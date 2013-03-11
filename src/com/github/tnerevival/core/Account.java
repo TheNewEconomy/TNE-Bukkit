@@ -15,6 +15,7 @@ public class Account extends AccountHolder {
 	
 	/**
 	 * Used to create an account.
+	 * @param owner
 	 */
 	public void createAccount(String owner) {
 		
@@ -22,7 +23,7 @@ public class Account extends AccountHolder {
 	
 	/**
 	 * Used to delete an account.
-	 * @param p
+	 * @param owner
 	 */
 	public void deleteAccount(String owner) {
 		
@@ -48,7 +49,7 @@ public class Account extends AccountHolder {
 	
 	/**
 	 * Used to check if a particular account exists.
-	 * @param p
+	 * @param owner
 	 * @return Whether or not the account exists.
 	 */
 	public boolean doesAccountExist(String owner) {
