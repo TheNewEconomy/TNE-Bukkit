@@ -1,17 +1,22 @@
 package com.github.tnerevival.core;
 
-import org.bukkit.entity.Player;
+import java.util.HashMap;
 
-public class Account {
+public class Account extends AccountHolder {
+	
+	HashMap<String, AccountHolder> accounts = new HashMap<String, AccountHolder>();
+	//Default Constructor
+	public Account () {
+		
+	}
 	
 	//SECTION: methods
 	
 	
 	/**
 	 * Used to create an account.
-	 * @param p
 	 */
-	public void createAccount(Player p) {
+	public void createAccount(String owner) {
 		
 	}
 	
@@ -19,15 +24,14 @@ public class Account {
 	 * Used to delete an account.
 	 * @param p
 	 */
-	public void deleteAccount(Player p) {
+	public void deleteAccount(String owner) {
 		
 	}
 	
 	/**
 	 * Used to backup every account just in-case.
-	 * @param p
 	 */
-	public void backupAccounts(Player p) {
+	public void backupAccounts() {
 		
 	}
 	
@@ -47,7 +51,7 @@ public class Account {
 	 * @param p
 	 * @return Whether or not the account exists.
 	 */
-	public boolean doesAccountExist(Player p) {
+	public boolean doesAccountExist(String owner) {
 		return false;
 	}
 	
