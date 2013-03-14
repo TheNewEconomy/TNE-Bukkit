@@ -5,6 +5,7 @@ import java.io.File;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 public class TheNewEconomy extends JavaPlugin {
 	
 	/**
