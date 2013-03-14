@@ -132,6 +132,174 @@ public class TNEMainProperties {
 	 */
 	static long lastLottery;
 	
+	/**
+	 * @return the currencySingular
+	 */
+	public static String getCurrencySingular() {
+		return currencySingular;
+	}
+
+	/**
+	 * @return the currencyPlural
+	 */
+	public static String getCurrencyPlural() {
+		return currencyPlural;
+	}
+
+	/**
+	 * @return the mobMoneyDrops
+	 */
+	public static Boolean getMobMoneyDrops() {
+		return mobMoneyDrops;
+	}
+
+	/**
+	 * @return the startingMoney
+	 */
+	public static double getStartingMoney() {
+		return startingMoney;
+	}
+
+	/**
+	 * @return the startingPublicFund
+	 */
+	public static double getStartingPublicFund() {
+		return startingPublicFund;
+	}
+
+	/**
+	 * @return the maxTradeAreaLength
+	 */
+	public static int getMaxTradeAreaLength() {
+		return maxTradeAreaLength;
+	}
+
+	/**
+	 * @return the maxTradeAreaSize
+	 */
+	public static int getMaxTradeAreaSize() {
+		return maxTradeAreaSize;
+	}
+
+	/**
+	 * @return the maxBankAreaLength
+	 */
+	public static int getMaxBankAreaLength() {
+		return maxBankAreaLength;
+	}
+
+	/**
+	 * @return the maxBankAreaSize
+	 */
+	public static int getMaxBankAreaSize() {
+		return maxBankAreaSize;
+	}
+
+	/**
+	 * @return the tradeAreaCost
+	 */
+	public static double getTradeAreaCost() {
+		return tradeAreaCost;
+	}
+
+	/**
+	 * @return the personalAreaCost
+	 */
+	public static double getPersonalAreaCost() {
+		return personalAreaCost;
+	}
+
+	/**
+	 * @return the bankAreaCost
+	 */
+	public static double getBankAreaCost() {
+		return bankAreaCost;
+	}
+
+	/**
+	 * @return the transferFee
+	 */
+	public static double getTransferFee() {
+		return transferFee;
+	}
+
+	/**
+	 * @return the renameFee
+	 */
+	public static double getRenameFee() {
+		return renameFee;
+	}
+
+	/**
+	 * @return the maxOffers
+	 */
+	public static int getMaxOffers() {
+		return maxOffers;
+	}
+
+	/**
+	 * @return the verticalCost
+	 */
+	public static double getVerticalCost() {
+		return verticalCost;
+	}
+
+	/**
+	 * @return the lotteryInterval
+	 */
+	public static double getLotteryInterval() {
+		return lotteryInterval;
+	}
+
+	/**
+	 * @return the playersUntilHalf
+	 */
+	public static int getPlayersUntilHalf() {
+		return playersUntilHalf;
+	}
+
+	/**
+	 * @return the maxAreas
+	 */
+	public static int getMaxAreas() {
+		return maxAreas;
+	}
+
+	/**
+	 * @return the salesTax
+	 */
+	public static double getSalesTax() {
+		return salesTax;
+	}
+
+	/**
+	 * @return the minAuctionLength
+	 */
+	public static double getMinAuctionLength() {
+		return minAuctionLength;
+	}
+
+	/**
+	 * @return the maxAuctionLength
+	 */
+	public static double getMaxAuctionLength() {
+		return maxAuctionLength;
+	}
+
+	/**
+	 * @return the publicFund
+	 */
+	public static double getPublicFund() {
+		return publicFund;
+	}
+
+	/**
+	 * @return the lastLottery
+	 */
+	public static long getLastLottery() {
+		return lastLottery;
+	}
+
 	public TNEMainProperties() {
 		work(mainProperties);
 		

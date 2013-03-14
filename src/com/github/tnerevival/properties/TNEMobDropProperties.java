@@ -38,6 +38,202 @@ public class TNEMobDropProperties {
 	static double dropWolf;
 	static double dropZombie;
 	
+	/**
+	 * @return the dropBat
+	 */
+	public static double getDropBat() {
+		return dropBat;
+	}
+
+	/**
+	 * @return the dropBlaze
+	 */
+	public static double getDropBlaze() {
+		return dropBlaze;
+	}
+
+	/**
+	 * @return the dropCaveSpider
+	 */
+	public static double getDropCaveSpider() {
+		return dropCaveSpider;
+	}
+
+	/**
+	 * @return the dropChicken
+	 */
+	public static double getDropChicken() {
+		return dropChicken;
+	}
+
+	/**
+	 * @return the dropCow
+	 */
+	public static double getDropCow() {
+		return dropCow;
+	}
+
+	/**
+	 * @return the dropCreeper
+	 */
+	public static double getDropCreeper() {
+		return dropCreeper;
+	}
+
+	/**
+	 * @return the dropEnderDragon
+	 */
+	public static double getDropEnderDragon() {
+		return dropEnderDragon;
+	}
+
+	/**
+	 * @return the dropEnderman
+	 */
+	public static double getDropEnderman() {
+		return dropEnderman;
+	}
+
+	/**
+	 * @return the dropGhast
+	 */
+	public static double getDropGhast() {
+		return dropGhast;
+	}
+
+	/**
+	 * @return the dropGiant
+	 */
+	public static double getDropGiant() {
+		return dropGiant;
+	}
+
+	/**
+	 * @return the dropIronGolem
+	 */
+	public static double getDropIronGolem() {
+		return dropIronGolem;
+	}
+
+	/**
+	 * @return the dropMagmaCube
+	 */
+	public static double getDropMagmaCube() {
+		return dropMagmaCube;
+	}
+
+	/**
+	 * @return the dropMushroomCow
+	 */
+	public static double getDropMushroomCow() {
+		return dropMushroomCow;
+	}
+
+	/**
+	 * @return the dropOcelot
+	 */
+	public static double getDropOcelot() {
+		return dropOcelot;
+	}
+
+	/**
+	 * @return the dropPig
+	 */
+	public static double getDropPig() {
+		return dropPig;
+	}
+
+	/**
+	 * @return the dropPigZombie
+	 */
+	public static double getDropPigZombie() {
+		return dropPigZombie;
+	}
+
+	/**
+	 * @return the dropSheep
+	 */
+	public static double getDropSheep() {
+		return dropSheep;
+	}
+
+	/**
+	 * @return the dropSilverfish
+	 */
+	public static double getDropSilverfish() {
+		return dropSilverfish;
+	}
+
+	/**
+	 * @return the dropSkeleton
+	 */
+	public static double getDropSkeleton() {
+		return dropSkeleton;
+	}
+
+	/**
+	 * @return the dropSlime
+	 */
+	public static double getDropSlime() {
+		return dropSlime;
+	}
+
+	/**
+	 * @return the dropSnowman
+	 */
+	public static double getDropSnowman() {
+		return dropSnowman;
+	}
+
+	/**
+	 * @return the dropSpider
+	 */
+	public static double getDropSpider() {
+		return dropSpider;
+	}
+
+	/**
+	 * @return the dropSquid
+	 */
+	public static double getDropSquid() {
+		return dropSquid;
+	}
+
+	/**
+	 * @return the dropVillager
+	 */
+	public static double getDropVillager() {
+		return dropVillager;
+	}
+
+	/**
+	 * @return the dropWitch
+	 */
+	public static double getDropWitch() {
+		return dropWitch;
+	}
+
+	/**
+	 * @return the dropWither
+	 */
+	public static double getDropWither() {
+		return dropWither;
+	}
+
+	/**
+	 * @return the dropWolf
+	 */
+	public static double getDropWolf() {
+		return dropWolf;
+	}
+
+	/**
+	 * @return the dropZombie
+	 */
+	public static double getDropZombie() {
+		return dropZombie;
+	}
+
 	public TNEMobDropProperties() {
 		
 		values(mobProperties);
