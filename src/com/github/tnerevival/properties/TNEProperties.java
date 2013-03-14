@@ -7,45 +7,56 @@ import java.util.Properties;
 
 public class TNEProperties extends Properties {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private String propertiesFileName;
+	private String propertiesFileTitle;
 	
-	public TNEProperties(String name) {
+	public TNEProperties(String name, String title) {
 		this.propertiesFileName = name;
+		this.propertiesFileTitle = title;
+	}
+	
+	public void initiate() {
+		if(exists()) {
+			load();
+		} else {
+			save();
+		}
 	}
 	
 	public void load() {
 		
-		File f = new File(this.propertiesFileName);
-		if(f.exists()) {
 			try {
 				load(new FileInputStream(this.propertiesFileName));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-		}
 	}
 	
-	public void save(String title) {
+	public void save() {
 		
-		File f = new File(this.propertiesFileName);
-		if(!f.exists()) {
 			try {
-				store(new FileOutputStream(this.propertiesFileName), title);
+				store(new FileOutputStream(this.propertiesFileName), this.propertiesFileTitle);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+		
+	}
+	
+	public Boolean exists() {
+		
+		File f = new File(this.propertiesFileName);
+		if(f.exists()) {
+			return true;
 		}
+		return false;
 		
 	}
 	
 	public void setComment(String propertyKey, String comment) {
 		
-		String propertyComment = "#" + comment;
+		//String propertyComment = "#" + comment;
 		
 	}
 	
@@ -53,16 +64,6 @@ public class TNEProperties extends Properties {
 		
 		if (containsKey(key)) {
 			return Double.parseDouble(getProperty(key));
-		}
-		return value;
-		
-	}
-	
-	public double setDouble(String key, double value) {
-		
-		if(!containsKey(key)) {
-			put(key, String.valueOf(value));
-			return value;
 		}
 		return value;
 		
@@ -77,16 +78,6 @@ public class TNEProperties extends Properties {
 		
 	}
 	
-	public int setInteger(String key, int value) {
-		
-		if (!containsKey(key)) {
-			put(key, String.valueOf(value));
-			return value;
-		}
-		return value;
-		
-	}
-	
 	public String getString(String key, String value) {
 		
 		if (containsKey(key)) {
@@ -96,30 +87,10 @@ public class TNEProperties extends Properties {
 		
 	}
 	
-	public String setString(String key, String value) {
-		
-		if (!containsKey(key)) {
-			put(key, value);
-			return value;
-		}
-		return value;
-		
-	}
-	
 	public Boolean getBoolean(String key, Boolean value) {
 		
 		if (containsKey(key)) {
 			return Boolean.parseBoolean(getProperty(key));
-		}
-		return value;
-		
-	}
-	
-	public Boolean setBoolean(String key, Boolean value) {
-		
-		if (!containsKey(key)) {
-			put(key, String.valueOf(value));
-			return value;
 		}
 		return value;
 		

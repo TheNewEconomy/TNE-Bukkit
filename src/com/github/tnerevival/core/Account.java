@@ -4,7 +4,11 @@ import java.util.HashMap;
 
 public class Account extends AccountHolder {
 	
+	/**
+	 * A Map containing information about all player accounts.
+	 */
 	HashMap<String, AccountHolder> accounts = new HashMap<String, AccountHolder>();
+	
 	//Default Constructor
 	public Account () {
 		
