@@ -1,10 +1,12 @@
 package com.github.tnerevival.properties;
 
+import com.github.tnerevival.TheNewEconomy;
+
 
 
 public class TNEMainProperties {
 	
-	String mainPropertiesFile = "economy.properties";
+	String mainPropertiesFile = TheNewEconomy.pluginDirectory + "/economy.properties";
 	String mainPropertiesTitle = "~~~The New Economy Main Properties~~~";
 	TNEProperties mainProperties = new TNEProperties(mainPropertiesFile, mainPropertiesTitle);
 	
@@ -131,7 +133,6 @@ public class TNEMainProperties {
 	static long lastLottery;
 	
 	public TNEMainProperties() {
-		values(mainProperties);
 		work(mainProperties);
 		
 	}
@@ -139,6 +140,7 @@ public class TNEMainProperties {
 	void work(TNEProperties prop) {
 		
 		try {
+			values(prop);
 			prop.initiate();
 		} catch(Exception e) {
 			e.printStackTrace();

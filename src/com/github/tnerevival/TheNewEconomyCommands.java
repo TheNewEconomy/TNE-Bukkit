@@ -72,6 +72,13 @@ public class TheNewEconomyCommands implements CommandExecutor {
 					p.sendMessage("You do not have permission to do that!");
 					return false;
 				}
+			}  else if (cmd.getName().equalsIgnoreCase("supply")) {
+				if(p.hasPermission("TNE.USER.BUY")) {
+					
+				} else {
+					p.sendMessage("You do not have permission to do that!");
+					return false;
+				}
 			}
 		}
 		return false;

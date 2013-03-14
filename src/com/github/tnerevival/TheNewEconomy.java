@@ -1,5 +1,7 @@
 package com.github.tnerevival;
 
+import java.io.File;
+
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -8,12 +10,18 @@ public class TheNewEconomy extends JavaPlugin {
 	/**
 	 * The plugin's directory.
 	 */
+	public static File pluginDirectory;
+	
+	/**
+	 * The plugin's description file.
+	 */
 	public PluginDescriptionFile pdf = getDescription();
 	
 	@Override
 	public void onEnable() {
 		
-        if(!this.getDataFolder().exists()) this.getDataFolder().mkdir();
+		pluginDirectory = this.getDataFolder();
+        if(!pluginDirectory.exists()) pluginDirectory.mkdir();
         
         // Register our commands
         getCommand("area").setExecutor(new TheNewEconomyCommands(this));

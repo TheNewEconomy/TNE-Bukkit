@@ -1,9 +1,11 @@
 package com.github.tnerevival.properties;
 
+import com.github.tnerevival.TheNewEconomy;
+
 
 public class TNEMobDropProperties {
 	
-	String mobPropertiesFile = "mobdrops.properties";
+	String mobPropertiesFile = TheNewEconomy.pluginDirectory + "/mobdrops.properties";
 	String mobPropertiesTitle = "~~~The New Economy Mob Drop Properties~~~";
 	TNEProperties mobProperties = new TNEProperties(mobPropertiesFile, mobPropertiesTitle);
 	
