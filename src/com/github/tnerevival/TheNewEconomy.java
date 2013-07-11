@@ -1,45 +1,49 @@
 package com.github.tnerevival;
 
 import java.io.File;
+import java.io.IOException;
 
-import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 public class TheNewEconomy extends JavaPlugin {
 	
-	/**
-	 * The plugin's directory.
-	 */
-	public static File pluginDirectory;
+	public static TheNewEconomy instance;
 	
-	/**
-	 * The plugin's description file.
-	 */
-	public PluginDescriptionFile pdf = getDescription();
-	
-	@Override
-	public void onEnable() {
-		
-		pluginDirectory = this.getDataFolder();
-        if(!pluginDirectory.exists()) pluginDirectory.mkdir();
-        
-        // Register our commands
-        getCommand("area").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("auction").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("bank").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("buy").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("economy").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("lottery").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("money").setExecutor(new TheNewEconomyCommands(this));
-        getCommand("offer").setExecutor(new TheNewEconomyCommands(this));
-        
-        getLogger().info(pdf.getName() + " version " + pdf.getVersion() + " is enabled!");
-	}
-	
-	@Override
-	public void onDisable(){
-		getLogger().info(pdf.getName() + " version " + pdf.getVersion() + " is now disabled!");
-	}
+	File configFile;
+	public YamlConfiguration config;
 
+	public void onEnabled() {
+		instance = this;
+		configFile = new File(getDataFolder(), "config.yml");
+		config = new YamlConfiguration();
+		
+		if(!getDataFolder().exists()) {
+			getDataFolder().mkdir();
+		}
+		if(!configFile.exists()) {
+			configFile.mkdir();
+		}
+		loadYamlFiles();
+	}
+	
+	public void onDisable() {
+		saveYamlFiles();
+	}
+	
+	private void loadYamlFiles() {
+		try {
+			config.load(configFile);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void saveYamlFiles() {
+		try {
+			config.save(configFile);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
