@@ -3,6 +3,7 @@ package com.github.tnerevival.core.accounts;
 import java.io.Serializable;
 
 import com.github.tnerevival.TheNewEconomy;
+import com.github.tnerevival.core.accounts.banks.Bank;
 
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,6 +11,7 @@ public class Account implements Serializable {
 	int accountNumber = 0;
 	String owner;
 	String pinCode;
+	Bank bank;
 	double balance;
 	String status;
 	

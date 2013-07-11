@@ -16,7 +16,7 @@ public class Economy {
 	File accountDirectory;
 	
 	public Economy() {
-		accountDirectory = new File(TheNewEconomy.instance.getDataFolder(), "Accounts");
+		//accountDirectory = new File(TheNewEconomy.instance.getDataFolder(), "Accounts");
 	}
 	
 	/**

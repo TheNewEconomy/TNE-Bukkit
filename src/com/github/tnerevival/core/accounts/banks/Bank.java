@@ -1,10 +1,15 @@
 package com.github.tnerevival.core.accounts.banks;
 
-public class Bank {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Bank implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	String owner;
 	Integer money;
-	BankSlot[] contents;
+	List<BankSlot> items = new ArrayList<BankSlot>();
 	
 	public Bank(String owner) {
 		this.owner = owner;
@@ -27,5 +32,19 @@ public class Bank {
 	 */
 	public Integer getMoney() {
 		return money;
+	}
+
+	/**
+	 * @return the items
+	 */
+	public List<BankSlot> getItems() {
+		return items;
+	}
+
+	/**
+	 * @param items the items to set
+	 */
+	public void setItems(List<BankSlot> items) {
+		this.items = items;
 	}
 }

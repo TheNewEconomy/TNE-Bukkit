@@ -2,12 +2,18 @@ package com.github.tnerevival.core.accounts.banks;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class BankSlot implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	List<Integer> enchantments = new ArrayList<Integer>();
+	HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
 	List<String> lore = new ArrayList<String>();
 	
 	Integer id;
@@ -16,78 +22,67 @@ public class BankSlot implements Serializable {
 	Short damage;
 	String name;
 	
-	public BankSlot(int id, int slot) {
-		this.id = id;
+	public BankSlot(Integer slot) {
+		this.id = null;
 		this.slot = slot;
-		this.amount = 1;
-		this.damage = 0;
+	}
+	public BankSlot(ItemStack i, Integer slot) {
+		this.id = i.getTypeId();
+		this.slot = slot;
+		this.amount = i.getAmount();
+		this.damage = i.getDurability();
+		if(i.getItemMeta().hasDisplayName()) {
+			this.name = i.getItemMeta().getDisplayName();
+		}
+		if(i.getItemMeta().hasLore()) {
+			this.lore = i.getItemMeta().getLore();
+		}
+		this.enchantments = getEnchantments(i);
+	}
+
+	/**
+	 * @return the slot
+	 */
+	public Integer getSlot() {
+		return slot;
+	}
+
+	/**
+	 * @param slot the slot to set
+	 */
+	public void setSlot(Integer slot) {
+		this.slot = slot;
+	}
+
+	HashMap<SerializableEnchantment, Integer> getEnchantments(ItemStack i) {
+		Map<Enchantment, Integer> enchantments = i.getEnchantments();
+		HashMap<SerializableEnchantment, Integer> serializedEnchantments = new HashMap<SerializableEnchantment, Integer>();
+		for(Enchantment e : enchantments.keySet()) {
+			serializedEnchantments.put(new SerializableEnchantment(e), enchantments.get(e));
+		}
+		return serializedEnchantments;
 	}
 	
-	public BankSlot(int id, int slot, int amount) {
-		this.id = id;
-		this.amount = amount;
-		this.damage = 0;
-	}
-	
-	public BankSlot(int id, int slot, int amount, Short damage) {
-		this.id = id;
-		this.amount = amount;
-		this.damage = damage;
-	}
-
-	/**
-	 * @return the enchantments
-	 */
-	public List<Integer> getEnchantments() {
-		return enchantments;
-	}
-
-	/**
-	 * @param enchantments the enchantments to set
-	 */
-	public void setEnchantments(List<Integer> enchantments) {
-		this.enchantments = enchantments;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the amount
-	 */
-	public Integer getAmount() {
-		return amount;
-	}
-
-	/**
-	 * @param amount the amount to set
-	 */
-	public void setAmount(Integer amount) {
-		this.amount = amount;
-	}
-
-	/**
-	 * @return the damage
-	 */
-	public Short getDamage() {
-		return damage;
-	}
-
-	/**
-	 * @param damage the damage to set
-	 */
-	public void setDamage(Short damage) {
-		this.damage = damage;
+	public ItemStack toItemStack() {
+		if(this.id != null) {
+			ItemStack stack = new ItemStack(this.id, this.amount, this.damage);
+			if(!this.enchantments.isEmpty()) {
+				HashMap<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
+				for(SerializableEnchantment e : this.enchantments.keySet()) {
+					enchants.put(e.getEnchantment(), this.enchantments.get(e));
+				}
+				stack.addUnsafeEnchantments(enchants);
+			}
+			ItemMeta stackMeta = stack.getItemMeta();
+			if(!this.lore.isEmpty()) {
+				stackMeta.setLore(this.lore);
+			}
+			if(this.name != null && !this.name.isEmpty()) {
+				stackMeta.setDisplayName(this.name);
+			}
+			return stack;
+		} else {
+			return null;
+		}
 	}
 }
