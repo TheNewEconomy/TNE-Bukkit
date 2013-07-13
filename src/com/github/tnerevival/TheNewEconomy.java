@@ -8,39 +8,41 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.core.Economy;
 import com.github.tnerevival.core.listeners.PlayerListener;
+import com.github.tnerevival.core.listeners.SignListener;
 
+/**
+ * Main Class for TNE.
+ * @author creatorfromhell
+ *
+ */
 public class TheNewEconomy extends JavaPlugin {
 	
 	public static TheNewEconomy instance;
 	public Economy eco;
 	
 	File configFile;
-	File banksFolder;
 	public YamlConfiguration config;
 
 	public void onEnable() {
 		instance = this;
-		//configFile = new File(getDataFolder(), "config.yml");
-		banksFolder = new File(getDataFolder(), "Banks");
-		//config = new YamlConfiguration();
+		configFile = new File(getDataFolder(), "config.yml");
+		config = new YamlConfiguration();
 		
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
-		/*if(!configFile.exists()) {
+		if(!configFile.exists()) {
 			configFile.mkdir();
-		}*/
-		if(!banksFolder.exists()) {
-			banksFolder.mkdir();
 		}
 		
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-		//loadYamlFiles();
+		getServer().getPluginManager().registerEvents(new SignListener(this), this);
+		loadYamlFiles();
 		eco = new Economy();
 	}
 	
 	public void onDisable() {
-		//saveYamlFiles();
+		saveYamlFiles();
 	}
 	
 	private void loadYamlFiles() {

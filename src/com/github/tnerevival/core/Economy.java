@@ -3,16 +3,38 @@ package com.github.tnerevival.core;
 import java.io.File;
 import java.util.HashMap;
 
-import com.github.tnerevival.TheNewEconomy;
 import com.github.tnerevival.core.accounts.Account;
 import com.github.tnerevival.core.areas.Area;
+import com.github.tnerevival.core.auctions.Auction;
 
+/**
+ * The heart of TNE. This class holds all maps, instances, etc.
+ * @author creatorfromhell
+ *
+ */
 public class Economy {
+	
 	/**
 	 * A HashMap holding all accounts for the economy.
+	 * Format: Player, Account File
 	 */
-	HashMap<String, Account> accounts = new HashMap<String, Account>();
-	HashMap<String, Area> areas = new HashMap<String, Area>();
+	public HashMap<String, Account> accounts = new HashMap<String, Account>();
+	
+	/**
+	 * A HashMap holding every auction.
+	 * Format: Auction Starter, Auction File
+	 */
+	public HashMap<String, Auction> auctions = new HashMap<String, Auction>();
+	
+	/**
+	 * A HashMap holding all areas that have been created.
+	 * Format: Area Owner, Area File
+	 */
+	public HashMap<String, Area> areas = new HashMap<String, Area>();
+	
+	/**
+	 * The directory that holds account files.
+	 */
 	File accountDirectory;
 	
 	public Economy() {
@@ -23,10 +45,8 @@ public class Economy {
 	 * Used to initialize the economy if this is the first run.
 	 */
 	public void initializeEconomy() {
-		if(TheNewEconomy.instance.config.getBoolean("firstrun")) {
-			if(accountDirectory.exists()) {
-				accountDirectory.mkdirs();
-			}
+		if(accountDirectory.exists()) {
+			accountDirectory.mkdirs();
 		}
 	}
 	
