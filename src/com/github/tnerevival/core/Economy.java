@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.github.tnerevival.core.accounts.Account;
 import com.github.tnerevival.core.areas.Area;
 import com.github.tnerevival.core.auctions.Auction;
+import com.github.tnerevival.core.companies.Company;
 
 /**
  * The heart of TNE. This class holds all maps, instances, etc.
@@ -21,16 +22,22 @@ public class Economy {
 	public HashMap<String, Account> accounts = new HashMap<String, Account>();
 	
 	/**
+	 * A HashMap holding all areas that have been created.
+	 * Format: Area Owner, Area File
+	 */
+	public HashMap<String, Area> areas = new HashMap<String, Area>();
+	
+	/**
 	 * A HashMap holding every auction.
 	 * Format: Auction Starter, Auction File
 	 */
 	public HashMap<String, Auction> auctions = new HashMap<String, Auction>();
 	
 	/**
-	 * A HashMap holding all areas that have been created.
-	 * Format: Area Owner, Area File
+	 * A HashMap holding every company created.
+	 * Format: Company Name, Company File
 	 */
-	public HashMap<String, Area> areas = new HashMap<String, Area>();
+	public HashMap<String, Company> companies = new HashMap<String, Company>();
 	
 	/**
 	 * The directory that holds account files.
