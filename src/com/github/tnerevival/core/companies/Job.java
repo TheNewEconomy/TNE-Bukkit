@@ -1,7 +1,7 @@
 package com.github.tnerevival.core.companies;
 
-import java.awt.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -9,10 +9,22 @@ import java.util.ArrayList;
  *
  */
 public abstract class Job {
+	
+	/**
+	 * The name of this Job.
+	 */
 	String name;
+	
+	/**
+	 * The Title the player will have in the company employee list for being apart of this Job.
+	 */
 	String title;
+	
+	/**
+	 * The paycheck that each player will receive for doing this job.
+	 */
 	Double paycheck;
-	ArrayList<String> employees = new ArrayList<String>();
+	List<String> employees = new ArrayList<String>();
 	
 	public Job(String name) {
 		this(name, name, 7.50);
@@ -26,16 +38,6 @@ public abstract class Job {
 		this.name = name;
 		this.title = title;
 		this.paycheck = paycheck;
-	}
-	
-	public Job(String name, String title, Double paycheck, String[] employees) {
-		this.name = name;
-		this.title = title;
-		this.paycheck = paycheck;
-		
-		for (String s : employees) {
-			this.employees.add(s);
-		}
 	}
 
 	/**

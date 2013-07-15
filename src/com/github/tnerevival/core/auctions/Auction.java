@@ -10,24 +10,25 @@ import org.bukkit.inventory.ItemStack;
 public class Auction {
 	
 	String creator;
+	Integer length;
 	Double minBid;
 	Double increment;
 	Double currentBid;
 	String highestBidder;
-	ItemStack[] item;
+	ItemStack item;
 	
 	Boolean queued;
 	Boolean finished;
 	
-	public Auction(String creator, ItemStack[] item) {
+	public Auction(String creator, ItemStack item) {
 		this(creator, 0.0, 1.0, item);
 	}
 	
-	public Auction(String creator, Double minBid, ItemStack[] item) {
+	public Auction(String creator, Double minBid, ItemStack item) {
 		this(creator, minBid, 1.0, item);
 	}
 	
-	public Auction(String creator, Double minBid, Double increment, ItemStack[] item) {
+	public Auction(String creator, Double minBid, Double increment, ItemStack item) {
 		this.creator = creator;
 		this.minBid = minBid;
 		this.increment = increment;
@@ -109,14 +110,14 @@ public class Auction {
 	/**
 	 * @return the item
 	 */
-	public ItemStack[] getItem() {
+	public ItemStack getItem() {
 		return item;
 	}
 
 	/**
 	 * @param item the item to set
 	 */
-	public void setItem(ItemStack[] item) {
+	public void setItem(ItemStack item) {
 		this.item = item;
 	}
 

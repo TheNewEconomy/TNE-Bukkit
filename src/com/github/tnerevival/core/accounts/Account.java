@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.github.tnerevival.TheNewEconomy;
 import com.github.tnerevival.core.accounts.banks.Bank;
+import com.github.tnerevival.core.companies.Company;
 
 /**
  * Class used to hold all economy-based information about a specific player on the server.
@@ -33,6 +34,11 @@ public class Account implements Serializable {
 	 * The Bank associated with this account.
 	 */
 	Bank bank;
+	
+	/**
+	 * The Company this player is associated with.
+	 */
+	Company company;
 	
 	/**
 	 * The account's balance of in-game virtual currency.

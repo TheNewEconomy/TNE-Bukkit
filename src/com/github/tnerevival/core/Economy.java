@@ -7,6 +7,7 @@ import com.github.tnerevival.core.accounts.Account;
 import com.github.tnerevival.core.areas.Area;
 import com.github.tnerevival.core.auctions.Auction;
 import com.github.tnerevival.core.companies.Company;
+import com.github.tnerevival.core.lottery.Lottery;
 
 /**
  * The heart of TNE. This class holds all maps, instances, etc.
@@ -38,6 +39,13 @@ public class Economy {
 	 * Format: Company Name, Company File
 	 */
 	public HashMap<String, Company> companies = new HashMap<String, Company>();
+	
+	/**
+	 * A HashMap holding every Lottery that is currently running.
+	 * We have this so we can have multiple lotteries at once.
+	 * Format: Lottery Name, Lottery File.
+	 */
+	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
 	
 	/**
 	 * The directory that holds account files.

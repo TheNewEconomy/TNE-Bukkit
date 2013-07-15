@@ -5,12 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 
+ * Holds all information pertaining to a company.
  * @author creatorfromhell
  *
  */
 public class Company {
+	
+	/**
+	 * A List of all the Jobs for this company.
+	 */
 	List<Job> jobs = new ArrayList<Job>();
+	
+	/**
+	 * A HashMap containing all employees for this company.
+	 * Format: Employee Name, Job Name.
+	 */
 	HashMap<String, String> employees = new HashMap<String, String>();
 	
 	String name;
