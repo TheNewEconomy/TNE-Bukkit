@@ -1,20 +1,50 @@
 package com.github.tnerevival.core.companies;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import com.github.tnerevival.TheNewEconomy;
+import com.github.tnerevival.core.accounts.Account;
 
 /**
  * Holds all information pertaining to a company.
  * @author creatorfromhell
  *
  */
-public class Company {
+public class Company implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * A List of all the Jobs for this company.
 	 */
 	List<Job> jobs = new ArrayList<Job>();
+	
+	/**
+	 * A map of this company's partners.
+	 * Format: Partner's Name, Partnership Status(Accepted, pending)
+	 * Why a HashMap? Instead of making two lists for pending partners, 
+	 * and accepted partners this seemed like the only logical way. It
+	 * may also be more efficient than two lists as well.
+	 */
+	HashMap<String, String> partners = new HashMap<String, String>();
+	
+	/**
+	 * A list of this company's competitors.
+	 */
+	List<String> competitors = new ArrayList<String>();
+	
+	/**
+	 * A hashmap containing all applications for this company.
+	 * Format: Player, Job. Default Job is set to any.
+	 */
+	HashMap<String, String> applications = new HashMap<String, String>();
 	
 	/**
 	 * A HashMap containing all employees for this company.
@@ -24,6 +54,7 @@ public class Company {
 	
 	String name;
 	String owner;
+	Boolean hiring;
 	Double tax;
 	Double revenue;
 	Double fees;
@@ -32,6 +63,11 @@ public class Company {
 	public Company(String name, String owner) {
 		this.name = name;
 		this.owner = owner;
+		this.hiring = true;
+		this.tax = 0.0;
+		this.revenue = 0.0;
+		this.fees = 0.0;
+		this.profit = 0.0;
 	}
 
 	/**
@@ -63,6 +99,34 @@ public class Company {
 	}
 
 	/**
+	 * @return the partners
+	 */
+	public HashMap<String, String> getPartners() {
+		return partners;
+	}
+
+	/**
+	 * @param partners the partners to set
+	 */
+	public void setPartners(HashMap<String, String> partners) {
+		this.partners = partners;
+	}
+
+	/**
+	 * @return the competitors
+	 */
+	public List<String> getCompetitors() {
+		return competitors;
+	}
+
+	/**
+	 * @param competitors the competitors to set
+	 */
+	public void setCompetitors(List<String> competitors) {
+		this.competitors = competitors;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {
@@ -88,6 +152,20 @@ public class Company {
 	 */
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	/**
+	 * @return the hiring
+	 */
+	public Boolean getHiring() {
+		return hiring;
+	}
+
+	/**
+	 * @param hiring the hiring to set
+	 */
+	public void setHiring(Boolean hiring) {
+		this.hiring = hiring;
 	}
 
 	/**
@@ -144,5 +222,71 @@ public class Company {
 	 */
 	public void setProfit(Double profit) {
 		this.profit = profit;
+	}
+	
+	/**
+	 * Used to delete this company.
+	 */
+	public void delete() {
+		for(String s : employees.keySet()) {
+			Account acc = TheNewEconomy.instance.eco.accounts.get(s);
+			Player player = Bukkit.getPlayer(s);
+			if(player != null) {
+				player.sendMessage(ChatColor.RED + "You've been kicked from your company due to the owner deleting it.");
+			}
+			acc.setCompany(null);
+		}
+		Account acc = TheNewEconomy.instance.eco.accounts.get(owner);
+		Player player = Bukkit.getPlayer(owner);
+		player.sendMessage("Your company has been deleted!");
+		acc.setCompany(null);
+		TheNewEconomy.instance.eco.companies.remove(name);
+	}
+	
+	public Boolean jobExist(String name) {
+		for(Job job : jobs) {
+			if(job.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void removeJob(String jobName, String reason) {
+		for(Job job : jobs) {
+			if(job.getName().equals(jobName)) {
+				for(String s : job.employees) {
+					Player player = Bukkit.getPlayer(s);
+					Account acc = TheNewEconomy.instance.eco.accounts.get(s);
+					acc.setCompany(null);
+					player.sendMessage("You have lost your job due to.");
+					player.sendMessage("Reason: " + reason); 
+					job.employees.remove(s);
+					employees.remove(s);
+				}
+				jobs.remove(job);
+			}
+		}
+	}
+	
+	public List<String> details() {
+		List<String> detailsList = new ArrayList<String>();
+		detailsList.add(ChatColor.GOLD + "~~~~[" + name + "]~~~~");
+		detailsList.add("Profit: " + profit + "  Employees: " + (employees.size()));
+		detailsList.add("CEO: " + owner);
+		for(Job j : jobs) {
+			Integer jEmployees = 1;
+			String jString = j.getName() + ": ";
+			for(String s : j.employees) {
+				jString += s;
+				if(jEmployees < j.employees.size()) {
+					jString += ", ";
+				}
+				jEmployees++;
+			}
+			detailsList.add(jString);
+		}
+		
+		return detailsList;
 	}
 }

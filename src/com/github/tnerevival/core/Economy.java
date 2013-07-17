@@ -1,8 +1,11 @@
 package com.github.tnerevival.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 
+import com.github.tnerevival.TheNewEconomy;
 import com.github.tnerevival.core.accounts.Account;
 import com.github.tnerevival.core.areas.Area;
 import com.github.tnerevival.core.auctions.Auction;
@@ -47,35 +50,66 @@ public class Economy {
 	 */
 	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
 	
-	/**
-	 * The directory that holds account files.
-	 */
-	File accountDirectory;
+	File accountsFile;
+	File areasFile;
+	File companiesFile;
 	
 	public Economy() {
-		//accountDirectory = new File(TheNewEconomy.instance.getDataFolder(), "Accounts");
+		accountsFile = new File(TheNewEconomy.instance.getDataFolder(), "accounts.tne");
+		areasFile = new File(TheNewEconomy.instance.getDataFolder(), "areas.tne");
+		companiesFile = new File(TheNewEconomy.instance.getDataFolder(), "companies.tne");
+		initializeEconomy();
 	}
 	
 	/**
 	 * Used to initialize the economy if this is the first run.
 	 */
-	public void initializeEconomy() {
-		if(accountDirectory.exists()) {
-			accountDirectory.mkdirs();
+	void initializeEconomy() {
+		if(!accountsFile.exists()) {
+			try {
+				accountsFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		if(!areasFile.exists()) {
+			try {
+				areasFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if(!companiesFile.exists()) {
+			try {
+				companiesFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		loadData();
 	}
 	
-	/**
-	 * Used to load all accounts into the HashMap.
-	 */
-	public void loadAccounts() {
-		
+	public void loadData() {
+		System.out.println("[TNE]Loading data....");
+		try {
+			accounts = EconomyIO.loadAccounts();
+			areas = EconomyIO.loadAreas();
+			companies = EconomyIO.loadCompanies();
+		} catch (FileNotFoundException e) {
+			System.out.println("[TNE] Data File(s) not found. Generating file...");
+		} catch (ClassNotFoundException e) {
+			System.out.println("[TNE] Data File(s) not found. Generating file...");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("[TNE]All data has been loaded.");
 	}
 	
-	/**
-	 * Used to save all accounts that are in the HashMap.
-	 */
-	public void saveAccounts() {
-		
+	public void saveData() {
+		System.out.println("[TNE]Saving data....");
+		EconomyIO.saveAccounts(accounts);
+		EconomyIO.saveAreas(areas);
+		EconomyIO.saveCompanies(companies);
+		System.out.println("[TNE]All data has been saved.");
 	}
 }

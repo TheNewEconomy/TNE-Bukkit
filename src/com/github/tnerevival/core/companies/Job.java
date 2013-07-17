@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.companies;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,9 @@ import java.util.List;
  * @author creatorfromhell, TheMonkey1415
  *
  */
-public abstract class Job {
+public class Job implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * The name of this Job.
 	 */
@@ -24,14 +26,23 @@ public abstract class Job {
 	 * The paycheck that each player will receive for doing this job.
 	 */
 	Double paycheck;
+	
+	/**
+	 * A list of permissions that this job has.
+	 */
+	List<String> permissions = new ArrayList<String>();
+	
+	/**
+	 * A list of the employees that are in this job.
+	 */
 	List<String> employees = new ArrayList<String>();
 	
 	public Job(String name) {
 		this(name, name, 7.50);
 	}
 	
-	public Job(String name, String title) {
-		this(name, title, 7.50);
+	public Job(String name, Double paycheck) {
+		this(name, name, paycheck);
 	}
 	
 	public Job(String name, String title, Double paycheck) {

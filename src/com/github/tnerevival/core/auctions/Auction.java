@@ -52,6 +52,20 @@ public class Auction {
 	}
 
 	/**
+	 * @return the length
+	 */
+	public Integer getLength() {
+		return length;
+	}
+
+	/**
+	 * @param length the length to set
+	 */
+	public void setLength(Integer length) {
+		this.length = length;
+	}
+
+	/**
 	 * @return the minBid
 	 */
 	public Double getMinBid() {

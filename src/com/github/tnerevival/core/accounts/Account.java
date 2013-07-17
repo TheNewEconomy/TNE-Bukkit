@@ -64,6 +64,20 @@ public class Account implements Serializable {
 	}
 
 	/**
+	 * @return the accountNumber
+	 */
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+
+	/**
+	 * @param accountNumber the accountNumber to set
+	 */
+	public void setAccountNumber(int accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	/**
 	 * @return the owner
 	 */
 	public String getOwner() {
@@ -103,6 +117,20 @@ public class Account implements Serializable {
 	 */
 	public void setBank(Bank bank) {
 		this.bank = bank;
+	}
+
+	/**
+	 * @return the company
+	 */
+	public Company getCompany() {
+		return company;
+	}
+
+	/**
+	 * @param company the company to set
+	 */
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	/**
