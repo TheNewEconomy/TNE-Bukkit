@@ -31,7 +31,7 @@ public class CompanyExecutor implements CommandExecutor {
 	        			   if(args.length == 1) {
 	        				   if(company != null) {
 		        				   for(String s : company.details()) {
-		        					   player.sendMessage(s);
+		        				      player.sendMessage(s);
 		        				   }
 	        				   } else {
 	        					   player.sendMessage("You must be apart of a company in order to do that.");
@@ -45,7 +45,7 @@ public class CompanyExecutor implements CommandExecutor {
 	        					   player.sendMessage("I'm sorry, but that name is already in use.");
 	        				   } else {
 	        					   Company newCompany = new Company(args[1], player.getName());
-	        					   acc.setCompany(newCompany);
+	        					   acc.setCompany(newCompany.getName());
 	        					   TheNewEconomy.instance.eco.companies.put(args[1], newCompany);
 	        					   player.sendMessage("Company has been created successfully!");
 	        				   }

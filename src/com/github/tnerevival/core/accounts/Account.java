@@ -36,9 +36,9 @@ public class Account implements Serializable {
 	Bank bank;
 	
 	/**
-	 * The Company this player is associated with.
+	 * The name of the Company this player is associated with.
 	 */
-	Company company;
+	String company;
 	
 	/**
 	 * The account's balance of in-game virtual currency.
@@ -58,6 +58,7 @@ public class Account implements Serializable {
 		this.accountNumber = TheNewEconomy.instance.config.getInt("highest-accountnumber") + 1;
 		this.owner = username;
 		this.pinCode = "default";
+		this.company = "none";
 		this.balance = TheNewEconomy.instance.config.getDouble("starting-balance");
 		this.status = "Normal";
 		TheNewEconomy.instance.config.set("highest-accountnumber", this.accountNumber);
@@ -123,14 +124,18 @@ public class Account implements Serializable {
 	 * @return the company
 	 */
 	public Company getCompany() {
-		return company;
+		if(this.company.equals("none") || this.company.equals(null)) {
+			return null;
+		} else {
+			return TheNewEconomy.instance.eco.companies.get(company);
+		}
 	}
 
 	/**
 	 * @param company the company to set
 	 */
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCompany(String name) {
+		this.company = name;
 	}
 
 	/**

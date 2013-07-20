@@ -272,7 +272,7 @@ public class Company implements Serializable {
 	public List<String> details() {
 		List<String> detailsList = new ArrayList<String>();
 		detailsList.add(ChatColor.GOLD + "~~~~[" + name + "]~~~~");
-		detailsList.add("Profit: " + profit + "  Employees: " + (employees.size()));
+		detailsList.add("Profit: " + getProfit() + "  Employees: " + (employees.size()));
 		detailsList.add("CEO: " + owner);
 		for(Job j : jobs) {
 			Integer jEmployees = 1;

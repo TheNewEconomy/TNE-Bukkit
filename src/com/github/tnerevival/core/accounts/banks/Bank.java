@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.inventory.ItemStack;
+
 public class Bank implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -46,5 +48,30 @@ public class Bank implements Serializable {
 	 */
 	public void setItems(List<BankSlot> items) {
 		this.items = items;
+	}
+	
+	public Boolean hasRoom(Integer amount) {
+		Integer freeSlots = 0;
+		for(BankSlot slot : items) {
+			if(slot.toItemStack().equals(null)) {
+				freeSlots++;
+			}
+		}
+		if(freeSlots >= amount) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void addItem(ItemStack item) {
+		Integer spent = 0;
+		for(BankSlot slot : items) {
+			if(spent == 0) {
+				if(slot.toItemStack().equals(null)) {
+					slot.equals(new BankSlot(item, slot.getSlot()));
+					spent++;
+				}
+			}
+		}
 	}
 }

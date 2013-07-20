@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.core.Economy;
 import com.github.tnerevival.core.commands.CompanyExecutor;
+import com.github.tnerevival.core.commands.MoneyExecutor;
 import com.github.tnerevival.core.listeners.PlayerListener;
 import com.github.tnerevival.core.listeners.SignListener;
 
@@ -45,6 +46,7 @@ public class TheNewEconomy extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new SignListener(this), this);
 		
 		getCommand("company").setExecutor(new CompanyExecutor(this));
+		getCommand("money").setExecutor(new MoneyExecutor(this));
 		//loadYamlFiles();
 		eco = new Economy();
 	}

@@ -20,7 +20,6 @@ public class MISCExecutor implements CommandExecutor {
 		if (sender instanceof Player) {
 	           Player player = (Player) sender;
 	           if(cmd.getName().equalsIgnoreCase("bank")) {
-	        	   
 	           } else if(cmd.getName().equalsIgnoreCase("bid")) {
 	        	   
 	           }
