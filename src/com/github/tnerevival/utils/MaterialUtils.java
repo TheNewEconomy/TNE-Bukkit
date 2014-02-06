@@ -1,8 +1,9 @@
-package com.github.tnerevival;
+package com.github.tnerevival.utils;
 
 import org.bukkit.Material;
 
-public class Utils {
+public class MaterialUtils {
+	
 	public static String formatMaterialName(Material material) {
 		String[] wordsSplit = material.name().split("_");
 		String sReturn = "";

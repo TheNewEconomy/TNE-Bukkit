@@ -1,4 +1,4 @@
-package com.github.tnerevival.core.accounts.banks;
+package com.github.tnerevival.serializable;
 
 import java.io.Serializable;
 
@@ -8,13 +8,13 @@ import org.bukkit.enchantments.Enchantment;
 public class SerializableEnchantment implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	Integer id;
+	String name;
 	
 	public SerializableEnchantment(Enchantment e) {
-		this.id = e.getId();
+		this.name = e.getName();
 	}
 	
 	public Enchantment getEnchantment() {
-		return Enchantment.getById(id);
+		return Enchantment.getByName(name);
 	}
 }

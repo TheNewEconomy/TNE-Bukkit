@@ -1,4 +1,4 @@
-package com.github.tnerevival.core.accounts.banks;
+package com.github.tnerevival.serializable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,40 +6,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class BankSlot implements Serializable {
+public class SerializableItemStack implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
 	List<String> lore = new ArrayList<String>();
 	
-	Integer id;
+	String name;
 	Integer slot;
 	Integer amount;
 	Short damage;
-	String name;
+	String customName;
 	
-	public BankSlot(Integer slot) {
-		this.id = null;
+	public SerializableItemStack(Integer slot) {
+		this.name = "none";
 		this.slot = slot;
+		this.customName = "none";
 	}
-	public BankSlot(ItemStack i, Integer slot) {
-		this.id = i.getTypeId();
+	
+	public SerializableItemStack(Integer slot, ItemStack i) {
+		this.name = i.getType().name();
 		this.slot = slot;
 		this.amount = i.getAmount();
 		this.damage = i.getDurability();
+		this.customName = "none";
 		if(i.getItemMeta().hasDisplayName()) {
-			this.name = i.getItemMeta().getDisplayName();
+			this.customName = i.getItemMeta().getDisplayName();
 		}
 		if(i.getItemMeta().hasLore()) {
 			this.lore = i.getItemMeta().getLore();
 		}
 		this.enchantments = getEnchantments(i);
 	}
-
+	
 	/**
 	 * @return the slot
 	 */
@@ -64,8 +68,8 @@ public class BankSlot implements Serializable {
 	}
 	
 	public ItemStack toItemStack() {
-		if(this.id != null) {
-			ItemStack stack = new ItemStack(this.id, this.amount, this.damage);
+		if(!this.name.equalsIgnoreCase("none")) {
+			ItemStack stack = new ItemStack(Material.getMaterial(name), this.amount, this.damage);
 			if(!this.enchantments.isEmpty()) {
 				HashMap<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
 				for(SerializableEnchantment e : this.enchantments.keySet()) {
@@ -77,12 +81,12 @@ public class BankSlot implements Serializable {
 			if(!this.lore.isEmpty()) {
 				stackMeta.setLore(this.lore);
 			}
-			if(this.name != null && !this.name.isEmpty()) {
-				stackMeta.setDisplayName(this.name);
+			if(!this.customName.equals(null) && !this.customName.equals("none") && !this.customName.isEmpty()) {
+				stackMeta.setDisplayName(this.customName);
 			}
+			stack.setItemMeta(stackMeta);
 			return stack;
-		} else {
-			return null;
 		}
+		return null;
 	}
 }

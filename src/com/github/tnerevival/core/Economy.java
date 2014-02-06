@@ -1,115 +1,101 @@
 package com.github.tnerevival.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
-import com.github.tnerevival.TheNewEconomy;
-import com.github.tnerevival.core.accounts.Account;
-import com.github.tnerevival.core.areas.Area;
-import com.github.tnerevival.core.auctions.Auction;
-import com.github.tnerevival.core.companies.Company;
-import com.github.tnerevival.core.lottery.Lottery;
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.Bank;
 
-/**
- * The heart of TNE. This class holds all maps, instances, etc.
- * @author creatorfromhell
- *
- */
 public class Economy {
 	
-	/**
-	 * A HashMap holding all accounts for the economy.
-	 * Format: Player, Account File
-	 */
 	public HashMap<String, Account> accounts = new HashMap<String, Account>();
 	
-	/**
-	 * A HashMap holding all areas that have been created.
-	 * Format: Area Owner, Area File
-	 */
-	public HashMap<String, Area> areas = new HashMap<String, Area>();
+	public HashMap<String, Bank> banks = new HashMap<String, Bank>();
 	
-	/**
-	 * A HashMap holding every auction.
-	 * Format: Auction Starter, Auction File
-	 */
-	public HashMap<String, Auction> auctions = new HashMap<String, Auction>();
-	
-	/**
-	 * A HashMap holding every company created.
-	 * Format: Company Name, Company File
-	 */
-	public HashMap<String, Company> companies = new HashMap<String, Company>();
-	
-	/**
-	 * A HashMap holding every Lottery that is currently running.
-	 * We have this so we can have multiple lotteries at once.
-	 * Format: Lottery Name, Lottery File.
-	 */
-	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
-	
-	File accountsFile;
-	File areasFile;
-	File companiesFile;
-	
+	public String fileName = TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File");	
+
+	public double curFileVersion = 1.0;
+	public double fileVersion = 1.0;
+
 	public Economy() {
-		accountsFile = new File(TheNewEconomy.instance.getDataFolder(), "accounts.tne");
-		areasFile = new File(TheNewEconomy.instance.getDataFolder(), "areas.tne");
-		companiesFile = new File(TheNewEconomy.instance.getDataFolder(), "companies.tne");
-		initializeEconomy();
+		File file = new File(fileName);
+		if(!file.exists()) {
+			initiate();
+		} else {
+			loadData();
+		}
 	}
 	
-	/**
-	 * Used to initialize the economy if this is the first run.
-	 */
-	void initializeEconomy() {
-		if(!accountsFile.exists()) {
+	public void initiate() {
+		TNE.instance.getLogger().info("[TNE] Initiating economy...");
+		String db = TNE.instance.getConfig().getString("Core.Database.Type");
+		if(db.equalsIgnoreCase("flatfile")) {
+			File file = new File(fileName);
 			try {
-				accountsFile.createNewFile();
+				TNE.instance.getDataFolder().mkdir();
+				file.createNewFile();
+				TNE.instance.getLogger().info("[TNE] Economy has been initialized.");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else if(db.equalsIgnoreCase("mysql")) {
+			//TODO: Add MySQL Support.
 		}
-		if(!areasFile.exists()) {
-			try {
-				areasFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if(!companiesFile.exists()) {
-			try {
-				companiesFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		loadData();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void loadData() {
-		System.out.println("[TNE]Loading data....");
-		try {
-			accounts = EconomyIO.loadAccounts();
-			areas = EconomyIO.loadAreas();
-			companies = EconomyIO.loadCompanies();
-		} catch (FileNotFoundException e) {
-			System.out.println("[TNE] Data File(s) not found. Generating file...");
-		} catch (ClassNotFoundException e) {
-			System.out.println("[TNE] Data File(s) not found. Generating file...");
-		} catch (IOException e) {
-			e.printStackTrace();
+		TNE.instance.getLogger().info("[TNE] Loading economy data...");
+		String db = TNE.instance.getConfig().getString("Core.Database.Type");
+		if(db.equalsIgnoreCase("flatfile")) {
+			try {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
+				fileVersion = ois.readDouble();
+				accounts = (HashMap<String, Account>)ois.readObject();
+				banks = (HashMap<String, Bank>)ois.readObject();
+				ois.close();
+				TNE.instance.getLogger().info("[TNE] Economy data has been loaded.");
+				TNE.instance.getLogger().info("[TNE] Save File Version: " + fileVersion);
+			} catch (FileNotFoundException e) {
+				TNE.instance.getLogger().warning("[TNE] Economy data file not found...");
+			} catch (IOException e) {
+				e.printStackTrace();
+				TNE.instance.getLogger().warning("[TNE] Error writing economy data file not found...");
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else if(db.equalsIgnoreCase("mysql")) {
+			//TODO: Add MySQL Support.
 		}
-		System.out.println("[TNE]All data has been loaded.");
 	}
 	
 	public void saveData() {
-		System.out.println("[TNE]Saving data....");
-		EconomyIO.saveAccounts(accounts);
-		EconomyIO.saveAreas(areas);
-		EconomyIO.saveCompanies(companies);
-		System.out.println("[TNE]All data has been saved.");
+		TNE.instance.getLogger().info("[TNE] Saving economy data...");
+		String db = TNE.instance.getConfig().getString("Core.Database.Type");
+		if(db.equalsIgnoreCase("flatfile")) {
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+				oos.writeDouble(curFileVersion);
+				oos.writeObject(accounts);
+				oos.writeObject(banks);
+				oos.flush();
+			    oos.close();
+			    TNE.instance.getLogger().info("[TNE] Economy data has been saved.");
+			} catch (FileNotFoundException e) {
+				TNE.instance.getLogger().warning("[TNE] Economy data file not found...");
+			} catch (IOException e) {
+				e.printStackTrace();
+				TNE.instance.getLogger().warning("[TNE] Error writing economy data file not found...");
+			}
+		} else if(db.equalsIgnoreCase("mysql")) {
+			//TODO: Add MySQL Support.
+		}
 	}
 }

@@ -1,67 +1,49 @@
-package com.github.tnerevival.core.accounts;
+package com.github.tnerevival.account;
 
 import java.io.Serializable;
 
-import com.github.tnerevival.TheNewEconomy;
-import com.github.tnerevival.core.accounts.banks.Bank;
-import com.github.tnerevival.core.companies.Company;
+import com.github.tnerevival.TNE;
 
-/**
- * Class used to hold all economy-based information about a specific player on the server.
- * @author creatorfromhell
- *
- */
 public class Account implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * The account number for this account.
 	 * This number is unique to the account.
 	 */
-	int accountNumber = 0;
+	private int accountNumber = 0;
 	
 	/**
 	 * The name of the player who this account belongs to.
 	 */
-	String owner;
-	
-	/**
-	 * A special pin that can be set to help secure the account from any unwanted access.
-	 */
-	String pinCode;
-	
-	/**
-	 * The Bank associated with this account.
-	 */
-	Bank bank;
+	private String owner;
 	
 	/**
 	 * The name of the Company this player is associated with.
 	 */
-	String company;
+	private String company;
 	
 	/**
 	 * The account's balance of in-game virtual currency.
 	 */
-	double balance;
+	private double balance;
 	
 	/**
 	 * The status of this account in String form.
 	 */
-	String status;
+	private String status;
 	
 	/**
 	 * Creates a new Account for the specified Player using their username.
 	 * @param username
 	 */
 	public Account(String username) {
-		this.accountNumber = TheNewEconomy.instance.config.getInt("highest-accountnumber") + 1;
+		this.accountNumber = TNE.instance.manager.accounts.size() + 1;
 		this.owner = username;
-		this.pinCode = "default";
 		this.company = "none";
-		this.balance = TheNewEconomy.instance.config.getDouble("starting-balance");
-		this.status = "Normal";
-		TheNewEconomy.instance.config.set("highest-accountnumber", this.accountNumber);
+		this.balance = TNE.instance.getConfig().getDouble("Core.Balance");
+		this.status = "normal";
 	}
 
 	/**
@@ -93,49 +75,17 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * @return the pinCode
-	 */
-	public String getPinCode() {
-		return pinCode;
-	}
-
-	/**
-	 * @param pinCode the pinCode to set
-	 */
-	public void setPinCode(String pinCode) {
-		this.pinCode = pinCode;
-	}
-
-	/**
-	 * @return the bank
-	 */
-	public Bank getBank() {
-		return bank;
-	}
-
-	/**
-	 * @param bank the bank to set
-	 */
-	public void setBank(Bank bank) {
-		this.bank = bank;
-	}
-
-	/**
 	 * @return the company
 	 */
-	public Company getCompany() {
-		if(this.company.equals("none") || this.company.equals(null)) {
-			return null;
-		} else {
-			return TheNewEconomy.instance.eco.companies.get(company);
-		}
+	public String getCompany() {
+		return company;
 	}
 
 	/**
 	 * @param company the company to set
 	 */
-	public void setCompany(String name) {
-		this.company = name;
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	/**
