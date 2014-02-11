@@ -1,6 +1,6 @@
 #General Data
 name: TheNewEconomy
-version: 1.0
+version: 1.1
 description: The New Economy Bukkit Plugin.
 author: creatorfromhell
 
@@ -14,3 +14,41 @@ commands:
       description: Bank your items and money.
    money:
       description: The main command for money.
+
+permissions:
+   tne.*:
+      description: Gives access to all TNE commands
+      default: op
+      children:
+         tne.bank.help: true
+         tne.bank.balance: true
+         tne.bank.buy: true
+         tne.bank.create: true
+         tne.bank.deposit: true
+         tne.bank.price: true
+         tne.bank.use: true
+         tne.bank.withdraw: true
+         tne.money.help: true
+         tne.money.balance: true
+         tne.money.give: true
+         tne.money.pay: true
+
+   tne.bank.*:
+      description: Gives access to all TNE Bank Commands
+      children:
+         tne.bank.help: true
+         tne.bank.balance: true
+         tne.bank.buy: true
+         tne.bank.create: true
+         tne.bank.deposit: true
+         tne.bank.price: true
+         tne.bank.use: true
+         tne.bank.withdraw: true
+
+   tne.money.*:
+      description: Gives access to all TNE Money Commands
+      children:
+         tne.money.help: true
+         tne.money.balance: true
+         tne.money.give: true
+         tne.money.pay: true

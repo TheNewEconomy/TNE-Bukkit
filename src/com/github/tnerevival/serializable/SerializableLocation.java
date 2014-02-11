@@ -10,19 +10,23 @@ public class SerializableLocation implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private double x,y,z;
+	private double x, y, z;
     private String world;
-    public SerializableLocation(Location loc) {
-        x=loc.getX();
-        y=loc.getY();
-        z=loc.getZ();
-        world=loc.getWorld().getName();
+    
+    public SerializableLocation(Location location) {
+        x = location.getX();
+        y = location.getY();
+        z = location.getZ();
+        world = location.getWorld().getName();
     }
+    
     public Location getLocation() {
         World w = Bukkit.getWorld(world);
-        if(w==null)
+        if(w == null) {
             return null;
-        Location toRet = new Location(w,x,y,z);
-        return toRet;
+        }
+        
+        Location location = new Location(w, x, y, z);
+        return location;
     }
 }

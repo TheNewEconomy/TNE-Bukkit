@@ -14,7 +14,7 @@ public class MISCUtils {
 			return "" + dollars;
 		}
 	    int exp = (int) (Math.log(dollars) / Math.log(1000));
-	    return String.format("%.1f %c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
+	    return String.format("%.1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
 	}
 	
 	public static String formatAmount(double amount) {

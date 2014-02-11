@@ -1,12 +1,23 @@
 package com.github.tnerevival.account;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import com.github.tnerevival.TNE;
 
 public class Account implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * A HashMap of this account's balances from every world that the player has visited.
+	 */
+	private HashMap<String, Double> balances = new HashMap<String, Double>();
+	
+	/**
+	 * A HashMap of this account's banks from every world that the player has visited.
+	 */
+	private HashMap<String, Bank> banks = new HashMap<String, Bank>();
 	
 	/**
 	 * The account number for this account.
@@ -42,8 +53,8 @@ public class Account implements Serializable {
 		this.accountNumber = TNE.instance.manager.accounts.size() + 1;
 		this.owner = username;
 		this.company = "none";
-		this.balance = TNE.instance.getConfig().getDouble("Core.Balance");
 		this.status = "normal";
+		setBalance(TNE.instance.defaultWorld, TNE.instance.getConfig().getDouble("Core.Balance"));
 	}
 
 	/**
@@ -96,13 +107,6 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * @param balance the balance to set
-	 */
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
-
-	/**
 	 * @return the status
 	 */
 	public String getStatus() {
@@ -114,5 +118,37 @@ public class Account implements Serializable {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public HashMap<String, Double> getBalances() {
+		return balances;
+	}
+
+	public void setBalances(HashMap<String, Double> balances) {
+		this.balances = balances;
+	}
+	
+	public double getBalance(String world) {
+		return balances.get(world);
+	}
+	
+	public void setBalance(String world, Double balance) {
+		this.balances.put(world, balance);
+	}
+
+	public HashMap<String, Bank> getBanks() {
+		return banks;
+	}
+
+	public void setBanks(HashMap<String, Bank> banks) {
+		this.banks = banks;
+	}
+	
+	public void setBank(String world, Bank bank) {
+		this.banks.put(world, bank);
+	}
+	
+	public Bank getBank(String world) {
+		return this.banks.get(world);
 	}
 }

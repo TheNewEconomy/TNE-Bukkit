@@ -16,6 +16,8 @@ public class TNE extends JavaPlugin {
 	
 	public Economy manager;
 	
+	public String defaultWorld = getServer().getWorlds().get(0).getName();
+	
 	/*
 	 * Instances of the main runnables.
 	 */
@@ -41,7 +43,8 @@ public class TNE extends JavaPlugin {
 		getCommand("bank").setExecutor(new BankExecutor(this));
 		getCommand("money").setExecutor(new MoneyExecutor(this));
 		
-		getLogger().info("[TNE] TheNewEconomy v1.0 has been enabled!");
+		getLogger().info("[TNE] TheNewEconomy v1.1 has been enabled!");
+		getLogger().info("[TNE]Default World: " + defaultWorld);
 	}
 	
 	public void onDisable() {
@@ -49,7 +52,7 @@ public class TNE extends JavaPlugin {
 			autoSave.cancelTask();
 		}
 		manager.saveData();
-		getLogger().info("[TNE] TheNewEconomy v1.0 has been disabled!");
+		getLogger().info("[TNE] TheNewEconomy v1.1 has been disabled!");
 	}
 	
 	private void loadConfiguration(){

@@ -6,6 +6,10 @@
 
 
 Core:
+
+    #Whether or not players should have different balances, banks, etc in different worlds
+    Multiworld: false
+    
     #The initial balance for accounts.
     Balance: 200.0
 
@@ -24,6 +28,13 @@ Core:
 
     #All configurations relating to currency.
     Currency:
+
+        #Would you like to use an item as the currency?
+        ItemCurrency: false
+        
+        #If you want to use an item, which one?(Please use the name of the item)
+        #Example: GOLD_INGOT
+        ItemMajor: GOLD_INGOT
 
         #The name of the currency.
         Name:
@@ -60,16 +71,26 @@ Core:
             Enabled: false
 
             #The interest rate in decimal form.
-            Rate: 0.5
+            Rate: 0.2
 
             #The interval at which interest is gained(in seconds)
-            Interval: 300
+            Interval: 1800
+            
+            
+   #All configurations relating to worlds
+   World:
+       
+       #Whether or not changing worlds costs money
+       EnableChangeFee: false
+       
+       #How much it costs to change worlds if ChangeFee is enabled
+       ChangeFee: 5.0
 
 
     #All configurations relating to the database
     Database:
 
-        #The database type to use. Current options: FlatFile.
+        #The database type to use. Current options: FlatFile, MySQL.
         Type: FlatFile
 
         #All configurations relating to the FlatFile Database
@@ -77,6 +98,21 @@ Core:
 
             #The file to which all the data will be saved
             File: economy.tne
+            
+        #All configurations relating to the MySQL Database
+        MySQL:
+            
+            #The MySQL host
+            host: localhost
+            
+            #The MySQL database
+            database: TheNewEconomy
+            
+            #Your MySQL user's name
+            user: user
+            
+            #Your MySQL user's password
+            password: password
 
 
     #All configurations relating to mobs.

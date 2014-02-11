@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.PlayerUtils;
 
 public class BankExecutor implements CommandExecutor {
 
@@ -26,17 +26,20 @@ public class BankExecutor implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			String username = player.getDisplayName();
-			Account account = plugin.manager.accounts.get(username);
 			
 			if(cmd.getName().equalsIgnoreCase("bank")) {
 				if(plugin.getConfig().getBoolean("Core.Bank.Enabled")) {
 					if(args.length > 0) {
 						if(args[0].equalsIgnoreCase("help")) {
-							sendHelp(player);
+							if(player.hasPermission("tne.bank.help") || player.hasPermission("tne.bank.*")) {
+								sendHelp(player);
+							} else {
+								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+							}
 						} else if(args[0].equalsIgnoreCase("balance")) {
 							if(player.hasPermission("tne.bank.balance") || player.hasPermission("tne.bank.*")) {
-								if(PlayerUtils.hasBank(username)) {
-									player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(PlayerUtils.getBankBalance(username)) + " in your bank.");
+								if(BankUtils.hasBank(username)) {
+									player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(BankUtils.getBankBalance(username)) + " in your bank.");
 								} else {
 									player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 								}
@@ -45,14 +48,22 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("buy")) { 
 							if(player.hasPermission("tne.bank.buy") || player.hasPermission("tne.bank.*")) {
-								if(!PlayerUtils.hasBank(username)) {
-									if(account.getBalance() >= plugin.getConfig().getDouble("Core.Bank.Cost")) {
+								if(!BankUtils.hasBank(username)) {
+									if(!player.hasPermission("tne.bank.bypass") && !player.hasPermission("tne.bank.*")) {
+										if(AccountUtils.hasFunds(username, plugin.getConfig().getDouble("Core.Bank.Cost"))) {
+											Integer size = (TNE.instance.getConfig().getInt("Core.Bank.Size") >= 9 && TNE.instance.getConfig().getInt("Core.Bank.Size") <= 54) ? TNE.instance.getConfig().getInt("Core.Bank.Size") : 27;
+											AccountUtils.removeFunds(username, plugin.getConfig().getDouble("Core.Bank.Cost"));
+											Bank bank = new Bank(username, size);
+											plugin.manager.banks.put(username, bank);
+											player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
+										} else {
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(plugin.getConfig().getDouble("Core.Bank.Cost")) + ChatColor.DARK_RED + " to create a bank.");
+										}
+									} else {
 										Integer size = (TNE.instance.getConfig().getInt("Core.Bank.Size") >= 9 && TNE.instance.getConfig().getInt("Core.Bank.Size") <= 54) ? TNE.instance.getConfig().getInt("Core.Bank.Size") : 27;
-										PlayerUtils.removeFunds(username, plugin.getConfig().getDouble("Core.Bank.Cost"));
 										Bank bank = new Bank(username, size);
 										plugin.manager.banks.put(username, bank);
-									} else {
-										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + MISCUtils.formatBalance(plugin.getConfig().getDouble("Core.Bank.Cost")) + " to create a bank.");
+										player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 									}
 								} else {
 									player.sendMessage(ChatColor.RED + "You already have a bank!");
@@ -62,8 +73,8 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("deposit")) {
 							if(player.hasPermission("tne.bank.deposit") || player.hasPermission("tne.bank.*")) {
-								if(PlayerUtils.hasBank(username)) {
-									if(PlayerUtils.bankDeposit(username, Double.valueOf(args[1]))) {
+								if(BankUtils.hasBank(username)) {
+									if(BankUtils.bankDeposit(username, Double.valueOf(args[1]))) {
 										player.sendMessage(ChatColor.WHITE + "You have deposited " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " into your bank.");
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.DARK_RED + ".");
@@ -83,8 +94,8 @@ public class BankExecutor implements CommandExecutor {
 						} else if(args[0].equalsIgnoreCase("view")) {
 							if(player.hasPermission("tne.bank.use") || player.hasPermission("tne.bank.*")) {
 								if(plugin.getConfig().getBoolean("Core.Bank.Command")) {
-									if(PlayerUtils.hasBank(username)) {
-										Inventory bankInventory = PlayerUtils.getBank(username);
+									if(BankUtils.hasBank(username)) {
+										Inventory bankInventory = BankUtils.getBankInventory(username);
 										player.openInventory(bankInventory);
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
@@ -97,8 +108,8 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("withdraw")) {
 							if(player.hasPermission("tne.bank.withdraw") || player.hasPermission("tne.bank.*")) {
-								if(PlayerUtils.hasBank(username)) {
-									if(PlayerUtils.bankWithdraw(username, Double.valueOf(args[1]))) {
+								if(BankUtils.hasBank(username)) {
+									if(BankUtils.bankWithdraw(username, Double.valueOf(args[1]))) {
 										player.sendMessage(ChatColor.WHITE + "You have withdrawn " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " from your bank.");
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but your bank does not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + ".");

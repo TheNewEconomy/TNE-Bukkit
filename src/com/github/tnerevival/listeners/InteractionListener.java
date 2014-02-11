@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.PlayerUtils;
+import com.github.tnerevival.utils.BankUtils;
 
 public class InteractionListener implements Listener {
 	
@@ -75,8 +75,8 @@ public class InteractionListener implements Listener {
 				if (sign.getLine(0).contains("bank")) {
 					if(player.hasPermission("tne.bank.use") || player.hasPermission("tne.bank.*")) {
 						if(plugin.getConfig().getBoolean("Core.Bank.Sign")) {
-							if(PlayerUtils.hasBank(username)) {
-								Inventory bankInventory = PlayerUtils.getBank(username);
+							if(BankUtils.hasBank(username)) {
+								Inventory bankInventory = BankUtils.getBankInventory(username);
 								player.openInventory(bankInventory);
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
