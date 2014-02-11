@@ -1,0 +1,60 @@
+# The New Economy v2.0
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TNERevival/TheNewEconomy/
+
+
+#All configurations that can be made world-specific
+#To use, please check the Example world below
+Worlds:
+
+    #An example of what world-specific configurations are available
+    #Please note that you do NOT have to include all the following configurations as all
+    #world-specific configurations are optional
+    #Note: World name is case sensitive
+    Example:
+        
+        #How much it costs to enter this world if ChangeFee is enabled in the main configuration
+        ChangeFee: 10.0
+        
+        #The initial balance for this world if multiworld is enabled
+        Balance: 500.0
+        
+        #All configurations relating to currency.
+        Currency:
+
+            #Would you like to use an item as the currency?
+            ItemCurrency: false
+        
+            #If you want to use an item, which one?(Please use the name of the item)
+            #Example: GOLD_INGOT
+            ItemMajor: GOLD_INGOT
+
+            #The name of the currency.
+            Name:
+
+                #The singular name. Example: Dollar
+                Single: Dollar
+
+                #The plural name. Example: Dollars
+                Plural: Dollars
+        
+        #All configurations relating to banks.
+        Bank:
+
+            #Whether or not banks are enabled.
+            Enabled: true
+
+            #Whether or not players can use signs to access their banks.
+            Sign: false
+
+            #Whether or not players can use a command to access their banks.
+            Command: true
+
+            #How much is costs to open a bank account.
+            Cost: 20.0
+
+            #The number of rows a bank has.( minimum is 1, maximum is 6)
+            #1 row = 9 slots
+            Rows: 3

@@ -1,4 +1,4 @@
-# The New Economy v1.0
+# The New Economy v2.0
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
@@ -11,6 +11,7 @@ Core:
     Multiworld: false
     
     #The initial balance for accounts.
+    #Will be used if no world-specific configurations are found if multiworld is enabled
     Balance: 200.0
 
     #Whether or not to shorten money amounts
@@ -61,10 +62,11 @@ Core:
         #How much is costs to open a bank account.
         Cost: 20.0
 
-        #The number of slots a bank has.(Number of slots must be a multiplication of 9. Minimum is 9, and Maximum is 54)
-        Size: 27
+        #The number of rows a bank has.( minimum is 1, maximum is 6)
+        #1 row = 9 slots
+        Rows: 3
 
-        #All configuratiosn relating to bank gold interest.
+        #All configurations relating to bank gold interest.
         Interest:
 
             #Whether or not interest is enabled.
@@ -113,131 +115,3 @@ Core:
             
             #Your MySQL user's password
             password: password
-
-
-    #All configurations relating to mobs.
-    Mob:
-        
-        #Whether or not mobs drop money on death.
-        Enabled: true
-
-        #Reward configurations for individual mobs
-        Bat:
-            Enabled: true
-            Reward: 10.00
-
-        Blaze:
-            Enabled: true
-            Reward: 10.00
-
-        CaveSpider:
-            Enabled: true
-            Reward: 10.00
-
-        Chicken:
-            Enabled: true
-            Reward: 10.00
-
-        Cow:
-            Enabled: true
-            Reward: 10.00
-
-        Creeper:
-            Enabled: true
-            Reward: 10.00
-
-        EnderDragon:
-            Enabled: true
-            Reward: 10.00
-
-        Enderman:
-            Enabled: true
-            Reward: 10.00
-
-        Ghast:
-            Enabled: true
-            Reward: 10.00
-
-        Horse:
-            Enabled: true
-            Reward: 10.00
-
-        IronGolem:
-            Enabled: true
-            Reward: 10.00
-
-        MagmaCube:
-            Enabled: true
-            Reward: 10.00
-
-        Mooshroom:
-            Enabled: true
-            Reward: 10.00
-
-        Ocelot:
-            Enabled: true
-            Reward: 10.00
-
-        Pig:
-            Enabled: true
-            Reward: 10.00
-
-        Sheep:
-            Enabled: true
-            Reward: 10.00
-
-        Silverfish:
-            Enabled: true
-            Reward: 10.00
-
-        Skeleton:
-            Enabled: true
-            Reward: 10.00
-
-        Slime:
-            Enabled: true
-            Reward: 10.00
-
-        SnowGolem:
-            Enabled: true
-            Reward: 10.00
-
-        Spider:
-            Enabled: true
-            Reward: 10.00
-
-        Squid:
-            Enabled: true
-            Reward: 10.00
-
-        Villager:
-            Enabled: true
-            Reward: 10.00
-
-        Witch:
-            Enabled: true
-            Reward: 10.00
-
-        Wither:
-            Enabled: true
-            Reward: 10.00
-
-        WitherSkeleton:
-            Enabled: true
-            Reward: 10.00
-
-        Wolf:
-            Enabled: true
-            Reward: 10.00
-
-        Zombie:
-            Enabled: true
-            Reward: 10.00
-
-        ZombiePigman:
-            Enabled: true
-            Reward: 10.00
-
-        ZombieVillager:
-            Enabled: true
-            Reward: 10.00

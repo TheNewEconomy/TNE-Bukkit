@@ -49,12 +49,12 @@ public class FlatFileIO {
 	}
 	
 	public void initiate() {
-		TNE.instance.getLogger().info("[TNE] Initiating economy data file...");
+		TNE.instance.getLogger().info("Initiating economy data file...");
 		File file = new File(fileName);
 		try {
 			TNE.instance.getDataFolder().mkdir();
 			file.createNewFile();
-			TNE.instance.getLogger().info("[TNE] Economy data file has been initialized.");
+			TNE.instance.getLogger().info("Economy data file has been initialized.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -88,13 +88,13 @@ public class FlatFileIO {
 				eco.accounts = (HashMap<String, Account>)ois.readObject();
 				eco.banks = (HashMap<String, Bank>)ois.readObject();
 				ois.close();
-				TNE.instance.getLogger().info("[TNE] Economy data has been loaded.");
-				TNE.instance.getLogger().info("[TNE] Save File Version: " + fileVersion);
+				TNE.instance.getLogger().info("Economy data has been loaded.");
+				TNE.instance.getLogger().info("Save File Version: " + fileVersion);
 			} catch (FileNotFoundException e) {
-				TNE.instance.getLogger().warning("[TNE] Economy data file not found...");
+				TNE.instance.getLogger().warning("Economy data file not found...");
 			} catch (IOException e) {
 				e.printStackTrace();
-				TNE.instance.getLogger().warning("[TNE] Error writing economy data...");
+				TNE.instance.getLogger().warning("Error writing economy data...");
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -107,12 +107,12 @@ public class FlatFileIO {
 				oos.writeObject(eco.banks);
 				oos.flush();
 			    oos.close();
-			    TNE.instance.getLogger().info("[TNE] Economy data has been saved.");
+			    TNE.instance.getLogger().info("Economy data has been saved.");
 			} catch (FileNotFoundException e) {
-				TNE.instance.getLogger().warning("[TNE] Economy data file not found...");
+				TNE.instance.getLogger().warning("Economy data file not found...");
 			} catch (IOException e) {
 				e.printStackTrace();
-				TNE.instance.getLogger().warning("[TNE] Error writing economy data...");
+				TNE.instance.getLogger().warning("Error writing economy data...");
 			}
 		}
 	}
@@ -126,13 +126,13 @@ public class FlatFileIO {
 				fileVersion = ois.readDouble();
 				eco.accounts = (HashMap<String, Account>)ois.readObject();
 				ois.close();
-				TNE.instance.getLogger().info("[TNE] Economy data has been loaded.");
-				TNE.instance.getLogger().info("[TNE] Save File Version: " + fileVersion);
+				TNE.instance.getLogger().info("Economy data has been loaded.");
+				TNE.instance.getLogger().info("Save File Version: " + fileVersion);
 			} catch (FileNotFoundException e) {
-				TNE.instance.getLogger().warning("[TNE] Economy data file not found...");
+				TNE.instance.getLogger().warning("Economy data file not found...");
 			} catch (IOException e) {
 				e.printStackTrace();
-				TNE.instance.getLogger().warning("[TNE] Error writing economy data...");
+				TNE.instance.getLogger().warning("Error writing economy data...");
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -144,12 +144,12 @@ public class FlatFileIO {
 				oos.writeObject(eco.accounts);
 				oos.flush();
 			    oos.close();
-			    TNE.instance.getLogger().info("[TNE] Economy data has been saved.");
+			    TNE.instance.getLogger().info("Economy data has been saved.");
 			} catch (FileNotFoundException e) {
-				TNE.instance.getLogger().warning("[TNE] Economy data file not found...");
+				TNE.instance.getLogger().warning("Economy data file not found...");
 			} catch (IOException e) {
 				e.printStackTrace();
-				TNE.instance.getLogger().warning("[TNE] Error writing economy data...");
+				TNE.instance.getLogger().warning("Error writing economy data...");
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.PlayerUtils;
 
 public class BankExecutor implements CommandExecutor {
 
@@ -26,9 +27,10 @@ public class BankExecutor implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			String username = player.getDisplayName();
+			String world = PlayerUtils.getWorld(username);
 			
 			if(cmd.getName().equalsIgnoreCase("bank")) {
-				if(plugin.getConfig().getBoolean("Core.Bank.Enabled")) {
+				if(BankUtils.enabled(world)) {
 					if(args.length > 0) {
 						if(args[0].equalsIgnoreCase("help")) {
 							if(player.hasPermission("tne.bank.help") || player.hasPermission("tne.bank.*")) {
@@ -50,18 +52,16 @@ public class BankExecutor implements CommandExecutor {
 							if(player.hasPermission("tne.bank.buy") || player.hasPermission("tne.bank.*")) {
 								if(!BankUtils.hasBank(username)) {
 									if(!player.hasPermission("tne.bank.bypass") && !player.hasPermission("tne.bank.*")) {
-										if(AccountUtils.hasFunds(username, plugin.getConfig().getDouble("Core.Bank.Cost"))) {
-											Integer size = (TNE.instance.getConfig().getInt("Core.Bank.Size") >= 9 && TNE.instance.getConfig().getInt("Core.Bank.Size") <= 54) ? TNE.instance.getConfig().getInt("Core.Bank.Size") : 27;
-											AccountUtils.removeFunds(username, plugin.getConfig().getDouble("Core.Bank.Cost"));
-											Bank bank = new Bank(username, size);
+										if(AccountUtils.hasFunds(username, BankUtils.cost(world))) {
+											AccountUtils.removeFunds(username, BankUtils.cost(world));
+											Bank bank = new Bank(username, BankUtils.size(world));
 											plugin.manager.banks.put(username, bank);
 											player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 										} else {
-											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(plugin.getConfig().getDouble("Core.Bank.Cost")) + ChatColor.DARK_RED + " to create a bank.");
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(BankUtils.cost(world)) + ChatColor.DARK_RED + " to create a bank.");
 										}
 									} else {
-										Integer size = (TNE.instance.getConfig().getInt("Core.Bank.Size") >= 9 && TNE.instance.getConfig().getInt("Core.Bank.Size") <= 54) ? TNE.instance.getConfig().getInt("Core.Bank.Size") : 27;
-										Bank bank = new Bank(username, size);
+										Bank bank = new Bank(username, BankUtils.size(world));
 										plugin.manager.banks.put(username, bank);
 										player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 									}
@@ -87,13 +87,13 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("price")) { 
 							if(player.hasPermission("tne.bank.price") || player.hasPermission("tne.bank.*")) {
-								player.sendMessage(ChatColor.WHITE + "A bank is currently " + ChatColor.GOLD + MISCUtils.formatBalance(plugin.getConfig().getDouble("Core.Bank.Cost")) + ChatColor.WHITE + ".");
+								player.sendMessage(ChatColor.WHITE + "A bank is currently " + ChatColor.GOLD + MISCUtils.formatBalance(BankUtils.cost(world)) + ChatColor.WHITE + ".");
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("view")) {
 							if(player.hasPermission("tne.bank.use") || player.hasPermission("tne.bank.*")) {
-								if(plugin.getConfig().getBoolean("Core.Bank.Command")) {
+								if(BankUtils.command(world)) {
 									if(BankUtils.hasBank(username)) {
 										Inventory bankInventory = BankUtils.getBankInventory(username);
 										player.openInventory(bankInventory);
@@ -101,7 +101,7 @@ public class BankExecutor implements CommandExecutor {
 										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 									}
 								} else {
-									player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but accessing banks via /bank has been disabled!");
+									player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but accessing banks via /bank has been disabled in this world!");
 								}
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
@@ -125,7 +125,7 @@ public class BankExecutor implements CommandExecutor {
 						sendHelp(player);
 					}
 				} else {
-					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but banks are not enabled!");
+					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but banks are not enabled in this world!");
 				}
 			}
 		}

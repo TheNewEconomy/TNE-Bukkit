@@ -24,4 +24,12 @@ public class MISCUtils {
 	public static String getName(double amount) {
 		return (amount > 1.0)? TNE.instance.getConfig().getString("Core.Currency.Name.Plural") : TNE.instance.getConfig().getString("Core.Currency.Name.Singular");
 	}
+	
+	public static Boolean multiWorld() {
+		return TNE.instance.getConfig().getBoolean("Core.Multiworld");
+	}
+	
+	public static Boolean worldConfigExists(String node) {
+		return (TNE.instance.worldConfigurations.get(node) != null);
+	}
 }

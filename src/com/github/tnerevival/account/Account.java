@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.utils.AccountUtils;
 
 public class Account implements Serializable {
 	
@@ -54,7 +55,7 @@ public class Account implements Serializable {
 		this.owner = username;
 		this.company = "none";
 		this.status = "normal";
-		setBalance(TNE.instance.defaultWorld, TNE.instance.getConfig().getDouble("Core.Balance"));
+		setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
 	}
 
 	/**

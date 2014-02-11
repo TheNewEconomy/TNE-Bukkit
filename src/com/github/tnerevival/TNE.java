@@ -1,5 +1,10 @@
 package com.github.tnerevival;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.commands.BankExecutor;
@@ -13,8 +18,14 @@ import com.github.tnerevival.run.AutoSaver;
 public class TNE extends JavaPlugin {
 	
 	public static TNE instance;
-	
 	public Economy manager;
+	
+	// Files & Custom Configuration Files
+	File mobs;
+	File worlds;
+	
+	public FileConfiguration mobConfigurations;
+	public FileConfiguration worldConfigurations;
 	
 	public String defaultWorld = getServer().getWorlds().get(0).getName();
 	
@@ -31,7 +42,9 @@ public class TNE extends JavaPlugin {
 			autoSave.startTask(getConfig().getLong("Core.AutoSaver.Interval") * 20);
 		}
 		
-		loadConfiguration();
+		//Configurations
+		initializeConfigurations();
+		loadConfigurations();
 		
 
 		//Listeners
@@ -43,8 +56,8 @@ public class TNE extends JavaPlugin {
 		getCommand("bank").setExecutor(new BankExecutor(this));
 		getCommand("money").setExecutor(new MoneyExecutor(this));
 		
-		getLogger().info("[TNE] TheNewEconomy v1.1 has been enabled!");
-		getLogger().info("[TNE]Default World: " + defaultWorld);
+		getLogger().info("TheNewEconomy v2.0 has been enabled!");
+		getLogger().info("Default World: " + defaultWorld);
 	}
 	
 	public void onDisable() {
@@ -52,11 +65,30 @@ public class TNE extends JavaPlugin {
 			autoSave.cancelTask();
 		}
 		manager.saveData();
-		getLogger().info("[TNE] TheNewEconomy v1.1 has been disabled!");
+		getLogger().info("TheNewEconomy v2.0 has been disabled!");
 	}
 	
-	private void loadConfiguration(){
+	private void initializeConfigurations() {
+		mobs = new File(getDataFolder(), "mobs.yml");
+		worlds = new File(getDataFolder(), "worlds.yml");
+		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
+		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
+	}
+	
+	private void loadConfigurations() {
 	     getConfig().options().copyDefaults(true);
-	     saveConfig();
+	     mobConfigurations.options().copyDefaults(true);
+	     worldConfigurations.options().copyDefaults(true);
+	     saveConfigurations();
+	}
+	
+	private void saveConfigurations() {
+		saveConfig();
+		try {
+			mobConfigurations.save(mobs);
+			worldConfigurations.save(worlds);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

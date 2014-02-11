@@ -41,14 +41,14 @@ public class BankUtils {
 	}
 	
 	public static Boolean hasBank(String username) {
-		if(TNE.instance.getConfig().getBoolean("Core.Multiworld")) {
+		if(MISCUtils.multiWorld()) {
 			return AccountUtils.getAccount(username).getBanks().containsKey(PlayerUtils.getWorld(username));
 		}
 		return AccountUtils.getAccount(username).getBanks().containsKey(TNE.instance.defaultWorld);
 	}
 	
 	public static Bank getBank(String username) {
-		if(TNE.instance.getConfig().getBoolean("Core.Multiworld")) {
+		if(MISCUtils.multiWorld()) {
 			return AccountUtils.getAccount(username).getBank(PlayerUtils.getWorld(username));			
 		}
 		return AccountUtils.getAccount(username).getBank(TNE.instance.defaultWorld);
@@ -64,7 +64,7 @@ public class BankUtils {
 		} else {
 			Bank bank = getBank(username);
 			String gold = "Gold: " + MISCUtils.formatMoney(bank.getGold());
-			Inventory bankInventory = Bukkit.createInventory(null, TNE.instance.getConfig().getInt("Core.Bank.Size"), ChatColor.RED + username + " " + ChatColor.GOLD + gold);
+			Inventory bankInventory = Bukkit.createInventory(null, size(PlayerUtils.getWorld(username)), ChatColor.RED + username + " " + ChatColor.GOLD + gold);
 			if(bank.getItems().size() > 0) {
 				List<SerializableItemStack> items = bank.getItems();
 				
@@ -109,5 +109,55 @@ public class BankUtils {
 		} else {
 			return false;
 		}
+	}
+	
+	//Configuration-related Utils
+	
+	public static Integer size(String world) {
+		Integer rows = 3;
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Rows")) {
+				rows = TNE.instance.worldConfigurations.getInt("Worlds." + world + ".Bank.Rows");
+			}
+		} else {
+			rows = TNE.instance.getConfig().getInt("Core.Bank.Rows");
+		}
+		return (rows >= 1 && rows <= 6) ? (rows * 9) : 27;
+	}
+	
+	public static Boolean enabled(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Enabled")) {
+				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Enabled");
+			}
+		}
+		return TNE.instance.getConfig().getBoolean("Core.Bank.Enabled");
+	}
+	
+	public static Boolean command(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Command")) {
+				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Command");
+			}
+		}
+		return TNE.instance.getConfig().getBoolean("Core.Bank.Command");
+	}
+	
+	public static Double cost(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Cost")) {
+				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Cost");
+			}
+		}
+		return TNE.instance.getConfig().getDouble("Core.Bank.Cost");
+	}
+	
+	public static Boolean sign(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Sign")) {
+				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Sign");
+			}
+		}
+		return TNE.instance.getConfig().getBoolean("Core.Bank.Sign");
 	}
 }

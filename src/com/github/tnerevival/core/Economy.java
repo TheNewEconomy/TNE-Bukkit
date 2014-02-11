@@ -20,6 +20,7 @@ public class Economy {
 	public Economy() {
 		flatfile = new FlatFileIO(this);
 		mysql = new MySQLIO(this);
+		initiate();
 	}
 	
 	public void initiate() {
@@ -32,7 +33,7 @@ public class Economy {
 	}
 	
 	public void loadData() {
-		TNE.instance.getLogger().info("[TNE] Loading economy data...");
+		TNE.instance.getLogger().info("Loading economy data...");
 		String db = TNE.instance.getConfig().getString("Core.Database.Type");
 		if(db.equalsIgnoreCase("flatfile")) {
 			flatfile.loadData();
@@ -42,7 +43,7 @@ public class Economy {
 	}
 	
 	public void saveData() {
-		TNE.instance.getLogger().info("[TNE] Saving economy data...");
+		TNE.instance.getLogger().info("Saving economy data...");
 		String db = TNE.instance.getConfig().getString("Core.Database.Type");
 		if(db.equalsIgnoreCase("flatfile")) {
 			flatfile.saveData();

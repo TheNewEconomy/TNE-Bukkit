@@ -21,7 +21,7 @@ public class AccountUtils {
 	
 	public static Double getBalance(String username) {
 		Account account = getAccount(username);
-		if(TNE.instance.getConfig().getBoolean("Core.Multiworld")) {
+		if(MISCUtils.multiWorld()) {
 			return account.getBalance(PlayerUtils.getWorld(username));
 		}
 		return account.getBalance(TNE.instance.defaultWorld);
@@ -29,8 +29,9 @@ public class AccountUtils {
 	
 	public static void setBalance(String username, Double balance) {
 		Account account = getAccount(username);
-		if(TNE.instance.getConfig().getBoolean("Core.Multiworld")) {
+		if(MISCUtils.multiWorld()) {
 			account.setBalance(PlayerUtils.getWorld(username), balance);
+			return;
 		}
 		account.setBalance(TNE.instance.defaultWorld, balance);
 	}
@@ -38,7 +39,7 @@ public class AccountUtils {
 	public static void initializeWorldData(String username, String world) {
 		Account account = getAccount(username);
 		if(!account.getBalances().containsKey(world)) {
-			account.setBalance(world, TNE.instance.getConfig().getDouble("Core.Balance"));
+			account.setBalance(world, getInitialBalance(world));
 		}
 	}
 	
@@ -73,5 +74,25 @@ public class AccountUtils {
 		} else {
 			return false;
 		}
+	}
+	
+	//Configuration-related Utils
+	
+	public static Double getInitialBalance(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Balance")) {
+				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Balance");
+			}
+		}
+		return TNE.instance.getConfig().getDouble("Core.Balance");
+	}
+	
+	public static Double getWorldCost(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".balance")) {
+				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee");
+			}
+		}
+		return TNE.instance.getConfig().getDouble("Core.World.ChangeFee");
 	}
 }

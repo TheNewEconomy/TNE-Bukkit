@@ -22,6 +22,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.PlayerUtils;
 
 public class InteractionListener implements Listener {
 	
@@ -74,7 +75,7 @@ public class InteractionListener implements Listener {
 				Sign sign = (Sign) block.getState();
 				if (sign.getLine(0).contains("bank")) {
 					if(player.hasPermission("tne.bank.use") || player.hasPermission("tne.bank.*")) {
-						if(plugin.getConfig().getBoolean("Core.Bank.Sign")) {
+						if(BankUtils.sign(PlayerUtils.getWorld(username))) {
 							if(BankUtils.hasBank(username)) {
 								Inventory bankInventory = BankUtils.getBankInventory(username);
 								player.openInventory(bankInventory);
@@ -82,7 +83,7 @@ public class InteractionListener implements Listener {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 							}
 						} else {
-							player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but accessing banks via signs has been disabled!");
+							player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but accessing banks via signs has been disabled in this world!");
 						}
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");

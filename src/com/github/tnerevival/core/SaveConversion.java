@@ -15,8 +15,9 @@ public class SaveConversion {
 			Entry<String, Account> entry = it.next();
 			
 			if(TNE.instance.manager.banks.containsKey(entry.getKey())) {
-				
+				entry.getValue().setBank(TNE.instance.defaultWorld, TNE.instance.manager.banks.get(entry.getKey()));
 			}
+			entry.getValue().setBalance(TNE.instance.defaultWorld, entry.getValue().getBalance());
 		}
 	}
 }

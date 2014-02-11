@@ -26,12 +26,13 @@ public class WorldListener implements Listener {
 		
 		if(TNE.instance.getConfig().getBoolean("Core.World.EnableChangeFee")) {
 			if(!player.hasPermission("tne.world.bypass") && !player.hasPermission("tne.world.*")) {
-				if(AccountUtils.hasFunds(username, TNE.instance.getConfig().getDouble("Core.World.ChangeFee"))) {
-					AccountUtils.removeFunds(username, TNE.instance.getConfig().getDouble("Core.World.ChangeFee"));
+				if(AccountUtils.hasFunds(username, AccountUtils.getWorldCost(world))) {
+					AccountUtils.removeFunds(username, AccountUtils.getWorldCost(world));
 					AccountUtils.initializeWorldData(username, world);
+					player.sendMessage(ChatColor.DARK_RED + "You have been charged " + ChatColor.GOLD + MISCUtils.formatBalance(AccountUtils.getWorldCost(world)) + ChatColor.DARK_RED + " for changing worlds.");
 				} else {
 					player.teleport(event.getFrom().getSpawnLocation());
-					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(plugin.getConfig().getDouble("Core.Bank.Cost")) + ChatColor.DARK_RED + " to change worlds.");
+					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(AccountUtils.getWorldCost(world)) + ChatColor.DARK_RED + " to change worlds.");
 				}
 			} else {
 				AccountUtils.initializeWorldData(username, world);
