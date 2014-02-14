@@ -47,7 +47,7 @@ public class MoneyExecutor implements CommandExecutor {
 										player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");
 									}
 								} else {
-									sendHelp(player);
+									player.sendMessage(ChatColor.DARK_RED + "Correct usage is /money give <player> <amount>");
 								}
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
@@ -66,7 +66,7 @@ public class MoneyExecutor implements CommandExecutor {
 									}
 									
 								} else {
-									sendHelp(player);
+									player.sendMessage(ChatColor.DARK_RED + "Correct usage is /money pay <player> <amount>");
 								}
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");

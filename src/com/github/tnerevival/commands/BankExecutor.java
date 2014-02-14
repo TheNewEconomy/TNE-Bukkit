@@ -73,14 +73,18 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("deposit")) {
 							if(player.hasPermission("tne.bank.deposit") || player.hasPermission("tne.bank.*")) {
-								if(BankUtils.hasBank(username)) {
-									if(BankUtils.bankDeposit(username, Double.valueOf(args[1]))) {
-										player.sendMessage(ChatColor.WHITE + "You have deposited " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " into your bank.");
+								if(args.length == 2) {
+									if(BankUtils.hasBank(username)) {
+										if(BankUtils.bankDeposit(username, Double.valueOf(args[1]))) {
+											player.sendMessage(ChatColor.WHITE + "You have deposited " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " into your bank.");
+										} else {
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.DARK_RED + ".");
+										}
 									} else {
-										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.DARK_RED + ".");
+										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 									}
 								} else {
-									player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+									player.sendMessage(ChatColor.DARK_RED + "Correct usage is /bank deposit <amount>");
 								}
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
@@ -108,14 +112,18 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("withdraw")) {
 							if(player.hasPermission("tne.bank.withdraw") || player.hasPermission("tne.bank.*")) {
-								if(BankUtils.hasBank(username)) {
-									if(BankUtils.bankWithdraw(username, Double.valueOf(args[1]))) {
-										player.sendMessage(ChatColor.WHITE + "You have withdrawn " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " from your bank.");
+								if(args.length == 2) {
+									if(BankUtils.hasBank(username)) {
+										if(BankUtils.bankWithdraw(username, Double.valueOf(args[1]))) {
+											player.sendMessage(ChatColor.WHITE + "You have withdrawn " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " from your bank.");
+										} else {
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but your bank does not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + ".");
+										}
 									} else {
-										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but your bank does not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + ".");
+										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 									}
 								} else {
-									player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+									player.sendMessage(ChatColor.DARK_RED + "Correct usage is /bank withdraw <amount>");
 								}
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
