@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.PlayerUtils;
 
 public class MoneyExecutor implements CommandExecutor {
 
@@ -23,6 +24,7 @@ public class MoneyExecutor implements CommandExecutor {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				String username = player.getDisplayName();
+				String world = PlayerUtils.getWorld(username);
 				
 				if(cmd.getName().equalsIgnoreCase("money")) {
 					if(args.length > 0) {
@@ -34,7 +36,7 @@ public class MoneyExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("balance")) {
 							if(player.hasPermission("tne.money.balance") || player.hasPermission("tne.money.*")) {
-								player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(AccountUtils.getBalance(username)) + ChatColor.WHITE + " on you.");
+								player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(world, AccountUtils.getBalance(username)) + ChatColor.WHITE + " on you.");
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
@@ -42,7 +44,7 @@ public class MoneyExecutor implements CommandExecutor {
 							if(player.hasPermission("tne.money.give") || player.hasPermission("tne.money.*")) {
 								if(args.length == 3) {
 									if(AccountUtils.giveMoney(args[1], Double.valueOf(args[2]))) {
-										player.sendMessage(ChatColor.WHITE + "Successfully gave " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
+										player.sendMessage(ChatColor.WHITE + "Successfully gave " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");
 									}
@@ -57,12 +59,12 @@ public class MoneyExecutor implements CommandExecutor {
 								if(args.length == 3) {
 									if(AccountUtils.hasFunds(username, Double.valueOf(args[2]))) {
 										if(AccountUtils.payMoney(username, args[1], Double.valueOf(args[2]))) {
-											player.sendMessage(ChatColor.WHITE + "Successfully paid " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
+											player.sendMessage(ChatColor.WHITE + "Successfully paid " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
 										} else {
 											player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");
 										}
 									} else {
-										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[2])) + ChatColor.WHITE + ".");
+										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");
 									}
 									
 								} else {

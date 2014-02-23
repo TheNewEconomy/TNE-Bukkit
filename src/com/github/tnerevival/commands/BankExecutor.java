@@ -41,7 +41,7 @@ public class BankExecutor implements CommandExecutor {
 						} else if(args[0].equalsIgnoreCase("balance")) {
 							if(player.hasPermission("tne.bank.balance") || player.hasPermission("tne.bank.*")) {
 								if(BankUtils.hasBank(username)) {
-									player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(BankUtils.getBankBalance(username)) + " in your bank.");
+									player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(world, BankUtils.getBankBalance(username)) + " in your bank.");
 								} else {
 									player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 								}
@@ -58,7 +58,7 @@ public class BankExecutor implements CommandExecutor {
 											plugin.manager.banks.put(username, bank);
 											player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 										} else {
-											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(BankUtils.cost(world)) + ChatColor.DARK_RED + " to create a bank.");
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(world, BankUtils.cost(world)) + ChatColor.DARK_RED + " to create a bank.");
 										}
 									} else {
 										Bank bank = new Bank(username, BankUtils.size(world));
@@ -76,9 +76,9 @@ public class BankExecutor implements CommandExecutor {
 								if(args.length == 2) {
 									if(BankUtils.hasBank(username)) {
 										if(BankUtils.bankDeposit(username, Double.valueOf(args[1]))) {
-											player.sendMessage(ChatColor.WHITE + "You have deposited " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " into your bank.");
+											player.sendMessage(ChatColor.WHITE + "You have deposited " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[1])) + ChatColor.WHITE + " into your bank.");
 										} else {
-											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.DARK_RED + ".");
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[1])) + ChatColor.DARK_RED + ".");
 										}
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
@@ -91,7 +91,7 @@ public class BankExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("price")) { 
 							if(player.hasPermission("tne.bank.price") || player.hasPermission("tne.bank.*")) {
-								player.sendMessage(ChatColor.WHITE + "A bank is currently " + ChatColor.GOLD + MISCUtils.formatBalance(BankUtils.cost(world)) + ChatColor.WHITE + ".");
+								player.sendMessage(ChatColor.WHITE + "A bank is currently " + ChatColor.GOLD + MISCUtils.formatBalance(world, BankUtils.cost(world)) + ChatColor.WHITE + ".");
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
@@ -115,9 +115,9 @@ public class BankExecutor implements CommandExecutor {
 								if(args.length == 2) {
 									if(BankUtils.hasBank(username)) {
 										if(BankUtils.bankWithdraw(username, Double.valueOf(args[1]))) {
-											player.sendMessage(ChatColor.WHITE + "You have withdrawn " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + " from your bank.");
+											player.sendMessage(ChatColor.WHITE + "You have withdrawn " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[1])) + ChatColor.WHITE + " from your bank.");
 										} else {
-											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but your bank does not have " + ChatColor.GOLD + MISCUtils.formatBalance(Double.valueOf(args[1])) + ChatColor.WHITE + ".");
+											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but your bank does not have " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[1])) + ChatColor.WHITE + ".");
 										}
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");

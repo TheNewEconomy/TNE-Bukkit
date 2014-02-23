@@ -59,6 +59,20 @@ public class Bank implements Serializable {
 	}
 
 	/**
+	 * @return the pin
+	 */
+	public String getPin() {
+		return pin;
+	}
+
+	/**
+	 * @param pin the pin to set
+	 */
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
+
+	/**
 	 * @return the size
 	 */
 	public Integer getSize() {
@@ -84,5 +98,18 @@ public class Bank implements Serializable {
 	 */
 	public void setGold(Double gold) {
 		this.gold = gold;
+	}
+	
+	public String itemsToString() {
+		String toReturn = "";
+		
+		for(SerializableItemStack item : items) {
+			toReturn += item.toString() + "*";
+		}
+		return toReturn;
+	}
+	
+	public String toString() {
+		return owner + ":" + pin + ":" + size + ":" + gold + ":" + itemsToString();
 	}
 }

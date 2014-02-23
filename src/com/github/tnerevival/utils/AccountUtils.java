@@ -22,24 +22,25 @@ public class AccountUtils {
 	public static Double getBalance(String username) {
 		Account account = getAccount(username);
 		if(MISCUtils.multiWorld()) {
-			return account.getBalance(PlayerUtils.getWorld(username));
+			//return account.getBalance(PlayerUtils.getWorld(username));
 		}
-		return account.getBalance(TNE.instance.defaultWorld);
+		//return account.getBalance(TNE.instance.defaultWorld);
+		return 1.0;
 	}
 	
 	public static void setBalance(String username, Double balance) {
 		Account account = getAccount(username);
 		if(MISCUtils.multiWorld()) {
-			account.setBalance(PlayerUtils.getWorld(username), balance);
+			//account.setBalance(PlayerUtils.getWorld(username), balance);
 			return;
 		}
-		account.setBalance(TNE.instance.defaultWorld, balance);
+		//account.setBalance(TNE.instance.defaultWorld, balance);
 	}
 	
 	public static void initializeWorldData(String username, String world) {
 		Account account = getAccount(username);
 		if(!account.getBalances().containsKey(world)) {
-			account.setBalance(world, getInitialBalance(world));
+			//account.setBalance(world, getInitialBalance(world));
 		}
 	}
 	
@@ -58,7 +59,7 @@ public class AccountUtils {
 	public static Boolean giveMoney(String username, Double amount) {
 		if(exists(username)) {
 			addFunds(username, amount);
-			if(Bukkit.getPlayer(username) != null) Bukkit.getPlayer(username).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(amount) + ChatColor.WHITE + ".");
+			if(Bukkit.getPlayer(username) != null) Bukkit.getPlayer(username).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(PlayerUtils.getWorld(username), amount) + ChatColor.WHITE + ".");
 			return true;
 		} else {
 			return false;
@@ -69,7 +70,7 @@ public class AccountUtils {
 		if(exists(to)) {
 			removeFunds(from, amount);
 			addFunds(to, amount);
-			if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(ChatColor.WHITE + "You were paid " + ChatColor.GOLD + MISCUtils.formatBalance(amount) + ChatColor.WHITE + " by " + from + ".");
+			if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(ChatColor.WHITE + "You were paid " + ChatColor.GOLD + MISCUtils.formatBalance(PlayerUtils.getWorld(from), amount) + ChatColor.WHITE + " by " + from + ".");
 			return true;
 		} else {
 			return false;

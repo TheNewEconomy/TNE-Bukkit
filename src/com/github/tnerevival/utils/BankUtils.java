@@ -1,16 +1,20 @@
 package com.github.tnerevival.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.serializable.SerializableEnchantment;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class BankUtils {
@@ -56,6 +60,43 @@ public class BankUtils {
 	
 	public static Bank getBank(String username, String world) {
 		return AccountUtils.getAccount(username).getBank(world);
+	}
+	
+	public static Bank fromString(String bank) {
+		String[] variables = bank.split(":");
+		String[] itemStrings = variables[4].split("*");
+		Bank b = new Bank(variables[0], Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
+		b.setPin(variables[1]);
+		
+		List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();
+		for(int i = 0; i < itemStrings.length; i++) {
+			String[] itemVariables = itemStrings[i].split(";");
+			String[] loreStrings = itemVariables[5].split("~");
+			String[] enchantmentStrings = itemVariables[6].split("~");
+			SerializableItemStack item = new SerializableItemStack(Integer.parseInt(itemVariables[1]));
+			HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
+			List<String> lore = new ArrayList<String>();
+			//ItemVariables
+			item.setName(itemVariables[0]);
+			item.setAmount(Integer.parseInt(itemVariables[2]));
+			item.setDamage(Short.parseShort(itemVariables[3]));
+			item.setCustomName(itemVariables[4]);
+			
+			for(int l = 0; l < loreStrings.length; l++) {
+				lore.add(loreStrings[l]);
+			}
+			item.setLore(lore);
+			
+			for(int e = 0; e < enchantmentStrings.length; e++) {
+				String[] enchantmentVariables = enchantmentStrings[e].split(",");
+				enchantments.put(new SerializableEnchantment(Enchantment.getByName(enchantmentVariables[0])), Integer.parseInt(enchantmentVariables[1]));
+			}
+			item.setEnchantments(enchantments);
+			items.add(item);
+		}
+		b.setItems(items);
+		
+		return b;
 	}
 	
 	public static Inventory getBankInventory(String username) {
@@ -159,5 +200,14 @@ public class BankUtils {
 			}
 		}
 		return TNE.instance.getConfig().getBoolean("Core.Bank.Sign");
+	}
+	
+	public static Boolean npc(String world) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.NPC")) {
+				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.NPC");
+			}
+		}
+		return TNE.instance.getConfig().getBoolean("Core.Bank.NPC");
 	}
 }

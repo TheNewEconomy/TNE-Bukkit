@@ -14,7 +14,7 @@ public class AutoSaver extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		plugin.manager.saveData();
+		plugin.manager.saveManager.save();
 	}
 	
 	public void startTask(Long time) {

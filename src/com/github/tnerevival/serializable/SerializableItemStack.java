@@ -3,6 +3,7 @@ package com.github.tnerevival.serializable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,49 @@ public class SerializableItemStack implements Serializable {
 	}
 	
 	/**
+	 * @return the enchantments
+	 */
+	public HashMap<SerializableEnchantment, Integer> getEnchantments() {
+		return enchantments;
+	}
+
+	/**
+	 * @param enchantments the enchantments to set
+	 */
+	public void setEnchantments(
+			HashMap<SerializableEnchantment, Integer> enchantments) {
+		this.enchantments = enchantments;
+	}
+
+	/**
+	 * @return the lore
+	 */
+	public List<String> getLore() {
+		return lore;
+	}
+
+	/**
+	 * @param lore the lore to set
+	 */
+	public void setLore(List<String> lore) {
+		this.lore = lore;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
 	 * @return the slot
 	 */
 	public Integer getSlot() {
@@ -56,6 +100,74 @@ public class SerializableItemStack implements Serializable {
 	 */
 	public void setSlot(Integer slot) {
 		this.slot = slot;
+	}
+
+	/**
+	 * @return the amount
+	 */
+	public Integer getAmount() {
+		return amount;
+	}
+
+	/**
+	 * @param amount the amount to set
+	 */
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	/**
+	 * @return the damage
+	 */
+	public Short getDamage() {
+		return damage;
+	}
+
+	/**
+	 * @param damage the damage to set
+	 */
+	public void setDamage(Short damage) {
+		this.damage = damage;
+	}
+
+	/**
+	 * @return the customName
+	 */
+	public String getCustomName() {
+		return customName;
+	}
+
+	/**
+	 * @param customName the customName to set
+	 */
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}
+
+	public String enchantmentsToString() {
+		String toReturn = "";
+		Iterator<java.util.Map.Entry<SerializableEnchantment, Integer>> it = enchantments.entrySet().iterator();
+		
+		while(it.hasNext()) {
+			java.util.Map.Entry<SerializableEnchantment, Integer> entry = it.next();
+			
+			toReturn += entry.getKey().name + "," + entry.getValue() + "~";
+		}
+		
+		return toReturn;
+	}
+	
+	public String loreToString() {
+		String toReturn = "";
+		
+		for(String s : lore) {
+			toReturn += s + "~";
+		}
+		return toReturn;
+	}
+	
+	public String toString() {
+		return name + ";" + slot + ";" + amount + ";" + damage + ";" + customName + ";" + loreToString() + ";" + enchantmentsToString();
 	}
 
 	HashMap<SerializableEnchantment, Integer> getEnchantments(ItemStack i) {

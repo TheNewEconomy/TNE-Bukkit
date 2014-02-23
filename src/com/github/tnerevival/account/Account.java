@@ -13,7 +13,7 @@ public class Account implements Serializable {
 	/**
 	 * A HashMap of this account's balances from every world that the player has visited.
 	 */
-	private HashMap<String, Double> balances = new HashMap<String, Double>();
+	private HashMap<String, HashMap<String, Double>> balances = new HashMap<String, HashMap<String, Double>>();
 	
 	/**
 	 * A HashMap of this account's banks from every world that the player has visited.
@@ -55,7 +55,7 @@ public class Account implements Serializable {
 		this.owner = username;
 		this.company = "none";
 		this.status = "normal";
-		setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+		setBalance(TNE.instance.defaultWorld, "default", AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
 	}
 
 	/**
@@ -121,20 +121,28 @@ public class Account implements Serializable {
 		this.status = status;
 	}
 
-	public HashMap<String, Double> getBalances() {
+	public HashMap<String, HashMap<String, Double>> getBalances() {
 		return balances;
 	}
 
-	public void setBalances(HashMap<String, Double> balances) {
+	public void setBalances(HashMap<String, HashMap<String, Double>> balances) {
 		this.balances = balances;
 	}
 	
-	public double getBalance(String world) {
+	public HashMap<String, Double> getBalances(String world) {
 		return balances.get(world);
 	}
 	
-	public void setBalance(String world, Double balance) {
+	public void setBalances(String world, HashMap<String, Double> balance) {
 		this.balances.put(world, balance);
+	}
+	
+	public Double getBalance(String world, String currency) {
+		return balances.get(world).get(currency);
+	}
+	
+	public void setBalance(String world, String currency, Double balance) {
+		this.balances.get(world).put(currency, balance);
 	}
 
 	public HashMap<String, Bank> getBanks() {

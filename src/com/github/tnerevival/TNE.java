@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.commands.BankExecutor;
+import com.github.tnerevival.commands.CoreExecutor;
 import com.github.tnerevival.commands.MoneyExecutor;
 import com.github.tnerevival.core.Economy;
 import com.github.tnerevival.listeners.ConnectionListener;
@@ -21,9 +22,11 @@ public class TNE extends JavaPlugin {
 	public Economy manager;
 	
 	// Files & Custom Configuration Files
+	File currency;
 	File mobs;
 	File worlds;
 	
+	public FileConfiguration currencyConfigurations;
 	public FileConfiguration mobConfigurations;
 	public FileConfiguration worldConfigurations;
 	
@@ -55,6 +58,7 @@ public class TNE extends JavaPlugin {
 		//Commands
 		getCommand("bank").setExecutor(new BankExecutor(this));
 		getCommand("money").setExecutor(new MoneyExecutor(this));
+		getCommand("theneweconomy").setExecutor(new CoreExecutor(this));
 		
 		getLogger().info("TheNewEconomy v2.0 has been enabled!");
 		getLogger().info("Default World: " + defaultWorld);
@@ -64,27 +68,35 @@ public class TNE extends JavaPlugin {
 		if(getConfig().getBoolean("Core.AutoSaver.Enabled")) {
 			autoSave.cancelTask();
 		}
-		manager.saveData();
+		manager.saveManager.save();
 		getLogger().info("TheNewEconomy v2.0 has been disabled!");
 	}
 	
 	private void initializeConfigurations() {
+		currency = new File(getDataFolder(), "currency.yml");
 		mobs = new File(getDataFolder(), "mobs.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
+		currencyConfigurations = YamlConfiguration.loadConfiguration(currency);
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
 	}
 	
 	private void loadConfigurations() {
 	     getConfig().options().copyDefaults(true);
+	     currencyConfigurations.options().copyDefaults(true);
 	     mobConfigurations.options().copyDefaults(true);
 	     worldConfigurations.options().copyDefaults(true);
 	     saveConfigurations();
 	}
 	
+	public void reloadConfigurations() {
+		reloadConfig();
+	}
+	
 	private void saveConfigurations() {
 		saveConfig();
 		try {
+			currencyConfigurations.save(currency);
 			mobConfigurations.save(mobs);
 			worldConfigurations.save(worlds);
 		} catch (IOException e) {
