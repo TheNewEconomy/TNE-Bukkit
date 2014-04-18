@@ -1,6 +1,8 @@
 package com.github.tnerevival.utils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.serializable.SerializableEnchantment;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class MISCUtils {
@@ -148,6 +151,40 @@ public class MISCUtils {
 			}
 			return (Integer.valueOf(split[0]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular");
 		}
+	}
+	
+	//ItemStack Utils
+	public static String itemstackToString(SerializableItemStack stack) {
+		return stack.getName() + ";" + stack.getSlot() + ";" + stack.getAmount() + ";" + stack.getDamage() + ";" + stack.getCustomName() + ";" + stack.loreToString() + ";" + stack.enchantmentsToString();
+	}
+	
+	public static SerializableItemStack itemstackFromString(String itemString) {
+		String[] variables = itemString.split("\\;");
+		
+		SerializableItemStack stack = new SerializableItemStack(Integer.valueOf(variables[1]));
+		stack.setName(variables[0]);
+		stack.setAmount(Integer.valueOf(variables[2]));
+		stack.setDamage(Short.valueOf(variables[3]));
+		if(variables[4] != null && !variables[4].equals("TNENOSTRINGVALUE")) {
+			stack.setCustomName(variables[4]);
+		}
+		
+		if(variables[5] != null && !variables[5].equals("TNENOSTRINGVALUE")) {
+			stack.setLore(Arrays.asList(variables[5].split("\\~")));
+		}
+		
+		if(variables[6] != null && !variables[6].equals("TNENOSTRINGVALUE")) {
+			HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
+			String[] enchantmentsArray = variables[6].split("\\~");
+			
+			for(String s : enchantmentsArray) {
+				String[] enchantmentVariables = s.split("\\,");
+				
+				enchantments.put(new SerializableEnchantment(enchantmentVariables[0]), Integer.valueOf(enchantmentVariables[1]));
+			}
+			stack.setEnchantments(enchantments);
+		}
+		return stack;
 	}
 	
 	//World Utils

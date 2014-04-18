@@ -1,20 +1,17 @@
 package com.github.tnerevival.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
-import com.github.tnerevival.serializable.SerializableEnchantment;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class BankUtils {
@@ -73,50 +70,20 @@ public class BankUtils {
 		return AccountUtils.getAccount(username).getBank(world);
 	}
 	
-	public static Bank fromString(String bank) {
-		String[] variables = bank.split(":");
-		String[] itemStrings = variables[4].split("\\*");
-		Bank b = new Bank(variables[0], Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
-		b.setPin(variables[1]);
-		
+	public static Bank fromString(String bankString) {
+		String[] variables = bankString.split("\\:");
+		Bank bank = new Bank(variables[0], Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
+		bank.setPin(variables[1]);
 		List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();
-		for(int i = 0; i < itemStrings.length; i++) {
-			if(itemStrings[i].replaceAll(";;", ";none;").split(";").length == 6) {
-				itemStrings[i] += ";none";
-			}
-			String[] itemVariables = itemStrings[i].replaceAll(";;", ";none;").split(";");
-			String[] loreStrings = (itemVariables[5] != "none") ? itemVariables[5].split("~") : new String[]{};
-			String[] enchantmentStrings = (itemVariables[6] != "none") ? itemVariables[6].split("~") : new String[]{};
-			SerializableItemStack item = new SerializableItemStack(Integer.parseInt(itemVariables[1]));
-			HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
-			List<String> lore = new ArrayList<String>();
-			//ItemVariables
-			item.setName(itemVariables[0]);
-			item.setAmount(Integer.parseInt(itemVariables[2]));
-			item.setDamage(Short.parseShort(itemVariables[3]));
-			item.setCustomName(itemVariables[4]);
-			
-			for(int l = 0; l < loreStrings.length; l++) {
-				if(loreStrings[l] != "none") {
-					lore.add(loreStrings[l]);
-				}
-			}
-			item.setLore(lore);
-			
-			if(enchantmentStrings != null && enchantmentStrings.length > 0) {
-				for(int e = 0; e < enchantmentStrings.length; e++) {
-					String[] enchantmentVariables = enchantmentStrings[e].split(",");
-					if(Enchantment.getByName(enchantmentVariables[0]) != null) {
-						enchantments.put(new SerializableEnchantment(Enchantment.getByName(enchantmentVariables[0])), Integer.parseInt(enchantmentVariables[1]));
-					}
-				}
-				item.setEnchantments(enchantments);
-			}
-			items.add(item);
-		}
-		b.setItems(items);
 		
-		return b;
+		if(variables[4] != "TNENOSTRINGVALUE") {
+			String[] itemStrings = variables[4].split("\\*");
+			for(String s : itemStrings) {
+				items.add(MISCUtils.itemstackFromString(s));
+			}
+		}
+		bank.setItems(items);
+		return bank;
 	}
 	
 	public static Inventory getBankInventory(String username) {

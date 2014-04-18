@@ -1,11 +1,15 @@
 package com.github.tnerevival.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class AccountUtils {
 	
@@ -18,6 +22,18 @@ public class AccountUtils {
 			return TNE.instance.manager.accounts.get(username);
 		}
 		return null;
+	}
+	
+	public static List<SerializableItemStack> overflowFromString(String overflowString) {
+		List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+		if(overflowString != "TNENOSTRINGVALUE") {
+			String[] itemStrings = overflowString.split("\\*");
+			
+			for(String s : itemStrings) {
+				items.add(MISCUtils.itemstackFromString(s));
+			}
+		}
+		return items;
 	}
 
 	public static Double getBalance(String username) {

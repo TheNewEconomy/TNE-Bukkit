@@ -101,17 +101,20 @@ public class Bank implements Serializable {
 	}
 	
 	public String itemsToString() {
-		String toReturn = "";
-		
-		int count = 0;
-		for(SerializableItemStack item : items) {
-			if(count != 0) {
-				toReturn += "*";
+		if(!items.isEmpty()) {
+			String toReturn = "";
+			
+			int count = 0;
+			for(SerializableItemStack item : items) {
+				if(count != 0) {
+					toReturn += "*";
+				}
+				toReturn += item.toString();
+				count++;
 			}
-			toReturn += item.toString();
-			count++;
+			return toReturn;
 		}
-		return toReturn;
+		return "TNENOSTRINGVALUE";
 	}
 	
 	public String toString() {

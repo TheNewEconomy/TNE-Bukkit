@@ -21,11 +21,6 @@ public class CoreExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 				Player player = (Player) sender;
-				String world = plugin.defaultWorld;
-				
-				if(MISCUtils.multiWorld()) {
-					world = player.getWorld().getName();
-				}
 				
 				if(cmd.getName().equalsIgnoreCase("theneweconomy")) {
 					if(args.length >= 1) {

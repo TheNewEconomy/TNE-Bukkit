@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
@@ -24,18 +23,17 @@ import com.github.tnerevival.core.db.SQLite;
 import com.github.tnerevival.core.db.flat.Article;
 import com.github.tnerevival.core.db.flat.Entry;
 import com.github.tnerevival.core.db.flat.Section;
-import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 
 public class SaveManager {
 	
-	MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
 	//FlatFile ff = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File"));
-	SQLite sqlite = new SQLite(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.SQLite.File"));
 	File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File"));
 	
 	String prefix = TNE.instance.getConfig().getString("Core.Database.Prefix");
 	String type = TNE.instance.getConfig().getString("Core.Database.Type");
+	String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.SQLite.File");
 	Double currentSaveVersion = 2.0;
 	Double saveVersion = 0.0;
 	
@@ -54,6 +52,7 @@ public class SaveManager {
 		if(type.equalsIgnoreCase("flatfile")) {
 			return !file.exists();
 		} else if(type.equalsIgnoreCase("mysql")) {
+			MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
 			mysql.connect();
 			try {
 				DatabaseMetaData meta = ((Connection)mysql.connection()).getMetaData();
@@ -65,6 +64,7 @@ public class SaveManager {
 			}
 			mysql.close();
 		} else if(type.equalsIgnoreCase("sqlite")) {
+			SQLite sqlite = new SQLite(sqliteFile);
 			sqlite.connect();
 			try {
 				DatabaseMetaData meta = ((Connection)sqlite.connection()).getMetaData();
@@ -104,6 +104,8 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 		} else if(type.equalsIgnoreCase("mysql")) {
+			MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
+			mysql.connect();
 			Statement statement;
 			ResultSet result;
 			String table = prefix + "_INFO";
@@ -116,7 +118,10 @@ public class SaveManager {
 			} catch(SQLException e) {
 				e.printStackTrace();
 			}
+			mysql.close();
 		} else if(type.equalsIgnoreCase("sqlite")) {
+			SQLite sqlite = new SQLite(sqliteFile);
+			sqlite.connect();
 			Statement statement;
 			ResultSet result;
 			String table = prefix + "_INFO";
@@ -129,6 +134,7 @@ public class SaveManager {
 			} catch(SQLException e) {
 				e.printStackTrace();
 			}
+			sqlite.close();
 		}
 	}
 	
@@ -201,10 +207,10 @@ public class SaveManager {
 				Entry balances = entry.getValue().getEntry("balances");
 				Entry banks = entry.getValue().getEntry("banks");
 				
-				account.setOverflow((List<SerializableItemStack>)info.getData("overflow"));
 				account.setAccountNumber((Integer) info.getData("accountnumber"));
 				account.setCompany((String) info.getData("company"));
 				account.setStatus((String) info.getData("status"));
+				account.setOverflow(AccountUtils.overflowFromString((String)info.getData("overflow")));
 				
 				Iterator<java.util.Map.Entry<String, Object>> balanceIterator = balances.getData().entrySet().iterator();
 				
@@ -242,11 +248,11 @@ public class SaveManager {
 				Article account = new Article(entry.getKey());
 				//Info
 				Entry info = new Entry("info");
-				info.addData("overflow", acc.getOverflow());
 				info.addData("accountnumber", acc.getAccountNumber());
 				info.addData("owner", acc.getOwner());
 				info.addData("company", acc.getCompany());
 				info.addData("status", acc.getStatus());
+				info.addData("overflow", acc.overflowToString());
 				account.addEntry(info);
 				//Balances
 				Entry balances = new Entry("balances");
@@ -284,6 +290,8 @@ public class SaveManager {
 	
 	//MySQL Methods
 	public void loadMySQL() {
+		MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
+		mysql.connect();
 		if(saveVersion == 2.0) {
 			PreparedStatement statement;
 			ResultSet result;
@@ -300,6 +308,7 @@ public class SaveManager {
 					account.setAccountNumber(result.getInt("accountnumber"));
 					account.setStatus(result.getString("accountstatus"));
 					account.setJoined(result.getString("joinedDate"));
+					account.setOverflow(AccountUtils.overflowFromString(result.getString("overflow")));
 					
 					String bankTable = prefix + "_BANKS";
 					PreparedStatement bankStatement = ((Connection) mysql.connection()).prepareStatement("SELECT * FROM " + bankTable + " WHERE username = ?;");
@@ -315,9 +324,12 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 		}
+		mysql.close();
 	}
 	
 	public void saveMySQL() {
+		MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
+		mysql.connect();
 		if(currentSaveVersion == 2.0) {
 			PreparedStatement statement;
 			ResultSet result;
@@ -370,21 +382,23 @@ public class SaveManager {
 					statement.setString(1, entry.getKey());
 					result = statement.executeQuery();
 					if(result.first()) {
-						statement = ((Connection) mysql.connection()).prepareStatement("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ? WHERE username = ?;");
+						statement = ((Connection) mysql.connection()).prepareStatement("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ?, overflow = ? WHERE username = ?;");
 						statement.setString(1, entry.getValue().balancesToString());
 						statement.setString(2, entry.getValue().getJoined());
 						statement.setInt(3, entry.getValue().getAccountNumber());
 						statement.setString(4, entry.getValue().getCompany());
 						statement.setString(5, entry.getValue().getStatus());
+						statement.setString(6, entry.getValue().overflowToString());
 						statement.executeUpdate();
 					} else {
-						statement = ((Connection) mysql.connection()).prepareStatement("INSERT INTO " + table + " (username, balances, joinedDate, accountnumber, company, accountstatus) VALUES (?, ?, ?, ?, ?, ?);");
+						statement = ((Connection) mysql.connection()).prepareStatement("INSERT INTO " + table + " (username, balances, joinedDate, accountnumber, company, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?, ?);");
 						statement.setString(1, entry.getKey());
 						statement.setString(2, entry.getValue().balancesToString());
 						statement.setString(3, entry.getValue().getJoined());
 						statement.setInt(4, entry.getValue().getAccountNumber());
 						statement.setString(5, entry.getValue().getCompany());
 						statement.setString(6, entry.getValue().getStatus());
+						statement.setString(7, entry.getValue().overflowToString());
 						statement.executeQuery();
 					}					
 				} catch (SQLException e) {
@@ -392,10 +406,13 @@ public class SaveManager {
 				}
 			}
 		}
+		mysql.close();
 	}
 	
 	//SQLite Methods
 	public void loadSQLite() {
+		SQLite sqlite = new SQLite(sqliteFile);
+		sqlite.connect();
 		if(saveVersion == 2.0) {
 			PreparedStatement statement;
 			ResultSet result;
@@ -412,6 +429,7 @@ public class SaveManager {
 					account.setAccountNumber(result.getInt("accountnumber"));
 					account.setStatus(result.getString("accountstatus"));
 					account.setJoined(result.getString("joinedDate"));
+					account.setOverflow(AccountUtils.overflowFromString(result.getString("overflow")));
 					
 					String bankTable = prefix + "_BANKS";
 					PreparedStatement bankStatement = ((Connection) sqlite.connection()).prepareStatement("SELECT * FROM " + bankTable + " WHERE username = ?;");
@@ -427,9 +445,12 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 		}
+		sqlite.close();
 	}
 	
 	public void saveSQLite() {
+		SQLite sqlite = new SQLite(sqliteFile);
+		sqlite.connect();
 		if(currentSaveVersion == 2.0) {
 			PreparedStatement statement;
 			ResultSet result;
@@ -482,21 +503,23 @@ public class SaveManager {
 					statement.setString(1, entry.getKey());
 					result = statement.executeQuery();
 					if(result.first()) {
-						statement = ((Connection) sqlite.connection()).prepareStatement("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ? WHERE username = ?;");
+						statement = ((Connection) sqlite.connection()).prepareStatement("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ?, overflow = ? WHERE username = ?;");
 						statement.setString(1, entry.getValue().balancesToString());
 						statement.setString(2, entry.getValue().getJoined());
 						statement.setInt(3, entry.getValue().getAccountNumber());
 						statement.setString(4, entry.getValue().getCompany());
 						statement.setString(5, entry.getValue().getStatus());
+						statement.setString(6, entry.getValue().overflowToString());
 						statement.executeUpdate();
 					} else {
-						statement = ((Connection) sqlite.connection()).prepareStatement("INSERT INTO " + table + " (username, balances, joinedDate, accountnumber, company, accountstatus) VALUES (?, ?, ?, ?, ?, ?);");
+						statement = ((Connection) sqlite.connection()).prepareStatement("INSERT INTO " + table + " (username, balances, joinedDate, accountnumber, company, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?, ?);");
 						statement.setString(1, entry.getKey());
 						statement.setString(2, entry.getValue().balancesToString());
 						statement.setString(3, entry.getValue().getJoined());
 						statement.setInt(4, entry.getValue().getAccountNumber());
 						statement.setString(5, entry.getValue().getCompany());
 						statement.setString(6, entry.getValue().getStatus());
+						statement.setString(7, entry.getValue().overflowToString());
 						statement.executeQuery();
 					}					
 				} catch (SQLException e) {
@@ -504,9 +527,12 @@ public class SaveManager {
 				}
 			}
 		}
+		sqlite.close();
 	}
 	
 	public void createMySQLTables() {
+		MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
+		mysql.connect();
 		Statement statement;
 		String table = prefix + "_INFO";
 		try {
@@ -520,11 +546,12 @@ public class SaveManager {
 			table = prefix + "_USERS";
 			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
 								"username VARCHAR(40) NOT NULL," +
-								"balances BLOB," +
+								"balances LONGTEXT," +
 								"joinedDate VARCHAR(60)," +
 								"accountnumber INTEGER," +
 								"company VARCHAR(60)," +
 								"accountstatus VARCHAR(60)," +
+								"overflow LONGTEXT," +
 								"PRIMARY KEY (`username`)" +
 								");");
 			
@@ -533,19 +560,22 @@ public class SaveManager {
 								   "id INTEGER NOT NULL AUTO_INCREMENT," +
 								   "username VARCHAR(40) NOT NULL," +
 								   "world VARCHAR(50) NOT NULL," +
-								   "bank BLOB," +
+								   "bank LONGTEXT," +
 								   "PRIMARY KEY ('id')" +
 								   ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		mysql.close();
 	}
 	
 	public void createSQLiteTables() {
+		SQLite sqlite = new SQLite(sqliteFile);
+		sqlite.connect();
 		Statement statement;
 		String table = prefix + "_INFO";
 		try {
-			statement = ((Connection) mysql.connection()).createStatement();
+			statement = ((Connection) sqlite.connection()).createStatement();
 			
 			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
 								   "id INTEGER NOT NULL," +
@@ -555,11 +585,12 @@ public class SaveManager {
 			table = prefix + "_USERS";
 			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
 								"username CHAR(40) PRIMARY KEY NOT NULL," +
-								"balances BLOB," +
+								"balances LONGTEXT," +
 								"joinedDate CHAR(60)," +
 								"accountnumber INTEGER," +
 								"company CHAR(60)," +
 								"accountstatus CHAR(60)" +
+								"overflow LONGTEXT," +
 								");");
 			
 			table = prefix + "_BANKS";
@@ -567,10 +598,11 @@ public class SaveManager {
 								   "id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT," +
 								   "username CHAR(40) NOT NULL," +
 								   "world CHAR(50) NOT NULL," +
-								   "bank BLOB" +
+								   "bank LONGTEXT" +
 								   ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		sqlite.close();
 	}
 }

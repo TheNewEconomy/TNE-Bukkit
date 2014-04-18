@@ -1,13 +1,15 @@
 package com.github.tnerevival.utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+
+import com.github.tnerevival.TNE;
 
 public class PlayerUtils {
 
 	public static String getWorld(String username) {
-		Player player = Bukkit.getPlayer(username);
-		return player.getWorld().getName();
+		if(MISCUtils.multiWorld()) {
+			return Bukkit.getPlayer(username).getWorld().getName();
+		}
+		return TNE.instance.defaultWorld;
 	}
-
 }

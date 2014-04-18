@@ -25,9 +25,9 @@ public class SerializableItemStack implements Serializable {
 	String customName;
 	
 	public SerializableItemStack(Integer slot) {
-		this.name = "none";
+		this.name = "TNENOSTRINGVALUE";
 		this.slot = slot;
-		this.customName = "none";
+		this.customName = "TNENOSTRINGVALUE";
 	}
 	
 	public SerializableItemStack(Integer slot, ItemStack i) {
@@ -35,14 +35,14 @@ public class SerializableItemStack implements Serializable {
 		this.slot = slot;
 		this.amount = i.getAmount();
 		this.damage = i.getDurability();
-		this.customName = "none";
+		this.customName = "TNENOSTRINGVALUE";
 		if(i.getItemMeta().hasDisplayName()) {
 			this.customName = i.getItemMeta().getDisplayName();
 		}
 		if(i.getItemMeta().hasLore()) {
 			this.lore = i.getItemMeta().getLore();
 		}
-		this.enchantments = getEnchantments(i);
+		this.enchantments = getEnchantmentsFromStack(i);
 	}
 	
 	/**
@@ -145,43 +145,39 @@ public class SerializableItemStack implements Serializable {
 	}
 
 	public String enchantmentsToString() {
-		String toReturn = "";
-		Iterator<java.util.Map.Entry<SerializableEnchantment, Integer>> it = enchantments.entrySet().iterator();
-		
-		while(it.hasNext()) {
-			java.util.Map.Entry<SerializableEnchantment, Integer> entry = it.next();
+		if(!enchantments.isEmpty()) {
+			String toReturn = "";
+			Iterator<java.util.Map.Entry<SerializableEnchantment, Integer>> it = enchantments.entrySet().iterator();
 			
-			toReturn += entry.getKey().name + "," + entry.getValue() + "~";
+			int count = 0;
+			while(it.hasNext()) {
+				java.util.Map.Entry<SerializableEnchantment, Integer> entry = it.next();
+				if(count > 0) { toReturn += "~"; }
+				
+				toReturn += entry.getKey().name + "," + entry.getValue();
+				count++;
+			}
+			return toReturn;
 		}
-		
-		return toReturn;
+		return "TNENOSTRINGVALUE";
 	}
 	
 	public String loreToString() {
-		String toReturn = "";
-		
-		int count = 0;
-		for(String s : lore) {
-			if(count > 0) {
-				toReturn += "~";
+		if(!lore.isEmpty()) {
+			String toReturn = "";
+			
+			int count = 0;
+			for(String s : lore) {
+				if(count > 0) { toReturn += "~"; }
+				toReturn += s;
+				count++;
 			}
-			toReturn += s;
-			count++;
+			return toReturn;
 		}
-		return (toReturn != "") ? toReturn : "none";
+		return "TNENOSTRINGVALUE";
 	}
 	
-	public String toString() {
-		String n = (name != null) ? name : "none";
-		Integer s = (slot != null) ? slot : 1;
-		Integer a = (amount != null) ? amount : 1;
-		Short d = (damage != null) ? damage : 0;
-		String cn = (customName != null) ? customName : "none";
-		String enchantment = (enchantments.isEmpty()) ? "none" : enchantmentsToString();
-		return n + ";" + s + ";" + a + ";" + d + ";" + cn + ";" + loreToString() + ";" + enchantment;
-	}
-
-	HashMap<SerializableEnchantment, Integer> getEnchantments(ItemStack i) {
+	HashMap<SerializableEnchantment, Integer> getEnchantmentsFromStack(ItemStack i) {
 		Map<Enchantment, Integer> enchantments = i.getEnchantments();
 		HashMap<SerializableEnchantment, Integer> serializedEnchantments = new HashMap<SerializableEnchantment, Integer>();
 		for(Enchantment e : enchantments.keySet()) {
@@ -190,21 +186,23 @@ public class SerializableItemStack implements Serializable {
 		return serializedEnchantments;
 	}
 	
+	Map<Enchantment, Integer> getEnchantmentsFromSerializable() {
+		Map<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
+		for(SerializableEnchantment e : enchantments.keySet()) {
+			enchants.put(e.getEnchantment(), enchants.get(e.name));
+		}
+		return enchants;
+	}
+	
 	public ItemStack toItemStack() {
-		if(!this.name.equalsIgnoreCase("none")) {
+		if(!this.name.equalsIgnoreCase("TNENOSTRINGVALUE")) {
 			ItemStack stack = new ItemStack(Material.getMaterial(name), this.amount, this.damage);
-			if(!this.enchantments.isEmpty()) {
-				HashMap<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
-				for(SerializableEnchantment e : this.enchantments.keySet()) {
-					enchants.put(e.getEnchantment(), this.enchantments.get(e));
-				}
-				stack.addUnsafeEnchantments(enchants);
-			}
+			stack.addUnsafeEnchantments(getEnchantmentsFromSerializable());
 			ItemMeta stackMeta = stack.getItemMeta();
 			if(!this.lore.isEmpty()) {
 				stackMeta.setLore(this.lore);
 			}
-			if(!this.customName.equals(null) && !this.customName.equals("none") && !this.customName.isEmpty()) {
+			if(!this.customName.equals(null) && !this.customName.equals("TNENOSTRINGVALUE") && !this.customName.isEmpty()) {
 				stackMeta.setDisplayName(this.customName);
 			}
 			stack.setItemMeta(stackMeta);

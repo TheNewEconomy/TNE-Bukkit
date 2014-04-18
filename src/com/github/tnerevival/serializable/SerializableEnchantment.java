@@ -14,6 +14,10 @@ public class SerializableEnchantment implements Serializable {
 		this.name = e.getName();
 	}
 	
+	public SerializableEnchantment(String name) {
+		this.name = name;
+	}
+
 	public Enchantment getEnchantment() {
 		return Enchantment.getByName(name);
 	}

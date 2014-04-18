@@ -88,12 +88,29 @@ public class Account implements Serializable {
 	}
 	
 	public void balancesFromString(String from) {
-		String[] b = from.split(":");
+		String[] b = from.split("\\:");
 		
 		for(String s : b) {
-			String[] balance = s.split(",");
+			String[] balance = s.split("\\,");
 			balances.put(balance[0], Double.valueOf(balance[1]));
 		}
+	}
+	
+	public String overflowToString() {
+		if(!overflow.isEmpty()) {
+			String toReturn = "";
+			
+			int count = 0;
+			for(SerializableItemStack item : overflow) {
+				if(count != 0) {
+					toReturn += "*";
+				}
+				toReturn += item.toString();
+				count++;
+			}
+			return toReturn;
+		}
+		return "TNENOSTRINGVALUE";
 	}
 
 	/**

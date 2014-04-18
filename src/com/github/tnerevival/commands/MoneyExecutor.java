@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.PlayerUtils;
 
 public class MoneyExecutor implements CommandExecutor {
 
@@ -23,11 +24,7 @@ public class MoneyExecutor implements CommandExecutor {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				String username = player.getDisplayName();
-				String world = plugin.defaultWorld;
-				
-				if(MISCUtils.multiWorld()) {
-					world = player.getWorld().getName();
-				}
+				String world = PlayerUtils.getWorld(username);
 				
 				if(cmd.getName().equalsIgnoreCase("money")) {
 					if(args.length > 0) {
