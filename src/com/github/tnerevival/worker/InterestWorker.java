@@ -1,4 +1,4 @@
-package com.github.tnerevival.run;
+package com.github.tnerevival.worker;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -9,11 +9,11 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.utils.BankUtils;
 
-public class InterestRate extends BukkitRunnable {
+public class InterestWorker extends BukkitRunnable {
 	
 	private TNE plugin;
 	
-	public InterestRate(TNE plugin) {
+	public InterestWorker(TNE plugin) {
 		this.plugin = plugin;
 	}
 
@@ -22,16 +22,8 @@ public class InterestRate extends BukkitRunnable {
 		doInterest();
 	}
 	
-	public void startTask(Long time) {
-		this.runTaskTimer(plugin, 0L, time);
-	}
-	
-	public void cancelTask() {
-		this.cancel();
-	}
-	
 	private void doInterest() {
-		Iterator<Entry<String, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+		Iterator<Entry<String, Account>> it = plugin.manager.accounts.entrySet().iterator();
 		
 		while(it.hasNext()) {
 			Entry<String, Account> entry = it.next();

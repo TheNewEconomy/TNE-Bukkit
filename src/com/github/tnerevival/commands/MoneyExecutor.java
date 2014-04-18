@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.PlayerUtils;
 
 public class MoneyExecutor implements CommandExecutor {
 
@@ -24,24 +23,28 @@ public class MoneyExecutor implements CommandExecutor {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				String username = player.getDisplayName();
-				String world = PlayerUtils.getWorld(username);
+				String world = plugin.defaultWorld;
+				
+				if(MISCUtils.multiWorld()) {
+					world = player.getWorld().getName();
+				}
 				
 				if(cmd.getName().equalsIgnoreCase("money")) {
 					if(args.length > 0) {
 						if(args[0].equalsIgnoreCase("help")) {
-							if(player.hasPermission("tne.money.help") || player.hasPermission("tne.moneu.*")) {
+							if(player.hasPermission("tne.money.help")) {
 								sendHelp(player);
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("balance")) {
-							if(player.hasPermission("tne.money.balance") || player.hasPermission("tne.money.*")) {
+							if(player.hasPermission("tne.money.balance")) {
 								player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(world, AccountUtils.getBalance(username)) + ChatColor.WHITE + " on you.");
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("give")) {
-							if(player.hasPermission("tne.money.give") || player.hasPermission("tne.money.*")) {
+							if(player.hasPermission("tne.money.give")) {
 								if(args.length == 3) {
 									if(AccountUtils.giveMoney(args[1], Double.valueOf(args[2]))) {
 										player.sendMessage(ChatColor.WHITE + "Successfully gave " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
@@ -55,7 +58,7 @@ public class MoneyExecutor implements CommandExecutor {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("pay")) {
-							if(player.hasPermission("tne.money.pay") || player.hasPermission("tne.money.*")) {
+							if(player.hasPermission("tne.money.pay")) {
 								if(args.length == 3) {
 									if(AccountUtils.hasFunds(username, Double.valueOf(args[2]))) {
 										if(AccountUtils.payMoney(username, args[1], Double.valueOf(args[2]))) {

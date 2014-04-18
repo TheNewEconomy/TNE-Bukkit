@@ -8,13 +8,20 @@ public class Currency {
 	HashMap<String, Tier> tiers = new HashMap<String, Tier>();
 	
 	String name;
+	String plural;
+	String abbreviation;
+	Double value;
 	Boolean worldDefault;
 	Boolean digital;
+	Double balance;
 	
 	public Currency(String name) {
-		this. name = name;
+		this.name = name;
+		this.plural = name + "s";
+		this.abbreviation = "";
 		this.worldDefault = false;
 		this.digital = true;
+		this.balance = 0.0;
 	}
 	
 	public Tier getTier(String name) {
@@ -54,6 +61,48 @@ public class Currency {
 	}
 
 	/**
+	 * @return the plural
+	 */
+	public String getPlural() {
+		return plural;
+	}
+
+	/**
+	 * @param plural the plural to set
+	 */
+	public void setPlural(String plural) {
+		this.plural = plural;
+	}
+
+	/**
+	 * @return the abbreviation
+	 */
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+
+	/**
+	 * @param abbreviation the abbreviation to set
+	 */
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
+	}
+	
+	/**
+	 * @return the value
+	 */
+	public Double getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
+	/**
 	 * @return the worldDefault
 	 */
 	public Boolean getWorldDefault() {
@@ -79,5 +128,19 @@ public class Currency {
 	 */
 	public void setDigital(Boolean digital) {
 		this.digital = digital;
+	}
+
+	/**
+	 * @return the balance
+	 */
+	public Double getBalance() {
+		return balance;
+	}
+
+	/**
+	 * @param balance the balance to set
+	 */
+	public void setBalance(Double balance) {
+		this.balance = balance;
 	}
 }

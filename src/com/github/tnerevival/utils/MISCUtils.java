@@ -1,14 +1,126 @@
 package com.github.tnerevival.utils;
 
+import java.io.File;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class MISCUtils {
-	
-	public static String formatBalance(String world, double balance) {
-		return (TNE.instance.getConfig().getBoolean("Core.Shorten")) ? formatMoney(balance) + " " + getName(world, balance) : formatAmount(world, balance);
+
+	//True MISC Utils
+	public static Integer getItemCount(String username, Material item) {
+		Player p = Bukkit.getPlayer(username);
+		int count = 0;
+		if(item != null) {
+			for(ItemStack i : p.getInventory().getContents()) {
+				if(i != null && i.getType() != null && i.getType() == item) {
+					count += i.getAmount();
+				}
+			}
+		}
+		return count;
 	}
 	
-	public static String formatMoney(double balance) {
+	public static void setItemCount(String username, Material item, Integer amount) {
+		Player p = Bukkit.getPlayer(username);
+		Integer count = getItemCount(username, item);
+		if(item != null) {
+			if(count > amount) {
+				Integer remove = count - amount;
+				Integer slot = 0;
+				for(ItemStack i : p.getInventory().getContents()) {
+					if(i != null && i.getType() != null && i.getType() == item) {
+						if(remove > i.getAmount()) {
+							remove -= i.getAmount();
+							i.setAmount(0);
+							p.getInventory().setItem(slot, null);
+						} else {
+							if(i.getAmount() - remove > 0) {
+								i.setAmount(i.getAmount() - remove);
+								p.getInventory().setItem(slot, i);
+								return;
+							}
+							p.getInventory().setItem(slot, null);
+							return;
+						}
+					}
+					slot++;
+				}
+			} else if(count < amount) {
+				Integer add = amount - count;
+				
+				while(add > 0) {
+					if(add > item.getMaxStackSize()) {
+						if(p.getInventory().firstEmpty() != -1) {
+							p.getInventory().addItem(new ItemStack(item, item.getMaxStackSize()));
+						} else {
+							AccountUtils.getAccount(username).getOverflow().add(new SerializableItemStack(0, new ItemStack(item, item.getMaxStackSize())));
+						}
+						add -= item.getMaxStackSize();
+					} else {
+						if(p.getInventory().firstEmpty() != -1) {
+							p.getInventory().addItem(new ItemStack(item, add));
+						} else {
+							AccountUtils.getAccount(username).getOverflow().add(new SerializableItemStack(0, new ItemStack(item, add)));
+						}
+						add = 0;
+					}
+				}
+			}
+		}
+	}
+	
+	public static void reloadConfigurations(String type) {
+		if(type.equalsIgnoreCase("all")) {
+			TNE.instance.reloadConfig();
+			reloadConfigsMobs();
+			reloadConfigsWorlds();
+		} else if(type.equalsIgnoreCase("config")) {
+			TNE.instance.reloadConfig();
+		} else if(type.equalsIgnoreCase("mobs")) {
+			reloadConfigsMobs();
+		} else if(type.equalsIgnoreCase("worlds")) {
+			reloadConfigsWorlds();
+		}
+	}
+	
+	public static void reloadConfigsMobs() {
+		if(TNE.instance.mobs == null) {
+			TNE.instance.mobs = new File(TNE.instance.getDataFolder(), "mobs.yml");
+		}
+		TNE.instance.mobConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.mobs);
+	}
+	
+	public static void reloadConfigsWorlds() {
+		if(TNE.instance.worlds == null) {
+			TNE.instance.worlds = new File(TNE.instance.getDataFolder(), "worlds.yml");
+		}
+		TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
+	}
+	
+	
+	//Format Utils
+	public static String formatBalance(String world, double balance) {
+		if(multiWorld() && worldConfigExists("Worlds." + world + ".Shorten")) {
+			return (TNE.instance.getConfig().getBoolean("Worlds." + world + ".Shorten")) ? formatBalance(world, balance, true) : formatBalance(world, balance, false);
+		}
+		return (TNE.instance.getConfig().getBoolean("Core.Shorten")) ? formatBalance(world, balance, true) : formatBalance(world, balance, false);
+	}
+	
+	public static String formatBalance(String world, double balance, Boolean shorten) {
+		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
+		String[] split = balanceString.split("\\.");
+		return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0])) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
+	}
+	
+	public static String getShort(double balance) {
 		Integer dollars = (int) Math.floor(balance);
 		if (dollars < 1000) {
 			return "" + dollars;
@@ -17,28 +129,24 @@ public class MISCUtils {
 	    return String.format("%.1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
 	}
 	
-	public static String formatAmount(String world, double amount) {
-		return amount + " " + getName(world, amount);
-	}
-	
-	public static String getName(String world, double amount) {
-		if(multiWorld()) {
-			//if(worldConfigExists()) {
-				
-			//}
-		}
-		return (amount > 1.0 || amount == 0.0)? TNE.instance.getConfig().getString("Core.Currency.Name.Plural") : TNE.instance.getConfig().getString("Core.Currency.Name.Singular");
-	}
-	
-	public static void reloadConfigurations(String type) {
-		if(type.equalsIgnoreCase("config")) {
-			
-		} else if(type.equalsIgnoreCase("currency")) {
-			
-		} else if(type.equalsIgnoreCase("mobs")) {
-			
-		} else if(type.equalsIgnoreCase("worlds")) {
-			
+	public static String getName(String world, double balance, String type) {
+		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
+		String[] split = balanceString.split("\\.");
+		if(type.equalsIgnoreCase("major")) {
+			if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.Name")) {
+				return (Integer.valueOf(split[0]) != 1) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular");
+			}
+			return (Integer.valueOf(split[0]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular");
+		} else if(type.equalsIgnoreCase("minor")) {
+			if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.Name")) {
+				return (Integer.valueOf(split[1]) != 1) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Plural") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Singular");
+			}
+			return (Integer.valueOf(split[1]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MinorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MinorName.Singular");
+		} else {
+			if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.Name")) {
+				return (Integer.valueOf(split[0]) != 1) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular");
+			}
+			return (Integer.valueOf(split[0]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular");
 		}
 	}
 	

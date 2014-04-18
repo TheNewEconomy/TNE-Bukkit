@@ -12,7 +12,6 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.PlayerUtils;
 
 public class BankExecutor implements CommandExecutor {
 
@@ -27,19 +26,23 @@ public class BankExecutor implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			String username = player.getDisplayName();
-			String world = PlayerUtils.getWorld(username);
+			String world = plugin.defaultWorld;
+			
+			if(MISCUtils.multiWorld()) {
+				world = player.getWorld().getName();
+			}
 			
 			if(cmd.getName().equalsIgnoreCase("bank")) {
 				if(BankUtils.enabled(world)) {
 					if(args.length > 0) {
 						if(args[0].equalsIgnoreCase("help")) {
-							if(player.hasPermission("tne.bank.help") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.help")) {
 								sendHelp(player);
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
 							}
 						} else if(args[0].equalsIgnoreCase("balance")) {
-							if(player.hasPermission("tne.bank.balance") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.balance")) {
 								if(BankUtils.hasBank(username)) {
 									player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(world, BankUtils.getBankBalance(username)) + " in your bank.");
 								} else {
@@ -49,9 +52,9 @@ public class BankExecutor implements CommandExecutor {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("buy")) { 
-							if(player.hasPermission("tne.bank.buy") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.buy")) {
 								if(!BankUtils.hasBank(username)) {
-									if(!player.hasPermission("tne.bank.bypass") && !player.hasPermission("tne.bank.*")) {
+									if(!player.hasPermission("tne.bank.bypass")) {
 										if(AccountUtils.hasFunds(username, BankUtils.cost(world))) {
 											AccountUtils.removeFunds(username, BankUtils.cost(world));
 											Bank bank = new Bank(username, BankUtils.size(world));
@@ -72,7 +75,7 @@ public class BankExecutor implements CommandExecutor {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("deposit")) {
-							if(player.hasPermission("tne.bank.deposit") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.deposit")) {
 								if(args.length == 2) {
 									if(BankUtils.hasBank(username)) {
 										if(BankUtils.bankDeposit(username, Double.valueOf(args[1]))) {
@@ -90,13 +93,13 @@ public class BankExecutor implements CommandExecutor {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("price")) { 
-							if(player.hasPermission("tne.bank.price") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.price")) {
 								player.sendMessage(ChatColor.WHITE + "A bank is currently " + ChatColor.GOLD + MISCUtils.formatBalance(world, BankUtils.cost(world)) + ChatColor.WHITE + ".");
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("view")) {
-							if(player.hasPermission("tne.bank.use") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.use")) {
 								if(BankUtils.command(world)) {
 									if(BankUtils.hasBank(username)) {
 										Inventory bankInventory = BankUtils.getBankInventory(username);
@@ -111,7 +114,7 @@ public class BankExecutor implements CommandExecutor {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("withdraw")) {
-							if(player.hasPermission("tne.bank.withdraw") || player.hasPermission("tne.bank.*")) {
+							if(player.hasPermission("tne.bank.withdraw")) {
 								if(args.length == 2) {
 									if(BankUtils.hasBank(username)) {
 										if(BankUtils.bankWithdraw(username, Double.valueOf(args[1]))) {

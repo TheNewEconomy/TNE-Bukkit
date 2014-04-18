@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.utils.AccountUtils;
 
 public class ConnectionListener implements Listener {
 	
@@ -23,6 +24,7 @@ public class ConnectionListener implements Listener {
 		if(!plugin.manager.accounts.containsKey(username)) {
 			Account account = new Account(username);
 			plugin.manager.accounts.put(username, account);
+			AccountUtils.addFunds(username, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
 		}
 	}
 }

@@ -62,6 +62,15 @@ public class FlatFileConnection {
 	 * @return the ois
 	 */
 	public ObjectInputStream getOIS() {
+		if(ois == null) {
+			try {
+				connect();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return ois;
 	}
 
@@ -76,6 +85,15 @@ public class FlatFileConnection {
 	 * @return the oos
 	 */
 	public ObjectOutputStream getOOS() {
+		if(oos == null) {
+			try {
+				connect();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return oos;
 	}
 

@@ -160,14 +160,25 @@ public class SerializableItemStack implements Serializable {
 	public String loreToString() {
 		String toReturn = "";
 		
+		int count = 0;
 		for(String s : lore) {
-			toReturn += s + "~";
+			if(count > 0) {
+				toReturn += "~";
+			}
+			toReturn += s;
+			count++;
 		}
-		return toReturn;
+		return (toReturn != "") ? toReturn : "none";
 	}
 	
 	public String toString() {
-		return name + ";" + slot + ";" + amount + ";" + damage + ";" + customName + ";" + loreToString() + ";" + enchantmentsToString();
+		String n = (name != null) ? name : "none";
+		Integer s = (slot != null) ? slot : 1;
+		Integer a = (amount != null) ? amount : 1;
+		Short d = (damage != null) ? damage : 0;
+		String cn = (customName != null) ? customName : "none";
+		String enchantment = (enchantments.isEmpty()) ? "none" : enchantmentsToString();
+		return n + ";" + s + ";" + a + ";" + d + ";" + cn + ";" + loreToString() + ";" + enchantment;
 	}
 
 	HashMap<SerializableEnchantment, Integer> getEnchantments(ItemStack i) {

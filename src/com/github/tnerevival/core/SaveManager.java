@@ -1,53 +1,140 @@
 package com.github.tnerevival.core;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
-import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.db.SQLite;
 import com.github.tnerevival.core.db.flat.Article;
 import com.github.tnerevival.core.db.flat.Entry;
-import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.BankUtils;
 
 public class SaveManager {
 	
-	MySQL sql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
-	FlatFile ff = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File"));
+	MySQL mysql = new MySQL(TNE.instance.getConfig().getString("Core.Database.MySQL.Host"), TNE.instance.getConfig().getInt("Core.Database.MySQL.Port"), TNE.instance.getConfig().getString("Core.Database.MySQL.Database"), TNE.instance.getConfig().getString("Core.Database.MySQL.User"), TNE.instance.getConfig().getString("Core.Database.MySQL.Password"));
+	//FlatFile ff = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File"));
 	SQLite sqlite = new SQLite(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.SQLite.File"));
+	File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File"));
 	
+	String prefix = TNE.instance.getConfig().getString("Core.Database.Prefix");
 	String type = TNE.instance.getConfig().getString("Core.Database.Type");
 	Double currentSaveVersion = 2.0;
 	Double saveVersion = 0.0;
 	
 	public SaveManager() {
-		
+		if(firstRun()) {
+			initiate();
+		} else {
+			getVersion();
+			TNE.instance.getLogger().info("Save file of version: " + saveVersion + " detected.");
+			load();
+			convert();
+		}
+	}
+	
+	public Boolean firstRun() {
+		if(type.equalsIgnoreCase("flatfile")) {
+			return !file.exists();
+		} else if(type.equalsIgnoreCase("mysql")) {
+			mysql.connect();
+			try {
+				DatabaseMetaData meta = ((Connection)mysql.connection()).getMetaData();
+				ResultSet tables = meta.getTables(null, null, prefix + "_INFO", null);
+				
+				return !tables.next();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			mysql.close();
+		} else if(type.equalsIgnoreCase("sqlite")) {
+			sqlite.connect();
+			try {
+				DatabaseMetaData meta = ((Connection)sqlite.connection()).getMetaData();
+				ResultSet tables = meta.getTables(null, null, prefix + "_INFO", null);
+				
+				return !tables.next();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			sqlite.close();
+		}
+		return !file.exists();
+	}
+	
+	public void initiate() {
+		if(type.equalsIgnoreCase("flatfile")) {
+			try {
+				TNE.instance.getDataFolder().mkdir();
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else if(type.equalsIgnoreCase("mysql")) {
+			createMySQLTables();
+		} else if(type.equalsIgnoreCase("sqlite")) {
+			createSQLiteTables();
+		}
 	}
 	
 	public void getVersion() {
 		if(type.equalsIgnoreCase("flatfile")) {
-			ff.connect();
-			ObjectInputStream ois = ((FlatFileConnection)ff.connection()).getOIS();
-			
 			try {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 				saveVersion = ois.readDouble();
+				ois.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			ff.close();
 		} else if(type.equalsIgnoreCase("mysql")) {
-			//TODO: MySQL Support
+			Statement statement;
+			ResultSet result;
+			String table = prefix + "_INFO";
+			try {
+				statement = ((Connection) mysql.connection()).createStatement();
+				result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1;");
+				if(result.first()) {
+					saveVersion = Double.valueOf(result.getString("version"));
+				}
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
 		} else if(type.equalsIgnoreCase("sqlite")) {
-			//TODO: SQLite Support
+			Statement statement;
+			ResultSet result;
+			String table = prefix + "_INFO";
+			try {
+				statement = ((Connection) sqlite.connection()).createStatement();
+				result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1;");
+				if(result.first()) {
+					saveVersion = Double.valueOf(result.getString("version"));
+				}
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void convert() {
+		if(saveVersion == 1.0) {
+			SaveConversion.alphaTwo();
 		}
 	}
 	
@@ -55,9 +142,9 @@ public class SaveManager {
 		if(type.equalsIgnoreCase("flatfile")) {
 			loadFlatFile();
 		} else if(type.equalsIgnoreCase("mysql")) {
-			//TODO: MySQL Support
+			loadMySQL();
 		} else if(type.equalsIgnoreCase("sqlite")) {
-			//TODO: SQLite Support
+			loadSQLite();
 		}
 	}
 	
@@ -65,9 +152,9 @@ public class SaveManager {
 		if(type.equalsIgnoreCase("flatfile")) {
 			saveFlatFile();
 		} else if(type.equalsIgnoreCase("mysql")) {
-			//TODO: MySQL Support
+			saveMySQL();
 		} else if(type.equalsIgnoreCase("sqlite")) {
-			//TODO: SQLite Support
+			saveSQLite();
 		}
 	}
 	
@@ -77,47 +164,44 @@ public class SaveManager {
 	//FlatFile Methods
 	@SuppressWarnings("unchecked")
 	public void loadFlatFile() {
-		if(saveVersion == 1.0) {
-			ff.connect();
-			ObjectInputStream ois = ((FlatFileConnection)ff.connection()).getOIS();
-			
+		if(saveVersion == 1.0 || saveVersion == 1.1) {			
 			try {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 				saveVersion = ois.readDouble();
 				TNE.instance.manager.accounts = (HashMap<String, Account>) ois.readObject();
 				TNE.instance.manager.banks = (HashMap<String, Bank>) ois.readObject();
+				ois.close();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			ff.close();
 		} else if(saveVersion == 2.0) {
 			Section accounts = null;
-			ff.connect();
-			ObjectInputStream ois = ((FlatFileConnection)ff.connection()).getOIS();
-			
 			try {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 				saveVersion = ois.readDouble();
 				accounts = (Section) ois.readObject();
+				ois.close();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			ff.close();
 			
 			Iterator<java.util.Map.Entry<String, Article>> it = accounts.getArticle().entrySet().iterator();
 			
 			while(it.hasNext()) {
 				java.util.Map.Entry<String, Article> entry = it.next();
 				Account account = new Account(entry.getKey());
-				HashMap<String, HashMap<String, Double>> balanceMap = new HashMap<String, HashMap<String, Double>>();
+				HashMap<String, Double> balanceMap = new HashMap<String, Double>();
 				HashMap<String, Bank> bankMap = new HashMap<String, Bank>();
 				
 				Entry info = entry.getValue().getEntry("info");
 				Entry balances = entry.getValue().getEntry("balances");
 				Entry banks = entry.getValue().getEntry("banks");
 				
+				account.setOverflow((List<SerializableItemStack>)info.getData("overflow"));
 				account.setAccountNumber((Integer) info.getData("accountnumber"));
 				account.setCompany((String) info.getData("company"));
 				account.setStatus((String) info.getData("status"));
@@ -127,7 +211,7 @@ public class SaveManager {
 				while(balanceIterator.hasNext()) {
 					java.util.Map.Entry<String, Object> balanceEntry = balanceIterator.next();
 					
-					balanceMap.put(balanceEntry.getKey(), (HashMap<String, Double>)balanceEntry.getValue());
+					balanceMap.put(balanceEntry.getKey(), (Double)balanceEntry.getValue());
 				}
 				account.setBalances(balanceMap);
 				
@@ -158,6 +242,7 @@ public class SaveManager {
 				Article account = new Article(entry.getKey());
 				//Info
 				Entry info = new Entry("info");
+				info.addData("overflow", acc.getOverflow());
 				info.addData("accountnumber", acc.getAccountNumber());
 				info.addData("owner", acc.getOwner());
 				info.addData("company", acc.getCompany());
@@ -165,10 +250,10 @@ public class SaveManager {
 				account.addEntry(info);
 				//Balances
 				Entry balances = new Entry("balances");
-				Iterator<java.util.Map.Entry<String, HashMap<String, Double>>> balanceIterator = acc.getBalances().entrySet().iterator();
+				Iterator<java.util.Map.Entry<String, Double>> balanceIterator = acc.getBalances().entrySet().iterator();
 				
 				while(balanceIterator.hasNext()) {
-					java.util.Map.Entry<String, HashMap<String, Double>> balanceEntry = balanceIterator.next();
+					java.util.Map.Entry<String, Double> balanceEntry = balanceIterator.next();
 					balances.addData(balanceEntry.getKey(), balanceEntry.getValue());
 				}
 				account.addEntry(balances);
@@ -185,41 +270,307 @@ public class SaveManager {
 				
 				accounts.addArticle(entry.getKey(), account);
 			}
-			ff.connect();
-			ObjectOutputStream oos = ((FlatFileConnection)ff.connection()).getOOS();
 			try {
+				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 				oos.writeDouble(currentSaveVersion);
 				oos.writeObject(accounts);
+				oos.flush();
+				oos.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			ff.close();
 		}
 	}
 	
 	//MySQL Methods
 	public void loadMySQL() {
 		if(saveVersion == 2.0) {
+			PreparedStatement statement;
+			ResultSet result;
+			String table = prefix + "_USERS";
 			
+			try {
+				statement = ((Connection) mysql.connection()).prepareStatement("SELECT * FROM " + table + ";");
+				result = statement.executeQuery();
+				
+				while(result.next()) {
+					Account account = new Account(result.getString("username"));
+					account.balancesFromString(result.getString("balances"));
+					account.setCompany(result.getString("company"));
+					account.setAccountNumber(result.getInt("accountnumber"));
+					account.setStatus(result.getString("accountstatus"));
+					account.setJoined(result.getString("joinedDate"));
+					
+					String bankTable = prefix + "_BANKS";
+					PreparedStatement bankStatement = ((Connection) mysql.connection()).prepareStatement("SELECT * FROM " + bankTable + " WHERE username = ?;");
+					bankStatement.setString(1, account.getOwner());
+					ResultSet banks = bankStatement.executeQuery();
+					
+					while(banks.next()) {
+						account.getBanks().put(banks.getString("world"), BankUtils.fromString(banks.getString("bank")));
+					}
+					TNE.instance.manager.accounts.put(account.getOwner(), account);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void saveMySQL() {
 		if(currentSaveVersion == 2.0) {
+			PreparedStatement statement;
+			ResultSet result;
+			String table = prefix + "_INFO";
+			try {
+				statement = ((Connection) mysql.connection()).prepareStatement("Update " + table + " SET version = ? WHERE id = 1;");
+				statement.setString(1, String.valueOf(currentSaveVersion));
+				statement.executeUpdate();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
 			
+			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+			
+			while(it.hasNext()) {
+				java.util.Map.Entry<String, Account> entry = it.next();
+				
+				Iterator<java.util.Map.Entry<String, Bank>> bankIterator = entry.getValue().getBanks().entrySet().iterator();
+				
+				while(bankIterator.hasNext()) {
+					java.util.Map.Entry<String, Bank> bankEntry = bankIterator.next();
+					
+					table = prefix + "_BANKS";
+					
+					try {
+						statement = ((Connection) mysql.connection()).prepareStatement("SELECT * FROM " + table + " WHERE username = ? AND world = ?;");
+						statement.setString(1, entry.getKey());
+						statement.setString(2, bankEntry.getKey());
+						result = statement.executeQuery();
+						if(result.first()) {
+							statement = ((Connection) mysql.connection()).prepareStatement("UPDATE " + table + " SET bank = ? WHERE username = ? AND world = ?;");
+							statement.setString(1, bankEntry.getValue().toString());
+							statement.setString(2, entry.getKey());
+							statement.setString(3, bankEntry.getKey());
+						} else {
+							statement = ((Connection) mysql.connection()).prepareStatement("INSERT INTO " + table + " (id, username, world, bank) VALUES ('', ?, ?, ?);");
+							statement.setString(1, entry.getKey());
+							statement.setString(2, bankEntry.getKey());
+							statement.setString(3, bankEntry.getValue().toString());
+							statement.executeQuery();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				table = prefix + "_USERS";
+				
+				try {
+					statement = ((Connection) mysql.connection()).prepareStatement("SELECT * FROM " + table + " WHERE username = ?;");
+					statement.setString(1, entry.getKey());
+					result = statement.executeQuery();
+					if(result.first()) {
+						statement = ((Connection) mysql.connection()).prepareStatement("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ? WHERE username = ?;");
+						statement.setString(1, entry.getValue().balancesToString());
+						statement.setString(2, entry.getValue().getJoined());
+						statement.setInt(3, entry.getValue().getAccountNumber());
+						statement.setString(4, entry.getValue().getCompany());
+						statement.setString(5, entry.getValue().getStatus());
+						statement.executeUpdate();
+					} else {
+						statement = ((Connection) mysql.connection()).prepareStatement("INSERT INTO " + table + " (username, balances, joinedDate, accountnumber, company, accountstatus) VALUES (?, ?, ?, ?, ?, ?);");
+						statement.setString(1, entry.getKey());
+						statement.setString(2, entry.getValue().balancesToString());
+						statement.setString(3, entry.getValue().getJoined());
+						statement.setInt(4, entry.getValue().getAccountNumber());
+						statement.setString(5, entry.getValue().getCompany());
+						statement.setString(6, entry.getValue().getStatus());
+						statement.executeQuery();
+					}					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
 	//SQLite Methods
 	public void loadSQLite() {
 		if(saveVersion == 2.0) {
+			PreparedStatement statement;
+			ResultSet result;
+			String table = prefix + "_USERS";
 			
+			try {
+				statement = ((Connection) sqlite.connection()).prepareStatement("SELECT * FROM " + table + ";");
+				result = statement.executeQuery();
+				
+				while(result.next()) {
+					Account account = new Account(result.getString("username"));
+					account.balancesFromString(result.getString("balances"));
+					account.setCompany(result.getString("company"));
+					account.setAccountNumber(result.getInt("accountnumber"));
+					account.setStatus(result.getString("accountstatus"));
+					account.setJoined(result.getString("joinedDate"));
+					
+					String bankTable = prefix + "_BANKS";
+					PreparedStatement bankStatement = ((Connection) sqlite.connection()).prepareStatement("SELECT * FROM " + bankTable + " WHERE username = ?;");
+					bankStatement.setString(1, account.getOwner());
+					ResultSet banks = bankStatement.executeQuery();
+					
+					while(banks.next()) {
+						account.getBanks().put(banks.getString("world"), BankUtils.fromString(banks.getString("bank")));
+					}
+					TNE.instance.manager.accounts.put(account.getOwner(), account);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void saveSQLite() {
 		if(currentSaveVersion == 2.0) {
+			PreparedStatement statement;
+			ResultSet result;
+			String table = prefix + "_INFO";
+			try {
+				statement = ((Connection) sqlite.connection()).prepareStatement("Update " + table + " SET version = ? WHERE id = 1;");
+				statement.setString(1, String.valueOf(currentSaveVersion));
+				statement.executeUpdate();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
 			
+			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+			
+			while(it.hasNext()) {
+				java.util.Map.Entry<String, Account> entry = it.next();
+				
+				Iterator<java.util.Map.Entry<String, Bank>> bankIterator = entry.getValue().getBanks().entrySet().iterator();
+				
+				while(bankIterator.hasNext()) {
+					java.util.Map.Entry<String, Bank> bankEntry = bankIterator.next();
+					
+					table = prefix + "_BANKS";
+					
+					try {
+						statement = ((Connection) sqlite.connection()).prepareStatement("SELECT * FROM " + table + " WHERE username = ? AND world = ?;");
+						statement.setString(1, entry.getKey());
+						statement.setString(2, bankEntry.getKey());
+						result = statement.executeQuery();
+						if(result.first()) {
+							statement = ((Connection) sqlite.connection()).prepareStatement("UPDATE " + table + " SET bank = ? WHERE username = ? AND world = ?;");
+							statement.setString(1, bankEntry.getValue().toString());
+							statement.setString(2, entry.getKey());
+							statement.setString(3, bankEntry.getKey());
+						} else {
+							statement = ((Connection) sqlite.connection()).prepareStatement("INSERT INTO " + table + " (id, username, world, bank) VALUES ('', ?, ?, ?);");
+							statement.setString(1, entry.getKey());
+							statement.setString(2, bankEntry.getKey());
+							statement.setString(3, bankEntry.getValue().toString());
+							statement.executeQuery();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				table = prefix + "_USERS";
+				
+				try {
+					statement = ((Connection) sqlite.connection()).prepareStatement("SELECT * FROM " + table + " WHERE username = ?;");
+					statement.setString(1, entry.getKey());
+					result = statement.executeQuery();
+					if(result.first()) {
+						statement = ((Connection) sqlite.connection()).prepareStatement("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ? WHERE username = ?;");
+						statement.setString(1, entry.getValue().balancesToString());
+						statement.setString(2, entry.getValue().getJoined());
+						statement.setInt(3, entry.getValue().getAccountNumber());
+						statement.setString(4, entry.getValue().getCompany());
+						statement.setString(5, entry.getValue().getStatus());
+						statement.executeUpdate();
+					} else {
+						statement = ((Connection) sqlite.connection()).prepareStatement("INSERT INTO " + table + " (username, balances, joinedDate, accountnumber, company, accountstatus) VALUES (?, ?, ?, ?, ?, ?);");
+						statement.setString(1, entry.getKey());
+						statement.setString(2, entry.getValue().balancesToString());
+						statement.setString(3, entry.getValue().getJoined());
+						statement.setInt(4, entry.getValue().getAccountNumber());
+						statement.setString(5, entry.getValue().getCompany());
+						statement.setString(6, entry.getValue().getStatus());
+						statement.executeQuery();
+					}					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void createMySQLTables() {
+		Statement statement;
+		String table = prefix + "_INFO";
+		try {
+			statement = ((Connection) mysql.connection()).createStatement();
+			
+			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
+								   "id INTEGER NOT NULL," +
+								   "version VARCHAR(10)" +
+								   ");");
+			
+			table = prefix + "_USERS";
+			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
+								"username VARCHAR(40) NOT NULL," +
+								"balances BLOB," +
+								"joinedDate VARCHAR(60)," +
+								"accountnumber INTEGER," +
+								"company VARCHAR(60)," +
+								"accountstatus VARCHAR(60)," +
+								"PRIMARY KEY (`username`)" +
+								");");
+			
+			table = prefix + "_BANKS";
+			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
+								   "id INTEGER NOT NULL AUTO_INCREMENT," +
+								   "username VARCHAR(40) NOT NULL," +
+								   "world VARCHAR(50) NOT NULL," +
+								   "bank BLOB," +
+								   "PRIMARY KEY ('id')" +
+								   ");");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createSQLiteTables() {
+		Statement statement;
+		String table = prefix + "_INFO";
+		try {
+			statement = ((Connection) mysql.connection()).createStatement();
+			
+			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
+								   "id INTEGER NOT NULL," +
+								   "version CHAR(10)" +
+								   ");");
+			
+			table = prefix + "_USERS";
+			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
+								"username CHAR(40) PRIMARY KEY NOT NULL," +
+								"balances BLOB," +
+								"joinedDate CHAR(60)," +
+								"accountnumber INTEGER," +
+								"company CHAR(60)," +
+								"accountstatus CHAR(60)" +
+								");");
+			
+			table = prefix + "_BANKS";
+			statement.executeQuery("CREATE TABLE IF NOT EXISTS " + table + " (" +
+								   "id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT," +
+								   "username CHAR(40) NOT NULL," +
+								   "world CHAR(50) NOT NULL," +
+								   "bank BLOB" +
+								   ");");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }

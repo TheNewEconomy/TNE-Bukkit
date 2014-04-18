@@ -49,6 +49,9 @@ public class MySQL extends Database {
 
 	@Override
 	public Object connection() {
+		if(connection == null) {
+			connect();
+		}
 		return connection;
 	}
 

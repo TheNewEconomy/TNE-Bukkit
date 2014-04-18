@@ -1,10 +1,15 @@
 package com.github.tnerevival.account;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class Account implements Serializable {
 	
@@ -13,12 +18,17 @@ public class Account implements Serializable {
 	/**
 	 * A HashMap of this account's balances from every world that the player has visited.
 	 */
-	private HashMap<String, HashMap<String, Double>> balances = new HashMap<String, HashMap<String, Double>>();
+	private HashMap<String, Double> balances = new HashMap<String, Double>();
 	
 	/**
 	 * A HashMap of this account's banks from every world that the player has visited.
 	 */
 	private HashMap<String, Bank> banks = new HashMap<String, Bank>();
+	
+
+	private List<SerializableItemStack> overflow = new ArrayList<SerializableItemStack>();
+	
+	private String joined;
 	
 	/**
 	 * The account number for this account.
@@ -30,6 +40,8 @@ public class Account implements Serializable {
 	 * The name of the player who this account belongs to.
 	 */
 	private String owner;
+	
+	private UUID uid;
 	
 	/**
 	 * The name of the Company this player is associated with.
@@ -51,11 +63,37 @@ public class Account implements Serializable {
 	 * @param username
 	 */
 	public Account(String username) {
+		this.joined = new String(TNE.instance.dateFormat.format(new Date()));
 		this.accountNumber = TNE.instance.manager.accounts.size() + 1;
 		this.owner = username;
 		this.company = "none";
 		this.status = "normal";
-		setBalance(TNE.instance.defaultWorld, "default", AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+		setBalance(TNE.instance.defaultWorld, 0.0);
+	}
+	
+	public String balancesToString() {
+		Iterator<java.util.Map.Entry<String, Double>> balanceIterator = balances.entrySet().iterator();
+		
+		int count = 0;
+		String toReturn = "";
+		while(balanceIterator.hasNext()) {
+			java.util.Map.Entry<String, Double> balanceEntry = balanceIterator.next();
+			if(count > 0) {
+				toReturn += ":";
+			}
+			toReturn += balanceEntry.getKey() + "," + balanceEntry.getValue();
+			count++;
+		}
+		return toReturn;
+	}
+	
+	public void balancesFromString(String from) {
+		String[] b = from.split(":");
+		
+		for(String s : b) {
+			String[] balance = s.split(",");
+			balances.put(balance[0], Double.valueOf(balance[1]));
+		}
 	}
 
 	/**
@@ -84,6 +122,28 @@ public class Account implements Serializable {
 	 */
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public UUID getUid() {
+		return uid;
+	}
+
+	public void setUid(UUID uid) {
+		this.uid = uid;
+	}
+
+	/**
+	 * @return the joined
+	 */
+	public String getJoined() {
+		return joined;
+	}
+
+	/**
+	 * @param joined the joined to set
+	 */
+	public void setJoined(String joined) {
+		this.joined = joined;
 	}
 
 	/**
@@ -121,28 +181,20 @@ public class Account implements Serializable {
 		this.status = status;
 	}
 
-	public HashMap<String, HashMap<String, Double>> getBalances() {
+	public HashMap<String, Double> getBalances() {
 		return balances;
 	}
 
-	public void setBalances(HashMap<String, HashMap<String, Double>> balances) {
+	public void setBalances(HashMap<String, Double> balances) {
 		this.balances = balances;
 	}
 	
-	public HashMap<String, Double> getBalances(String world) {
+	public Double getBalance(String world) {
 		return balances.get(world);
 	}
 	
-	public void setBalances(String world, HashMap<String, Double> balance) {
+	public void setBalance(String world, Double balance) {
 		this.balances.put(world, balance);
-	}
-	
-	public Double getBalance(String world, String currency) {
-		return balances.get(world).get(currency);
-	}
-	
-	public void setBalance(String world, String currency, Double balance) {
-		this.balances.get(world).put(currency, balance);
 	}
 
 	public HashMap<String, Bank> getBanks() {
@@ -159,5 +211,13 @@ public class Account implements Serializable {
 	
 	public Bank getBank(String world) {
 		return this.banks.get(world);
+	}
+
+	public List<SerializableItemStack> getOverflow() {
+		return overflow;
+	}
+
+	public void setOverflow(List<SerializableItemStack> overflow) {
+		this.overflow = overflow;
 	}
 }

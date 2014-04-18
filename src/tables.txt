@@ -1,2 +1,36 @@
 MySQL and SQLite Table Setup
 
+CREATE TABLE IF NOT EXISTS Info (
+        id INTEGER NOT NULL,
+        version INT(64)
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+        username VARCHAR(40) NOT NULL,
+        balances BLOB,
+        joinedDate VARCHAR(60),
+        accountnumber INT(120),
+        company VARCHAR(60),
+        accountstatus VARCHAR(60),
+        PRIMARY KEY (`username`)
+);
+
+CREATE TABLE IF NOT EXISTS Banks (
+        id INT(120) NOT NULL AUTO_INCREMENT,
+        username VARCHAR(40) NOT NULL,
+        world VARCHAR(50) NOT NULL,
+        bank BLOB,
+        PRIMARY KEY ('id')
+);
+
+CREATE TABLE IF NOT EXISTS Lotteries (
+        id INT(120) NOT NULL AUTO_INCREMENT,
+        lotteryName VARCHAR(60) NOT NULL,
+        lotteryCost BLOB,
+        lotteryMaxEntry INT(60),
+        lotteryEntries BLOB,
+        lotteryPassed INT(60),
+        lotteryLength INT(60),
+        lotteryReward BLOB,
+        PRIMARY KEY ('id')
+);

@@ -103,8 +103,13 @@ public class Bank implements Serializable {
 	public String itemsToString() {
 		String toReturn = "";
 		
+		int count = 0;
 		for(SerializableItemStack item : items) {
-			toReturn += item.toString() + "*";
+			if(count != 0) {
+				toReturn += "*";
+			}
+			toReturn += item.toString();
+			count++;
 		}
 		return toReturn;
 	}

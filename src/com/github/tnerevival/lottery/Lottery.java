@@ -1,18 +1,24 @@
 package com.github.tnerevival.lottery;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class Lottery {
 	
-	List<String> entries = new ArrayList<String>();
+	HashMap<String, Integer> entries = new HashMap<String, Integer>();
 	
 	String name;
-	Long startTime;
+	LotteryCost cost;
+	Integer maxEntries;
+	Integer passed;
 	Integer length;
 	LotteryReward reward;
 	
-	public Lottery() {
-		
+	public Lottery(String name) {
+		this.name = name;
+		this.cost = new LotteryCost();
+		this.maxEntries = 5;
+		this.passed = 0;
+		this.length = 600;
+		this.reward = new LotteryReward();
 	}
 }

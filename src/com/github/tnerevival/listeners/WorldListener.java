@@ -25,7 +25,7 @@ public class WorldListener implements Listener {
 		String world = player.getWorld().getName();
 		
 		if(TNE.instance.getConfig().getBoolean("Core.World.EnableChangeFee")) {
-			if(!player.hasPermission("tne.world.bypass") && !player.hasPermission("tne.world.*")) {
+			if(!player.hasPermission("tne.bypass.world")) {
 				if(AccountUtils.hasFunds(username, AccountUtils.getWorldCost(world))) {
 					AccountUtils.removeFunds(username, AccountUtils.getWorldCost(world));
 					AccountUtils.initializeWorldData(username, world);

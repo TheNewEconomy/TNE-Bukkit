@@ -1,4 +1,4 @@
-package com.github.tnerevival.utils;
+package com.github.tnerevival.oldutils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import com.github.tnerevival.serializable.SerializableEnchantment;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class BankUtils {
+	
 	public static void applyInterest(String username) {
 		Account account = AccountUtils.getAccount(username);
 		Iterator<Entry<String, Bank>> it = account.getBanks().entrySet().iterator();
@@ -25,30 +26,20 @@ public class BankUtils {
 		while(it.hasNext()) {
 			Entry<String, Bank> entry = it.next();
 			
-			if(interestEnabled(entry.getKey())) {
-				Double gold = entry.getValue().getGold();
-				Double interestEarned = gold * interestRate(entry.getKey());
-				entry.getValue().setGold(gold + interestEarned);
-			}
+			Double gold = entry.getValue().getGold();
+			Double interestEarned = gold * TNE.instance.getConfig().getDouble("Core.Bank.Interest.Rate");
+			entry.getValue().setGold(gold + interestEarned);
 		}
 	}
 	
-	public static Boolean interestEnabled(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Interest.Enabled")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Interest.Enabled");
-			}
-		}
-		return TNE.instance.getConfig().getBoolean("Core.Bank.Interest.Enabled");
-	}
+	public static void applyInterest(String username, String world) {
+		if(hasBank(username)) {
+			Bank bank = getBank(username, world);
 	
-	public static Double interestRate(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Interest.Rate")) {
-				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Interest.Rate");
-			}
+			Double gold = bank.getGold();
+			Double interestEarned = gold * TNE.instance.getConfig().getDouble("Core.Bank.Interest.Rate");
+			bank.setGold(gold + interestEarned);
 		}
-		return TNE.instance.getConfig().getDouble("Core.Bank.Interest.Rate");
 	}
 	
 	public static Boolean hasOldBank(String username) {
@@ -75,18 +66,15 @@ public class BankUtils {
 	
 	public static Bank fromString(String bank) {
 		String[] variables = bank.split(":");
-		String[] itemStrings = variables[4].split("\\*");
+		String[] itemStrings = variables[4].split("*");
 		Bank b = new Bank(variables[0], Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
 		b.setPin(variables[1]);
 		
 		List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();
 		for(int i = 0; i < itemStrings.length; i++) {
-			if(itemStrings[i].replaceAll(";;", ";none;").split(";").length == 6) {
-				itemStrings[i] += ";none";
-			}
-			String[] itemVariables = itemStrings[i].replaceAll(";;", ";none;").split(";");
-			String[] loreStrings = (itemVariables[5] != "none") ? itemVariables[5].split("~") : new String[]{};
-			String[] enchantmentStrings = (itemVariables[6] != "none") ? itemVariables[6].split("~") : new String[]{};
+			String[] itemVariables = itemStrings[i].split(";");
+			String[] loreStrings = itemVariables[5].split("~");
+			String[] enchantmentStrings = itemVariables[6].split("~");
 			SerializableItemStack item = new SerializableItemStack(Integer.parseInt(itemVariables[1]));
 			HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
 			List<String> lore = new ArrayList<String>();
@@ -97,21 +85,15 @@ public class BankUtils {
 			item.setCustomName(itemVariables[4]);
 			
 			for(int l = 0; l < loreStrings.length; l++) {
-				if(loreStrings[l] != "none") {
-					lore.add(loreStrings[l]);
-				}
+				lore.add(loreStrings[l]);
 			}
 			item.setLore(lore);
 			
-			if(enchantmentStrings != null && enchantmentStrings.length > 0) {
-				for(int e = 0; e < enchantmentStrings.length; e++) {
-					String[] enchantmentVariables = enchantmentStrings[e].split(",");
-					if(Enchantment.getByName(enchantmentVariables[0]) != null) {
-						enchantments.put(new SerializableEnchantment(Enchantment.getByName(enchantmentVariables[0])), Integer.parseInt(enchantmentVariables[1]));
-					}
-				}
-				item.setEnchantments(enchantments);
+			for(int e = 0; e < enchantmentStrings.length; e++) {
+				String[] enchantmentVariables = enchantmentStrings[e].split(",");
+				enchantments.put(new SerializableEnchantment(Enchantment.getByName(enchantmentVariables[0])), Integer.parseInt(enchantmentVariables[1]));
 			}
+			item.setEnchantments(enchantments);
 			items.add(item);
 		}
 		b.setItems(items);
@@ -124,7 +106,7 @@ public class BankUtils {
 			return null;
 		} else {
 			Bank bank = getBank(username);
-			String gold = "Gold: " + MISCUtils.getShort(bank.getGold());
+			String gold = "Gold: " + MISCUtils.formatAmountShort(bank.getGold());
 			Inventory bankInventory = Bukkit.createInventory(null, size(PlayerUtils.getWorld(username)), ChatColor.RED + username + " " + ChatColor.GOLD + gold);
 			if(bank.getItems().size() > 0) {
 				List<SerializableItemStack> items = bank.getItems();

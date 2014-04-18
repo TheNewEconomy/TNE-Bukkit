@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.db;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -22,12 +23,18 @@ public class FlatFile extends Database {
 
 	@Override
 	public Boolean connected() {
+		if(connection == null) {
+			connect();
+		}
 		return connection.connected();
 	}
 
 	@Override
 	public void connect() {
 		try {
+			if(connection == null) {
+				connection = new FlatFileConnection(file);
+			}
 			connection.connect();
 		} catch (FileNotFoundException e) {
 			System.out.println("Could not find file! File:" + file);
@@ -39,11 +46,18 @@ public class FlatFile extends Database {
 
 	@Override
 	public Object connection() {
+		if(connection == null || !connected()) {
+			connect();
+		}
 		return connection;
 	}
 
 	@Override
 	public void close() {
 		connection.close();
+	}
+	
+	public File getFile() {
+		return new File(this.file);
 	}
 }
