@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class Bank implements Serializable {
 	
@@ -106,11 +107,13 @@ public class Bank implements Serializable {
 			
 			int count = 0;
 			for(SerializableItemStack item : items) {
-				if(count != 0) {
-					toReturn += "*";
+				if(item != null) {
+					if(count != 0) {
+						toReturn += "*";
+					}
+					toReturn += MISCUtils.itemstackToString(item);
+					count++;
 				}
-				toReturn += item.toString();
-				count++;
 			}
 			return toReturn;
 		}

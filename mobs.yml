@@ -10,8 +10,13 @@ Mobs:
 
     #Whether or not mobs drop money on death.
     Enabled: true
-
+    
     #Reward configurations for individual mobs
+    #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
+    Default:
+        Enabled: true
+        Reward: 10.00
+    
     Bat:
         Enabled: true
         Reward: 10.00

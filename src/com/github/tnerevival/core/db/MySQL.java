@@ -2,14 +2,17 @@ package com.github.tnerevival.core.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * 
  * @author Daniel Vidmar aka creatorfromhell
  *
  */
-public class MySQL extends Database {
+public class MySQL extends SQLDatabase {
 	
 	private String host;
 	private Integer port;
@@ -19,6 +22,11 @@ public class MySQL extends Database {
 	
 	private Connection connection;
 	
+	private Statement statement;
+	private PreparedStatement preparedStatement;
+	
+	private ResultSet result;
+	
 	public MySQL(String host, Integer port, String database, String user, String password) {
 		this.host = host;
 		this.port = port;
@@ -26,6 +34,9 @@ public class MySQL extends Database {
 		this.user = user;
 		this.password = password;
 		connection = null;
+		statement = null;
+		preparedStatement = null;
+		result = null;
 	}
 
 	@Override
@@ -48,11 +59,76 @@ public class MySQL extends Database {
 	}
 
 	@Override
-	public Object connection() {
-		if(connection == null) {
+	public Connection connection() {
+		if(!connected()) {
 			connect();
 		}
 		return connection;
+	}
+
+	@Override
+	public void executeQuery(String query) {
+		if(!connected()) {
+			connect();
+		}
+		try {
+			statement = connection().createStatement();
+			result = statement.executeQuery(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void executePreparedQuery(String query, Object[] variables) {
+		if(!connected()) {
+			connect();
+		}
+		try {
+			preparedStatement = connection().prepareStatement(query);
+			
+			for(int i = 0; i < variables.length; i++) {
+				preparedStatement.setObject((i + 1), variables[i]);
+			}
+			result = preparedStatement.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void executeUpdate(String query) {
+		if(!connected()) {
+			connect();
+		}
+		try {
+			statement = connection().createStatement();
+			statement.executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void executePreparedUpdate(String query, Object[] variables) {
+		if(!connected()) {
+			connect();
+		}
+		try {
+			preparedStatement = connection().prepareStatement(query);
+			
+			for(int i = 0; i < variables.length; i++) {
+				preparedStatement.setObject((i + 1), variables[i]);
+			}
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ResultSet results() {
+		return result;
 	}
 
 	@Override

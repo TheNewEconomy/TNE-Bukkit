@@ -64,15 +64,13 @@ public class InteractionListener implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		String username = player.getDisplayName();
-		if(event.getInventory().getTitle() != null && event.getInventory().getTitle().contains(username)) {
+		if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("bank")) {
 			Bank bank = TNE.instance.manager.accounts.get(username).getBank(PlayerUtils.getWorld(username));
 			List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
 			Integer slot = 0;
 			for(ItemStack i : event.getInventory().getContents()) {
 				if(i != null) {
 					items.add(new SerializableItemStack(slot, i));
-				} else {
-					items.add(new SerializableItemStack(slot));
 				}
 				slot++;
 			}
@@ -360,6 +358,16 @@ public class InteractionListener implements Listener {
 							Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Zombie.Reward");
 							AccountUtils.addFunds(username, reward);
 							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Zombie" + ChatColor.WHITE + ".");
+						}
+					}
+				} else {
+					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Default.Enabled")) {
+						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Default.Reward");
+						AccountUtils.addFunds(username, reward);
+						if(entity.getCustomName() != null) {
+							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + entity.getCustomName() + ChatColor.WHITE + ".");
+						} else {
+							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Mob" + ChatColor.WHITE + ".");
 						}
 					}
 				}

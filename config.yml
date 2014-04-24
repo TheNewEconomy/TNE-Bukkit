@@ -66,6 +66,20 @@ Core:
 
             #The plural name. Example: Cents
             Plural: Cents
+            
+    #All configurations relating to player death.
+    Death:
+        
+        #Whether or not players who die lose all their money
+        Lose: false
+        
+        #Currently doesn't work
+        #Whether or not players who have killed other players have access to their bank for the specified interval
+        Robbing: false
+        
+        #Currently doesn't work
+        #The amount of time players have access to the other player's bank if Robbing is enabled(in seconds)
+        RobbingInterval: 600
 
 
     #All configurations relating to banks.

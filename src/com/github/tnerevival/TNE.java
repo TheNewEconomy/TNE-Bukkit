@@ -48,7 +48,7 @@ public class TNE extends JavaPlugin {
 	
 	public void onEnable() {
 		instance = this;
-		defaultWorld = getServer().getWorlds().get(0).getName();
+		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
 		//Configurations
 		initializeConfigurations();
 		loadConfigurations();

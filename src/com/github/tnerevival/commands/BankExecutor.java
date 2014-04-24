@@ -55,14 +55,14 @@ public class BankExecutor implements CommandExecutor {
 										if(AccountUtils.hasFunds(username, BankUtils.cost(world))) {
 											AccountUtils.removeFunds(username, BankUtils.cost(world));
 											Bank bank = new Bank(username, BankUtils.size(world));
-											plugin.manager.banks.put(username, bank);
+											AccountUtils.getAccount(username).getBanks().put(world, bank);
 											player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 										} else {
 											player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(world, BankUtils.cost(world)) + ChatColor.DARK_RED + " to create a bank.");
 										}
 									} else {
 										Bank bank = new Bank(username, BankUtils.size(world));
-										plugin.manager.banks.put(username, bank);
+										AccountUtils.getAccount(username).getBanks().put(world, bank);
 										player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 									}
 								} else {

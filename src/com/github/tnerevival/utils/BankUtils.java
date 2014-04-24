@@ -56,7 +56,11 @@ public class BankUtils {
 		if(MISCUtils.multiWorld()) {
 			return AccountUtils.getAccount(username).getBanks().containsKey(PlayerUtils.getWorld(username));
 		}
-		return AccountUtils.getAccount(username).getBanks().containsKey(TNE.instance.defaultWorld);
+		String defaultWorld = TNE.instance.defaultWorld;
+		if(defaultWorld == null) {
+			TNE.instance.getLogger().warning("***WORLD NAME IS NULL***");
+		}
+		return AccountUtils.getAccount(username).getBanks().containsKey(defaultWorld);
 	}
 	
 	public static Bank getBank(String username) {
@@ -92,7 +96,7 @@ public class BankUtils {
 		} else {
 			Bank bank = getBank(username);
 			String gold = "Gold: " + MISCUtils.getShort(bank.getGold());
-			Inventory bankInventory = Bukkit.createInventory(null, size(PlayerUtils.getWorld(username)), ChatColor.RED + username + " " + ChatColor.GOLD + gold);
+			Inventory bankInventory = Bukkit.createInventory(null, size(PlayerUtils.getWorld(username)), ChatColor.WHITE + "Bank " + ChatColor.GOLD + gold);
 			if(bank.getItems().size() > 0) {
 				List<SerializableItemStack> items = bank.getItems();
 				

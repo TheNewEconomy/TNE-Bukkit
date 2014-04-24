@@ -20,13 +20,17 @@ public class AccountUtils {
 	public static Account getAccount(String username) {
 		if(exists(username)) {
 			return TNE.instance.manager.accounts.get(username);
+		} else {
+			Account account = new Account(username);
+			TNE.instance.manager.accounts.put(username, account);
+			AccountUtils.addFunds(username, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+			return account;
 		}
-		return null;
 	}
 	
 	public static List<SerializableItemStack> overflowFromString(String overflowString) {
 		List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
-		if(overflowString != "TNENOSTRINGVALUE") {
+		if(!overflowString.equalsIgnoreCase("TNENOSTRINGVALUE")) {
 			String[] itemStrings = overflowString.split("\\*");
 			
 			for(String s : itemStrings) {
@@ -106,6 +110,10 @@ public class AccountUtils {
 
 	public static void removeFunds(String username, double amount) {
 		setBalance(username, getBalance(username) - amount);
+	}
+	
+	public static void setFunds(String username, double amount) {
+		setBalance(username, amount);
 	}
 
 	public static Boolean giveMoney(String username, Double amount) {

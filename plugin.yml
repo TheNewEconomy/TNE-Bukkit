@@ -16,6 +16,7 @@ commands:
       description: The base command for all money-related commands.
    theneweconomy:
       description: The base command for all The New Economy core commands.
+      aliases: tne
 
 permissions:
    tne.*:

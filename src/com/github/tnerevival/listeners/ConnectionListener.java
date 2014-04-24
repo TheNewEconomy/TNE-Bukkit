@@ -3,6 +3,7 @@ package com.github.tnerevival.listeners;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.github.tnerevival.TNE;
@@ -25,6 +26,15 @@ public class ConnectionListener implements Listener {
 			Account account = new Account(username);
 			plugin.manager.accounts.put(username, account);
 			AccountUtils.addFunds(username, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent event) {
+		if(TNE.instance.getConfig().getBoolean("Core.Death.Lose")) {
+			String username = event.getEntity().getDisplayName();
+			
+			AccountUtils.setFunds(username, 0.0);
 		}
 	}
 }
