@@ -12,7 +12,6 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.PlayerUtils;
 
 public class BankExecutor implements CommandExecutor {
 
@@ -27,7 +26,7 @@ public class BankExecutor implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			String username = player.getDisplayName();
-			String world = PlayerUtils.getWorld(username);
+			String world = MISCUtils.getWorld(username);
 			
 			if(cmd.getName().equalsIgnoreCase("bank")) {
 				if(BankUtils.enabled(world)) {

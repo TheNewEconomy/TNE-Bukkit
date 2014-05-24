@@ -66,7 +66,7 @@ public class Account implements Serializable {
 		this.joined = new String(TNE.instance.dateFormat.format(new Date()));
 		this.accountNumber = TNE.instance.manager.accounts.size() + 1;
 		this.owner = username;
-		this.company = "none";
+		this.company = "TNENOSTRINGVALUE";
 		this.status = "normal";
 		setBalance(TNE.instance.defaultWorld, 0.0);
 	}

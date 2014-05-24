@@ -33,7 +33,6 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.PlayerUtils;
 
 public class InteractionListener implements Listener {
 	
@@ -65,7 +64,7 @@ public class InteractionListener implements Listener {
 		Player player = (Player) event.getPlayer();
 		String username = player.getDisplayName();
 		if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("bank")) {
-			Bank bank = TNE.instance.manager.accounts.get(username).getBank(PlayerUtils.getWorld(username));
+			Bank bank = TNE.instance.manager.accounts.get(username).getBank(MISCUtils.getWorld(username));
 			List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
 			Integer slot = 0;
 			for(ItemStack i : event.getInventory().getContents()) {
@@ -165,7 +164,7 @@ public class InteractionListener implements Listener {
 		if(entity.getKiller() != null) {
 			Player killer = entity.getKiller();
 			String username = killer.getDisplayName();
-			String world = PlayerUtils.getWorld(username);
+			String world = MISCUtils.getWorld(username);
 			
 			if(TNE.instance.mobConfigurations.getBoolean("Mobs.Enabled")) {
 				if(entity.getType().equals(EntityType.BAT)) {

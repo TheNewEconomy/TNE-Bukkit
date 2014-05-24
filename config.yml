@@ -1,13 +1,9 @@
-# The New Economy v2.0
+# The New Economy v0.0.2.1
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
 # you can do so via Github at https://github.com/TNERevival/TheNewEconomy/
 Core:
-
-    #Whether or not this is the first time running TNE
-    #Do not modify this or you may lose some data.
-    First: true
     
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
@@ -80,6 +76,24 @@ Core:
         #Currently doesn't work
         #The amount of time players have access to the other player's bank if Robbing is enabled(in seconds)
         RobbingInterval: 600
+        
+    #All configurations relating to companies
+    Company:
+        
+        #Whether or not companies are enabled
+        Enabled: true
+        
+        #How much it costs to create a company
+        Cost: 20.0
+        
+        #How much a company initially has in their balance.
+        InitialBalance: 100.0
+        
+        #The interval(in seconds) a player receives their specified paycheck from their company.
+        PayRate: 2400
+        
+        #What a company's balance must reach to be official declared as bankrupt and automatically removed.
+        Failure: -2000.0
 
 
     #All configurations relating to banks.

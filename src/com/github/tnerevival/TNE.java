@@ -12,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.tnerevival.commands.BankExecutor;
 import com.github.tnerevival.commands.CoreExecutor;
 import com.github.tnerevival.commands.MoneyExecutor;
-import com.github.tnerevival.core.Economy;
-import com.github.tnerevival.core.SaveManager;
+import com.github.tnerevival.core.EconomyManager;
+import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
 import com.github.tnerevival.listeners.WorldListener;
@@ -23,15 +23,15 @@ import com.github.tnerevival.worker.SaveWorker;
 public class TNE extends JavaPlugin {
 	
 	public static TNE instance;
-	public Economy manager;
+	public EconomyManager manager;
+	public TNEAPI api = null;
+	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
 	
 	// Files & Custom Configuration Files
-	//File currency;
 	public File mobs;
 	public File worlds;
 	
-	//public FileConfiguration currencyConfigurations;
 	public FileConfiguration mobConfigurations;
 	public FileConfiguration worldConfigurations;
 	
@@ -49,6 +49,8 @@ public class TNE extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
+		manager = new EconomyManager();
+		api = new TNEAPI(this);
 		//Configurations
 		initializeConfigurations();
 		loadConfigurations();
@@ -56,8 +58,6 @@ public class TNE extends JavaPlugin {
 		saveWorkerID = -1;
 		interestWorkerID = -1;
 		
-		manager = new Economy();
-		manager.saveManager = new SaveManager();
 		saveWorker = new SaveWorker(this);
 		interestWorker = new InterestWorker(this);
 		if(getConfig().getBoolean("Core.AutoSaver.Enabled")) {
@@ -79,14 +79,21 @@ public class TNE extends JavaPlugin {
 		getCommand("money").setExecutor(new MoneyExecutor(this));
 		getCommand("theneweconomy").setExecutor(new CoreExecutor(this));
 		
-		getLogger().info("TheNewEconomy v2.0 has been enabled!");
+		try {
+		    MetricsLite metrics = new MetricsLite(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    getLogger().severe("Error while enabling plugin metrics.");
+		}
+		
+		getLogger().info("The New Economy v0.0.2.1 has been enabled!");
 	}
 	
 	public void onDisable() {
 		stopSaveWorker();
 		stopInterestWorker();
 		manager.saveManager.save();
-		getLogger().info("TheNewEconomy v2.0 has been disabled!");
+		getLogger().info("The New Economy v0.0.2.1 has been disabled!");
 	}
 	
 	public void startSaveWorker() {
@@ -116,10 +123,8 @@ public class TNE extends JavaPlugin {
 	}
 	
 	private void initializeConfigurations() {
-		//currency = new File(getDataFolder(), "currency.yml");
 		mobs = new File(getDataFolder(), "mobs.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
-		//currencyConfigurations = YamlConfiguration.loadConfiguration(currency);
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
 		mobConfigurations.setDefaults(YamlConfiguration.loadConfiguration(getResource("mobs.yml")));
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
@@ -130,14 +135,12 @@ public class TNE extends JavaPlugin {
 	     getConfig().options().copyDefaults(true);
 	     mobConfigurations.options().copyDefaults(true);
 	     worldConfigurations.options().copyDefaults(true);
-	     //currencyConfigurations.options().copyDefaults(true);
 	     saveConfigurations();
 	}
 	
 	private void saveConfigurations() {
 		saveConfig();
 		try {
-			//currencyConfigurations.save(currency);
 			mobConfigurations.save(mobs);
 			worldConfigurations.save(worlds);
 		} catch (IOException e) {

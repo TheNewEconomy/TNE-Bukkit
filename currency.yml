@@ -1,0 +1,66 @@
+# The New Economy v2.0
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TNERevival/TheNewEconomy/
+
+
+#All currency configurations that are available for the advanced currency system.
+#These only apply
+Currencies:
+
+    #The default advanced currency configurations that will be used if world-specific
+    #configurations are not set for the specific world.
+    #This field should be the name of the world that the currencies are for(case sensitive)
+    #You should always have a Default configuration setup.
+    Default:
+    
+        #The initial balance for accounts in this world.
+        Balance: 100.0
+        
+        #The singular name of this currency group.
+        #Example: United States Dollar, Great Britain Pound, Australian dollar
+        United Ender Dollar:
+            
+            #The plural name of this currency group.
+            #Example: Dollars, Pounds, etc
+            Plural: United Ender Dollars
+            
+            #The abbreviation for this currency that can be used for sign shops, and balance checking
+            #Example USD, GBP, AUD
+            Abbreviation: UED
+            
+            #Whether or not this currency group is the default for the world.
+            Default: true
+            
+            #Whether or not this currency is a digital currency. If it is
+            #not then you'll need to specify an item in each tier to use
+            #as the currency.
+            Digital: true
+            
+            #The rate of this currency when being compared to other currencies
+            Value: 1.0
+            
+            #The name of this currency tier.
+            #Example(using USD as currency group): Dime, Quarter, Half Dollar, Dollar
+            Half Block:
+                
+                #The item to use as the currency if this currency is not digital.
+                #Please use the item id
+                Currency_Item: 44
+                
+                #The value of this currency tier in comparison to the other tiers of this currency group in decimal form.
+                #Example(Using USD as the currency group): Quarter is .25 of the Dollar, Dime is .10 of the Dollar, etc
+                Value: 0.5
+                
+            #The name of this currency tier.
+            #Example(using USD as currency group): Dime, Quarter, Half Dollar, Dollar    
+            Full Block:
+                
+                #The item to use as the currency if this currency is not digital.
+                #Please use the item id
+                Currency_Item: 43
+                
+                #The value of this currency tier in comparison to the other tiers of this currency group in decimal form.
+                #Example(Using USD as the currency group): Quarter is .25 of the Dollar, Dime is .10 of the Dollar, etc
+                Value: 1.0

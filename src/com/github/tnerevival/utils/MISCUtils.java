@@ -18,6 +18,15 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 public class MISCUtils {
 
 	//True MISC Utils
+	public static String getWorld(String username) {
+		if(MISCUtils.multiWorld()) {
+			if(Bukkit.getPlayer(username) != null) {
+				return Bukkit.getPlayer(username).getWorld().getName();
+			}
+		}
+		return TNE.instance.defaultWorld;
+	}
+	
 	public static Integer getItemCount(String username, Material item) {
 		Player p = Bukkit.getPlayer(username);
 		int count = 0;
@@ -64,14 +73,14 @@ public class MISCUtils {
 						if(p.getInventory().firstEmpty() != -1) {
 							p.getInventory().addItem(new ItemStack(item, item.getMaxStackSize()));
 						} else {
-							AccountUtils.getAccount(username).getOverflow().add(new SerializableItemStack(0, new ItemStack(item, item.getMaxStackSize())));
+							p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, item.getMaxStackSize()));
 						}
 						add -= item.getMaxStackSize();
 					} else {
 						if(p.getInventory().firstEmpty() != -1) {
 							p.getInventory().addItem(new ItemStack(item, add));
 						} else {
-							AccountUtils.getAccount(username).getOverflow().add(new SerializableItemStack(0, new ItemStack(item, add)));
+							p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, add));
 						}
 						add = 0;
 					}
@@ -110,11 +119,15 @@ public class MISCUtils {
 	
 	
 	//Format Utils
-	public static String formatBalance(String world, double balance) {
+	public static Boolean shorten(String world) {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Shorten")) {
-			return (TNE.instance.getConfig().getBoolean("Worlds." + world + ".Shorten")) ? formatBalance(world, balance, true) : formatBalance(world, balance, false);
+			return TNE.instance.getConfig().getBoolean("Worlds." + world + ".Shorten");
 		}
-		return (TNE.instance.getConfig().getBoolean("Core.Shorten")) ? formatBalance(world, balance, true) : formatBalance(world, balance, false);
+		return TNE.instance.getConfig().getBoolean("Worlds." + world + ".Shorten");
+	}
+	
+	public static String formatBalance(String world, double balance) {
+		return (shorten(world)) ? formatBalance(world, balance, true) : formatBalance(world, balance, false);
 	}
 	
 	public static String formatBalance(String world, double balance, Boolean shorten) {
@@ -140,21 +153,25 @@ public class MISCUtils {
 		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
 		String[] split = balanceString.split("\\.");
 		if(type.equalsIgnoreCase("major")) {
-			if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.Name")) {
-				return (Integer.valueOf(split[0]) != 1) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular");
-			}
-			return (Integer.valueOf(split[0]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular");
+			return (Integer.valueOf(split[0]) != 1) ? getMajorCurrencyName(world, false) : getMajorCurrencyName(world, true);
 		} else if(type.equalsIgnoreCase("minor")) {
-			if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.Name")) {
-				return (Integer.valueOf(split[1]) != 1) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Plural") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Singular");
-			}
-			return (Integer.valueOf(split[1]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MinorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MinorName.Singular");
-		} else {
-			if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.Name")) {
-				return (Integer.valueOf(split[0]) != 1) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular");
-			}
-			return (Integer.valueOf(split[0]) != 1) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular");
+			return (Integer.valueOf(split[0]) != 1) ? getMinorCurrencyName(world, false) : getMinorCurrencyName(world, true);
 		}
+		return (Integer.valueOf(split[0]) != 1) ? getMajorCurrencyName(world, false) : getMajorCurrencyName(world, true);
+	}
+	
+	public static String getMajorCurrencyName(String world, Boolean singular) {
+		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MajorName")) {
+			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural");
+		}
+		return (singular) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural");
+	}
+	
+	public static String getMinorCurrencyName(String world, Boolean singular) {
+		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MinorName")) {
+			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Plural");
+		}
+		return (singular) ? TNE.instance.getConfig().getString("Core.Currency.MinorName.Singular") : TNE.instance.getConfig().getString("Core.Currency.MinorName.Plural");
 	}
 	
 	//ItemStack Utils
