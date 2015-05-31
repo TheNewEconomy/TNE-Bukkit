@@ -2,6 +2,7 @@ package com.github.tnerevival.worker;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,12 +24,12 @@ public class InterestWorker extends BukkitRunnable {
 	}
 	
 	private void doInterest() {
-		Iterator<Entry<String, Account>> it = plugin.manager.accounts.entrySet().iterator();
+		Iterator<Entry<UUID, Account>> it = plugin.manager.accounts.entrySet().iterator();
 		
 		while(it.hasNext()) {
-			Entry<String, Account> entry = it.next();
+			Entry<UUID, Account> entry = it.next();
 			
-			BankUtils.applyInterest(entry.getValue().getOwner());
+			BankUtils.applyInterest(entry.getValue().getUid());
 		}
 	}
 }

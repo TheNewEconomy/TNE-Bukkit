@@ -21,24 +21,23 @@ public class WorldListener implements Listener {
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
-		String username = player.getDisplayName();
 		String world = player.getWorld().getName();
 		
 		if(TNE.instance.getConfig().getBoolean("Core.World.EnableChangeFee")) {
 			if(!player.hasPermission("tne.bypass.world")) {
-				if(AccountUtils.hasFunds(username, AccountUtils.getWorldCost(world))) {
-					AccountUtils.removeFunds(username, AccountUtils.getWorldCost(world));
-					AccountUtils.initializeWorldData(username, world);
+				if(AccountUtils.hasFunds(player.getUniqueId(), AccountUtils.getWorldCost(world))) {
+					AccountUtils.removeFunds(player.getUniqueId(), AccountUtils.getWorldCost(world));
+					AccountUtils.initializeWorldData(player.getUniqueId(), world);
 					player.sendMessage(ChatColor.DARK_RED + "You have been charged " + ChatColor.GOLD + MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)) + ChatColor.DARK_RED + " for changing worlds.");
 				} else {
 					player.teleport(event.getFrom().getSpawnLocation());
 					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)) + ChatColor.DARK_RED + " to change worlds.");
 				}
 			} else {
-				AccountUtils.initializeWorldData(username, world);
+				AccountUtils.initializeWorldData(player.getUniqueId(), world);
 			}
 		} else {
-			AccountUtils.initializeWorldData(username, world);
+			AccountUtils.initializeWorldData(player.getUniqueId(), world);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.github.tnerevival.core;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
@@ -11,9 +12,16 @@ public class EconomyManager {
 	
 	/**
 	 * A HashMap holding all accounts for the economy.
-	 * Format: Player Name, Account Class Instance
+	 * Format: Player name, Account Class Instance
 	 */
-	public HashMap<String, Account> accounts = new HashMap<String, Account>();
+	@Deprecated
+	public HashMap<String, Account> legacy = new HashMap<String, Account>();
+	
+	/**
+	 * A HashMap holding all accounts for the economy.
+	 * Format: Player UUID, Account Class Instance
+	 */
+	public HashMap<UUID, Account> accounts = new HashMap<UUID, Account>();
 	
 	/**
 	 * A HashMap holding every company created.
@@ -28,9 +36,7 @@ public class EconomyManager {
 	 */
 	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
 	
-	/*
-	 * @Deprecated
-	 */
+	@Deprecated
 	public HashMap<String, Bank> banks = new HashMap<String, Bank>();
 	
 	//public CurrencyManager currencyManager;

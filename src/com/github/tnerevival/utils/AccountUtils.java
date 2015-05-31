@@ -2,6 +2,7 @@ package com.github.tnerevival.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,26 +19,26 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class AccountUtils {
 	
-	public static Boolean exists(String username) {
-		return TNE.instance.manager.accounts.containsKey(username);
+	public static Boolean exists(UUID id) {
+		return TNE.instance.manager.accounts.containsKey(id);
 	}
 	
-	public static void createAccount(String username) {
-		TNECreateAccountEvent e = new TNECreateAccountEvent(username);
+	public static void createAccount(UUID id) {
+		TNECreateAccountEvent e = new TNECreateAccountEvent(Bukkit.getPlayer(id));
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
 		if(!e.isCancelled()) {
-			TNE.instance.manager.accounts.put(e.getUsername(), e.getAccount());
-			AccountUtils.addFunds(e.getUsername(), AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+			TNE.instance.manager.accounts.put(e.getPlayer().getUniqueId(), e.getAccount());
+			AccountUtils.addFunds(e.getPlayer().getUniqueId(), AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
 		}
 	}
 
-	public static Account getAccount(String username) {
-		if(exists(username)) {
-			return TNE.instance.manager.accounts.get(username);
+	public static Account getAccount(UUID id) {
+		if(exists(id)) {
+			return TNE.instance.manager.accounts.get(id);
 		} else {
-			createAccount(username);
-			return TNE.instance.manager.accounts.get(username);
+			createAccount(id);
+			return TNE.instance.manager.accounts.get(id);
 		}
 	}
 	
@@ -53,45 +54,45 @@ public class AccountUtils {
 		return items;
 	}
 	
-	private static Double getBalance(String username) {
-		return getBalance(username, MISCUtils.getWorld(username));
+	private static Double getBalance(UUID id) {
+		return getBalance(id, MISCUtils.getWorld(id));
 	}
 
-	private static Double getBalance(String username, String world) {
-		Account account = getAccount(username);
+	private static Double getBalance(UUID id, String world) {
+		Account account = getAccount(id);
 		if(MISCUtils.multiWorld()) {
 			if(MISCUtils.worldConfigExists("Worlds." + world + ".Currency.ItemCurrency")) {
 				if(TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Currency.ItemCurrency")) {
 					Material majorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMajor"));
 					Material minorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMinor"));
-					Integer major = MISCUtils.getItemCount(username, majorItem);
-					Integer minor = MISCUtils.getItemCount(username, minorItem);
+					Integer major = MISCUtils.getItemCount(id, majorItem);
+					Integer minor = MISCUtils.getItemCount(id, minorItem);
 					String balance = major + "." + minor;
 					return Double.valueOf(balance);
 				}
 			}
 			if(!account.getBalances().containsKey(world)) {
-				initializeWorldData(username, world);
+				initializeWorldData(id, world);
 			}
-			return account.getBalance(MISCUtils.getWorld(username));
+			return account.getBalance(MISCUtils.getWorld(id));
 		}
 		if(TNE.instance.getConfig().getBoolean("Core.Currency.ItemCurrency")) {
 			Material majorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMajor"));
 			Material minorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMinor"));
-			Integer major = MISCUtils.getItemCount(username, majorItem);
-			Integer minor = MISCUtils.getItemCount(username, minorItem);
+			Integer major = MISCUtils.getItemCount(id, majorItem);
+			Integer minor = MISCUtils.getItemCount(id, minorItem);
 			String balance = major + "." + minor;
 			return Double.valueOf(balance);
 		}
 		return account.getBalance(TNE.instance.defaultWorld);
 	}
 	
-	private static void setBalance(String username, Double balance) {
-		setBalance(username, MISCUtils.getWorld(username), balance);
+	private static void setBalance(UUID id, Double balance) {
+		setBalance(id, MISCUtils.getWorld(id), balance);
 	}
 
-	private static void setBalance(String username, String world, Double balance) {
-		Account account = getAccount(username);
+	private static void setBalance(UUID id, String world, Double balance) {
+		Account account = getAccount(id);
 		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
 		String[] split = balanceString.split("\\.");
 		if(MISCUtils.multiWorld()) {
@@ -99,12 +100,12 @@ public class AccountUtils {
 				if(TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Currency.ItemCurrency")) {
 					Material majorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMajor"));
 					Material minorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMinor"));
-					MISCUtils.setItemCount(username, majorItem, Integer.valueOf(split[0].trim()));
-					MISCUtils.setItemCount(username, minorItem, Integer.valueOf(split[1].trim()));
+					MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
+					MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
 				}
 			} else {
 				if(!account.getBalances().containsKey(world)) {
-					initializeWorldData(username, world);
+					initializeWorldData(id, world);
 				}
 				account.setBalance(world, balance);
 			}
@@ -112,87 +113,87 @@ public class AccountUtils {
 		if(TNE.instance.getConfig().getBoolean("Core.Currency.ItemCurrency")) {
 			Material majorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMajor"));
 			Material minorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMinor"));
-			MISCUtils.setItemCount(username, majorItem, Integer.valueOf(split[0].trim()));
-			MISCUtils.setItemCount(username, minorItem, Integer.valueOf(split[1].trim()));
+			MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
+			MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
 		} else {
 			account.setBalance(TNE.instance.defaultWorld, balance);
 		}
 	}
 
-	public static Boolean hasFunds(String username, double amount) {
-		return getBalance(username) >= amount;
+	public static Boolean hasFunds(UUID id, double amount) {
+		return getBalance(id) >= amount;
 	}
 	
-	public static Boolean hasFunds(String username, String world, double amount) {
-		return getBalance(username, world) >= amount;
+	public static Boolean hasFunds(UUID id, String world, double amount) {
+		return getBalance(id, world) >= amount;
 	}
 
-	public static void addFunds(String username, double amount) {
-		addFunds(username, MISCUtils.getWorld(username), amount);
+	public static void addFunds(UUID id, double amount) {
+		addFunds(id, MISCUtils.getWorld(id), amount);
 	}
 	
-	public static void addFunds(String username, String world, double amount) {
-		TNEFundsAddEvent e = new TNEFundsAddEvent(username, amount);
+	public static void addFunds(UUID id, String world, double amount) {
+		TNEFundsAddEvent e = new TNEFundsAddEvent(Bukkit.getPlayer(id), amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
 		if(!e.isCancelled()) {
-			setBalance(e.getUsername(), world, e.getNewBalance());
+			setBalance(e.getPlayer().getUniqueId(), world, e.getNewBalance());
 		}
 	}
 
-	public static void removeFunds(String username, double amount) {
-		removeFunds(username, MISCUtils.getWorld(username), amount);
+	public static void removeFunds(UUID id, double amount) {
+		removeFunds(id, MISCUtils.getWorld(id), amount);
 	}
 	
-	public static void removeFunds(String username, String world, double amount) {
-		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(username, amount);
+	public static void removeFunds(UUID id, String world, double amount) {
+		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(Bukkit.getPlayer(id), amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
 		if(!e.isCancelled()) {
-			setBalance(e.getUsername(), world, e.getNewBalance());
+			setBalance(e.getPlayer().getUniqueId(), world, e.getNewBalance());
 		}
 	}
 	
-	public static Double getFunds(String username) {
-		return getBalance(username);
+	public static Double getFunds(UUID id) {
+		return getBalance(id);
 	}
 	
-	public static Double getFunds(String username, String world) {
-		return getBalance(username, world);
+	public static Double getFunds(UUID id, String world) {
+		return getBalance(id, world);
 	}
 	
-	public static void setFunds(String username, double amount) {
-		setBalance(username, amount);
+	public static void setFunds(UUID id, double amount) {
+		setBalance(id, amount);
 	}
 	
-	public static void setFunds(String username, String world, double amount) {
-		setBalance(username, world, amount);
+	public static void setFunds(UUID id, String world, double amount) {
+		setBalance(id, world, amount);
 	}
 
-	public static Boolean giveMoney(String username, String from, Double amount) {
-		if(exists(username)) {
-			String world = MISCUtils.getWorld(username);
-			TNEFundsGiveEvent e = new TNEFundsGiveEvent(username, from, amount);
+	public static Boolean giveMoney(UUID id, UUID from, Double amount) {
+		if(exists(id)) {
+			String world = MISCUtils.getWorld(id);
+			TNEFundsGiveEvent e = new TNEFundsGiveEvent(Bukkit.getPlayer(id), Bukkit.getPlayer(from), amount);
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
 			if(!e.isCancelled()) {
-				addFunds(e.getReceiver(), e.getAmount());
-				if(Bukkit.getPlayer(e.getReceiver()) != null) Bukkit.getPlayer(e.getReceiver()).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + ".");
+				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
+				if(Bukkit.getPlayer(e.getReceiver().getUniqueId()) != null) Bukkit.getPlayer(e.getReceiver().getUniqueId()).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + ".");
 			}
 			return true;
 		}
 		return false;
 	}
 
-	public static Boolean payMoney(String from, String to, Double amount) {
+	public static Boolean payMoney(UUID from, UUID to, Double amount) {
 		if(exists(to)) {
 			String world = MISCUtils.getWorld(to);
-			TNEFundsPayEvent e = new TNEFundsPayEvent(from, to, amount);
+			TNEFundsPayEvent e = new TNEFundsPayEvent(Bukkit.getPlayer(from), Bukkit.getPlayer(to), amount);
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
 			if(!e.isCancelled()) {
-				removeFunds(e.getSender(), e.getAmount());
-				addFunds(e.getReceiver(), e.getAmount());
+				removeFunds(e.getSender().getUniqueId(), e.getAmount());
+				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
 				if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(ChatColor.WHITE + "You were paid " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " by " + from + ".");
 			}
 			return true;
@@ -200,11 +201,11 @@ public class AccountUtils {
 		return false;
 	}
 	
-	public static void initializeWorldData(String username, String world) {
-		Account account = getAccount(username);
+	public static void initializeWorldData(UUID id, String world) {
+		Account account = getAccount(id);
 		if(!account.getBalances().containsKey(world)) {
 			account.setBalance(world, 0.0);
-			addFunds(username, getInitialBalance(world));
+			addFunds(id, getInitialBalance(world));
 		}
 	}
 

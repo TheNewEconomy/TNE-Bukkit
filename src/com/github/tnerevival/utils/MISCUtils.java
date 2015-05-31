@@ -3,6 +3,7 @@ package com.github.tnerevival.utils;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,17 +19,17 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 public class MISCUtils {
 
 	//True MISC Utils
-	public static String getWorld(String username) {
+	public static String getWorld(UUID id) {
 		if(MISCUtils.multiWorld()) {
-			if(Bukkit.getPlayer(username) != null) {
-				return Bukkit.getPlayer(username).getWorld().getName();
+			if(Bukkit.getPlayer(id) != null) {
+				return Bukkit.getPlayer(id).getWorld().getName();
 			}
 		}
 		return TNE.instance.defaultWorld;
 	}
 	
-	public static Integer getItemCount(String username, Material item) {
-		Player p = Bukkit.getPlayer(username);
+	public static Integer getItemCount(UUID id, Material item) {
+		Player p = Bukkit.getPlayer(id);
 		int count = 0;
 		if(item != null) {
 			for(ItemStack i : p.getInventory().getContents()) {
@@ -40,9 +41,9 @@ public class MISCUtils {
 		return count;
 	}
 	
-	public static void setItemCount(String username, Material item, Integer amount) {
-		Player p = Bukkit.getPlayer(username);
-		Integer count = getItemCount(username, item);
+	public static void setItemCount(UUID id, Material item, Integer amount) {
+		Player p = Bukkit.getPlayer(id);
+		Integer count = getItemCount(id, item);
 		if(item != null) {
 			if(count > amount) {
 				Integer remove = count - amount;

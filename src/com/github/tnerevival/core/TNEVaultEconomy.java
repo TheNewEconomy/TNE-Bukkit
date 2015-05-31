@@ -3,6 +3,8 @@ package com.github.tnerevival.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.OfflinePlayer;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
@@ -36,42 +38,122 @@ public class TNEVaultEconomy implements Economy {
 	}
 
 	@Override
-	public EconomyResponse bankBalance(String username) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
+	public EconomyResponse createBank(String name, OfflinePlayer player) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
 	}
 
 	@Override
-	public EconomyResponse bankDeposit(String username, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
+	public boolean createPlayerAccount(OfflinePlayer player, String world) {
+		return createPlayerAccount(player);
 	}
 
 	@Override
-	public EconomyResponse bankHas(String username, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
-	}
-
-	@Override
-	public EconomyResponse bankWithdraw(String username, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
-	}
-
-	@Override
-	public EconomyResponse createBank(String username, String world) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
-	}
-
-	@Override
-	public boolean createPlayerAccount(String username) {
-		return createPlayerAccount(username, "");
-	}
-
-	@Override
-	public boolean createPlayerAccount(String username, String world) {
-		if(hasAccount(username)) {
+	public boolean createPlayerAccount(OfflinePlayer player) {
+		if(hasAccount(player)) {
 			return false;
 		}
-		api.createAccount(username);
+		api.createAccount(player);
 		return true;
+	}
+
+	@Override
+	public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
+		if(!hasAccount(player)) {
+            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+		}
+		
+		if(amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
+		}
+		api.fundsAdd(player, amount);
+		return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
+	}
+
+	@Override
+	public EconomyResponse depositPlayer(OfflinePlayer player, String world, double amount) {
+		if(!hasAccount(player)) {
+            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+		}
+		
+		if(amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
+		}
+		api.fundsAdd(player, world, amount);
+		return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
+	}
+
+	@Override
+	public double getBalance(OfflinePlayer player, String world) {
+		return api.getBalance(player, world);
+	}
+
+	@Override
+	public double getBalance(OfflinePlayer player) {
+		return api.getBalance(player);
+	}
+
+	@Override
+	public boolean has(OfflinePlayer player, double amount) {
+		return api.fundsHas(player, amount);
+	}
+
+	@Override
+	public boolean has(OfflinePlayer player, String world, double amount) {
+		return api.fundsHas(player, world, amount);
+	}
+
+	@Override
+	public boolean hasAccount(OfflinePlayer player, String world) {
+		return hasAccount(player);
+	}
+
+	@Override
+	public boolean hasAccount(OfflinePlayer player) {
+		return api.accountExists(player);
+	}
+
+	@Override
+	public EconomyResponse isBankMember(String name, OfflinePlayer player) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
+		if(!hasAccount(player)) {
+            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+		}
+		
+		if(amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative amounts.");
+		}
+		
+		if(!has(player.getName(), amount)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
+		}
+		api.fundsRemove(player, amount);
+		return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
+	}
+
+	@Override
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, String world, double amount) {
+		if(!hasAccount(player)) {
+            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+		}
+		
+		if(amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative amounts.");
+		}
+		
+		if(!has(player.getName(), world, amount)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
+		}
+		api.fundsRemove(player, world, amount);
+		return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
 	}
 
 	@Override
@@ -82,37 +164,6 @@ public class TNEVaultEconomy implements Economy {
 	@Override
 	public String currencyNameSingular() {
 		return api.getCurrencyName(true, true);
-	}
-
-	@Override
-	public EconomyResponse deleteBank(String username) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
-	}
-
-	@Override
-	public EconomyResponse depositPlayer(String username, double amount) {
-		if(!hasAccount(username)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
-		}
-		
-		if(amount < 0) {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative amounts.");
-		}
-		api.fundsAdd(username, amount);
-		return new EconomyResponse(amount, getBalance(username), ResponseType.SUCCESS, "");
-	}
-
-	@Override
-	public EconomyResponse depositPlayer(String username, String world, double amount) {
-		if(!hasAccount(username)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
-		}
-		
-		if(amount < 0) {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative amounts.");
-		}
-		api.fundsAdd(username, world, amount);
-		return new EconomyResponse(amount, getBalance(username, world), ResponseType.SUCCESS, "");
 	}
 
 	@Override
@@ -129,51 +180,140 @@ public class TNEVaultEconomy implements Economy {
 	}
 
 	@Override
-	public double getBalance(String username) {
-		return api.getBalance(username);
-	}
-
-	@Override
-	public double getBalance(String username, String world) {
-		return api.getBalance(username, world);
-	}
-
-	@Override
 	public List<String> getBanks() {
 		return new ArrayList<String>();
 	}
 
 	@Override
+	@Deprecated
+	public boolean createPlayerAccount(String username) {
+		if(hasAccount(username)) {
+			return false;
+		}
+		api.createAccount(username);
+		return true;
+	}
+
+	@Override
+	@Deprecated
+	public boolean createPlayerAccount(String username, String world) {
+		return createPlayerAccount(username);
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse bankBalance(String username) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse bankDeposit(String username, double amount) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse bankHas(String username, double amount) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse bankWithdraw(String username, double amount) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse createBank(String username, String world) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse deleteBank(String username) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse depositPlayer(String username, double amount) {
+		if(!hasAccount(username)) {
+            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+		}
+		
+		if(amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
+		}
+		api.fundsAdd(username, amount);
+		return new EconomyResponse(amount, getBalance(username), ResponseType.SUCCESS, "");
+	}
+
+	@Override
+	@Deprecated
+	public EconomyResponse depositPlayer(String username, String world, double amount) {
+		if(!hasAccount(username)) {
+            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+		}
+		
+		if(amount < 0) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
+		}
+		api.fundsAdd(username, world, amount);
+		return new EconomyResponse(amount, getBalance(username, world), ResponseType.SUCCESS, "");
+	}
+
+	@Override
+	@Deprecated
+	public double getBalance(String username) {
+		return api.getBalance(username);
+	}
+
+	@Override
+	@Deprecated
+	public double getBalance(String username, String world) {
+		return api.getBalance(username, world);
+	}
+
+	@Override
+	@Deprecated
 	public boolean has(String username, double amount) {
 		return api.fundsHas(username, amount);
 	}
 
 	@Override
+	@Deprecated
 	public boolean has(String username, String world, double amount) {
 		return api.fundsHas(username, world, amount);
 	}
 
 	@Override
+	@Deprecated
 	public boolean hasAccount(String username) {
-		return hasAccount(username, "");
-	}
-
-	@Override
-	public boolean hasAccount(String username, String world) {
 		return api.accountExists(username);
 	}
 
 	@Override
-	public EconomyResponse isBankMember(String username, String arg1) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
+	@Deprecated
+	public boolean hasAccount(String username, String world) {
+		return hasAccount(username);
 	}
 
 	@Override
-	public EconomyResponse isBankOwner(String username, String arg1) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
+	@Deprecated
+	public EconomyResponse isBankMember(String name, String username) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
 	}
 
 	@Override
+	@Deprecated
+	public EconomyResponse isBankOwner(String name, String username) {
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	}
+
+	@Override
+	@Deprecated
 	public EconomyResponse withdrawPlayer(String username, double amount) {
 		if(!hasAccount(username)) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
@@ -191,6 +331,7 @@ public class TNEVaultEconomy implements Economy {
 	}
 
 	@Override
+	@Deprecated
 	public EconomyResponse withdrawPlayer(String username, String world, double amount) {
 		if(!hasAccount(username)) {
             return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");

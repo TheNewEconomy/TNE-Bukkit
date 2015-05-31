@@ -10,8 +10,8 @@ public class SaveConversion {
 	
 	public static void alphaTwo() {
 		
-		for(String s : TNE.instance.manager.accounts.keySet()) {
-			Account acc = TNE.instance.manager.accounts.get(s);
+		for(String s : TNE.instance.manager.legacy.keySet()) {
+			Account acc = TNE.instance.manager.legacy.get(s);
 			acc.setBanks(new HashMap<String, Bank>());
 			acc.setBalances(new HashMap<String, Double>());
 			if(TNE.instance.manager.banks.containsKey(s)) {

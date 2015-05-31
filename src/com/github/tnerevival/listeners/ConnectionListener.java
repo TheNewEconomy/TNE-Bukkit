@@ -20,18 +20,16 @@ public class ConnectionListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		String username = player.getDisplayName();
-		if(!plugin.manager.accounts.containsKey(username)) {
-			AccountUtils.createAccount(username);
+		if(!plugin.manager.accounts.containsKey(player.getUniqueId())) {
+			AccountUtils.createAccount(player.getUniqueId());
 		}
 	}
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		if(TNE.instance.getConfig().getBoolean("Core.Death.Lose")) {
-			String username = event.getEntity().getDisplayName();
 			
-			AccountUtils.setFunds(username, 0.0);
+			AccountUtils.setFunds(event.getEntity().getUniqueId(), 0.0);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.event;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -9,7 +10,7 @@ public class TNEBankCloseEvent extends Event implements Cancellable {
     
     private Boolean cancelled;
  
-    public TNEBankCloseEvent(String username, String world) {
+    public TNEBankCloseEvent(OfflinePlayer player, String world) {
     }
  
     public HandlerList getHandlers() {

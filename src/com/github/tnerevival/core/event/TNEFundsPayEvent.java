@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.event;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -11,12 +12,12 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
     
     private Boolean cancelled;
     
-    private String to;
-    private String from;
+    private OfflinePlayer to;
+    private OfflinePlayer from;
     
     private Double amount;
  
-    public TNEFundsPayEvent(String to, String from, Double amount) {
+    public TNEFundsPayEvent(OfflinePlayer to, OfflinePlayer from, Double amount) {
     	this.to = to;
     	this.from = from;
     	this.amount = amount;
@@ -39,16 +40,16 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
     }
 
 	/**
-	 * @return The name of the player who is receiving the payment.
+	 * @return The player who is receiving the payment.
 	 */
-	public String getReceiver() {
+	public OfflinePlayer getReceiver() {
 		return to;
 	}
 	
 	/**
-	 * @return The name of the player who is sending the payment.
+	 * @return The player who is sending the payment.
 	 */
-	public String getSender() {
+	public OfflinePlayer getSender() {
 		return from;
 	}
 
@@ -71,7 +72,7 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns the balance of the player who is receiving the payment beforehand.
 	 */
 	public Double getReceiverPreviousBalance() {
-		return AccountUtils.getFunds(to);
+		return AccountUtils.getFunds(to.getUniqueId());
 	}
 	
 	/**
@@ -79,7 +80,7 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns what the balance of the player who is receiving the payment will be afterwards.
 	 */
 	public Double getReceiverNewBalance() {
-		return (AccountUtils.getFunds(to) + getAmount());
+		return (AccountUtils.getFunds(to.getUniqueId()) + getAmount());
 	}
 	
 	/**
@@ -87,7 +88,7 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns the balance of the player who is sending the payment beforehand.
 	 */
 	public Double getSenderPreviousBalance() {
-		return AccountUtils.getFunds(from);
+		return AccountUtils.getFunds(from.getUniqueId());
 	}
 	
 	/**
@@ -95,6 +96,6 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns what the balance of the player who is sending the payment will be afterwards.
 	 */
 	public Double getSenderNewBalance() {
-		return (AccountUtils.getFunds(from) + getAmount());
+		return (AccountUtils.getFunds(from.getUniqueId()) + getAmount());
 	}
 }

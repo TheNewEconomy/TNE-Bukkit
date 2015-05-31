@@ -38,7 +38,7 @@ public class SaveManager {
 	String prefix = TNE.instance.getConfig().getString("Core.Database.Prefix");
 	String type = TNE.instance.getConfig().getString("Core.Database.Type");
 	String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.SQLite.File");
-	Double currentSaveVersion = 2.0;
+	Double currentSaveVersion = 2.1;
 	Double saveVersion = 0.0;
 	
 	public SaveManager() {
@@ -211,7 +211,7 @@ public class SaveManager {
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 				saveVersion = ois.readDouble();
-				TNE.instance.manager.accounts = (HashMap<String, Account>) ois.readObject();
+				TNE.instance.manager.legacy = (HashMap<String, Account>) ois.readObject();
 				TNE.instance.manager.banks = (HashMap<String, Bank>) ois.readObject();
 				ois.close();
 			} catch (ClassNotFoundException e) {
@@ -267,14 +267,14 @@ public class SaveManager {
 				}
 				account.setBanks(bankMap);
 				
-				TNE.instance.manager.accounts.put(entry.getKey(), account);
+				TNE.instance.manager.legacy.put(entry.getKey(), account);
 			}
 		}
 	}
 	
 	public void saveFlatFile() {
 		if(currentSaveVersion == 2.0) {
-			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.legacy.entrySet().iterator();
 			
 			Section accounts = new Section("accounts");
 			
@@ -356,7 +356,7 @@ public class SaveManager {
 					while(banks.next()) {
 						account.getBanks().put(banks.getString("world"), BankUtils.fromString(banks.getString("bank")));
 					}
-					TNE.instance.manager.accounts.put(account.getOwner(), account);
+					TNE.instance.manager.legacy.put(account.getOwner(), account);
 				}
 				connection.close();
 			} catch (SQLException e) {
@@ -391,7 +391,7 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 			
-			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.legacy.entrySet().iterator();
 			
 			while(it.hasNext()) {
 				java.util.Map.Entry<String, Account> entry = it.next();
@@ -494,7 +494,7 @@ public class SaveManager {
 					while(banks.next()) {
 						account.getBanks().put(banks.getString("world"), BankUtils.fromString(banks.getString("bank")));
 					}
-					TNE.instance.manager.accounts.put(account.getOwner(), account);
+					TNE.instance.manager.legacy.put(account.getOwner(), account);
 				}
 				connection.close();
 			} catch (SQLException e) {
@@ -529,7 +529,7 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 			
-			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+			Iterator<java.util.Map.Entry<String, Account>> it = TNE.instance.manager.legacy.entrySet().iterator();
 			
 			while(it.hasNext()) {
 				java.util.Map.Entry<String, Account> entry = it.next();
@@ -614,6 +614,8 @@ public class SaveManager {
 			
 			table = prefix + "_USERS";
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
+					   			"id INTEGER NOT NULL AUTO_INCREMENT," +
+					   			"uuid varchar(36) NOT NULL," +
 								"username VARCHAR(40) NOT NULL," +
 								"balances LONGTEXT," +
 								"joinedDate VARCHAR(60)," +
@@ -621,7 +623,7 @@ public class SaveManager {
 								"company VARCHAR(60)," +
 								"accountstatus VARCHAR(60)," +
 								"overflow LONGTEXT," +
-								"PRIMARY KEY (`username`)" +
+								"PRIMARY KEY (`id`)" +
 								");");
 			
 			table = prefix + "_BANKS";
@@ -656,7 +658,9 @@ public class SaveManager {
 			
 			table = prefix + "_USERS";
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-								"username CHAR(40) PRIMARY KEY NOT NULL," +
+					   			"id INTEGER PRIMARY KEY NOT NULL," +
+								"uuid CHAR(36) NOT NULL," +
+								"username CHAR(40) NOT NULL," +
 								"balances LONGTEXT," +
 								"joinedDate CHAR(60)," +
 								"accountnumber INTEGER," +

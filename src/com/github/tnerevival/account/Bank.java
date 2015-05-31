@@ -3,6 +3,9 @@ package com.github.tnerevival.account;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.OfflinePlayer;
 
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.MISCUtils;
@@ -12,11 +15,14 @@ public class Bank implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+	UUID id;
+	@Deprecated
 	String owner;
 	String pin;
 	Integer size;
 	Double gold;
 	
+	@Deprecated
 	public Bank(String owner, Integer size) {
 		this.owner = owner;
 		this.pin = "none";
@@ -24,8 +30,23 @@ public class Bank implements Serializable {
 		this.gold = 0.0;
 	}
 	
+	@Deprecated
 	public Bank(String owner, Integer size, Double gold) {
 		this.owner = owner;
+		this.pin = "none";
+		this.size = size;
+		this.gold = gold;
+	}
+	
+	public Bank(OfflinePlayer player, Integer size) {
+		this.id = player.getUniqueId();
+		this.pin = "none";
+		this.size = size;
+		this.gold = 0.0;
+	}
+	
+	public Bank(OfflinePlayer player, Integer size, Double gold) {
+		this.id = player.getUniqueId();
 		this.pin = "none";
 		this.size = size;
 		this.gold = gold;
@@ -48,6 +69,7 @@ public class Bank implements Serializable {
 	/**
 	 * @return the owner
 	 */
+	@Deprecated
 	public String getOwner() {
 		return owner;
 	}
@@ -55,6 +77,7 @@ public class Bank implements Serializable {
 	/**
 	 * @param owner the owner to set
 	 */
+	@Deprecated
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}

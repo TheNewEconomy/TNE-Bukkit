@@ -3,6 +3,7 @@ package com.github.tnerevival.utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -15,8 +16,8 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class BankUtils {
-	public static void applyInterest(String username) {
-		Account account = AccountUtils.getAccount(username);
+	public static void applyInterest(UUID id) {
+		Account account = AccountUtils.getAccount(id);
 		Iterator<Entry<String, Bank>> it = account.getBanks().entrySet().iterator();
 		
 		while(it.hasNext()) {
@@ -48,30 +49,30 @@ public class BankUtils {
 		return TNE.instance.getConfig().getDouble("Core.Bank.Interest.Rate");
 	}
 	
-	public static Boolean hasOldBank(String username) {
-		return TNE.instance.manager.banks.containsKey(username);
+	public static Boolean hasOldBank(UUID id) {
+		return TNE.instance.manager.banks.containsKey(id);
 	}
 	
-	public static Boolean hasBank(String username) {
+	public static Boolean hasBank(UUID id) {
 		if(MISCUtils.multiWorld()) {
-			return AccountUtils.getAccount(username).getBanks().containsKey(MISCUtils.getWorld(username));
+			return AccountUtils.getAccount(id).getBanks().containsKey(MISCUtils.getWorld(id));
 		}
 		String defaultWorld = TNE.instance.defaultWorld;
 		if(defaultWorld == null) {
 			TNE.instance.getLogger().warning("***WORLD NAME IS NULL***");
 		}
-		return AccountUtils.getAccount(username).getBanks().containsKey(defaultWorld);
+		return AccountUtils.getAccount(id).getBanks().containsKey(defaultWorld);
 	}
 	
-	public static Bank getBank(String username) {
+	public static Bank getBank(UUID id) {
 		if(MISCUtils.multiWorld()) {
-			return AccountUtils.getAccount(username).getBank(MISCUtils.getWorld(username));			
+			return AccountUtils.getAccount(id).getBank(MISCUtils.getWorld(id));			
 		}
-		return AccountUtils.getAccount(username).getBank(TNE.instance.defaultWorld);
+		return AccountUtils.getAccount(id).getBank(TNE.instance.defaultWorld);
 	}
 	
-	public static Bank getBank(String username, String world) {
-		return AccountUtils.getAccount(username).getBank(world);
+	public static Bank getBank(UUID id, String world) {
+		return AccountUtils.getAccount(id).getBank(world);
 	}
 	
 	public static Bank fromString(String bankString) {
@@ -90,13 +91,13 @@ public class BankUtils {
 		return bank;
 	}
 	
-	public static Inventory getBankInventory(String username) {
-		if(!hasBank(username)) {
+	public static Inventory getBankInventory(UUID id) {
+		if(!hasBank(id)) {
 			return null;
 		} else {
-			Bank bank = getBank(username);
+			Bank bank = getBank(id);
 			String gold = "Gold: " + MISCUtils.getShort(bank.getGold());
-			Inventory bankInventory = Bukkit.createInventory(null, size(MISCUtils.getWorld(username)), ChatColor.WHITE + "Bank " + ChatColor.GOLD + gold);
+			Inventory bankInventory = Bukkit.createInventory(null, size(MISCUtils.getWorld(id)), ChatColor.WHITE + "Bank " + ChatColor.GOLD + gold);
 			if(bank.getItems().size() > 0) {
 				List<SerializableItemStack> items = bank.getItems();
 				
@@ -108,35 +109,35 @@ public class BankUtils {
 		}
 	}
 	
-	public static Double getBankBalance(String username) {
-		if(!hasBank(username)) {
+	public static Double getBankBalance(UUID id) {
+		if(!hasBank(id)) {
 			return null;
 		} else {
-			Bank bank = getBank(username);
+			Bank bank = getBank(id);
 			return bank.getGold();
 		}
 	}
 	
-	public static Boolean bankHasFunds(String username, Double amount) {
-		return (getBankBalance(username) != null) ? getBankBalance(username) >= amount : false;
+	public static Boolean bankHasFunds(UUID id, Double amount) {
+		return (getBankBalance(id) != null) ? getBankBalance(id) >= amount : false;
 	}
 	
-	public static Boolean bankDeposit(String username, Double amount) {
-		if(AccountUtils.hasFunds(username, amount)) {
-			Bank bank = getBank(username);
+	public static Boolean bankDeposit(UUID id, Double amount) {
+		if(AccountUtils.hasFunds(id, amount)) {
+			Bank bank = getBank(id);
 			bank.setGold(bank.getGold() + amount);
-			AccountUtils.removeFunds(username, amount);
+			AccountUtils.removeFunds(id, amount);
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public static Boolean bankWithdraw(String username, Double amount) {
-		if(bankHasFunds(username, amount)) {
-			Bank bank = getBank(username);
+	public static Boolean bankWithdraw(UUID id, Double amount) {
+		if(bankHasFunds(id, amount)) {
+			Bank bank = getBank(id);
 			bank.setGold(bank.getGold() - amount);
-			AccountUtils.addFunds(username, amount);
+			AccountUtils.addFunds(id, amount);
 			return true;
 		} else {
 			return false;

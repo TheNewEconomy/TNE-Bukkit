@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,8 +23,7 @@ public class MoneyExecutor implements CommandExecutor {
 		public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
-				String username = player.getDisplayName();
-				String world = MISCUtils.getWorld(username);
+				String world = MISCUtils.getWorld(player.getUniqueId());
 				
 				if(cmd.getName().equalsIgnoreCase("money")) {
 					if(args.length > 0) {
@@ -35,14 +35,14 @@ public class MoneyExecutor implements CommandExecutor {
 							}
 						} else if(args[0].equalsIgnoreCase("balance")) {
 							if(player.hasPermission("tne.money.balance")) {
-								player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(world, plugin.api.getBalance(username)) + ChatColor.WHITE + " on you.");
+								player.sendMessage(ChatColor.WHITE + "You currently have " + ChatColor.GOLD + MISCUtils.formatBalance(world, plugin.api.getBalance(player)) + ChatColor.WHITE + " on you.");
 							} else {
 								player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have permission to do that.");
 							}
 						} else if(args[0].equalsIgnoreCase("give")) {
 							if(player.hasPermission("tne.money.give")) {
 								if(args.length == 3) {
-									if(AccountUtils.giveMoney(args[1], username, Double.valueOf(args[2]))) {
+									if(AccountUtils.giveMoney(Bukkit.getPlayer(args[1]).getUniqueId(), player.getUniqueId(), Double.valueOf(args[2]))) {
 										player.sendMessage(ChatColor.WHITE + "Successfully gave " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");
@@ -56,8 +56,8 @@ public class MoneyExecutor implements CommandExecutor {
 						} else if(args[0].equalsIgnoreCase("pay")) {
 							if(player.hasPermission("tne.money.pay")) {
 								if(args.length == 3) {
-									if(AccountUtils.hasFunds(username, Double.valueOf(args[2]))) {
-										if(AccountUtils.payMoney(username, args[1], Double.valueOf(args[2]))) {
+									if(AccountUtils.hasFunds(player.getUniqueId(), Double.valueOf(args[2]))) {
+										if(AccountUtils.payMoney(player.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId(), Double.valueOf(args[2]))) {
 											player.sendMessage(ChatColor.WHITE + "Successfully paid " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
 										} else {
 											player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");

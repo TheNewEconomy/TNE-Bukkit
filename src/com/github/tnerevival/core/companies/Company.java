@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -229,14 +230,14 @@ public class Company implements Serializable {
 	public void delete() {
 		for(String s : employees.keySet()) {
 			Account acc = TNE.instance.manager.accounts.get(s);
-			Player player = Bukkit.getPlayer(s);
+			Player player = Bukkit.getPlayer(UUID.fromString(s));
 			if(player != null) {
 				player.sendMessage(ChatColor.RED + "You've been kicked from your company due to the owner deleting it.");
 			}
 			acc.setCompany(null);
 		}
 		Account acc = TNE.instance.manager.accounts.get(owner);
-		Player player = Bukkit.getPlayer(owner);
+		Player player = Bukkit.getPlayer(UUID.fromString(owner));
 		player.sendMessage("Your company has been deleted!");
 		acc.setCompany(null);
 		TNE.instance.manager.companies.remove(name);
@@ -255,7 +256,7 @@ public class Company implements Serializable {
 		for(Job job : jobs) {
 			if(job.getName().equals(jobName)) {
 				for(String s : job.employees) {
-					Player player = Bukkit.getPlayer(s);
+					Player player = Bukkit.getPlayer(UUID.fromString(s));
 					Account acc = TNE.instance.manager.accounts.get(s);
 					acc.setCompany(null);
 					player.sendMessage("You have lost your job due to.");

@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.event;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -11,12 +12,12 @@ public class TNEFundsGiveEvent extends Event implements Cancellable {
     
     private Boolean cancelled;
     
-    private String to;
-    private String from;
+    private OfflinePlayer to;
+    private OfflinePlayer from;
     
     private Double amount;
  
-    public TNEFundsGiveEvent(String to, String from, Double amount) {
+    public TNEFundsGiveEvent(OfflinePlayer to, OfflinePlayer from, Double amount) {
     	this.to = to;
     	this.from = from;
     	this.amount = amount;
@@ -39,16 +40,16 @@ public class TNEFundsGiveEvent extends Event implements Cancellable {
     }
 
 	/**
-	 * @return The name of the player who is being given the money.
+	 * @return The player who is being given the money.
 	 */
-	public String getReceiver() {
+	public OfflinePlayer getReceiver() {
 		return to;
 	}
 	
 	/**
-	 * @return The name of the player who is giving the money.
+	 * @return The player who is giving the money.
 	 */
-	public String getSender() {
+	public OfflinePlayer getSender() {
 		return from;
 	}
 
@@ -71,7 +72,7 @@ public class TNEFundsGiveEvent extends Event implements Cancellable {
 	 * @return Returns the balance of the player who is being given the money beforehand.
 	 */
 	public Double getReceiverPreviousBalance() {
-		return AccountUtils.getFunds(to);
+		return AccountUtils.getFunds(to.getUniqueId());
 	}
 	
 	/**
@@ -79,6 +80,6 @@ public class TNEFundsGiveEvent extends Event implements Cancellable {
 	 * @return Returns what the balance of the player who is being given the money will be afterwards.
 	 */
 	public Double getReceiverNewBalance() {
-		return (AccountUtils.getFunds(to) + getAmount());
+		return (AccountUtils.getFunds(to.getUniqueId()) + getAmount());
 	}
 }

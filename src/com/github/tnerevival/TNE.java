@@ -4,15 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.commands.BankExecutor;
 import com.github.tnerevival.commands.CoreExecutor;
 import com.github.tnerevival.commands.MoneyExecutor;
 import com.github.tnerevival.core.EconomyManager;
+import com.github.tnerevival.core.TNEVaultEconomy;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
@@ -37,9 +42,6 @@ public class TNE extends JavaPlugin {
 	
 	public String defaultWorld;
 	
-	public Integer saveWorkerID;
-	public Integer interestWorkerID;
-	
 	/*
 	 * Instances of the main runnables.
 	 */
@@ -51,21 +53,20 @@ public class TNE extends JavaPlugin {
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
 		manager = new EconomyManager();
 		api = new TNEAPI(this);
+		setupVault();
+		
 		//Configurations
 		initializeConfigurations();
 		loadConfigurations();
 		
-		saveWorkerID = -1;
-		interestWorkerID = -1;
-		
 		saveWorker = new SaveWorker(this);
 		interestWorker = new InterestWorker(this);
 		if(getConfig().getBoolean("Core.AutoSaver.Enabled")) {
-			startSaveWorker();
+			saveWorker.runTaskTimer(this, getConfig().getLong("Core.AutoSaver.Interval") * 20, getConfig().getLong("Core.AutoSaver.Interval") * 20);
 		}
 		
 		if(getConfig().getBoolean("Core.Bank.Interest.Enabled")) {
-			startInterestWorker();
+			interestWorker.runTaskTimer(this, getConfig().getLong("Core.Bank.Interest.Interval") * 20, getConfig().getLong("Core.Bank.Interest.Interval") * 20);
 		}
 		
 
@@ -90,45 +91,19 @@ public class TNE extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		stopSaveWorker();
-		stopInterestWorker();
+		saveWorker.cancel();
+		interestWorker.cancel();
 		manager.saveManager.save();
 		getLogger().info("The New Economy v0.0.2.1 has been disabled!");
-	}
-	
-	public void startSaveWorker() {
-		if(saveWorkerID == -1) {
-			saveWorkerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, saveWorker, getConfig().getLong("Core.AutoSaver.Interval") * 20, getConfig().getLong("Core.AutoSaver.Interval") * 20);
-		}
-	}
-	
-	public void startInterestWorker() {
-		if(interestWorkerID == -1) {
-			interestWorkerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, interestWorker, getConfig().getLong("Core.Bank.Interest.Interval") * 20, getConfig().getLong("Core.Bank.Interest.Interval") * 20);
-		}
-	}
-	
-	public void stopSaveWorker() {
-		if(saveWorkerID != null && saveWorkerID != -1) {
-			Bukkit.getScheduler().cancelTask(saveWorkerID);
-			saveWorkerID = -1;
-		}
-	}
-	
-	public void stopInterestWorker() {
-		if(interestWorkerID != null && interestWorkerID != -1) {
-			Bukkit.getScheduler().cancelTask(interestWorkerID);
-			interestWorkerID = -1;
-		}
 	}
 	
 	private void initializeConfigurations() {
 		mobs = new File(getDataFolder(), "mobs.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
-		mobConfigurations.setDefaults(YamlConfiguration.loadConfiguration(getResource("mobs.yml")));
+		mobConfigurations.setDefaults(YamlConfiguration.loadConfiguration(new File("mobs.yml")));
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
-		worldConfigurations.setDefaults(YamlConfiguration.loadConfiguration(getResource("worlds.yml")));
+		worldConfigurations.setDefaults(YamlConfiguration.loadConfiguration(new File("worlds.yml")));
 	}
 	
 	private void loadConfigurations() {
@@ -146,5 +121,17 @@ public class TNE extends JavaPlugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void setupVault() {
+		if(getServer().getPluginManager().getPlugin("Vault") == null) {
+			return;
+		}
+		
+		RegisteredServiceProvider<Economy> economyService = getServer().getServicesManager().getRegistration(Economy.class);
+		if(economyService != null) {
+            getServer().getServicesManager().unregister(economyService.getProvider());
+		}
+        getServer().getServicesManager().register(Economy.class, new TNEVaultEconomy(this), this, ServicePriority.Highest);
 	}
 }

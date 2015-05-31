@@ -24,10 +24,10 @@ public class CompanyExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-	        Account account = AccountUtils.getAccount(player.getDisplayName());
+	        Account account = AccountUtils.getAccount(player.getUniqueId());
 				
 			if(cmd.getName().equalsIgnoreCase("company")) {
-				if(CompanyUtils.enabled(player.getDisplayName())) {
+				if(CompanyUtils.enabled(player.getUniqueId())) {
 					if(args.length >= 1) {
 						if(args[0].equalsIgnoreCase("help")) {
 							if(player.hasPermission("tne.company.help")) {
