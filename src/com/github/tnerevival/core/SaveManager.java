@@ -615,7 +615,7 @@ public class SaveManager {
 			table = prefix + "_USERS";
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
 					   			"id INTEGER NOT NULL AUTO_INCREMENT," +
-					   			"uuid varchar(36) NOT NULL," +
+					   			"uuid VARCHAR(36) NOT NULL," +
 								"username VARCHAR(40) NOT NULL," +
 								"balances LONGTEXT," +
 								"joinedDate VARCHAR(60)," +
@@ -629,6 +629,7 @@ public class SaveManager {
 			table = prefix + "_BANKS";
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
 								   "id INTEGER NOT NULL AUTO_INCREMENT," +
+								   "uuid VARCHAR(36) NOT NULL," +
 								   "username VARCHAR(40) NOT NULL," +
 								   "world VARCHAR(50) NOT NULL," +
 								   "bank LONGTEXT," +
@@ -672,6 +673,7 @@ public class SaveManager {
 			table = prefix + "_BANKS";
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
 								   "id INTEGER PRIMARY KEY NOT NULL," +
+								   "uuid CHAR(36) NOT NULL," +
 								   "username CHAR(40) NOT NULL," +
 								   "world CHAR(50) NOT NULL," +
 								   "bank LONGTEXT" +

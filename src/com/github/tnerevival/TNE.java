@@ -2,6 +2,9 @@ package com.github.tnerevival;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 
 import net.milkbowl.vault.economy.Economy;
@@ -91,8 +94,12 @@ public class TNE extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		saveWorker.cancel();
-		interestWorker.cancel();
+		try {
+			saveWorker.cancel();
+			interestWorker.cancel();
+		} catch(IllegalStateException e) {
+			//Task was not scheduled
+		}
 		manager.saveManager.save();
 		getLogger().info("The New Economy v0.0.2.1 has been disabled!");
 	}
@@ -101,9 +108,12 @@ public class TNE extends JavaPlugin {
 		mobs = new File(getDataFolder(), "mobs.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
-		mobConfigurations.setDefaults(YamlConfiguration.loadConfiguration(new File("mobs.yml")));
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
-		worldConfigurations.setDefaults(YamlConfiguration.loadConfiguration(new File("worlds.yml")));
+		try {
+			setConfigurationDefaults();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void loadConfigurations() {
@@ -121,6 +131,20 @@ public class TNE extends JavaPlugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void setConfigurationDefaults() throws UnsupportedEncodingException {
+		Reader mobsStream = new InputStreamReader(this.getResource("mobs.yml"), "UTF8");
+		Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
+	    if (mobsStream != null) {
+	        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
+	        mobConfigurations.setDefaults(config);
+	    }
+	    
+	    if (worldsStream != null) {
+	        YamlConfiguration config = YamlConfiguration.loadConfiguration(worldsStream);
+	        worldConfigurations.setDefaults(config);
+	    }
 	}
 	
 	private void setupVault() {
