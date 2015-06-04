@@ -40,10 +40,8 @@ public class EconomyManager {
 	public HashMap<String, Bank> banks = new HashMap<String, Bank>();
 	
 	//public CurrencyManager currencyManager;
-	public SaveManager saveManager;
 
 	public EconomyManager() {
 		//currencyManager = new CurrencyManager();
-		saveManager = new SaveManager();
 	}
 }

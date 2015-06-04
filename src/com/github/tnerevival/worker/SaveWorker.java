@@ -14,6 +14,6 @@ public class SaveWorker extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		plugin.manager.saveManager.save();
+		plugin.saveManager.save();
 	}
 }

@@ -10,7 +10,7 @@ import com.github.tnerevival.account.Account;
 public class TNECreateAccountEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
     
-    private Boolean cancelled;
+    private Boolean cancelled = false;
     
     private OfflinePlayer player;
  
@@ -49,7 +49,7 @@ public class TNECreateAccountEvent extends Event implements Cancellable {
 	}
 	
 	public Account getAccount() {
-		Account account = new Account(player);
+		Account account = new Account(player.getUniqueId());
 		return account;
 	}
 }

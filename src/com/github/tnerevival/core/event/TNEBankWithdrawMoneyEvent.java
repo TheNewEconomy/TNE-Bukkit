@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 public class TNEBankWithdrawMoneyEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
     
-    private Boolean cancelled;
+    private Boolean cancelled = false;
  
     public TNEBankWithdrawMoneyEvent(OfflinePlayer player, String world, Double amount) {
     }

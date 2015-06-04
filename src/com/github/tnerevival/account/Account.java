@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
@@ -75,10 +73,14 @@ public class Account implements Serializable {
 		setBalance(TNE.instance.defaultWorld, 0.0);
 	}
 	
-	public Account(OfflinePlayer player) {
-		this.uid = player.getUniqueId();
+	public Account(UUID uid) {
+		this(uid, TNE.instance.manager.accounts.size() + 1);
+	}
+	
+	public Account(UUID uid, int accountNumber) {
+		this.uid = uid;
 		this.joined = new String(TNE.instance.dateFormat.format(new Date()));
-		this.accountNumber = TNE.instance.manager.accounts.size() + 1;
+		this.accountNumber = accountNumber;
 		this.company = "TNENOSTRINGVALUE";
 		this.status = "normal";
 		setBalance(TNE.instance.defaultWorld, 0.0);

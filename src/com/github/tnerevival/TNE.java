@@ -20,6 +20,7 @@ import com.github.tnerevival.commands.BankExecutor;
 import com.github.tnerevival.commands.CoreExecutor;
 import com.github.tnerevival.commands.MoneyExecutor;
 import com.github.tnerevival.core.EconomyManager;
+import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.TNEVaultEconomy;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.listeners.ConnectionListener;
@@ -32,6 +33,7 @@ public class TNE extends JavaPlugin {
 	
 	public static TNE instance;
 	public EconomyManager manager;
+	public SaveManager saveManager;
 	public TNEAPI api = null;
 	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
@@ -55,6 +57,7 @@ public class TNE extends JavaPlugin {
 		instance = this;
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
 		manager = new EconomyManager();
+		saveManager = new SaveManager();
 		api = new TNEAPI(this);
 		setupVault();
 		
@@ -83,11 +86,13 @@ public class TNE extends JavaPlugin {
 		getCommand("money").setExecutor(new MoneyExecutor(this));
 		getCommand("theneweconomy").setExecutor(new CoreExecutor(this));
 		
-		try {
-		    MetricsLite metrics = new MetricsLite(this);
-		    metrics.start();
-		} catch (IOException e) {
-		    getLogger().severe("Error while enabling plugin metrics.");
+		if(getConfig().getBoolean("Core.Metrics")) {
+			try {
+			    MetricsLite metrics = new MetricsLite(this);
+			    metrics.start();
+			} catch (IOException e) {
+			    getLogger().severe("Error while enabling plugin metrics.");
+			}
 		}
 		
 		getLogger().info("The New Economy v0.0.2.1 has been enabled!");
@@ -100,7 +105,7 @@ public class TNE extends JavaPlugin {
 		} catch(IllegalStateException e) {
 			//Task was not scheduled
 		}
-		manager.saveManager.save();
+		saveManager.save();
 		getLogger().info("The New Economy v0.0.2.1 has been disabled!");
 	}
 	

@@ -28,7 +28,6 @@ public class ConnectionListener implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		if(TNE.instance.getConfig().getBoolean("Core.Death.Lose")) {
-			
 			AccountUtils.setFunds(event.getEntity().getUniqueId(), 0.0);
 		}
 	}

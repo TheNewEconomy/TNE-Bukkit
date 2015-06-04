@@ -15,6 +15,9 @@ Core:
     #Whether or not to shorten money amounts
     #Example: 2100 would be 2.1k
     Shorten: true
+    
+    #whether or not to enable plugin metrics for TNE
+    Metrics: true
 
     #All configurations relating to the data auto saver
     AutoSaver:
@@ -149,6 +152,9 @@ Core:
             
         #The prefix to use for TheNewEconomy MySQL and SQLite Tables
         Prefix: TNE
+        
+        #Whether or not to backup your database automatically before converting to newer versions of TNE
+        Backup: true
 
         #All configurations relating to the FlatFile Database
         FlatFile:

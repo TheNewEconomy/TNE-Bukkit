@@ -186,6 +186,7 @@ public class AccountUtils {
 	}
 
 	public static Boolean payMoney(UUID from, UUID to, Double amount) {
+		if(to == null || from == null) { return false; }
 		if(exists(to)) {
 			String world = MISCUtils.getWorld(to);
 			TNEFundsPayEvent e = new TNEFundsPayEvent(Bukkit.getPlayer(from), Bukkit.getPlayer(to), amount);

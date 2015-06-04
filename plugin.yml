@@ -6,6 +6,7 @@ author: creatorfromhell
 
 #Plugin Data
 main: com.github.tnerevival.TNE
+softdepend: [Vault]
 
 
 #Command Data

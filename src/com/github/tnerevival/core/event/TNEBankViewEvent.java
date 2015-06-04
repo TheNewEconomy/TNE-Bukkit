@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 public class TNEBankViewEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
     
-    private Boolean cancelled;
+    private Boolean cancelled = false;
  
     public TNEBankViewEvent(OfflinePlayer player, String world) {
     }

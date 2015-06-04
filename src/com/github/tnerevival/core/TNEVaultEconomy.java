@@ -24,7 +24,7 @@ public class TNEVaultEconomy implements Economy {
 	
 	@Override
 	public String getName() {
-		return "TNE";
+		return "TheNewEconomy";
 	}
 	
 	@Override
@@ -132,7 +132,7 @@ public class TNEVaultEconomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative amounts.");
 		}
 		
-		if(!has(player.getName(), amount)) {
+		if(!has(player, amount)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
 		}
 		api.fundsRemove(player, amount);
@@ -149,7 +149,7 @@ public class TNEVaultEconomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative amounts.");
 		}
 		
-		if(!has(player.getName(), world, amount)) {
+		if(!has(player, world, amount)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
 		}
 		api.fundsRemove(player, world, amount);

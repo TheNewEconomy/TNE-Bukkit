@@ -11,7 +11,7 @@ import com.github.tnerevival.account.Account;
 public class TNEDeleteAccountEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
     
-    private Boolean cancelled;
+    private Boolean cancelled = false;
 
     private OfflinePlayer player;
  

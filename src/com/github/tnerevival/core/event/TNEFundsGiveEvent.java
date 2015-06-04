@@ -10,7 +10,7 @@ import com.github.tnerevival.utils.AccountUtils;
 public class TNEFundsGiveEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
     
-    private Boolean cancelled;
+    private Boolean cancelled = false;
     
     private OfflinePlayer to;
     private OfflinePlayer from;

@@ -18,7 +18,7 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class MISCUtils {
 
-	//True MISC Utils
+	//True MISC Utils	
 	public static String getWorld(UUID id) {
 		if(MISCUtils.multiWorld()) {
 			if(Bukkit.getPlayer(id) != null) {

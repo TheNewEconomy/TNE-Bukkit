@@ -42,7 +42,7 @@ public class MoneyExecutor implements CommandExecutor {
 						} else if(args[0].equalsIgnoreCase("give")) {
 							if(player.hasPermission("tne.money.give")) {
 								if(args.length == 3) {
-									if(AccountUtils.giveMoney(Bukkit.getPlayer(args[1]).getUniqueId(), player.getUniqueId(), Double.valueOf(args[2]))) {
+									if(Bukkit.getPlayer(args[1]) != null && AccountUtils.giveMoney(Bukkit.getPlayer(args[1]).getUniqueId(), player.getUniqueId(), Double.valueOf(args[2]))) {
 										player.sendMessage(ChatColor.WHITE + "Successfully gave " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
 									} else {
 										player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");
@@ -57,7 +57,7 @@ public class MoneyExecutor implements CommandExecutor {
 							if(player.hasPermission("tne.money.pay")) {
 								if(args.length == 3) {
 									if(AccountUtils.hasFunds(player.getUniqueId(), Double.valueOf(args[2]))) {
-										if(AccountUtils.payMoney(player.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId(), Double.valueOf(args[2]))) {
+										if(Bukkit.getPlayer(args[1]) != null && AccountUtils.payMoney(player.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId(), Double.valueOf(args[2]))) {
 											player.sendMessage(ChatColor.WHITE + "Successfully paid " + args[1] + " " + ChatColor.GOLD + MISCUtils.formatBalance(world, Double.valueOf(args[2])) + ChatColor.WHITE + ".");		
 										} else {
 											player.sendMessage(ChatColor.DARK_RED + "The player you specified could not be found!");
