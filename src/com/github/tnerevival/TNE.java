@@ -10,15 +10,17 @@ import java.text.SimpleDateFormat;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.tnerevival.commands.BankExecutor;
-import com.github.tnerevival.commands.CoreExecutor;
-import com.github.tnerevival.commands.MoneyExecutor;
+import com.github.tnerevival.commands.CommandManager;
+import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Configurations;
 import com.github.tnerevival.core.EconomyManager;
 import com.github.tnerevival.core.SaveManager;
@@ -35,6 +37,7 @@ public class TNE extends JavaPlugin {
 	public static TNE instance;
 	public EconomyManager manager;
 	public SaveManager saveManager;
+	private CommandManager commandManager;
 	public TNEAPI api = null;
 	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
@@ -70,6 +73,7 @@ public class TNE extends JavaPlugin {
 		
 		manager = new EconomyManager();
 		saveManager = new SaveManager();
+		commandManager = new CommandManager();
 		api = new TNEAPI(this);
 		setupVault();
 		
@@ -88,11 +92,6 @@ public class TNE extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
 		getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
-		
-		//Commands
-		getCommand("bank").setExecutor(new BankExecutor(this));
-		getCommand("money").setExecutor(new MoneyExecutor(this));
-		getCommand("theneweconomy").setExecutor(new CoreExecutor(this));
 		
 		if(configurations.getBoolean("Core.Metrics")) {
 			try {
@@ -118,6 +117,19 @@ public class TNE extends JavaPlugin {
 		}
 		saveManager.save();
 		getLogger().info("The New Economy v0.0.2.2 has been disabled!");
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments) {
+		TNECommand ecoCommand = commandManager.Find(label);
+		if(ecoCommand != null) {
+			if(!ecoCommand.canExecute(sender)) {
+				sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
+				return false;
+			}
+			return ecoCommand.execute(sender, arguments);
+		}
+		return false;
 	}
 	
 	private void initializeConfigurations() {

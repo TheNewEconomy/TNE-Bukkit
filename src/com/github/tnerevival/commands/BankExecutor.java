@@ -146,6 +146,6 @@ public class BankExecutor implements CommandExecutor {
 		player.sendMessage(ChatColor.GOLD + "/bank deposit <amount> - put the specified amount of money in your bank");
 		player.sendMessage(ChatColor.GOLD + "/bank price - see how much a bank cost");
 		player.sendMessage(ChatColor.GOLD + "/bank view - view your bank");
-		player.sendMessage(ChatColor.GOLD + "/bank withdraw <amount> - withdraw the specified amout of money from your bank");		
+		player.sendMessage(ChatColor.GOLD + "/bank withdraw <amount> - withdraw the specified amout of money from your bank");	
 	}
 }
