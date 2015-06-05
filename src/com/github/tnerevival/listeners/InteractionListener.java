@@ -162,202 +162,202 @@ public class InteractionListener implements Listener {
 			Player killer = entity.getKiller();
 			String world = MISCUtils.getWorld(killer.getUniqueId());
 			
-			if(TNE.instance.mobConfigurations.getBoolean("Mobs.Enabled")) {
+			if(((boolean)TNE.configurations.getValue("Mobs.Enabled", false))) {
 				if(entity.getType().equals(EntityType.BAT)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Bat.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Bat.Reward");
+					if(TNE.configurations.mobEnabled("Bat")) {
+						Double reward = TNE.configurations.mobReward("Bat");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Bat" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.BLAZE)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Blaze.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Blaze.Reward");
+					if(TNE.configurations.mobEnabled("Blaze")) {
+						Double reward = TNE.configurations.mobReward("Blaze");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Blaze" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.CAVE_SPIDER)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.CaveSpider.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.CaveSpider.Reward");
+					if(TNE.configurations.mobEnabled("CaveSpider")) {
+						Double reward = TNE.configurations.mobReward("CaveSpider");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Cave Spider" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.CHICKEN)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Chicken.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Chicken.Reward");
+					if(TNE.configurations.mobEnabled("Chicken")) {
+						Double reward = TNE.configurations.mobReward("Chicken");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Chicken" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.COW)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Cow.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Cow.Reward");
+					if(TNE.configurations.mobEnabled("Cow")) {
+						Double reward = TNE.configurations.mobReward("Cow");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Cow" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.CREEPER)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Creeper.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Creeper.Reward");
+					if(TNE.configurations.mobEnabled("Creeper")) {
+						Double reward = TNE.configurations.mobReward("Creeper");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Creeper" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.ENDER_DRAGON)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.EnderDragon.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.EnderDragon.Reward");
+					if(TNE.configurations.mobEnabled("EnderDragon")) {
+						Double reward = TNE.configurations.mobReward("EnderDragon");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing an " + ChatColor.GREEN + "Ender Dragon" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.ENDERMAN)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Enderman.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Enderman.Reward");
+					if(TNE.configurations.mobEnabled("Enderman")) {
+						Double reward = TNE.configurations.mobReward("Enderman");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing an " + ChatColor.GREEN + "Enderman" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.GHAST)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Ghast.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Ghast.Reward");
+					if(TNE.configurations.mobEnabled("Ghast")) {
+						Double reward = TNE.configurations.mobReward("Ghast");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Ghast" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.GIANT)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Giant.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Giant.Reward");
+					if(TNE.configurations.mobEnabled("Giant")) {
+						Double reward = TNE.configurations.mobReward("Giant");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Giant" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.HORSE)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Horse.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Horse.Reward");
+					if(TNE.configurations.mobEnabled("Horse")) {
+						Double reward = TNE.configurations.mobReward("Horse");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Horse" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.IRON_GOLEM)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.IronGolem.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.IronGolem.Reward");
+					if(TNE.configurations.mobEnabled("IronGolem")) {
+						Double reward = TNE.configurations.mobReward("IronGolem");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing an " + ChatColor.GREEN + "Iron Golem" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.MAGMA_CUBE)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.MagmaCube.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.MagmaCube.Reward");
+					if(TNE.configurations.mobEnabled("MagmaCube")) {
+						Double reward = TNE.configurations.mobReward("MagmaCube");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "MagmaCube" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.MUSHROOM_COW)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Mooshroom.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Mooshroom.Reward");
+					if(TNE.configurations.mobEnabled("Mooshroom")) {
+						Double reward = TNE.configurations.mobReward("Mooshroom");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Mooshroom" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.OCELOT)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Ocelot.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Ocelot.Reward");
+					if(TNE.configurations.mobEnabled("Ocelot")) {
+						Double reward = TNE.configurations.mobReward("Ocelot");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing an " + ChatColor.GREEN + "Ocelot" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.PIG)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Pig.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Pig.Reward");
+					if(TNE.configurations.mobEnabled("Pig")) {
+						Double reward = TNE.configurations.mobReward("Pig");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Pig" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.PIG_ZOMBIE)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.ZombiePigman.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.ZombiePigman.Reward");
+					if(TNE.configurations.mobEnabled("ZombiePigman")) {
+						Double reward = TNE.configurations.mobReward("ZombiePigman");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Zombie Pigman" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.SHEEP)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Sheep.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Sheep.Reward");
+					if(TNE.configurations.mobEnabled("Sheep")) {
+						Double reward = TNE.configurations.mobReward("Sheep");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Sheep" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.SILVERFISH)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Silverfish.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Silverfish.Reward");
+					if(TNE.configurations.mobEnabled("Silverfish")) {
+						Double reward = TNE.configurations.mobReward("Silverfish");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Silverfish" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.SKELETON)) {
 					Skeleton skelly = (Skeleton)entity;
 					if(skelly.getSkeletonType().equals(SkeletonType.NORMAL)) {
-						if(TNE.instance.mobConfigurations.getBoolean("Mobs.Skeleton.Enabled")) {
-							Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Skeleton.Reward");
+						if(TNE.configurations.mobEnabled("Skeleton")) {
+							Double reward = TNE.configurations.mobReward("Skeleton");
 							AccountUtils.addFunds(killer.getUniqueId(), reward);
 							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Skeleton" + ChatColor.WHITE + ".");
 						}
 					} else {
-						if(TNE.instance.mobConfigurations.getBoolean("Mobs.WitherSkeleton.Enabled")) {
-							Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.WitherSkeleton.Reward");
+						if(TNE.configurations.mobEnabled("WitherSkeleton")) {
+							Double reward = TNE.configurations.mobReward("WitherSkeleton");
 							AccountUtils.addFunds(killer.getUniqueId(), reward);
 							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Wither Skeleton" + ChatColor.WHITE + ".");
 						}
 					}
 				} else if(entity.getType().equals(EntityType.SLIME)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Slime.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Slime.Reward");
+					if(TNE.configurations.mobEnabled("Slime")) {
+						Double reward = TNE.configurations.mobReward("Slime");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Slime" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.SNOWMAN)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.SnowGolem.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.SnowGolem.Reward");
+					if(TNE.configurations.mobEnabled("SnowGolem")) {
+						Double reward = TNE.configurations.mobReward("SnowGolem");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Snow Golem" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.SPIDER)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Spider.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Spider.Reward");
+					if(TNE.configurations.mobEnabled("Spider")) {
+						Double reward = TNE.configurations.mobReward("Spider");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Spider" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.SQUID)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Squid.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Squid.Reward");
+					if(TNE.configurations.mobEnabled("Squid")) {
+						Double reward = TNE.configurations.mobReward("Squid");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Squid" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.VILLAGER)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Villager.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Villager.Reward");
+					if(TNE.configurations.mobEnabled("Villager")) {
+						Double reward = TNE.configurations.mobReward("Villager");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Villager" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.WITCH)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Witch.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Witch.Reward");
+					if(TNE.configurations.mobEnabled("Witch")) {
+						Double reward = TNE.configurations.mobReward("Witch");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Witch" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.WITHER)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Wither.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Wither.Reward");
+					if(TNE.configurations.mobEnabled("Wither")) {
+						Double reward = TNE.configurations.mobReward("Wither");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Wither" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.WOLF)) {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Wolf.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Wolf.Reward");
+					if(TNE.configurations.mobEnabled("Wolf")) {
+						Double reward = TNE.configurations.mobReward("Wolf");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Wolf" + ChatColor.WHITE + ".");
 					}
 				} else if(entity.getType().equals(EntityType.ZOMBIE)) {
 					Zombie zombles = (Zombie)entity;
 					if(zombles.isVillager()) {
-						if(TNE.instance.mobConfigurations.getBoolean("Mobs.ZombieVillager.Enabled")) {
-							Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.ZombieVillager.Reward");
+						if(TNE.configurations.mobEnabled("ZombieVillager")) {
+							Double reward = TNE.configurations.mobReward("ZombieVillager");
 							AccountUtils.addFunds(killer.getUniqueId(), reward);
 							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Zombie Villager" + ChatColor.WHITE + ".");
 						}
 					} else {
-						if(TNE.instance.mobConfigurations.getBoolean("Mobs.Zombie.Enabled")) {
-							Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Zombie.Reward");
+						if(TNE.configurations.mobEnabled("Zombie")) {
+							Double reward = TNE.configurations.mobReward("Zombie");
 							AccountUtils.addFunds(killer.getUniqueId(), reward);
 							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + "Zombie" + ChatColor.WHITE + ".");
 						}
 					}
 				} else {
-					if(TNE.instance.mobConfigurations.getBoolean("Mobs.Default.Enabled")) {
-						Double reward = TNE.instance.mobConfigurations.getDouble("Mobs.Default.Reward");
+					if(TNE.configurations.mobEnabled("Default")) {
+						Double reward = TNE.configurations.mobReward("Default");
 						AccountUtils.addFunds(killer.getUniqueId(), reward);
 						if(entity.getCustomName() != null) {
 							killer.sendMessage(ChatColor.WHITE + "You received " + MISCUtils.formatBalance(world, reward) + " for killing a " + ChatColor.GREEN + entity.getCustomName() + ChatColor.WHITE + ".");

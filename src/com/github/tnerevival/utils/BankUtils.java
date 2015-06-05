@@ -37,7 +37,7 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Interest.Enabled");
 			}
 		}
-		return TNE.instance.getConfig().getBoolean("Core.Bank.Interest.Enabled");
+		return TNE.configurations.getBoolean("Core.Bank.Interest.Enabled");
 	}
 	
 	public static Double interestRate(String world) {
@@ -46,7 +46,7 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Interest.Rate");
 			}
 		}
-		return TNE.instance.getConfig().getDouble("Core.Bank.Interest.Rate");
+		return TNE.configurations.getDouble("Core.Bank.Interest.Rate");
 	}
 	
 	public static Boolean hasOldBank(UUID id) {
@@ -153,7 +153,7 @@ public class BankUtils {
 				rows = TNE.instance.worldConfigurations.getInt("Worlds." + world + ".Bank.Rows");
 			}
 		} else {
-			rows = TNE.instance.getConfig().getInt("Core.Bank.Rows");
+			rows = TNE.configurations.getInt("Core.Bank.Rows");
 		}
 		return (rows >= 1 && rows <= 6) ? (rows * 9) : 27;
 	}
@@ -164,7 +164,7 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Enabled");
 			}
 		}
-		return TNE.instance.getConfig().getBoolean("Core.Bank.Enabled");
+		return TNE.configurations.getBoolean("Core.Bank.Enabled");
 	}
 	
 	public static Boolean command(String world) {
@@ -173,7 +173,7 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Command");
 			}
 		}
-		return TNE.instance.getConfig().getBoolean("Core.Bank.Command");
+		return TNE.configurations.getBoolean("Core.Bank.Command");
 	}
 	
 	public static Double cost(String world) {
@@ -182,7 +182,7 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Cost");
 			}
 		}
-		return TNE.instance.getConfig().getDouble("Core.Bank.Cost");
+		return TNE.configurations.getDouble("Core.Bank.Cost");
 	}
 	
 	public static Boolean sign(String world) {
@@ -191,7 +191,7 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Sign");
 			}
 		}
-		return TNE.instance.getConfig().getBoolean("Core.Bank.Sign");
+		return TNE.configurations.getBoolean("Core.Bank.Sign");
 	}
 	
 	public static Boolean npc(String world) {
@@ -200,6 +200,6 @@ public class BankUtils {
 				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.NPC");
 			}
 		}
-		return TNE.instance.getConfig().getBoolean("Core.Bank.NPC");
+		return TNE.configurations.getBoolean("Core.Bank.NPC");
 	}
 }

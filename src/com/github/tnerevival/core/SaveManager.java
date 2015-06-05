@@ -29,18 +29,18 @@ import com.github.tnerevival.utils.BankUtils;
 
 public class SaveManager {
 	
-	File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.FlatFile.File"));
+	File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
 
 	//MySQL Variables
-	String mysqlHost = TNE.instance.getConfig().getString("Core.Database.MySQL.Host");
-	Integer mysqlPort = TNE.instance.getConfig().getInt("Core.Database.MySQL.Port");
-	String mysqlDatabase = TNE.instance.getConfig().getString("Core.Database.MySQL.Database");
-	String mysqlUser = TNE.instance.getConfig().getString("Core.Database.MySQL.User");
-	String mysqlPassword = TNE.instance.getConfig().getString("Core.Database.MySQL.Password").trim();
+	String mysqlHost = TNE.configurations.getString("Core.Database.MySQL.Host");
+	Integer mysqlPort = TNE.configurations.getInt("Core.Database.MySQL.Port");
+	String mysqlDatabase = TNE.configurations.getString("Core.Database.MySQL.Database");
+	String mysqlUser = TNE.configurations.getString("Core.Database.MySQL.User");
+	String mysqlPassword = TNE.configurations.getString("Core.Database.MySQL.Password").trim();
 	
-	String prefix = TNE.instance.getConfig().getString("Core.Database.Prefix");
-	String type = TNE.instance.getConfig().getString("Core.Database.Type");
-	String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.instance.getConfig().getString("Core.Database.SQLite.File");
+	String prefix = TNE.configurations.getString("Core.Database.Prefix");
+	String type = TNE.configurations.getString("Core.Database.Type");
+	String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.SQLite.File");
 	Double currentSaveVersion = 2.1;
 	Double saveVersion = 0.0;
 	
@@ -260,7 +260,7 @@ public class SaveManager {
 	}
 	
 	private void backupDatabase() throws IOException {
-		String db = (type.equalsIgnoreCase("flatfile")) ? TNE.instance.getConfig().getString("Core.Database.FlatFile.File") : TNE.instance.getConfig().getString("Core.Database.SQLite.File");
+		String db = (type.equalsIgnoreCase("flatfile")) ? TNE.configurations.getString("Core.Database.FlatFile.File") : TNE.configurations.getString("Core.Database.SQLite.File");
 		FileInputStream fileIn = new FileInputStream(new File(TNE.instance.getDataFolder(), db));
 		FileOutputStream fileOut = new FileOutputStream(new File(TNE.instance.getDataFolder(), "Database.zip"));
 		ZipOutputStream zipOut = new ZipOutputStream(fileOut);

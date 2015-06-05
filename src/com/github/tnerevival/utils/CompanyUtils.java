@@ -13,6 +13,6 @@ public class CompanyUtils {
 				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Company.Enabled");
 			}
 		}
-		return TNE.instance.getConfig().getBoolean("Core.Company.Enabled");
+		return TNE.configurations.getBoolean("Core.Company.Enabled");
 	}
 }

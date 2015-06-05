@@ -97,6 +97,7 @@ public class MISCUtils {
 			reloadConfigsWorlds();
 		} else if(type.equalsIgnoreCase("config")) {
 			TNE.instance.reloadConfig();
+			TNE.configurations.load(TNE.instance.getConfig(), true);
 		} else if(type.equalsIgnoreCase("mobs")) {
 			reloadConfigsMobs();
 		} else if(type.equalsIgnoreCase("worlds")) {
@@ -109,6 +110,7 @@ public class MISCUtils {
 			TNE.instance.mobs = new File(TNE.instance.getDataFolder(), "mobs.yml");
 		}
 		TNE.instance.mobConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.mobs);
+		TNE.configurations.load(TNE.instance.mobConfigurations, false);
 	}
 	
 	public static void reloadConfigsWorlds() {
@@ -122,9 +124,9 @@ public class MISCUtils {
 	//Format Utils
 	public static Boolean shorten(String world) {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Shorten")) {
-			return TNE.instance.getConfig().getBoolean("Worlds." + world + ".Shorten");
+			return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Shorten");
 		}
-		return TNE.instance.getConfig().getBoolean("Worlds." + world + ".Shorten");
+		return TNE.configurations.getBoolean("Core.Shorten");
 	}
 	
 	public static String formatBalance(String world, double balance) {
@@ -165,14 +167,14 @@ public class MISCUtils {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MajorName")) {
 			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural");
 		}
-		return (singular) ? TNE.instance.getConfig().getString("Core.Currency.MajorName.Singular") : TNE.instance.getConfig().getString("Core.Currency.MajorName.Plural");
+		return (singular) ? TNE.configurations.getString("Core.Currency.MajorName.Singular") : TNE.configurations.getString("Core.Currency.MajorName.Plural");
 	}
 	
 	public static String getMinorCurrencyName(String world, Boolean singular) {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MinorName")) {
 			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Plural");
 		}
-		return (singular) ? TNE.instance.getConfig().getString("Core.Currency.MinorName.Singular") : TNE.instance.getConfig().getString("Core.Currency.MinorName.Plural");
+		return (singular) ? TNE.configurations.getString("Core.Currency.MinorName.Singular") : TNE.configurations.getString("Core.Currency.MinorName.Plural");
 	}
 	
 	//ItemStack Utils
@@ -211,7 +213,7 @@ public class MISCUtils {
 	
 	//World Utils
 	public static Boolean multiWorld() {
-		return TNE.instance.getConfig().getBoolean("Core.Multiworld");
+		return TNE.configurations.getBoolean("Core.Multiworld");
 	}
 	
 	public static Boolean worldConfigExists(String node) {

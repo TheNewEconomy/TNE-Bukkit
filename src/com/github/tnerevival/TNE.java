@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.tnerevival.commands.BankExecutor;
 import com.github.tnerevival.commands.CoreExecutor;
 import com.github.tnerevival.commands.MoneyExecutor;
+import com.github.tnerevival.core.Configurations;
 import com.github.tnerevival.core.EconomyManager;
 import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.TNEVaultEconomy;
@@ -45,6 +46,8 @@ public class TNE extends JavaPlugin {
 	public FileConfiguration mobConfigurations;
 	public FileConfiguration worldConfigurations;
 	
+	public static Configurations configurations;
+	
 	public String defaultWorld;
 	
 	/*
@@ -56,23 +59,28 @@ public class TNE extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
+		
+		//Configurations
+		initializeConfigurations();
+		loadConfigurations();
+		configurations = new Configurations();
+		configurations.load(getConfig(), true);
+		configurations.load(mobConfigurations, false);
+		configurations.setValue("Core.Bank.Enabled", false, true);
+		
 		manager = new EconomyManager();
 		saveManager = new SaveManager();
 		api = new TNEAPI(this);
 		setupVault();
 		
-		//Configurations
-		initializeConfigurations();
-		loadConfigurations();
-		
 		saveWorker = new SaveWorker(this);
 		interestWorker = new InterestWorker(this);
-		if(getConfig().getBoolean("Core.AutoSaver.Enabled")) {
-			saveWorker.runTaskTimer(this, getConfig().getLong("Core.AutoSaver.Interval") * 20, getConfig().getLong("Core.AutoSaver.Interval") * 20);
+		if(configurations.getBoolean("Core.AutoSaver.Enabled")) {
+			saveWorker.runTaskTimer(this, configurations.getLong("Core.AutoSaver.Interval") * 20, configurations.getLong("Core.AutoSaver.Interval") * 20);
 		}
 		
-		if(getConfig().getBoolean("Core.Bank.Interest.Enabled")) {
-			interestWorker.runTaskTimer(this, getConfig().getLong("Core.Bank.Interest.Interval") * 20, getConfig().getLong("Core.Bank.Interest.Interval") * 20);
+		if(configurations.getBoolean("Core.Bank.Interest.Enabled")) {
+			interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
 		}
 		
 
@@ -86,7 +94,7 @@ public class TNE extends JavaPlugin {
 		getCommand("money").setExecutor(new MoneyExecutor(this));
 		getCommand("theneweconomy").setExecutor(new CoreExecutor(this));
 		
-		if(getConfig().getBoolean("Core.Metrics")) {
+		if(configurations.getBoolean("Core.Metrics")) {
 			try {
 			    MetricsLite metrics = new MetricsLite(this);
 			    metrics.start();
@@ -95,10 +103,13 @@ public class TNE extends JavaPlugin {
 			}
 		}
 		
-		getLogger().info("The New Economy v0.0.2.1 has been enabled!");
+		getLogger().info("The New Economy v0.0.2.2 has been enabled!");
 	}
 	
 	public void onDisable() {
+		configurations.save(getConfig(), true);
+		configurations.save(mobConfigurations, false);
+		saveConfigurations();
 		try {
 			saveWorker.cancel();
 			interestWorker.cancel();
@@ -106,7 +117,7 @@ public class TNE extends JavaPlugin {
 			//Task was not scheduled
 		}
 		saveManager.save();
-		getLogger().info("The New Economy v0.0.2.1 has been disabled!");
+		getLogger().info("The New Economy v0.0.2.2 has been disabled!");
 	}
 	
 	private void initializeConfigurations() {

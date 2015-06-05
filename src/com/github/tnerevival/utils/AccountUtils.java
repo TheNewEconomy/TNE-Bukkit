@@ -76,9 +76,9 @@ public class AccountUtils {
 			}
 			return account.getBalance(MISCUtils.getWorld(id));
 		}
-		if(TNE.instance.getConfig().getBoolean("Core.Currency.ItemCurrency")) {
-			Material majorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMajor"));
-			Material minorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMinor"));
+		if(TNE.configurations.getBoolean("Core.Currency.ItemCurrency")) {
+			Material majorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMajor"));
+			Material minorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMinor"));
 			Integer major = MISCUtils.getItemCount(id, majorItem);
 			Integer minor = MISCUtils.getItemCount(id, minorItem);
 			String balance = major + "." + minor;
@@ -110,9 +110,9 @@ public class AccountUtils {
 				account.setBalance(world, balance);
 			}
 		}
-		if(TNE.instance.getConfig().getBoolean("Core.Currency.ItemCurrency")) {
-			Material majorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMajor"));
-			Material minorItem = Material.getMaterial(TNE.instance.getConfig().getString("Core.Currency.ItemMinor"));
+		if(TNE.configurations.getBoolean("Core.Currency.ItemCurrency")) {
+			Material majorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMajor"));
+			Material minorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMinor"));
 			MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
 			MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
 		} else {
@@ -216,7 +216,7 @@ public class AccountUtils {
 				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Balance");
 			}
 		}
-		return TNE.instance.getConfig().getDouble("Core.Balance");
+		return TNE.configurations.getDouble("Core.Balance");
 	}
 
 	public static Double getWorldCost(String world) {
@@ -225,6 +225,6 @@ public class AccountUtils {
 				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee");
 			}
 		}
-		return TNE.instance.getConfig().getDouble("Core.World.ChangeFee");
+		return TNE.configurations.getDouble("Core.World.ChangeFee");
 	}
 }
