@@ -1,4 +1,4 @@
-package com.github.tnerevival.commands.core;
+package com.github.tnerevival.commands.admin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -6,11 +6,11 @@ import org.bukkit.command.CommandSender;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 
-public class CoreCommand extends TNECommand {
+public class AdminCommand extends TNECommand {
 
-	public CoreCommand(TNE plugin) {
+	public AdminCommand(TNE plugin) {
 		super(plugin);
-		subCommands.add(new ReloadCommand(plugin));
+		subCommands.add(new AdminReloadCommand(plugin));
 	}
 
 	@Override

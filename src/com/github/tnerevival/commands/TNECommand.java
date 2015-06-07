@@ -47,7 +47,7 @@ public abstract class TNECommand {
 		return sub.execute(sender, removeSub(arguments));
 	}
 	
-	private String[] removeSub(String[] oldArguments) {
+	protected String[] removeSub(String[] oldArguments) {
 		String[] arguments = new String[oldArguments.length - 1];
 		for(int i = 1; i < oldArguments.length; i++) {
 			arguments[i - 1] = oldArguments[i];

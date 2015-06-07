@@ -10,9 +10,9 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class GiveCommand extends TNECommand {
+public class MoneyGiveCommand extends TNECommand {
 
-	public GiveCommand(TNE plugin) {
+	public MoneyGiveCommand(TNE plugin) {
 		super(plugin);
 	}
 

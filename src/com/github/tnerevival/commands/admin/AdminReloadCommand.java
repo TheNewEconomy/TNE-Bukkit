@@ -1,4 +1,4 @@
-package com.github.tnerevival.commands.core;
+package com.github.tnerevival.commands.admin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -8,9 +8,9 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class ReloadCommand extends TNECommand {
+public class AdminReloadCommand extends TNECommand {
 	
-	public ReloadCommand(TNE plugin) {
+	public AdminReloadCommand(TNE plugin) {
 		super(plugin);
 	}
 

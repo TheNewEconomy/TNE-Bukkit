@@ -8,9 +8,9 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class BalanceCommand extends TNECommand {
+public class MoneyBalanceCommand extends TNECommand {
 
-	public BalanceCommand(TNE plugin) {
+	public MoneyBalanceCommand(TNE plugin) {
 		super(plugin);
 	}
 

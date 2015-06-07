@@ -81,7 +81,7 @@ public class BankUtils {
 		bank.setPin(variables[1]);
 		List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();
 		
-		if(variables[4] != "TNENOSTRINGVALUE") {
+		if(!variables[4].equalsIgnoreCase("TNENOSTRINGVALUE")) {
 			String[] itemStrings = variables[4].split("\\*");
 			for(String s : itemStrings) {
 				items.add(MISCUtils.itemstackFromString(s));

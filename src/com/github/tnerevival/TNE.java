@@ -69,7 +69,6 @@ public class TNE extends JavaPlugin {
 		configurations = new Configurations();
 		configurations.load(getConfig(), true);
 		configurations.load(mobConfigurations, false);
-		configurations.setValue("Core.Bank.Enabled", false, true);
 		
 		manager = new EconomyManager();
 		saveManager = new SaveManager();
