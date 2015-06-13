@@ -13,8 +13,8 @@ Basic Information
 Some basic information you might want to look over.
 - [Github](https://github.com/TheNewEconomy/TNE-Bukkit)
 - [Bugs/Feature Requests/Suggestions](https://github.com/TheNewEconomy/TNE-Bukkit/issues)
-- [Permission Nodes](http://dev.bukkit.org/bukkit-plugins/tne/pages/permission-nodes/)
-- [Commands](http://dev.bukkit.org/bukkit-plugins/tne/pages/commands/)
+- [Permission Nodes](https://creatorfromhell.com/wiki/TheNewEconomy/Permissions/)
+- [Commands](https://creatorfromhell.com/wiki/TheNewEconomy/Commands/)
 - [To view the default configuration file w/ comments](http://paste.ubuntu.com/6885962/)
 - [We're on Esper! #TheNewEconomy](http://chat.mibbit.com/?server=irc.esper.net&channel=%23TheNewEconomy)
 
@@ -26,7 +26,7 @@ Default Configurations
 
 Features
 ----------
-- [Features](http://dev.bukkit.org/bukkit-plugins/tne/pages/features/) 
+- [Features](https://creatorfromhell.com/wiki/TheNewEconomy/Features/) 
 
 Requirements
 ----------
