@@ -15,7 +15,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,6 +58,11 @@ public class TNE extends JavaPlugin {
 	public SaveWorker saveWorker;
 	public InterestWorker interestWorker;
 	
+	public void onLoad() {
+		api = new TNEAPI(this);
+		setupVault();
+	}
+	
 	public void onEnable() {
 		instance = this;
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
@@ -73,8 +77,6 @@ public class TNE extends JavaPlugin {
 		manager = new EconomyManager();
 		saveManager = new SaveManager();
 		commandManager = new CommandManager();
-		api = new TNEAPI(this);
-		setupVault();
 		
 		saveWorker = new SaveWorker(this);
 		interestWorker = new InterestWorker(this);
@@ -177,11 +179,6 @@ public class TNE extends JavaPlugin {
 	private void setupVault() {
 		if(getServer().getPluginManager().getPlugin("Vault") == null) {
 			return;
-		}
-		
-		RegisteredServiceProvider<Economy> economyService = getServer().getServicesManager().getRegistration(Economy.class);
-		if(economyService != null) {
-            getServer().getServicesManager().unregister(economyService.getProvider());
 		}
         getServer().getServicesManager().register(Economy.class, new TNEVaultEconomy(this), this, ServicePriority.Highest);
         getLogger().info("Hooked into Vault");
