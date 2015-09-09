@@ -53,7 +53,7 @@ public class BankBuyCommand extends TNECommand {
 				return false;
 			}
 		}
-		Bank bank = new Bank(player, BankUtils.size(player.getWorld().getName()));
+		Bank bank = new Bank(player.getUniqueId(), BankUtils.size(player.getWorld().getName()));
 		AccountUtils.getAccount(player.getUniqueId()).getBanks().put(player.getWorld().getName(), bank);
 		player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
 		return true;

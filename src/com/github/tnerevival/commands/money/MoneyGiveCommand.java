@@ -1,6 +1,5 @@
 package com.github.tnerevival.commands.money;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +39,7 @@ public class MoneyGiveCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(arguments.length == 2) {
-			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(Bukkit.getPlayer(arguments[0]).getUniqueId(), player.getUniqueId(), Double.valueOf(arguments[1]))) {
+			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(getPlayer(sender, arguments[0]).getUniqueId(), player.getUniqueId(), Double.valueOf(arguments[1]))) {
 				player.sendMessage(ChatColor.WHITE + "Successfully gave " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");
 				return true;
 			}

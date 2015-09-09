@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
-
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -38,15 +36,15 @@ public class Bank implements Serializable {
 		this.gold = gold;
 	}
 	
-	public Bank(OfflinePlayer player, Integer size) {
-		this.id = player.getUniqueId();
+	public Bank(UUID uid, Integer size) {
+		this.id = uid;
 		this.pin = "none";
 		this.size = size;
 		this.gold = 0.0;
 	}
 	
-	public Bank(OfflinePlayer player, Integer size, Double gold) {
-		this.id = player.getUniqueId();
+	public Bank(UUID uid, Integer size, Double gold) {
+		this.id = uid;
 		this.pin = "none";
 		this.size = size;
 		this.gold = gold;

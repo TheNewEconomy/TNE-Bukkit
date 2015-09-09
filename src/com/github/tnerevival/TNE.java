@@ -184,5 +184,6 @@ public class TNE extends JavaPlugin {
             getServer().getServicesManager().unregister(economyService.getProvider());
 		}
         getServer().getServicesManager().register(Economy.class, new TNEVaultEconomy(this), this, ServicePriority.Highest);
+        getLogger().info("Hooked into Vault");
 	}
 }

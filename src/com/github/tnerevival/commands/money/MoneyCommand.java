@@ -2,9 +2,11 @@ package com.github.tnerevival.commands.money;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.utils.BankUtils;
 
 public class MoneyCommand extends TNECommand {
 
@@ -33,6 +35,36 @@ public class MoneyCommand extends TNECommand {
 	@Override
 	public boolean console() {
 		return false;
+	}
+	
+	@Override
+	public boolean execute(CommandSender sender, String[] arguments) {
+		Player player = getPlayer(sender);
+		if(!BankUtils.enabled(player.getWorld().getName())) {
+			player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but banks are not enabled in this world!");
+			return false;
+		}
+		
+		if(arguments.length == 0) {
+			TNECommand sub = FindSub("balance");
+			return sub.execute(sender, arguments);
+		}
+		
+		if(arguments[0].equalsIgnoreCase("help")) {
+			help(sender);
+			return false;
+		}
+		
+		TNECommand sub = FindSub(arguments[0]);
+		if(sub == null) {
+			sender.sendMessage(ChatColor.YELLOW + "Command \"/"  + getName() + " " + arguments[0] + "\" could not be found! Try using \"/"  + getName() + " help" + "\".");
+			return false;
+		}
+		if(!sub.canExecute(sender)) {
+			sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
+			return false;
+		}
+		return sub.execute(sender, removeSub(arguments));
 	}
 
 	@Override

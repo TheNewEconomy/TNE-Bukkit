@@ -1,6 +1,5 @@
 package com.github.tnerevival.commands.money;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,7 +40,7 @@ public class MoneyPayCommand extends TNECommand {
 		Player player = getPlayer(sender);
 		if(arguments.length == 2) {
 			if(AccountUtils.hasFunds(player.getUniqueId(), Double.valueOf(arguments[1]))) {
-				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(player.getUniqueId(), Bukkit.getPlayer(arguments[0]).getUniqueId(), Double.valueOf(arguments[1]))) {
+				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(player.getUniqueId(), getPlayer(sender, arguments[0]).getUniqueId(), Double.valueOf(arguments[1]))) {
 					player.sendMessage(ChatColor.WHITE + "Successfully paid " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");
 					return true;
 				}
