@@ -2,13 +2,51 @@
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
-# you can do so via Github at https://github.com/TheNewEconomy/TNEBukkit
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 
 #All configurable messages in TNE
 Messages:
     
+    Command:
+       
+       Unable: <red>I'm sorry, but you're not allowed to use that command.
+       None: <yellow>Command $command $arguments could not be found! Try using $command help.
+    
     General:
     
+       NoPerm: <red>I'm sorry, but you do not have permission to do that.
+    
     Money:
+       
+       Given: <white>You were given <gold>$amount<white>.
+       Received: <white>You were paid <gold>$amount  <white> by <white> $from.
+       Insufficient: <red>I'm sorry, but you do not have <gold>$amount<red>.
+       Balance: <white>You currently have <gold>$amount<white> on you.
+       Gave: <white>Successfully gave $player <gold>$amount<white>.
+       Paid: <white>Successfully paid $player <gold>$amount<white>.
+       
     
     Bank:
+    
+       Already: <red>You already own a bank!
+       Bought: <white>Congratulations! You have successfully purchased a bank!
+       Insufficient: <red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.
+       Overdraw: <red>I'm sorry, but your bank does not have <gold>$amount<red>.
+       None: <red>I'm sorry, but you do not own a bank. Please try /bank buy to buy one.
+       NoNPC: <red>I'm sorry, but accessing banks via NPCs has been disabled in this world!
+       NoSign: <red>I'm sorry, but accessing banks via signs has been disabled in this world!
+       NoCommand: <red>I'm sorry, but accessing banks via /bank has been disabled in this world!
+       DisabledWorld: <red>I'm sorry, but banks are disabled in this world.
+       Balance: <white>You currently have <gold>$amount<white> in your bank.
+       Deposit: <white>You have deposited <gold>$amount<white> into your bank.
+       Cost: <white>A bank is currently <gold>$amount<white>.
+       
+    Mob:
+       
+       Killed: <white>You received $reward for killing a <green>$mob<white>.
+       KilledVowel: <white>You received $reward for killing an <green>$mob<white>.
+    
+    World:
+       
+       Change: <red>You have been charged <gold> $amount<red> for changing worlds.
+       ChangeFailed: <red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.
