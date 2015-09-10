@@ -11,6 +11,7 @@ public class AdminCommand extends TNECommand {
 	public AdminCommand(TNE plugin) {
 		super(plugin);
 		subCommands.add(new AdminReloadCommand(plugin));
+		subCommands.add(new AdminSaveCommand(plugin));
 	}
 
 	@Override
@@ -38,6 +39,7 @@ public class AdminCommand extends TNECommand {
 		sender.sendMessage(ChatColor.GOLD + "~~~~~TNE Core Commands~~~~~");
 		sender.sendMessage(ChatColor.GOLD + "/theneweconomy help - general TNE help");
 		sender.sendMessage(ChatColor.GOLD + "/theneweconomy reload <all/config/mobs/worlds> - reload the TNE configurations or reload the specified file");
+		sender.sendMessage(ChatColor.GOLD + "/theneweconomy save - force saves all TNE data");
 	}
 	
 }

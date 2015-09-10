@@ -26,6 +26,7 @@ permissions:
       children:
          tne.admin.help: true
          tne.admin.reload: true
+         tne.admin.save: true
          tne.bank.help: true
          tne.bank.balance: true
          tne.bank.buy: true
@@ -44,6 +45,7 @@ permissions:
       children:
           tne.admin.help: true
           tne.admin.reload: true
+          tne.admin.save: true
           tne.bypass.bank: true
           tne.bypass.nametag: true
           tne.bypass.world: true
