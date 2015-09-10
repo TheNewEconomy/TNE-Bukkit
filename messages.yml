@@ -20,10 +20,14 @@ Messages:
        
        Given: <white>You were given <gold>$amount<white>.
        Received: <white>You were paid <gold>$amount  <white> by <white> $from.
+       Taken: <white>$from took <gold>$amount<white> from you.
        Insufficient: <red>I'm sorry, but you do not have <gold>$amount<red>.
        Balance: <white>You currently have <gold>$amount<white> on you.
        Gave: <white>Successfully gave $player <gold>$amount<white>.
        Paid: <white>Successfully paid $player <gold>$amount<white>.
+       Took: <white>Successfully took <gold>$amount<white> from $player.
+       Negative: <red>Amount cannot be a negative value!
+       SelfPay: <red>You can't pay yourself!
        
     
     Bank:

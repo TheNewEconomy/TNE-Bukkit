@@ -36,6 +36,7 @@ permissions:
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
+         tne.money.take: true
          tne.money.pay: true
 
    tne.admin.*:
@@ -71,6 +72,7 @@ permissions:
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
+         tne.money.take: true
          tne.money.pay: true
          
    tne.sign.*:

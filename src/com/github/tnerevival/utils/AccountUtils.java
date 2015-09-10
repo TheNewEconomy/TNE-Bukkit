@@ -15,6 +15,7 @@ import com.github.tnerevival.core.event.TNEFundsAddEvent;
 import com.github.tnerevival.core.event.TNEFundsGiveEvent;
 import com.github.tnerevival.core.event.TNEFundsPayEvent;
 import com.github.tnerevival.core.event.TNEFundsRemoveEvent;
+import com.github.tnerevival.core.event.TNEFundsTakeEvent;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class AccountUtils {
@@ -179,6 +180,21 @@ public class AccountUtils {
 			if(!e.isCancelled()) {
 				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
 				if(Bukkit.getPlayer(e.getReceiver().getUniqueId()) != null) Bukkit.getPlayer(e.getReceiver().getUniqueId()).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + ".");
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public static Boolean takeMoney(UUID id, UUID from, Double amount) {
+		if(exists(id)) {
+			String world = MISCUtils.getWorld(id);
+			TNEFundsTakeEvent e = new TNEFundsTakeEvent(Bukkit.getPlayer(id), Bukkit.getPlayer(from), amount);
+			Bukkit.getServer().getPluginManager().callEvent(e);
+			
+			if(!e.isCancelled()) {
+				removeFunds(e.getTarget().getUniqueId(), e.getAmount());
+				if(Bukkit.getPlayer(e.getTarget().getUniqueId()) != null) Bukkit.getPlayer(e.getTarget().getUniqueId()).sendMessage(ChatColor.WHITE + e.getTaker().getPlayer().getDisplayName() + " took " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " from you.");
 			}
 			return true;
 		}

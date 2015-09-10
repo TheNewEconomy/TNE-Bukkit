@@ -39,6 +39,14 @@ public class MoneyPayCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(arguments.length == 2) {
+			if(Double.valueOf(arguments[1]) < 0) {
+				player.sendMessage(ChatColor.RED + "Amount cannot be a negative value!");
+				return false;
+			}
+			if(player.getUniqueId().equals(getPlayer(sender, arguments[0]).getUniqueId())) {
+				player.sendMessage(ChatColor.RED + "You can't pay yourself!");
+				return false;
+			}
 			if(AccountUtils.hasFunds(player.getUniqueId(), Double.valueOf(arguments[1]))) {
 				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(player.getUniqueId(), getPlayer(sender, arguments[0]).getUniqueId(), Double.valueOf(arguments[1]))) {
 					player.sendMessage(ChatColor.WHITE + "Successfully paid " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");

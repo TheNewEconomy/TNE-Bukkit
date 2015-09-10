@@ -13,6 +13,7 @@ public class MoneyCommand extends TNECommand {
 		subCommands.add(new MoneyBalanceCommand(plugin));
 		subCommands.add(new MoneyGiveCommand(plugin));
 		subCommands.add(new MoneyPayCommand(plugin));
+		subCommands.add(new MoneyTakeCommand(plugin));
 	}
 
 	@Override
@@ -66,6 +67,7 @@ public class MoneyCommand extends TNECommand {
 		sender.sendMessage(ChatColor.GOLD + "/money help - general money help");
 		sender.sendMessage(ChatColor.GOLD + "/money balance - find out how much money you have on you");
 		sender.sendMessage(ChatColor.GOLD + "/money give <player> <amount> - summon money from air and give it to a player");
-		sender.sendMessage(ChatColor.GOLD + "/money pay <player> <amount> - pay a player money from your balance");	
+		sender.sendMessage(ChatColor.GOLD + "/money pay <player> <amount> - pay a player money from your balance");
+		sender.sendMessage(ChatColor.GOLD + "/money take <player> <amount> - make some of <player>'s money vanish into thin air");
 	}
 }

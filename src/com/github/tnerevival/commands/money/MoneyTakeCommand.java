@@ -9,15 +9,15 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class MoneyGiveCommand extends TNECommand {
+public class MoneyTakeCommand extends TNECommand {
 
-	public MoneyGiveCommand(TNE plugin) {
+	public MoneyTakeCommand(TNE plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public String getName() {
-		return "give";
+		return "take";
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class MoneyGiveCommand extends TNECommand {
 
 	@Override
 	public String getNode() {
-		return "tne.money.give";
+		return "tne.money.take";
 	}
 
 	@Override
@@ -43,9 +43,8 @@ public class MoneyGiveCommand extends TNECommand {
 				player.sendMessage(ChatColor.RED + "Amount cannot be a negative value!");
 				return false;
 			}
-			
-			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(getPlayer(sender, arguments[0]).getUniqueId(), player.getUniqueId(), Double.valueOf(arguments[1]))) {
-				player.sendMessage(ChatColor.WHITE + "Successfully gave " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");
+			if(getPlayer(sender, arguments[0]) != null && AccountUtils.takeMoney(getPlayer(sender, arguments[0]).getUniqueId(), player.getUniqueId(), Double.valueOf(arguments[1]))) {
+				player.sendMessage(ChatColor.WHITE + "Successfully took " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + " from " + arguments[0] + ".");
 				return true;
 			}
 		} else {
@@ -56,7 +55,7 @@ public class MoneyGiveCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/money give <player> <amount> - summon money from air and give it to a player");
+		sender.sendMessage(ChatColor.GOLD + "/money take <player> <amount> - make some of <player>'s money vanish into thin air");
 	}
 	
 }
