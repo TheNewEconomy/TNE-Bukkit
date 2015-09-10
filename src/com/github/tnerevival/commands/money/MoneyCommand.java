@@ -2,11 +2,9 @@ package com.github.tnerevival.commands.money;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.utils.BankUtils;
 
 public class MoneyCommand extends TNECommand {
 
@@ -39,11 +37,6 @@ public class MoneyCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
-		if(!BankUtils.enabled(player.getWorld().getName())) {
-			player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but banks are not enabled in this world!");
-			return false;
-		}
 		
 		if(arguments.length == 0) {
 			TNECommand sub = FindSub("balance");

@@ -195,7 +195,7 @@ public class AccountUtils {
 			if(!e.isCancelled()) {
 				removeFunds(e.getSender().getUniqueId(), e.getAmount());
 				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
-				if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(ChatColor.WHITE + "You were paid " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " by " + from + ".");
+				if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(ChatColor.WHITE + "You were paid " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " by " + Bukkit.getPlayer(from).getDisplayName() + ".");
 			}
 			return true;
 		}
