@@ -257,7 +257,7 @@ public class SaveManager {
 		} else if(type.equalsIgnoreCase("sqlite")) {
 			saveSQLite();
 		}
-		System.out.println("Data saved!");
+		TNE.instance.getLogger().info("Data saved!");
 	}
 	
 	private void backupDatabase() throws IOException {

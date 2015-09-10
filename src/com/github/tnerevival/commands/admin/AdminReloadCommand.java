@@ -45,7 +45,8 @@ public class AdminReloadCommand extends TNECommand {
 			} else if(arguments.length == 1) {
 				if(arguments[0].equalsIgnoreCase("all") || arguments[0].equalsIgnoreCase("config") || arguments[0].equalsIgnoreCase("mobs") || arguments[0].equalsIgnoreCase("worlds")) {
 					MISCUtils.reloadConfigurations(arguments[0]);
-					player.sendMessage(ChatColor.WHITE + arguments[0] + ".yml reloaded!");
+					String message = (arguments[0].equalsIgnoreCase("all"))? " All configurations reloaded." : arguments[0] + ".yml reloaded.";
+					player.sendMessage(ChatColor.WHITE + message);
 					return true;
 				}
 			}
