@@ -44,7 +44,7 @@ public class MoneyPayCommand extends TNECommand {
 				player.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
-			if(player.getUniqueId().equals(getPlayer(sender, arguments[0]).getUniqueId())) {
+			if(getPlayer(sender, arguments[0]) != null && player.getUniqueId().equals(getPlayer(sender, arguments[0]).getUniqueId())) {
 				player.sendMessage(new Message("Messages.Money.SelfPay").translate());
 				return false;
 			}

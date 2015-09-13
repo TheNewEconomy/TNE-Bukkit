@@ -50,7 +50,7 @@ public class MoneyTakeCommand extends TNECommand {
 				Message took = new Message("Messages.Money.Took");
 				took.addVariable("$amount", MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), Double.valueOf(arguments[1])));
 				took.addVariable("$player", arguments[0]);
-				sender.sendMessage(ChatColor.WHITE + "Successfully took " + ChatColor.GOLD + MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + " from " + arguments[0] + ".");
+				sender.sendMessage(took.translate());
 				return true;
 			}
 		} else {

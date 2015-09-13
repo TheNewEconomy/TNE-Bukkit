@@ -199,10 +199,10 @@ public class AccountUtils {
 			if(!e.isCancelled()) {
 				String taker = (from == null) ? "Console" : Bukkit.getPlayer(from).getDisplayName();
 				removeFunds(e.getTarget().getUniqueId(), e.getAmount());
-				Message given = new Message("Messages.Money.Taken");
-				given.addVariable("$from", taker);
-				given.addVariable("$amount", MISCUtils.formatBalance(world, amount));
-				if(Bukkit.getPlayer(e.getTarget().getUniqueId()) != null) Bukkit.getPlayer(e.getTarget().getUniqueId()).sendMessage(ChatColor.WHITE + taker + " took " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " from you.");
+				Message taken = new Message("Messages.Money.Taken");
+				taken.addVariable("$from", taker);
+				taken.addVariable("$amount", MISCUtils.formatBalance(world, amount));
+				if(Bukkit.getPlayer(e.getTarget().getUniqueId()) != null) Bukkit.getPlayer(e.getTarget().getUniqueId()).sendMessage(taken.translate());
 			}
 			return true;
 		}
