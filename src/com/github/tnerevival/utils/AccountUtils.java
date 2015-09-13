@@ -178,6 +178,7 @@ public class AccountUtils {
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
 			if(!e.isCancelled()) {
+				String giver = (from == null) ? "Console" : Bukkit.getPlayer(from).getDisplayName();
 				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
 				if(Bukkit.getPlayer(e.getReceiver().getUniqueId()) != null) Bukkit.getPlayer(e.getReceiver().getUniqueId()).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + ".");
 			}
@@ -193,8 +194,9 @@ public class AccountUtils {
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
 			if(!e.isCancelled()) {
+				String taker = (from == null) ? "Console" : Bukkit.getPlayer(from).getDisplayName();
 				removeFunds(e.getTarget().getUniqueId(), e.getAmount());
-				if(Bukkit.getPlayer(e.getTarget().getUniqueId()) != null) Bukkit.getPlayer(e.getTarget().getUniqueId()).sendMessage(ChatColor.WHITE + e.getTaker().getPlayer().getDisplayName() + " took " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " from you.");
+				if(Bukkit.getPlayer(e.getTarget().getUniqueId()) != null) Bukkit.getPlayer(e.getTarget().getUniqueId()).sendMessage(ChatColor.WHITE + taker + " took " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " from you.");
 			}
 			return true;
 		}

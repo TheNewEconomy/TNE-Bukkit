@@ -2,6 +2,7 @@ package com.github.tnerevival.commands.money;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
@@ -33,13 +34,13 @@ public class MoneyCommand extends TNECommand {
 
 	@Override
 	public boolean console() {
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		
-		if(arguments.length == 0) {
+		if(arguments.length == 0 && sender instanceof Player) {
 			TNECommand sub = FindSub("balance");
 			return sub.execute(sender, arguments);
 		}

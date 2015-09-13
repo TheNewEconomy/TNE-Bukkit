@@ -2,11 +2,9 @@ package com.github.tnerevival.commands.admin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.utils.MISCUtils;
 
 public class AdminSaveCommand extends TNECommand {
 	
@@ -31,14 +29,13 @@ public class AdminSaveCommand extends TNECommand {
 
 	@Override
 	public boolean console() {
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
 		this.plugin.saveManager.save();
-		player.sendMessage("Successfully saved all TNE Data!");
+		sender.sendMessage("Successfully saved all TNE Data!");
 		return true;
 	}
 

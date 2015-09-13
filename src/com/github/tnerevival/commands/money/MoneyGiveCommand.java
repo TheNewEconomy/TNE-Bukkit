@@ -1,5 +1,7 @@
 package com.github.tnerevival.commands.money;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,20 +34,20 @@ public class MoneyGiveCommand extends TNECommand {
 
 	@Override
 	public boolean console() {
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
+		UUID id = (sender instanceof Player) ? getPlayer(sender).getUniqueId() : null;
 		if(arguments.length == 2) {
 			if(Double.valueOf(arguments[1]) < 0) {
-				player.sendMessage(ChatColor.RED + "Amount cannot be a negative value!");
+				sender.sendMessage(ChatColor.RED + "Amount cannot be a negative value!");
 				return false;
 			}
 			
-			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(getPlayer(sender, arguments[0]).getUniqueId(), player.getUniqueId(), Double.valueOf(arguments[1]))) {
-				player.sendMessage(ChatColor.WHITE + "Successfully gave " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");
+			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(getPlayer(sender, arguments[0]).getUniqueId(), id, Double.valueOf(arguments[1]))) {
+				sender.sendMessage(ChatColor.WHITE + "Successfully gave " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");
 				return true;
 			}
 		} else {
@@ -53,6 +55,8 @@ public class MoneyGiveCommand extends TNECommand {
 		}
 		return false;
 	}
+	
+	
 
 	@Override
 	public void help(CommandSender sender) {

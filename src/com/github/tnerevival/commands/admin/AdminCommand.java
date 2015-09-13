@@ -31,7 +31,7 @@ public class AdminCommand extends TNECommand {
 
 	@Override
 	public boolean console() {
-		return false;
+		return true;
 	}
 
 	@Override
