@@ -5,6 +5,35 @@
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 
 #All configurable messages in TNE
+# Colour characters are supported, just use the colour code preceded by an ampersand character('&')
+# An alternate colouring format is also viable, just type out the name of the colour inside a less than and greater than symbol
+# 
+# Colour chart
+# Char  |   Alt
+# ------|-----------
+#  &b   |  <aqua>
+#  &0   |  <black>
+#  &9   |  <blue>
+#  &3   |  <dark_aqua>
+#  &1   |  <dark_blue>
+#  &8   |  <dark_gray>
+#  &2   |  <dark_green>
+#  &5   |  <dark_purple>
+#  &4   |  <dark_red>
+#  &6   |  <gold>
+#  &7   |  <gray>
+#  &a   |  <green>
+#  &d   |  <purple>
+#  &c   |  <red>
+#  &f   |  <white>
+#  &e   |  <yellow>
+#  &k   |  <magic>
+#  &l   |  <bold>
+#  &o   |  <italic>
+#  &r   |  <reset>
+#  &m   |  <strike>
+#  &n   |  <underline>
+
 Messages:
     
     Command:
@@ -20,7 +49,7 @@ Messages:
     Money:
        
        Given: <white>You were given <gold>$amount<white>.
-       Received: <white>You were paid <gold>$amount  <white> by <white> $from.
+       Received: <white>You were paid <gold>$amount <white> by <white> $from.
        Taken: <white>$from took <gold>$amount<white> from you.
        Insufficient: <red>I'm sorry, but you do not have <gold>$amount<red>.
        Balance: <white>You currently have <gold>$amount<white> on you.
@@ -41,7 +70,7 @@ Messages:
        NoNPC: <red>I'm sorry, but accessing banks via NPCs has been disabled in this world!
        NoSign: <red>I'm sorry, but accessing banks via signs has been disabled in this world!
        NoCommand: <red>I'm sorry, but accessing banks via /bank has been disabled in this world!
-       DisabledWorld: <red>I'm sorry, but banks are disabled in this world.
+       Disabled: <red>I'm sorry, but banks are disabled in this world.
        Balance: <white>You currently have <gold>$amount<white> in your bank.
        Deposit: <white>You have deposited <gold>$amount<white> into your bank.
        Cost: <white>A bank is currently <gold>$amount<white>.

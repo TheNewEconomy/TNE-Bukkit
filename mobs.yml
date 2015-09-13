@@ -49,11 +49,19 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    Endermite:
+        Enabled: true
+        Reward: 10.00
+
     Ghast:
         Enabled: true
         Reward: 10.00
         
     Giant:
+        Enabled: true
+        Reward: 10.00
+
+    Guardian:
         Enabled: true
         Reward: 10.00
 
@@ -78,6 +86,10 @@ Mobs:
         Reward: 10.00
 
     Pig:
+        Enabled: true
+        Reward: 10.00
+
+    Rabbit:
         Enabled: true
         Reward: 10.00
 

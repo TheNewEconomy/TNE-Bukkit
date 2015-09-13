@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class Configurations {
 	HashMap<String, Object> mainConfigurations = new HashMap<String, Object>();
+	HashMap<String, Object> messageConfigurations = new HashMap<String, Object>();
 	HashMap<String, Object> mobsConfigurations = new HashMap<String, Object>();
 	
 	public Configurations() {
@@ -57,6 +58,38 @@ public class Configurations {
 		mainConfigurations.put("Core.Database.MySQL.User", "user");
 		mainConfigurations.put("Core.Database.MySQL.Password", "password");
 		mainConfigurations.put("Core.Database.SQLite.File", "economy.db");
+		
+		messageConfigurations.put("Messages.Command.Unable", "<red>I'm sorry, but you're not allowed to use that command.");
+		messageConfigurations.put("Messages.Command.None", "<yellow>Command $command $arguments could not be found! Try using $command help.");
+		messageConfigurations.put("Messages.General.NoPerm", "<red>I'm sorry, but you do not have permission to do that.");
+		messageConfigurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
+		messageConfigurations.put("Messages.Money.Given", "<white>You were given <gold>$amount<white>.");
+		messageConfigurations.put("Messages.Money.Received", "<white>You were paid <gold>$amount <white> by <white> $from.");
+		messageConfigurations.put("Messages.Money.Taken", "<white>$from took <gold>$amount<white> from you.");
+		messageConfigurations.put("Messages.Money.Insufficient", "<red>I'm sorry, but you do not have <gold>$amount<red>.");
+		messageConfigurations.put("Messages.Money.Balance", "<white>You currently have <gold>$amount<white> on you.");
+		messageConfigurations.put("Messages.Money.Gave", "<white>Successfully gave $player <gold>$amount<white>.");
+		messageConfigurations.put("Messages.Money.Paid", "<white>Successfully paid $player <gold>$amount<white>.");
+		messageConfigurations.put("Messages.Money.Took", "<white>Successfully took <gold>$amount<white> from $player.");
+		messageConfigurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");
+		messageConfigurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
+		messageConfigurations.put("Messages.Bank.Already", "<red>You already own a bank!");
+		messageConfigurations.put("Messages.Bank.Bought", "<white>Congratulations! You have successfully purchased a bank!");
+		messageConfigurations.put("Messages.Bank.Insufficient", "<red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.");
+		messageConfigurations.put("Messages.Bank.Overdraw", "<red>I'm sorry, but your bank does not have <gold>$amount<red>.");
+		messageConfigurations.put("Messages.Bank.None", "<red>I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+		messageConfigurations.put("Messages.Bank.NoNPC", "<red>I'm sorry, but accessing banks via NPCs has been disabled in this world!");
+		messageConfigurations.put("Messages.Bank.NoSign", "<red>I'm sorry, but accessing banks via signs has been disabled in this world!");
+		messageConfigurations.put("Messages.Bank.NoCommand", "<red>I'm sorry, but accessing banks via /bank has been disabled in this world!");
+		messageConfigurations.put("Messages.Bank.Disabled", "<red>I'm sorry, but banks are disabled in this world.");
+		messageConfigurations.put("Messages.Bank.Balance", "<white>You currently have <gold>$amount<white> in your bank.");
+		messageConfigurations.put("Messages.Bank.Deposit", "<white>You have deposited <gold>$amount<white> into your bank.");
+		messageConfigurations.put("Messages.Bank.Withdraw", "<white>You have withdrawn <gold>$amount<gold> from your bank.");
+		messageConfigurations.put("Messages.Bank.Cost", "<white>A bank is currently <gold>$amount<white>.");
+		messageConfigurations.put("Messages.Mob.Killed", "<white>You received $reward for killing a <green>$mob<white>.");
+		messageConfigurations.put("Messages.Mob.KilledVowel", "<white>You received $reward for killing an <green>$mob<white>.");
+		messageConfigurations.put("Messages.World.Change", "<white>You have been charged <gold> $amount<white> for changing worlds.");
+		messageConfigurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
 		
 		mobsConfigurations.put("Mobs.Enabled", true);
 		mobsConfigurations.put("Mobs.Default.Enabled", true);
@@ -125,9 +158,8 @@ public class Configurations {
 		mobsConfigurations.put("Mobs.ZombieVillager.Reward", 10.00);
 	}
 	
-	public Object getValue(String node, Boolean main) {
-		Iterator<java.util.Map.Entry<String, Object>> it;
-		it = (main) ? mainConfigurations.entrySet().iterator() : mobsConfigurations.entrySet().iterator();
+	public Object getValue(String node, String file) {
+		Iterator<java.util.Map.Entry<String, Object>> it = getIterator(file);
 		
 		while(it.hasNext()) {
 			java.util.Map.Entry<String, Object> entry = it.next();
@@ -138,9 +170,8 @@ public class Configurations {
 		return null;
 	}
 	
-	public void setValue(String node, Object value, Boolean main) {
-		Iterator<java.util.Map.Entry<String, Object>> it;
-		it = (main) ? mainConfigurations.entrySet().iterator() : mobsConfigurations.entrySet().iterator();
+	public void setValue(String node, Object value, String file) {
+		Iterator<java.util.Map.Entry<String, Object>> it = getIterator(file);
 		
 		while(it.hasNext()) {
 			java.util.Map.Entry<String, Object> entry = it.next();
@@ -151,48 +182,50 @@ public class Configurations {
 	}
 	
 	public Boolean getBoolean(String node) {
-		return (Boolean)getValue(node, true);
+		return (Boolean)getValue(node, "main");
 	}
 	
 	public Integer getInt(String node) {
-		return (Integer)getValue(node, true);
+		return (Integer)getValue(node, "main");
 	}
 	
 	public Double getDouble(String node) {
-		return (Double)getValue(node, true);
+		return (Double)getValue(node, "main");
 	}
 	
 	public Long getLong(String node) {
-		return Long.valueOf(((Integer)getValue(node, true)).longValue());
+		return Long.valueOf(((Integer)getValue(node, "main")).longValue());
 	}
 	
 	public String getString(String node) {
-		return (String)getValue(node, true);
+		return (String)getValue(node, "main");
+	}
+	
+	public String getMessage(String node) {
+		return (String)getValue(node, "messages");
 	}
 	
 	public Boolean mobEnabled(String mob) {
-		return (Boolean)getValue("Mobs." + mob + ".Enabled", false);
+		return (Boolean)getValue("Mobs." + mob + ".Enabled", "mob");
 	}
 	
 	public Double mobReward(String mob) {
-		return (Double)getValue("Mobs." + mob + ".Reward", false);
+		return (Double)getValue("Mobs." + mob + ".Reward", "mob");
 	}
 	
-	public void load(FileConfiguration configuration, Boolean main) {
-		Iterator<java.util.Map.Entry<String, Object>> it;
-		it = (main) ? mainConfigurations.entrySet().iterator() : mobsConfigurations.entrySet().iterator();
+	public void load(FileConfiguration configuration, String file) {
+		Iterator<java.util.Map.Entry<String, Object>> it = getIterator(file);
 		
 		while(it.hasNext()) {
 			java.util.Map.Entry<String, Object> entry = it.next();
 			if(configuration.contains(entry.getKey())) {
-				setValue(entry.getKey(), configuration.get(entry.getKey()), main);
+				setValue(entry.getKey(), configuration.get(entry.getKey()), file);
 			}
 		}
 	}
 	
-	public void save(FileConfiguration configuration, Boolean main) {
-		Iterator<java.util.Map.Entry<String, Object>> it;
-		it = (main) ? mainConfigurations.entrySet().iterator() : mobsConfigurations.entrySet().iterator();
+	public void save(FileConfiguration configuration, String file) {
+		Iterator<java.util.Map.Entry<String, Object>> it = getIterator(file);
 		
 		while(it.hasNext()) {
 			java.util.Map.Entry<String, Object> entry = it.next();
@@ -200,5 +233,23 @@ public class Configurations {
 				configuration.set(entry.getKey(), entry.getValue());
 			}
 		}
+	}
+	
+	private Iterator<java.util.Map.Entry<String, Object>> getIterator(String file) {
+		Iterator<java.util.Map.Entry<String, Object>> it = mainConfigurations.entrySet().iterator();
+		switch(file) {
+			case "main":
+				it = mainConfigurations.entrySet().iterator();
+				break;
+			case "mob":
+				it = mobsConfigurations.entrySet().iterator();
+				break;
+			case "messages":
+				it = messageConfigurations.entrySet().iterator();
+				break;
+			default:
+				break;
+		}
+		return it;
 	}
 }

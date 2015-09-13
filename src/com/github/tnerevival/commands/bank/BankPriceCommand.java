@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -38,7 +39,9 @@ public class BankPriceCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
-		player.sendMessage(ChatColor.WHITE + "A bank is currently " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName())) + ChatColor.WHITE + ".");
+		Message cost = new Message("Messages.Bank.Cost");
+		cost.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName())));
+		player.sendMessage(cost.translate());
 		return true;
 	}
 

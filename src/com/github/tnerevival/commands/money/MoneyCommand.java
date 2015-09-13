@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 
 public class MoneyCommand extends TNECommand {
 
@@ -45,18 +46,23 @@ public class MoneyCommand extends TNECommand {
 			return sub.execute(sender, arguments);
 		}
 		
-		if(arguments[0].equalsIgnoreCase("help")) {
+		if(arguments.length == 0 || arguments.length == 1 && arguments[0].equalsIgnoreCase("help")) {
 			help(sender);
 			return false;
 		}
 		
 		TNECommand sub = FindSub(arguments[0]);
 		if(sub == null) {
-			sender.sendMessage(ChatColor.YELLOW + "Command \"/"  + getName() + " " + arguments[0] + "\" could not be found! Try using \"/"  + getName() + " help" + "\".");
+			Message noCommand = new Message("Messages.Command.None");
+			noCommand.addVariable("$command", "/" + getName());
+			noCommand.addVariable("$arguments", arguments[0]);
+			sender.sendMessage(noCommand.translate());
 			return false;
 		}
 		if(!sub.canExecute(sender)) {
-			sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
+			Message unable = new Message("Messages.Command.Unable");
+			unable.addVariable("$command", "/" + getName());
+			sender.sendMessage(unable.translate());
 			return false;
 		}
 		return sub.execute(sender, removeSub(arguments));

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -41,7 +42,7 @@ public class BankBuyCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(BankUtils.hasBank(player.getUniqueId())) {
-			player.sendMessage(ChatColor.RED + "You already own a bank!");
+			player.sendMessage(new Message("Messages.Bank.Already").translate());
 			return false;
 		}
 		
@@ -49,13 +50,15 @@ public class BankBuyCommand extends TNECommand {
 			if(AccountUtils.hasFunds(player.getUniqueId(), BankUtils.cost(player.getWorld().getName()))) {
 				AccountUtils.removeFunds(player.getUniqueId(), BankUtils.cost(player.getWorld().getName()));
 			} else {
-				player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName())) + ChatColor.DARK_RED + " to create a bank.");
+				Message insufficient = new Message("Messages.Money.Insufficient");
+				insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName())));
+				player.sendMessage(insufficient.translate());
 				return false;
 			}
 		}
 		Bank bank = new Bank(player.getUniqueId(), BankUtils.size(player.getWorld().getName()));
 		AccountUtils.getAccount(player.getUniqueId()).getBanks().put(player.getWorld().getName(), bank);
-		player.sendMessage(ChatColor.WHITE + "Congratulations! You have successfully purchased a bank!");
+		player.sendMessage(new Message("Messages.Bank.Bought").translate());
 		return true;
 	}
 

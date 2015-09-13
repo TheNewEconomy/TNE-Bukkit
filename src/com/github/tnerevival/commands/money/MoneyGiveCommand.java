@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -42,12 +43,15 @@ public class MoneyGiveCommand extends TNECommand {
 		UUID id = (sender instanceof Player) ? getPlayer(sender).getUniqueId() : null;
 		if(arguments.length == 2) {
 			if(Double.valueOf(arguments[1]) < 0) {
-				sender.sendMessage(ChatColor.RED + "Amount cannot be a negative value!");
+				sender.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
 			
 			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(getPlayer(sender, arguments[0]).getUniqueId(), id, Double.valueOf(arguments[1]))) {
-				sender.sendMessage(ChatColor.WHITE + "Successfully gave " + arguments[0] + " " + ChatColor.GOLD + MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), Double.valueOf(arguments[1])) + ChatColor.WHITE + ".");
+				Message gave = new Message("Messages.Money.Gave");
+				gave.addVariable("$amount",  MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), Double.valueOf(arguments[1])));
+				gave.addVariable("$player", arguments[0]);
+				sender.sendMessage(gave.translate());
 				return true;
 			}
 		} else {

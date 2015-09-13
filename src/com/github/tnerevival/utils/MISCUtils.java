@@ -97,7 +97,9 @@ public class MISCUtils {
 			reloadConfigsWorlds();
 		} else if(type.equalsIgnoreCase("config")) {
 			TNE.instance.reloadConfig();
-			TNE.configurations.load(TNE.instance.getConfig(), true);
+			TNE.configurations.load(TNE.instance.getConfig(), "main");
+		} else if(type.equalsIgnoreCase("messages")) {
+			reloadConfigsMessages();
 		} else if(type.equalsIgnoreCase("mobs")) {
 			reloadConfigsMobs();
 		} else if(type.equalsIgnoreCase("worlds")) {
@@ -110,7 +112,15 @@ public class MISCUtils {
 			TNE.instance.mobs = new File(TNE.instance.getDataFolder(), "mobs.yml");
 		}
 		TNE.instance.mobConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.mobs);
-		TNE.configurations.load(TNE.instance.mobConfigurations, false);
+		TNE.configurations.load(TNE.instance.mobConfigurations, "mob");
+	}
+	
+	public static void reloadConfigsMessages() {
+		if(TNE.instance.messages == null) {
+			TNE.instance.messages = new File(TNE.instance.getDataFolder(), "messages.yml");
+		}
+		TNE.instance.messageConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.messages);
+		TNE.configurations.load(TNE.instance.messageConfigurations, "messages");
 	}
 	
 	public static void reloadConfigsWorlds() {

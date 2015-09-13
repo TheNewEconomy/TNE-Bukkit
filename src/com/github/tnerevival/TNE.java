@@ -43,9 +43,11 @@ public class TNE extends JavaPlugin {
 	
 	// Files & Custom Configuration Files
 	public File mobs;
+	public File messages;
 	public File worlds;
 	
 	public FileConfiguration mobConfigurations;
+	public FileConfiguration messageConfigurations;
 	public FileConfiguration worldConfigurations;
 	
 	public static Configurations configurations;
@@ -71,8 +73,9 @@ public class TNE extends JavaPlugin {
 		initializeConfigurations();
 		loadConfigurations();
 		configurations = new Configurations();
-		configurations.load(getConfig(), true);
-		configurations.load(mobConfigurations, false);
+		configurations.load(getConfig(), "main");
+		configurations.load(mobConfigurations, "mob");
+		configurations.load(messageConfigurations, "messages");
 		
 		manager = new EconomyManager();
 		saveManager = new SaveManager();
@@ -103,12 +106,13 @@ public class TNE extends JavaPlugin {
 			}
 		}
 		
-		getLogger().info("The New Economy v0.0.2.2 has been enabled!");
+		getLogger().info("The New Economy v0.0.2.2 Dev Build 5 has been enabled!");
 	}
 	
 	public void onDisable() {
-		configurations.save(getConfig(), true);
-		configurations.save(mobConfigurations, false);
+		configurations.save(getConfig(), "main");
+		configurations.save(mobConfigurations, "mob");
+		configurations.save(messageConfigurations, "messages");
 		saveConfigurations();
 		try {
 			saveWorker.cancel();
@@ -135,8 +139,10 @@ public class TNE extends JavaPlugin {
 	
 	private void initializeConfigurations() {
 		mobs = new File(getDataFolder(), "mobs.yml");
+		messages = new File(getDataFolder(), "messages.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
+		messageConfigurations = YamlConfiguration.loadConfiguration(messages);
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
 		try {
 			setConfigurationDefaults();
@@ -148,6 +154,7 @@ public class TNE extends JavaPlugin {
 	private void loadConfigurations() {
 	     getConfig().options().copyDefaults(true);
 	     mobConfigurations.options().copyDefaults(true);
+	     messageConfigurations.options().copyDefaults(true);
 	     worldConfigurations.options().copyDefaults(true);
 	     saveConfigurations();
 	}
@@ -156,6 +163,7 @@ public class TNE extends JavaPlugin {
 		saveConfig();
 		try {
 			mobConfigurations.save(mobs);
+			messageConfigurations.save(messages);
 			worldConfigurations.save(worlds);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -164,10 +172,16 @@ public class TNE extends JavaPlugin {
 	
 	private void setConfigurationDefaults() throws UnsupportedEncodingException {
 		Reader mobsStream = new InputStreamReader(this.getResource("mobs.yml"), "UTF8");
+		Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
 		Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
 	    if (mobsStream != null) {
 	        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
 	        mobConfigurations.setDefaults(config);
+	    }
+	    
+	    if (messagesStream != null) {
+	        YamlConfiguration config = YamlConfiguration.loadConfiguration(messagesStream);
+	        messageConfigurations.setDefaults(config);
 	    }
 	    
 	    if (worldsStream != null) {

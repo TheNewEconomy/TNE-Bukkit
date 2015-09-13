@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -41,13 +42,17 @@ public class BankDepositCommand extends TNECommand {
 		if(arguments.length == 1) {
 			if(BankUtils.hasBank(player.getUniqueId())) {
 				if(BankUtils.bankDeposit(player.getUniqueId(), Double.valueOf(arguments[0]))) {
-					player.sendMessage(ChatColor.WHITE + "You have deposited " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])) + ChatColor.WHITE + " into your bank.");
+					Message deposit = new Message("Messages.Bank.Deposit");
+					deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+					player.sendMessage(deposit.translate());
 					return true;
 				} else {
-					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not have " + ChatColor.GOLD + MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])) + ChatColor.DARK_RED + ".");
+					Message insufficient = new Message("Messages.Money.Insufficient");
+					insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+					player.sendMessage(insufficient.translate());
 				}
 			} else {
-				player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+				player.sendMessage(new Message("Messages.Bank.None").translate());
 			}
 		} else {
 			help(sender);

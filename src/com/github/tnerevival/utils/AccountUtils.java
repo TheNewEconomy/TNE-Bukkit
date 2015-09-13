@@ -10,6 +10,7 @@ import org.bukkit.Material;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.event.TNECreateAccountEvent;
 import com.github.tnerevival.core.event.TNEFundsAddEvent;
 import com.github.tnerevival.core.event.TNEFundsGiveEvent;
@@ -180,7 +181,9 @@ public class AccountUtils {
 			if(!e.isCancelled()) {
 				String giver = (from == null) ? "Console" : Bukkit.getPlayer(from).getDisplayName();
 				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
-				if(Bukkit.getPlayer(e.getReceiver().getUniqueId()) != null) Bukkit.getPlayer(e.getReceiver().getUniqueId()).sendMessage(ChatColor.WHITE + "You were given " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + ".");
+				Message given = new Message("Messages.Money.Given");
+				given.addVariable("$amount", MISCUtils.formatBalance(world, amount));
+				if(Bukkit.getPlayer(e.getReceiver().getUniqueId()) != null) Bukkit.getPlayer(e.getReceiver().getUniqueId()).sendMessage(given.translate());
 			}
 			return true;
 		}
@@ -196,6 +199,9 @@ public class AccountUtils {
 			if(!e.isCancelled()) {
 				String taker = (from == null) ? "Console" : Bukkit.getPlayer(from).getDisplayName();
 				removeFunds(e.getTarget().getUniqueId(), e.getAmount());
+				Message given = new Message("Messages.Money.Taken");
+				given.addVariable("$from", taker);
+				given.addVariable("$amount", MISCUtils.formatBalance(world, amount));
 				if(Bukkit.getPlayer(e.getTarget().getUniqueId()) != null) Bukkit.getPlayer(e.getTarget().getUniqueId()).sendMessage(ChatColor.WHITE + taker + " took " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " from you.");
 			}
 			return true;
@@ -213,7 +219,10 @@ public class AccountUtils {
 			if(!e.isCancelled()) {
 				removeFunds(e.getSender().getUniqueId(), e.getAmount());
 				addFunds(e.getReceiver().getUniqueId(), e.getAmount());
-				if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(ChatColor.WHITE + "You were paid " + ChatColor.GOLD + MISCUtils.formatBalance(world, amount) + ChatColor.WHITE + " by " + Bukkit.getPlayer(from).getDisplayName() + ".");
+				Message paid = new Message("Messages.Money.Received");
+				paid.addVariable("$from", Bukkit.getPlayer(from).getDisplayName());
+				paid.addVariable("$amount", MISCUtils.formatBalance(world, amount));
+				if(Bukkit.getPlayer(to) != null) Bukkit.getPlayer(to).sendMessage(paid.translate());
 			}
 			return true;
 		}

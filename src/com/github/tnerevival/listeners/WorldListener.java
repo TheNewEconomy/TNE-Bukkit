@@ -1,12 +1,12 @@
 package com.github.tnerevival.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -28,10 +28,14 @@ public class WorldListener implements Listener {
 				if(AccountUtils.hasFunds(player.getUniqueId(), AccountUtils.getWorldCost(world))) {
 					AccountUtils.removeFunds(player.getUniqueId(), AccountUtils.getWorldCost(world));
 					AccountUtils.initializeWorldData(player.getUniqueId(), world);
-					player.sendMessage(ChatColor.DARK_RED + "You have been charged " + ChatColor.GOLD + MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)) + ChatColor.DARK_RED + " for changing worlds.");
+					Message change = new Message("Messages.World.Change");
+					change.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)));
+					player.sendMessage(change.translate());
 				} else {
 					player.teleport(event.getFrom().getSpawnLocation());
-					player.sendMessage(ChatColor.DARK_RED + "I'm sorry, but you need at least " + ChatColor.GOLD + MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)) + ChatColor.DARK_RED + " to change worlds.");
+					Message changeFailed = new Message("Messages.World.ChangeFailed");
+					changeFailed.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)));
+					player.sendMessage(changeFailed.translate());
 				}
 			} else {
 				AccountUtils.initializeWorldData(player.getUniqueId(), world);
