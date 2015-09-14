@@ -236,10 +236,10 @@ public class InteractionListener implements Listener {
 					case SKELETON:
 						Skeleton skelly = (Skeleton)entity;
 						if(skelly.getSkeletonType().equals(SkeletonType.WITHER)) {
-							mob = "Skeleton";
+							mob = "WitherSkeleton";
 							break;
 						} 
-						mob = "WitherSkeleton";
+						mob = "Skeleton";
 						break;
 					case SLIME:
 						mob = "Slime";

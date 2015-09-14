@@ -93,6 +93,7 @@ public class MISCUtils {
 	public static void reloadConfigurations(String type) {
 		if(type.equalsIgnoreCase("all")) {
 			TNE.instance.reloadConfig();
+			reloadConfigsMessages();
 			reloadConfigsMobs();
 			reloadConfigsWorlds();
 		} else if(type.equalsIgnoreCase("config")) {

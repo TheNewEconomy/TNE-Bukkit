@@ -110,10 +110,14 @@ public class Configurations {
 		mobsConfigurations.put("Mobs.EnderDragon.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Enderman.Enabled", true);
 		mobsConfigurations.put("Mobs.Enderman.Reward", 10.00);
+		mobsConfigurations.put("Mobs.Endermite.Enabled", true);
+		mobsConfigurations.put("Mobs.Endermite.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Ghast.Enabled", true);
 		mobsConfigurations.put("Mobs.Ghast.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Giant.Enabled", true);
 		mobsConfigurations.put("Mobs.Giant.Reward", 10.00);
+		mobsConfigurations.put("Mobs.Guardian.Enabled", true);
+		mobsConfigurations.put("Mobs.Guardian.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Horse.Enabled", true);
 		mobsConfigurations.put("Mobs.Horse.Reward", 10.00);
 		mobsConfigurations.put("Mobs.IronGolem.Enabled", true);
@@ -126,6 +130,8 @@ public class Configurations {
 		mobsConfigurations.put("Mobs.Ocelot.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Pig.Enabled", true);
 		mobsConfigurations.put("Mobs.Pig.Reward", 10.00);
+		mobsConfigurations.put("Mobs.Rabbit.Enabled", true);
+		mobsConfigurations.put("Mobs.Rabbit.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Sheep.Enabled", true);
 		mobsConfigurations.put("Mobs.Sheep.Reward", 10.00);
 		mobsConfigurations.put("Mobs.Silverfish.Enabled", true);
