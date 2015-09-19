@@ -18,6 +18,15 @@ Core:
     
     #whether or not to enable plugin metrics for TNE
     Metrics: true
+    
+    #All configurations relating to update checking
+    Update:
+    
+        #Whether or not TNE should check if the server is using the latest build
+        Check: true
+        
+        #Whether or not admins(anyone with perm. node tne.admin) should be notified on login if TNE is outdated.
+        Notify: true
 
     #All configurations relating to the data auto saver
     AutoSaver:

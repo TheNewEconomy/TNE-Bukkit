@@ -1,5 +1,6 @@
 package com.github.tnerevival.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +23,10 @@ public class ConnectionListener implements Listener {
 		Player player = event.getPlayer();
 		if(!plugin.manager.accounts.containsKey(player.getUniqueId())) {
 			AccountUtils.createAccount(player.getUniqueId());
+		}
+		
+		if(player.hasPermission("tne.admin") && !TNE.updater.latest()) {
+			player.sendMessage(ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.updater.getCurrentBuild());
 		}
 	}
 	

@@ -19,6 +19,8 @@ public class Configurations {
 		mainConfigurations.put("Core.Balance", 200.0);
 		mainConfigurations.put("Core.Shorten", true);
 		mainConfigurations.put("Core.Metrics", true);
+		mainConfigurations.put("Core.Update.Check", true);
+		mainConfigurations.put("Core.Update.Notify", true);
 		mainConfigurations.put("Core.AutoSaver.Enabled", true);
 		mainConfigurations.put("Core.AutoSaver.Interval", 600);
 		mainConfigurations.put("Core.Currency.Advanced", false);

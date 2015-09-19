@@ -213,7 +213,7 @@ public class AccountUtils {
 		if(to == null || from == null) { return false; }
 		if(exists(to)) {
 			String world = MISCUtils.getWorld(to);
-			TNEFundsPayEvent e = new TNEFundsPayEvent(Bukkit.getPlayer(from), Bukkit.getPlayer(to), amount);
+			TNEFundsPayEvent e = new TNEFundsPayEvent(Bukkit.getPlayer(to), Bukkit.getPlayer(from), amount);
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
 			if(!e.isCancelled()) {

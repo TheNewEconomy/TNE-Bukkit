@@ -24,6 +24,7 @@ import com.github.tnerevival.core.Configurations;
 import com.github.tnerevival.core.EconomyManager;
 import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.TNEVaultEconomy;
+import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
@@ -51,6 +52,7 @@ public class TNE extends JavaPlugin {
 	public FileConfiguration worldConfigurations;
 	
 	public static Configurations configurations;
+	public static UpdateChecker updater;
 	
 	public String defaultWorld;
 	
@@ -68,6 +70,7 @@ public class TNE extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
+		updater = new UpdateChecker();
 		
 		//Configurations
 		initializeConfigurations();
@@ -107,6 +110,9 @@ public class TNE extends JavaPlugin {
 		}
 		
 		getLogger().info("The New Economy v0.0.2.2 Dev Build 5 has been enabled!");
+		
+		String updateMessage = (updater.latest()) ? "Using the latest version: " + updater.getCurrentBuild() : "Outdated! The current build is " + updater.getCurrentBuild();
+		getLogger().info(updateMessage);
 	}
 	
 	public void onDisable() {
