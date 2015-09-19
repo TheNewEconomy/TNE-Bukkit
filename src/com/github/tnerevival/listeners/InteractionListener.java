@@ -2,6 +2,7 @@ package com.github.tnerevival.listeners;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.serializable.SerializableItemStack;
@@ -63,7 +65,19 @@ public class InteractionListener implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("bank")) {
-			Bank bank = TNE.instance.manager.accounts.get(player.getUniqueId()).getBank(MISCUtils.getWorld(player.getUniqueId()));
+			UUID playerID = player.getUniqueId();
+			String world = MISCUtils.getWorld(playerID);
+			if(TNE.instance.manager.accessing.containsKey(playerID)) {
+				Access acc = TNE.instance.manager.accessing.get(playerID);
+				if(!acc.getSave()) {
+					TNE.instance.manager.accessing.remove(playerID);
+					return;
+				}
+				playerID = acc.getAccessing();
+				world = acc.getWorld();
+			}
+			
+			Bank bank = TNE.instance.manager.accounts.get(playerID).getBank(world);
 			List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
 			Integer slot = 0;
 			for(ItemStack i : event.getInventory().getContents()) {
@@ -73,6 +87,7 @@ public class InteractionListener implements Listener {
 				slot++;
 			}
 			bank.setItems(items);
+			TNE.instance.manager.accessing.remove(player.getUniqueId());
 		}
 	}
 	

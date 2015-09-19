@@ -3,6 +3,7 @@ package com.github.tnerevival.core;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.companies.Company;
@@ -35,6 +36,8 @@ public class EconomyManager {
 	 * Format: Lottery Name, Lottery Class Instance.
 	 */
 	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
+	
+	public HashMap<UUID, Access> accessing = new HashMap<UUID, Access>();
 	
 	@Deprecated
 	public HashMap<String, Bank> banks = new HashMap<String, Bank>();

@@ -24,6 +24,8 @@ permissions:
       description: Gives access to all TNE commands
       default: op
       children:
+         tne.admin.balance: true
+         tne.admin.bank: true
          tne.admin.help: true
          tne.admin.reload: true
          tne.admin.save: true
@@ -43,6 +45,8 @@ permissions:
    tne.admin.*:
       description: Gives access to all TNE Admin Commands and bypasses.
       children:
+          tne.admin.balance: true
+          tne.admin.bank: true
           tne.admin.help: true
           tne.admin.reload: true
           tne.admin.save: true
