@@ -41,7 +41,7 @@ public class SaveManager {
 	String prefix = TNE.configurations.getString("Core.Database.Prefix");
 	String type = TNE.configurations.getString("Core.Database.Type");
 	String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.SQLite.File");
-	Double currentSaveVersion = 2.1;
+	Double currentSaveVersion = 2.2;
 	Double saveVersion = 0.0;
 	
 	public SaveManager() {
@@ -236,6 +236,9 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 			SaveConversion.alphaTwoOne();
+		} else if(saveVersion == 2.1) {
+			SaveConversion.alphaTwoTwo();
+			save();
 		}
 	}
 	
@@ -260,7 +263,9 @@ public class SaveManager {
 		TNE.instance.getLogger().info("Data saved!");
 	}
 	
-	private void backupDatabase() throws IOException {
+	public Boolean backupDatabase() throws IOException {
+		if(type.equalsIgnoreCase("mysql")) return false;
+		
 		String db = (type.equalsIgnoreCase("flatfile")) ? TNE.configurations.getString("Core.Database.FlatFile.File") : TNE.configurations.getString("Core.Database.SQLite.File");
 		FileInputStream fileIn = new FileInputStream(new File(TNE.instance.getDataFolder(), db));
 		FileOutputStream fileOut = new FileOutputStream(new File(TNE.instance.getDataFolder(), "Database.zip"));
@@ -275,6 +280,7 @@ public class SaveManager {
 		fileIn.close();
 		zipOut.closeEntry();
 		zipOut.close();
+		return true;
 	}
 	
 	
@@ -345,7 +351,7 @@ public class SaveManager {
 				
 				TNE.instance.manager.legacy.put(entry.getKey(), account);
 			}
-		} else if(saveVersion == 2.1) {
+		} else if(saveVersion == 2.1 || saveVersion == 2.2) {
 			Section accounts = null;
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
@@ -400,7 +406,7 @@ public class SaveManager {
 	}
 	
 	public void saveFlatFile() {
-		if(currentSaveVersion == 2.1) {
+		if(currentSaveVersion == 2.1 || currentSaveVersion == 2.2) {
 			Iterator<java.util.Map.Entry<UUID, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
 			
 			Section accounts = new Section("accounts");
@@ -491,7 +497,7 @@ public class SaveManager {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else if(saveVersion == 2.1) {
+		} else if(saveVersion == 2.1 || saveVersion == 2.2) {
 			PreparedStatement statement;
 			ResultSet result;
 			String table = prefix + "_USERS";
@@ -532,7 +538,7 @@ public class SaveManager {
 	
 	public void saveMySQL() {
 		Connection connection = null;
-		if(currentSaveVersion == 2.1) {
+		if(currentSaveVersion == 2.1 || currentSaveVersion == 2.2) {
 			PreparedStatement statement;
 			ResultSet result;
 			String table = prefix + "_INFO";
@@ -666,7 +672,7 @@ public class SaveManager {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else if(saveVersion == 2.1) {
+		} else if(saveVersion == 2.1 || saveVersion == 2.2) {
 			Connection connection;
 			PreparedStatement statement;
 			ResultSet result;
@@ -707,7 +713,7 @@ public class SaveManager {
 	}
 	
 	public void saveSQLite() {
-		if(currentSaveVersion == 2.1) {
+		if(currentSaveVersion == 2.1 || currentSaveVersion == 2.2) {
 			Connection connection = null;
 			PreparedStatement statement;
 			ResultSet result;

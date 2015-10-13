@@ -48,17 +48,17 @@ public class MoneyPayCommand extends TNECommand {
 				player.sendMessage(new Message("Messages.Money.SelfPay").translate());
 				return false;
 			}
-			if(AccountUtils.hasFunds(player.getUniqueId(), Double.valueOf(arguments[1]))) {
-				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(player.getUniqueId(), getPlayer(sender, arguments[0]).getUniqueId(), Double.valueOf(arguments[1]))) {
+			if(AccountUtils.hasFunds(player.getUniqueId(), AccountUtils.round(Double.valueOf(arguments[1])))) {
+				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(player.getUniqueId(), getPlayer(sender, arguments[0]).getUniqueId(), AccountUtils.round(Double.valueOf(arguments[1])))) {
 					Message paid = new Message("Messages.Money.Paid");
-					paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])));
+					paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
 					paid.addVariable("$player", arguments[0]);
 					player.sendMessage(paid.translate());
 					return true;
 				}
 			} else {
 				Message insufficient = new Message("Messages.Money.Insufficient");
-				insufficient.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[1])));
+				insufficient.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
 				player.sendMessage(insufficient.translate());
 			}
 		} else {

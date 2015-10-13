@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.AccountUtils;
 
 public class Account implements Serializable {
 	
@@ -226,7 +227,7 @@ public class Account implements Serializable {
 	}
 	
 	public void setBalance(String world, Double balance) {
-		this.balances.put(world, balance);
+		this.balances.put(world, AccountUtils.round(balance));
 	}
 
 	public HashMap<String, Bank> getBanks() {

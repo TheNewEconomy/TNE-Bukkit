@@ -65,6 +65,9 @@ public class Configurations {
 		messageConfigurations.put("Messages.Command.None", "<yellow>Command $command $arguments could not be found! Try using $command help.");
 		messageConfigurations.put("Messages.General.NoPerm", "<red>I'm sorry, but you do not have permission to do that.");
 		messageConfigurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
+		messageConfigurations.put("Messages.Admin.NoBalance", "<red>$player has no balance data for the world \"$world\"!");
+		messageConfigurations.put("Messages.Admin.NoBank", "<red>$player has no bank data for the world \"$world\"!");
+		messageConfigurations.put("Messages.Admin.Balance", "<white>$player currently has <gold>$amount <white>for world \"$world\"!");
 		messageConfigurations.put("Messages.Money.Given", "<white>You were given <gold>$amount<white>.");
 		messageConfigurations.put("Messages.Money.Received", "<white>You were paid <gold>$amount <white> by <white> $from.");
 		messageConfigurations.put("Messages.Money.Taken", "<white>$from took <gold>$amount<white> from you.");

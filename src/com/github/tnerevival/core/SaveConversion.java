@@ -7,6 +7,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.utils.AccountUtils;
 
 public class SaveConversion {
 	
@@ -29,6 +30,23 @@ public class SaveConversion {
 			UUID uid = MojangAPI.getPlayerUUID(acc.getOwner());
 			acc.setUid(uid);
 			TNE.instance.manager.accounts.put(uid, acc);
+		}
+	}
+	
+	public static void alphaTwoTwo() {
+		for(UUID id : TNE.instance.manager.accounts.keySet()) {
+			Account acc = TNE.instance.manager.accounts.get(id);
+			for(String s : acc.getBalances().keySet()) {
+				double balance = AccountUtils.round(acc.getBalances().get(s));
+				acc.getBalances().put(s, balance);
+			}
+			
+			for(String s : acc.getBanks().keySet()) {
+				Bank b = acc.getBanks().get(s);
+				double balance = AccountUtils.round(b.getGold());
+				b.setGold(balance);
+				acc.getBanks().put(s, b);
+			}
 		}
 	}
 }

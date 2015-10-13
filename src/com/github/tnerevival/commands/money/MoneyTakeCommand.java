@@ -46,9 +46,9 @@ public class MoneyTakeCommand extends TNECommand {
 				sender.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
-			if(getPlayer(sender, arguments[0]) != null && AccountUtils.takeMoney(getPlayer(sender, arguments[0]).getUniqueId(), id, Double.valueOf(arguments[1]))) {
+			if(getPlayer(sender, arguments[0]) != null && AccountUtils.takeMoney(getPlayer(sender, arguments[0]).getUniqueId(), id, AccountUtils.round(Double.valueOf(arguments[1])))) {
 				Message took = new Message("Messages.Money.Took");
-				took.addVariable("$amount", MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), Double.valueOf(arguments[1])));
+				took.addVariable("$amount", MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
 				took.addVariable("$player", arguments[0]);
 				sender.sendMessage(took.translate());
 				return true;

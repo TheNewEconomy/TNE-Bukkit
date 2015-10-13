@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import com.github.tnerevival.TNE;
@@ -76,7 +75,7 @@ public class AccountUtils {
 			if(!account.getBalances().containsKey(world)) {
 				initializeWorldData(id, world);
 			}
-			return account.getBalance(MISCUtils.getWorld(id));
+			return round(account.getBalance(MISCUtils.getWorld(id)));
 		}
 		if(TNE.configurations.getBoolean("Core.Currency.ItemCurrency")) {
 			Material majorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMajor"));
@@ -86,7 +85,7 @@ public class AccountUtils {
 			String balance = major + "." + minor;
 			return Double.valueOf(balance);
 		}
-		return account.getBalance(TNE.instance.defaultWorld);
+		return round(account.getBalance(TNE.instance.defaultWorld));
 	}
 	
 	private static void setBalance(UUID id, Double balance) {
@@ -94,6 +93,7 @@ public class AccountUtils {
 	}
 
 	private static void setBalance(UUID id, String world, Double balance) {
+		balance = round(balance);
 		Account account = getAccount(id);
 		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
 		String[] split = balanceString.split("\\.");
@@ -121,12 +121,18 @@ public class AccountUtils {
 			account.setBalance(TNE.instance.defaultWorld, balance);
 		}
 	}
+	
+	public static Double round(double amount) {
+		return (double)Math.round(amount * 100) / 100;
+	}
 
 	public static Boolean hasFunds(UUID id, double amount) {
+		amount = round(amount);
 		return getBalance(id) >= amount;
 	}
 	
 	public static Boolean hasFunds(UUID id, String world, double amount) {
+		amount = round(amount);
 		return getBalance(id, world) >= amount;
 	}
 
@@ -135,6 +141,7 @@ public class AccountUtils {
 	}
 	
 	public static void addFunds(UUID id, String world, double amount) {
+		amount = round(amount);
 		TNEFundsAddEvent e = new TNEFundsAddEvent(Bukkit.getPlayer(id), amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
@@ -148,6 +155,7 @@ public class AccountUtils {
 	}
 	
 	public static void removeFunds(UUID id, String world, double amount) {
+		amount = round(amount);
 		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(Bukkit.getPlayer(id), amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
@@ -165,16 +173,19 @@ public class AccountUtils {
 	}
 	
 	public static void setFunds(UUID id, double amount) {
+		amount = round(amount);
 		setBalance(id, amount);
 	}
 	
 	public static void setFunds(UUID id, String world, double amount) {
+		amount = round(amount);
 		setBalance(id, world, amount);
 	}
 
 	public static Boolean giveMoney(UUID id, UUID from, Double amount) {
 		if(exists(id)) {
 			String world = MISCUtils.getWorld(id);
+			amount = round(amount);
 			TNEFundsGiveEvent e = new TNEFundsGiveEvent(Bukkit.getPlayer(id), Bukkit.getPlayer(from), amount);
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
@@ -193,6 +204,7 @@ public class AccountUtils {
 	public static Boolean takeMoney(UUID id, UUID from, Double amount) {
 		if(exists(id)) {
 			String world = MISCUtils.getWorld(id);
+			amount = round(amount);
 			TNEFundsTakeEvent e = new TNEFundsTakeEvent(Bukkit.getPlayer(id), Bukkit.getPlayer(from), amount);
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
@@ -213,6 +225,7 @@ public class AccountUtils {
 		if(to == null || from == null) { return false; }
 		if(exists(to)) {
 			String world = MISCUtils.getWorld(to);
+			amount = round(amount);
 			TNEFundsPayEvent e = new TNEFundsPayEvent(Bukkit.getPlayer(to), Bukkit.getPlayer(from), amount);
 			Bukkit.getServer().getPluginManager().callEvent(e);
 			
@@ -240,18 +253,18 @@ public class AccountUtils {
 	public static Double getInitialBalance(String world) {
 		if(MISCUtils.multiWorld()) {
 			if(MISCUtils.worldConfigExists("Worlds." + world + ".Balance")) {
-				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Balance");
+				return round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Balance"));
 			}
 		}
-		return TNE.configurations.getDouble("Core.Balance");
+		return round(TNE.configurations.getDouble("Core.Balance"));
 	}
 
 	public static Double getWorldCost(String world) {
 		if(MISCUtils.multiWorld()) {
 			if(MISCUtils.worldConfigExists("Worlds." + world + ".balance")) {
-				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee");
+				return round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee"));
 			}
 		}
-		return TNE.configurations.getDouble("Core.World.ChangeFee");
+		return round(TNE.configurations.getDouble("Core.World.ChangeFee"));
 	}
 }

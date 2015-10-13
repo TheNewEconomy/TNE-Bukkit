@@ -176,16 +176,16 @@ public class MISCUtils {
 	
 	public static String getMajorCurrencyName(String world, Boolean singular) {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MajorName")) {
-			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural");
+			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Single") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural");
 		}
-		return (singular) ? TNE.configurations.getString("Core.Currency.MajorName.Singular") : TNE.configurations.getString("Core.Currency.MajorName.Plural");
+		return (singular) ? TNE.configurations.getString("Core.Currency.MajorName.Single") : TNE.configurations.getString("Core.Currency.MajorName.Plural");
 	}
 	
 	public static String getMinorCurrencyName(String world, Boolean singular) {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MinorName")) {
 			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Plural");
 		}
-		return (singular) ? TNE.configurations.getString("Core.Currency.MinorName.Singular") : TNE.configurations.getString("Core.Currency.MinorName.Plural");
+		return (singular) ? TNE.configurations.getString("Core.Currency.MinorName.Single") : TNE.configurations.getString("Core.Currency.MinorName.Plural");
 	}
 	
 	//ItemStack Utils

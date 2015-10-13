@@ -26,7 +26,7 @@ public class BankUtils {
 			if(interestEnabled(entry.getKey())) {
 				Double gold = entry.getValue().getGold();
 				Double interestEarned = gold * interestRate(entry.getKey());
-				entry.getValue().setGold(gold + interestEarned);
+				entry.getValue().setGold(gold + AccountUtils.round(interestEarned));
 			}
 		}
 	}
@@ -114,15 +114,17 @@ public class BankUtils {
 			return null;
 		} else {
 			Bank bank = getBank(id);
-			return bank.getGold();
+			return AccountUtils.round(bank.getGold());
 		}
 	}
 	
 	public static Boolean bankHasFunds(UUID id, Double amount) {
+		amount = AccountUtils.round(amount);
 		return (getBankBalance(id) != null) ? getBankBalance(id) >= amount : false;
 	}
 	
 	public static Boolean bankDeposit(UUID id, Double amount) {
+		amount = AccountUtils.round(amount);
 		if(AccountUtils.hasFunds(id, amount)) {
 			Bank bank = getBank(id);
 			bank.setGold(bank.getGold() + amount);
@@ -134,6 +136,7 @@ public class BankUtils {
 	}
 	
 	public static Boolean bankWithdraw(UUID id, Double amount) {
+		amount = AccountUtils.round(amount);
 		if(bankHasFunds(id, amount)) {
 			Bank bank = getBank(id);
 			bank.setGold(bank.getGold() - amount);
@@ -179,10 +182,10 @@ public class BankUtils {
 	public static Double cost(String world) {
 		if(MISCUtils.multiWorld()) {
 			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Cost")) {
-				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Cost");
+				return AccountUtils.round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Cost"));
 			}
 		}
-		return TNE.configurations.getDouble("Core.Bank.Cost");
+		return AccountUtils.round(TNE.configurations.getDouble("Core.Bank.Cost"));
 	}
 	
 	public static Boolean sign(String world) {
