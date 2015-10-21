@@ -1,5 +1,8 @@
 package com.github.tnerevival.core.event;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,10 +15,10 @@ public class TNECreateAccountEvent extends Event implements Cancellable {
     
     private Boolean cancelled = false;
     
-    private OfflinePlayer player;
+    private UUID id;
  
-    public TNECreateAccountEvent(OfflinePlayer player) {
-    	this.player = player;
+    public TNECreateAccountEvent(UUID id) {
+    	this.id = id;
     }
  
     public HandlerList getHandlers() {
@@ -33,23 +36,27 @@ public class TNECreateAccountEvent extends Event implements Cancellable {
     public void setCancelled(boolean cancel) {
         cancelled = cancel;
     }
+    
+    public UUID getID() {
+    	return this.id;
+    }
 
 	/**
 	 * @return the player
 	 */
 	public OfflinePlayer getPlayer() {
-		return player;
+		return Bukkit.getOfflinePlayer(id);
 	}
 
 	/**
 	 * @param player the player to set
 	 */
 	public void setPlayer(OfflinePlayer player) {
-		this.player = player;
+		this.id = player.getUniqueId();
 	}
 	
 	public Account getAccount() {
-		Account account = new Account(player.getUniqueId());
+		Account account = new Account(this.id);
 		return account;
 	}
 }

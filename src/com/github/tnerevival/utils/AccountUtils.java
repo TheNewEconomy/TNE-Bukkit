@@ -25,22 +25,21 @@ public class AccountUtils {
 	}
 	
 	public static void createAccount(UUID id) {
-		TNECreateAccountEvent e = new TNECreateAccountEvent(Bukkit.getPlayer(id));
+		System.out.println("Account created!");
+		TNECreateAccountEvent e = new TNECreateAccountEvent(id);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
 		if(!e.isCancelled()) {
-			TNE.instance.manager.accounts.put(e.getPlayer().getUniqueId(), e.getAccount());
-			AccountUtils.addFunds(e.getPlayer().getUniqueId(), AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+			TNE.instance.manager.accounts.put(e.getID(), e.getAccount());
+			AccountUtils.addFunds(e.getID(), AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
 		}
 	}
 
 	public static Account getAccount(UUID id) {
-		if(exists(id)) {
-			return TNE.instance.manager.accounts.get(id);
-		} else {
+		if(!exists(id)) {
 			createAccount(id);
-			return TNE.instance.manager.accounts.get(id);
 		}
+		return TNE.instance.manager.accounts.get(id);
 	}
 	
 	public static List<SerializableItemStack> overflowFromString(String overflowString) {
@@ -142,11 +141,11 @@ public class AccountUtils {
 	
 	public static void addFunds(UUID id, String world, double amount) {
 		amount = round(amount);
-		TNEFundsAddEvent e = new TNEFundsAddEvent(Bukkit.getPlayer(id), amount);
+		TNEFundsAddEvent e = new TNEFundsAddEvent(id, amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
 		if(!e.isCancelled()) {
-			setBalance(e.getPlayer().getUniqueId(), world, e.getNewBalance());
+			setBalance(e.getID(), world, e.getNewBalance());
 		}
 	}
 
@@ -156,11 +155,11 @@ public class AccountUtils {
 	
 	public static void removeFunds(UUID id, String world, double amount) {
 		amount = round(amount);
-		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(Bukkit.getPlayer(id), amount);
+		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(id, amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);
 		
 		if(!e.isCancelled()) {
-			setBalance(e.getPlayer().getUniqueId(), world, e.getNewBalance());
+			setBalance(e.getID(), world, e.getNewBalance());
 		}
 	}
 	

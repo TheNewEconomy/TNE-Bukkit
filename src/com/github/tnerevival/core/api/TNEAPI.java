@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.api;
 
-import org.bukkit.Bukkit;
+import java.util.UUID;
+
 import org.bukkit.OfflinePlayer;
 
 import com.github.tnerevival.TNE;
@@ -18,57 +19,69 @@ public class TNEAPI {
 	
 	@Deprecated
 	public Boolean accountExists(String username) {
-		return getAccount(username) != null;
+		UUID id = getPlayerID(username);
+		return AccountUtils.getAccount(id) != null;
 	}
 
 	@Deprecated
 	public void createAccount(String username) {
-		AccountUtils.createAccount(Bukkit.getPlayer(username).getUniqueId());
+		UUID id = getPlayerID(username);
+		AccountUtils.createAccount(id);
 	}
 
 	@Deprecated
 	public void fundsAdd(String username, Double amount) {
-		AccountUtils.addFunds(Bukkit.getPlayer(username).getUniqueId(), amount);
+		UUID id = getPlayerID(username);
+		AccountUtils.addFunds(id, amount);
 	}
 
 	@Deprecated
 	public void fundsAdd(String username, String world, Double amount) {
-		AccountUtils.addFunds(Bukkit.getPlayer(username).getUniqueId(), amount);
+		UUID id = getPlayerID(username);
+		AccountUtils.addFunds(id, amount);
 	}
 
 	@Deprecated
 	public Boolean fundsHas(String username, Double amount) {
-		return AccountUtils.hasFunds(Bukkit.getPlayer(username).getUniqueId(), amount);
+		UUID id = getPlayerID(username);
+		return AccountUtils.hasFunds(id, amount);
 	}
 
 	@Deprecated
 	public Boolean fundsHas(String username, String world, Double amount) {
-		return AccountUtils.hasFunds(Bukkit.getPlayer(username).getUniqueId(), world, amount);
+		UUID id = getPlayerID(username);
+		return AccountUtils.hasFunds(id, world, amount);
 	}
 
 	@Deprecated
 	public void fundsRemove(String username, Double amount) {
-		AccountUtils.removeFunds(Bukkit.getPlayer(username).getUniqueId(), amount);
+		UUID id = getPlayerID(username);
+		AccountUtils.removeFunds(id, amount);
 	}
 
 	@Deprecated
 	public void fundsRemove(String username, String world, Double amount) {
-		AccountUtils.removeFunds(Bukkit.getPlayer(username).getUniqueId(), world, amount);
+		UUID id = getPlayerID(username);
+		AccountUtils.removeFunds(id, world, amount);
 	}
 
 	@Deprecated
 	public Account getAccount(String username) {
-		return AccountUtils.getAccount(Bukkit.getPlayer(username).getUniqueId());
+		UUID id = getPlayerID(username);
+		Account account = AccountUtils.getAccount(id);
+		return account;
 	}
 
 	@Deprecated
 	public Double getBalance(String username) {
-		return AccountUtils.getFunds(Bukkit.getPlayer(username).getUniqueId());
+		UUID id = getPlayerID(username);
+		return AccountUtils.getFunds(id);
 	}
 
 	@Deprecated
 	public Double getBalance(String username, String world) {
-		return AccountUtils.getFunds(Bukkit.getPlayer(username).getUniqueId(), world);
+		UUID id = getPlayerID(username);
+		return AccountUtils.getFunds(id, world);
 	}
 	
 	public Boolean accountExists(OfflinePlayer player) {
@@ -141,5 +154,13 @@ public class TNEAPI {
 	
 	public Boolean getShorten(String world) {
 		return MISCUtils.shorten(world);
+	}
+	
+	public UUID getPlayerID(String username) {
+		if(username.contains("faction-")) {
+			System.out.println(username.substring(8, username.length() - 1));
+			return UUID.fromString(username.substring(8, username.length() - 1));
+		}
+		return MojangAPI.getPlayerUUID(username);
 	}
 }

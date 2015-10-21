@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.event;
 
-import org.bukkit.OfflinePlayer;
+import java.util.UUID;
+
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,7 +11,7 @@ public class TNEGainInterestEvent extends Event implements Cancellable {
     
     private Boolean cancelled = false;
  
-    public TNEGainInterestEvent(OfflinePlayer player, String world, Double amount) {
+    public TNEGainInterestEvent(UUID id, String world, Double amount) {
     }
  
     public HandlerList getHandlers() {

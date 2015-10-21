@@ -109,7 +109,7 @@ public class TNE extends JavaPlugin {
 			}
 		}
 		
-		getLogger().info("The New Economy v0.0.2.2 Dev Build 6 has been enabled!");
+		getLogger().info("The New Economy v0.0.2.2 has been enabled!");
 		
 		String updateMessage = (updater.latest()) ? "Using the latest version: " + updater.getCurrentBuild() : "Outdated! The current build is " + updater.getCurrentBuild();
 		getLogger().info(updateMessage);
