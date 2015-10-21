@@ -158,7 +158,6 @@ public class TNEAPI {
 	
 	public UUID getPlayerID(String username) {
 		if(username.contains("faction-")) {
-			System.out.println(username.substring(8, username.length() - 1));
 			return UUID.fromString(username.substring(8, username.length() - 1));
 		}
 		return MojangAPI.getPlayerUUID(username);

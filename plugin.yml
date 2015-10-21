@@ -1,6 +1,6 @@
 #General Data
 name: TheNewEconomy
-version: 0.0.2.2
+version: 0.0.2.3
 description: A feature-packed Bukkit Economy Plugin.
 author: creatorfromhell
 
@@ -24,11 +24,14 @@ permissions:
       description: Gives access to all TNE commands
       default: op
       children:
+         tne.admin: true
+         tne.admin.backup: true
          tne.admin.balance: true
          tne.admin.bank: true
          tne.admin.help: true
          tne.admin.reload: true
          tne.admin.save: true
+         tne.bank: true
          tne.bank.help: true
          tne.bank.balance: true
          tne.bank.buy: true
@@ -36,27 +39,38 @@ permissions:
          tne.bank.price: true
          tne.bank.use: true
          tne.bank.withdraw: true
+         tne.bypass: true
+         tne.bypass.bank: true
+         tne.bypass.nametag: true
+         tne.bypass.world: true
+         tne.money: true
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
          tne.money.take: true
          tne.money.pay: true
+         tne.sign: true
+         tne.sign.main: true
+         tne.sign.bank: true
 
    tne.admin.*:
       description: Gives access to all TNE Admin Commands and bypasses.
       children:
-          tne.admin.balance: true
-          tne.admin.bank: true
-          tne.admin.help: true
-          tne.admin.reload: true
-          tne.admin.save: true
-          tne.bypass.bank: true
-          tne.bypass.nametag: true
-          tne.bypass.world: true
+         tne.admin: true
+         tne.admin.backup: true
+         tne.admin.balance: true
+         tne.admin.bank: true
+         tne.admin.help: true
+         tne.admin.reload: true
+         tne.admin.save: true
+         tne.bypass.bank: true
+         tne.bypass.nametag: true
+         tne.bypass.world: true
           
    tne.bank.*:
       description: Gives access to all TNE Bank Commands
       children:
+         tne.bank: true
          tne.bank.help: true
          tne.bank.balance: true
          tne.bank.buy: true
@@ -68,6 +82,7 @@ permissions:
    tne.bypass.*:
       description: Gives access to all TNE Bypasses
       children:
+         tne.bypass: true
          tne.bypass.bank: true
          tne.bypass.nametag: true
          tne.bypass.world: true
@@ -75,6 +90,7 @@ permissions:
    tne.money.*:
       description: Gives access to all TNE Money Commands
       children:
+         tne.money: true
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
@@ -84,5 +100,6 @@ permissions:
    tne.sign.*:
       description: Gives access to creating all sign types
       children:
+         tne.sign: true
          tne.sign.main: true
          tne.sign.bank: true
