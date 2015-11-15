@@ -26,6 +26,7 @@ public class MySQL extends SQLDatabase {
 	private PreparedStatement preparedStatement;
 	
 	private ResultSet result;
+	private ResultSet secondary;
 	
 	public MySQL(String host, Integer port, String database, String user, String password) {
 		this.host = host;
@@ -80,7 +81,7 @@ public class MySQL extends SQLDatabase {
 	}
 
 	@Override
-	public void executePreparedQuery(String query, Object[] variables) {
+	public void executePreparedQuery(String query, Object[] variables, boolean overwrite) {
 		if(!connected()) {
 			connect();
 		}
@@ -90,7 +91,11 @@ public class MySQL extends SQLDatabase {
 			for(int i = 0; i < variables.length; i++) {
 				preparedStatement.setObject((i + 1), variables[i]);
 			}
-			result = preparedStatement.executeQuery();
+			if(overwrite) {
+				result = preparedStatement.executeQuery();
+			} else {
+				secondary = preparedStatement.executeQuery();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -129,6 +134,10 @@ public class MySQL extends SQLDatabase {
 	@Override
 	public ResultSet results() {
 		return result;
+	}
+
+	public ResultSet secondary() {
+		return secondary;
 	}
 
 	@Override

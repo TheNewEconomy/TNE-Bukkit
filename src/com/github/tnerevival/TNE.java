@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.UUID;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -23,6 +25,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Configurations;
 import com.github.tnerevival.core.EconomyManager;
 import com.github.tnerevival.core.SaveManager;
+import com.github.tnerevival.core.Statistics;
 import com.github.tnerevival.core.TNEVaultEconomy;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.api.TNEAPI;
@@ -31,6 +34,7 @@ import com.github.tnerevival.listeners.InteractionListener;
 import com.github.tnerevival.listeners.WorldListener;
 import com.github.tnerevival.worker.InterestWorker;
 import com.github.tnerevival.worker.SaveWorker;
+import com.github.tnerevival.worker.StatisticsWorker;
 
 public class TNE extends JavaPlugin {
 	
@@ -61,6 +65,9 @@ public class TNE extends JavaPlugin {
 	 */
 	public SaveWorker saveWorker;
 	public InterestWorker interestWorker;
+	public StatisticsWorker statsWorker;
+	
+	public static HashMap<String, UUID> uuidCache = new HashMap<String, UUID>();
 	
 	public void onLoad() {
 		api = new TNEAPI(this);
@@ -100,7 +107,10 @@ public class TNE extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 		
+		statsWorker = new StatisticsWorker(this);
 		if(configurations.getBoolean("Core.Metrics")) {
+			statsWorker.runTaskTimer(this, 24000, 24000);
+			Statistics.send();
 			try {
 			    MetricsLite metrics = new MetricsLite(this);
 			    metrics.start();
@@ -109,7 +119,7 @@ public class TNE extends JavaPlugin {
 			}
 		}
 		
-		getLogger().info("The New Economy v0.0.2.3 has been enabled!");
+		getLogger().info("The New Economy v0.0.2.4 has been enabled!");
 		
 		String updateMessage = (updater.latest()) ? "Using the latest version: " + updater.getCurrentBuild() : "Outdated! The current build is " + updater.getCurrentBuild();
 		getLogger().info(updateMessage);
@@ -127,7 +137,7 @@ public class TNE extends JavaPlugin {
 			//Task was not scheduled
 		}
 		saveManager.save();
-		getLogger().info("The New Economy v0.0.2.3 has been disabled!");
+		getLogger().info("The New Economy v0.0.2.4 has been disabled!");
 	}
 	
 	@Override

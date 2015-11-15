@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.db.flat;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,32 +15,27 @@ import java.io.ObjectOutputStream;
  */
 public class FlatFileConnection {
 	
-	private String fileName;
+	private File file;
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	
 	public FlatFileConnection(String fileName) {
-		this.fileName = fileName;
-	}
-	
-	public void connect() throws FileNotFoundException, IOException {
-		ois = new ObjectInputStream(new FileInputStream(fileName));
-		oos = new ObjectOutputStream(new FileOutputStream(fileName));
-	}
-	
-	public Boolean connected() {
-		return ois != null && oos != null;
+		file = new File(fileName);
 	}
 	
 	public void close() {
 		try {
-			ois.close();
-			oos.flush();
-			oos.close();
-			ois = null;
-			oos = null;
+			if(ois != null) {
+				ois.close();
+				ois = null;
+			}
+			
+			if(oos != null) {
+				oos.flush();
+				oos.close();
+				oos = null;
+			}
 		} catch (IOException e) {
-			System.out.println("There was an error closing the Object Streams.");
 			e.printStackTrace();
 		}
 	}
@@ -47,15 +43,15 @@ public class FlatFileConnection {
 	/**
 	 * @return the fileName
 	 */
-	public String getFileName() {
-		return fileName;
+	public File getFile() {
+		return file;
 	}
 
 	/**
 	 * @param fileName the fileName to set
 	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFile(String fileName) {
+		file = new File(fileName);
 	}
 
 	/**
@@ -64,7 +60,7 @@ public class FlatFileConnection {
 	public ObjectInputStream getOIS() {
 		if(ois == null) {
 			try {
-				connect();
+				ois = new ObjectInputStream(new FileInputStream(file));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -87,7 +83,7 @@ public class FlatFileConnection {
 	public ObjectOutputStream getOOS() {
 		if(oos == null) {
 			try {
-				connect();
+				oos = new ObjectOutputStream(new FileOutputStream(file));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

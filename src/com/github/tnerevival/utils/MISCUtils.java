@@ -1,6 +1,12 @@
 package com.github.tnerevival.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
@@ -129,6 +135,25 @@ public class MISCUtils {
 			TNE.instance.worlds = new File(TNE.instance.getDataFolder(), "worlds.yml");
 		}
 		TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
+	}
+	
+	public static String sendGetRequest(String URL) {
+		StringBuilder builder = new StringBuilder();
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+			connection.setRequestMethod("GET");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String response;
+			while((response = reader.readLine()) != null) {
+				builder.append(response);
+			}
+			reader.close();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return builder.toString();
 	}
 	
 	

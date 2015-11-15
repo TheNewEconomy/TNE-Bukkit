@@ -13,7 +13,11 @@ public abstract class SQLDatabase extends Database {
 	
 	public abstract void executeQuery(String query);
 	
-	public abstract void executePreparedQuery(String query, Object[] variables);
+	public void executePreparedQuery(String query, Object[] variables) {
+		executePreparedQuery(query, variables, true);
+	}
+	
+	public abstract void executePreparedQuery(String query, Object[] variables, boolean overwrite);
 	
 	public abstract void executeUpdate(String query);
 	
