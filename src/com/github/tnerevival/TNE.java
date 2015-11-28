@@ -22,13 +22,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.commands.CommandManager;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.Configurations;
 import com.github.tnerevival.core.EconomyManager;
 import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.Statistics;
 import com.github.tnerevival.core.TNEVaultEconomy;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.api.TNEAPI;
+import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
 import com.github.tnerevival.listeners.WorldListener;
@@ -49,13 +49,16 @@ public class TNE extends JavaPlugin {
 	// Files & Custom Configuration Files
 	public File mobs;
 	public File messages;
+	public File objects;
 	public File worlds;
 	
 	public FileConfiguration mobConfigurations;
 	public FileConfiguration messageConfigurations;
+	public FileConfiguration objectConfigurations;
 	public FileConfiguration worldConfigurations;
 	
-	public static Configurations configurations;
+	public static ConfigurationManager configurations;
+	//public static Configurations configurations;
 	public static UpdateChecker updater;
 	
 	public String defaultWorld;
@@ -82,10 +85,8 @@ public class TNE extends JavaPlugin {
 		//Configurations
 		initializeConfigurations();
 		loadConfigurations();
-		configurations = new Configurations();
-		configurations.load(getConfig(), "main");
-		configurations.load(mobConfigurations, "mob");
-		configurations.load(messageConfigurations, "messages");
+		
+		configurations = new ConfigurationManager();
 		
 		manager = new EconomyManager();
 		saveManager = new SaveManager();
@@ -129,6 +130,7 @@ public class TNE extends JavaPlugin {
 		configurations.save(getConfig(), "main");
 		configurations.save(mobConfigurations, "mob");
 		configurations.save(messageConfigurations, "messages");
+		configurations.save(objectConfigurations, "objects");
 		saveConfigurations();
 		try {
 			saveWorker.cancel();
@@ -156,9 +158,11 @@ public class TNE extends JavaPlugin {
 	private void initializeConfigurations() {
 		mobs = new File(getDataFolder(), "mobs.yml");
 		messages = new File(getDataFolder(), "messages.yml");
+		objects = new File(getDataFolder(), "objects.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
 		messageConfigurations = YamlConfiguration.loadConfiguration(messages);
+		objectConfigurations = YamlConfiguration.loadConfiguration(objects);
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
 		try {
 			setConfigurationDefaults();
@@ -171,6 +175,7 @@ public class TNE extends JavaPlugin {
 	     getConfig().options().copyDefaults(true);
 	     mobConfigurations.options().copyDefaults(true);
 	     messageConfigurations.options().copyDefaults(true);
+	     objectConfigurations.options().copyDefaults(true);
 	     worldConfigurations.options().copyDefaults(true);
 	     saveConfigurations();
 	}
@@ -180,6 +185,7 @@ public class TNE extends JavaPlugin {
 		try {
 			mobConfigurations.save(mobs);
 			messageConfigurations.save(messages);
+			objectConfigurations.save(objects);
 			worldConfigurations.save(worlds);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -189,6 +195,7 @@ public class TNE extends JavaPlugin {
 	private void setConfigurationDefaults() throws UnsupportedEncodingException {
 		Reader mobsStream = new InputStreamReader(this.getResource("mobs.yml"), "UTF8");
 		Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
+		Reader objectsStream = new InputStreamReader(this.getResource("objects.yml"), "UTF8");
 		Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
 	    if (mobsStream != null) {
 	        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
@@ -198,6 +205,11 @@ public class TNE extends JavaPlugin {
 	    if (messagesStream != null) {
 	        YamlConfiguration config = YamlConfiguration.loadConfiguration(messagesStream);
 	        messageConfigurations.setDefaults(config);
+	    }
+	    
+	    if (objectsStream != null) {
+	        YamlConfiguration config = YamlConfiguration.loadConfiguration(objectsStream);
+	        objectConfigurations.setDefaults(config);
 	    }
 	    
 	    if (worldsStream != null) {

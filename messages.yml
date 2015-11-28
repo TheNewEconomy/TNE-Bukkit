@@ -40,6 +40,7 @@ Messages:
        
        Unable: <red>I'm sorry, but you're not allowed to use that command.
        None: <yellow>Command $command $arguments could not be found! Try using $command help.
+       Charge: <white>You have been charged <gold>$amount<white> for using $command.
     
     General:
     

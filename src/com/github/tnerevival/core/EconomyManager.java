@@ -39,6 +39,8 @@ public class EconomyManager {
 	
 	public HashMap<UUID, Access> accessing = new HashMap<UUID, Access>();
 	
+	public HashMap<UUID, String[]> commandCredits = new HashMap<UUID, String[]>();
+	
 	@Deprecated
 	public HashMap<String, Bank> banks = new HashMap<String, Bank>();
 	

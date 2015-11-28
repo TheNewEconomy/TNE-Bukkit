@@ -21,6 +21,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -30,6 +32,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
@@ -41,6 +44,57 @@ public class InteractionListener implements Listener {
 	
 	public InteractionListener(TNE plugin) {
 		this.plugin = plugin;
+	}
+	
+	@EventHandler
+	public void onCommand(PlayerCommandPreprocessEvent event) {
+		if(TNE.configurations.getBoolean("Objects.Commands.Enabled", "objects")) {
+			
+			ObjectConfiguration configuration = TNE.configurations.getObjectConfiguration();
+			
+			Player player = event.getPlayer();
+			String command = event.getMessage().substring(1);
+			String[] commandSplit = command.split(" ");
+			String commandName = commandSplit[0];
+			String commandFirstArg = commandSplit[0] + ((commandSplit.length > 1) ? " " + commandSplit[1] : "");
+			double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0]);
+			
+			Message commandCost = new Message("Messages.Command.Charge");
+			commandCost.addVariable("$amount", MISCUtils.formatBalance(event.getPlayer().getWorld().getName(), AccountUtils.round(cost)));
+			commandCost.addVariable("$command", commandFirstArg);
+			
+			if(cost > 0.0) {
+				event.setCancelled(true);
+				
+				boolean paid = false;
+				if(MISCUtils.hasCredit(player.getUniqueId(), commandFirstArg)) {
+					MISCUtils.removeCredit(player.getUniqueId(), commandFirstArg);
+				} else {
+					if(TNE.instance.api.fundsHas(player, player.getWorld().getName(), cost)) {
+						TNE.instance.api.fundsRemove(player, player.getWorld().getName(), cost);
+						paid = true;
+					}
+				}
+				
+				if(paid) {
+					if(!player.performCommand(command)) {
+						MISCUtils.addCredit(player.getUniqueId(), commandFirstArg);
+						return;
+					}		
+					
+					player.sendMessage(commandCost.translate());
+				}
+				return;
+			}
+			
+			if(TNE.configurations.getBoolean("Objects.Commands.ZeroMessage", "objects")) {
+				player.sendMessage(commandCost.translate());
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onInventoryOpen(InventoryOpenEvent event) {
 	}
 	
 	@EventHandler
@@ -180,7 +234,7 @@ public class InteractionListener implements Listener {
 			Double reward = TNE.configurations.mobReward("Default");
 			String messageNode = "Messages.Mob.Killed";
 			
-			if(((boolean)TNE.configurations.getValue("Mobs.Enabled", "mob"))) {
+			if((TNE.configurations.getBoolean("Mobs.Enabled", "mob"))) {
 				switch(entity.getType()) {
 					case BAT:
 						mob = "Bat";

@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -154,6 +156,40 @@ public class MISCUtils {
 			e.printStackTrace();
 		}
 		return builder.toString();
+	}
+	
+	public static boolean hasCredit(UUID id, String command) {
+		if(TNE.instance.manager.commandCredits.containsKey(id)) {
+			for(String s : TNE.instance.manager.commandCredits.get(id)) {
+				if(s.equalsIgnoreCase(command)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static void addCredit(UUID id, String command) {
+		List<String> credits = new ArrayList<String>();
+		credits.add(command);
+		if(TNE.instance.manager.commandCredits.containsKey(id)) {
+			for(String s : TNE.instance.manager.commandCredits.get(id)) {
+				credits.add(s);
+			}
+		}
+		TNE.instance.manager.commandCredits.put(id, (String[])credits.toArray());
+	}
+	
+	public static void removeCredit(UUID id, String command) {
+		List<String> credits = new ArrayList<String>();
+		if(TNE.instance.manager.commandCredits.containsKey(id)) {
+			for(String s : TNE.instance.manager.commandCredits.get(id)) {
+				if(!s.equalsIgnoreCase(command)) {
+					credits.add(s);
+				}
+			}
+		}
+		TNE.instance.manager.commandCredits.put(id, (String[])credits.toArray());
 	}
 	
 	

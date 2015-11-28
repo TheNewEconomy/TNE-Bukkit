@@ -2,12 +2,10 @@ package com.github.tnerevival.commands.auction;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.BankUtils;
 
 public class AuctionCommand extends TNECommand {
 
@@ -37,12 +35,6 @@ public class AuctionCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
-		if(!BankUtils.enabled(player.getWorld().getName())) {
-			player.sendMessage(new Message("Messages.Bank.Disabled").translate());
-			return false;
-		}
-		
 		if(arguments.length == 0) {
 			help(sender);
 			return false;
@@ -74,6 +66,7 @@ public class AuctionCommand extends TNECommand {
 	public void help(CommandSender sender) {
 		sender.sendMessage(ChatColor.GOLD + "~~~~~Auction Commands~~~~~");
 		sender.sendMessage(ChatColor.GOLD + "/auction help - general auction help");
+		sender.sendMessage(ChatColor.GOLD + "/auction view <world>/global - View more information about the current auction for <world> or global.");
 	}
 	
 }
