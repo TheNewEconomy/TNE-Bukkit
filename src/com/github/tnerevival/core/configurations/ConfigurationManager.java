@@ -15,15 +15,18 @@ public class ConfigurationManager {
 		MessageConfiguration message = new MessageConfiguration();
 		MobConfiguration mob = new MobConfiguration();
 		ObjectConfiguration objects = new ObjectConfiguration();
+		MaterialsConfiguration materials = new MaterialsConfiguration();
 		main.load(TNE.instance.getConfig());
 		message.load(TNE.instance.messageConfigurations);
 		mob.load(TNE.instance.mobConfigurations);
 		objects.load(TNE.instance.objectConfigurations);
+		materials.load(TNE.instance.materialConfigurations);
 		
 		configurations.put("main", main);
 		configurations.put("mob", mob);
 		configurations.put("messages", message);
 		configurations.put("objects", objects);
+		configurations.put("materials", materials);
 	}
 	
 	public Boolean mobEnabled(String mob) {
@@ -40,6 +43,10 @@ public class ConfigurationManager {
 	
 	public ObjectConfiguration getObjectConfiguration() {
 		return (ObjectConfiguration)getConfiguration("objects");
+	}
+	
+	public MaterialsConfiguration getMaterialsConfiguration() {
+		return (MaterialsConfiguration)getConfiguration("materials");
 	}
 	
 	public void load(FileConfiguration configurationFile, String configID) {

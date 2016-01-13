@@ -6,9 +6,24 @@
 
 Materials:
 
+    #All configurations relating to potions
+    Potions:
+        
+        #Whether or not a message should be sent even if the charge is 0
+        ZeroMessage: false
+        
+        #For reference purposes
+        Example:
+            
+            #The cost to brew this potion
+            Brew: 10.00
+            
+            #The cost to use this potion
+            Use: 5.00
+        
     #All configurations relating to items
     Items:
-    
+        
         #Whether or not a message should be sent even if the charge is 0
         ZeroMessage: false
     
@@ -20,16 +35,22 @@ Materials:
             
             #The base cost to sell to the global shop
             Sell: 15.00
+        
+            #The cost to use this item(use negative amount to give money)
+            Use: 0.00
             
             #The cost to craft this item(use negative amount to give money)
             Crafting: 5.00
             
             #The cost to enchant this item(use negative amount to give money)
             Enchant: 2.00
+            
+            #The cost to smelt this item(use negative amount to give money)
+            Smelt: 4.00
    
     #All configurations relating to blocks
     Blocks:
-    
+        
         #Whether or not a message should be sent even if the charge is 0
         ZeroMessage: false
     
@@ -42,8 +63,14 @@ Materials:
             #The base cost to sell to the global shop
             Sell: 15.00
             
+            #The cost to craft this block(use negative amount to give money). Only applies to certain blocks
+            Crafting: 5.00
+            
             #The cost to place this block(use negative amount to give money)
             Place: 5.00
             
             #The cost to mine this block(use negative amount to give money)
             Mine: 2.00
+            
+            #The cost to smelt this block(use negative amount to give money)
+            Smelt: 4.00

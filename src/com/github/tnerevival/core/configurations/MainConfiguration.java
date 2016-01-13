@@ -5,7 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class MainConfiguration extends Configuration {
 
 	@Override
-	public void load(FileConfiguration configurationFile) {		
+	public void load(FileConfiguration configurationFile) {	
+		configurations.put("Core.UUID", true);	
 		configurations.put("Core.Multiworld", false);
 		configurations.put("Core.Balance", 200.0);
 		configurations.put("Core.Shorten", true);

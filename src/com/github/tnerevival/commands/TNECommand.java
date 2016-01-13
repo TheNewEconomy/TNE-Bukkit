@@ -91,6 +91,7 @@ public abstract class TNECommand {
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected Player getPlayer(CommandSender sender, String username) {
 		if(username != null) {
 			List<Player> matches = sender.getServer().matchPlayer(username);

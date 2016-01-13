@@ -19,11 +19,18 @@ Worlds:
         ChangeFee: 10.0
         
         #The initial balance for this world if multiworld is enabled
+        #Overriden if ShareAccounts = true
         Balance: 500.0
 
         #Whether or not to shorten money amounts
         #Example: 2100 would be 2.1k
         Shorten: true
+        
+        #Whether or not you want this world to share accounts with another
+        ShareAccounts: false
+        
+        #The world to share accounts with if ShareAccounts is true
+        ShareWorld: WorldName
         
         #All configurations relating to currency.
         Currency:

@@ -2,7 +2,7 @@ package com.github.tnerevival.core.objects;
 
 import java.util.HashMap;
 
-public class TNEInventoryObject extends TNEObject {
+public class TNEInventoryObject {
 
 	private HashMap<String, TNEAccessPackage> packages = new HashMap<String, TNEAccessPackage>();
 	
@@ -18,7 +18,6 @@ public class TNEInventoryObject extends TNEObject {
 		this.cost = cost;
 	}
 	
-	@Override
 	public String getIdentifier() {
 		return name;
 	}
@@ -31,7 +30,6 @@ public class TNEInventoryObject extends TNEObject {
 		return timed;
 	}
 
-	@Override
 	public double getCost() {
 		return cost;
 	}

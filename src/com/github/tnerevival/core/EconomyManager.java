@@ -5,18 +5,11 @@ import java.util.UUID;
 
 import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Account;
-import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.companies.Company;
 import com.github.tnerevival.lottery.Lottery;
+import com.github.tnerevival.worker.InventoryTimeWorker;
 
 public class EconomyManager {
-	
-	/**
-	 * A HashMap holding all accounts for the economy.
-	 * Format: Player name, Account Class Instance
-	 */
-	@Deprecated
-	public HashMap<String, Account> legacy = new HashMap<String, Account>();
 	
 	/**
 	 * A HashMap holding all accounts for the economy.
@@ -37,12 +30,16 @@ public class EconomyManager {
 	 */
 	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
 	
-	public HashMap<UUID, Access> accessing = new HashMap<UUID, Access>();
-	
 	public HashMap<UUID, String[]> commandCredits = new HashMap<UUID, String[]>();
 	
-	@Deprecated
-	public HashMap<String, Bank> banks = new HashMap<String, Bank>();
+	public HashMap<UUID, InventoryTimeWorker> invWorkers = new HashMap<UUID, InventoryTimeWorker>();
+	
+	public HashMap<UUID, Access> accessing = new HashMap<UUID, Access>();
+	
+	/**
+	 * A Map, which holds the economy UUIDs for each player that are used when UUID support is turned off.
+	 */
+	public HashMap<String, UUID> ecoIDs = new HashMap<String, UUID>();
 	
 	//public CurrencyManager currencyManager;
 

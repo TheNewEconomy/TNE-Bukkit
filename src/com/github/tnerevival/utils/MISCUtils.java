@@ -11,33 +11,59 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.api.MojangAPI;
 import com.github.tnerevival.serializable.SerializableEnchantment;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class MISCUtils {
 
-	//True MISC Utils	
+	//True MISC Utils
+	/**
+	 * Returns the player's account world(or the world it's meant to share accounts with if configured to do so)
+	 */
 	public static String getWorld(UUID id) {
 		if(MISCUtils.multiWorld()) {
-			if(Bukkit.getPlayer(id) != null) {
-				return Bukkit.getPlayer(id).getWorld().getName();
+			if(MISCUtils.getPlayer(id) != null) {
+				String actualWorld = MISCUtils.getPlayer(id).getWorld().getName();
+				if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
+					return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
+				}
+				return MISCUtils.getPlayer(id).getWorld().getName();
+			}
+		}
+		return TNE.instance.defaultWorld;
+	}
+	
+	public static String getWorld(Player player) {
+		return MISCUtils.getWorld(MISCUtils.getID(player));
+	}
+	
+	/**
+	 * Returns the player's actual current world
+	 */
+	public static String getActualWorld(UUID id) {
+		if(MISCUtils.multiWorld()) {
+			if(MISCUtils.getPlayer(id) != null) {
+				return MISCUtils.getPlayer(id).getWorld().getName();
 			}
 		}
 		return TNE.instance.defaultWorld;
 	}
 	
 	public static Integer getItemCount(UUID id, Material item) {
-		Player p = Bukkit.getPlayer(id);
+		Player p = MISCUtils.getPlayer(id);
 		int count = 0;
 		if(item != null) {
 			for(ItemStack i : p.getInventory().getContents()) {
@@ -50,7 +76,7 @@ public class MISCUtils {
 	}
 	
 	public static void setItemCount(UUID id, Material item, Integer amount) {
-		Player p = Bukkit.getPlayer(id);
+		Player p = MISCUtils.getPlayer(id);
 		Integer count = getItemCount(id, item);
 		if(item != null) {
 			if(count > amount) {
@@ -158,7 +184,70 @@ public class MISCUtils {
 		return builder.toString();
 	}
 	
-	public static boolean hasCredit(UUID id, String command) {
+	@SuppressWarnings("deprecation")
+	public static Player getPlayer(String username) {
+		if(!TNE.configurations.getBoolean("Core.UUID")) {
+			return Bukkit.getPlayer(username);
+		}
+		UUID id = getID(username);
+		return Bukkit.getPlayer(id);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static Player getPlayer(UUID id) {
+		if(!TNE.configurations.getBoolean("Core.UUID")) {
+			return Bukkit.getPlayer(ecoToUsername(id));
+		}
+		return Bukkit.getPlayer(id);
+	}
+	
+	public static UUID ecoID(String username) {
+		if(TNE.instance.manager.ecoIDs.containsKey(username)) {
+			return TNE.instance.manager.ecoIDs.get(username);
+		}
+		UUID eco = UUID.randomUUID();
+		TNE.instance.manager.ecoIDs.put(username, eco);
+		return eco;
+	}
+	
+	public static String ecoToUsername(UUID id) {
+		String username = (String) getKey(TNE.instance.manager.ecoIDs, id);
+		return username;
+	}
+	
+	public static UUID getID(String player) {
+		if(!TNE.configurations.getBoolean("Core.UUID")) {
+			return ecoID(player);
+		}
+		return MojangAPI.getPlayerUUID(player);
+	}
+	
+	public static UUID getID(Player player) {
+		if(!TNE.configurations.getBoolean("Core.UUID")) {
+			return ecoID(player.getDisplayName());
+		}
+		return player.getUniqueId();
+	}
+	
+	public static UUID getID(OfflinePlayer player) {
+		if(!TNE.configurations.getBoolean("Core.UUID")) {
+			return ecoID(player.getName());
+		}
+		return player.getUniqueId();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static Object getKey(Map m, Object value) {
+		for(Object obj : m.keySet()) {
+			if(m.get(obj).equals(value)) {
+				return obj;
+			}
+		}
+		return null;
+	}
+	
+	//Credit Utils
+	public static boolean hasCommandCredit(UUID id, String command) {
 		if(TNE.instance.manager.commandCredits.containsKey(id)) {
 			for(String s : TNE.instance.manager.commandCredits.get(id)) {
 				if(s.equalsIgnoreCase(command)) {
@@ -169,7 +258,7 @@ public class MISCUtils {
 		return false;
 	}
 	
-	public static void addCredit(UUID id, String command) {
+	public static void addCommandCredit(UUID id, String command) {
 		List<String> credits = new ArrayList<String>();
 		credits.add(command);
 		if(TNE.instance.manager.commandCredits.containsKey(id)) {
@@ -180,7 +269,7 @@ public class MISCUtils {
 		TNE.instance.manager.commandCredits.put(id, (String[])credits.toArray());
 	}
 	
-	public static void removeCredit(UUID id, String command) {
+	public static void removeCommandCredit(UUID id, String command) {
 		List<String> credits = new ArrayList<String>();
 		if(TNE.instance.manager.commandCredits.containsKey(id)) {
 			for(String s : TNE.instance.manager.commandCredits.get(id)) {

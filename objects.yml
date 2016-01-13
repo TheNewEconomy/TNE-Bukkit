@@ -35,6 +35,9 @@ Objects:
         #Whether or not GUI costs should be enabled
         Enabled: true
         
+        #Whether or not timed access should be per-world
+        PerWorld: true
+        
         #Whether or not a message should be sent even if the charge is 0
         ZeroMessage: false
         
@@ -199,7 +202,7 @@ Objects:
                     #Cost for this amount of access time
                     Cost: 20.00
         
-        EnchantmentTablet:
+        EnchantmentTable:
         
             #Whether or not to enable changing for enchantment tablet access
             Enabled: true

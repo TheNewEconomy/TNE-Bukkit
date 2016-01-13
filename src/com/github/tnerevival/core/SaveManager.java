@@ -17,6 +17,7 @@ import java.util.zip.ZipOutputStream;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.version.Alpha2_2;
+import com.github.tnerevival.core.version.Alpha3_0;
 import com.github.tnerevival.core.version.Version;
 
 public class SaveManager {
@@ -25,6 +26,7 @@ public class SaveManager {
 	static {
 		versions = new HashMap<Double, Version>();
 		versions.put(2.2, new Alpha2_2());
+		versions.put(3.0, new Alpha3_0());
 	}
 	
 	Version versionInstance;
@@ -213,7 +215,8 @@ public class SaveManager {
 	
 	//FlatFile Methods
 	public void loadFlatFile() {
-		versionInstance.loadFlat(file);
+		Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
+		loadVersion.loadFlat(file);
 	}
 	
 	public void saveFlatFile() {
@@ -222,7 +225,8 @@ public class SaveManager {
 	
 	//MySQL Methods
 	public void loadMySQL() {
-		versionInstance.loadMySQL();
+		Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
+		loadVersion.loadMySQL();
 	}
 	
 	public void saveMySQL() {
@@ -231,7 +235,8 @@ public class SaveManager {
 	
 	//SQLite Methods
 	public void loadSQLite() {
-		versionInstance.loadSQLite();
+		Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
+		loadVersion.loadSQLite();
 	}
 	
 	public void saveSQLite() {

@@ -49,10 +49,6 @@ public class BankUtils {
 		return TNE.configurations.getDouble("Core.Bank.Interest.Rate");
 	}
 	
-	public static Boolean hasOldBank(UUID id) {
-		return TNE.instance.manager.banks.containsKey(id);
-	}
-	
 	public static Boolean hasBank(UUID id) {
 		if(MISCUtils.multiWorld()) {
 			return AccountUtils.getAccount(id).getBanks().containsKey(MISCUtils.getWorld(id));
@@ -77,6 +73,7 @@ public class BankUtils {
 	
 	public static Bank fromString(String bankString) {
 		String[] variables = bankString.split("\\:");
+		@SuppressWarnings("deprecation")
 		Bank bank = new Bank(variables[0], Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
 		bank.setPin(variables[1]);
 		List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();

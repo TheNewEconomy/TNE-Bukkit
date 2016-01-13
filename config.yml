@@ -5,6 +5,9 @@
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 Core:
     
+    #Whether or not to enable UUID support(results may vary if turned off).
+    UUID: true
+    
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
     

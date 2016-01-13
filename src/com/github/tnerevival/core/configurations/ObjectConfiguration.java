@@ -17,9 +17,9 @@ public class ObjectConfiguration extends Configuration {
 	HashMap<String, TNEInventoryObject> inventories = new HashMap<String, TNEInventoryObject>();
 	
 	@Override
-	public void load(FileConfiguration configurationFile) {
-		String baseNode = "Objects.Commands";
+	public void load(FileConfiguration configurationFile) {		
 		//Load Command Objects
+		String baseNode = "Objects.Commands";
 		configurations.put(baseNode + ".Enabled", true);
 		configurations.put(baseNode + ".ZeroMessage", false);
 		
@@ -44,6 +44,7 @@ public class ObjectConfiguration extends Configuration {
 		//Load Inventory Objects
 		baseNode = "Objects.Inventories";
 		configurations.put(baseNode + ".Enabled", true);
+		configurations.put(baseNode + ".PerWorld", true);
 		configurations.put(baseNode + ".ZeroMessage", false);
 		
 		Set<String> inventoryNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
@@ -55,6 +56,7 @@ public class ObjectConfiguration extends Configuration {
 			double cost = configurationFile.getDouble(baseNode + "." + inventoryName + ".Cost");
 			
 			TNEInventoryObject inventory = new TNEInventoryObject(inventoryName, enabled, timed, cost);
+			System.out.println(inventoryName);
 			
 			if(configurationFile.contains(baseNode + "." + inventoryName + ".Packages")) {
 				Set<String> packageNames = configurationFile.getConfigurationSection(baseNode + "." + inventoryName + ".Packages").getKeys(false);
@@ -63,7 +65,8 @@ public class ObjectConfiguration extends Configuration {
 					
 					long packageTime = configurationFile.getLong(baseNode + "." + inventoryName + ".Packages" + "." + packageName + ".Time");
 					double packageCost = configurationFile.getDouble(baseNode + "." + inventoryName + ".Packages" + "." + packageName + ".Cost");
-					
+
+					System.out.println(packageName + ":" + packageTime + ":" + packageCost);
 					inventory.addPackage(new TNEAccessPackage(packageName, packageTime, packageCost));
 				}
 			}
@@ -91,7 +94,7 @@ public class ObjectConfiguration extends Configuration {
 			case DROPPER:
 				return "Dropper";
 			case ENCHANTING:
-				return "EnchantmentTablet";
+				return "EnchantmentTable";
 			case ENDER_CHEST:
 				return "EnderChest";
 			case FURNACE:

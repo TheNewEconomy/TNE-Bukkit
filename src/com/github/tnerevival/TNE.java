@@ -50,11 +50,13 @@ public class TNE extends JavaPlugin {
 	public File mobs;
 	public File messages;
 	public File objects;
+	public File materials;
 	public File worlds;
 	
 	public FileConfiguration mobConfigurations;
 	public FileConfiguration messageConfigurations;
 	public FileConfiguration objectConfigurations;
+	public FileConfiguration materialConfigurations;
 	public FileConfiguration worldConfigurations;
 	
 	public static ConfigurationManager configurations;
@@ -131,6 +133,7 @@ public class TNE extends JavaPlugin {
 		configurations.save(mobConfigurations, "mob");
 		configurations.save(messageConfigurations, "messages");
 		configurations.save(objectConfigurations, "objects");
+		configurations.save(materialConfigurations, "materials");
 		saveConfigurations();
 		try {
 			saveWorker.cancel();
@@ -159,10 +162,12 @@ public class TNE extends JavaPlugin {
 		mobs = new File(getDataFolder(), "mobs.yml");
 		messages = new File(getDataFolder(), "messages.yml");
 		objects = new File(getDataFolder(), "objects.yml");
+		materials = new File(getDataFolder(), "materials.yml");
 		worlds = new File(getDataFolder(), "worlds.yml");
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
 		messageConfigurations = YamlConfiguration.loadConfiguration(messages);
 		objectConfigurations = YamlConfiguration.loadConfiguration(objects);
+		materialConfigurations = YamlConfiguration.loadConfiguration(objects);
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
 		try {
 			setConfigurationDefaults();
@@ -176,6 +181,7 @@ public class TNE extends JavaPlugin {
 	     mobConfigurations.options().copyDefaults(true);
 	     messageConfigurations.options().copyDefaults(true);
 	     objectConfigurations.options().copyDefaults(true);
+	     materialConfigurations.options().copyDefaults(true);
 	     worldConfigurations.options().copyDefaults(true);
 	     saveConfigurations();
 	}
@@ -186,6 +192,7 @@ public class TNE extends JavaPlugin {
 			mobConfigurations.save(mobs);
 			messageConfigurations.save(messages);
 			objectConfigurations.save(objects);
+			materialConfigurations.save(materials);
 			worldConfigurations.save(worlds);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -196,6 +203,7 @@ public class TNE extends JavaPlugin {
 		Reader mobsStream = new InputStreamReader(this.getResource("mobs.yml"), "UTF8");
 		Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
 		Reader objectsStream = new InputStreamReader(this.getResource("objects.yml"), "UTF8");
+		Reader materialsStream = new InputStreamReader(this.getResource("materials.yml"), "UTF8");
 		Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
 	    if (mobsStream != null) {
 	        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
@@ -205,6 +213,11 @@ public class TNE extends JavaPlugin {
 	    if (messagesStream != null) {
 	        YamlConfiguration config = YamlConfiguration.loadConfiguration(messagesStream);
 	        messageConfigurations.setDefaults(config);
+	    }
+	    
+	    if (materialsStream != null) {
+	        YamlConfiguration config = YamlConfiguration.loadConfiguration(materialsStream);
+	        materialConfigurations.setDefaults(config);
 	    }
 	    
 	    if (objectsStream != null) {

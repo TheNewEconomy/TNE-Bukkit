@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class ConnectionListener implements Listener {
 	
@@ -21,8 +22,8 @@ public class ConnectionListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if(!plugin.manager.accounts.containsKey(player.getUniqueId())) {
-			AccountUtils.createAccount(player.getUniqueId());
+		if(!plugin.manager.accounts.containsKey(MISCUtils.getID(player))) {
+			AccountUtils.createAccount(MISCUtils.getID(player));
 		}
 		
 		if(player.hasPermission("tne.admin") && !TNE.updater.latest()) {
@@ -33,7 +34,7 @@ public class ConnectionListener implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		if(TNE.configurations.getBoolean("Core.Death.Lose")) {
-			AccountUtils.setFunds(event.getEntity().getUniqueId(), 0.0);
+			AccountUtils.setFunds(MISCUtils.getID(event.getEntity()), 0.0);
 		}
 	}
 }

@@ -2,7 +2,7 @@ package com.github.tnerevival.core.objects;
 
 import java.util.HashMap;
 
-public class TNECommandObject extends TNEObject {
+public class TNECommandObject {
 
 	private HashMap<String, TNECommandObject> subCommands = new HashMap<String, TNECommandObject>();
 	
@@ -14,12 +14,10 @@ public class TNECommandObject extends TNEObject {
 		this.cost = cost;
 	}
 	
-	@Override
 	public String getIdentifier() {
 		return name;
 	}
 
-	@Override
 	public double getCost() {
 		return cost;
 	}

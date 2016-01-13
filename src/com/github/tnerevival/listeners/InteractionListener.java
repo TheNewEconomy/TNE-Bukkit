@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,25 +20,39 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.potion.PotionHelper;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.MaterialUtils;
 
 public class InteractionListener implements Listener {
 	
@@ -60,15 +76,15 @@ public class InteractionListener implements Listener {
 			double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0]);
 			
 			Message commandCost = new Message("Messages.Command.Charge");
-			commandCost.addVariable("$amount", MISCUtils.formatBalance(event.getPlayer().getWorld().getName(), AccountUtils.round(cost)));
+			commandCost.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), AccountUtils.round(cost)));
 			commandCost.addVariable("$command", commandFirstArg);
 			
 			if(cost > 0.0) {
 				event.setCancelled(true);
 				
 				boolean paid = false;
-				if(MISCUtils.hasCredit(player.getUniqueId(), commandFirstArg)) {
-					MISCUtils.removeCredit(player.getUniqueId(), commandFirstArg);
+				if(MISCUtils.hasCommandCredit(MISCUtils.getID(player), commandFirstArg)) {
+					MISCUtils.removeCommandCredit(MISCUtils.getID(player), commandFirstArg);
 				} else {
 					if(TNE.instance.api.fundsHas(player, player.getWorld().getName(), cost)) {
 						TNE.instance.api.fundsRemove(player, player.getWorld().getName(), cost);
@@ -78,7 +94,7 @@ public class InteractionListener implements Listener {
 				
 				if(paid) {
 					if(!player.performCommand(command)) {
-						MISCUtils.addCredit(player.getUniqueId(), commandFirstArg);
+						MISCUtils.addCommandCredit(MISCUtils.getID(player), commandFirstArg);
 						return;
 					}		
 					
@@ -92,9 +108,381 @@ public class InteractionListener implements Listener {
 			}
 		}
 	}
+
+	@EventHandler
+	public void onBreak(BlockBreakEvent event) {
+		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType());
+		
+		if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
+			Player player = event.getPlayer();
+			Double cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getMine();
+			
+
+			String message = "Messages.Objects.MiningCharged";
+			if(cost > 0.0) {
+				if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+					AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				} else {
+					event.setCancelled(true);
+					Message insufficient = new Message("Messages.Money.Insufficient");
+					insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+					player.sendMessage(insufficient.translate());
+					return;
+				}
+			} else {
+				AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				message = "Messages.Objects.MiningPaid";
+			}
+			
+			if(cost > 0.0 || cost < 0.0 || cost == 0.0 && TNE.configurations.getBoolean("Materials.Blocks.ZeroMessage")) {
+				
+				Message m = new Message(message);
+				m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+				m.addVariable("$name", name);
+				player.sendMessage(m.translate());
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlace(BlockPlaceEvent event) {
+		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType());
+		
+		if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
+			Player player = event.getPlayer();
+			Double cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getPlace();
+			
+
+			String message = "Messages.Objects.PlacingCharged";
+			if(cost > 0.0) {
+				if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+					AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				} else {
+					event.setCancelled(true);
+					Message insufficient = new Message("Messages.Money.Insufficient");
+					insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+					player.sendMessage(insufficient.translate());
+					return;
+				}
+			} else {
+				AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				message = "Messages.Objects.PlacingPaid";
+			}
+			
+			if(cost > 0.0 || cost < 0.0 || cost == 0.0 && TNE.configurations.getBoolean("Materials.Blocks.ZeroMessage")) {
+				
+				Message m = new Message(message);
+				m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+				m.addVariable("$name", name);
+				player.sendMessage(m.translate());
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onSmelt(FurnaceSmeltEvent event) {
+		if(event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
+			String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getSource().getType());
+			Double cost = 0.0;
+			
+			if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
+			} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getCrafting();
+			} else {
+				return;
+			}
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.WHITE + "Smelting Cost: " + ChatColor.GOLD + cost);
+			
+			ItemStack result = event.getResult();
+			ItemMeta meta = result.getItemMeta();
+			meta.setLore(lore);
+			
+			result.setItemMeta(meta);
+			event.setResult(result);
+		}
+	}
+	
+	@EventHandler
+	public void onBrew(BrewEvent event) {
+		
+		Double cost = 0.0;
+		
+		if(event.getContents().getItem(0) != null && !event.getContents().getItem(0).getType().equals(Material.AIR)) {
+			String name = PotionHelper.getName(event.getContents().getItem(0));
+			
+			if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
+			} else {
+				return;
+			}
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.WHITE + "Brewing Cost: " + ChatColor.GOLD + cost);
+			
+			ItemStack result = event.getContents().getItem(0);
+			ItemMeta meta = result.getItemMeta();
+			meta.setLore(lore);
+			
+			result.setItemMeta(meta);
+			event.getContents().setItem(0, result);
+		}
+		
+		if(event.getContents().getItem(1) != null && !event.getContents().getItem(1).getType().equals(Material.AIR)) {
+			String name = PotionHelper.getName(event.getContents().getItem(1));
+			
+			if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
+			} else {
+				return;
+			}
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.WHITE + "Brewing Cost: " + ChatColor.GOLD + cost);
+			
+			ItemStack result = event.getContents().getItem(1);
+			ItemMeta meta = result.getItemMeta();
+			meta.setLore(lore);
+			
+			result.setItemMeta(meta);
+			event.getContents().setItem(1, result);
+		}
+		
+		if(event.getContents().getItem(2) != null && !event.getContents().getItem(2).getType().equals(Material.AIR)) {
+			String name = PotionHelper.getName(event.getContents().getItem(2));
+			
+			if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
+			} else {
+				return;
+			}
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.WHITE + "Brewing Cost: " + ChatColor.GOLD + cost);
+			
+			ItemStack result = event.getContents().getItem(2);
+			ItemMeta meta = result.getItemMeta();
+			meta.setLore(lore);
+			
+			result.setItemMeta(meta);
+			event.getContents().setItem(2, result);
+		}
+	}
+	@EventHandler
+	public void onEnchant(EnchantItemEvent event) {
+		if(event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
+			
+			ItemStack result = event.getItem();
+			String name = MaterialUtils.formatMaterialNameWithoutSpace(result.getType());
+			Double cost = 0.0;
+			
+			if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
+			} else {
+				return;
+			}
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
+			
+			ItemMeta meta = result.getItemMeta();
+			meta.setLore(lore);
+			
+			for(Enchantment e : event.getEnchantsToAdd().keySet()) {
+				meta.addEnchant(e, event.getEnchantsToAdd().get(e), false);
+			}
+			
+			result.setItemMeta(meta);
+			event.getInventory().setItem(0, result);
+		}
+	}
+	
+	@EventHandler
+	public void onPreCraft(PrepareItemCraftEvent event) {
+		if(event.getInventory().getResult() != null) {
+			String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType());
+			Double cost = 0.0;
+			
+			if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
+			} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
+				cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getCrafting();
+			} else {
+				return;
+			}
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
+			
+			ItemStack result = event.getInventory().getResult();
+			ItemMeta meta = result.getItemMeta();
+			meta.setLore(lore);
+			result.setItemMeta(meta);
+			event.getInventory().setResult(result);
+		}
+	}
+	
+	@EventHandler
+	public void onCraft(CraftItemEvent event) {
+		
+		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType());
+		Double cost = 00.00;
+		boolean item = false;
+		
+		if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+			cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
+			item = true;
+		} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
+			cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getCrafting();
+		}
+		
+		ItemStack result = event.getInventory().getResult();
+		ItemMeta meta = result.getItemMeta();
+		meta.setLore(new ArrayList<String>());
+		result.setItemMeta(meta);
+		
+		Player player = (Player)event.getWhoClicked();
+		String message = "Messages.Objects.CraftingCharged";
+		if(cost > 0.0) {
+			if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+				AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+			} else {
+				event.setCancelled(true);
+				Message insufficient = new Message("Messages.Money.Insufficient");
+				insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+				player.sendMessage(insufficient.translate());
+				return;
+			}
+		} else {
+			AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+			message = "Messages.Objects.CraftingPaid";
+		}
+		
+		if(cost > 0.0 || cost < 0.0  || cost == 0.0 && item && TNE.configurations.getBoolean("Materials.Items.ZeroMessage") || cost == 0.0 && !item && TNE.configurations.getBoolean("Materials.Blocks.ZeroMessage")) {
+			String newName = (result.getAmount() > 1)? name + "'s" : name;
+			
+			Message m = new Message(message);
+			m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+			m.addVariable("$stack_size", result.getAmount() + "");
+			m.addVariable("$item", newName);
+			player.sendMessage(m.translate());
+		}
+		
+		event.getInventory().setResult(result);
+	}
 	
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent event) {
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		Player player = (Player)event.getWhoClicked();
+		int slot = event.getRawSlot();
+		InventoryType type = event.getInventory().getType();
+		ItemStack result = event.getCurrentItem();
+		ItemMeta meta;
+		String name;
+		Boolean charge = false;
+		String message = "Messages.Money.Insufficient";
+		Double cost = 0.0;
+		
+		if(type.equals(InventoryType.BREWING)) {
+			if(slot == 0 || slot == 1 || slot == 2) {
+				if(!result.getType().equals(Material.AIR)) {
+					meta = result.getItemMeta();
+					if(chargeClick(meta.getLore(), "brew")) {
+						name = PotionHelper.getName(result);
+						
+						if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+							cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
+						}
+						
+						if(cost > 0.0) {
+							if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+								message = "Messages.Objects.BrewingCharged";
+							}
+						} else {
+							message = "Messages.Objects.BrewingPaid";
+						}
+						charge = true;
+					}
+				}
+			}
+		} else if(type.equals(InventoryType.ENCHANTING)) {
+			if(slot == 0 && !result.getType().equals(Material.AIR)) {
+				meta = result.getItemMeta();
+				if(chargeClick(meta.getLore(), "enchant")) {
+					name = MaterialUtils.formatMaterialNameWithoutSpace(result.getType());
+					
+					if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+						cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
+					}
+					
+					if(cost > 0.0) {
+						if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+							message = "Messages.Objects.EnchantingCharged";
+						}
+					} else {
+						message = "Messages.Objects.EnchantingPaid";
+					}
+					charge = true;
+				}
+			}
+		} else if(type.equals(InventoryType.FURNACE)) {
+			if(slot == 2 && !result.getType().equals(Material.AIR)) {
+				meta = result.getItemMeta();
+				if(chargeClick(meta.getLore(), "smelt")) {
+					name = MaterialUtils.formatMaterialNameWithoutSpace(getFurnaceSource(result).getType());
+					
+					if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+						cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
+					} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
+						cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getCrafting();
+					}
+					
+					if(cost > 0.0) {
+						if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+							message = "Messages.Objects.SmeltingCharged";
+						}
+					} else {
+						message = "Messages.Objects.SmeltingPaid";
+					}
+					charge = true;
+				}
+			}
+		}
+		
+		if(charge) {
+			if(cost > 0.0) {
+				if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+					AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				} else {
+					event.setCancelled(true);
+				}
+			} else {
+				AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+			}
+			
+			if(cost > 0.0 || cost < 0.0  || cost == 0.0 && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")) {
+				Message m = new Message(message);
+				m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+				if(result != null) {
+					m.addVariable("$stack_size", result.getAmount() + "");
+					m.addVariable("$item", MaterialUtils.formatMaterialNameWithSpace(result.getType()));
+				}
+				player.sendMessage(m.translate());
+			}
+			
+			if(!event.isCancelled()) {
+				meta = result.getItemMeta();
+				meta.setLore(new ArrayList<String>());
+				result.setItemMeta(meta);
+				event.setCurrentItem(result);
+			}
+		}
 	}
 	
 	@EventHandler
@@ -142,6 +530,8 @@ public class InteractionListener implements Listener {
 			}
 			bank.setItems(items);
 			TNE.instance.manager.accessing.remove(player.getUniqueId());
+		} else {
+			
 		}
 	}
 	
@@ -217,6 +607,51 @@ public class InteractionListener implements Listener {
 						} else {
 							player.sendMessage(new Message("Messages.General.NoPerm").translate());
 						}
+					}
+				}
+			} else {
+				Double cost = 0.0;
+				String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getMaterial());
+				boolean potion = false;
+				
+				if(event.getMaterial().equals(Material.POTION)) {
+					potion = true;
+					
+					name = PotionHelper.getName(event.getItem());
+					
+					if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+						cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getUse();
+					}
+				} else {
+					if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+						cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getUse();
+					}
+				}
+				
+				if(!potion && TNE.configurations.getMaterialsConfiguration().containsItem(name) || potion && TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+				
+					String message = (potion)? "Messages.Objects.PotionUseCharged" : "Messages.Objects.ItemUseCharged";
+					if(cost > 0.0) {
+						if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+							AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+						} else {
+							event.setCancelled(true);
+							Message insufficient = new Message("Messages.Money.Insufficient");
+							insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+							player.sendMessage(insufficient.translate());
+							return;
+						}
+					} else {
+						AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+						message = (potion)? "Messages.Objects.PotionUsePaid" : "Messages.Objects.ItemUsePaid";
+					}
+					
+					if(cost > 0.0 || cost < 0.0  || cost == 0.0 && !potion && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")  || cost == 0.0 && potion && TNE.configurations.getBoolean("Materials.Potions.ZeroMessage")) {
+						
+						Message m = new Message(message);
+						m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+						m.addVariable("$item", name);
+						player.sendMessage(m.translate());
 					}
 				}
 			}
@@ -359,5 +794,39 @@ public class InteractionListener implements Listener {
 				}
 			}
 		}
+	}
+	
+	private ItemStack getFurnaceSource(ItemStack result) {
+		List<Recipe> recipes = TNE.instance.getServer().getRecipesFor(result);
+		for(Recipe r : recipes) {
+			if(r instanceof FurnaceRecipe) {
+				return ((FurnaceRecipe) r).getInput();
+			}
+		}
+		return new ItemStack(Material.AIR, 1);
+	}
+	
+	private Boolean chargeClick(List<String> lore, String inv) {
+		if(lore != null) {
+			String search = "Enchanting Cost:";
+			switch(inv) {
+				case "smelt":
+					search = "Smelting Cost:";
+					break;
+				case "brew":
+					search = "Brewing Cost:";
+					break;
+				default:
+					search = "Enchanting Cost:";
+					break;
+			}
+			
+			for(String s : lore) {
+				if(s.contains(search)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

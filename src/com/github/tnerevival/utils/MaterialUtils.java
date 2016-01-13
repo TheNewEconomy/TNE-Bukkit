@@ -4,6 +4,10 @@ import org.bukkit.Material;
 
 public class MaterialUtils {
 	
+	public static String formatMaterialNameWithoutSpace(Material material) {
+		return formatMaterialNameWithSpace(material).replace(" ", "");
+	}
+	
 	public static String formatMaterialName(Material material) {
 		String[] wordsSplit = material.name().split("_");
 		String sReturn = "";

@@ -89,43 +89,43 @@ public class TNEAPI {
 	}
 
 	public void createAccount(OfflinePlayer player) {
-		AccountUtils.createAccount(player.getUniqueId());
+		AccountUtils.createAccount(MISCUtils.getID(player));
 	}
 
 	public void fundsAdd(OfflinePlayer player, Double amount) {
-		AccountUtils.addFunds(player.getUniqueId(), amount);
+		AccountUtils.addFunds(MISCUtils.getID(player), amount);
 	}
 
 	public void fundsAdd(OfflinePlayer player, String world, Double amount) {
-		AccountUtils.addFunds(player.getUniqueId(), amount);
+		AccountUtils.addFunds(MISCUtils.getID(player), amount);
 	}
 
 	public Boolean fundsHas(OfflinePlayer player, Double amount) {
-		return AccountUtils.hasFunds(player.getUniqueId(), amount);
+		return AccountUtils.hasFunds(MISCUtils.getID(player), amount);
 	}
 
 	public Boolean fundsHas(OfflinePlayer player, String world, Double amount) {
-		return AccountUtils.hasFunds(player.getUniqueId(), world, amount);
+		return AccountUtils.hasFunds(MISCUtils.getID(player), world, amount);
 	}
 
 	public void fundsRemove(OfflinePlayer player, Double amount) {
-		AccountUtils.removeFunds(player.getUniqueId(), amount);
+		AccountUtils.removeFunds(MISCUtils.getID(player), amount);
 	}
 
 	public void fundsRemove(OfflinePlayer player, String world, Double amount) {
-		AccountUtils.removeFunds(player.getUniqueId(), world, amount);
+		AccountUtils.removeFunds(MISCUtils.getID(player), world, amount);
 	}
 
 	public Account getAccount(OfflinePlayer player) {
-		return AccountUtils.getAccount(player.getUniqueId());
+		return AccountUtils.getAccount(MISCUtils.getID(player));
 	}
 
 	public Double getBalance(OfflinePlayer player) {
-		return AccountUtils.getFunds(player.getUniqueId());
+		return AccountUtils.getFunds(MISCUtils.getID(player));
 	}
 
 	public Double getBalance(OfflinePlayer player, String world) {
-		return AccountUtils.getFunds(player.getUniqueId(), world);
+		return AccountUtils.getFunds(MISCUtils.getID(player), world);
 	}
 
 	public String format(Double amount) {
@@ -160,6 +160,6 @@ public class TNEAPI {
 		if(username.contains("faction-")) {
 			return UUID.fromString(username.substring(8, username.length() - 1));
 		}
-		return MojangAPI.getPlayerUUID(username);
+		return MISCUtils.getID(username);
 	}
 }
