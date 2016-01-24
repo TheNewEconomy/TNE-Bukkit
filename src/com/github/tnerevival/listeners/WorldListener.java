@@ -25,23 +25,23 @@ public class WorldListener implements Listener {
 		
 		if(TNE.configurations.getBoolean("Core.World.EnableChangeFee")) {
 			if(!player.hasPermission("tne.bypass.world")) {
-				if(AccountUtils.hasFunds(player.getUniqueId(), AccountUtils.getWorldCost(world))) {
-					AccountUtils.removeFunds(player.getUniqueId(), AccountUtils.getWorldCost(world));
-					AccountUtils.initializeWorldData(player.getUniqueId(), world);
+				if(AccountUtils.hasFunds(MISCUtils.getID(player), AccountUtils.getWorldCost(world))) {
+					AccountUtils.removeFunds(MISCUtils.getID(player), AccountUtils.getWorldCost(world));
+					AccountUtils.initializeWorldData(MISCUtils.getID(player), world);
 					Message change = new Message("Messages.World.Change");
-					change.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)));
+					change.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
 					player.sendMessage(change.translate());
 				} else {
 					player.teleport(event.getFrom().getSpawnLocation());
 					Message changeFailed = new Message("Messages.World.ChangeFailed");
-					changeFailed.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.getWorldCost(world)));
+					changeFailed.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
 					player.sendMessage(changeFailed.translate());
 				}
 			} else {
-				AccountUtils.initializeWorldData(player.getUniqueId(), world);
+				AccountUtils.initializeWorldData(MISCUtils.getID(player), world);
 			}
 		} else {
-			AccountUtils.initializeWorldData(player.getUniqueId(), world);
+			AccountUtils.initializeWorldData(MISCUtils.getID(player), world);
 		}
 	}
 }

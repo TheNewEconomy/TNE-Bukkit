@@ -41,23 +41,23 @@ public class BankBuyCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
-		if(BankUtils.hasBank(player.getUniqueId())) {
+		if(BankUtils.hasBank(MISCUtils.getID(player))) {
 			player.sendMessage(new Message("Messages.Bank.Already").translate());
 			return false;
 		}
 		
 		if(!player.hasPermission("tne.bank.bypass")) {
-			if(AccountUtils.hasFunds(player.getUniqueId(), BankUtils.cost(player.getWorld().getName()))) {
-				AccountUtils.removeFunds(player.getUniqueId(), BankUtils.cost(player.getWorld().getName()));
+			if(AccountUtils.hasFunds(MISCUtils.getID(player), BankUtils.cost(player.getWorld().getName()))) {
+				AccountUtils.removeFunds(MISCUtils.getID(player), BankUtils.cost(player.getWorld().getName()));
 			} else {
 				Message insufficient = new Message("Messages.Money.Insufficient");
-				insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName())));
+				insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), BankUtils.cost(player.getWorld().getName())));
 				player.sendMessage(insufficient.translate());
 				return false;
 			}
 		}
-		Bank bank = new Bank(player.getUniqueId(), BankUtils.size(player.getWorld().getName()));
-		AccountUtils.getAccount(player.getUniqueId()).getBanks().put(player.getWorld().getName(), bank);
+		Bank bank = new Bank(MISCUtils.getID(player), BankUtils.size(player.getWorld().getName()));
+		AccountUtils.getAccount(MISCUtils.getID(player)).getBanks().put(MISCUtils.getWorld(player), bank);
 		player.sendMessage(new Message("Messages.Bank.Bought").translate());
 		return true;
 	}

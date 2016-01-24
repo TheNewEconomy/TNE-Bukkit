@@ -2,13 +2,13 @@ package com.github.tnerevival.core.event;
 
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class TNECreateAccountEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
@@ -45,14 +45,14 @@ public class TNECreateAccountEvent extends Event implements Cancellable {
 	 * @return the player
 	 */
 	public OfflinePlayer getPlayer() {
-		return Bukkit.getOfflinePlayer(id);
+		return MISCUtils.getPlayer(id);
 	}
 
 	/**
 	 * @param player the player to set
 	 */
 	public void setPlayer(OfflinePlayer player) {
-		this.id = player.getUniqueId();
+		this.id = MISCUtils.getID(player);
 	}
 	
 	public Account getAccount() {

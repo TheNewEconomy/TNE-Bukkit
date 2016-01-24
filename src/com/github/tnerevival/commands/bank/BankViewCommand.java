@@ -9,6 +9,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class BankViewCommand extends TNECommand {
 	
@@ -40,8 +41,8 @@ public class BankViewCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(BankUtils.command(player.getWorld().getName())) {
-			if(BankUtils.hasBank(player.getUniqueId())) {
-				Inventory bankInventory = BankUtils.getBankInventory(player.getUniqueId());
+			if(BankUtils.hasBank(MISCUtils.getID(player))) {
+				Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
 				player.openInventory(bankInventory);
 			} else {
 				player.sendMessage(new Message("Messages.Bank.None").translate());

@@ -7,6 +7,7 @@ import org.bukkit.event.HandlerList;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class TNEDeleteAccountEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
@@ -50,6 +51,6 @@ public class TNEDeleteAccountEvent extends Event implements Cancellable {
 	}
 	
 	public Account getAccount() {
-		return TNE.instance.manager.accounts.get(player.getUniqueId());
+		return TNE.instance.manager.accounts.get(MISCUtils.getID(player));
 	}
 }

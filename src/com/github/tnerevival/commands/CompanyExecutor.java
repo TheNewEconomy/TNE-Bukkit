@@ -11,6 +11,7 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.companies.Company;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.CompanyUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class CompanyExecutor implements CommandExecutor {
 
@@ -24,10 +25,10 @@ public class CompanyExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-	        Account account = AccountUtils.getAccount(player.getUniqueId());
+	        Account account = AccountUtils.getAccount(MISCUtils.getID(player));
 				
 			if(cmd.getName().equalsIgnoreCase("company")) {
-				if(CompanyUtils.enabled(player.getUniqueId())) {
+				if(CompanyUtils.enabled(MISCUtils.getID(player))) {
 					if(args.length >= 1) {
 						if(args[0].equalsIgnoreCase("help")) {
 							if(player.hasPermission("tne.company.help")) {

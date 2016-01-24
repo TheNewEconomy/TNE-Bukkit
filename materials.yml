@@ -18,8 +18,11 @@ Materials:
             #The cost to brew this potion
             Brew: 10.00
             
-            #The cost to use this potion
-            Use: 5.00
+            #The cost to consume this potion
+            Consume: 5.00
+            
+            #The cost to splash this potion
+            Splash: 5.00
         
     #All configurations relating to items
     Items:
@@ -47,6 +50,9 @@ Materials:
             
             #The cost to smelt this item(use negative amount to give money)
             Smelt: 4.00
+            
+            #The cost to consume this item
+            Consume: 5.00
    
     #All configurations relating to blocks
     Blocks:

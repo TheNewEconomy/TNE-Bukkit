@@ -6,6 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class TNEFundsGiveEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
@@ -72,7 +73,7 @@ public class TNEFundsGiveEvent extends Event implements Cancellable {
 	 * @return Returns the balance of the player who is being given the money beforehand.
 	 */
 	public Double getReceiverPreviousBalance() {
-		return AccountUtils.getFunds(to.getUniqueId());
+		return AccountUtils.getFunds(MISCUtils.getID(to));
 	}
 	
 	/**
@@ -80,6 +81,6 @@ public class TNEFundsGiveEvent extends Event implements Cancellable {
 	 * @return Returns what the balance of the player who is being given the money will be afterwards.
 	 */
 	public Double getReceiverNewBalance() {
-		return (AccountUtils.getFunds(to.getUniqueId()) + getAmount());
+		return (AccountUtils.getFunds(MISCUtils.getID(to)) + getAmount());
 	}
 }

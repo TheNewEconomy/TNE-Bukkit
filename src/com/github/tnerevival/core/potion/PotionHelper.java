@@ -83,30 +83,30 @@ public class PotionHelper {
 		//Base Potions
 		ids.add(new PotionIDHelper("Awkward", 16));
 		ids.add(new PotionIDHelper("Regeneration", 8193));
-		ids.add(new PotionIDHelper("NightVision", 8200));
-		ids.add(new PotionIDHelper("Leaping", 8200));
-		ids.add(new PotionIDHelper("Invisibility", 8200));
+		ids.add(new PotionIDHelper("NightVision", 8198));
+		ids.add(new PotionIDHelper("Leaping", 8203));
+		ids.add(new PotionIDHelper("Invisibility", 8206));
 		ids.add(new PotionIDHelper("Swiftness", 8194));
 		ids.add(new PotionIDHelper("FireResistance", 8195));
 		ids.add(new PotionIDHelper("Poison", 8196));
 		ids.add(new PotionIDHelper("Healing", 8197));
 		ids.add(new PotionIDHelper("Weakness", 8200));
-		ids.add(new PotionIDHelper("WaterBreathing", 8200));
+		ids.add(new PotionIDHelper("WaterBreathing", 8205));
 		ids.add(new PotionIDHelper("Slowness", 8202));
 		ids.add(new PotionIDHelper("Harming", 8204));
 		ids.add(new PotionIDHelper("Strength ", 8201));
 		
 		//Extended Potions
-		ids.add(new PotionIDHelper("LeapingPotent", 8200));
+		ids.add(new PotionIDHelper("LeapingPotent", 8235));
 		ids.add(new PotionIDHelper("FireResistancePotent", 8227));
 		ids.add(new PotionIDHelper("HealingPotent", 8229));
 		ids.add(new PotionIDHelper("StrengthPotent", 8233));
 		ids.add(new PotionIDHelper("HarmingPotent", 8236));
 		ids.add(new PotionIDHelper("RegenerationPotent", 8225));
 		ids.add(new PotionIDHelper("SwiftnessPotent", 8226));
-		ids.add(new PotionIDHelper("NightVisionExtended", 8200));
-		ids.add(new PotionIDHelper("LeapingExtended", 8200));
-		ids.add(new PotionIDHelper("InvisibilityExtended", 8200));
+		ids.add(new PotionIDHelper("NightVisionExtended", 8262));
+		ids.add(new PotionIDHelper("LeapingExtended", 8267));
+		ids.add(new PotionIDHelper("InvisibilityExtended", 8270));
 		ids.add(new PotionIDHelper("FireResistanceExtended", 8211));
 		ids.add(new PotionIDHelper("PoisonExtended", 8212));
 		ids.add(new PotionIDHelper("WeaknessExtended", 8216));
@@ -114,7 +114,7 @@ public class PotionHelper {
 		ids.add(new PotionIDHelper("SlownessExtended", 8218));
 		ids.add(new PotionIDHelper("SwiftnessExtended", 8210));
 		ids.add(new PotionIDHelper("RegenerationExtended", 8209));
-		ids.add(new PotionIDHelper("WaterBreathingExtended", 8200));
+		ids.add(new PotionIDHelper("WaterBreathingExtended", 8269));
 		 
 		//Splash Potions
 		ids.add(new PotionIDHelper("SplashRegeneration", 16385));
@@ -156,7 +156,8 @@ public class PotionHelper {
 	
 	public static String getName(ItemStack potionStack) {
 		for(PotionIDHelper helper : ids) {
-			if(helper.getDurability().equals(potionStack.getDurability())) {
+			if(helper.getDurability() == potionStack.getDurability()) {
+				System.out.println(helper.getName());
 				return helper.getName();
 			}
 		}

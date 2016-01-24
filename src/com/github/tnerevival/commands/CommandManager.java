@@ -7,7 +7,9 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.admin.AdminCommand;
 import com.github.tnerevival.commands.bank.BankCommand;
 import com.github.tnerevival.commands.company.CompanyCommand;
+import com.github.tnerevival.commands.credit.CreditCommand;
 import com.github.tnerevival.commands.money.MoneyCommand;
+import com.github.tnerevival.commands.packages.PackageCommand;
 
 public class CommandManager {
 	
@@ -18,6 +20,8 @@ public class CommandManager {
 		commands.add(new CompanyCommand(TNE.instance));
 		commands.add(new AdminCommand(TNE.instance));
 		commands.add(new MoneyCommand(TNE.instance));
+		commands.add(new PackageCommand(TNE.instance));
+		commands.add(new CreditCommand(TNE.instance));
 	}
 	
 	public TNECommand Find(String name) {

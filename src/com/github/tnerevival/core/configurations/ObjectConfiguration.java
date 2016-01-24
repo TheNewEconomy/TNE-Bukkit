@@ -1,6 +1,8 @@
 package com.github.tnerevival.core.configurations;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -56,7 +58,6 @@ public class ObjectConfiguration extends Configuration {
 			double cost = configurationFile.getDouble(baseNode + "." + inventoryName + ".Cost");
 			
 			TNEInventoryObject inventory = new TNEInventoryObject(inventoryName, enabled, timed, cost);
-			System.out.println(inventoryName);
 			
 			if(configurationFile.contains(baseNode + "." + inventoryName + ".Packages")) {
 				Set<String> packageNames = configurationFile.getConfigurationSection(baseNode + "." + inventoryName + ".Packages").getKeys(false);
@@ -65,8 +66,7 @@ public class ObjectConfiguration extends Configuration {
 					
 					long packageTime = configurationFile.getLong(baseNode + "." + inventoryName + ".Packages" + "." + packageName + ".Time");
 					double packageCost = configurationFile.getDouble(baseNode + "." + inventoryName + ".Packages" + "." + packageName + ".Cost");
-
-					System.out.println(packageName + ":" + packageTime + ":" + packageCost);
+					
 					inventory.addPackage(new TNEAccessPackage(packageName, packageTime, packageCost));
 				}
 			}
@@ -126,20 +126,34 @@ public class ObjectConfiguration extends Configuration {
 		return null;
 	}
 	
-	public TNEAccessPackage[] getInventoryPackages(InventoryType type) {
-		String typeString = inventoryType(type);
-		if(!inventories.containsKey(typeString)) {
-			return inventories.get(typeString).getPackages();
+	public boolean hasInventory(String type) {
+		return inventories.containsKey(type);
+	}
+	
+	public List<TNEAccessPackage> getInventoryPackages(String type) {
+		if(inventories.containsKey(type)) {
+			return inventories.get(type).getPackages();
 		}
-		return new TNEAccessPackage[0];
+		return new ArrayList<TNEAccessPackage>();
+	}
+	
+	public List<TNEAccessPackage> getInventoryPackages(InventoryType type) {
+		String typeString = inventoryType(type);
+		return getInventoryPackages(typeString);
 	}
 	
 	public boolean isTimed(InventoryType type) {
 		String typeString = inventoryType(type);
-		if(!inventories.containsKey(typeString)) {
+		if(inventories.containsKey(typeString)) {
 			return inventories.get(typeString).isTimed();
 		}
 		return false;
+	}
+	
+	public boolean inventoryEnabled(InventoryType type) {
+		String typeString = inventoryType(type);
+		TNEInventoryObject inventoryObject = inventories.get(typeString);
+		return ((Boolean)configurations.get("Objects.Inventories.Enabled") && inventoryObject != null && inventoryObject.isEnabled());
 	}
 	
 	public double getInventoryCost(InventoryType type) {

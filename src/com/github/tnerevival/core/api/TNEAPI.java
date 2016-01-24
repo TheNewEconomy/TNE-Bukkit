@@ -19,69 +19,58 @@ public class TNEAPI {
 	
 	@Deprecated
 	public Boolean accountExists(String username) {
-		UUID id = getPlayerID(username);
-		return AccountUtils.getAccount(id) != null;
+		return AccountUtils.getAccount(getPlayerID(username)) != null;
 	}
 
 	@Deprecated
 	public void createAccount(String username) {
-		UUID id = getPlayerID(username);
-		AccountUtils.createAccount(id);
+		AccountUtils.createAccount(getPlayerID(username));
 	}
 
 	@Deprecated
 	public void fundsAdd(String username, Double amount) {
-		UUID id = getPlayerID(username);
-		AccountUtils.addFunds(id, amount);
+		AccountUtils.addFunds(getPlayerID(username), amount);
 	}
 
 	@Deprecated
 	public void fundsAdd(String username, String world, Double amount) {
-		UUID id = getPlayerID(username);
-		AccountUtils.addFunds(id, amount);
+		AccountUtils.addFunds(getPlayerID(username), amount);
 	}
 
 	@Deprecated
 	public Boolean fundsHas(String username, Double amount) {
-		UUID id = getPlayerID(username);
-		return AccountUtils.hasFunds(id, amount);
+		return AccountUtils.hasFunds(getPlayerID(username), amount);
 	}
 
 	@Deprecated
 	public Boolean fundsHas(String username, String world, Double amount) {
-		UUID id = getPlayerID(username);
-		return AccountUtils.hasFunds(id, world, amount);
+		return AccountUtils.hasFunds(getPlayerID(username), world, amount);
 	}
 
 	@Deprecated
 	public void fundsRemove(String username, Double amount) {
-		UUID id = getPlayerID(username);
-		AccountUtils.removeFunds(id, amount);
+		AccountUtils.removeFunds(getPlayerID(username), amount);
 	}
 
 	@Deprecated
 	public void fundsRemove(String username, String world, Double amount) {
-		UUID id = getPlayerID(username);
-		AccountUtils.removeFunds(id, world, amount);
+		AccountUtils.removeFunds(getPlayerID(username), world, amount);
 	}
 
 	@Deprecated
 	public Account getAccount(String username) {
-		UUID id = getPlayerID(username);
-		Account account = AccountUtils.getAccount(id);
+		Account account = AccountUtils.getAccount(getPlayerID(username));
 		return account;
 	}
 
 	@Deprecated
 	public Double getBalance(String username) {
-		UUID id = getPlayerID(username);
-		return AccountUtils.getFunds(id);
+		return AccountUtils.getFunds(getPlayerID(username));
 	}
 
 	@Deprecated
 	public Double getBalance(String username, String world) {
-		UUID id = getPlayerID(username);
-		return AccountUtils.getFunds(id, world);
+		return AccountUtils.getFunds(getPlayerID(username), world);
 	}
 	
 	public Boolean accountExists(OfflinePlayer player) {

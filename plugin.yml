@@ -15,6 +15,10 @@ commands:
       description: The base command for all bank-related commands.
    money:
       description: The base command for all money-related commands.
+   package:
+      description: The base command for all inventory package-related commands.
+   credit:
+      description: The base command for all credit-related commands.
    theneweconomy:
       description: The base command for all The New Economy core commands.
       aliases: tne
@@ -41,14 +45,21 @@ permissions:
          tne.bank.withdraw: true
          tne.bypass: true
          tne.bypass.bank: true
+         tne.bypass.inventory: true
          tne.bypass.nametag: true
          tne.bypass.world: true
+         tne.credit: true
+         tne.credit.commands: true
+         tne.credit.inventory: true
          tne.money: true
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
          tne.money.take: true
          tne.money.pay: true
+         tne.package: true
+         tne.package.list: true
+         tne.package.buy: true
          tne.sign: true
          tne.sign.main: true
          tne.sign.bank: true
@@ -64,6 +75,7 @@ permissions:
          tne.admin.reload: true
          tne.admin.save: true
          tne.bypass.bank: true
+         tne.bypass.inventory: true
          tne.bypass.nametag: true
          tne.bypass.world: true
           
@@ -84,8 +96,15 @@ permissions:
       children:
          tne.bypass: true
          tne.bypass.bank: true
+         tne.bypass.inventory: true
          tne.bypass.nametag: true
          tne.bypass.world: true
+   
+   tne.lottery.*:
+      description: Gives access to all TNE Lottery Commands
+      children:
+         tne.lottery.create: true
+         tne.lottery.view: true
 
    tne.money.*:
       description: Gives access to all TNE Money Commands
@@ -96,6 +115,20 @@ permissions:
          tne.money.give: true
          tne.money.take: true
          tne.money.pay: true
+         
+   tne.package.*:
+      description: Gives access to All TNE Credit Commands
+      children:
+         tne.credit: true
+         tne.credit.commands: true
+         tne.credit.inventory: true
+    
+   tne.package.*:
+      description: Gives access to all TNE Inventory Package Commands
+      children:
+         tne.package: true
+         tne.package.list: true
+         tne.package.buy: true
          
    tne.sign.*:
       description: Gives access to creating all sign types

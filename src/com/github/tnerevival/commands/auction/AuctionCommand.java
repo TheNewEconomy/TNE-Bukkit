@@ -64,9 +64,17 @@ public class AuctionCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "~~~~~Auction Commands~~~~~");
-		sender.sendMessage(ChatColor.GOLD + "/auction help - general auction help");
-		sender.sendMessage(ChatColor.GOLD + "/auction view <world>/global - View more information about the current auction for <world> or global.");
+		sender.sendMessage(ChatColor.GOLD + "~~~~~Lottery Commands~~~~~");
+		sender.sendMessage(ChatColor.GOLD + "/lottery help - View general lottery command help.");
+		if(sender.hasPermission("tne.admin") || sender.hasPermission("tne.lottery.admin")) {
+			sender.sendMessage(ChatColor.GOLD + "/lottery create <name> <cost> - Create a new lottery.");
+			sender.sendMessage(ChatColor.GOLD + "/lottery modify <cost/reward/info> <cost> - Create a new lottery.");
+			sender.sendMessage(ChatColor.GOLD + "/lottery delete <name> - View the rewards for <lottery>.");
+		}
+		sender.sendMessage(ChatColor.GOLD + "/lottery list <global/world> - View a list of lotteries for <world> or global.");
+		sender.sendMessage(ChatColor.GOLD + "/lottery reward <lottery> - View the rewards for <lottery>.");
+		sender.sendMessage(ChatColor.GOLD + "/lottery buy <lottery> <amount> - Buy X amount of entries for <lottery>.");
+		sender.sendMessage(ChatColor.GOLD + "/lottery collect - Collect your rewards for winning lotteries.");
 	}
 	
 }

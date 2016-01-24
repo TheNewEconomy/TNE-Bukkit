@@ -5,9 +5,10 @@ import java.util.UUID;
 
 import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.auction.Auction;
 import com.github.tnerevival.core.companies.Company;
+import com.github.tnerevival.core.inventory.View;
 import com.github.tnerevival.lottery.Lottery;
-import com.github.tnerevival.worker.InventoryTimeWorker;
 
 public class EconomyManager {
 	
@@ -30,9 +31,9 @@ public class EconomyManager {
 	 */
 	public HashMap<String, Lottery> lotteries = new HashMap<String, Lottery>();
 	
-	public HashMap<UUID, String[]> commandCredits = new HashMap<UUID, String[]>();
+	public HashMap<UUID, Auction> auctions = new HashMap<UUID, Auction>();
 	
-	public HashMap<UUID, InventoryTimeWorker> invWorkers = new HashMap<UUID, InventoryTimeWorker>();
+	public HashMap<UUID, View> viewers = new HashMap<UUID, View>();
 	
 	public HashMap<UUID, Access> accessing = new HashMap<UUID, Access>();
 	

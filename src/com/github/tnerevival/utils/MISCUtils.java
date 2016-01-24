@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,9 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
@@ -246,42 +247,6 @@ public class MISCUtils {
 		return null;
 	}
 	
-	//Credit Utils
-	public static boolean hasCommandCredit(UUID id, String command) {
-		if(TNE.instance.manager.commandCredits.containsKey(id)) {
-			for(String s : TNE.instance.manager.commandCredits.get(id)) {
-				if(s.equalsIgnoreCase(command)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public static void addCommandCredit(UUID id, String command) {
-		List<String> credits = new ArrayList<String>();
-		credits.add(command);
-		if(TNE.instance.manager.commandCredits.containsKey(id)) {
-			for(String s : TNE.instance.manager.commandCredits.get(id)) {
-				credits.add(s);
-			}
-		}
-		TNE.instance.manager.commandCredits.put(id, (String[])credits.toArray());
-	}
-	
-	public static void removeCommandCredit(UUID id, String command) {
-		List<String> credits = new ArrayList<String>();
-		if(TNE.instance.manager.commandCredits.containsKey(id)) {
-			for(String s : TNE.instance.manager.commandCredits.get(id)) {
-				if(!s.equalsIgnoreCase(command)) {
-					credits.add(s);
-				}
-			}
-		}
-		TNE.instance.manager.commandCredits.put(id, (String[])credits.toArray());
-	}
-	
-	
 	//Format Utils
 	public static Boolean shorten(String world) {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Shorten")) {
@@ -370,6 +335,42 @@ public class MISCUtils {
 			stack.setEnchantments(enchantments);
 		}
 		return stack;
+	}
+	
+
+	
+	public static ItemStack getFurnaceSource(ItemStack result) {
+		List<Recipe> recipes = TNE.instance.getServer().getRecipesFor(result);
+		for(Recipe r : recipes) {
+			if(r instanceof FurnaceRecipe) {
+				return ((FurnaceRecipe) r).getInput();
+			}
+		}
+		return new ItemStack(Material.AIR, 1);
+	}
+	
+	public static Boolean chargeClick(List<String> lore, String inv) {
+		if(lore != null) {
+			String search = "Enchanting Cost:";
+			switch(inv) {
+				case "smelt":
+					search = "Smelting Cost:";
+					break;
+				case "brew":
+					search = "Brewing Cost:";
+					break;
+				default:
+					search = "Enchanting Cost:";
+					break;
+			}
+			
+			for(String s : lore) {
+				if(s.contains(search)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	//World Utils

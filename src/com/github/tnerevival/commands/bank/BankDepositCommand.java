@@ -40,8 +40,8 @@ public class BankDepositCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(arguments.length == 1) {
-			if(BankUtils.hasBank(player.getUniqueId())) {
-				if(BankUtils.bankDeposit(player.getUniqueId(), Double.valueOf(arguments[0]))) {
+			if(BankUtils.hasBank(MISCUtils.getID(player))) {
+				if(BankUtils.bankDeposit(MISCUtils.getID(player), Double.valueOf(arguments[0]))) {
 					Message deposit = new Message("Messages.Bank.Deposit");
 					deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
 					player.sendMessage(deposit.translate());

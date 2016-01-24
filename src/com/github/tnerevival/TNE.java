@@ -29,10 +29,13 @@ import com.github.tnerevival.core.TNEVaultEconomy;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
+import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
+import com.github.tnerevival.listeners.InventoryListener;
 import com.github.tnerevival.listeners.WorldListener;
 import com.github.tnerevival.worker.InterestWorker;
+import com.github.tnerevival.worker.InventoryTimeWorker;
 import com.github.tnerevival.worker.SaveWorker;
 import com.github.tnerevival.worker.StatisticsWorker;
 
@@ -71,6 +74,7 @@ public class TNE extends JavaPlugin {
 	public SaveWorker saveWorker;
 	public InterestWorker interestWorker;
 	public StatisticsWorker statsWorker;
+	public InventoryTimeWorker invWorker;
 	
 	public static HashMap<String, UUID> uuidCache = new HashMap<String, UUID>();
 	
@@ -96,6 +100,7 @@ public class TNE extends JavaPlugin {
 		
 		saveWorker = new SaveWorker(this);
 		interestWorker = new InterestWorker(this);
+		invWorker = new InventoryTimeWorker(this);
 		if(configurations.getBoolean("Core.AutoSaver.Enabled")) {
 			saveWorker.runTaskTimer(this, configurations.getLong("Core.AutoSaver.Interval") * 20, configurations.getLong("Core.AutoSaver.Interval") * 20);
 		}
@@ -104,10 +109,15 @@ public class TNE extends JavaPlugin {
 			interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
 		}
 		
+		if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
+			invWorker.runTaskTimer(this, 20, 20);
+		}
+		
 
 		//Listeners
 		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
 		getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
+		getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 		
 		statsWorker = new StatisticsWorker(this);
@@ -167,7 +177,7 @@ public class TNE extends JavaPlugin {
 		mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
 		messageConfigurations = YamlConfiguration.loadConfiguration(messages);
 		objectConfigurations = YamlConfiguration.loadConfiguration(objects);
-		materialConfigurations = YamlConfiguration.loadConfiguration(objects);
+		materialConfigurations = YamlConfiguration.loadConfiguration(materials);
 		worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
 		try {
 			setConfigurationDefaults();

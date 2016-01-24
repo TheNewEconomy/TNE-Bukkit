@@ -44,12 +44,12 @@ public class MoneyPayCommand extends TNECommand {
 				player.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
-			if(getPlayer(sender, arguments[0]) != null && player.getUniqueId().equals(getPlayer(sender, arguments[0]).getUniqueId())) {
+			if(getPlayer(sender, arguments[0]) != null && MISCUtils.getID(player).equals(MISCUtils.getID(getPlayer(sender, arguments[0])))) {
 				player.sendMessage(new Message("Messages.Money.SelfPay").translate());
 				return false;
 			}
-			if(AccountUtils.hasFunds(player.getUniqueId(), AccountUtils.round(Double.valueOf(arguments[1])))) {
-				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(player.getUniqueId(), getPlayer(sender, arguments[0]).getUniqueId(), AccountUtils.round(Double.valueOf(arguments[1])))) {
+			if(AccountUtils.hasFunds(MISCUtils.getID(player), AccountUtils.round(Double.valueOf(arguments[1])))) {
+				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(MISCUtils.getID(player), MISCUtils.getID(getPlayer(sender, arguments[0])), AccountUtils.round(Double.valueOf(arguments[1])))) {
 					Message paid = new Message("Messages.Money.Paid");
 					paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
 					paid.addVariable("$player", arguments[0]);

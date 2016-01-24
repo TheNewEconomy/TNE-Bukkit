@@ -212,7 +212,7 @@ public class AccountUtils {
 			
 			if(!e.isCancelled()) {
 				String taker = (from == null) ? "Console" : MISCUtils.getPlayer(from).getDisplayName();
-				removeFunds(e.getTarget().getUniqueId(), e.getAmount());
+				removeFunds(MISCUtils.getID(e.getTarget()), e.getAmount());
 				Message taken = new Message("Messages.Money.Taken");
 				taken.addVariable("$from", taker);
 				taken.addVariable("$amount", MISCUtils.formatBalance(world, amount));

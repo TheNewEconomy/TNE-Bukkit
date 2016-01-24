@@ -41,6 +41,20 @@ Messages:
        Unable: <red>I'm sorry, but you're not allowed to use that command.
        None: <yellow>Command $command $arguments could not be found! Try using $command help.
        Charge: <white>You have been charged <gold>$amount<white> for using $command.
+       
+    Inventory:
+       Charge: <white>You have been charged <gold>$amount<white> for opening inventory of type "$type."
+       NoTime: <white>You have run out of time for using inventory of type "$type."
+       TimeRemoved: <white>You used $amount of time for inventory of type "$type."
+       
+    Credit:
+        Empty: <white>You currently have no inventory time credits for type "$type."
+       
+    Package:
+        Empty: <white>No packages to display for inventory of type "$type."
+        None: <white>Package "$name" does not exist for inventory of type "$type."
+        Bought: <white> Successfully purchased package "$name" for inventory of type "$type."
+        Unable: <red>I'm sorry, but you have no time credits for inventory of type "$type."
     
     General:
     
@@ -85,22 +99,22 @@ Messages:
        
     Objects:
        PotionWarning: <white>Once finished, you'll be charged <gold>$amount<white> for removing your potions from the brewing stand.
-       CraftingCharged: <white> You were charged $amount for crafting $stack_size "$item".
-       CraftingPaid: <white> You were given $amount for crafting $stack_size "$item".
-       SmeltingCharged: <white> You were charged $amount for smelting $stack_size "$item".
-       SmeltingPaid: <white> You were given $amount for smelting $stack_size "$item".
-       EnchantingCharged: <white> You were charged $amount for enchanting $stack_size "$item".
-       EnchantingPaid: <white> You were given $amount for enchanting $stack_size "$item".
-       BrewingCharged: <white> You were charged $amount for brewing $stack_size "$item".
-       BrewingPaid: <white> You were given $amount for brewing $stack_size "$item".
-       MiningCharged: <white> You were charged $amount for mining one "$name" block.
-       MiningPaid: <white> You were given $amount for mining one "$name" block.
-       PlacingCharged: <white> You were charged $amount for placing one "$name" block.
-       PlacingPaid: <white> You were given $amount for placing one "$name" block.
-       ItemUseCharged: <white> You were charged $amount for using item "$name".
-       ItemUsePaid: <white> You were given $amount for using item "$name".
-       PotionUseCharged: <white> You were charged $amount for using a "$name" potion.
-       PotionUsePaid: <white> You were given $amount for using a "$name" potion.
+       CraftingCharged: <white> You were charged <gold>$amount<white> for crafting $stack_size "$item".
+       CraftingPaid: <white> You were given <gold>$amount<white> for crafting $stack_size "$item".
+       SmeltingCharged: <white> You were charged <gold>$amount<white> for smelting $stack_size "$item".
+       SmeltingPaid: <white> You were given <gold>$amount<white> for smelting $stack_size "$item".
+       EnchantingCharged: <white> You were charged <gold>$amount<white> for enchanting $stack_size "$item".
+       EnchantingPaid: <white> You were given <gold>$amount<white> for enchanting $stack_size "$item".
+       BrewingCharged: <white> You were charged <gold>$amount<white> for brewing $stack_size "$item".
+       BrewingPaid: <white> You were given <gold>$amount<white> for brewing $stack_size "$item".
+       MiningCharged: <white> You were charged <gold>$amount<white> for mining one "$name" block.
+       MiningPaid: <white> You were given <gold>$amount<white> for mining one "$name" block.
+       PlacingCharged: <white> You were charged <gold>$amount<white> for placing one "$name" block.
+       PlacingPaid: <white> You were given <gold>$amount<white> for placing one "$name" block.
+       ItemUseCharged: <white> You were charged <gold>$amount<white> for using item "$name".
+       ItemUsePaid: <white> You were given <gold>$amount<white> for using item "$name".
+       PotionUseCharged: <white> You were charged <gold>$amount<white> for using a "$name" potion.
+       PotionUsePaid: <white> You were given <gold>$amount<white> for using a "$name" potion.
        
     Mob:
        

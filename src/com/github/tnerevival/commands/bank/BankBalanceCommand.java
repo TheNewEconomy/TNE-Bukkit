@@ -39,9 +39,9 @@ public class BankBalanceCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
-		if(BankUtils.hasBank(player.getUniqueId())) {
+		if(BankUtils.hasBank(MISCUtils.getID(player))) {
 			Message balance = new Message("Messages.Bank.Balance");
-			balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.getBankBalance(player.getUniqueId())));
+			balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.getBankBalance(MISCUtils.getID(player))));
 			player.sendMessage(balance.translate());
 			return true;
 		} else {

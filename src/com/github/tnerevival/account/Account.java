@@ -26,6 +26,10 @@ public class Account implements Serializable {
 	 */
 	private HashMap<String, Bank> banks = new HashMap<String, Bank>();
 	
+	private HashMap<String, HashMap<String, Long>> credits = new HashMap<String, HashMap<String, Long>>();
+	
+	private HashMap<String, Integer> commands = new HashMap<String, Integer>();
+	
 
 	private List<SerializableItemStack> overflow = new ArrayList<SerializableItemStack>();
 	
@@ -112,6 +116,59 @@ public class Account implements Serializable {
 		}
 	}
 	
+	/*
+	 * Inventory Time Credits
+	 */
+	public HashMap<String, Long> getTimes(String inventory) {
+		if(credits.get(inventory) != null) {
+			return credits.get(inventory);
+		}
+		return new HashMap<String, Long>();
+	}
+	
+	public void addTime(String world, String inventory, Long time) {
+		setTime(world, inventory, getTimeLeft(world, inventory) + time);
+	}
+	
+	public Long getTimeLeft(String world, String inventory) {
+		if(credits.get(inventory) != null) {
+			return (credits.get(inventory).get(world) != null)? credits.get(inventory).get(world) : 0;
+		}
+		return 0L;
+	}
+	
+	public void setTime(String world, String inventory, long time) {
+		HashMap<String, Long> inventoryCredits = (credits.get(inventory) != null) ? credits.get(inventory) : new HashMap<String, Long>();
+		inventoryCredits.put(world, time);
+		credits.put(inventory, inventoryCredits);
+	}
+	
+	/*
+	 * Command Credits
+	 */
+	public void addCredit(String command) {
+		if(commands.containsKey(command)) {
+			commands.put(command, commands.get(command) + 1);
+		}
+	}
+	
+	public void removeCredit(String command) {
+		if(commands.containsKey(command)) {
+			commands.put(command, commands.get(command) - 1);
+		}
+	}
+	
+	public Boolean hasCredit(String command) {
+		return (commands.containsKey(command) && commands.get(command) > 0);
+	}
+	
+	public HashMap<String, Integer> getCredits() {
+		return commands;
+	}
+	
+	/*
+	 * MISC Methods/Getters & Setters
+	 */
 	public String overflowToString() {
 		if(!overflow.isEmpty()) {
 			String toReturn = "";

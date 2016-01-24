@@ -1,7 +1,5 @@
 package com.github.tnerevival.commands.admin;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -10,7 +8,6 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.api.MojangAPI;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -40,18 +37,18 @@ public class AdminBalanceCommand extends TNECommand {
 		return true;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		if(arguments.length == 1 || arguments.length == 2) {
 			String world = (arguments.length == 2) ? arguments[1] : TNE.instance.defaultWorld;
-			UUID playerID = MojangAPI.getPlayerUUID(arguments[0]);
-			if(playerID != null && TNE.instance.manager.accounts.containsKey(playerID)) {
-				Account acc = AccountUtils.getAccount(playerID);
+			if(MISCUtils.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(MISCUtils.getID(arguments[0]))) {
+				Account acc = AccountUtils.getAccount(MISCUtils.getID(arguments[0]));
 				if(acc.getBalances().containsKey(world)) {
 					Message balance = new Message("Messages.Admin.Balance");
 					balance.addVariable("$player", arguments[0]);
 					balance.addVariable("$world", world);
-					balance.addVariable("$amount", MISCUtils.formatBalance(world, plugin.api.getBalance(Bukkit.getOfflinePlayer(playerID), world)));
+					balance.addVariable("$amount", MISCUtils.formatBalance(world, plugin.api.getBalance(Bukkit.getPlayer(arguments[0]), world)));
 					sender.sendMessage(balance.translate());
 					return true;
 				}

@@ -55,8 +55,7 @@ public class SerializableItemStack implements Serializable {
 	/**
 	 * @param enchantments the enchantments to set
 	 */
-	public void setEnchantments(
-			HashMap<SerializableEnchantment, Integer> enchantments) {
+	public void setEnchantments(HashMap<SerializableEnchantment, Integer> enchantments) {
 		this.enchantments = enchantments;
 	}
 
@@ -189,7 +188,9 @@ public class SerializableItemStack implements Serializable {
 	Map<Enchantment, Integer> getEnchantmentsFromSerializable() {
 		Map<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
 		for(SerializableEnchantment e : enchantments.keySet()) {
-			enchants.put(e.getEnchantment(), enchants.get(e.name));
+			if(e != null) {
+				enchants.put(e.getEnchantment(), enchantments.get(e.name));
+			}
 		}
 		return enchants;
 	}
@@ -197,7 +198,13 @@ public class SerializableItemStack implements Serializable {
 	public ItemStack toItemStack() {
 		if(!this.name.equalsIgnoreCase("TNENOSTRINGVALUE")) {
 			ItemStack stack = new ItemStack(Material.getMaterial(name), this.amount, this.damage);
-			stack.addUnsafeEnchantments(getEnchantmentsFromSerializable());
+			
+			for(SerializableEnchantment enchant : enchantments.keySet()) {
+				if(enchant != null) {
+					stack.addUnsafeEnchantment(enchant.getEnchantment(), enchantments.get(enchant));
+				}
+			}
+			
 			ItemMeta stackMeta = stack.getItemMeta();
 			if(!this.lore.isEmpty()) {
 				stackMeta.setLore(this.lore);

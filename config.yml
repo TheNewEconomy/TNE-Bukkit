@@ -39,12 +39,33 @@ Core:
 
         #The interval at which the auto saver will save data(in seconds)
         Interval: 600
+        
+    #Currently doesn't work
+    #All configurations relating to auctions.
+    Auction:
+        
+        #Whether or not multiple auctions can be run at once
+        Multiple: false
+        
+        #whether or not anti-snipe is enabled
+        AntiSnipe: true
+        
+        #The time in seconds the anti-snipe system should add on
+        SnipeTime: 20
+        
+        #Currently doesn't work
+        #Whether or not you can auction items via signs - currently unavailable
+        Sign: false
+        
+        #Currently doesn't work
+        #Whether or not you can auction items via commands
+        Command: true
 
     #All configurations relating to currency.
     Currency:
     
         #Whether or not to use the advanced currency system.
-        #The advanced currency system allows multiple tiered currencies that can be digital or item-based
+        #The advanced currency system allows multiple tiered currencies that can be digital or item-based - currently unavailable
         Advanced: false
 
         #Would you like to use an item as the currency?
@@ -92,6 +113,7 @@ Core:
         #The amount of time players have access to the other player's bank if Robbing is enabled(in seconds)
         RobbingInterval: 600
         
+    #Currently doesn't work
     #All configurations relating to companies
     Company:
         

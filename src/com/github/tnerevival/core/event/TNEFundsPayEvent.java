@@ -6,6 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class TNEFundsPayEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
@@ -72,7 +73,7 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns the balance of the player who is receiving the payment beforehand.
 	 */
 	public Double getReceiverPreviousBalance() {
-		return AccountUtils.getFunds(to.getUniqueId());
+		return AccountUtils.getFunds(MISCUtils.getID(to));
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns what the balance of the player who is receiving the payment will be afterwards.
 	 */
 	public Double getReceiverNewBalance() {
-		return (AccountUtils.getFunds(to.getUniqueId()) + getAmount());
+		return (AccountUtils.getFunds(MISCUtils.getID(to)) + getAmount());
 	}
 	
 	/**
@@ -88,7 +89,7 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns the balance of the player who is sending the payment beforehand.
 	 */
 	public Double getSenderPreviousBalance() {
-		return AccountUtils.getFunds(from.getUniqueId());
+		return AccountUtils.getFunds(MISCUtils.getID(from));
 	}
 	
 	/**
@@ -96,6 +97,6 @@ public class TNEFundsPayEvent extends Event implements Cancellable {
 	 * @return Returns what the balance of the player who is sending the payment will be afterwards.
 	 */
 	public Double getSenderNewBalance() {
-		return (AccountUtils.getFunds(from.getUniqueId()) + getAmount());
+		return (AccountUtils.getFunds(MISCUtils.getID(from)) + getAmount());
 	}
 }
