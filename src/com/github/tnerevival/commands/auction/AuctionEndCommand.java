@@ -39,7 +39,7 @@ public class AuctionEndCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/auction end - Ends the current auction");
+		sender.sendMessage(ChatColor.GOLD + "/auction end [lot] - Ends the current auction. Lot number is required when multiple auctions are allowed at once.");
 	}
 	
 }

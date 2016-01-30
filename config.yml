@@ -43,12 +43,20 @@ Core:
     #Currently doesn't work
     #All configurations relating to auctions.
     Auction:
+    
+        #Whether or not auctions should be muted by default.
+        # true - Players will have to type /auction listen <lot> to hear auction announcements
+        # false - Players will have to type /auction mute <lot> to not hear auction announcements
+        Muted: true
         
         #Whether or not multiple auctions can be run at once
         Multiple: false
         
         #whether or not anti-snipe is enabled
         AntiSnipe: true
+        
+        #The time in seconds 
+        SnipePeriod: 30
         
         #The time in seconds the anti-snipe system should add on
         SnipeTime: 20
@@ -60,6 +68,21 @@ Core:
         #Currently doesn't work
         #Whether or not you can auction items via commands
         Command: true
+        
+        #The max amount of items a player can have in the auction queue at one time
+        Queued: 5
+        
+        #Whether or not periodic announcements should be made about the current auction(s)
+        Announce: true
+        
+        #The interval for auction announcements if they're enabled
+        Interval: 15
+        
+        #Whether or not the final <CountdownTime> seconds should be announced.
+        Countdown: true
+        
+        #The time in seconds that should be classified as the final countdown period.
+        CountdownTime: 10
 
     #All configurations relating to currency.
     Currency:
@@ -112,25 +135,6 @@ Core:
         #Currently doesn't work
         #The amount of time players have access to the other player's bank if Robbing is enabled(in seconds)
         RobbingInterval: 600
-        
-    #Currently doesn't work
-    #All configurations relating to companies
-    Company:
-        
-        #Whether or not companies are enabled
-        Enabled: true
-        
-        #How much it costs to create a company
-        Cost: 20.0
-        
-        #How much a company initially has in their balance.
-        InitialBalance: 100.0
-        
-        #The interval(in seconds) a player receives their specified paycheck from their company.
-        PayRate: 2400
-        
-        #What a company's balance must reach to be official declared as bankrupt and automatically removed.
-        Failure: -2000.0
 
 
     #All configurations relating to banks.
@@ -147,6 +151,9 @@ Core:
         
         #Whether or not testificates named "Banker" allow access to player banks.
         NPC: false
+        
+        #Whether or not players can use bank balances to pay dues when personal balance is short.
+        Connected: false
 
         #How much is costs to open a bank account.
         Cost: 20.0

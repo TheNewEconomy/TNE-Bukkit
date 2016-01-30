@@ -19,6 +19,8 @@ commands:
       description: The base command for all inventory package-related commands.
    credit:
       description: The base command for all credit-related commands.
+   pin:
+      description: The base command for all pin-related commands.
    theneweconomy:
       description: The base command for all The New Economy core commands.
       aliases: tne
@@ -60,6 +62,9 @@ permissions:
          tne.package: true
          tne.package.list: true
          tne.package.buy: true
+         tne.pin: true
+         tne.pin.set: true
+         tne.pin.confirm: true
          tne.sign: true
          tne.sign.main: true
          tne.sign.bank: true
@@ -99,6 +104,13 @@ permissions:
          tne.bypass.inventory: true
          tne.bypass.nametag: true
          tne.bypass.world: true
+         
+   tne.credit.*:
+      description: Gives access to All TNE Credit Commands
+      children:
+         tne.credit: true
+         tne.credit.commands: true
+         tne.credit.inventory: true
    
    tne.lottery.*:
       description: Gives access to all TNE Lottery Commands
@@ -115,13 +127,6 @@ permissions:
          tne.money.give: true
          tne.money.take: true
          tne.money.pay: true
-         
-   tne.package.*:
-      description: Gives access to All TNE Credit Commands
-      children:
-         tne.credit: true
-         tne.credit.commands: true
-         tne.credit.inventory: true
     
    tne.package.*:
       description: Gives access to all TNE Inventory Package Commands
@@ -129,6 +134,13 @@ permissions:
          tne.package: true
          tne.package.list: true
          tne.package.buy: true
+    
+   tne.pin.*:
+      description: Gives access to all TNE Pin Commands
+      children:
+         tne.pin: true
+         tne.pin.set: true
+         tne.pin.confirm: true
          
    tne.sign.*:
       description: Gives access to creating all sign types

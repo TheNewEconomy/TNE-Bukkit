@@ -41,8 +41,16 @@ public class PackageBuyCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
+		Player player = (Player)sender;
+		
+		if(!AccountUtils.getAccount(MISCUtils.getID(player)).getStatus().getBalance()) {
+			Message locked = new Message("Messages.Account.Locked");
+			locked.addVariable("$player", player.getDisplayName());
+			sender.sendMessage(locked.translate());
+			return false;
+		}
+		
 		if(arguments.length == 2) {
-			Player player = (Player)sender;
 			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0]);
 			if(packages.size() > 0) {
 				for(TNEAccessPackage p : packages) {

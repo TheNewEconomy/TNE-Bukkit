@@ -103,7 +103,7 @@ public class Alpha2_2 extends Version {
 			info.addData("accountnumber", acc.getAccountNumber());
 			info.addData("uuid", acc.getUid());
 			info.addData("company", acc.getCompany());
-			info.addData("status", acc.getStatus());
+			info.addData("status", acc.getStatus().getName());
 			info.addData("overflow", acc.overflowToString());
 			account.addEntry(info);
 			//Balances
@@ -225,7 +225,7 @@ public class Alpha2_2 extends Version {
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getCompany(),
-								entry.getValue().getStatus(),
+								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString(),
 								entry.getKey().toString()
 							});
@@ -237,7 +237,7 @@ public class Alpha2_2 extends Version {
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getCompany(),
-								entry.getValue().getStatus(),
+								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString()
 							});
 				}
@@ -332,7 +332,7 @@ public class Alpha2_2 extends Version {
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getCompany(),
-								entry.getValue().getStatus(),
+								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString(),
 								entry.getKey().toString()
 							});
@@ -344,7 +344,7 @@ public class Alpha2_2 extends Version {
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getCompany(),
-								entry.getValue().getStatus(),
+								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString()
 							});
 				}

@@ -14,27 +14,9 @@ public class Bank implements Serializable {
 	
 	List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
 	UUID id;
-	@Deprecated
-	String owner;
 	String pin;
 	Integer size;
 	Double gold;
-	
-	@Deprecated
-	public Bank(String owner, Integer size) {
-		this.owner = owner;
-		this.pin = "none";
-		this.size = size;
-		this.gold = 0.0;
-	}
-	
-	@Deprecated
-	public Bank(String owner, Integer size, Double gold) {
-		this.owner = owner;
-		this.pin = "none";
-		this.size = size;
-		this.gold = gold;
-	}
 	
 	public Bank(UUID uid, Integer size) {
 		this.id = uid;
@@ -62,36 +44,6 @@ public class Bank implements Serializable {
 	 */
 	public void setItems(List<SerializableItemStack> items) {
 		this.items = items;
-	}
-
-	/**
-	 * @return the owner
-	 */
-	@Deprecated
-	public String getOwner() {
-		return owner;
-	}
-
-	/**
-	 * @param owner the owner to set
-	 */
-	@Deprecated
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * @return the pin
-	 */
-	public String getPin() {
-		return pin;
-	}
-
-	/**
-	 * @param pin the pin to set
-	 */
-	public void setPin(String pin) {
-		this.pin = pin;
 	}
 
 	/**
@@ -142,6 +94,6 @@ public class Bank implements Serializable {
 	}
 	
 	public String toString() {
-		return owner + ":" + pin + ":" + size + ":" + gold + ":" + itemsToString();
+		return id.toString() + ":" + pin + ":" + size + ":" + gold + ":" + itemsToString();
 	}
 }

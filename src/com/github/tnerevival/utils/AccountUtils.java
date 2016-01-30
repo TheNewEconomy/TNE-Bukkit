@@ -59,6 +59,9 @@ public class AccountUtils {
 
 	private static Double getBalance(UUID id, String world) {
 		Account account = getAccount(id);
+		
+		if(!account.getStatus().getBalance()) return 0.0;
+		
 		if(MISCUtils.multiWorld()) {
 			world = MISCUtils.getWorld(id);
 			if(MISCUtils.worldConfigExists("Worlds." + world + ".Currency.ItemCurrency")) {
@@ -74,6 +77,7 @@ public class AccountUtils {
 			if(!account.getBalances().containsKey(world)) {
 				initializeWorldData(id, world);
 			}
+			
 			return round(account.getBalance(MISCUtils.getWorld(id)));
 		}
 		if(TNE.configurations.getBoolean("Core.Currency.ItemCurrency")) {
@@ -94,6 +98,9 @@ public class AccountUtils {
 	private static void setBalance(UUID id, String world, Double balance) {
 		balance = round(balance);
 		Account account = getAccount(id);
+		
+		if(!account.getStatus().getBalance()) return;
+		
 		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
 		String[] split = balanceString.split("\\.");
 		if(MISCUtils.multiWorld()) {

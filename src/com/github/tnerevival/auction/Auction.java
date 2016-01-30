@@ -1,14 +1,17 @@
 package com.github.tnerevival.auction;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
-public class Auction {
+public class Auction implements Serializable {
 	
-	private UUID id;
+	private static final long serialVersionUID = 1L;
+	
 	private UUID owner;
+	private int lotNumber;
 	private SerializableItemStack item;
 	private String world;
 	private Boolean global;
@@ -16,20 +19,13 @@ public class Auction {
 	private Long length;
 	private Double increment;
 	private Double startingPrice;
+	private Bid highestBid;
 	
 	public Auction() {
-		id = UUID.randomUUID();
+		lotNumber = TNE.instance.auctions.getFreeID();
 		this.world = TNE.instance.defaultWorld;
 		this.global = true;
-		this.start = System.nanoTime();
-	}
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
+		this.start = 0L;
 	}
 
 	public UUID getOwner() {
@@ -38,6 +34,14 @@ public class Auction {
 
 	public void setOwner(UUID owner) {
 		this.owner = owner;
+	}
+
+	public int getLotNumber() {
+		return lotNumber;
+	}
+
+	public void setLotNumber(int lotNumber) {
+		this.lotNumber = lotNumber;
 	}
 
 	public SerializableItemStack getItem() {
@@ -94,5 +98,13 @@ public class Auction {
 
 	public void setStartingPrice(Double startingPrice) {
 		this.startingPrice = startingPrice;
+	}
+
+	public Bid getHighestBid() {
+		return highestBid;
+	}
+
+	public void setHighestBid(Bid highestBid) {
+		this.highestBid = highestBid;
 	}
 }

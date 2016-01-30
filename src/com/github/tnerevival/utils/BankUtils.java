@@ -73,9 +73,14 @@ public class BankUtils {
 	
 	public static Bank fromString(String bankString) {
 		String[] variables = bankString.split("\\:");
-		@SuppressWarnings("deprecation")
-		Bank bank = new Bank(variables[0], Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
-		bank.setPin(variables[1]);
+		Bank bank;
+		try {
+			UUID id = UUID.fromString(variables[0]);
+			bank = new Bank(id, Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
+		} catch(IllegalArgumentException e) {
+			bank = new Bank(MISCUtils.getID(variables[0]), Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
+		}
+		
 		List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();
 		
 		if(!variables[4].equalsIgnoreCase("TNENOSTRINGVALUE")) {

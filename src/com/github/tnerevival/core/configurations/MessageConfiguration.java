@@ -23,6 +23,12 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Admin.NoBalance", "<red>$player has no balance data for the world \"$world\"!");
 		configurations.put("Messages.Admin.NoBank", "<red>$player has no bank data for the world \"$world\"!");
 		configurations.put("Messages.Admin.Balance", "<white>$player currently has <gold>$amount <white>for world \"$world\"!");
+		configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
+		configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
+		configurations.put("Messages.Account.Confirm", "<yellow>You must use /pin confirm before accessing your money and/or bank.");
+		configurations.put("Messages.Pin.Set", "<white>Your pin has been set successfully.");
+		configurations.put("Messages.Pin.Confirmed", "<white>Your pin has been confirmed successfully.");
+		configurations.put("Messages.Pin.Already", "<white>Your pin has already been confirmed.");
 		configurations.put("Messages.Money.Given", "<white>You were given <gold>$amount<white>.");
 		configurations.put("Messages.Money.Received", "<white>You were paid <gold>$amount <white> by <white> $from.");
 		configurations.put("Messages.Money.Taken", "<white>$from took <gold>$amount<white> from you.");
@@ -33,6 +39,11 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Money.Took", "<white>Successfully took <gold>$amount<white> from $player.");
 		configurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");
 		configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
+		configurations.put("Messages.Auction.None", "<white>Auction for lot $lot has ended with no bids.");
+		configurations.put("Messages.Auction.Start", "<white>Auction for lot $lot has started! $command_string");
+		configurations.put("Messages.Auction.Announce", "<white>Auction for lot #lot ends in $time.");
+		configurations.put("Messages.Auction.Winner", "<white>$player has won the auction for lot $lot for <gold>$amount<white>.");
+		configurations.put("Messages.Auction.Win", "<white>Congratulations! You won the auction for lot $lot for <gold>$amount<white>.");
 		configurations.put("Messages.Bank.Already", "<red>You already own a bank!");
 		configurations.put("Messages.Bank.Bought", "<white>Congratulations! You have successfully purchased a bank!");
 		configurations.put("Messages.Bank.Insufficient", "<red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.");

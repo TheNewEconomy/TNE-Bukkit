@@ -5,9 +5,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 public class BankCommand extends TNECommand {
 
@@ -46,6 +49,27 @@ public class BankCommand extends TNECommand {
 		Player player = getPlayer(sender);
 		if(!BankUtils.enabled(player.getWorld().getName())) {
 			player.sendMessage(new Message("Messages.Bank.Disabled").translate());
+			return false;
+		}
+		
+		Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
+		
+		if(!acc.getStatus().getBank()) {
+			Message locked = new Message("Messages.Account.Locked");
+			locked.addVariable("$player", player.getDisplayName());
+			sender.sendMessage(locked.translate());
+			return false;
+		}
+		
+		if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+			Message set = new Message("Messages.Account.Set");
+			sender.sendMessage(set.translate());
+			return false;
+		}
+		
+		if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
+			Message confirm = new Message("Messages.Account.Confirm");
+			sender.sendMessage(confirm.translate());
 			return false;
 		}
 		

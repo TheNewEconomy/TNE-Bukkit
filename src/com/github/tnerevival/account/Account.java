@@ -41,12 +41,6 @@ public class Account implements Serializable {
 	 */
 	private int accountNumber = 0;
 	
-	/**
-	 * The name of the player who this account belongs to.
-	 */
-	@Deprecated
-	private String owner;
-	
 	private UUID uid;
 	
 	/**
@@ -62,21 +56,11 @@ public class Account implements Serializable {
 	/**
 	 * The status of this account in String form.
 	 */
-	private String status;
+	//TODO: Make use of account statuses
+	private AccountStatus status;
 	
-	/**
-	 * Creates a new Account for the specified Player using their username.
-	 * @param username
-	 */
-	@Deprecated
-	public Account(String username) {
-		this.joined = new String(TNE.instance.dateFormat.format(new Date()));
-		this.accountNumber = TNE.instance.manager.accounts.size() + 1;
-		this.owner = username;
-		this.company = "TNENOSTRINGVALUE";
-		this.status = "normal";
-		setBalance(TNE.instance.defaultWorld, 0.0);
-	}
+	//TODO: Make use of the pin
+	private String pin;
 	
 	public Account(UUID uid) {
 		this(uid, TNE.instance.manager.accounts.size() + 1);
@@ -87,7 +71,8 @@ public class Account implements Serializable {
 		this.joined = new String(TNE.instance.dateFormat.format(new Date()));
 		this.accountNumber = accountNumber;
 		this.company = "TNENOSTRINGVALUE";
-		this.status = "normal";
+		this.status = AccountStatus.NORMAL;
+		this.pin = "TNENOSTRINGVALUE";
 		setBalance(TNE.instance.defaultWorld, 0.0);
 	}
 	
@@ -200,20 +185,6 @@ public class Account implements Serializable {
 		this.accountNumber = accountNumber;
 	}
 
-	/**
-	 * @return the owner
-	 */
-	public String getOwner() {
-		return owner;
-	}
-
-	/**
-	 * @param owner the owner to set
-	 */
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
 	public UUID getUid() {
 		return uid;
 	}
@@ -260,7 +231,7 @@ public class Account implements Serializable {
 	/**
 	 * @return the status
 	 */
-	public String getStatus() {
+	public AccountStatus getStatus() {
 		return status;
 	}
 
@@ -268,7 +239,15 @@ public class Account implements Serializable {
 	 * @param status the status to set
 	 */
 	public void setStatus(String status) {
-		this.status = status;
+		this.status = AccountStatus.fromName(status);
+	}
+
+	public String getPin() {
+		return pin;
+	}
+
+	public void setPin(String pin) {
+		this.pin = pin;
 	}
 
 	public HashMap<String, Double> getBalances() {
