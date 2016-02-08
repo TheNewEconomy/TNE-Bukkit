@@ -1,4 +1,4 @@
-The New Economy
+[logo](http://i.imgur.com/vxjnYvn.png "The New Economy")
 =============
 **If you're looking for a lightweight economy plugin download [The New Economy Lite](http://dev.bukkit.org/bukkit-plugins/tnelite/).**  
 
