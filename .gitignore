@@ -1,4 +1,2 @@
 *.class
-*.project
-*.classpath
 bin/
