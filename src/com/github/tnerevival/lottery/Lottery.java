@@ -1,12 +1,15 @@
 package com.github.tnerevival.lottery;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.UUID;
 
 import com.github.tnerevival.TNE;
 
-public class Lottery {
+public class Lottery  implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private HashMap<UUID, Integer> entries = new HashMap<UUID, Integer>();
 	
 	private String name;

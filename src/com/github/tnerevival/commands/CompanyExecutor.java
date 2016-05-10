@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
-import com.github.tnerevival.core.companies.Company;
+import com.github.tnerevival.companies.Company;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.CompanyUtils;
 import com.github.tnerevival.utils.MISCUtils;

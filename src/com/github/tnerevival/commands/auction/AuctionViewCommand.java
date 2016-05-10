@@ -39,7 +39,7 @@ public class AuctionViewCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/auction view [world/global] [world name] - View more information about the current auction for [world name] or global.");
+		sender.sendMessage(ChatColor.GOLD + "/auction view [lot] - Views the current auction or auction with lot [lot].");
 	}
 	
 }

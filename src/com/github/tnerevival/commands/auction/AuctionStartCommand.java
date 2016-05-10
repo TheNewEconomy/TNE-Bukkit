@@ -14,7 +14,7 @@ public class AuctionStartCommand extends TNECommand {
 
 	@Override
 	public String getName() {
-		return "add";
+		return "start";
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class AuctionStartCommand extends TNECommand {
 
 	@Override
 	public String getNode() {
-		return "tne.auction.add";
+		return "tne.auction.start";
 	}
 
 	@Override
@@ -34,12 +34,21 @@ public class AuctionStartCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		return true;
+		
+		if(arguments.length >= 1) {
+			double starting = Integer.parseInt(arguments[0]);
+			double amount = 1;
+			double increment = 5;
+			long length = 60000;
+			boolean global = true;
+		}
+		help(sender);
+		return false;
 	}
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/auction add [amount] - Adds [amount] of the current itemstack in your hand to the auction queue.");
+		sender.sendMessage(ChatColor.GOLD + "/auction start <starting_bid> [amount] [bid_increment] [length(seconds)] [delay(seconds)] [world/global] - Starts an auction for the item in your hand for <starting_bid>.");
 	}
 	
 }

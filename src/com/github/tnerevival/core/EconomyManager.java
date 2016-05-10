@@ -8,9 +8,11 @@ import java.util.UUID;
 
 import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Account;
-import com.github.tnerevival.core.companies.Company;
+import com.github.tnerevival.companies.Company;
 import com.github.tnerevival.core.inventory.View;
+import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.lottery.Lottery;
+import com.github.tnerevival.serializable.SerializableLocation;
 
 public class EconomyManager {
 	
@@ -42,11 +44,7 @@ public class EconomyManager {
 	 */
 	public Map<String, UUID> ecoIDs = new HashMap<String, UUID>();
 	
-	public List<UUID> confirmed = new ArrayList<UUID>();
+	public Map<SerializableLocation, TNESign> signs = new HashMap<SerializableLocation, TNESign>();
 	
-	//public CurrencyManager currencyManager;
-
-	public EconomyManager() {
-		//currencyManager = new CurrencyManager();
-	}
+	public List<UUID> confirmed = new ArrayList<UUID>();
 }

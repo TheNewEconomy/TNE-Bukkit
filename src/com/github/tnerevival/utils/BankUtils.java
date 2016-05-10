@@ -49,22 +49,28 @@ public class BankUtils {
 		return TNE.configurations.getDouble("Core.Bank.Interest.Rate");
 	}
 	
+	public static Boolean hasBank(UUID id, String world) {
+		return AccountUtils.getAccount(id).getBanks().containsKey(world);
+	}
+	
 	public static Boolean hasBank(UUID id) {
+		String world = TNE.instance.defaultWorld;
 		if(MISCUtils.multiWorld()) {
-			return AccountUtils.getAccount(id).getBanks().containsKey(MISCUtils.getWorld(id));
+			world = MISCUtils.getWorld(id);
 		}
-		String defaultWorld = TNE.instance.defaultWorld;
-		if(defaultWorld == null) {
+		if(world == null) {
 			TNE.instance.getLogger().warning("***WORLD NAME IS NULL***");
+			return false;
 		}
-		return AccountUtils.getAccount(id).getBanks().containsKey(defaultWorld);
+		return hasBank(id, world);
 	}
 	
 	public static Bank getBank(UUID id) {
+		String world = TNE.instance.defaultWorld;
 		if(MISCUtils.multiWorld()) {
-			return AccountUtils.getAccount(id).getBank(MISCUtils.getWorld(id));			
+			world = MISCUtils.getWorld(id);	
 		}
-		return AccountUtils.getAccount(id).getBank(TNE.instance.defaultWorld);
+		return getBank(id, world);
 	}
 	
 	public static Bank getBank(UUID id, String world) {
@@ -93,39 +99,81 @@ public class BankUtils {
 		return bank;
 	}
 	
-	public static Inventory getBankInventory(UUID id) {
-		if(!hasBank(id)) {
+	public static Inventory getBankInventory(UUID id, String world) {
+		
+		if(!hasBank(id, world)) {
 			return null;
-		} else {
-			Bank bank = getBank(id);
-			String gold = "Gold: " + MISCUtils.getShort(bank.getGold());
-			Inventory bankInventory = Bukkit.createInventory(null, size(MISCUtils.getWorld(id)), ChatColor.WHITE + "Bank " + ChatColor.GOLD + gold);
-			if(bank.getItems().size() > 0) {
-				List<SerializableItemStack> items = bank.getItems();
-				
-				for(SerializableItemStack stack : items) {
-					bankInventory.setItem(stack.getSlot(), stack.toItemStack());
-				}
-			}
-			return bankInventory;
 		}
+		
+		if(!AccountUtils.getAccount(id).getStatus().getBank()) {
+			return null;
+		}
+		
+		Bank bank = getBank(id, world);
+		String gold = "Gold: " + MISCUtils.getShort(bank.getGold());
+		Inventory bankInventory = Bukkit.createInventory(null, size(world), ChatColor.WHITE + "Bank " + ChatColor.GOLD + gold);
+		if(bank.getItems().size() > 0) {
+			List<SerializableItemStack> items = bank.getItems();
+			
+			for(SerializableItemStack stack : items) {
+				bankInventory.setItem(stack.getSlot(), stack.toItemStack());
+			}
+		}
+		return bankInventory;
 	}
 	
-	public static Double getBankBalance(UUID id) {
-		if(!hasBank(id)) {
+	public static Inventory getBankInventory(UUID id) {
+		String world = TNE.instance.defaultWorld;
+		if(MISCUtils.multiWorld()) {
+			world = MISCUtils.getWorld(id);	
+		}
+		return getBankInventory(id, world);
+	}
+	
+	public static Double getBankBalance(UUID id, String world) {
+		if(!hasBank(id, world)) {
 			return null;
 		} else {
-			Bank bank = getBank(id);
+			if(!AccountUtils.getAccount(id).getStatus().getBank()) {
+				return 0.0;
+			}
+			Bank bank = getBank(id, world);
 			return AccountUtils.round(bank.getGold());
 		}
 	}
 	
-	public static Boolean bankHasFunds(UUID id, Double amount) {
+	public static Double getBankBalance(UUID id) {
+		return getBankBalance(id, TNE.instance.defaultWorld);
+	}
+	
+	public static void setBankBalance(UUID id, String world, Double amount) {
+		if(!AccountUtils.getAccount(id).getStatus().getBank()) {
+			return;
+		}
+		if(hasBank(id, world)) {
+			Bank bank = getBank(id, world);
+			bank.setGold(AccountUtils.round(amount));
+			return;
+		}
+	}
+	
+	public static void setBankBalance(UUID id, Double amount) {
+		setBankBalance(id, TNE.instance.defaultWorld, amount);
+	}
+	
+	public static Boolean bankHasFunds(UUID id, String world, Double amount) {
 		amount = AccountUtils.round(amount);
-		return (getBankBalance(id) != null) ? getBankBalance(id) >= amount : false;
+		return (getBankBalance(id, world) != null) ? getBankBalance(id, world) >= amount : false;
+	}
+	
+	public static Boolean bankHasFunds(UUID id, Double amount) {
+		return bankHasFunds(id,TNE.instance.defaultWorld, amount);
 	}
 	
 	public static Boolean bankDeposit(UUID id, Double amount) {
+		if(!AccountUtils.getAccount(id).getStatus().getBank()) {
+			return false;
+		}
 		amount = AccountUtils.round(amount);
 		if(AccountUtils.hasFunds(id, amount)) {
 			Bank bank = getBank(id);
@@ -138,6 +186,9 @@ public class BankUtils {
 	}
 	
 	public static Boolean bankWithdraw(UUID id, Double amount) {
+		if(!AccountUtils.getAccount(id).getStatus().getBank()) {
+			return false;
+		}
 		amount = AccountUtils.round(amount);
 		if(bankHasFunds(id, amount)) {
 			Bank bank = getBank(id);

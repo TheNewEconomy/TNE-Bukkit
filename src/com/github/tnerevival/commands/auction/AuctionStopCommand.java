@@ -6,15 +6,15 @@ import org.bukkit.command.CommandSender;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 
-public class AuctionBidCommand extends TNECommand {
+public class AuctionStopCommand extends TNECommand {
 	
-	public AuctionBidCommand(TNE plugin) {
+	public AuctionStopCommand(TNE plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public String getName() {
-		return "bid";
+		return "stop";
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class AuctionBidCommand extends TNECommand {
 
 	@Override
 	public String getNode() {
-		return "tne.auction.bid";
+		return "tne.auction.stop";
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class AuctionBidCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/auction bid [lot] <amount> - Places a bid of <amount> for the current auction or auction with lot [lot].");
+		sender.sendMessage(ChatColor.GOLD + "/auction stop [lot] - Stops the current auction or auction for [lot] without transferring ownership of the item.");
 	}
 	
 }

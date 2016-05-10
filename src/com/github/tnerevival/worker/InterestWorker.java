@@ -29,7 +29,9 @@ public class InterestWorker extends BukkitRunnable {
 		while(it.hasNext()) {
 			Entry<UUID, Account> entry = it.next();
 			
-			BankUtils.applyInterest(entry.getValue().getUid());
+			if(entry.getValue().getStatus().getBank()) {
+				BankUtils.applyInterest(entry.getValue().getUid());
+			}
 		}
 	}
 }

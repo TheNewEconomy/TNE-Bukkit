@@ -92,16 +92,17 @@ public class AuctionCommand extends TNECommand {
 	@Override
 	public void help(CommandSender sender) {
 		sender.sendMessage(ChatColor.GOLD + "~~~~~Lottery Commands~~~~~");
-		sender.sendMessage(ChatColor.GOLD + "/lottery help - View general lottery command help.");
-		if(sender.hasPermission("tne.admin") || sender.hasPermission("tne.lottery.admin")) {
-			sender.sendMessage(ChatColor.GOLD + "/lottery create <name> <cost> - Create a new lottery.");
-			sender.sendMessage(ChatColor.GOLD + "/lottery modify <cost/reward/info> <cost> - Create a new lottery.");
-			sender.sendMessage(ChatColor.GOLD + "/lottery delete <name> - View the rewards for <lottery>.");
+		sender.sendMessage(ChatColor.GOLD + "/auction help - View general auction command help.");
+		if(sender.hasPermission("tne.admin") || sender.hasPermission("tne.auction.admin")) {
+			sender.sendMessage(ChatColor.GOLD + "/auction lock [lot] - Locks the current auction or auction with [lot] number.");
+			sender.sendMessage(ChatColor.GOLD + "/auction stop [lot] - Stops the current auction or auction for [lot] without transferring ownership of the item.");
 		}
-		sender.sendMessage(ChatColor.GOLD + "/lottery list <global/world> - View a list of lotteries for <world> or global.");
-		sender.sendMessage(ChatColor.GOLD + "/lottery reward <lottery> - View the rewards for <lottery>.");
-		sender.sendMessage(ChatColor.GOLD + "/lottery buy <lottery> <amount> - Buy X amount of entries for <lottery>.");
-		sender.sendMessage(ChatColor.GOLD + "/lottery collect - Collect your rewards for winning lotteries.");
+		sender.sendMessage(ChatColor.GOLD + "/auction bid [lot] <amount> - Places a bid of <amount> for the current auction or auction with lot [lot].");
+		sender.sendMessage(ChatColor.GOLD + "/auction cancel [lot] - Cancels your current auction or auction with lot [lot].");
+		sender.sendMessage(ChatColor.GOLD + "/auction end [lot] - Ends your current auction or auction with lot [lot], and transfers ownership of the item.");
+		sender.sendMessage(ChatColor.GOLD + "/auction list - Lists all auctions, current and upcoming.");
+		sender.sendMessage(ChatColor.GOLD + "/auction mute [lot] - Mutes the auction with the specified lot number or all if no lot is specified.");
+		sender.sendMessage(ChatColor.GOLD + "/auction start <starting_bid> [amount] [bid_increment] [length(seconds)] [delay(seconds)] [world/global] - Starts an auction for the item in your hand for <starting_bid>.");
+		sender.sendMessage(ChatColor.GOLD + "/auction view [lot] - Views the current auction or auction with lot [lot].");
 	}
-	
 }

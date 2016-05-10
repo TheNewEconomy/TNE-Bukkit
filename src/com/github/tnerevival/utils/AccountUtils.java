@@ -10,12 +10,12 @@ import org.bukkit.Material;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.event.TNECreateAccountEvent;
-import com.github.tnerevival.core.event.TNEFundsAddEvent;
-import com.github.tnerevival.core.event.TNEFundsGiveEvent;
-import com.github.tnerevival.core.event.TNEFundsPayEvent;
-import com.github.tnerevival.core.event.TNEFundsRemoveEvent;
-import com.github.tnerevival.core.event.TNEFundsTakeEvent;
+import com.github.tnerevival.core.eventold.TNECreateAccountEvent;
+import com.github.tnerevival.core.eventold.TNEFundsAddEvent;
+import com.github.tnerevival.core.eventold.TNEFundsGiveEvent;
+import com.github.tnerevival.core.eventold.TNEFundsPayEvent;
+import com.github.tnerevival.core.eventold.TNEFundsRemoveEvent;
+import com.github.tnerevival.core.eventold.TNEFundsTakeEvent;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
 public class AccountUtils {
@@ -140,6 +140,10 @@ public class AccountUtils {
 	
 	public static Boolean hasFunds(UUID id, String world, double amount) {
 		amount = round(amount);
+		if(getBalance(id, world) < amount && MISCUtils.useBankBalance(world) && BankUtils.enabled(world) && BankUtils.hasBank(id, world)) {
+			double check = amount - getBalance(id, world);
+			return BankUtils.bankHasFunds(id, world, check);
+		}
 		return getBalance(id, world) >= amount;
 	}
 
@@ -162,6 +166,7 @@ public class AccountUtils {
 	}
 	
 	public static void removeFunds(UUID id, String world, double amount) {
+		//TODO: remove from bank balance too if needed
 		amount = round(amount);
 		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(id, amount);
 		Bukkit.getServer().getPluginManager().callEvent(e);

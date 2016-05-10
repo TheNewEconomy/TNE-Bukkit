@@ -15,6 +15,7 @@ public class Auction implements Serializable {
 	private SerializableItemStack item;
 	private String world;
 	private Boolean global;
+	private Long delay;
 	private Long start;
 	private Long length;
 	private Double increment;
@@ -26,6 +27,7 @@ public class Auction implements Serializable {
 		this.world = TNE.instance.defaultWorld;
 		this.global = true;
 		this.start = 0L;
+		this.delay = 0L;
 	}
 
 	public UUID getOwner() {
@@ -66,6 +68,14 @@ public class Auction implements Serializable {
 
 	public void setGlobal(Boolean global) {
 		this.global = global;
+	}
+
+	public Long getDelay() {
+		return delay;
+	}
+
+	public void setDelay(Long delay) {
+		this.delay = delay;
 	}
 
 	public Long getStart() {

@@ -41,7 +41,7 @@ public class MISCUtils {
 				if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
 					return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
 				}
-				return MISCUtils.getPlayer(id).getWorld().getName();
+				return actualWorld;
 			}
 		}
 		return TNE.instance.defaultWorld;
@@ -373,9 +373,23 @@ public class MISCUtils {
 		return false;
 	}
 	
+	public static Boolean useBankBalance(String world) {
+		if(multiWorld()) {
+			if(worldConfigExists("Bank.Connect", world)) {
+				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Connected");
+			}
+			return false;
+		}
+		return TNE.configurations.getBoolean("Core.Bank.Connected");
+	}
+	
 	//World Utils
 	public static Boolean multiWorld() {
 		return TNE.configurations.getBoolean("Core.Multiworld");
+	}
+	
+	public static Boolean worldConfigExists(String node, String world) {
+		return (TNE.instance.worldConfigurations.get("Worlds." + world + "." + node) != null);
 	}
 	
 	public static Boolean worldConfigExists(String node) {

@@ -1,7 +1,7 @@
 package com.github.tnerevival.core;
 
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
@@ -12,11 +12,11 @@ import com.github.tnerevival.utils.MISCUtils;
 
 public class AuctionManager {
 
-	public NavigableMap<Integer, Auction> auctions = new TreeMap<Integer, Auction>();
+	public Map<Integer, Auction> auctions = new HashMap<Integer, Auction>();
 	
 	public void work() {
 		for(Integer lot : auctions.keySet()) {
-			Auction a = auctions.get(lot);
+			Auction a = get(lot);
 			if(a.getStart() > 0L) {
 				int seconds = (int)TimeUnit.SECONDS.convert(System.nanoTime() - a.getStart(), TimeUnit.NANOSECONDS);
 				
@@ -56,8 +56,19 @@ public class AuctionManager {
 		return free;
 	}
 	
+	public boolean exists(Integer lot) {
+		return auctions.containsKey(lot);
+	}
+	
+	public Auction get(Integer lot) {
+		if(exists(lot)) {
+			return auctions.get(lot);
+		}
+		return null;
+	}
+	
 	public void start(Integer lot) {
-		Auction auction = auctions.get(lot);
+		Auction auction = get(lot);
 		
 
 		Message message = new Message("Messages.Auction.Win");
@@ -67,7 +78,7 @@ public class AuctionManager {
 	}
 	
 	public void end(Integer lot) {
-		Auction auction = auctions.get(lot);
+		Auction auction = get(lot);
 		
 		Message message = new Message("Messages.Auction.Win");
 		message.addVariable("$amount", MISCUtils.formatBalance(auction.getWorld(), auction.getHighestBid().getAmount()));
