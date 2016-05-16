@@ -8,8 +8,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Guardian;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager;
@@ -488,6 +490,11 @@ public class InteractionListener implements Listener {
 						mob = "Giant";
 						break;
 					case GUARDIAN:
+						Guardian guard = (Guardian)entity;
+						if(guard.isElder()) {
+							mob = "GuardianElder";
+							break;
+						}
 						mob = "Guardian";
 						break;
 					case HORSE:
@@ -512,10 +519,17 @@ public class InteractionListener implements Listener {
 						mob = "ZombiePigman";
 						break;
 					case RABBIT:
+						Rabbit rab = (Rabbit)entity;
+						if(rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
+							mob = "RabbitKiller";
+						}
 						mob = "Rabbit";
 						break;
 					case SHEEP:
 						mob = "Sheep";
+						break;
+					case SHULKER:
+						mob = "Shulker";
 						break;
 					case SILVERFISH:
 						mob = "Silverfish";

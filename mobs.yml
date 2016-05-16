@@ -65,6 +65,10 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    GuardianElder:
+        Enabled: true
+        Reward: 10.00
+
     Horse:
         Enabled: true
         Reward: 10.00
@@ -92,8 +96,16 @@ Mobs:
     Rabbit:
         Enabled: true
         Reward: 10.00
+        
+    RabbitKiller:
+        Enabled: true
+        Reward: 10.00
 
     Sheep:
+        Enabled: true
+        Reward: 10.00
+
+    Shulker:
         Enabled: true
         Reward: 10.00
 
