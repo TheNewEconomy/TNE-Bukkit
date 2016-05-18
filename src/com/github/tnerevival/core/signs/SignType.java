@@ -2,16 +2,21 @@ package com.github.tnerevival.core.signs;
 
 public enum SignType {
 	
-	UNKNOWN("", "", ""),
-	AUCTION("[auction]", "tne.place.auction", "tne.use.auction"),
-	BANK("[bank]", "tne.place.bank", "tne.use.bank"),
-	LOTTERY("[lottery]", "tne.place.lottery", "tne.use.lottery");
+	UNKNOWN("unknown", "", "", ""),
+	AUCTION("auction", "[auction]", "tne.place.auction", "tne.use.auction"),
+	BANK("bank", "[bank]", "tne.place.bank", "tne.use.bank"),
+	BUY("buy", "[buy]", "tne.place.buy", "tne.use.buy"),
+	LOTTERY("lottery", "[lottery]", "tne.place.lottery", "tne.use.lottery"),
+	SELL("sell", "[sell]", "tne.place.sell", "tne.use.sell"),
+	SHOP("shop", "[shop]", "tne.place.shop", "tne.use.shop");
 	
+	private String name;
 	private String identifier;
 	private String placePermission;
 	private String usePermission;
 	
-	SignType(String identifier, String placePermission, String usePermission) {
+	SignType(String name, String identifier, String placePermission, String usePermission) {
+		this.name = name;
 		this.identifier = identifier;
 		this.placePermission = placePermission;
 		this.usePermission = usePermission;
@@ -24,6 +29,23 @@ public enum SignType {
 			}
 		}
 		return UNKNOWN;
+	}
+	
+	public static SignType fromName(String name) {
+		for(SignType type : values()) {
+			if(type.getName().equalsIgnoreCase(name)) {
+				return type;
+			}
+		}
+		return UNKNOWN;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getIdentifier() {

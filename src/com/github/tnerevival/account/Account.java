@@ -44,11 +44,6 @@ public class Account implements Serializable {
 	private UUID uid;
 	
 	/**
-	 * The name of the Company this player is associated with.
-	 */
-	private String company;
-	
-	/**
 	 * The account's balance of in-game virtual currency.
 	 */
 	private double balance;
@@ -59,7 +54,6 @@ public class Account implements Serializable {
 	//TODO: Make use of account statuses
 	private AccountStatus status;
 	
-	//TODO: Make use of the pin
 	private String pin;
 	
 	public Account(UUID uid) {
@@ -70,7 +64,6 @@ public class Account implements Serializable {
 		this.uid = uid;
 		this.joined = new String(TNE.instance.dateFormat.format(new Date()));
 		this.accountNumber = accountNumber;
-		this.company = "TNENOSTRINGVALUE";
 		this.status = AccountStatus.NORMAL;
 		this.pin = "TNENOSTRINGVALUE";
 		setBalance(TNE.instance.defaultWorld, 0.0);
@@ -205,20 +198,6 @@ public class Account implements Serializable {
 	 */
 	public void setJoined(String joined) {
 		this.joined = joined;
-	}
-
-	/**
-	 * @return the company
-	 */
-	public String getCompany() {
-		return company;
-	}
-
-	/**
-	 * @param company the company to set
-	 */
-	public void setCompany(String company) {
-		this.company = company;
 	}
 
 	/**

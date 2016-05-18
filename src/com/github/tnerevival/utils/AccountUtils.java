@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
@@ -39,6 +40,29 @@ public class AccountUtils {
 			createAccount(id);
 		}
 		return TNE.instance.manager.accounts.get(id);
+	}
+	
+	public static boolean commandLocked(Player player) {
+		Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
+		if(!acc.getStatus().getBalance()) {
+			Message locked = new Message("Messages.Account.Locked");
+			locked.addVariable("$player", player.getDisplayName());
+			player.sendMessage(locked.translate());
+			return true;
+		}
+		
+		if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+			Message set = new Message("Messages.Account.Set");
+			player.sendMessage(set.translate());
+			return true;
+		}
+		
+		if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
+			Message confirm = new Message("Messages.Account.Confirm");
+			player.sendMessage(confirm.translate());
+			return true;
+		}
+		return false;
 	}
 	
 	public static List<SerializableItemStack> overflowFromString(String overflowString) {

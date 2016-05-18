@@ -176,7 +176,11 @@ public class SerializableItemStack implements Serializable {
 		return "TNENOSTRINGVALUE";
 	}
 	
-	HashMap<SerializableEnchantment, Integer> getEnchantmentsFromStack(ItemStack i) {
+	public ItemMeta getItemMeta() {
+		return toItemStack().getItemMeta();
+	}
+	
+	public HashMap<SerializableEnchantment, Integer> getEnchantmentsFromStack(ItemStack i) {
 		Map<Enchantment, Integer> enchantments = i.getEnchantments();
 		HashMap<SerializableEnchantment, Integer> serializedEnchantments = new HashMap<SerializableEnchantment, Integer>();
 		for(Enchantment e : enchantments.keySet()) {

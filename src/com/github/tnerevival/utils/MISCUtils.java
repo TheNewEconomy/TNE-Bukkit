@@ -206,9 +206,18 @@ public class MISCUtils {
 		if(TNE.instance.manager.ecoIDs.containsKey(username)) {
 			return TNE.instance.manager.ecoIDs.get(username);
 		}
-		UUID eco = UUID.randomUUID();
+		UUID eco = MISCUtils.genUUID();
 		TNE.instance.manager.ecoIDs.put(username, eco);
 		return eco;
+	}
+	
+	public static UUID genUUID() {
+		UUID id = UUID.randomUUID();
+		while(TNE.instance.manager.accounts.containsKey(id) || TNE.instance.manager.ecoIDs.containsKey(id)) {
+			//This should never happen, but we'll play it safe
+			id = UUID.randomUUID();
+		}
+		return id;
 	}
 	
 	public static String ecoToUsername(UUID id) {
@@ -217,6 +226,14 @@ public class MISCUtils {
 	}
 	
 	public static UUID getID(String player) {
+		if(player.contains("town-")) {
+			return MISCUtils.ecoID(player);
+		}
+		
+		if(player.contains("nation-")) {
+			return MISCUtils.ecoID(player);
+		}
+		
 		if(!TNE.configurations.getBoolean("Core.UUID")) {
 			return ecoID(player);
 		}

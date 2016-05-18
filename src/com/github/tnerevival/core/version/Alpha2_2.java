@@ -61,7 +61,6 @@ public class Alpha2_2 extends Version {
 			HashMap<String, Bank> bankMap = new HashMap<String, Bank>();
 			
 			account.setAccountNumber((Integer) info.getData("accountnumber"));
-			account.setCompany((String) info.getData("company"));
 			account.setStatus((String) info.getData("status"));
 			account.setOverflow(AccountUtils.overflowFromString((String)info.getData("overflow")));
 			
@@ -102,7 +101,6 @@ public class Alpha2_2 extends Version {
 			Entry info = new Entry("info");
 			info.addData("accountnumber", acc.getAccountNumber());
 			info.addData("uuid", acc.getUid());
-			info.addData("company", acc.getCompany());
 			info.addData("status", acc.getStatus().getName());
 			info.addData("overflow", acc.overflowToString());
 			account.addEntry(info);
@@ -151,7 +149,6 @@ public class Alpha2_2 extends Version {
 			while(mysql().results().next()) {
 				Account account = new Account(UUID.fromString(mysql().results().getString("uuid")));
 				account.balancesFromString(mysql().results().getString("balances"));
-				account.setCompany(mysql().results().getString("company"));
 				account.setAccountNumber(mysql().results().getInt("accountnumber"));
 				account.setStatus(mysql().results().getString("accountstatus"));
 				account.setJoined(mysql().results().getString("joinedDate"));
@@ -219,24 +216,22 @@ public class Alpha2_2 extends Version {
 			try {
 				mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { entry.getKey().toString() });
 				if(mysql().results().first()) {
-					mysql().executePreparedUpdate("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ?, overflow = ? WHERE uuid = ?;", 
+					mysql().executePreparedUpdate("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?, overflow = ? WHERE uuid = ?;", 
 							new Object[] {
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
-								entry.getValue().getCompany(),
 								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString(),
 								entry.getKey().toString()
 							});
 				} else {
-					mysql().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, joinedDate, accountnumber, company, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?, ?);", 
+					mysql().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, joinedDate, accountnumber, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?);", 
 							new Object[] {
 								entry.getKey().toString(),
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
-								entry.getValue().getCompany(),
 								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString()
 							});
@@ -260,7 +255,6 @@ public class Alpha2_2 extends Version {
 				
 				Account account = new Account(uid, sqlite().results().getInt("accountnumber"));
 				account.balancesFromString(sqlite().results().getString("balances"));
-				account.setCompany(sqlite().results().getString("company"));
 				account.setStatus(sqlite().results().getString("accountstatus"));
 				account.setJoined(sqlite().results().getString("joinedDate"));
 				account.setOverflow(AccountUtils.overflowFromString(sqlite().results().getString("overflow")));
@@ -326,24 +320,22 @@ public class Alpha2_2 extends Version {
 			try {
 				sqlite().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { entry.getKey().toString() });
 				if(sqlite().results().next()) {
-					sqlite().executePreparedUpdate("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, company = ?, accountstatus = ?, overflow = ? WHERE uuid = ?;", 
+					sqlite().executePreparedUpdate("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?, overflow = ? WHERE uuid = ?;", 
 							new Object[] {
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
-								entry.getValue().getCompany(),
 								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString(),
 								entry.getKey().toString()
 							});
 				} else {
-					sqlite().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, joinedDate, accountnumber, company, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?, ?);", 
+					sqlite().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, joinedDate, accountnumber, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?);", 
 							new Object[] {
 								entry.getKey().toString(),
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
-								entry.getValue().getCompany(),
 								entry.getValue().getStatus().getName(),
 								entry.getValue().overflowToString()
 							});
@@ -386,7 +378,6 @@ public class Alpha2_2 extends Version {
 								"balances LONGTEXT," +
 								"joinedDate VARCHAR(60)," +
 								"accountnumber INTEGER," +
-								"company VARCHAR(60)," +
 								"accountstatus VARCHAR(60)," +
 								"overflow LONGTEXT" +
 								");");
@@ -422,7 +413,6 @@ public class Alpha2_2 extends Version {
 								"balances LONGTEXT," +
 								"joinedDate CHAR(60)," +
 								"accountnumber INTEGER," +
-								"company CHAR(60)," +
 								"accountstatus CHAR(60)," +
 								"overflow LONGTEXT" +
 								");");

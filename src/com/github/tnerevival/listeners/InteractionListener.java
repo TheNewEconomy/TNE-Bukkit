@@ -415,7 +415,7 @@ public class InteractionListener implements Listener {
 		
 		if(entity instanceof Villager) {
 			Villager villager = (Villager)entity;
-			if(player.getItemInHand().getType().equals(Material.NAME_TAG) && !player.hasPermission("tne.bypass.nametag")) {
+			if(player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !player.hasPermission("tne.bypass.nametag")) {
 				event.setCancelled(true);
 				player.sendMessage("I'm sorry, but you cannot use a name tag on a villager.");
 			}

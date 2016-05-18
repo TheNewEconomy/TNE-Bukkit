@@ -1,7 +1,5 @@
 package com.github.tnerevival.core.signs;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,7 +15,6 @@ public abstract class TNESign {
 	protected UUID owner;
 	protected SignType type;
 	protected SerializableLocation location;
-	protected List<String> lines = new ArrayList<String>();
 	protected Inventory inventory = null;
 	protected String permission = null;
 	
@@ -57,7 +54,7 @@ public abstract class TNESign {
 	 * @param type
 	 * @return Whether or not the action was performed successfully
 	 */
-	public boolean onOpen(Player player, SignType type) {
+	public boolean onOpen(Player player) {
 		TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.INVENTORY_OPENED);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		return (!event.isCancelled());
@@ -70,12 +67,12 @@ public abstract class TNESign {
 	 * @param type
 	 * @return Whether or not the action was performed successfully
 	 */
-	public boolean onClose(Player player, SignType type) {
+	public boolean onClose(Player player) {
 		TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.INVENTORY_CLOSED);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		return (!event.isCancelled());
 	}
-
+ 
 	public UUID getOwner() {
 		return owner;
 	}
@@ -98,14 +95,6 @@ public abstract class TNESign {
 
 	public void setLocation(SerializableLocation location) {
 		this.location = location;
-	}
-
-	public List<String> getLines() {
-		return lines;
-	}
-
-	public void setLines(List<String> lines) {
-		this.lines = lines;
 	}
 
 	public Inventory getInventory() {

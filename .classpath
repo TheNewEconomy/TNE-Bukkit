@@ -7,6 +7,6 @@
 			<attribute name="javadoc_location" value="http://milkbowl.github.io/VaultAPI/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Java Dependencies/bukkit-1.8.6-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/Java Dependencies/bukkit-1.9.2-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

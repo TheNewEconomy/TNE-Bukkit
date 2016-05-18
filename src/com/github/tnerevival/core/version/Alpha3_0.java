@@ -121,7 +121,6 @@ public class Alpha3_0 extends Version {
 								"balances LONGTEXT," +
 								"joinedDate VARCHAR(60)," +
 								"accountnumber INTEGER," +
-								"company VARCHAR(60)," +
 								"accountstatus VARCHAR(60)," +
 								"overflow LONGTEXT" +
 								");");
@@ -157,7 +156,6 @@ public class Alpha3_0 extends Version {
 								"balances LONGTEXT," +
 								"joinedDate CHAR(60)," +
 								"accountnumber INTEGER," +
-								"company CHAR(60)," +
 								"accountstatus CHAR(60)," +
 								"overflow LONGTEXT" +
 								");");
