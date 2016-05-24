@@ -1,4 +1,4 @@
-# The New Economy v0.0.2.4
+# The New Economy v0.0.3.0
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
@@ -93,6 +93,14 @@ Messages:
        Announce: <white>Auction for lot $lot ends in $time.
        Winner: <white>$player has won the auction for lot $lot for <gold>$amount<white>.
        Win: <white>Congratulations! You won the auction for lot $lot for <gold>$amount<white>.
+       
+    Shop:
+       Permission: <red>You must be the owner of this shop to perform that action!
+       WhitelistAdded: <white>Successfully added $player to your shop's whitelist.
+       WhitelistRemoved: <white>Successfully removed $player from your shop's whitelist.
+       BlacklistAdded: <white>Successfully added $player to your shop's blacklist.
+       BlacklistRemoved: <white>Successfully removed $player from your shop's blacklist.
+        
     
     Bank:
        Already: <red>You already own a bank!

@@ -11,25 +11,25 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class ShopCloseCommand extends TNECommand {
+public class ShopWhitelistCommand extends TNECommand {
 
-	public ShopCloseCommand(TNE plugin) {
+	public ShopWhitelistCommand(TNE plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public String getName() {
-		return "close";
+		return "whitelist";
 	}
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "c" };
+		return new String[] { "wl" };
 	}
 
 	@Override
 	public String getNode() {
-		return "tne.shop.close";
+		return "tne.shop.whitelist";
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ShopCloseCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop close <name> - Close the specified shop.");
+		sender.sendMessage(ChatColor.GOLD + "/shop whitelist <name> <player> - Add/remove the specified player to the shop's whitelist.");
 	}
 	
 	@Override
@@ -48,16 +48,14 @@ public class ShopCloseCommand extends TNECommand {
 			if(Shop.exists(arguments[0])) {
 				if(Shop.canModify(arguments[0], (Player)sender)) {
 					Shop s = Shop.getShop(arguments[0]);
-					
-					for(UUID shopper : s.getShoppers()) {
-						Player p = MISCUtils.getPlayer(shopper);
-						p.closeInventory();
-						//TODO: Shop has been closed message.
+					UUID target = MISCUtils.getID(arguments[1]);
+					if(s.whitelisted(MISCUtils.getID(arguments[1]))) {
+						s.addWhitelist(target);
+						//TODO: Player has been removed from the shop's whitelist.
+					} else {
+						s.removeWhitelist(target);
+						//TODO: Player has been added to the shop's whitelist.
 					}
-					s.getShoppers().clear();
-					
-					TNE.instance.manager.shops.remove(arguments[0]);
-					//TODO: Shop has been closed.
 					return true;
 				}
 				//TODO: Must be shop owner to do that.

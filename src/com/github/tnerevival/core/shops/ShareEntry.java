@@ -1,8 +1,10 @@
 package com.github.tnerevival.core.shops;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class ShareEntry {
+public class ShareEntry implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	private UUID shareOwner;
 	private double percent = 0.0;

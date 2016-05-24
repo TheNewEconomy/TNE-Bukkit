@@ -11,25 +11,25 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class ShopCloseCommand extends TNECommand {
+public class ShopToggleCommand extends TNECommand {
 
-	public ShopCloseCommand(TNE plugin) {
+	public ShopToggleCommand(TNE plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public String getName() {
-		return "close";
+		return "toggle";
 	}
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "c" };
+		return new String[] { "t" };
 	}
 
 	@Override
 	public String getNode() {
-		return "tne.shop.close";
+		return "tne.shop.toggle";
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ShopCloseCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop close <name> - Close the specified shop.");
+		sender.sendMessage(ChatColor.GOLD + "/shop toggle <name> - Toggle this shop's visibility. Only whitelisted players can buy from hidden shops.");
 	}
 	
 	@Override
@@ -48,16 +48,21 @@ public class ShopCloseCommand extends TNECommand {
 			if(Shop.exists(arguments[0])) {
 				if(Shop.canModify(arguments[0], (Player)sender)) {
 					Shop s = Shop.getShop(arguments[0]);
-					
-					for(UUID shopper : s.getShoppers()) {
-						Player p = MISCUtils.getPlayer(shopper);
-						p.closeInventory();
-						//TODO: Shop has been closed message.
+					if(s.isHidden()) {
+						s.setHidden(false);
+						//TODO: Shop is no longer hidden.
+					} else {
+						s.setHidden(true);
+						
+						for(UUID shopper : s.getShoppers()) {
+							if(!s.whitelisted(shopper)) {
+								Player p = MISCUtils.getPlayer(shopper);
+								p.closeInventory();
+								//TODO: Shop has been hidden message.
+							}
+						}
+						//TODO: Shop is now hidden.
 					}
-					s.getShoppers().clear();
-					
-					TNE.instance.manager.shops.remove(arguments[0]);
-					//TODO: Shop has been closed.
 					return true;
 				}
 				//TODO: Must be shop owner to do that.

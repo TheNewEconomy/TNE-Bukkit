@@ -72,9 +72,13 @@ public class ShopCommand extends TNECommand {
 	public void help(CommandSender sender) {
 		sender.sendMessage(ChatColor.GOLD + "~~~~~Shop Commands~~~~~");
 		sender.sendMessage(ChatColor.GOLD + "/shop help - Shows general shop help.");
-		sender.sendMessage(ChatColor.GOLD + "/shop list - Shows a list of shops you own.");
+		sender.sendMessage(ChatColor.GOLD + "/shop whitelist <name> <player> - Add/remove the specified player to the shop's whitelist.");
+		sender.sendMessage(ChatColor.GOLD + "/shop blacklist <name> <player> - Add/remove the specified player to the shop's blacklist.");
+		sender.sendMessage(ChatColor.GOLD + "/shop toggle <name> - Toggle this shop's visibility. Only whitelisted players can buy from hidden shops.");
+		sender.sendMessage(ChatColor.GOLD + "/shop create <name> [admin] [hidden] - Create a new shop. [admin] yes/no, [hidden] yes/no");
 		sender.sendMessage(ChatColor.GOLD + "/shop close <name> - Close the specified shop.");
-		sender.sendMessage(ChatColor.GOLD + "/shop remove <name> - Remove a specific item from your shop");
-		sender.sendMessage(ChatColor.GOLD + "/shop add <name> [gold:amount] [trade:block/item name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade].");
+		sender.sendMessage(ChatColor.GOLD + "/shop share <name> <player> [percent](decimal) - Allow/disallow profit sharing with another player.");
+		sender.sendMessage(ChatColor.GOLD + "/shop remove <name> <amount> [item] [cost(gold:amount or trade:name:amount)] - Remove a specific item from your shop. Cost is required if multiple entries exist.");
+		sender.sendMessage(ChatColor.GOLD + "/shop add <name> <amount> [item] [gold:amount] [trade:block/item name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade]. Leave out item name to use currently held item.");
 	}
 }

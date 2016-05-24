@@ -11,25 +11,25 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 
-public class ShopCloseCommand extends TNECommand {
+public class ShopBlacklistCommand extends TNECommand {
 
-	public ShopCloseCommand(TNE plugin) {
+	public ShopBlacklistCommand(TNE plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public String getName() {
-		return "close";
+		return "blacklist";
 	}
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "c" };
+		return new String[] { "bl" };
 	}
 
 	@Override
 	public String getNode() {
-		return "tne.shop.close";
+		return "tne.shop.blacklist";
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ShopCloseCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop close <name> - Close the specified shop.");
+		sender.sendMessage(ChatColor.GOLD + "/shop blacklist <shop> <player> - Add/remove the specified player to the shop's blacklist.");
 	}
 	
 	@Override
@@ -48,16 +48,14 @@ public class ShopCloseCommand extends TNECommand {
 			if(Shop.exists(arguments[0])) {
 				if(Shop.canModify(arguments[0], (Player)sender)) {
 					Shop s = Shop.getShop(arguments[0]);
-					
-					for(UUID shopper : s.getShoppers()) {
-						Player p = MISCUtils.getPlayer(shopper);
-						p.closeInventory();
-						//TODO: Shop has been closed message.
+					UUID target = MISCUtils.getID(arguments[1]);
+					if(s.blacklisted(MISCUtils.getID(arguments[1]))) {
+						s.addBlacklist(target);
+						//TODO: Player has been removed from the shop's blacklist.
+					} else {
+						s.removeBlacklist(target);
+						//TODO: Player has been added to the shop's blacklist.
 					}
-					s.getShoppers().clear();
-					
-					TNE.instance.manager.shops.remove(arguments[0]);
-					//TODO: Shop has been closed.
 					return true;
 				}
 				//TODO: Must be shop owner to do that.

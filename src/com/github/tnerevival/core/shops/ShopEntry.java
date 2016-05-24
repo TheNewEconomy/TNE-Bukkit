@@ -1,8 +1,11 @@
 package com.github.tnerevival.core.shops;
 
+import java.io.Serializable;
+
 import com.github.tnerevival.serializable.SerializableItemStack;
 
-public class ShopEntry {
+public class ShopEntry implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	private SerializableItemStack item = null;
 	private double cost = 0.0;

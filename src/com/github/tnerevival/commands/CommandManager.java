@@ -10,6 +10,7 @@ import com.github.tnerevival.commands.credit.CreditCommand;
 import com.github.tnerevival.commands.money.MoneyCommand;
 import com.github.tnerevival.commands.packages.PackageCommand;
 import com.github.tnerevival.commands.pin.PinCommand;
+import com.github.tnerevival.commands.shop.ShopCommand;
 
 public class CommandManager {
 	
@@ -22,6 +23,7 @@ public class CommandManager {
 		commands.add(new PackageCommand(TNE.instance));
 		commands.add(new CreditCommand(TNE.instance));
 		commands.add(new PinCommand(TNE.instance));
+		commands.add(new ShopCommand(TNE.instance));
 	}
 	
 	public TNECommand Find(String name) {
