@@ -237,7 +237,9 @@ public class MISCUtils {
 		if(!TNE.configurations.getBoolean("Core.UUID")) {
 			return ecoID(player);
 		}
-		return MojangAPI.getPlayerUUID(player);
+		
+		UUID mojangID = MojangAPI.getPlayerUUID(player);
+		return (mojangID == null)? MISCUtils.ecoID(player) : mojangID;
 	}
 	
 	public static UUID getID(Player player) {

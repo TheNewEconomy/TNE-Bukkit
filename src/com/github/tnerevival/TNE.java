@@ -22,7 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.tnerevival.commands.CommandManager;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.AuctionManager;
 import com.github.tnerevival.core.EconomyManager;
 import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.Statistics;
@@ -44,7 +43,6 @@ public class TNE extends JavaPlugin {
 	
 	public static TNE instance;
 	public EconomyManager manager;
-	public AuctionManager auctions;
 	public SaveManager saveManager;
 	private CommandManager commandManager;
 	public TNEAPI api = null;
@@ -97,7 +95,6 @@ public class TNE extends JavaPlugin {
 		configurations = new ConfigurationManager();
 		
 		manager = new EconomyManager();
-		auctions = new AuctionManager();
 		saveManager = new SaveManager();
 		commandManager = new CommandManager();
 		
