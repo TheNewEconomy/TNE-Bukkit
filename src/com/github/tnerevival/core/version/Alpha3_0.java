@@ -1,10 +1,10 @@
 package com.github.tnerevival.core.version;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.db.SQLite;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Alpha3_0 extends Version {
 
@@ -91,13 +91,13 @@ public class Alpha3_0 extends Version {
 	}
 
 	@Override
-	public void loadYAML() {
+	public void loadH2() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void saveYAML() {
+	public void saveH2() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -117,7 +117,7 @@ public class Alpha3_0 extends Version {
 
 			table = prefix + "_USERS";
 			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-					   			"uuid VARCHAR(36) NOT NULL," +
+								"uuid VARCHAR(36) NOT NULL," +
 								"balances LONGTEXT," +
 								"joinedDate VARCHAR(60)," +
 								"accountnumber INTEGER," +

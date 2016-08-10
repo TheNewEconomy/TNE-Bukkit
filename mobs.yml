@@ -73,6 +73,10 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    Husk:
+        Enabled: true
+        Reward: 10.00
+
     IronGolem:
         Enabled: true
         Reward: 10.00
@@ -90,6 +94,10 @@ Mobs:
         Reward: 10.00
 
     Pig:
+        Enabled: true
+        Reward: 10.00
+
+    PolarBear:
         Enabled: true
         Reward: 10.00
 
@@ -130,6 +138,10 @@ Mobs:
         Reward: 10.00
 
     Squid:
+        Enabled: true
+        Reward: 10.00
+
+    Stray:
         Enabled: true
         Reward: 10.00
 

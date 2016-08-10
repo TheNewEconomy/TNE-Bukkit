@@ -1,30 +1,21 @@
 package com.github.tnerevival.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.version.Alpha2_2;
 import com.github.tnerevival.core.version.Alpha3_0;
 import com.github.tnerevival.core.version.Version;
 
+import java.io.*;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 public class SaveManager {
 
 	static HashMap<Double, Version> versions;
 	static {
-		versions = new HashMap<Double, Version>();
+		versions = new HashMap<>();
 		versions.put(2.2, new Alpha2_2());
 		versions.put(3.0, new Alpha3_0());
 	}
@@ -47,7 +38,7 @@ public class SaveManager {
 		}
 	}
 	
-	public Boolean firstRun() {
+	private Boolean firstRun() {
 		if(type.equalsIgnoreCase("flatfile")) {
 			return !file.exists();
 		} else if(type.equalsIgnoreCase("mysql")) {
@@ -93,11 +84,13 @@ public class SaveManager {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		} else if(type.equalsIgnoreCase("h2")) {
+
 		}
 		return !file.exists();
 	}
 	
-	public void initiate() {
+	private void initiate() {
 		if(type.equalsIgnoreCase("flatfile")) {
 			try {
 				TNE.instance.getDataFolder().mkdir();
@@ -112,7 +105,7 @@ public class SaveManager {
 		}
 	}
 	
-	public void getVersion() {
+	private void getVersion() {
 		if(type.equalsIgnoreCase("flatfile")) {
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
@@ -159,10 +152,12 @@ public class SaveManager {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		} else if (type.equalsIgnoreCase("h2")) {
+
 		}
 	}
 	
-	public void convert() {
+	private void convert() {
 	}
 	
 	public void load() {
@@ -176,7 +171,9 @@ public class SaveManager {
 			loadMySQL();
 		} else if(type.equalsIgnoreCase("sqlite")) {
 			loadSQLite();
-		}
+		} else if(type.equalsIgnoreCase("h2")) {
+		  loadH2();
+    }
 	}
 	
 	public void save() {
@@ -214,32 +211,52 @@ public class SaveManager {
 	//Actual Save/Load Methods
 	
 	//FlatFile Methods
-	public void loadFlatFile() {
+  private void loadFlatFile() {
 		Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
 		loadVersion.loadFlat(file);
 	}
-	
-	public void saveFlatFile() {
+
+  private void saveFlatFile() {
 		versionInstance.saveFlat(file);
 	}
 	
 	//MySQL Methods
-	public void loadMySQL() {
+  private void loadMySQL() {
 		Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
 		loadVersion.loadMySQL();
 	}
-	
-	public void saveMySQL() {
+
+  private void saveMySQL() {
 		versionInstance.saveMySQL();
 	}
 	
 	//SQLite Methods
-	public void loadSQLite() {
+  private void loadSQLite() {
 		Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
-		loadVersion.loadSQLite();
+    if(saveVersion != 0.0 && saveVersion < 3.0) {
+      loadVersion.loadSQLite();
+      return;
+    }
+    loadVersion.loadH2();
 	}
-	
-	public void saveSQLite() {
-		versionInstance.saveSQLite();
+
+  private void saveSQLite() {
+    //We no longer support SQLite starting post Alpha 3.0. For now we just load from SQLite
+    if(currentSaveVersion < 3.0) {
+      //For testing purposes we need to populate SQLite with some data.
+      versionInstance.saveSQLite();
+    }
+    versionInstance.saveH2();
 	}
+
+	private void loadH2() {
+    Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
+    if(saveVersion == 0.0 || saveVersion != 0.0 && saveVersion >= 3.0) {
+      loadVersion.loadH2();
+    }
+  }
+
+  private void saveH2() {
+    versionInstance.saveH2();
+  }
 }

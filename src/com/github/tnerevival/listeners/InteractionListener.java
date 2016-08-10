@@ -1,21 +1,20 @@
 package com.github.tnerevival.listeners;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.potion.PotionHelper;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.MaterialUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -36,15 +35,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.configurations.ObjectConfiguration;
-import com.github.tnerevival.core.potion.PotionHelper;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.MaterialUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InteractionListener implements Listener {
 	
@@ -518,6 +510,9 @@ public class InteractionListener implements Listener {
 					case PIG_ZOMBIE:
 						mob = "ZombiePigman";
 						break;
+					case POLAR_BEAR:
+						mob = "PolarBear";
+						break;
 					case RABBIT:
 						Rabbit rab = (Rabbit)entity;
 						if(rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
@@ -539,7 +534,10 @@ public class InteractionListener implements Listener {
 						if(skelly.getSkeletonType().equals(SkeletonType.WITHER)) {
 							mob = "WitherSkeleton";
 							break;
-						} 
+						}  else if(skelly.getSkeletonType().equals(SkeletonType.STRAY)) {
+							mob = "Stray";
+							break;
+						}
 						mob = "Skeleton";
 						break;
 					case SLIME:
@@ -570,6 +568,10 @@ public class InteractionListener implements Listener {
 						Zombie zombles = (Zombie)entity;
 						if(zombles.isVillager()) {
 							mob = "ZombieVillager";
+							break;
+						}
+						if(zombles.getVillagerProfession().equals(Villager.Profession.HUSK)) {
+							mob = "Husk";
 							break;
 						}
 						mob = "Zombie";

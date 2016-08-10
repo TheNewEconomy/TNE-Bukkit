@@ -35,6 +35,8 @@ public class MobConfiguration extends Configuration {
 		configurations.put("Mobs.Guardian.Reward", 10.00);
 		configurations.put("Mobs.Horse.Enabled", true);
 		configurations.put("Mobs.Horse.Reward", 10.00);
+		configurations.put("Mobs.Husk.Enabled", true);
+		configurations.put("Mobs.Husk.Reward", 10.00);
 		configurations.put("Mobs.IronGolem.Enabled", true);
 		configurations.put("Mobs.IronGolem.Reward", 10.00);
 		configurations.put("Mobs.MagmaCube.Enabled", true);
@@ -45,10 +47,14 @@ public class MobConfiguration extends Configuration {
 		configurations.put("Mobs.Ocelot.Reward", 10.00);
 		configurations.put("Mobs.Pig.Enabled", true);
 		configurations.put("Mobs.Pig.Reward", 10.00);
+		configurations.put("Mobs.PolarBear.Enabled", true);
+		configurations.put("Mobs.PolarBear.Reward", 10.00);
 		configurations.put("Mobs.Rabbit.Enabled", true);
 		configurations.put("Mobs.Rabbit.Reward", 10.00);
 		configurations.put("Mobs.Sheep.Enabled", true);
 		configurations.put("Mobs.Sheep.Reward", 10.00);
+		configurations.put("Mobs.Shulker.Enabled", true);
+		configurations.put("Mobs.Shulker.Reward", 10.00);
 		configurations.put("Mobs.Silverfish.Enabled", true);
 		configurations.put("Mobs.Silverfish.Reward", 10.00);
 		configurations.put("Mobs.Skeleton.Enabled", true);
@@ -61,6 +67,8 @@ public class MobConfiguration extends Configuration {
 		configurations.put("Mobs.Spider.Reward", 10.00);
 		configurations.put("Mobs.Squid.Enabled", true);
 		configurations.put("Mobs.Squid.Reward", 10.00);
+		configurations.put("Mobs.Stray.Enabled", true);
+		configurations.put("Mobs.Stray.Reward", 10.00);
 		configurations.put("Mobs.Villager.Enabled", true);
 		configurations.put("Mobs.Villager.Reward", 10.00);
 		configurations.put("Mobs.Witch.Enabled", true);

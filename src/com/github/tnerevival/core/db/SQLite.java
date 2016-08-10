@@ -54,7 +54,7 @@ public class SQLite extends SQLDatabase {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:" + file);
 		} catch (SQLException e) {
-			System.out.println("Unable to connect to MySQL.");
+			System.out.println("Unable to connect to SQLite.");
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Unable to find JBDC File.");

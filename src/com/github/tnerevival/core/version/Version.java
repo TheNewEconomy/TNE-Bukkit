@@ -1,12 +1,12 @@
 package com.github.tnerevival.core.version;
 
-import java.io.File;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.db.Database;
 import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.db.SQLite;
+
+import java.io.File;
 
 public abstract class Version {
 	public String mysqlHost = TNE.configurations.getString("Core.Database.MySQL.Host");
@@ -41,7 +41,7 @@ public abstract class Version {
 	public abstract void saveMySQL();
 	public abstract void loadSQLite();
 	public abstract void saveSQLite();
-	public abstract void loadYAML();
-	public abstract void saveYAML();
+	public abstract void loadH2();
+	public abstract void saveH2();
 	public abstract void createTables(String type);
 }

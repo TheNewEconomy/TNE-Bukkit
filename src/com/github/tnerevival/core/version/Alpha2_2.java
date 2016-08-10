@@ -1,12 +1,5 @@
 package com.github.tnerevival.core.version;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.UUID;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
@@ -19,6 +12,13 @@ import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
 
 public class Alpha2_2 extends Version {
 
@@ -348,13 +348,13 @@ public class Alpha2_2 extends Version {
 	}
 
 	@Override
-	public void loadYAML() {
+	public void loadH2() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void saveYAML() {
+	public void saveH2() {
 		// TODO Auto-generated method stub
 		
 	}
