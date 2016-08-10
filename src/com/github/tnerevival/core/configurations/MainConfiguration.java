@@ -15,16 +15,6 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Update.Notify", true);
 		configurations.put("Core.AutoSaver.Enabled", true);
 		configurations.put("Core.AutoSaver.Interval", 10);
-		configurations.put("Core.Auction.Multiple", false);
-		configurations.put("Core.Auction.AntiSnipe", true);
-		configurations.put("Core.Auction.SnipeTime", 20);
-		configurations.put("Core.Auction.Sign", false);
-		configurations.put("Core.Auction.Command", true);
-		configurations.put("Core.Auction.Queued", 5);
-		configurations.put("Core.Auction.Announce", true);
-		configurations.put("Core.Auction.Interval", 15);
-		configurations.put("Core.Auction.Countdown", true);
-		configurations.put("Core.Auction.CountdownTime", 10);
 		configurations.put("Core.Currency.Advanced", false);
 		configurations.put("Core.Currency.ItemCurrency", false);
 		configurations.put("Core.Currency.ItemMajor", "GOLD_INGOT");

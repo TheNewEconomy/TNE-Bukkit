@@ -510,6 +510,13 @@ public class InteractionListener implements Listener {
 					case PIG_ZOMBIE:
 						mob = "ZombiePigman";
 						break;
+          case PLAYER:
+            mob = "Player";
+            Player p = (Player)entity;
+            if(TNE.configurations.mobEnabled(p.getDisplayName())) {
+              mob = p.getDisplayName();
+            }
+            break;
 					case POLAR_BEAR:
 						mob = "PolarBear";
 						break;

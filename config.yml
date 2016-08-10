@@ -39,50 +39,6 @@ Core:
 
         #The interval at which the auto saver will save data(in seconds)
         Interval: 600
-        
-    #Currently doesn't work
-    #All configurations relating to auctions.
-    Auction:
-    
-        #Whether or not auctions should be muted by default.
-        # true - Players will have to type /auction listen <lot> to hear auction announcements
-        # false - Players will have to type /auction mute <lot> to not hear auction announcements
-        Muted: true
-        
-        #Whether or not multiple auctions can be run at once
-        Multiple: false
-        
-        #whether or not anti-snipe is enabled
-        AntiSnipe: true
-        
-        #The time in seconds 
-        SnipePeriod: 30
-        
-        #The time in seconds the anti-snipe system should add on
-        SnipeTime: 20
-        
-        #Currently doesn't work
-        #Whether or not you can auction items via signs - currently unavailable
-        Sign: false
-        
-        #Currently doesn't work
-        #Whether or not you can auction items via commands
-        Command: true
-        
-        #The max amount of items a player can have in the auction queue at one time
-        Queued: 5
-        
-        #Whether or not periodic announcements should be made about the current auction(s)
-        Announce: true
-        
-        #The interval for auction announcements if they're enabled
-        Interval: 15
-        
-        #Whether or not the final <CountdownTime> seconds should be announced.
-        Countdown: true
-        
-        #The time in seconds that should be classified as the final countdown period.
-        CountdownTime: 10
 
     #All configurations relating to currency.
     Currency:

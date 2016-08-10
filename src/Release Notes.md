@@ -3,6 +3,8 @@ Alpha 3.0
 Completed:
 
 * Add support for H2 in place of SQLite
+  * H2 will use the SQLite configurations
+  * Your SQLite database will be automatically converted for you.
 * Ability to reward/charge for using potions
 * Ability to reward/charge for using items
 * Ability to reward/charge for crafting
@@ -17,6 +19,9 @@ Completed:
 * Ability to allow worlds to share economy data
 * Ability to allow the use of bank balances for transactions
 * Ability to charge for command use
+* Ability to give reward for killing a player in mobs.yml
+  * You may also specify a single player's username in the same format to
+  give more money if someone kills a certain player.
 
 
 Needs Completed:

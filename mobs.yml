@@ -97,6 +97,15 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    Player:
+        Enabled: true
+        Reward: 10.00
+
+    #You can specify a specific player's name as well.
+    #ExamplePlayerName:
+    #    Enabled: true
+    #    Reward: 10.00
+
     PolarBear:
         Enabled: true
         Reward: 10.00
