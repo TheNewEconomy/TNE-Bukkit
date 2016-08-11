@@ -1,6 +1,7 @@
 Alpha 3.0
 ============
 Completed:
+----------
 
 * Add support for H2 in place of SQLite
   * H2 will use the SQLite configurations
@@ -25,18 +26,24 @@ Completed:
 
 
 Needs Completed:
-
+-----------------
 * Ability to import data from iConomy
-* Ability to create accounts via command
+* Ability to change configurations via command
+* Ability to create Auctions(?)
 * Re-organize data management classes to make more sense
 * Write loading/saving/backwards compatibility code for Alpha 3.0
-* Test new features
-  * Shops
-  * Administrative commands
-  * rewards for above completed features
-  * Disabling UUID support
-  * Shared economy data for worlds
-  * Bank balances for transactions
+
+Needs Tested:
+-------------
+* Account purging
+* Inventory & Command Credits
+* Shops
+* Administrative commands
+* Rewards for above completed features
+* Disabling UUID support
+* Shared economy data for worlds
+* Bank balances for transactions
+* Ability to create accounts via command
 
 
 Alpha 3.1

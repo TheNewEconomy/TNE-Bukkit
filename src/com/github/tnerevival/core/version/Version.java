@@ -1,10 +1,7 @@
 package com.github.tnerevival.core.version;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.db.Database;
-import com.github.tnerevival.core.db.FlatFile;
-import com.github.tnerevival.core.db.MySQL;
-import com.github.tnerevival.core.db.SQLite;
+import com.github.tnerevival.core.db.*;
 
 import java.io.File;
 
@@ -27,6 +24,7 @@ public abstract class Version {
 	public SQLite sqlite() {
 		return (SQLite)db;
 	}
+	public H2 h2() { return (H2)db; }
 	
 	public FlatFile flatfile() {
 		return (FlatFile)db;

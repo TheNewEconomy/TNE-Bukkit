@@ -21,6 +21,8 @@ commands:
       description: The base command for all credit-related commands.
    pin:
       description: The base command for all pin-related commands.
+   shop:
+      description: The base command for all shop-related commands.
    theneweconomy:
       description: The base command for all The New Economy core commands.
       aliases: tne
@@ -34,7 +36,10 @@ permissions:
          tne.admin.backup: true
          tne.admin.balance: true
          tne.admin.bank: true
+         tne.admin.create: true
+         tne.admin.delete: true
          tne.admin.help: true
+         tne.admin.purge: true
          tne.admin.reload: true
          tne.admin.save: true
          tne.bank: true
@@ -65,6 +70,17 @@ permissions:
          tne.pin: true
          tne.pin.set: true
          tne.pin.confirm: true
+         tne.shop: true
+         tne.shop.admin: true
+         tne.shop.add: true
+         tne.shop.blacklist: true
+         tne.shop.browse: true
+         tne.shop.close: true
+         tne.shop.create: true
+         tne.shop.remove: true
+         tne.shop.share: true
+         tne.shop.toggle: true
+         tne.shop.whitelist: true
          tne.sign: true
          tne.sign.main: true
          tne.sign.bank: true
@@ -76,13 +92,17 @@ permissions:
          tne.admin.backup: true
          tne.admin.balance: true
          tne.admin.bank: true
+         tne.admin.create: true
+         tne.admin.delete: true
          tne.admin.help: true
+         tne.admin.purge: true
          tne.admin.reload: true
          tne.admin.save: true
          tne.bypass.bank: true
          tne.bypass.inventory: true
          tne.bypass.nametag: true
          tne.bypass.world: true
+         tne.shop.admin: true
           
    tne.bank.*:
       description: Gives access to all TNE Bank Commands
@@ -141,6 +161,20 @@ permissions:
          tne.pin: true
          tne.pin.set: true
          tne.pin.confirm: true
+
+   tne.shop.*:
+      description: Gives access to all shop-related features & commands.
+      children:
+         tne.shop: true
+         tne.shop.add: true
+         tne.shop.blacklist: true
+         tne.shop.browse: true
+         tne.shop.close: true
+         tne.shop.create: true
+         tne.shop.remove: true
+         tne.shop.share: true
+         tne.shop.toggle: true
+         tne.shop.whitelist: true
          
    tne.sign.*:
       description: Gives access to creating all sign types

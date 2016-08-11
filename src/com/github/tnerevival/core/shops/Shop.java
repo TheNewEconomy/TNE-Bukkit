@@ -1,11 +1,7 @@
 package com.github.tnerevival.core.shops;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,8 +10,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.utils.MISCUtils;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 public class Shop implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -29,13 +28,14 @@ public class Shop implements Serializable {
 	private UUID owner;
 	private String name;
 	private boolean hidden = false;
-	
+	private boolean admin = false;
+
 	public Shop(UUID owner) {
 		this.owner = owner;
 	}
 	
 	public boolean isAdmin() {
-		return this.owner == null;
+		return admin;
 	}
 	
 	public ShopEntry getItem(int id) {

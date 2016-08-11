@@ -1,10 +1,9 @@
 package com.github.tnerevival.account;
 
-import java.util.HashMap;
-
+import com.github.tnerevival.TNE;
 import org.bukkit.entity.Player;
 
-import com.github.tnerevival.TNE;
+import java.util.HashMap;
 
 public class InventoryCredits {
 	
@@ -21,7 +20,7 @@ public class InventoryCredits {
 	}
 	
 	private Long getTimeLeft(String world, String inventory) {
-		return (credits.get(world).get(inventory) != null) ? credits.get(world).get(inventory) : 0;
+		return (credits.get(world).get(inventory) != null) ? credits.get(world).get(inventory) : 0L;
 	}
 	
 	private void setTime(String world, String inventory, long time) {

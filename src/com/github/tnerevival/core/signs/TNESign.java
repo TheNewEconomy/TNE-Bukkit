@@ -1,15 +1,14 @@
 package com.github.tnerevival.core.signs;
 
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
 import com.github.tnerevival.core.event.sign.SignEventAction;
 import com.github.tnerevival.core.event.sign.TNESignEvent;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+import java.util.UUID;
 
 public abstract class TNESign {
 	protected UUID owner;
@@ -25,8 +24,6 @@ public abstract class TNESign {
 	/**
 	 * Called when this sign is clicked on
 	 * @param player
-	 * @param inventory
-	 * @param type
 	 * @return Whether or not the action was performed successfully
 	 */
 	public boolean onClick(Player player) {
@@ -38,8 +35,6 @@ public abstract class TNESign {
 	/**
 	 * Called when this sign is right clicked on
 	 * @param player
-	 * @param inventory
-	 * @param type
 	 * @return Whether or not the action was performed successfully
 	 */
 	public boolean onRightClick(Player player) {
@@ -51,7 +46,6 @@ public abstract class TNESign {
 	/**
 	 * Called when the inventory(if any) attached to this sign is opened.
 	 * @param player
-	 * @param type
 	 * @return Whether or not the action was performed successfully
 	 */
 	public boolean onOpen(Player player) {
@@ -63,8 +57,6 @@ public abstract class TNESign {
 	/**
 	 * Called when the inventory(if any) attached to this sign is closed.
 	 * @param player
-	 * @param inventory
-	 * @param type
 	 * @return Whether or not the action was performed successfully
 	 */
 	public boolean onClose(Player player) {

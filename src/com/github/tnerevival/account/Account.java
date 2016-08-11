@@ -1,16 +1,11 @@
 package com.github.tnerevival.account;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class Account implements Serializable {
 	
@@ -19,16 +14,16 @@ public class Account implements Serializable {
 	/**
 	 * A HashMap of this account's balances from every world that the player has visited.
 	 */
-	private HashMap<String, Double> balances = new HashMap<String, Double>();
+	private Map<String, Double> balances = new HashMap<>();
 	
 	/**
 	 * A HashMap of this account's banks from every world that the player has visited.
 	 */
-	private HashMap<String, Bank> banks = new HashMap<String, Bank>();
+	private Map<String, Bank> banks = new HashMap<>();
 	
-	private HashMap<String, HashMap<String, Long>> credits = new HashMap<String, HashMap<String, Long>>();
+	private Map<String, CreditsEntry> credits = new HashMap<>();
 	
-	private HashMap<String, Integer> commands = new HashMap<String, Integer>();
+	private Map<String, Integer> commands = new HashMap<>();
 	
 
 	private List<SerializableItemStack> overflow = new ArrayList<SerializableItemStack>();
@@ -70,12 +65,12 @@ public class Account implements Serializable {
 	}
 	
 	public String balancesToString() {
-		Iterator<java.util.Map.Entry<String, Double>> balanceIterator = balances.entrySet().iterator();
+		Iterator<Map.Entry<String, Double>> balanceIterator = balances.entrySet().iterator();
 		
 		int count = 0;
 		String toReturn = "";
 		while(balanceIterator.hasNext()) {
-			java.util.Map.Entry<String, Double> balanceEntry = balanceIterator.next();
+			Map.Entry<String, Double> balanceEntry = balanceIterator.next();
 			if(count > 0) {
 				toReturn += ":";
 			}
@@ -93,13 +88,61 @@ public class Account implements Serializable {
 			balances.put(balance[0], Double.valueOf(balance[1]));
 		}
 	}
+
+	public String commandsToString() {
+		Iterator<Map.Entry<String, Integer>> commandsIterator = commands.entrySet().iterator();
+    StringBuilder builder = new StringBuilder();
+
+    while(commandsIterator.hasNext()) {
+      Map.Entry<String, Integer> commandEntry = commandsIterator.next();
+
+      if(builder.length() > 0) {
+        builder.append(",");
+      }
+      builder.append(commandEntry.getKey() + "=" + commandEntry.getValue());
+    }
+    return builder.toString();
+	}
+
+	public void commandsFromString(String value) {
+	  String[] values = value.split(",");
+
+    for(String s : values) {
+      String[] data = s.split("=");
+      commands.put(data[0], Integer.valueOf(data[1]));
+    }
+  }
+
+	public String creditsToString() {
+	  Iterator<Map.Entry<String, CreditsEntry>> creditsIterator = credits.entrySet().iterator();
+    StringBuilder builder = new StringBuilder();
+
+    while(creditsIterator.hasNext()) {
+      Map.Entry<String, CreditsEntry> creditsEntry = creditsIterator.next();
+      if(builder.length() > 0) {
+        builder.append(",");
+      }
+      builder.append(creditsEntry.getKey() + "=" + creditsEntry.getValue().toString());
+    }
+
+    return builder.toString();
+  }
+
+  public void creditsFromString(String value) {
+    String[] values = value.split(",");
+
+    for(String s : values) {
+      String[] data = s.split("=");
+      credits.put(data[0], CreditsEntry.fromString(data[1]));
+    }
+  }
 	
 	/*
 	 * Inventory Time Credits
 	 */
-	public HashMap<String, Long> getTimes(String inventory) {
+	public Map<String, Long> getTimes(String inventory) {
 		if(credits.get(inventory) != null) {
-			return credits.get(inventory);
+			return credits.get(inventory).getCredits();
 		}
 		return new HashMap<String, Long>();
 	}
@@ -110,15 +153,15 @@ public class Account implements Serializable {
 	
 	public Long getTimeLeft(String world, String inventory) {
 		if(credits.get(inventory) != null) {
-			return (credits.get(inventory).get(world) != null)? credits.get(inventory).get(world) : 0;
+			return credits.get(inventory).getRemaining(world);
 		}
 		return 0L;
 	}
 	
 	public void setTime(String world, String inventory, long time) {
-		HashMap<String, Long> inventoryCredits = (credits.get(inventory) != null) ? credits.get(inventory) : new HashMap<String, Long>();
+		Map<String, Long> inventoryCredits = (credits.get(inventory) != null) ? credits.get(inventory).getCredits() : new HashMap<String, Long>();
 		inventoryCredits.put(world, time);
-		credits.put(inventory, inventoryCredits);
+		credits.put(inventory, new CreditsEntry(inventoryCredits));
 	}
 	
 	/*
@@ -140,7 +183,7 @@ public class Account implements Serializable {
 		return (commands.containsKey(command) && commands.get(command) > 0);
 	}
 	
-	public HashMap<String, Integer> getCredits() {
+	public Map<String, Integer> getCredits() {
 		return commands;
 	}
 	
@@ -229,7 +272,7 @@ public class Account implements Serializable {
 		this.pin = pin;
 	}
 
-	public HashMap<String, Double> getBalances() {
+	public Map<String, Double> getBalances() {
 		return balances;
 	}
 
@@ -245,7 +288,7 @@ public class Account implements Serializable {
 		this.balances.put(world, AccountUtils.round(balance));
 	}
 
-	public HashMap<String, Bank> getBanks() {
+	public Map<String, Bank> getBanks() {
 		return banks;
 	}
 

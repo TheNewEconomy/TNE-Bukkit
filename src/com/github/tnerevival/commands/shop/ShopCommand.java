@@ -13,6 +13,15 @@ public class ShopCommand extends TNECommand {
 	
 	public ShopCommand(TNE plugin) {
 		super(plugin);
+		subCommands.add(new ShopAddCommand(plugin));
+		subCommands.add(new ShopBlacklistCommand(plugin));
+		subCommands.add(new ShopBrowseCommand(plugin));
+		subCommands.add(new ShopCloseCommand(plugin));
+		subCommands.add(new ShopCreateCommand(plugin));
+		subCommands.add(new ShopRemoveCommand(plugin));
+		subCommands.add(new ShopShareCommand(plugin));
+		subCommands.add(new ShopToggleCommand(plugin));
+		subCommands.add(new ShopWhitelistCommand(plugin));
 	}
 	
 	@Override
@@ -74,6 +83,7 @@ public class ShopCommand extends TNECommand {
 		sender.sendMessage(ChatColor.GOLD + "/shop help - Shows general shop help.");
 		sender.sendMessage(ChatColor.GOLD + "/shop whitelist <name> <player> - Add/remove the specified player to the shop's whitelist.");
 		sender.sendMessage(ChatColor.GOLD + "/shop blacklist <name> <player> - Add/remove the specified player to the shop's blacklist.");
+		sender.sendMessage(ChatColor.GOLD + "/shop browse <name> - Browse the spcified shop's inventory.");
 		sender.sendMessage(ChatColor.GOLD + "/shop toggle <name> - Toggle this shop's visibility. Only whitelisted players can buy from hidden shops.");
 		sender.sendMessage(ChatColor.GOLD + "/shop create <name> [admin] [hidden] - Create a new shop. [admin] yes/no, [hidden] yes/no");
 		sender.sendMessage(ChatColor.GOLD + "/shop close <name> - Close the specified shop.");

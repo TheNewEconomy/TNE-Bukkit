@@ -1,9 +1,17 @@
 package com.github.tnerevival.listeners;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Access;
+import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.inventory.View;
+import com.github.tnerevival.core.potion.PotionHelper;
+import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.MaterialUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -21,18 +29,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Access;
-import com.github.tnerevival.account.Bank;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.configurations.ObjectConfiguration;
-import com.github.tnerevival.core.inventory.View;
-import com.github.tnerevival.core.potion.PotionHelper;
-import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.MaterialUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class InventoryListener implements Listener {
 	
@@ -47,8 +46,10 @@ public class InventoryListener implements Listener {
 		Player player = (Player)event.getPlayer();
 		InventoryType type = event.getInventory().getType();
 		ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
-		
-		System.out.println(TNE.configurations.getObjectConfiguration().inventoryType(type));
+
+    if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("bank") || event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
+      return;
+    }
 		
 		if(config.inventoryEnabled(type)) {
 			if(config.isTimed(type)) {
@@ -108,6 +109,9 @@ public class InventoryListener implements Listener {
 			bank.setItems(items);
 			TNE.instance.manager.accessing.remove(MISCUtils.getID(player));
 		} else {
+		  if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
+		    return;
+      }
 			InventoryType type = event.getInventory().getType();
 			ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
 			if(config.inventoryEnabled(type) && TNE.instance.manager.viewers.containsKey(MISCUtils.getID(player))) {
@@ -131,6 +135,11 @@ public class InventoryListener implements Listener {
 		Boolean charge = false;
 		String message = "Messages.Money.Insufficient";
 		Double cost = 0.0;
+
+    if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
+      event.setCancelled(true);
+      return;
+    }
 		
 		if(type.equals(InventoryType.BREWING)) {
 			if(slot == 0 || slot == 1 || slot == 2) {
