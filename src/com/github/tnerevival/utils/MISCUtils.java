@@ -1,18 +1,9 @@
 package com.github.tnerevival.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.serializable.SerializableEnchantment;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,10 +14,14 @@ import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.api.MojangAPI;
-import com.github.tnerevival.serializable.SerializableEnchantment;
-import com.github.tnerevival.serializable.SerializableItemStack;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 public class MISCUtils {
 
@@ -128,19 +123,33 @@ public class MISCUtils {
 	public static void reloadConfigurations(String type) {
 		if(type.equalsIgnoreCase("all")) {
 			TNE.instance.reloadConfig();
+			reloadConfigsMaterials();
 			reloadConfigsMessages();
 			reloadConfigsMobs();
+			reloadConfigsObjects();
 			reloadConfigsWorlds();
 		} else if(type.equalsIgnoreCase("config")) {
 			TNE.instance.reloadConfig();
 			TNE.configurations.load(TNE.instance.getConfig(), "main");
+		} else if(type.equalsIgnoreCase("materials")) {
+			reloadConfigsMaterials();
 		} else if(type.equalsIgnoreCase("messages")) {
 			reloadConfigsMessages();
 		} else if(type.equalsIgnoreCase("mobs")) {
 			reloadConfigsMobs();
+		} else if(type.equalsIgnoreCase("objects")) {
+			reloadConfigsObjects();
 		} else if(type.equalsIgnoreCase("worlds")) {
 			reloadConfigsWorlds();
 		}
+	}
+
+	public static void reloadConfigsMaterials() {
+		if(TNE.instance.materials == null) {
+			TNE.instance.materials = new File(TNE.instance.getDataFolder(), "materials.yml");
+		}
+		TNE.instance.materialConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.materials);
+		TNE.configurations.load(TNE.instance.materialConfigurations, "materials");
 	}
 	
 	public static void reloadConfigsMobs() {
@@ -157,6 +166,14 @@ public class MISCUtils {
 		}
 		TNE.instance.messageConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.messages);
 		TNE.configurations.load(TNE.instance.messageConfigurations, "messages");
+	}
+
+	public static void reloadConfigsObjects() {
+		if(TNE.instance.objects == null) {
+			TNE.instance.objects = new File(TNE.instance.getDataFolder(), "objects.yml");
+		}
+		TNE.instance.objectConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.objects);
+		TNE.configurations.load(TNE.instance.objectConfigurations, "objects");
 	}
 	
 	public static void reloadConfigsWorlds() {

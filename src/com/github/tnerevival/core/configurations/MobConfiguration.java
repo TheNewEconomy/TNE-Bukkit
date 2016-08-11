@@ -47,6 +47,8 @@ public class MobConfiguration extends Configuration {
 		configurations.put("Mobs.Ocelot.Reward", 10.00);
 		configurations.put("Mobs.Pig.Enabled", true);
 		configurations.put("Mobs.Pig.Reward", 10.00);
+		configurations.put("Mobs.Player.Enabled", true);
+		configurations.put("Mobs.Player.Reward", 10.00);
 		configurations.put("Mobs.PolarBear.Enabled", true);
 		configurations.put("Mobs.PolarBear.Reward", 10.00);
 		configurations.put("Mobs.Rabbit.Enabled", true);
@@ -85,7 +87,9 @@ public class MobConfiguration extends Configuration {
 		configurations.put("Mobs.ZombiePigman.Reward", 10.00);
 		configurations.put("Mobs.ZombieVillager.Enabled", true);
 		configurations.put("Mobs.ZombieVillager.Reward", 10.00);
-		
+
+    //TODO: Load username-specific kill reward.
+
 		super.load(configurationFile);
 	}
 }
