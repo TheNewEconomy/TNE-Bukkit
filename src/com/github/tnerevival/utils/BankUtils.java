@@ -1,19 +1,18 @@
 package com.github.tnerevival.utils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.Map.Entry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.inventory.Inventory;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.serializable.SerializableItemStack;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.inventory.Inventory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 public class BankUtils {
 	public static void applyInterest(UUID id) {
@@ -92,7 +91,7 @@ public class BankUtils {
 		if(!variables[4].equalsIgnoreCase("TNENOSTRINGVALUE")) {
 			String[] itemStrings = variables[4].split("\\*");
 			for(String s : itemStrings) {
-				items.add(MISCUtils.itemstackFromString(s));
+				items.add(SerializableItemStack.fromString(s));
 			}
 		}
 		bank.setItems(items);

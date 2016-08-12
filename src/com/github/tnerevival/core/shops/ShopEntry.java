@@ -1,8 +1,8 @@
 package com.github.tnerevival.core.shops;
 
-import java.io.Serializable;
-
 import com.github.tnerevival.serializable.SerializableItemStack;
+
+import java.io.Serializable;
 
 public class ShopEntry implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -50,4 +50,25 @@ public class ShopEntry implements Serializable {
 	public void setTrade(SerializableItemStack trade) {
 		this.trade = trade;
 	}
+
+	@Override
+  public String toString() {
+	  StringBuilder builder = new StringBuilder();
+
+    builder.append(item.toString());
+    builder.append("*" + cost);
+    if(trade != null) {
+      builder.append(trade.toString());
+    }
+    return builder.toString();
+  }
+
+  public static ShopEntry fromString(String parse) {
+    String[] parsed = parse.split("\\*");
+
+    if(parsed.length == 3) {
+      return new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), SerializableItemStack.fromString(parsed[2]));
+    }
+    return new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]));
+  }
 }

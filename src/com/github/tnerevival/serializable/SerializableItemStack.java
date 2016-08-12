@@ -1,16 +1,12 @@
 package com.github.tnerevival.serializable;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class SerializableItemStack implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -190,7 +186,7 @@ public class SerializableItemStack implements Serializable {
 	}
 	
 	Map<Enchantment, Integer> getEnchantmentsFromSerializable() {
-		Map<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
+		Map<Enchantment, Integer> enchants = new HashMap<>();
 		for(SerializableEnchantment e : enchantments.keySet()) {
 			if(e != null) {
 				enchants.put(e.getEnchantment(), enchantments.get(e.name));
@@ -220,5 +216,39 @@ public class SerializableItemStack implements Serializable {
 			return stack;
 		}
 		return null;
+	}
+
+	@Override
+  public  String toString() {
+    return name + ";" + slot + ";" + amount + ";" + damage + ";" + customName + ";" + loreToString() + ";" + enchantmentsToString();
+  }
+
+	public static SerializableItemStack fromString(String itemString) {
+		String[] variables = itemString.split("\\;");
+
+		SerializableItemStack stack = new SerializableItemStack(Integer.valueOf(variables[1]));
+		stack.setName(variables[0]);
+		stack.setAmount(Integer.valueOf(variables[2]));
+		stack.setDamage(Short.valueOf(variables[3]));
+		if(variables[4] != null && !variables[4].equals("TNENOSTRINGVALUE")) {
+			stack.setCustomName(variables[4]);
+		}
+
+		if(variables[5] != null && !variables[5].equals("TNENOSTRINGVALUE")) {
+			stack.setLore(Arrays.asList(variables[5].split("\\~")));
+		}
+
+		if(variables[6] != null && !variables[6].equals("TNENOSTRINGVALUE")) {
+			HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
+			String[] enchantmentsArray = variables[6].split("\\~");
+
+			for(String s : enchantmentsArray) {
+				String[] enchantmentVariables = s.split("\\,");
+
+				enchantments.put(new SerializableEnchantment(enchantmentVariables[0]), Integer.valueOf(enchantmentVariables[1]));
+			}
+			stack.setEnchantments(enchantments);
+		}
+		return stack;
 	}
 }

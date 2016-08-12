@@ -2,8 +2,6 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
-import com.github.tnerevival.serializable.SerializableEnchantment;
-import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,7 +19,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class MISCUtils {
 
@@ -340,41 +340,6 @@ public class MISCUtils {
 	}
 	
 	//ItemStack Utils
-	public static String itemstackToString(SerializableItemStack stack) {
-		return stack.getName() + ";" + stack.getSlot() + ";" + stack.getAmount() + ";" + stack.getDamage() + ";" + stack.getCustomName() + ";" + stack.loreToString() + ";" + stack.enchantmentsToString();
-	}
-	
-	public static SerializableItemStack itemstackFromString(String itemString) {
-		String[] variables = itemString.split("\\;");
-		
-		SerializableItemStack stack = new SerializableItemStack(Integer.valueOf(variables[1]));
-		stack.setName(variables[0]);
-		stack.setAmount(Integer.valueOf(variables[2]));
-		stack.setDamage(Short.valueOf(variables[3]));
-		if(variables[4] != null && !variables[4].equals("TNENOSTRINGVALUE")) {
-			stack.setCustomName(variables[4]);
-		}
-		
-		if(variables[5] != null && !variables[5].equals("TNENOSTRINGVALUE")) {
-			stack.setLore(Arrays.asList(variables[5].split("\\~")));
-		}
-		
-		if(variables[6] != null && !variables[6].equals("TNENOSTRINGVALUE")) {
-			HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
-			String[] enchantmentsArray = variables[6].split("\\~");
-			
-			for(String s : enchantmentsArray) {
-				String[] enchantmentVariables = s.split("\\,");
-				
-				enchantments.put(new SerializableEnchantment(enchantmentVariables[0]), Integer.valueOf(enchantmentVariables[1]));
-			}
-			stack.setEnchantments(enchantments);
-		}
-		return stack;
-	}
-	
-
-	
 	public static ItemStack getFurnaceSource(ItemStack result) {
 		List<Recipe> recipes = TNE.instance.getServer().getRecipesFor(result);
 		for(Recipe r : recipes) {

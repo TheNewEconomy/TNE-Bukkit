@@ -6,10 +6,12 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.H2;
 import com.github.tnerevival.core.db.MySQL;
+import com.github.tnerevival.core.db.SQLDatabase;
 import com.github.tnerevival.core.db.flat.Article;
 import com.github.tnerevival.core.db.flat.Entry;
 import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
+import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.BankUtils;
 
 import java.io.File;
@@ -33,18 +35,34 @@ public class Alpha3_0 extends Version {
 		if(type.equalsIgnoreCase("mysql")) {
 			db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
 			
-			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-					   "username VARCHAR(20)," +
-					   "uuid VARCHAR(36)" +
+			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+					   "`username` VARCHAR(20)," +
+					   "`uuid` VARCHAR(36) UNIQUE" +
 					   ");");
 
-      //TODO: Shops Table.
+      table = prefix + "_SHOPS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`shop_owner` VARCHAR(36)," +
+          "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
+          "`shop_hidden` INTEGER(1)," +
+          "`shop_admin` INTEGER(1)," +
+          "`shop_items` LONGTEXT," +
+          "`shop_blacklist` LONGTEXT," +
+          "`shop_whitelist` LONGTEXT," +
+          "`shop_shares` LONGTEXT," +
+          ");");
 
       table = prefix + "_USERS";
-      mysql().executeUpdate("ALTER TABLE " + table + " DROP COLUMN `overflow`");
-      mysql().executeUpdate("ALTER TABLE " + table + " ADD COLUMN `acc_pin` VARCHAR(30)," +
+      mysql().executeUpdate("ALTER TABLE `" + table + "` DROP COLUMN `overflow`");
+      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD COLUMN `acc_pin` VARCHAR(30)," +
                             "ADD COLUMN `command_credits` LONGTEXT," +
                             "ADD COLUMN `inventory_credits` LONGTEXT AFTER `uuid`");
+      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(uuid)");
+
+      table = prefix + "_BANKS";
+      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(uuid)");
+      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(world)");
+
 		}
 	}
 
@@ -119,12 +137,12 @@ public class Alpha3_0 extends Version {
 
 	@Override
 	public void saveFlat(File file) {
-    Iterator<java.util.Map.Entry<UUID, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+    Iterator<java.util.Map.Entry<UUID, Account>> accIT = TNE.instance.manager.accounts.entrySet().iterator();
 
     Section accounts = new Section("accounts");
 
-    while(it.hasNext()) {
-      java.util.Map.Entry<UUID, Account> entry = it.next();
+    while(accIT.hasNext()) {
+      java.util.Map.Entry<UUID, Account> entry = accIT.next();
 
       Account acc = entry.getValue();
       Article account = new Article(entry.getKey().toString());
@@ -139,20 +157,20 @@ public class Alpha3_0 extends Version {
       account.addEntry(info);
       //Balances
       Entry balances = new Entry("balances");
-      Iterator<java.util.Map.Entry<String, Double>> balanceIterator = acc.getBalances().entrySet().iterator();
+      Iterator<java.util.Map.Entry<String, Double>> balIT = acc.getBalances().entrySet().iterator();
 
-      while(balanceIterator.hasNext()) {
-        java.util.Map.Entry<String, Double> balanceEntry = balanceIterator.next();
+      while(balIT.hasNext()) {
+        java.util.Map.Entry<String, Double> balanceEntry = balIT.next();
         balances.addData(balanceEntry.getKey(), balanceEntry.getValue());
       }
       account.addEntry(balances);
 
       Entry banks = new Entry("banks");
 
-      Iterator<java.util.Map.Entry<String, Bank>> bankIterator = acc.getBanks().entrySet().iterator();
+      Iterator<java.util.Map.Entry<String, Bank>> bankIT = acc.getBanks().entrySet().iterator();
 
-      while(bankIterator.hasNext()) {
-        java.util.Map.Entry<String, Bank> bankEntry = bankIterator.next();
+      while(bankIT.hasNext()) {
+        java.util.Map.Entry<String, Bank> bankEntry = bankIT.next();
         banks.addData(bankEntry.getKey(), bankEntry.getValue().toString());
       }
       account.addEntry(banks);
@@ -160,12 +178,12 @@ public class Alpha3_0 extends Version {
       accounts.addArticle(entry.getKey().toString(), account);
     }
 
-    Iterator<Map.Entry<String, UUID>> idsIterator = TNE.instance.manager.ecoIDs.entrySet().iterator();
+    Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
 
     Section ids = new Section("IDS");
 
-    while(idsIterator.hasNext()) {
-      Map.Entry<String, UUID> idEntry = idsIterator.next();
+    while(idsIT.hasNext()) {
+      Map.Entry<String, UUID> idEntry = idsIT.next();
 
       Article a = new Article(idEntry.getKey());
       Entry e = new Entry("info");
@@ -225,7 +243,18 @@ public class Alpha3_0 extends Version {
         TNE.instance.manager.ecoIDs.put(mysql().results().getString("username"), UUID.fromString(mysql().results().getString("uuid")));
       }
 
-      //TODO: Shops table.
+      table = prefix + "_SHOPS";
+      mysql().executeQuery("SELECT * FROM `" + table + ";");
+      while(mysql().results().next()) {
+        Shop s = new Shop(mysql().results().getString("shop_name"));
+        s.setOwner(UUID.fromString(mysql().results().getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(mysql().results().getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(mysql().results().getInt("shop_admin")));
+        s.itemsFromString(mysql().results().getString("shop_items"));
+        s.listFromString(mysql().results().getString("shop_blacklist"), true);
+        s.listFromString(mysql().results().getString("shop_whitelist"), false);
+        s.sharesFromString(mysql().results().getString("shop_shares"));
+      }
       mysql().close();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -238,104 +267,90 @@ public class Alpha3_0 extends Version {
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
     mysql().executePreparedUpdate("Update " + table + " SET version = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()) });
 
-    Iterator<Map.Entry<UUID, Account>> it = TNE.instance.manager.accounts.entrySet().iterator();
+    Iterator<Map.Entry<UUID, Account>> accIT = TNE.instance.manager.accounts.entrySet().iterator();
 
-    while(it.hasNext()) {
-      java.util.Map.Entry<UUID, Account> entry = it.next();
+    while(accIT.hasNext()) {
+      java.util.Map.Entry<UUID, Account> entry = accIT.next();
 
-      Iterator<java.util.Map.Entry<String, Bank>> bankIterator = entry.getValue().getBanks().entrySet().iterator();
+      Iterator<java.util.Map.Entry<String, Bank>> bankIT = entry.getValue().getBanks().entrySet().iterator();
 
-      while(bankIterator.hasNext()) {
-        java.util.Map.Entry<String, Bank> bankEntry = bankIterator.next();
+      while(bankIT.hasNext()) {
+        java.util.Map.Entry<String, Bank> bankEntry = bankIT.next();
 
         table = prefix + "_BANKS";
 
-        try {
-          mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ? AND world = ?;",
-              new Object[] {
-                  entry.getKey().toString(),
-                  bankEntry.getKey()
-              });
-          if(mysql().results().first()) {
-            mysql().executePreparedUpdate("UPDATE " + table + " SET bank = ? WHERE uuid = ? AND world = ?;",
-                new Object[] {
-                    bankEntry.getValue().toString(),
-                    entry.getKey().toString(),
-                    bankEntry.getKey()
-                });
-          } else {
-            mysql().executePreparedUpdate("INSERT INTO " + table + " (uuid, world, bank) VALUES (?, ?, ?);",
-                new Object[] {
-                    entry.getKey().toString(),
-                    bankEntry.getKey(),
-                    bankEntry.getValue().toString(),
-                });
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
+        mysql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, world, bank) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE bank = ?",
+            new Object[] {
+                entry.getKey().toString(),
+                bankEntry.getKey(),
+                bankEntry.getValue().toString(),
+                bankEntry.getValue().toString(),
+            });
       }
       table = prefix + "_USERS";
 
-      try {
-        mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { entry.getKey().toString() });
-        if(mysql().results().first()) {
-          mysql().executePreparedUpdate("UPDATE " + table + " SET balances = ?, acc_pin = ?, inventory_credits = ?, command_credits = ?, joinedDate = ?, accountnumber = ?, accountstatus = ? WHERE uuid = ?;",
-              new Object[] {
-                  entry.getValue().balancesToString(),
-                  entry.getValue().getPin(),
-                  entry.getValue().creditsToString(),
-                  entry.getValue().commandsToString(),
-                  entry.getValue().getJoined(),
-                  entry.getValue().getAccountNumber(),
-                  entry.getValue().getStatus().getName(),
-                  entry.getKey().toString()
-              });
-        } else {
-          mysql().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, acc_pin, inventory_credits, command_credits, joinedDate, accountnumber, accountstatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-              new Object[] {
-                  entry.getKey().toString(),
-                  entry.getValue().balancesToString(),
-                  entry.getValue().getPin(),
-                  entry.getValue().creditsToString(),
-                  entry.getValue().commandsToString(),
-                  entry.getValue().getJoined(),
-                  entry.getValue().getAccountNumber(),
-                  entry.getValue().getStatus().getName(),
-                  entry.getValue().overflowToString()
-              });
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, balances, acc_pin, inventory_credits, command_credits, joinedDate, accountnumber, accountstatus) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+                                    " ON DUPLICATE KEY UPDATE balances = ?, acc_pin = ?, inventory_credits = ?, command_credits = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?",
+          new Object[] {
+              entry.getKey().toString(),
+              entry.getValue().balancesToString(),
+              entry.getValue().getPin(),
+              entry.getValue().creditsToString(),
+              entry.getValue().commandsToString(),
+              entry.getValue().getJoined(),
+              entry.getValue().getAccountNumber(),
+              entry.getValue().getStatus().getName(),
+              entry.getValue().balancesToString(),
+              entry.getValue().getPin(),
+              entry.getValue().creditsToString(),
+              entry.getValue().commandsToString(),
+              entry.getValue().getJoined(),
+              entry.getValue().getAccountNumber(),
+              entry.getValue().getStatus().getName(),
+              entry.getValue().overflowToString()
+          });
     }
-    Iterator<Map.Entry<String, UUID>> ecoIDSIterator = TNE.instance.manager.ecoIDs.entrySet().iterator();
+    Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
 
-    while(it.hasNext()) {
-      Map.Entry<String, UUID> idEntry = ecoIDSIterator.next();
+    while(idsIT.hasNext()) {
+      Map.Entry<String, UUID> idEntry = idsIT.next();
 
-      mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?", new Object[] { idEntry.getValue().toString() });
-      try {
-        if(mysql().results().first()) {
-          mysql().executePreparedUpdate("UPDATE " + table + " SET username = ? WHERE uuid = ?",
-              new Object[] {
-                  idEntry.getValue(),
-                  idEntry.getValue().toString()
-              });
-        } else {
-          mysql().executePreparedQuery("INSERT INTO " + table + " (username, uuid) VALUES(?, ?)",
-              new Object[]{
-                  idEntry.getValue(),
-                  idEntry.getValue().toString()
-              });
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-
-      //TODO: Shops Table
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?",
+          new Object[] {
+              idEntry.getKey(),
+              idEntry.getValue().toString(),
+              idEntry.getKey()
+          });
     }
 
+    Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance.manager.shops.entrySet().iterator();
+
+    while(shopIT.hasNext()) {
+      Map.Entry<String, Shop> shopEntry = shopIT.next();
+
+      Shop s = shopEntry.getValue();
+
+      table = prefix + "_SHOPS";
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
+          new Object[] {
+              shopEntry.getKey(),
+              s.getOwner(),
+              SQLDatabase.boolToDB(s.isHidden()),
+              SQLDatabase.boolToDB(s.isAdmin()),
+              s.itemsToString(),
+              s.listToString(true),
+              s.listToString(false),
+              s.sharesToString(),
+              s.getOwner(),
+              SQLDatabase.boolToDB(s.isHidden()),
+              SQLDatabase.boolToDB(s.isAdmin()),
+              s.itemsToString(),
+              s.listToString(true),
+              s.listToString(false),
+              s.sharesToString()
+          });
+    }
     mysql().close();
 	}
 
@@ -368,47 +383,47 @@ public class Alpha3_0 extends Version {
 		if(type.equalsIgnoreCase("mysql")) {
 			db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
 			
-			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-					   "id INTEGER NOT NULL," +
-					   "version VARCHAR(10)" +
+			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+					   "`id` INTEGER NOT NULL," +
+					   "`version` VARCHAR(10)" +
 					   ");");
 			mysql().executeUpdate("INSERT INTO " + table + " (id, version) VALUES(1, " + versionNumber() + ");");
 
       table = prefix + "_ECOIDS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-          "username VARCHAR(20)," +
-          "uuid VARCHAR(36)" +
+          "`username` VARCHAR(20)," +
+          "`uuid` VARCHAR(36) UNIQUE" +
           ");");
 
       table = prefix + "_USERS";
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-          "uuid VARCHAR(36) NOT NULL," +
-          "inventory_credits LONGTEXT," +
-          "command_credits LONGTEXT," +
-          "acc_pin VARCHAR(30)," +
-          "balances LONGTEXT," +
-          "joinedDate VARCHAR(60)," +
-          "accountnumber INTEGER," +
-          "accountstatus VARCHAR(60)," +
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
+          "`inventory_credits` LONGTEXT," +
+          "`command_credits` LONGTEXT," +
+          "`acc_pin` VARCHAR(30)," +
+          "`balances` LONGTEXT," +
+          "`joinedDate` VARCHAR(60)," +
+          "`accountnumber` INTEGER," +
+          "`accountstatus` VARCHAR(60)," +
           ");");
 
       table = prefix + "_SHOPS";
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-          "shop_owner VARCHAR(36)," +
-          "shop_name VARCHAR(60) NOT NULL," +
-          "shop_hidden INTEGER(1)," +
-          "shop_admin INTEGER(1)," +
-          "shop_items LONGTEXT," +
-          "shop_blacklist LONGTEXT," +
-          "shop_whitelist LONGTEXT," +
-          "shop_shares LONGTEXT," +
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`shop_owner` VARCHAR(36)," +
+          "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
+          "`shop_hidden` INTEGER(1)," +
+          "`shop_admin` INTEGER(1)," +
+          "`shop_items` LONGTEXT," +
+          "`shop_blacklist` LONGTEXT," +
+          "`shop_whitelist` LONGTEXT," +
+          "`shop_shares` LONGTEXT," +
           ");");
 			
 			table = prefix + "_BANKS";
-			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-								   "uuid VARCHAR(36) NOT NULL," +
-								   "world VARCHAR(50) NOT NULL," +
-								   "bank LONGTEXT" +
+			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+								   "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
+								   "`world` VARCHAR(50) NOT NULL UNIQUE," +
+								   "`bank` LONGTEXT" +
 								   ");");
 			mysql().close();
 		} else {

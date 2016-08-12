@@ -1,16 +1,15 @@
 package com.github.tnerevival.commands.credit;
 
-import java.util.HashMap;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class CreditInventoryCommand extends TNECommand {
 	
@@ -42,7 +41,7 @@ public class CreditInventoryCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		if(arguments.length == 1) {
 			Player player = (Player)sender;
-			HashMap<String, Long> credits = AccountUtils.getAccount(MISCUtils.getID(player)).getTimes(arguments[0]);
+			Map<String, Long> credits = AccountUtils.getAccount(MISCUtils.getID(player)).getTimes(arguments[0]);
 			sender.sendMessage(ChatColor.WHITE + "Time Credits for inventory \"" + arguments[0] +"\".");
 			sender.sendMessage(ChatColor.WHITE + "World ~ Time Credits(in seconds)");
 			sender.sendMessage(ChatColor.WHITE + "==============================");

@@ -1,15 +1,14 @@
 package com.github.tnerevival.commands.shop;
 
-import java.util.UUID;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class ShopCreateCommand extends TNECommand {
 
@@ -54,8 +53,12 @@ public class ShopCreateCommand extends TNECommand {
 				if(arguments.length >= 2 && arguments[1].equalsIgnoreCase("true")) {
 					owner = null;
 				}
-				
-				Shop s = new Shop(owner);
+
+        Shop s = new Shop(arguments[0]);
+				s.setOwner(owner);
+        if(owner == null) {
+          s.setAdmin(true);
+        }
 				
 				if(arguments.length >= 3 && arguments[2].equalsIgnoreCase("true")) {
 					s.setHidden(true);

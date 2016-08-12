@@ -1,12 +1,11 @@
 package com.github.tnerevival.account;
 
+import com.github.tnerevival.serializable.SerializableItemStack;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.MISCUtils;
 
 public class Bank implements Serializable {
 	
@@ -84,7 +83,7 @@ public class Bank implements Serializable {
 					if(count != 0) {
 						toReturn += "*";
 					}
-					toReturn += MISCUtils.itemstackToString(item);
+					toReturn += item.toString();
 					count++;
 				}
 			}

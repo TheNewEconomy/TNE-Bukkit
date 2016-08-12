@@ -19,24 +19,28 @@ import java.util.UUID;
 public class Shop implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<UUID> shoppers = new ArrayList<UUID>();
-	private List<ShopEntry> items = new ArrayList<ShopEntry>();
-	private List<UUID> blacklist = new ArrayList<UUID>();
-	private List<UUID> whitelist = new ArrayList<UUID>();
-	private List<ShareEntry> shares = new ArrayList<ShareEntry>();
+	private List<UUID> shoppers = new ArrayList<>();
+	private List<ShopEntry> items = new ArrayList<>();
+	private List<UUID> blacklist = new ArrayList<>();
+	private List<UUID> whitelist = new ArrayList<>();
+	private List<ShareEntry> shares = new ArrayList<>();
 	
 	private UUID owner;
 	private String name;
 	private boolean hidden = false;
 	private boolean admin = false;
 
-	public Shop(UUID owner) {
-		this.owner = owner;
+	public Shop(String name) {
+		this.name = name;
 	}
 	
 	public boolean isAdmin() {
 		return admin;
 	}
+
+	public void setAdmin(boolean admin) {
+	  this.admin = admin;
+  }
 	
 	public ShopEntry getItem(int id) {
 		for(ShopEntry entry : this.items) {
@@ -201,6 +205,67 @@ public class Shop implements Serializable {
 	public void addShares(ShareEntry entry) {
 		shares.add(entry);
 	}
+
+	public String listToString(boolean blacklist) {
+	  StringBuilder builder = new StringBuilder();
+
+    List<UUID> list = (blacklist)? this.blacklist : this.whitelist;
+
+    for(UUID id : list) {
+      if(builder.length() > 0) builder.append(",");
+      builder.append(id.toString());
+    }
+    return builder.toString();
+  }
+
+  public void listFromString(String parse, boolean blacklist) {
+    String[] parsed = parse.split(",");
+
+    for(String s : parsed) {
+      if(blacklist) {
+        this.blacklist.add(UUID.fromString(s));
+        continue;
+      }
+      this.whitelist.add(UUID.fromString(s));
+    }
+  }
+
+  public String sharesToString() {
+    StringBuilder builder = new StringBuilder();
+
+    for(ShareEntry entry : shares) {
+      if(builder.length() > 0) builder.append(",");
+      builder.append(entry.toString());
+    }
+    return builder.toString();
+  }
+
+  public void sharesFromString(String parse) {
+    String[] parsed = parse.split(",");
+
+    for(String s : parsed) {
+      shares.add(ShareEntry.fromString(s));
+    }
+  }
+
+  public String itemsToString() {
+    StringBuilder builder = new StringBuilder();
+
+    for(ShopEntry entry : items) {
+      if(builder.length() > 0) builder.append("=");
+      builder.append(entry.toString());
+    }
+
+    return builder.toString();
+  }
+
+  public void itemsFromString(String parse) {
+    String[] parsed = parse.split("=");
+
+    for(String s : parsed) {
+      items.add(ShopEntry.fromString(s));
+    }
+  }
 	
 	/*
 	 * Static methods

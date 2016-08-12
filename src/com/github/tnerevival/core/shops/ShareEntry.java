@@ -33,4 +33,14 @@ public class ShareEntry implements Serializable {
 	public void setPercent(double percent) {
 		this.percent = percent;
 	}
+
+	@Override
+	public String toString() {
+		return shareOwner.toString() + "=" + percent;
+	}
+
+	public static ShareEntry fromString(String parse) {
+	  String[] data = parse.split("=");
+		return new ShareEntry(UUID.fromString(data[0]), Double.valueOf(data[1]));
+	}
 }

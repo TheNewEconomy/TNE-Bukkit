@@ -24,4 +24,12 @@ public abstract class SQLDatabase extends Database {
 	public abstract void executePreparedUpdate(String query, Object[] variables);
 	
 	public abstract ResultSet results();
+
+	public static Integer boolToDB(boolean value) {
+	  return (value)? 1 : 0;
+  }
+
+  public static Boolean boolFromDB(int value) {
+    return (value == 1);
+  }
 }
