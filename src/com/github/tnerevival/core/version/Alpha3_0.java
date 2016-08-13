@@ -44,8 +44,8 @@ public class Alpha3_0 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_owner` VARCHAR(36)," +
           "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
-          "`shop_hidden` INTEGER(1)," +
-          "`shop_admin` INTEGER(1)," +
+          "`shop_hidden` TINYINT(1)," +
+          "`shop_admin` TINYINT(1)," +
           "`shop_items` LONGTEXT," +
           "`shop_blacklist` LONGTEXT," +
           "`shop_whitelist` LONGTEXT," +
@@ -72,11 +72,12 @@ public class Alpha3_0 extends Version {
     FlatFileConnection connection = (FlatFileConnection)db.connection();
     Section accounts = null;
     Section ids = null;
-    //TODO: Shops Table
+    Section shops = null;
     try {
       connection.getOIS().readDouble();
       accounts = (Section) connection.getOIS().readObject();
       ids = (Section) connection.getOIS().readObject();
+      shops = (Section) connection.getOIS().readObject();
       connection.close();
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
@@ -84,18 +85,18 @@ public class Alpha3_0 extends Version {
       e.printStackTrace();
     }
 
-    Iterator<java.util.Map.Entry<String, Article>> it = accounts.getArticle().entrySet().iterator();
+    Iterator<Map.Entry<String, Article>> it = accounts.getArticle().entrySet().iterator();
 
     while(it.hasNext()) {
-      java.util.Map.Entry<String, Article> entry = it.next();
+      Map.Entry<String, Article> entry = it.next();
       UUID uid = UUID.fromString(entry.getKey());
       Entry info = entry.getValue().getEntry("info");
       Entry balances = entry.getValue().getEntry("balances");
       Entry banks = entry.getValue().getEntry("banks");
 
       Account account = new Account(uid, (Integer) info.getData("accountnumber"));
-      HashMap<String, Double> balanceMap = new HashMap<String, Double>();
-      HashMap<String, Bank> bankMap = new HashMap<String, Bank>();
+      Map<String, Double> balanceMap = new HashMap<>();
+      Map<String, Bank> bankMap = new HashMap<>();
 
       account.setAccountNumber((Integer) info.getData("accountnumber"));
       account.setStatus((String) info.getData("status"));
@@ -103,7 +104,7 @@ public class Alpha3_0 extends Version {
       account.creditsFromString((String)info.getData("inventory_credits"));
       account.commandsFromString((String)info.getData("command_credits"));
 
-      Iterator<java.util.Map.Entry<String, Object>> balanceIterator = balances.getData().entrySet().iterator();
+      Iterator<Map.Entry<String, Object>> balanceIterator = balances.getData().entrySet().iterator();
 
       while(balanceIterator.hasNext()) {
         java.util.Map.Entry<String, Object> balanceEntry = balanceIterator.next();
@@ -132,6 +133,23 @@ public class Alpha3_0 extends Version {
       Entry info = idEntry.getValue().getEntry("info");
 
       TNE.instance.manager.ecoIDs.put((String)info.getData("username"), UUID.fromString((String)info.getData("uuid")));
+    }
+
+    Iterator<Map.Entry<String, Article>> shopsIterator = shops.getArticle().entrySet().iterator();
+    while(shopsIterator.hasNext()) {
+      Map.Entry<String, Article> shopEntry = shopsIterator.next();
+
+      Shop s = new Shop(shopEntry.getKey());
+      Entry info = shopEntry.getValue().getEntry("info");
+
+      s.setOwner(UUID.fromString((String)info.getData("owner")));
+      s.setHidden((boolean)info.getData("hidden"));
+      s.setAdmin((boolean)info.getData("admin"));
+      s.listFromString((String)info.getData("blacklist"), true);
+      s.listFromString((String)info.getData("whitelist"), false);
+      s.sharesFromString((String)info.getData("shares"));
+
+      TNE.instance.manager.shops.put(shopEntry.getKey(), s);
     }
 	}
 
@@ -195,13 +213,35 @@ public class Alpha3_0 extends Version {
       ids.addArticle(idEntry.getKey(), a);
     }
 
-    //TODO: Shops table
+    Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance.manager.shops.entrySet().iterator();
+    Section shops = new Section("SHOPS");
+
+    while(shopIT.hasNext()) {
+      Map.Entry<String, Shop> shopEntry = shopIT.next();
+      Shop s = shopEntry.getValue();
+
+      Article a = new Article(s.getName());
+      Entry info = new Entry("info");
+
+      info.addData("owner", s.getOwner().toString());
+      info.addData("hidden", s.isHidden());
+      info.addData("admin", s.isAdmin());
+      info.addData("items", s.itemsToString());
+      info.addData("blacklist", s.listToString(true));
+      info.addData("whitelist", s.listToString(false));
+      info.addData("shares", s.sharesToString());
+      a.addEntry(info);
+
+      shops.addArticle(s.getName(), a);
+    }
+
     try {
       db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
       FlatFileConnection connection = (FlatFileConnection)db.connection();
       connection.getOOS().writeDouble(versionNumber());
       connection.getOOS().writeObject(accounts);
       connection.getOOS().writeObject(ids);
+      connection.getOOS().writeObject(shops);
       connection.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -306,8 +346,7 @@ public class Alpha3_0 extends Version {
               entry.getValue().commandsToString(),
               entry.getValue().getJoined(),
               entry.getValue().getAccountNumber(),
-              entry.getValue().getStatus().getName(),
-              entry.getValue().overflowToString()
+              entry.getValue().getStatus().getName()
           });
     }
     Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
@@ -411,8 +450,8 @@ public class Alpha3_0 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_owner` VARCHAR(36)," +
           "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
-          "`shop_hidden` INTEGER(1)," +
-          "`shop_admin` INTEGER(1)," +
+          "`shop_hidden` TINYINT(1)," +
+          "`shop_admin` TINYINT(1)," +
           "`shop_items` LONGTEXT," +
           "`shop_blacklist` LONGTEXT," +
           "`shop_whitelist` LONGTEXT," +
@@ -437,31 +476,49 @@ public class Alpha3_0 extends Version {
 			}
 			
 			db = new H2(sqliteFile, mysqlUser, mysqlPassword);
-			
-			h2().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-					   "id INTEGER NOT NULL," +
-					   "version CHAR(10)" +
-					   ");");
+
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`id` INTEGER NOT NULL," +
+          "`version` VARCHAR(10)" +
+          ");");
       h2().executeUpdate("INSERT INTO " + table + " (id, version) VALUES(1, " + versionNumber() + ");");
 
-			table = prefix + "_USERS";
+      table = prefix + "_ECOIDS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-								"uuid CHAR(36) NOT NULL," +
-					      "inventory_credits LONGTEXT," +
-					      "command_credits LONGTEXT," +
-					      "acc_pin VARCHAR(30)," +
-								"balances LONGTEXT," +
-								"joinedDate CHAR(60)," +
-								"accountnumber INTEGER," +
-								"accountstatus CHAR(60)," +
-								");");
-			
-			table = prefix + "_BANKS";
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-								   "uuid CHAR(36) NOT NULL," +
-								   "world CHAR(50) NOT NULL," +
-								   "bank LONGTEXT" +
-								   ");");
+          "`username` VARCHAR(20)," +
+          "`uuid` VARCHAR(36) UNIQUE" +
+          ");");
+
+      table = prefix + "_USERS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
+          "`inventory_credits` LONGTEXT," +
+          "`command_credits` LONGTEXT," +
+          "`acc_pin` VARCHAR(30)," +
+          "`balances` LONGTEXT," +
+          "`joinedDate` VARCHAR(60)," +
+          "`accountnumber` INTEGER," +
+          "`accountstatus` VARCHAR(60)," +
+          ");");
+
+      table = prefix + "_SHOPS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`shop_owner` VARCHAR(36)," +
+          "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
+          "`shop_hidden` TINYINT(1)," +
+          "`shop_admin` TINYINT(1)," +
+          "`shop_items` LONGTEXT," +
+          "`shop_blacklist` LONGTEXT," +
+          "`shop_whitelist` LONGTEXT," +
+          "`shop_shares` LONGTEXT," +
+          ");");
+
+      table = prefix + "_BANKS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
+          "`world` VARCHAR(50) NOT NULL UNIQUE," +
+          "`bank` LONGTEXT" +
+          ");");
       h2().close();
 		}
 	}

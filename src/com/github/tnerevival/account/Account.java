@@ -1,7 +1,6 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 
 import java.io.Serializable;
@@ -24,9 +23,6 @@ public class Account implements Serializable {
 	private Map<String, CreditsEntry> credits = new HashMap<>();
 	
 	private Map<String, Integer> commands = new HashMap<>();
-	
-
-	private List<SerializableItemStack> overflow = new ArrayList<SerializableItemStack>();
 	
 	private String joined;
 	
@@ -190,22 +186,6 @@ public class Account implements Serializable {
 	/*
 	 * MISC Methods/Getters & Setters
 	 */
-	public String overflowToString() {
-		if(!overflow.isEmpty()) {
-			String toReturn = "";
-			
-			int count = 0;
-			for(SerializableItemStack item : overflow) {
-				if(count != 0) {
-					toReturn += "*";
-				}
-				toReturn += item.toString();
-				count++;
-			}
-			return toReturn;
-		}
-		return "TNENOSTRINGVALUE";
-	}
 
 	/**
 	 * @return the accountNumber
@@ -276,7 +256,7 @@ public class Account implements Serializable {
 		return balances;
 	}
 
-	public void setBalances(HashMap<String, Double> balances) {
+	public void setBalances(Map<String, Double> balances) {
 		this.balances = balances;
 	}
 	
@@ -292,7 +272,7 @@ public class Account implements Serializable {
 		return banks;
 	}
 
-	public void setBanks(HashMap<String, Bank> banks) {
+	public void setBanks(Map<String, Bank> banks) {
 		this.banks = banks;
 	}
 	
@@ -302,13 +282,5 @@ public class Account implements Serializable {
 	
 	public Bank getBank(String world) {
 		return this.banks.get(world);
-	}
-
-	public List<SerializableItemStack> getOverflow() {
-		return overflow;
-	}
-
-	public void setOverflow(List<SerializableItemStack> overflow) {
-		this.overflow = overflow;
 	}
 }

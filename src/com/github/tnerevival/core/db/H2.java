@@ -51,7 +51,7 @@ public class H2 extends SQLDatabase {
 		}
 		try {
 			Class.forName("org.h2.Driver");
-			connection = DriverManager.getConnection("jdbc:h2:" + file, user, password);
+			connection = DriverManager.getConnection("jdbc:h2:" + file + ";mode=MySQL", user, password);
 		} catch (SQLException e) {
 			System.out.println("Unable to connect to H2.");
 			e.printStackTrace();

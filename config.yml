@@ -144,10 +144,10 @@ Core:
     #All configurations relating to the database
     Database:
 
-        #The database type to use. Current options: FlatFile, MySQL, SQLite.
+        #The database type to use. Current options: FlatFile, MySQL, H2.
         Type: FlatFile
             
-        #The prefix to use for TheNewEconomy MySQL and SQLite Tables
+        #The prefix to use for TheNewEconomy MySQL and H2 Tables
         Prefix: TNE
         
         #Whether or not to backup your database automatically before converting to newer versions of TNE
@@ -176,8 +176,14 @@ Core:
             
             #Your MySQL user's password
             Password: password
+
+        H2:
+            #The H2 Database file.
+            File: Economy
             
         #All configurations relating to the SQLite Database
+        #No Longer Supported
+        #For backwards support purposes only.
         SQLite:
             
             #The SQLite Database File
