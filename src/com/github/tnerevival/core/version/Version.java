@@ -12,6 +12,7 @@ public abstract class Version {
 	public String mysqlUser = TNE.configurations.getString("Core.Database.MySQL.User");
 	public String mysqlPassword = TNE.configurations.getString("Core.Database.MySQL.Password");
 	public String prefix = TNE.configurations.getString("Core.Database.Prefix");
+	public String h2File = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.H2.File");
 	public String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.SQLite.File");
 	
 	Database db;
@@ -24,6 +25,7 @@ public abstract class Version {
 	public SQLite sqlite() {
 		return (SQLite)db;
 	}
+
 	public H2 h2() { return (H2)db; }
 	
 	public FlatFile flatfile() {

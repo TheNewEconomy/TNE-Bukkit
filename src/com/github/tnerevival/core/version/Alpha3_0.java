@@ -405,14 +405,147 @@ public class Alpha3_0 extends Version {
 
 	@Override
 	public void loadH2() {
-		// TODO Auto-generated method stub
-		
+    db = new H2(h2File, mysqlUser, mysqlPassword);
+
+    String table = prefix + "_USERS";
+
+    try {
+      h2().executeQuery("SELECT * FROM " + table + ";");
+
+      while(mysql().results().next()) {
+        Account account = new Account(UUID.fromString(mysql().results().getString("uuid")));
+        account.balancesFromString(mysql().results().getString("balances"));
+        account.setAccountNumber(mysql().results().getInt("accountnumber"));
+        account.setStatus(mysql().results().getString("accountstatus"));
+        account.setJoined(mysql().results().getString("joinedDate"));
+        account.creditsFromString(mysql().results().getString("inventory_credits"));
+        account.commandsFromString(mysql().results().getString("command_credits"));
+        account.setPin(mysql().results().getString("acc_pin"));
+
+        String bankTable = prefix + "_BANKS";
+        h2().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
+
+        while(mysql().secondary().next()) {
+          account.getBanks().put(mysql().secondary().getString("world"), BankUtils.fromString(mysql().secondary().getString("bank")));
+        }
+        TNE.instance.manager.accounts.put(account.getUid(), account);
+      }
+
+      table = prefix + "_ECOIDS";
+      h2().executeQuery("SELECT * FROM " + table + ";");
+      while(h2().results().next()) {
+        TNE.instance.manager.ecoIDs.put(mysql().results().getString("username"), UUID.fromString(mysql().results().getString("uuid")));
+      }
+
+      table = prefix + "_SHOPS";
+      h2().executeQuery("SELECT * FROM `" + table + ";");
+      while(h2().results().next()) {
+        Shop s = new Shop(mysql().results().getString("shop_name"));
+        s.setOwner(UUID.fromString(mysql().results().getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(mysql().results().getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(mysql().results().getInt("shop_admin")));
+        s.itemsFromString(mysql().results().getString("shop_items"));
+        s.listFromString(mysql().results().getString("shop_blacklist"), true);
+        s.listFromString(mysql().results().getString("shop_whitelist"), false);
+        s.sharesFromString(mysql().results().getString("shop_shares"));
+      }
+      h2().close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 	}
 
 	@Override
 	public void saveH2() {
-		// TODO Auto-generated method stub
+    String table = prefix + "_INFO";
+    db = new H2(h2File, mysqlUser, mysqlPassword);
 
+    h2().executePreparedUpdate("Update " + table + " SET version = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()) });
+
+    Iterator<Map.Entry<UUID, Account>> accIT = TNE.instance.manager.accounts.entrySet().iterator();
+
+    while(accIT.hasNext()) {
+      java.util.Map.Entry<UUID, Account> entry = accIT.next();
+
+      Iterator<java.util.Map.Entry<String, Bank>> bankIT = entry.getValue().getBanks().entrySet().iterator();
+
+      while(bankIT.hasNext()) {
+        java.util.Map.Entry<String, Bank> bankEntry = bankIT.next();
+
+        table = prefix + "_BANKS";
+
+        h2().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, world, bank) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE bank = ?",
+            new Object[] {
+                entry.getKey().toString(),
+                bankEntry.getKey(),
+                bankEntry.getValue().toString(),
+                bankEntry.getValue().toString(),
+            });
+      }
+      table = prefix + "_USERS";
+
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, balances, acc_pin, inventory_credits, command_credits, joinedDate, accountnumber, accountstatus) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE balances = ?, acc_pin = ?, inventory_credits = ?, command_credits = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?",
+          new Object[] {
+              entry.getKey().toString(),
+              entry.getValue().balancesToString(),
+              entry.getValue().getPin(),
+              entry.getValue().creditsToString(),
+              entry.getValue().commandsToString(),
+              entry.getValue().getJoined(),
+              entry.getValue().getAccountNumber(),
+              entry.getValue().getStatus().getName(),
+              entry.getValue().balancesToString(),
+              entry.getValue().getPin(),
+              entry.getValue().creditsToString(),
+              entry.getValue().commandsToString(),
+              entry.getValue().getJoined(),
+              entry.getValue().getAccountNumber(),
+              entry.getValue().getStatus().getName()
+          });
+    }
+    Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
+
+    while(idsIT.hasNext()) {
+      Map.Entry<String, UUID> idEntry = idsIT.next();
+
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?",
+          new Object[] {
+              idEntry.getKey(),
+              idEntry.getValue().toString(),
+              idEntry.getKey()
+          });
+    }
+
+    Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance.manager.shops.entrySet().iterator();
+
+    while(shopIT.hasNext()) {
+      Map.Entry<String, Shop> shopEntry = shopIT.next();
+
+      Shop s = shopEntry.getValue();
+
+      table = prefix + "_SHOPS";
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
+          new Object[] {
+              shopEntry.getKey(),
+              s.getOwner(),
+              SQLDatabase.boolToDB(s.isHidden()),
+              SQLDatabase.boolToDB(s.isAdmin()),
+              s.itemsToString(),
+              s.listToString(true),
+              s.listToString(false),
+              s.sharesToString(),
+              s.getOwner(),
+              SQLDatabase.boolToDB(s.isHidden()),
+              SQLDatabase.boolToDB(s.isAdmin()),
+              s.itemsToString(),
+              s.listToString(true),
+              s.listToString(false),
+              s.sharesToString()
+          });
+    }
+    h2().close();
 	}
 
 	@Override
@@ -466,7 +599,7 @@ public class Alpha3_0 extends Version {
 								   ");");
 			mysql().close();
 		} else {
-			File h2DB = new File(sqliteFile);
+			File h2DB = new File(h2File);
 			if(!h2DB.exists()) {
 				try {
           h2DB.createNewFile();
@@ -475,7 +608,7 @@ public class Alpha3_0 extends Version {
 				}
 			}
 			
-			db = new H2(sqliteFile, mysqlUser, mysqlPassword);
+			db = new H2(h2File, mysqlUser, mysqlPassword);
 
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`id` INTEGER NOT NULL," +

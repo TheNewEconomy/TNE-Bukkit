@@ -49,16 +49,9 @@ public class SaveManager {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				connection = DriverManager.getConnection("jdbc:mysql://" + versionInstance.mysqlHost + ":" + versionInstance.mysqlPort + "/" + versionInstance.mysqlDatabase, versionInstance.mysqlUser, versionInstance.mysqlPassword);
-				statement = connection.prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ?;");
-				statement.setString(1, versionInstance.mysqlDatabase);
-				statement.setString(2, table);
-				result = statement.executeQuery();
-				Boolean toReturn = result.first();
-				connection.close();
-				return !toReturn;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+        result = connection.getMetaData().getTables(null, null, table, null);
+        return result.next();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if(type.equalsIgnoreCase("sqlite")) {
@@ -79,13 +72,26 @@ public class SaveManager {
 				Boolean toReturn = result.next();
 				connection.close();
 				return !toReturn;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if(type.equalsIgnoreCase("h2")) {
-
+      File h2DB = new File(versionInstance.h2File);
+      if(!h2DB.exists()) {
+        return true;
+      }
+      Connection connection;
+      PreparedStatement statement;
+      ResultSet result;
+      String table = versionInstance.prefix + "_INFO";
+      try {
+        Class.forName("org.h2.Driver");
+        connection = DriverManager.getConnection("jdbc:h2:" + versionInstance.h2File + ";mode=MySQL", versionInstance.mysqlUser, versionInstance.mysqlPassword);
+        result = connection.getMetaData().getTables(null, null, table, null);
+        return result.next();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
 		}
 		return !file.exists();
 	}
@@ -100,8 +106,8 @@ public class SaveManager {
 			}
 		} else if(type.equalsIgnoreCase("mysql")) {
 			versionInstance.createTables("mysql");
-		} else if(type.equalsIgnoreCase("sqlite")) {
-			versionInstance.createTables("sqlite");
+		} else if(type.equalsIgnoreCase("sqlite") || type.equalsIgnoreCase("h2")) {
+			versionInstance.createTables("h2");
 		}
 	}
 	
@@ -153,7 +159,24 @@ public class SaveManager {
 				e.printStackTrace();
 			}
 		} else if (type.equalsIgnoreCase("h2")) {
-
+      Connection connection;
+      Statement statement;
+      ResultSet result;
+      String table = versionInstance.prefix + "_INFO";
+      try {
+        Class.forName("org.h2.Driver");
+        connection = DriverManager.getConnection("jdbc:h2:" + versionInstance.h2File + ";mode=MySQL", versionInstance.mysqlUser, versionInstance.mysqlPassword);
+        statement = connection.createStatement();
+        result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1;");
+        if(result.next()) {
+          saveVersion = Double.valueOf(result.getString("version"));
+        }
+        connection.close();
+      } catch(SQLException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
 		}
 	}
 	
@@ -181,8 +204,8 @@ public class SaveManager {
 			saveFlatFile();
 		} else if(type.equalsIgnoreCase("mysql")) {
 			saveMySQL();
-		} else if(type.equalsIgnoreCase("sqlite")) {
-			saveSQLite();
+		} else if(type.equalsIgnoreCase("h2") || type.equalsIgnoreCase("sqlite")) {
+			saveH2();
 		}
 		TNE.instance.getLogger().info("Data saved!");
 	}
@@ -190,7 +213,7 @@ public class SaveManager {
 	public Boolean backupDatabase() throws IOException {
 		if(type.equalsIgnoreCase("mysql")) return false;
 		
-		String db = (type.equalsIgnoreCase("flatfile")) ? TNE.configurations.getString("Core.Database.FlatFile.File") : TNE.configurations.getString("Core.Database.SQLite.File");
+		String db = (type.equalsIgnoreCase("flatfile")) ? TNE.configurations.getString("Core.Database.FlatFile.File") : TNE.configurations.getString("Core.Database.H2.File");
 		FileInputStream fileIn = new FileInputStream(new File(TNE.instance.getDataFolder(), db));
 		FileOutputStream fileOut = new FileOutputStream(new File(TNE.instance.getDataFolder(), "Database.zip"));
 		ZipOutputStream zipOut = new ZipOutputStream(fileOut);

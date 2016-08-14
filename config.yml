@@ -177,6 +177,7 @@ Core:
             #Your MySQL user's password
             Password: password
 
+        #All configurations relating to the H2 Database
         H2:
             #The H2 Database file.
             File: Economy
