@@ -4,13 +4,10 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.eventold.*;
-import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class AccountUtils {
@@ -57,18 +54,6 @@ public class AccountUtils {
 			return true;
 		}
 		return false;
-	}
-	
-	public static List<SerializableItemStack> overflowFromString(String overflowString) {
-		List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
-		if(!overflowString.equalsIgnoreCase("TNENOSTRINGVALUE")) {
-			String[] itemStrings = overflowString.split("\\*");
-			
-			for(String s : itemStrings) {
-				items.add(SerializableItemStack.fromString(s));
-			}
-		}
-		return items;
 	}
 	
 	private static Double getBalance(UUID id) {

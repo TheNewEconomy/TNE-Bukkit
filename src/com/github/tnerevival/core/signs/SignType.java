@@ -3,10 +3,8 @@ package com.github.tnerevival.core.signs;
 public enum SignType {
 	
 	UNKNOWN("unknown", "", "", ""),
-	AUCTION("auction", "[auction]", "tne.place.auction", "tne.use.auction"),
 	BANK("bank", "[bank]", "tne.place.bank", "tne.use.bank"),
 	BUY("buy", "[buy]", "tne.place.buy", "tne.use.buy"),
-	LOTTERY("lottery", "[lottery]", "tne.place.lottery", "tne.use.lottery"),
 	SELL("sell", "[sell]", "tne.place.sell", "tne.use.sell"),
 	SHOP("shop", "[shop]", "tne.place.shop", "tne.use.shop");
 	

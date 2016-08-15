@@ -10,7 +10,6 @@ import com.github.tnerevival.core.db.flat.Article;
 import com.github.tnerevival.core.db.flat.Entry;
 import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
-import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 
 import java.io.File;
@@ -62,7 +61,6 @@ public class Alpha2_2 extends Version {
 			
 			account.setAccountNumber((Integer) info.getData("accountnumber"));
 			account.setStatus((String) info.getData("status"));
-			account.setOverflow(AccountUtils.overflowFromString((String)info.getData("overflow")));
 			
 			Iterator<java.util.Map.Entry<String, Object>> balanceIterator = balances.getData().entrySet().iterator();
 			
@@ -102,7 +100,6 @@ public class Alpha2_2 extends Version {
 			info.addData("accountnumber", acc.getAccountNumber());
 			info.addData("uuid", acc.getUid());
 			info.addData("status", acc.getStatus().getName());
-			info.addData("overflow", acc.overflowToString());
 			account.addEntry(info);
 			//Balances
 			Entry balances = new Entry("balances");
@@ -152,7 +149,6 @@ public class Alpha2_2 extends Version {
 				account.setAccountNumber(mysql().results().getInt("accountnumber"));
 				account.setStatus(mysql().results().getString("accountstatus"));
 				account.setJoined(mysql().results().getString("joinedDate"));
-				account.setOverflow(AccountUtils.overflowFromString(mysql().results().getString("overflow")));
 				
 				String bankTable = prefix + "_BANKS";
 				mysql().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
@@ -216,24 +212,22 @@ public class Alpha2_2 extends Version {
 			try {
 				mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { entry.getKey().toString() });
 				if(mysql().results().first()) {
-					mysql().executePreparedUpdate("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?, overflow = ? WHERE uuid = ?;", 
+					mysql().executePreparedUpdate("UPDATE " + table + " SET balances = ?, joinedDate = ?, accountnumber = ?, accountstatus = ? WHERE uuid = ?;",
 							new Object[] {
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getStatus().getName(),
-								entry.getValue().overflowToString(),
 								entry.getKey().toString()
 							});
 				} else {
-					mysql().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, joinedDate, accountnumber, accountstatus, overflow) VALUES (?, ?, ?, ?, ?, ?);", 
+					mysql().executePreparedUpdate("INSERT INTO " + table + " (uuid, balances, joinedDate, accountnumber, accountstatus) VALUES (?, ?, ?, ?, ?);",
 							new Object[] {
 								entry.getKey().toString(),
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getStatus().getName(),
-								entry.getValue().overflowToString()
 							});
 				}
 			} catch (SQLException e) {
@@ -257,7 +251,6 @@ public class Alpha2_2 extends Version {
 				account.balancesFromString(sqlite().results().getString("balances"));
 				account.setStatus(sqlite().results().getString("accountstatus"));
 				account.setJoined(sqlite().results().getString("joinedDate"));
-				account.setOverflow(AccountUtils.overflowFromString(sqlite().results().getString("overflow")));
 				
 				String bankTable = prefix + "_BANKS";
 				sqlite().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { uid.toString() }, false);
@@ -326,7 +319,6 @@ public class Alpha2_2 extends Version {
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
 								entry.getValue().getStatus().getName(),
-								entry.getValue().overflowToString(),
 								entry.getKey().toString()
 							});
 				} else {
@@ -336,8 +328,7 @@ public class Alpha2_2 extends Version {
 								entry.getValue().balancesToString(),
 								entry.getValue().getJoined(),
 								entry.getValue().getAccountNumber(),
-								entry.getValue().getStatus().getName(),
-								entry.getValue().overflowToString()
+								entry.getValue().getStatus().getName()
 							});
 				}
 				sqlite().close();

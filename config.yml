@@ -42,10 +42,6 @@ Core:
 
     #All configurations relating to currency.
     Currency:
-    
-        #Whether or not to use the advanced currency system.
-        #The advanced currency system allows multiple tiered currencies that can be digital or item-based - currently unavailable
-        Advanced: false
 
         #Would you like to use an item as the currency?
         ItemCurrency: false
@@ -77,6 +73,51 @@ Core:
 
             #The plural name. Example: Cents
             Plural: Cents
+
+    #All configurations relating to the TNE Sign System
+    Signs:
+
+        #All configurations relating to bank signs.
+        Bank:
+
+            #Whether or not players can use bank signs to view their banks
+            Enabled: false
+
+            #The cost to make a bank sign, if the player has valid permissions.
+            Cost: 20.0
+
+        #All configurations relating to shop signs.
+        Shop:
+
+            #Whether or not shop signs are enabled.
+            Enabled: false
+
+            #The cost to make a shop sign, if the player has valid permissions.
+            Cost: 20.0
+
+        #All configurations relating to sell signs.
+        Sell:
+
+            #Whether or not sell signs are enabled.
+            Enabled: false
+
+            #The cost to make a sell sign, if the player has valid permissions.
+            Cost: 20.0
+
+            #The maximum amount of sell signs a player can make.
+            Max: 10
+
+       #All configurations relating to buy signs.
+       Buy:
+
+            #Whether or not buy signs are enabled.
+            Enabled: false
+
+            #The cost to make a buy sign, if the player has valid permissions.
+            Cost: 20.0
+
+            #The maximum amount of buy signs a player can make.
+            Max: 10
             
     #All configurations relating to player death.
     Death:
@@ -98,9 +139,6 @@ Core:
 
         #Whether or not banks are enabled.
         Enabled: true
-
-        #Whether or not players can use signs to access their banks.
-        Sign: false
 
         #Whether or not players can use a command to access their banks.
         Command: true

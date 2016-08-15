@@ -23,6 +23,16 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Currency.MajorName.Plural", "Dollars");
 		configurations.put("Core.Currency.MinorName.Single", "Cent");
 		configurations.put("Core.Currency.MinorName.Plural", "Cents");
+		configurations.put("Core.Signs.Bank.Enabled", false);
+		configurations.put("Core.Signs.Bank.Cost", 20.0);
+		configurations.put("Core.Signs.Shop.Enabled", false);
+		configurations.put("Core.Signs.Shop.Cost", 20.0);
+		configurations.put("Core.Signs.Sell.Enabled", false);
+		configurations.put("Core.Signs.Sell.Cost", 20.0);
+		configurations.put("Core.Signs.Sell.Max", 10);
+		configurations.put("Core.Signs.Buy.Enabled", false);
+		configurations.put("Core.Signs.Buy.Cost", 20.0);
+		configurations.put("Core.Signs.Buy.Max", 10);
 		configurations.put("Core.Death.Lose", false);
 		configurations.put("Core.Death.Robbing", false);
 		configurations.put("Core.Death.RobbingInterval", 600);

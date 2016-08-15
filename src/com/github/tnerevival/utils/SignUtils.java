@@ -1,16 +1,32 @@
 package com.github.tnerevival.utils;
 
+import com.github.tnerevival.core.signs.*;
 import org.bukkit.block.Sign;
 
-import com.github.tnerevival.core.signs.SignType;
+import java.util.UUID;
 
 public class SignUtils {
 	
-	public Boolean validSign(Sign sign) {
+	public static Boolean validSign(Sign sign) {
 		return sign.getLine(0).equalsIgnoreCase("[tne]");
 	}
 	
-	public SignType getType(Sign sign) {
+	public static SignType getType(Sign sign) {
 		return SignType.fromLine(sign.getLine(1));
 	}
+
+	public static TNESign instance(String type, UUID owner) {
+	  switch(type.toLowerCase()) {
+      case "bank":
+        return new BankSign(owner);
+      case "shop":
+        return new ShopSign(owner);
+      case "sell":
+        return new SellSign(owner);
+      case "buy":
+        return new BuySign(owner);
+      default:
+        return new BankSign(owner);
+    }
+  }
 }

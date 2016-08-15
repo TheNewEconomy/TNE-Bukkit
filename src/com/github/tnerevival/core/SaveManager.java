@@ -21,7 +21,7 @@ public class SaveManager {
 	}
 	
 	Version versionInstance;
-	Double currentSaveVersion = 2.2;
+	Double currentSaveVersion = 3.0;
 	Double saveVersion = 0.0;
 	String type = TNE.configurations.getString("Core.Database.Type");
 	File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
@@ -134,9 +134,7 @@ public class SaveManager {
 					saveVersion = Double.valueOf(result.getString("version"));
 				}
 				connection.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		} else if(type.equalsIgnoreCase("sqlite")) {
@@ -153,9 +151,7 @@ public class SaveManager {
 					saveVersion = Double.valueOf(result.getString("version"));
 				}
 				connection.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		} else if (type.equalsIgnoreCase("h2")) {
@@ -172,9 +168,7 @@ public class SaveManager {
           saveVersion = Double.valueOf(result.getString("version"));
         }
         connection.close();
-      } catch(SQLException e) {
-        e.printStackTrace();
-      } catch (ClassNotFoundException e) {
+      } catch(Exception e) {
         e.printStackTrace();
       }
 		}

@@ -12,7 +12,10 @@ import com.github.tnerevival.core.db.flat.Entry;
 import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.SignUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +66,13 @@ public class Alpha3_0 extends Version {
       mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(uuid)");
       mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(world)");
 
+      table = prefix + "_SIGNS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`sign_owner` VARCHAR(36)," +
+          "`sign_type` VARCHAR(30) NOT NULL," +
+          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_meta` LONGTEXT" +
+          ");");
 		}
 	}
 
@@ -73,15 +83,15 @@ public class Alpha3_0 extends Version {
     Section accounts = null;
     Section ids = null;
     Section shops = null;
+    Section signs = null;
     try {
       connection.getOIS().readDouble();
       accounts = (Section) connection.getOIS().readObject();
       ids = (Section) connection.getOIS().readObject();
       shops = (Section) connection.getOIS().readObject();
+      signs = (Section) connection.getOIS().readObject();
       connection.close();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 
@@ -150,6 +160,18 @@ public class Alpha3_0 extends Version {
       s.sharesFromString((String)info.getData("shares"));
 
       TNE.instance.manager.shops.put(shopEntry.getKey(), s);
+    }
+
+    Iterator<Map.Entry<String, Article>> signsIterator = signs.getArticle().entrySet().iterator();
+    while(signsIterator.hasNext()) {
+      Map.Entry<String, Article> signEntry = signsIterator.next();
+      Entry info = signEntry.getValue().getEntry("info");
+
+      TNESign sign = SignUtils.instance((String)info.getData("type"), UUID.fromString((String)info.getData("owner")));
+      sign.setLocation(SerializableLocation.fromString((String)info.getData("location")));
+      sign.loadMeta((String)info.getData("meta"));
+
+      TNE.instance.manager.signs.put(sign.getLocation(), sign);
     }
 	}
 
@@ -235,6 +257,22 @@ public class Alpha3_0 extends Version {
       shops.addArticle(s.getName(), a);
     }
 
+    Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
+    Section signs = new Section("SIGNS");
+
+    while(signIT.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> signEntry = signIT.next();
+      TNESign sign = signEntry.getValue();
+
+      Article a = new Article(sign.getLocation().toString());
+      Entry info = new Entry("info");
+
+      info.addData("owner", sign.getOwner().toString());
+      info.addData("type", sign.getType().getName());
+      info.addData("extra", sign.getMeta());
+      info.addData("location", sign.getLocation().toString());
+    }
+
     try {
       db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
       FlatFileConnection connection = (FlatFileConnection)db.connection();
@@ -242,6 +280,7 @@ public class Alpha3_0 extends Version {
       connection.getOOS().writeObject(accounts);
       connection.getOOS().writeObject(ids);
       connection.getOOS().writeObject(shops);
+      connection.getOOS().writeObject(signs);
       connection.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -284,7 +323,7 @@ public class Alpha3_0 extends Version {
       }
 
       table = prefix + "_SHOPS";
-      mysql().executeQuery("SELECT * FROM `" + table + ";");
+      mysql().executeQuery("SELECT * FROM `" + table + "`;");
       while(mysql().results().next()) {
         Shop s = new Shop(mysql().results().getString("shop_name"));
         s.setOwner(UUID.fromString(mysql().results().getString("shop_owner")));
@@ -294,8 +333,18 @@ public class Alpha3_0 extends Version {
         s.listFromString(mysql().results().getString("shop_blacklist"), true);
         s.listFromString(mysql().results().getString("shop_whitelist"), false);
         s.sharesFromString(mysql().results().getString("shop_shares"));
+        TNE.instance.manager.shops.put(s.getName(), s);
       }
       mysql().close();
+
+      table = prefix + "_SIGNS";
+      mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results().next()) {
+        TNESign sign = SignUtils.instance(mysql().results().getString("sign_type"), UUID.fromString(mysql().results().getString("sign_owner")));
+        sign.setLocation(SerializableLocation.fromString(mysql().results().getString("sign_location")));
+        sign.loadMeta(mysql().results().getString("sign_meta"));
+        TNE.instance.manager.signs.put(sign.getLocation(), sign);
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -390,6 +439,27 @@ public class Alpha3_0 extends Version {
               s.sharesToString()
           });
     }
+
+    Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
+
+    while(signIT.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> signEntry = signIT.next();
+
+      TNESign sign = signEntry.getValue();
+
+      table = prefix + "_SIGNS";
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (sign_owner, sign_type, sign_location, sign_meta) VALUES(?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE sign_owner = ?, sign_type = ?, sign_meta = ?",
+          new Object[] {
+              sign.getOwner().toString(),
+              sign.getType().getName(),
+              sign.getLocation().toString(),
+              sign.getMeta(),
+              sign.getOwner().toString(),
+              sign.getType().getName(),
+              sign.getMeta()
+          });
+    }
     mysql().close();
 	}
 
@@ -412,21 +482,21 @@ public class Alpha3_0 extends Version {
     try {
       h2().executeQuery("SELECT * FROM " + table + ";");
 
-      while(mysql().results().next()) {
-        Account account = new Account(UUID.fromString(mysql().results().getString("uuid")));
-        account.balancesFromString(mysql().results().getString("balances"));
-        account.setAccountNumber(mysql().results().getInt("accountnumber"));
-        account.setStatus(mysql().results().getString("accountstatus"));
-        account.setJoined(mysql().results().getString("joinedDate"));
-        account.creditsFromString(mysql().results().getString("inventory_credits"));
-        account.commandsFromString(mysql().results().getString("command_credits"));
-        account.setPin(mysql().results().getString("acc_pin"));
+      while(h2().results().next()) {
+        Account account = new Account(UUID.fromString(h2().results().getString("uuid")));
+        account.balancesFromString(h2().results().getString("balances"));
+        account.setAccountNumber(h2().results().getInt("accountnumber"));
+        account.setStatus(h2().results().getString("accountstatus"));
+        account.setJoined(h2().results().getString("joinedDate"));
+        account.creditsFromString(h2().results().getString("inventory_credits"));
+        account.commandsFromString(h2().results().getString("command_credits"));
+        account.setPin(h2().results().getString("acc_pin"));
 
         String bankTable = prefix + "_BANKS";
         h2().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
 
-        while(mysql().secondary().next()) {
-          account.getBanks().put(mysql().secondary().getString("world"), BankUtils.fromString(mysql().secondary().getString("bank")));
+        while(h2().secondary().next()) {
+          account.getBanks().put(h2().secondary().getString("world"), BankUtils.fromString(h2().secondary().getString("bank")));
         }
         TNE.instance.manager.accounts.put(account.getUid(), account);
       }
@@ -434,20 +504,31 @@ public class Alpha3_0 extends Version {
       table = prefix + "_ECOIDS";
       h2().executeQuery("SELECT * FROM " + table + ";");
       while(h2().results().next()) {
-        TNE.instance.manager.ecoIDs.put(mysql().results().getString("username"), UUID.fromString(mysql().results().getString("uuid")));
+        TNE.instance.manager.ecoIDs.put(h2().results().getString("username"), UUID.fromString(h2().results().getString("uuid")));
       }
 
       table = prefix + "_SHOPS";
-      h2().executeQuery("SELECT * FROM `" + table + ";");
+      h2().executeQuery("SELECT * FROM `" + table + "`;");
       while(h2().results().next()) {
-        Shop s = new Shop(mysql().results().getString("shop_name"));
-        s.setOwner(UUID.fromString(mysql().results().getString("shop_owner")));
-        s.setHidden(SQLDatabase.boolFromDB(mysql().results().getInt("shop_hidden")));
-        s.setAdmin(SQLDatabase.boolFromDB(mysql().results().getInt("shop_admin")));
-        s.itemsFromString(mysql().results().getString("shop_items"));
-        s.listFromString(mysql().results().getString("shop_blacklist"), true);
-        s.listFromString(mysql().results().getString("shop_whitelist"), false);
-        s.sharesFromString(mysql().results().getString("shop_shares"));
+        Shop s = new Shop(h2().results().getString("shop_name"));
+        s.setOwner(UUID.fromString(h2().results().getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(h2().results().getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(h2().results().getInt("shop_admin")));
+        s.itemsFromString(h2().results().getString("shop_items"));
+        s.listFromString(h2().results().getString("shop_blacklist"), true);
+        s.listFromString(h2().results().getString("shop_whitelist"), false);
+        s.sharesFromString(h2().results().getString("shop_shares"));
+        TNE.instance.manager.shops.put(s.getName(), s);
+      }
+
+      table = prefix + "_SIGNS";
+      h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results().next()) {
+        TNESign sign = SignUtils.instance(h2().results().getString("sign_type"), UUID.fromString(h2().results().getString("sign_owner")));
+        sign.setLocation(SerializableLocation.fromString(h2().results().getString("sign_location")));
+        sign.loadMeta(h2().results().getString("sign_meta"));
+
+        TNE.instance.manager.signs.put(sign.getLocation(), sign);
       }
       h2().close();
     } catch (SQLException e) {
@@ -545,6 +626,27 @@ public class Alpha3_0 extends Version {
               s.sharesToString()
           });
     }
+
+    Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
+
+    while(signIT.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> signEntry = signIT.next();
+
+      TNESign sign = signEntry.getValue();
+
+      table = prefix + "_SIGNS";
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (sign_owner, sign_type, sign_location, sign_meta) VALUES(?, ?, ?, ?)" +
+            " ON DUPLICATE KEY UPDATE sign_owner = ?, sign_type = ?, sign_meta = ?",
+          new Object[] {
+              sign.getOwner().toString(),
+              sign.getType().getName(),
+              sign.getLocation().toString(),
+              sign.getMeta(),
+              sign.getOwner().toString(),
+              sign.getType().getName(),
+              sign.getMeta()
+          });
+    }
     h2().close();
 	}
 
@@ -593,10 +695,18 @@ public class Alpha3_0 extends Version {
 			
 			table = prefix + "_BANKS";
 			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-								   "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
-								   "`world` VARCHAR(50) NOT NULL UNIQUE," +
-								   "`bank` LONGTEXT" +
-								   ");");
+          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
+					"`world` VARCHAR(50) NOT NULL UNIQUE," +
+					"`bank` LONGTEXT" +
+					");");
+
+      table = prefix + "_SIGNS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`sign_owner` VARCHAR(36)," +
+          "`sign_type` VARCHAR(30) NOT NULL," +
+          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_meta` LONGTEXT" +
+                   ");");
 			mysql().close();
 		} else {
 			File h2DB = new File(h2File);
@@ -651,6 +761,14 @@ public class Alpha3_0 extends Version {
           "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
           "`world` VARCHAR(50) NOT NULL UNIQUE," +
           "`bank` LONGTEXT" +
+          ");");
+
+      table = prefix + "_SIGNS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`sign_owner` VARCHAR(36)," +
+          "`sign_type` VARCHAR(30) NOT NULL," +
+          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_meta` LONGTEXT" +
           ");");
       h2().close();
 		}

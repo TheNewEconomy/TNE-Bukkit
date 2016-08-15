@@ -11,9 +11,9 @@ import org.bukkit.inventory.Inventory;
 import java.util.UUID;
 
 public abstract class TNESign {
-	protected UUID owner;
-	protected SignType type;
-	protected SerializableLocation location;
+	protected UUID owner; //save
+	protected SignType type; //save
+	protected SerializableLocation location; //save
 	protected Inventory inventory = null;
 	protected String permission = null;
 	
@@ -104,4 +104,13 @@ public abstract class TNESign {
 	public void setPermission(String permission) {
 		this.permission = permission;
 	}
+
+	public void loadMeta(String data) {
+	  //TODO: Implement as needed in child classes.
+  }
+
+  public String getMeta() {
+    //TODO: Implement as needed in child classes.
+    return "";
+  }
 }
