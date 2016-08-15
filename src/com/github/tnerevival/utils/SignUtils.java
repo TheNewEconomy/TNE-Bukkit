@@ -1,12 +1,25 @@
 package com.github.tnerevival.utils;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.signs.*;
+import com.github.tnerevival.serializable.SerializableLocation;
+import org.bukkit.Location;
 import org.bukkit.block.Sign;
 
 import java.util.UUID;
 
 public class SignUtils {
-	
+
+  public static Boolean validSign(Location location) {
+    SerializableLocation cerealLoc = new SerializableLocation(location);
+    for(SerializableLocation loc : TNE.instance.manager.signs.keySet()) {
+      if(loc.equals(cerealLoc)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 	public static Boolean validSign(Sign sign) {
 		return sign.getLine(0).equalsIgnoreCase("[tne]");
 	}

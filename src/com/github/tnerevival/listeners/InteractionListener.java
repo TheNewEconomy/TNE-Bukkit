@@ -5,19 +5,22 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.core.potion.PotionHelper;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.MaterialUtils;
+import com.github.tnerevival.core.signs.SignType;
+import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.serializable.SerializableLocation;
+import com.github.tnerevival.utils.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -29,6 +32,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -98,7 +102,17 @@ public class InteractionListener implements Listener {
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
 		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType()).toLowerCase();
-		
+
+    if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
+      if(SignUtils.validSign((Sign)event.getBlock().getState())) {
+        TNESign sign = TNE.instance.manager.signs.get(new SerializableLocation(event.getBlock().getLocation()));
+        if(!sign.onDestroy(event.getPlayer())) {
+          event.setCancelled(true);
+        }
+        return;
+      }
+    }
+
 		if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
 			Player player = event.getPlayer();
 			Double cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getMine();
@@ -133,7 +147,13 @@ public class InteractionListener implements Listener {
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
 		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType()).toLowerCase();
-		
+
+    if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
+      if(SignUtils.validSign((Sign)event.getBlock().getState())) {
+        return;
+      }
+    }
+
 		if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
 			Player player = event.getPlayer();
 			Double cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getPlace();
@@ -378,20 +398,13 @@ public class InteractionListener implements Listener {
 	
 	@EventHandler
 	public void onChange(SignChangeEvent event) {
-		Message noPerm = new Message("Messages.General.NoPerm");
-		Player player = event.getPlayer();
-		if(event.getLine(0).toLowerCase().contains("[tne]")) {
-			if(!player.hasPermission("tne.sign.main")) {
-				event.getPlayer().sendMessage(noPerm.translate());
-				event.setCancelled(true);
-			}
-		}
-		if(event.getLine(1).toLowerCase().contains("[bank]")) {
-			if(!player.hasPermission("tne.sign.bank")) {
-				event.getPlayer().sendMessage(noPerm.translate());
-				event.setCancelled(true);
-			}
-		}
+    SignType type = SignType.fromLine(event.getLine(1));
+    if(event.getLine(0).contains("[tne]") && type != SignType.UNKNOWN) {
+      TNESign sign = SignUtils.instance(type.getName(), MISCUtils.getID(event.getPlayer()));
+      if(!sign.onCreate(event.getPlayer())) {
+        event.setCancelled(true);
+      }
+    }
 	}
 	
 	@EventHandler
@@ -404,7 +417,7 @@ public class InteractionListener implements Listener {
 			world = player.getWorld().getName();
 		}
 		
-		
+		//TODO: Either fix or remove.
 		if(entity instanceof Villager) {
 			Villager villager = (Villager)entity;
 			if(player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !player.hasPermission("tne.bypass.nametag")) {
@@ -435,6 +448,76 @@ public class InteractionListener implements Listener {
 			}
 		}
 	}
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onRightClick(PlayerInteractEvent event) {
+    Action action = event.getAction();
+    Player player = event.getPlayer();
+    String world = player.getWorld().getName();
+    Block block = event.getClickedBlock();
+
+    if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
+      if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
+        if(SignUtils.validSign(block.getLocation())) {
+          TNESign sign = TNE.instance.manager.signs.get(new SerializableLocation(block.getLocation()));
+          if(sign.onRightClick(player)) {
+            event.setCancelled(true);
+          }
+        }
+      }
+
+      if (action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
+
+      } else {
+        //TODO: Move to PlayerConsumeEvent, and PotionSplashEvent
+        Double cost = 0.0;
+        String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getMaterial()).toLowerCase();
+        boolean potion = false;
+        if(event.getItem() != null) {
+          if(event.getItem().getType().equals(Material.POTION)) {
+            potion = true;
+
+            name = PotionHelper.getName(event.getItem()).toLowerCase() ;
+
+            if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+              cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getUse();
+            }
+          } else {
+            if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+              cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getUse();
+            }
+          }
+
+          if(!potion && TNE.configurations.getMaterialsConfiguration().containsItem(name) || potion && TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
+
+            String message = (potion)? "Messages.Objects.PotionUseCharged" : "Messages.Objects.ItemUseCharged";
+            if(cost > 0.0) {
+              if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+                AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+              } else {
+                event.setCancelled(true);
+                Message insufficient = new Message("Messages.Money.Insufficient");
+                insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+                player.sendMessage(insufficient.translate());
+                return;
+              }
+            } else {
+              AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+              message = (potion)? "Messages.Objects.PotionUsePaid" : "Messages.Objects.ItemUsePaid";
+            }
+
+            if(cost > 0.0 || cost < 0.0  || cost == 0.0 && !potion && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")  || cost == 0.0 && potion && TNE.configurations.getBoolean("Materials.Potions.ZeroMessage")) {
+
+              Message m = new Message(message);
+              m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
+              m.addVariable("$item", name);
+              player.sendMessage(m.translate());
+            }
+          }
+        }
+      }
+    }
+  }
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityDeath(EntityDeathEvent event) {

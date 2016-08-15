@@ -11,15 +11,37 @@ import org.bukkit.inventory.Inventory;
 import java.util.UUID;
 
 public abstract class TNESign {
-	protected UUID owner; //save
-	protected SignType type; //save
-	protected SerializableLocation location; //save
+	protected UUID owner;
+	protected SignType type;
+	protected SerializableLocation location;
 	protected Inventory inventory = null;
 	protected String permission = null;
 	
 	public TNESign(UUID owner) {
 		this.owner = owner;
 	}
+
+	/**
+	 * Called when a player attempts to create a TNE sign.
+   * @param player
+   * @return Whether or not the action was performed successfully.
+	 */
+	public boolean onCreate(Player player) {
+	  TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.CREATED);
+    Bukkit.getServer().getPluginManager().callEvent(event);
+    return (!event.isCancelled());
+  }
+
+  /**
+   * Called when a player attempts to destroy a TNE sign.
+   * @param player
+   * @return Whether or not the action was performed successfully.
+   */
+  public boolean onDestroy(Player player) {
+    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.DESTROYED);
+    Bukkit.getServer().getPluginManager().callEvent(event);
+    return (!event.isCancelled());
+  }
 
 	/**
 	 * Called when this sign is clicked on

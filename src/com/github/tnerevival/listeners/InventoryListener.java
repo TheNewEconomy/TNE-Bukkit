@@ -9,23 +9,16 @@ import com.github.tnerevival.core.inventory.View;
 import com.github.tnerevival.core.potion.PotionHelper;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.MaterialUtils;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -234,88 +227,6 @@ public class InventoryListener implements Listener {
 				meta.setLore(new ArrayList<String>());
 				result.setItemMeta(meta);
 				event.setCurrentItem(result);
-			}
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onRightClick(PlayerInteractEvent event) {
-		Action action = event.getAction();
-		Player player = event.getPlayer();
-		String world = player.getWorld().getName();
-		Block block = event.getClickedBlock();
-		
-		if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
-			if (action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
-				Sign sign = (Sign) block.getState();
-				if(sign.getLine(0).toLowerCase().contains("[tne]")) {
-					if (sign.getLine(1).toLowerCase().contains("[bank]")) {
-						if(player.hasPermission("tne.bank.use")) {
-							if(BankUtils.enabled(world)) {
-								if(BankUtils.sign(world)) {
-									if(BankUtils.hasBank(MISCUtils.getID(player))) {
-										Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
-										player.openInventory(bankInventory);
-									} else {
-										player.sendMessage(new Message("Messages.Bank.None").translate());
-									}
-								} else {
-									player.sendMessage(new Message("Messages.Bank.NoSign").translate());
-								}
-							} else {
-								player.sendMessage(new Message("Messages.Bank.Disabled").translate());
-							}
-						} else {
-							player.sendMessage(new Message("Messages.General.NoPerm").translate());
-						}
-					}
-				}
-			} else {
-				Double cost = 0.0;
-				String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getMaterial()).toLowerCase();
-				boolean potion = false;
-				if(event.getItem() != null) {
-					if(event.getItem().getType().equals(Material.POTION)) {
-						potion = true;
-						
-						name = PotionHelper.getName(event.getItem()).toLowerCase() ;
-						
-						if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-							cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getUse();
-						}
-					} else {
-						if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-							cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getUse();
-						}
-					}
-					
-					if(!potion && TNE.configurations.getMaterialsConfiguration().containsItem(name) || potion && TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-					
-						String message = (potion)? "Messages.Objects.PotionUseCharged" : "Messages.Objects.ItemUseCharged";
-						if(cost > 0.0) {
-							if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
-								AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
-							} else {
-								event.setCancelled(true);
-								Message insufficient = new Message("Messages.Money.Insufficient");
-								insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-								player.sendMessage(insufficient.translate());
-								return;
-							}
-						} else {
-							AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
-							message = (potion)? "Messages.Objects.PotionUsePaid" : "Messages.Objects.ItemUsePaid";
-						}
-						
-						if(cost > 0.0 || cost < 0.0  || cost == 0.0 && !potion && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")  || cost == 0.0 && potion && TNE.configurations.getBoolean("Materials.Potions.ZeroMessage")) {
-							
-							Message m = new Message(message);
-							m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-							m.addVariable("$item", name);
-							player.sendMessage(m.translate());
-						}
-					}
-				}
 			}
 		}
 	}

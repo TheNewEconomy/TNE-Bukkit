@@ -50,4 +50,19 @@ public class SerializableLocation implements Serializable {
 
       return new SerializableLocation(parsed[3], Double.valueOf(parsed[0]), Double.valueOf(parsed[1]), Double.valueOf(parsed[2]));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+      if(obj == null) return false;
+      if(getClass() != obj.getClass()) return false;
+
+      final SerializableLocation cerealLocation = (SerializableLocation)obj;
+
+      if(!world.equals(cerealLocation.world)) return false;
+      if(Double.compare(x, cerealLocation.x) != 0) return false;
+      if(Double.compare(y, cerealLocation.y) != 0) return false;
+      if(Double.compare(z, cerealLocation.z) != 0) return false;
+
+      return true;
+    }
 }

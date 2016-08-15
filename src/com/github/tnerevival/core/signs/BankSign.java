@@ -1,11 +1,10 @@
 package com.github.tnerevival.core.signs;
 
-import java.util.UUID;
-
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class BankSign extends TNESign {
 
@@ -25,6 +24,7 @@ public class BankSign extends TNESign {
 			inventory = BankUtils.getBankInventory(MISCUtils.getID(player));
 			if(!super.onOpen(player)) {
 				player.openInventory(inventory);
+				return true;
 			}
 		}
 		return false;
