@@ -1,0 +1,28 @@
+package com.github.tnerevival.core.transaction;
+
+/**
+ * Created by Daniel on 8/15/2016.
+ */
+public enum TransactionType {
+  MONEY_PAY,
+  MONEY_GIVE,
+  BANK_WITHDRAWAL,
+  BANK_DEPOSIT,
+  BANK_INTEREST,
+  SHOP_CHARGE,
+  BLOCK_PLACEMENT,
+  BLOCK_MINED,
+  ITEM_CRAFTED,
+  ITEM_USE,
+  ITEM_ENCHANT,
+  ITEM_SMELT,
+  ITEM_CONSUMED,
+  POTION_BREW,
+  POTION_USE,
+  POTION_USE_SPLASH,
+  COMMAND_PACKAGE,
+  COMMAND_USE,
+  INVENTORY_PACKAGE,
+  INVENTORY_USE,
+  ENTITY_REWARD
+}

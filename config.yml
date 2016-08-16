@@ -74,6 +74,31 @@ Core:
             #The plural name. Example: Cents
             Plural: Cents
 
+    #All configurations relating to the TNE Shop System
+    Shops:
+
+        #Whether or not shops are enabled
+        Enabled: true
+
+        #The max amount of shops a single player can own.
+        Amount: 5
+
+        #The number of rows a shop has.( minimum is 1, maximum is 6)
+        #1 row = 9 slots
+        Rows: 3
+
+        #The max amount of people that can browse a single shop at a time.
+        MaxShoppers: 10
+
+        #All configurations relating to shop money sharing.
+        Shares:
+
+            #Whether or not money sharing is enabled
+            Enabled: true
+
+            #The max amount of people that can share money for a shop.
+            MaxSharers: 3
+
     #All configurations relating to the TNE Sign System
     Signs:
 
@@ -86,6 +111,9 @@ Core:
             #The cost to make a bank sign, if the player has valid permissions.
             Cost: 20.0
 
+            #The cost to use a bank sign, if the player has valid permissions.
+            Use: 20.0
+
         #All configurations relating to shop signs.
         Shop:
 
@@ -94,6 +122,9 @@ Core:
 
             #The cost to make a shop sign, if the player has valid permissions.
             Cost: 20.0
+
+            #The cost to use a shop sign, if the player has valid permissions.
+            Use: 20.0
 
         #All configurations relating to sell signs.
         Sell:

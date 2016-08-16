@@ -1,16 +1,20 @@
 package com.github.tnerevival.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.OfflinePlayer;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.core.api.TNEAPI;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.api.TNEAPI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class TNEVaultEconomy implements Economy {
 	
@@ -39,7 +43,24 @@ public class TNEVaultEconomy implements Economy {
 
 	@Override
 	public EconomyResponse createBank(String name, OfflinePlayer player) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	  String world = MISCUtils.getWorld(player.getPlayer());
+
+    if(!BankUtils.enabled(world)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
+    }
+
+    if(BankUtils.hasBank(getBankAccount(name))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " already has a bank in this world!");
+    }
+
+    if(!AccountUtils.hasFunds(getBankAccount(name), world, BankUtils.cost(world))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " does not have enough funds for a bank in this world!");
+    }
+
+    Bank b = new Bank(getBankAccount(name), BankUtils.size(world));
+    AccountUtils.getAccount(getBankAccount(name)).setBank(world, b);
+    AccountUtils.removeFunds(getBankAccount(name), world, BankUtils.cost(world));
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " now owns a bank in this world!");
 	}
 
 	@Override
@@ -114,12 +135,18 @@ public class TNEVaultEconomy implements Economy {
 
 	@Override
 	public EconomyResponse isBankMember(String name, OfflinePlayer player) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+    if(BankUtils.bankMember(getBankAccount(name), MISCUtils.getID(player))) {
+      return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " is a member of this bank!");
+    }
+    return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " is not a member of this bank!");
 	}
 
 	@Override
 	public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+    if(BankUtils.getBank(getBankAccount(name)).getOwner().equals(MISCUtils.getID(player))) {
+      return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " is the owner of this bank!");
+    }
+    return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " is not the owner of this bank!");
 	}
 
 	@Override
@@ -203,37 +230,98 @@ public class TNEVaultEconomy implements Economy {
 	@Override
 	@Deprecated
 	public EconomyResponse bankBalance(String username) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+    String world = MISCUtils.getWorld(getBankAccount(username));
+    if(!BankUtils.enabled(world)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
+    }
+
+    if(!BankUtils.hasBank(getBankAccount(username))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
+    }
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has " + BankUtils.getBankBalance(getBankAccount(username), world));
 	}
 
 	@Override
 	@Deprecated
 	public EconomyResponse bankDeposit(String username, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+    String world = MISCUtils.getWorld(getBankAccount(username));
+    if(!BankUtils.enabled(world)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
+    }
+
+    if(!BankUtils.hasBank(getBankAccount(username))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
+    }
+
+    if(!AccountUtils.hasFunds(getBankAccount(username), world, amount)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
+    }
+    BankUtils.bankDeposit(getBankAccount(username), MISCUtils.getID(username), amount);
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Deposited money into bank!");
 	}
 
 	@Override
 	@Deprecated
 	public EconomyResponse bankHas(String username, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	  String world = MISCUtils.getWorld(getBankAccount(username));
+    if(!BankUtils.enabled(world)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
+    }
+
+    if(!BankUtils.hasBank(getBankAccount(username))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
+    }
+
+    if(!BankUtils.bankHasFunds(getBankAccount(username), world, amount)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
+    }
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has sufficient funds!");
 	}
 
 	@Override
 	@Deprecated
 	public EconomyResponse bankWithdraw(String username, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+    String world = MISCUtils.getWorld(getBankAccount(username));
+    if(!BankUtils.enabled(world)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
+    }
+
+    if(!BankUtils.hasBank(getBankAccount(username))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
+    }
+
+    if(!BankUtils.bankHasFunds(getBankAccount(username), world, amount)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
+    }
+    BankUtils.bankWithdraw(getBankAccount(username), MISCUtils.getID(username), amount);
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Withdrew money from bank!");
 	}
 
 	@Override
 	@Deprecated
 	public EconomyResponse createBank(String username, String world) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
-	}
+	  if(!BankUtils.enabled(world)) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
+    }
+
+	  if(BankUtils.hasBank(getBankAccount(username))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " already has a bank in this world!");
+    }
+
+    if(!AccountUtils.hasFunds(getBankAccount(username), world, BankUtils.cost(world))) {
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not have enough funds for a bank in this world!");
+    }
+
+    Bank b = new Bank(getBankAccount(username), BankUtils.size(world));
+    AccountUtils.getAccount(getBankAccount(username)).setBank(world, b);
+    AccountUtils.removeFunds(getBankAccount(username), world, BankUtils.cost(world));
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " now owns a bank in this world!");
+  }
 
 	@Override
 	@Deprecated
 	public EconomyResponse deleteBank(String username) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy Lite!");
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Bank deletion is not supported in The New Economy!");
 	}
 
 	@Override
@@ -303,13 +391,19 @@ public class TNEVaultEconomy implements Economy {
 	@Override
 	@Deprecated
 	public EconomyResponse isBankMember(String name, String username) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+    if(BankUtils.bankMember(getBankAccount(name), MISCUtils.getID(username))) {
+      return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " is a member of this bank!");
+    }
+    return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " is not a member of this bank!");
 	}
 
 	@Override
 	@Deprecated
 	public EconomyResponse isBankOwner(String name, String username) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "Banks are not supported in The New Economy!");
+	  if(BankUtils.getBank(getBankAccount(name)).getOwner().equals(MISCUtils.getID(username))) {
+	    return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " is the owner of this bank!");
+    }
+		return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " is not the owner of this bank!");
 	}
 
 	@Override
@@ -347,5 +441,20 @@ public class TNEVaultEconomy implements Economy {
 		api.fundsRemove(username, world, amount);
 		return new EconomyResponse(amount, getBalance(username, world), ResponseType.SUCCESS, "");
 	}
+
+	public UUID getBankAccount(String identifier) {
+	  Player player = (isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
+
+    return MISCUtils.getID(player);
+  }
+
+  private boolean isUUID(String value) {
+    try {
+      UUID.fromString(value);
+      return true;
+    } catch (Exception ex) {
+      return false;
+    }
+  }
 
 }

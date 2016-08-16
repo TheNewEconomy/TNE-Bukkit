@@ -1,73 +1,75 @@
 package com.github.tnerevival.core.transaction;
 
-import org.bukkit.entity.Player;
-
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.TNE;
 
 public class Transaction {
-	
-	private double amount;
-	private Player to;
-	private Player from;
-	
-	public Transaction(double amount, Player to, Player from) {
-		this.amount = amount;
-		this.to = to;
-		this.from = from;
-	}
-	
-	public void complete() {
-		pay(to, amount);
-		charge(from, amount);
-	}
-	
-	private boolean pay(Player p, double amount) {
-		if(p != null) {
-			Account acc = AccountUtils.getAccount(MISCUtils.getID(p));
-			if(amount >= 0) {
-				acc.setBalance(MISCUtils.getWorld(p), acc.getBalance(MISCUtils.getWorld(p)) + amount);
-				return true;
-			}
-			return charge(p, amount);
-		}
-		return false;
-	}
-	
-	private boolean charge(Player p, double amount) {
-		if(p != null) {
-			Account acc = AccountUtils.getAccount(MISCUtils.getID(p));
-			if(amount <= 0) {
-				acc.setBalance(MISCUtils.getWorld(p), acc.getBalance(MISCUtils.getWorld(p)) - amount);
-				return true;
-			}
-			return pay(p, amount);
-		}
-		return false;
-	}
+  private String initiator;
+  private String recipient;
+  private double amount;
+  private TransactionType type;
+  private String world;
 
-	public double getAmount() {
-		return amount;
-	}
+  public Transaction(String initiator, String recipient, double amount) {
+    this(initiator, recipient, amount, TransactionType.MONEY_GIVE, TNE.instance.defaultWorld);
+  }
 
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
+  public Transaction(String initiator, String recipient, double amount, TransactionType type) {
+    this(initiator, recipient, amount, type, TNE.instance.defaultWorld);
+  }
 
-	public Player getTo() {
-		return to;
-	}
+  public Transaction(String initiator, String recipient, double amount, TransactionType type, String world) {
+    this.initiator = initiator;
+    this.recipient = recipient;
+    this.amount = amount;
+    this.type = type;
+    this.world = world;
+  }
 
-	public void setTo(Player to) {
-		this.to = to;
-	}
+  public boolean perform() {
+    return(!handleInitiator() || !handleRecipient());
+  }
 
-	public Player getFrom() {
-		return from;
-	}
+  private boolean handleInitiator() {
+    return true;
+  }
 
-	public void setFrom(Player from) {
-		this.from = from;
-	}
+  private boolean handleRecipient() {
+    return true;
+  }
+
+  public String getInitiator() {
+    return initiator;
+  }
+
+  public String getRecipient() {
+    return recipient;
+  }
+
+  public void setRecipient(String recipient) {
+    this.recipient = recipient;
+  }
+
+  public double getAmount() {
+    return amount;
+  }
+
+  public void setAmount(double amount) {
+    this.amount = amount;
+  }
+
+  public TransactionType getType() {
+    return type;
+  }
+
+  public void setType(TransactionType type) {
+    this.type = type;
+  }
+
+  public String getWorld() {
+    return world;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
+  }
 }

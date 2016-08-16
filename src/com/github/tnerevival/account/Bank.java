@@ -11,22 +11,18 @@ public class Bank implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	List<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
-	UUID id;
-	String pin;
-	Integer size;
-	Double gold;
+	private List<SerializableItemStack> items = new ArrayList<>();
+	private List<UUID> members = new ArrayList<>();
+	private UUID owner;
+	private Integer size;
+	private Double gold;
 	
-	public Bank(UUID uid, Integer size) {
-		this.id = uid;
-		this.pin = "none";
-		this.size = size;
-		this.gold = 0.0;
+	public Bank(UUID owner, Integer size) {
+	  this(owner, size, 0.0);
 	}
 	
-	public Bank(UUID uid, Integer size, Double gold) {
-		this.id = uid;
-		this.pin = "none";
+	public Bank(UUID owner, Integer size, Double gold) {
+		this.owner = owner;
 		this.size = size;
 		this.gold = gold;
 	}
@@ -44,6 +40,18 @@ public class Bank implements Serializable {
 	public void setItems(List<SerializableItemStack> items) {
 		this.items = items;
 	}
+
+	public List<UUID> getMembers() {
+	  return members;
+  }
+
+  public void addMember(UUID player) {
+    members.add(player);
+  }
+
+  public void removeMember(UUID player) {
+    members.remove(player);
+  }
 
 	/**
 	 * @return the size
@@ -66,6 +74,10 @@ public class Bank implements Serializable {
 		return gold;
 	}
 
+	public UUID getOwner() {
+		return owner;
+	}
+
 	/**
 	 * @param gold the gold to set
 	 */
@@ -73,26 +85,54 @@ public class Bank implements Serializable {
 		this.gold = gold;
 	}
 	
-	public String itemsToString() {
-		if(!items.isEmpty()) {
-			String toReturn = "";
-			
-			int count = 0;
-			for(SerializableItemStack item : items) {
-				if(item != null) {
-					if(count != 0) {
-						toReturn += "*";
-					}
-					toReturn += item.toString();
-					count++;
-				}
-			}
-			return toReturn;
-		}
-		return "TNENOSTRINGVALUE";
+	private String itemsToString() {
+    StringBuilder builder = new StringBuilder();
+
+    for(SerializableItemStack item : items) {
+      if(item != null) {
+        if(builder.length() > 0) builder.append("*");
+        builder.append(item.toString());
+      }
+    }
+    return builder.toString();
 	}
+
+	private String membersToString() {
+    StringBuilder builder = new StringBuilder();
+	  for(UUID id : members) {
+	    if(builder.length() > 0) builder.append("*");
+      builder.append(id.toString());
+    }
+    return builder.toString();
+  }
+
+  public void itemsFromString(String parse) {
+    String[] parsed = parse.split("\\*");
+
+    for(String s : parsed) {
+      items.add(SerializableItemStack.fromString(s));
+    }
+  }
+
+  public void membersFromString(String parse) {
+    String[] parsed = parse.split("\\*");
+
+    for(String s : parsed) {
+      members.add(UUID.fromString(s));
+    }
+  }
+
+  public static Bank fromString(String parse) {
+    String[] parsed = parse.split(":");
+    Bank b = new Bank(UUID.fromString(parsed[0]), Integer.valueOf(parsed[1]));
+    b.setGold(Double.valueOf(parsed[2]));
+    b.itemsFromString(parsed[3]);
+    b.membersFromString(parsed[4]);
+
+    return b;
+  }
 	
 	public String toString() {
-		return id.toString() + ":" + pin + ":" + size + ":" + gold + ":" + itemsToString();
+		return owner.toString() + ":" + size + ":" + gold + ":" + itemsToString() + members.toString();
 	}
 }

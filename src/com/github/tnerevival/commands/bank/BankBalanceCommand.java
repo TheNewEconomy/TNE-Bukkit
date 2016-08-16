@@ -38,21 +38,28 @@ public class BankBalanceCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
-		if(BankUtils.hasBank(MISCUtils.getID(player))) {
-			Message balance = new Message("Messages.Bank.Balance");
-			balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.getBankBalance(MISCUtils.getID(player))));
-			player.sendMessage(balance.translate());
-			return true;
-		} else {
-			player.sendMessage(new Message("Messages.Bank.None").translate());
+	  String ownerName = (arguments.length >= 1)? arguments[0] : sender.getName();
+		Player owner = MISCUtils.getPlayer(ownerName);
+    Player player = MISCUtils.getPlayer(sender.getName());
+
+		if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+		  if(BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
+        Message balance = new Message("Messages.Bank.Balance");
+        balance.addVariable("$amount",  MISCUtils.formatBalance(owner.getWorld().getName(), BankUtils.getBankBalance(MISCUtils.getID(player))));
+        balance.addVariable("$name", ownerName);
+        player.sendMessage(balance.translate());
+        return true;
+      }
+      Message noAccess = new Message("Messages.Bank.Invalid");
+      noAccess.addVariable("$name", ownerName);
+      player.sendMessage(noAccess.translate());
 		}
+    player.sendMessage(new Message("Messages.Bank.None").translate());
 		return false;
 	}
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/bank balance - find out how much gold is in your bank");
-	}
-	
+    sender.sendMessage(ChatColor.GOLD + "/bank balance [owner] - Find out how much gold is in a specific bank. Defaults to your personal bank.");
+  }
 }

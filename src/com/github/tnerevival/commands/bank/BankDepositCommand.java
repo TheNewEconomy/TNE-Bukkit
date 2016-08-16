@@ -38,31 +38,42 @@ public class BankDepositCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
-		if(arguments.length == 1) {
-			if(BankUtils.hasBank(MISCUtils.getID(player))) {
-				if(BankUtils.bankDeposit(MISCUtils.getID(player), Double.valueOf(arguments[0]))) {
-					Message deposit = new Message("Messages.Bank.Deposit");
-					deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
-					player.sendMessage(deposit.translate());
-					return true;
-				} else {
-					Message insufficient = new Message("Messages.Money.Insufficient");
-					insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
-					player.sendMessage(insufficient.translate());
-				}
-			} else {
-				player.sendMessage(new Message("Messages.Bank.None").translate());
-			}
-		} else {
-			help(sender);
+    String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
+    Player owner = MISCUtils.getPlayer(ownerName);
+    Player player = MISCUtils.getPlayer(sender.getName());
+
+    if(arguments.length == 1) {
+      if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+        if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
+          if(BankUtils.bankDeposit(MISCUtils.getID(owner), Double.valueOf(arguments[0]))) {
+            Message deposit = new Message("Messages.Bank.Deposit");
+            deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            deposit.addVariable("$name",  ownerName);
+            player.sendMessage(deposit.translate());
+            return true;
+          } else {
+            Message insufficient = new Message("Messages.Money.Insufficient");
+            insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            insufficient.addVariable("$name",  ownerName);
+            player.sendMessage(insufficient.translate());
+            return false;
+          }
+        }
+        Message noAccess = new Message("Messages.Bank.Invalid");
+        noAccess.addVariable("$name", ownerName);
+        player.sendMessage(noAccess.translate());
+        return false;
+      }
+      player.sendMessage(new Message("Messages.Bank.None").translate());
+      return false;
 		}
+		help(sender);
 		return false;
 	}
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/bank deposit <amount> - put the specified amount of money in your bank");
+		sender.sendMessage(ChatColor.GOLD + "/bank deposit <amount> [owner] - Put <amount> into [owner]'s bank. Defaults to your personal bank.");
 	}
 	
 }

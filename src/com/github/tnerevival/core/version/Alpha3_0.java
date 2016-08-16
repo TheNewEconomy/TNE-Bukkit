@@ -14,7 +14,6 @@ import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.serializable.SerializableLocation;
-import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.SignUtils;
 
 import java.io.File;
@@ -128,7 +127,7 @@ public class Alpha3_0 extends Version {
       while(bankIterator.hasNext()) {
         java.util.Map.Entry<String, Object> bankEntry = bankIterator.next();
 
-        bankMap.put(bankEntry.getKey(), BankUtils.fromString((String)bankEntry.getValue()));
+        bankMap.put(bankEntry.getKey(), Bank.fromString((String)bankEntry.getValue()));
       }
       account.setBanks(bankMap);
 
@@ -311,7 +310,7 @@ public class Alpha3_0 extends Version {
         mysql().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
 
         while(mysql().secondary().next()) {
-          account.getBanks().put(mysql().secondary().getString("world"), BankUtils.fromString(mysql().secondary().getString("bank")));
+          account.getBanks().put(mysql().secondary().getString("world"), Bank.fromString(mysql().secondary().getString("bank")));
         }
         TNE.instance.manager.accounts.put(account.getUid(), account);
       }
@@ -496,7 +495,7 @@ public class Alpha3_0 extends Version {
         h2().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
 
         while(h2().secondary().next()) {
-          account.getBanks().put(h2().secondary().getString("world"), BankUtils.fromString(h2().secondary().getString("bank")));
+          account.getBanks().put(h2().secondary().getString("world"), Bank.fromString(h2().secondary().getString("bank")));
         }
         TNE.instance.manager.accounts.put(account.getUid(), account);
       }

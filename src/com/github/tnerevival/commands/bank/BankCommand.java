@@ -16,10 +16,12 @@ public class BankCommand extends TNECommand {
 
 	public BankCommand(TNE plugin) {
 		super(plugin);
+		subCommands.add(new BankAddCommand(plugin));
 		subCommands.add(new BankBalanceCommand(plugin));
 		subCommands.add(new BankBuyCommand(plugin));
 		subCommands.add(new BankDepositCommand(plugin));
 		subCommands.add(new BankPriceCommand(plugin));
+		subCommands.add(new BankRemoveCommand(plugin));
 		subCommands.add(new BankViewCommand(plugin));
 		subCommands.add(new BankWithdrawCommand(plugin));
 	}

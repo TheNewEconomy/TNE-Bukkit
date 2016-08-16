@@ -4,11 +4,14 @@ import com.github.tnerevival.account.Account;
 
 import java.util.UUID;
 
-public class TNEAccountCreationEvent extends TNEAccountEvent {
+/**
+ * Created by Daniel on 8/15/2016.
+ */
+public class TNEAccountDeletionEvent extends TNEAccountEvent {
 
   private Account account;
 
-  public TNEAccountCreationEvent(UUID id, Account account) {
+  public TNEAccountDeletionEvent(UUID id, Account account) {
     super(id);
     this.account = account;
   }

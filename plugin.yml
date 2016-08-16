@@ -44,10 +44,12 @@ permissions:
          tne.admin.save: true
          tne.bank: true
          tne.bank.help: true
+         tne.bank.add: true
          tne.bank.balance: true
          tne.bank.buy: true
          tne.bank.deposit: true
          tne.bank.price: true
+         tne.bank.remove: true
          tne.bank.use: true
          tne.bank.withdraw: true
          tne.bypass: true
@@ -109,10 +111,12 @@ permissions:
       children:
          tne.bank: true
          tne.bank.help: true
+         tne.bank.add: true
          tne.bank.balance: true
          tne.bank.buy: true
          tne.bank.deposit: true
          tne.bank.price: true
+         tne.bank.remove: true
          tne.bank.use: true
          tne.bank.withdraw: true
          

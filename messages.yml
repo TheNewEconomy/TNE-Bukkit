@@ -103,18 +103,21 @@ Messages:
         
     
     Bank:
+       Added: <white>$player has been added to your bank!
+       Removed: <white>$player has been removed from your bank!
        Already: <red>You already own a bank!
        Bought: <white>Congratulations! You have successfully purchased a bank!
        Insufficient: <red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.
-       Overdraw: <red>I'm sorry, but your bank does not have <gold>$amount<red>.
+       Overdraw: <red>I'm sorry, but the bank of $name bank does not have <gold>$amount<red>.
        None: <red>I'm sorry, but you do not own a bank. Please try /bank buy to buy one.
        NoNPC: <red>I'm sorry, but accessing banks via NPCs has been disabled in this world!
        NoSign: <red>I'm sorry, but accessing banks via signs has been disabled in this world!
        NoCommand: <red>I'm sorry, but accessing banks via /bank has been disabled in this world!
        Disabled: <red>I'm sorry, but banks are disabled in this world.
-       Balance: <white>You currently have <gold>$amount<white> in your bank.
-       Deposit: <white>You have deposited <gold>$amount<white> into your bank.
+       Balance: <white>There is currently <gold>$amount<white> in the bank of $name.
+       Deposit: <white>You have deposited <gold>$amount<white> into the bank of $name.
        Cost: <white>A bank is currently <gold>$amount<white>.
+       Invalid: <red>I'm sorry, but you don't have access to the bank of $name!
        
     Objects:
        PotionWarning: <white>Once finished, you'll be charged <gold>$amount<white> for removing your potions from the brewing stand.

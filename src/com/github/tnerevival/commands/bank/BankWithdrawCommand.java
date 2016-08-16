@@ -38,31 +38,42 @@ public class BankWithdrawCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		Player player = getPlayer(sender);
-		if(arguments.length == 1) {
-			if(BankUtils.hasBank(MISCUtils.getID(player))) {
-				if(BankUtils.bankWithdraw(MISCUtils.getID(player), Double.valueOf(arguments[0]))) {
-					Message withdrawn = new Message("Messages.Bank.Withdraw");
-					withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
-					player.sendMessage(withdrawn.translate());
-					return true;
-				} else {
-					Message overdraw = new Message("Messages.Bank.Overdraw");
-					overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
-					player.sendMessage(overdraw.translate());
-				}
-			} else {
-				player.sendMessage(new Message("Messages.Bank.None").translate());
-			}
-		} else {
-			help(sender);
-		}
-		return false;
+		String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
+		Player owner = MISCUtils.getPlayer(ownerName);
+		Player player = MISCUtils.getPlayer(sender.getName());
+
+
+    if(arguments.length == 1) {
+      if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+        if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
+          if(BankUtils.bankWithdraw(MISCUtils.getID(owner), Double.valueOf(arguments[0]))) {
+            Message withdrawn = new Message("Messages.Bank.Withdraw");
+            withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            withdrawn.addVariable("$name",  ownerName);
+            player.sendMessage(withdrawn.translate());
+            return true;
+          } else {
+            Message overdraw = new Message("Messages.Bank.Overdraw");
+            overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            overdraw.addVariable("$name",  ownerName);
+            player.sendMessage(overdraw.translate());
+          }
+        }
+        Message noAccess = new Message("Messages.Bank.Invalid");
+        noAccess.addVariable("$name", ownerName);
+        player.sendMessage(noAccess.translate());
+        return false;
+      }
+      player.sendMessage(new Message("Messages.Bank.None").translate());
+      return false;
+    }
+    help(sender);
+    return false;
 	}
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/bank withdraw <amount> - withdraw the specified amout of money from your bank");
+		sender.sendMessage(ChatColor.GOLD + "/bank withdraw <amount> [owner] - Withdraw <amount> from [owner]'s bank. Defaults to your bank.");
 	}
 	
 }
