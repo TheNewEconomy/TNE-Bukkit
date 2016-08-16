@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.money;
 
+import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -42,12 +43,14 @@ public class MoneyTakeCommand extends TNECommand {
 				sender.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
-			if(getPlayer(sender, arguments[0]) != null && AccountUtils.takeMoney(MISCUtils.getID(getPlayer(sender, arguments[0])), MISCUtils.getID(getPlayer(sender)), AccountUtils.round(Double.valueOf(arguments[1])))) {
-				Message took = new Message("Messages.Money.Took");
-				took.addVariable("$amount", MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
-				took.addVariable("$player", arguments[0]);
-				sender.sendMessage(took.translate());
-				return true;
+			if(getPlayer(sender, arguments[0]) != null) {
+				if(AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), AccountUtils.round(Double.valueOf(arguments[1])), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(getPlayer(sender)))) {
+          Message took = new Message("Messages.Money.Took");
+          took.addVariable("$amount", MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
+          took.addVariable("$player", arguments[0]);
+          sender.sendMessage(took.translate());
+          return true;
+        }
 			}
 		} else {
 			help(sender);

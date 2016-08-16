@@ -1,17 +1,17 @@
 package com.github.tnerevival.commands.packages;
 
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.objects.TNEAccessPackage;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class PackageBuyCommand extends TNECommand {
 	
@@ -55,8 +55,8 @@ public class PackageBuyCommand extends TNECommand {
 			if(packages.size() > 0) {
 				for(TNEAccessPackage p : packages) {
 					if(p.getName().equalsIgnoreCase(arguments[1])) {
-						if(AccountUtils.hasFunds(MISCUtils.getID(player), p.getCost())) {
-							AccountUtils.removeFunds(MISCUtils.getID(player), p.getCost());
+						if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+							AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 							AccountUtils.getAccount(MISCUtils.getID(player)).addTime(MISCUtils.getWorld(player), arguments[0], p.getTime());
 							Message bought = new Message("Messages.Package.Bought");
 							bought.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));

@@ -148,7 +148,7 @@ public class BankUtils {
 		}
 		return getBankInventory(owner, world);
 	}
-	
+
 	public static Double getBankBalance(UUID owner, String world) {
 		if(!hasBank(owner, world)) {
 			return null;
@@ -160,62 +160,25 @@ public class BankUtils {
 			return AccountUtils.round(bank.getGold());
 		}
 	}
-	
+
 	public static Double getBankBalance(UUID owner) {
 		return getBankBalance(owner, TNE.instance.defaultWorld);
 	}
-	
-	public static void setBankBalance(UUID owner, String world, Double amount) {
-		if(!AccountUtils.getAccount(owner).getStatus().getBank()) {
-			return;
-		}
-		if(hasBank(owner, world)) {
-			Bank bank = getBank(owner, world);
-			bank.setGold(AccountUtils.round(amount));
-			return;
-		}
-	}
-	
-	public static void setBankBalance(UUID owner, Double amount) {
-		setBankBalance(owner, TNE.instance.defaultWorld, amount);
-	}
-	
-	public static Boolean bankHasFunds(UUID owner, String world, Double amount) {
-		amount = AccountUtils.round(amount);
-		return (getBankBalance(owner, world) != null) ? getBankBalance(owner, world) >= amount : false;
-	}
-	
-	public static Boolean bankHasFunds(UUID owner, Double amount) {
-		return bankHasFunds(owner, TNE.instance.defaultWorld, amount);
-	}
-	
-	public static Boolean bankDeposit(UUID owner, UUID player, Double amount) {
-		if(!AccountUtils.getAccount(owner).getStatus().getBank()) {
-			return false;
-		}
-		amount = AccountUtils.round(amount);
-		if(AccountUtils.hasFunds(owner, amount)) {
-			Bank bank = getBank(owner);
-			bank.setGold(bank.getGold() + amount);
-			AccountUtils.removeFunds(owner, amount);
-			return true;
-		}
-		return false;
-	}
-	
-	public static Boolean bankWithdraw(UUID owner, UUID player, Double amount) {
-		if(!AccountUtils.getAccount(owner).getStatus().getBank()) {
-			return false;
-		}
-		amount = AccountUtils.round(amount);
-		if(bankHasFunds(owner, amount)) {
-			Bank bank = getBank(owner);
-			bank.setGold(bank.getGold() - amount);
-			AccountUtils.addFunds(player, amount);
-			return true;
-		}
-		return false;
-	}
+
+  public static void setBankBalance(UUID owner, String world, Double amount) {
+    if(!AccountUtils.getAccount(owner).getStatus().getBank()) {
+      return;
+    }
+    if(hasBank(owner, world)) {
+      Bank bank = getBank(owner, world);
+      bank.setGold(AccountUtils.round(amount));
+      return;
+    }
+  }
+
+  public static void setBankBalance(UUID owner, Double amount) {
+    setBankBalance(owner, TNE.instance.defaultWorld, amount);
+  }
 	
 	//Configuration-related Utils
 	

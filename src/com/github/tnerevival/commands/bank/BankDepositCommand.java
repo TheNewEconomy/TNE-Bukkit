@@ -1,5 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
+import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,7 +47,7 @@ public class BankDepositCommand extends TNECommand {
     if(arguments.length == 1) {
       if(BankUtils.hasBank(MISCUtils.getID(owner))) {
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
-          if(BankUtils.bankDeposit(MISCUtils.getID(owner), Double.valueOf(arguments[0]))) {
+          if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(owner).toString(), Double.valueOf(arguments[0]), TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
             Message deposit = new Message("Messages.Bank.Deposit");
             deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
             deposit.addVariable("$name",  ownerName);

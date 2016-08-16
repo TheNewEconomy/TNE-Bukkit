@@ -1,5 +1,6 @@
 package com.github.tnerevival.listeners;
 
+import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,8 +26,8 @@ public class WorldListener implements Listener {
 		
 		if(TNE.configurations.getBoolean("Core.World.EnableChangeFee")) {
 			if(!player.hasPermission("tne.bypass.world")) {
-				if(AccountUtils.hasFunds(MISCUtils.getID(player), AccountUtils.getWorldCost(world))) {
-					AccountUtils.removeFunds(MISCUtils.getID(player), AccountUtils.getWorldCost(world));
+				if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+					AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 					AccountUtils.initializeWorldData(MISCUtils.getID(player), world);
 					Message change = new Message("Messages.World.Change");
 					change.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));

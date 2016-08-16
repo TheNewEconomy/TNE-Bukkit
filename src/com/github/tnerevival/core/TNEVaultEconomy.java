@@ -3,6 +3,7 @@ package com.github.tnerevival.core;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.api.TNEAPI;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -53,13 +54,13 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " already has a bank in this world!");
     }
 
-    if(!AccountUtils.hasFunds(getBankAccount(name), world, BankUtils.cost(world))) {
+    if(!AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world), TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " does not have enough funds for a bank in this world!");
     }
 
     Bank b = new Bank(getBankAccount(name), BankUtils.size(world));
     AccountUtils.getAccount(getBankAccount(name)).setBank(world, b);
-    AccountUtils.removeFunds(getBankAccount(name), world, BankUtils.cost(world));
+    AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world), TransactionType.MONEY_REMOVE, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " now owns a bank in this world!");
 	}
 
@@ -253,10 +254,10 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!AccountUtils.hasFunds(getBankAccount(username), world, amount)) {
+    if(!AccountUtils.transaction(MISCUtils.getID(username).toString(), null, amount, TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
-    BankUtils.bankDeposit(getBankAccount(username), MISCUtils.getID(username), amount);
+    AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_DEPOSIT, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Deposited money into bank!");
 	}
 
@@ -272,7 +273,7 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!BankUtils.bankHasFunds(getBankAccount(username), world, amount)) {
+    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has sufficient funds!");
@@ -290,10 +291,10 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!BankUtils.bankHasFunds(getBankAccount(username), world, amount)) {
+    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
-    BankUtils.bankWithdraw(getBankAccount(username), MISCUtils.getID(username), amount);
+    AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_WITHDRAWAL, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Withdrew money from bank!");
 	}
 
@@ -308,13 +309,13 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " already has a bank in this world!");
     }
 
-    if(!AccountUtils.hasFunds(getBankAccount(username), world, BankUtils.cost(world))) {
+    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, BankUtils.cost(world), TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not have enough funds for a bank in this world!");
     }
 
     Bank b = new Bank(getBankAccount(username), BankUtils.size(world));
     AccountUtils.getAccount(getBankAccount(username)).setBank(world, b);
-    AccountUtils.removeFunds(getBankAccount(username), world, BankUtils.cost(world));
+    AccountUtils.transaction(getBankAccount(username).toString(), null, BankUtils.cost(world), TransactionType.MONEY_REMOVE, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " now owns a bank in this world!");
   }
 

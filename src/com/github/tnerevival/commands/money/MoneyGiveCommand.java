@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.money;
 
+import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -43,7 +44,8 @@ public class MoneyGiveCommand extends TNECommand {
 				return false;
 			}
 			
-			if(getPlayer(sender, arguments[0]) != null && AccountUtils.giveMoney(MISCUtils.getID(getPlayer(sender, arguments[0])), MISCUtils.getID(getPlayer(sender)), AccountUtils.round(Double.valueOf(arguments[1])))) {
+			if(getPlayer(sender, arguments[0]) != null) {
+				AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), Double.valueOf(arguments[1]), TransactionType.MONEY_GIVE, MISCUtils.getWorld(MISCUtils.getID(getPlayer(sender, arguments[0]))));
 				Message gave = new Message("Messages.Money.Gave");
 				gave.addVariable("$amount",  MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
 				gave.addVariable("$player", arguments[0]);

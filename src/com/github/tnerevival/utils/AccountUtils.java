@@ -3,7 +3,10 @@ package com.github.tnerevival.utils;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.eventold.*;
+import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
+import com.github.tnerevival.core.event.transaction.TNETransactionEvent;
+import com.github.tnerevival.core.transaction.Transaction;
+import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,13 +20,11 @@ public class AccountUtils {
 	}
 	
 	public static void createAccount(UUID id) {
-		TNECreateAccountEvent e = new TNECreateAccountEvent(id);
+	  Account a = new Account(id);
+    a.setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+		TNEAccountCreationEvent e = new TNEAccountCreationEvent(id, a);
 		Bukkit.getServer().getPluginManager().callEvent(e);
-		
-		if(!e.isCancelled()) {
-			TNE.instance.manager.accounts.put(e.getID(), e.getAccount());
-			AccountUtils.addFunds(e.getID(), AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
-		}
+    TNE.instance.manager.accounts.put(e.getId(), e.getAccount());
 	}
 
 	public static Account getAccount(UUID id) {
@@ -136,48 +137,17 @@ public class AccountUtils {
 		return (double)Math.round(amount * 100) / 100;
 	}
 
-	public static Boolean hasFunds(UUID id, double amount) {
-		amount = round(amount);
-		return getBalance(id) >= amount;
-	}
-	
-	public static Boolean hasFunds(UUID id, String world, double amount) {
-		amount = round(amount);
-		if(getBalance(id, world) < amount && MISCUtils.useBankBalance(world) && BankUtils.enabled(world) && BankUtils.hasBank(id, world)) {
-			double check = amount - getBalance(id, world);
-			return BankUtils.bankHasFunds(id, world, check);
-		}
-		return getBalance(id, world) >= amount;
-	}
+	public static boolean transaction(String initiator, String recipient, double amount, TransactionType type, String world) {
+	  Transaction t = new Transaction(initiator, recipient, amount, type, world);
 
-	public static void addFunds(UUID id, double amount) {
-		addFunds(id, MISCUtils.getWorld(id), amount);
-	}
-	
-	public static void addFunds(UUID id, String world, double amount) {
-		amount = round(amount);
-		TNEFundsAddEvent e = new TNEFundsAddEvent(id, amount);
-		Bukkit.getServer().getPluginManager().callEvent(e);
-		
-		if(!e.isCancelled()) {
-			setBalance(e.getID(), world, e.getNewBalance());
-		}
-	}
+    TNETransactionEvent e = new TNETransactionEvent(t);
+    Bukkit.getServer().getPluginManager().callEvent(e);
 
-	public static void removeFunds(UUID id, double amount) {
-		removeFunds(id, MISCUtils.getWorld(id), amount);
-	}
-	
-	public static void removeFunds(UUID id, String world, double amount) {
-		//TODO: remove from bank balance too if needed
-		amount = round(amount);
-		TNEFundsRemoveEvent e = new TNEFundsRemoveEvent(id, amount);
-		Bukkit.getServer().getPluginManager().callEvent(e);
-		
-		if(!e.isCancelled()) {
-			setBalance(e.getID(), world, e.getNewBalance());
-		}
-	}
+    if(!e.isCancelled()) {
+      return t.perform();
+    }
+    return false;
+  }
 	
 	public static Double getFunds(UUID id) {
 		return getBalance(id);
@@ -197,74 +167,12 @@ public class AccountUtils {
 		amount = round(amount);
 		setBalance(id, world, amount);
 	}
-
-	public static Boolean giveMoney(UUID id, UUID from, Double amount) {
-		if(exists(id)) {
-			String world = MISCUtils.getWorld(id);
-			amount = round(amount);
-			TNEFundsGiveEvent e = new TNEFundsGiveEvent(MISCUtils.getPlayer(id), MISCUtils.getPlayer(from), amount);
-			Bukkit.getServer().getPluginManager().callEvent(e);
-			
-			if(!e.isCancelled()) {
-				String giver = (from == null) ? "Console" : MISCUtils.getPlayer(from).getDisplayName();
-				addFunds(MISCUtils.getID(e.getReceiver()), e.getAmount());
-				Message given = new Message("Messages.Money.Given");
-				given.addVariable("$amount", MISCUtils.formatBalance(world, amount));
-				given.addVariable("$from", giver);
-				if(MISCUtils.getPlayer(MISCUtils.getID(e.getReceiver())) != null) MISCUtils.getPlayer(MISCUtils.getID(e.getReceiver())).sendMessage(given.translate());
-			}
-			return true;
-		}
-		return false;
-	}
-	
-	public static Boolean takeMoney(UUID id, UUID from, Double amount) {
-		if(exists(id)) {
-			String world = MISCUtils.getWorld(id);
-			amount = round(amount);
-			TNEFundsTakeEvent e = new TNEFundsTakeEvent(MISCUtils.getPlayer(id), MISCUtils.getPlayer(from), amount);
-			Bukkit.getServer().getPluginManager().callEvent(e);
-			
-			if(!e.isCancelled()) {
-				String taker = (from == null) ? "Console" : MISCUtils.getPlayer(from).getDisplayName();
-				removeFunds(MISCUtils.getID(e.getTarget()), e.getAmount());
-				Message taken = new Message("Messages.Money.Taken");
-				taken.addVariable("$from", taker);
-				taken.addVariable("$amount", MISCUtils.formatBalance(world, amount));
-				if(MISCUtils.getPlayer(MISCUtils.getID(e.getTarget())) != null) MISCUtils.getPlayer(MISCUtils.getID(e.getTarget())).sendMessage(taken.translate());
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public static Boolean payMoney(UUID from, UUID to, Double amount) {
-		if(to == null || from == null) { return false; }
-		if(exists(to)) {
-			String world = MISCUtils.getWorld(to);
-			amount = round(amount);
-			TNEFundsPayEvent e = new TNEFundsPayEvent(MISCUtils.getPlayer(to), MISCUtils.getPlayer(from), amount);
-			Bukkit.getServer().getPluginManager().callEvent(e);
-			
-			if(!e.isCancelled()) {
-				removeFunds(MISCUtils.getID(e.getSender()), e.getAmount());
-				addFunds(MISCUtils.getID(e.getReceiver()), e.getAmount());
-				Message paid = new Message("Messages.Money.Received");
-				paid.addVariable("$from", MISCUtils.getPlayer(from).getDisplayName());
-				paid.addVariable("$amount", MISCUtils.formatBalance(world, amount));
-				if(Bukkit.getPlayer(to) != null) MISCUtils.getPlayer(to).sendMessage(paid.translate());
-			}
-			return true;
-		}
-		return false;
-	}
 	
 	public static void initializeWorldData(UUID id, String world) {
 		Account account = getAccount(id);
 		world = MISCUtils.getWorld(id);
 		if(!account.getBalances().containsKey(world)) {
-			account.setBalance(world, 0.0);
-			addFunds(id, getInitialBalance(world));
+			account.setBalance(world, getInitialBalance(world));
 		}
 	}
 

@@ -7,6 +7,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.core.inventory.View;
 import com.github.tnerevival.core.potion.PotionHelper;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -58,7 +59,7 @@ public class InventoryListener implements Listener {
 				String message = "Messages.Inventory.Charge";
 				double cost = config.getInventoryCost(type);
 				
-				if(!AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+				if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
 					message = "Messages.Money.Insufficient";
 					event.setCancelled(true);
 				}
@@ -68,7 +69,7 @@ public class InventoryListener implements Listener {
 				player.sendMessage(m.translate());
 				
 				if(!event.isCancelled()) {
-					AccountUtils.removeFunds(MISCUtils.getID(player), cost);
+					AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 				}
 			}
 		}
@@ -146,7 +147,7 @@ public class InventoryListener implements Listener {
 							}
 							
 							if(cost > 0.0) {
-								if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+								if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
 									message = "Messages.Objects.BrewingCharged";
 								}
 							} else {
@@ -168,7 +169,7 @@ public class InventoryListener implements Listener {
 					}
 					
 					if(cost > 0.0) {
-						if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+						if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
 							message = "Messages.Objects.EnchantingCharged";
 						}
 					} else {
@@ -190,7 +191,7 @@ public class InventoryListener implements Listener {
 					}
 					
 					if(cost > 0.0) {
-						if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
+						if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
 							message = "Messages.Objects.SmeltingCharged";
 						}
 					} else {
@@ -203,13 +204,13 @@ public class InventoryListener implements Listener {
 		
 		if(charge) {
 			if(cost > 0.0) {
-				if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
-					AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+					AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 				} else {
 					event.setCancelled(true);
 				}
 			} else {
-				AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
 			}
 			
 			if(cost > 0.0 || cost < 0.0  || cost == 0.0 && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")) {

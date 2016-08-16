@@ -7,6 +7,7 @@ import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.core.potion.PotionHelper;
 import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.*;
 import org.bukkit.ChatColor;
@@ -120,8 +121,8 @@ public class InteractionListener implements Listener {
 
 			String message = "Messages.Objects.MiningCharged";
 			if(cost > 0.0) {
-				if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
-					AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+					AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 				} else {
 					event.setCancelled(true);
 					Message insufficient = new Message("Messages.Money.Insufficient");
@@ -130,7 +131,7 @@ public class InteractionListener implements Listener {
 					return;
 				}
 			} else {
-				AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+        AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
 				message = "Messages.Objects.MiningPaid";
 			}
 			
@@ -161,8 +162,8 @@ public class InteractionListener implements Listener {
 
 			String message = "Messages.Objects.PlacingCharged";
 			if(cost > 0.0) {
-				if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
-					AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+				if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+          AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 				} else {
 					event.setCancelled(true);
 					Message insufficient = new Message("Messages.Money.Insufficient");
@@ -171,7 +172,7 @@ public class InteractionListener implements Listener {
 					return;
 				}
 			} else {
-				AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+        AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
 				message = "Messages.Objects.PlacingPaid";
 			}
 			
@@ -369,8 +370,8 @@ public class InteractionListener implements Listener {
 		Player player = (Player)event.getWhoClicked();
 		String message = "Messages.Objects.CraftingCharged";
 		if(cost > 0.0) {
-			if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
-				AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+        AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 			} else {
 				event.setCancelled(true);
 				Message insufficient = new Message("Messages.Money.Insufficient");
@@ -379,7 +380,7 @@ public class InteractionListener implements Listener {
 				return;
 			}
 		} else {
-			AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+      AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
 			message = "Messages.Objects.CraftingPaid";
 		}
 		
@@ -492,8 +493,8 @@ public class InteractionListener implements Listener {
 
             String message = (potion)? "Messages.Objects.PotionUseCharged" : "Messages.Objects.ItemUseCharged";
             if(cost > 0.0) {
-              if(AccountUtils.hasFunds(MISCUtils.getID(player), cost)) {
-                AccountUtils.removeFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+              if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+                AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
               } else {
                 event.setCancelled(true);
                 Message insufficient = new Message("Messages.Money.Insufficient");
@@ -502,7 +503,7 @@ public class InteractionListener implements Listener {
                 return;
               }
             } else {
-              AccountUtils.addFunds(MISCUtils.getID(player), MISCUtils.getWorld(player), cost);
+              AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
               message = (potion)? "Messages.Objects.PotionUsePaid" : "Messages.Objects.ItemUsePaid";
             }
 
@@ -675,7 +676,7 @@ public class InteractionListener implements Listener {
 				reward = TNE.configurations.mobReward(mob);
 				messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
 				if(TNE.configurations.mobEnabled(mob)) {
-					AccountUtils.addFunds(MISCUtils.getID(killer), reward);
+          AccountUtils.transaction(MISCUtils.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
 					Message mobKilled = new Message(messageNode);
 					mobKilled.addVariable("$mob", mob);
 					mobKilled.addVariable("$reward", MISCUtils.formatBalance(MISCUtils.getWorld(killer), reward));

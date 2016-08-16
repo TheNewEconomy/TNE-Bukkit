@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.bank;
 
+import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,8 +48,8 @@ public class BankBuyCommand extends TNECommand {
 		}
 		
 		if(!player.hasPermission("tne.bank.bypass")) {
-			if(AccountUtils.hasFunds(MISCUtils.getID(player), BankUtils.cost(player.getWorld().getName()))) {
-				AccountUtils.removeFunds(MISCUtils.getID(player), BankUtils.cost(player.getWorld().getName()));
+			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, BankUtils.cost(MISCUtils.getWorld(player)), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+				AccountUtils.transaction(MISCUtils.getID(player).toString(), null, BankUtils.cost(MISCUtils.getWorld(player)), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
 			} else {
 				Message insufficient = new Message("Messages.Money.Insufficient");
 				insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), BankUtils.cost(player.getWorld().getName())));

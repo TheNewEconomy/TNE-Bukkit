@@ -1,13 +1,13 @@
 package com.github.tnerevival.core.api;
 
-import java.util.UUID;
-
-import org.bukkit.OfflinePlayer;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.OfflinePlayer;
+
+import java.util.UUID;
 
 public class TNEAPI {
 	
@@ -29,32 +29,32 @@ public class TNEAPI {
 
 	@Deprecated
 	public void fundsAdd(String username, Double amount) {
-		AccountUtils.addFunds(getPlayerID(username), amount);
+		fundsAdd(username, MISCUtils.getWorld(getPlayerID(username)), amount);
 	}
 
 	@Deprecated
 	public void fundsAdd(String username, String world, Double amount) {
-		AccountUtils.addFunds(getPlayerID(username), amount);
+    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, TransactionType.MONEY_GIVE, world);
 	}
 
 	@Deprecated
 	public Boolean fundsHas(String username, Double amount) {
-		return AccountUtils.hasFunds(getPlayerID(username), amount);
+    return fundsHas(username, MISCUtils.getWorld(getPlayerID(username)), amount);
 	}
 
 	@Deprecated
 	public Boolean fundsHas(String username, String world, Double amount) {
-		return AccountUtils.hasFunds(getPlayerID(username), world, amount);
+    return AccountUtils.transaction(getPlayerID(username).toString(), null, amount, TransactionType.MONEY_INQUIRY, world);
 	}
 
 	@Deprecated
 	public void fundsRemove(String username, Double amount) {
-		AccountUtils.removeFunds(getPlayerID(username), amount);
+		fundsRemove(username, MISCUtils.getWorld(getPlayerID(username)), amount);
 	}
 
 	@Deprecated
 	public void fundsRemove(String username, String world, Double amount) {
-		AccountUtils.removeFunds(getPlayerID(username), world, amount);
+		AccountUtils.transaction(getPlayerID(username).toString(), null, amount, TransactionType.MONEY_REMOVE, world);
 	}
 
 	@Deprecated
@@ -82,27 +82,27 @@ public class TNEAPI {
 	}
 
 	public void fundsAdd(OfflinePlayer player, Double amount) {
-		AccountUtils.addFunds(MISCUtils.getID(player), amount);
+    fundsAdd(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
 	}
 
 	public void fundsAdd(OfflinePlayer player, String world, Double amount) {
-		AccountUtils.addFunds(MISCUtils.getID(player), amount);
+    AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_GIVE, world);
 	}
 
 	public Boolean fundsHas(OfflinePlayer player, Double amount) {
-		return AccountUtils.hasFunds(MISCUtils.getID(player), amount);
+		return fundsHas(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
 	}
 
 	public Boolean fundsHas(OfflinePlayer player, String world, Double amount) {
-		return AccountUtils.hasFunds(MISCUtils.getID(player), world, amount);
+		return AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_INQUIRY, world);
 	}
 
 	public void fundsRemove(OfflinePlayer player, Double amount) {
-		AccountUtils.removeFunds(MISCUtils.getID(player), amount);
+		fundsRemove(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
 	}
 
 	public void fundsRemove(OfflinePlayer player, String world, Double amount) {
-		AccountUtils.removeFunds(MISCUtils.getID(player), world, amount);
+    AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_REMOVE, world);
 	}
 
 	public Account getAccount(OfflinePlayer player) {

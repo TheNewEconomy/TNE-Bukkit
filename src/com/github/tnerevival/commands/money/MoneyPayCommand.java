@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.money;
 
+import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,13 +49,15 @@ public class MoneyPayCommand extends TNECommand {
 				player.sendMessage(new Message("Messages.Money.SelfPay").translate());
 				return false;
 			}
-			if(AccountUtils.hasFunds(MISCUtils.getID(player), AccountUtils.round(Double.valueOf(arguments[1])))) {
-				if(getPlayer(sender, arguments[0]) != null && AccountUtils.payMoney(MISCUtils.getID(player), MISCUtils.getID(getPlayer(sender, arguments[0])), AccountUtils.round(Double.valueOf(arguments[1])))) {
-					Message paid = new Message("Messages.Money.Paid");
-					paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
-					paid.addVariable("$player", arguments[0]);
-					player.sendMessage(paid.translate());
-					return true;
+			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.round(Double.valueOf(arguments[1])), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+				if(getPlayer(sender, arguments[0]) != null) {
+					if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), AccountUtils.round(Double.valueOf(arguments[1])), TransactionType.MONEY_PAY, MISCUtils.getWorld(player))) {
+						Message paid = new Message("Messages.Money.Paid");
+						paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
+						paid.addVariable("$player", arguments[0]);
+						player.sendMessage(paid.translate());
+						return true;
+					}
 				}
 			} else {
 				Message insufficient = new Message("Messages.Money.Insufficient");

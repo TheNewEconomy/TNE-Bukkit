@@ -1,5 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
+import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -46,7 +48,7 @@ public class BankWithdrawCommand extends TNECommand {
     if(arguments.length == 1) {
       if(BankUtils.hasBank(MISCUtils.getID(owner))) {
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
-          if(BankUtils.bankWithdraw(MISCUtils.getID(owner), Double.valueOf(arguments[0]))) {
+          if(AccountUtils.transaction(MISCUtils.getID(owner).toString(), MISCUtils.getID(player).toString(), Double.valueOf(arguments[0]), TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
             withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
             withdrawn.addVariable("$name",  ownerName);
