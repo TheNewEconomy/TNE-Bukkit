@@ -4,8 +4,10 @@ Feature Set:
 ----------
 
 * Add support for H2 in place of SQLite
-  * H2 will use the SQLite configurations
   * Your SQLite database will be automatically converted for you.
+* New internal transaction system
+  * this is a giant step towards full transaction tracking, and history
+  * This new system improves code readability, and will better help pin point the location of any bugs that occur during a transaction.
 * Ability to reward/charge for using potions
 * Ability to reward/charge for using items
 * Ability to reward/charge for crafting
@@ -62,5 +64,3 @@ Alpha 3.1
 ================
 
 * Bug fixes for Alpha 3.0
-* Switch to a better solution for transactions to start eliminating the vast number of utlility classes
-* Better banks to allow multiple people per bank
