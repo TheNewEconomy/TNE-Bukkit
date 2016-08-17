@@ -201,6 +201,21 @@ public class MISCUtils {
 		}
 		return builder.toString();
 	}
+
+	public static UUID distringuishId(String identifier) {
+	  Player player = (isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
+
+    return MISCUtils.getID(player);
+	}
+
+  public static boolean isUUID(String value) {
+    try {
+      UUID.fromString(value);
+      return true;
+    } catch (Exception ex) {
+      return false;
+    }
+  }
 	
 	@SuppressWarnings("deprecation")
 	public static Player getPlayer(String username) {

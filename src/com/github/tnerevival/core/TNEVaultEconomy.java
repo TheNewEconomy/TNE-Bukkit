@@ -449,7 +449,7 @@ public class TNEVaultEconomy implements Economy {
     return MISCUtils.getID(player);
   }
 
-  private boolean isUUID(String value) {
+  public boolean isUUID(String value) {
     try {
       UUID.fromString(value);
       return true;

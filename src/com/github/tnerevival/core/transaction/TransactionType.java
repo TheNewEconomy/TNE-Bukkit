@@ -6,8 +6,8 @@ package com.github.tnerevival.core.transaction;
 public enum TransactionType {
   MONEY_INQUIRY,
   MONEY_REMOVE,
-  MONEY_PAY,
   MONEY_GIVE,
+  MONEY_PAY,
   BANK_INQUIRY,
   BANK_WITHDRAWAL,
   BANK_DEPOSIT,
