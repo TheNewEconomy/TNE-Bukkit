@@ -6,6 +6,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
 import com.github.tnerevival.core.event.transaction.TNETransactionEvent;
 import com.github.tnerevival.core.transaction.Transaction;
+import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -138,16 +139,21 @@ public class AccountUtils {
 	}
 
 	public static boolean transaction(String initiator, String recipient, double amount, TransactionType type, String world) {
-	  Transaction t = new Transaction(initiator, recipient, amount, type, world);
 
-    TNETransactionEvent e = new TNETransactionEvent(t);
-    Bukkit.getServer().getPluginManager().callEvent(e);
-
-    if(!e.isCancelled()) {
-      return t.perform();
-    }
-    return false;
+    return transaction(initiator, recipient, new TransactionCost(amount), type, world);
   }
+
+  public static boolean transaction(String initiator, String recipient, TransactionCost cost, TransactionType type, String world) {
+		Transaction t = new Transaction(initiator, recipient, cost, type, world);
+
+		TNETransactionEvent e = new TNETransactionEvent(t);
+		Bukkit.getServer().getPluginManager().callEvent(e);
+
+		if(!e.isCancelled()) {
+			return t.perform();
+		}
+		return false;
+	}
 	
 	public static Double getFunds(UUID id) {
 		return getBalance(id);
