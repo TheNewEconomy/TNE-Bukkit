@@ -2,6 +2,7 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -56,6 +57,27 @@ public class MISCUtils {
 			}
 		}
 		return TNE.instance.defaultWorld;
+	}
+
+	public static boolean hasItems(UUID id, List<SerializableItemStack> items) {
+	  for(SerializableItemStack item : items) {
+	    ItemStack stack = item.toItemStack();
+      if(getItemCount(id, stack.getType()) < stack.getAmount()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static void setItems(UUID id, List<SerializableItemStack> items, boolean add) {
+  	for(SerializableItemStack item : items) {
+  	  Material type = item.toItemStack().getType();
+  	  if(add) {
+        setItemCount(id, type, getItemCount(id, type) + item.getAmount());
+  	    continue;
+      }
+  	  setItemCount(id, type, getItemCount(id, type) - item.getAmount());
+    }
 	}
 	
 	public static Integer getItemCount(UUID id, Material item) {

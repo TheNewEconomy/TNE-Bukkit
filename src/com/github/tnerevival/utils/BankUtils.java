@@ -150,15 +150,13 @@ public class BankUtils {
 	}
 
 	public static Double getBankBalance(UUID owner, String world) {
-		if(!hasBank(owner, world)) {
-			return null;
-		} else {
-			if(!AccountUtils.getAccount(owner).getStatus().getBank()) {
-				return 0.0;
-			}
-			Bank bank = getBank(owner, world);
-			return AccountUtils.round(bank.getGold());
-		}
+		if(hasBank(owner, world)) {
+		  if(AccountUtils.getAccount(owner).getStatus().getBank()) {
+		    Bank b = getBank(owner, world);
+        return AccountUtils.round(b.getGold());
+      }
+    }
+		return 0.0;
 	}
 
 	public static Double getBankBalance(UUID owner) {

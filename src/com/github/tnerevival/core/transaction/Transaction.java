@@ -31,166 +31,171 @@ public class Transaction {
   }
 
   public boolean perform() {
-    return(!handleInitiator() || !handleRecipient());
+    return(handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
   }
 
-  private boolean handleInitiator() {
+  private TransactionResult handleInitiator() {
     if(type.equals(TransactionType.MONEY_INQUIRY)) {
       if(recipient == null) {
         UUID id = MISCUtils.distringuishId(initiator);
         if (!AccountUtils.exists(id))
-          return false;
-        //TODO: Check cost for items
-        if (cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
-          double difference = cost.getAmount() - AccountUtils.getFunds(id, world);
-          //TODO: Check if bank balance pay is enabled?
-          if (BankUtils.hasBank(id, world)) {
-            return BankUtils.getBankBalance(id, world) >= difference;
-          }
-          return false;
-        }
-        return true;
-      }
-      return true;
-    } else if(type.equals(TransactionType.MONEY_REMOVE)) {
-      if(recipient == null) {
-        UUID id = MISCUtils.distringuishId(initiator);
-        if (!AccountUtils.exists(id))
-          return false;
-        if (cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
-          double difference = cost.getAmount() - AccountUtils.getFunds(id, world);
-          //TODO: Check if bank balance pay is enabled?
-          if (BankUtils.hasBank(id, world) && BankUtils.getBankBalance(id, world) >= difference) {
-            BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) - difference));
-            AccountUtils.setFunds(id, world, 0.0);
-            return true;
-          }
-          return false;
-        }
-        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) - cost.getAmount()));
-        return true;
-      }
-      return true;
-    } else if(type.equals(TransactionType.MONEY_GIVE)) {
-      if(recipient == null) {
-        UUID id = MISCUtils.distringuishId(initiator);
-        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
-      }
-      return true;
-    } else if(type.equals(TransactionType.MONEY_PAY)) {
-      UUID id = MISCUtils.distringuishId(initiator);
-      if(initiator == null || recipient == null) return false;
-      if(!AccountUtils.exists(id) || AccountUtils.exists(MISCUtils.distringuishId(recipient))) return false;
-      if(cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
-        double difference = cost.getAmount() - AccountUtils.getFunds(id, world);
-        //TODO: Check if bank balance pay is enabled?
-        if(BankUtils.hasBank(id, world) && BankUtils.getBankBalance(id, world) >= difference) {
-          BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) - difference));
-          AccountUtils.setFunds(id, world, 0.0);
-          return true;
-        }
-        return false;
-      }
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) - cost.getAmount()));
-      return true;
-    } else if(type.equals(TransactionType.BANK_INQUIRY)) {
-      UUID id = MISCUtils.distringuishId(initiator);
-      if(!BankUtils.hasBank(id, world)) return false;
-      if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(recipient), world)) return false;
-      return (BankUtils.getBankBalance(id, world) >= cost.getAmount());
-    } else if(type.equals(TransactionType.BANK_WITHDRAWAL)) {
-      UUID id = MISCUtils.distringuishId(initiator);
-      if(!BankUtils.hasBank(id, world)) return false;
-      if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(recipient), world)) return false;
-      if(BankUtils.getBankBalance(id, world) < cost.getAmount()) return false;
-      BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) - cost.getAmount()));
-      return true;
-    } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
-      UUID id = MISCUtils.distringuishId(initiator);
-      if(!BankUtils.hasBank(MISCUtils.distringuishId(recipient), world)) return false;
-      if(cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) return false;
-      if(!BankUtils.bankMember(MISCUtils.distringuishId(recipient), id, world)) return false;
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) - cost.getAmount()));
-      return true;
-    }
-    return true;
-  }
+          return TransactionResult.FAILED;
 
-  private boolean handleRecipient() {
-    if(type.equals(TransactionType.MONEY_INQUIRY)) {
-      if(recipient != null) {
-        UUID id = MISCUtils.distringuishId(recipient);
-        if (!AccountUtils.exists(id))
-          return false;
-        if (cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
-          double difference = cost.getAmount() - AccountUtils.getFunds(id, world);
-          //TODO: Check if bank balance pay is enabled?
-          if (BankUtils.hasBank(id, world)) {
-            return BankUtils.getBankBalance(id, world) >= difference;
-          }
-          return false;
+        if(cost.getAmount() > 0.0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
+          return TransactionResult.FAILED;
         }
-        return true;
+
+        if(cost.getItems().size() > 0 && !MISCUtils.hasItems(id, cost.getItems())) {
+          return TransactionResult.FAILED;
+        }
+
+        return TransactionResult.SUCCESS;
       }
-      return true;
+      return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_REMOVE)) {
-      if(recipient != null) {
-        UUID id = MISCUtils.distringuishId(recipient);
+      if(recipient == null) {
+        UUID id = MISCUtils.distringuishId(initiator);
         if (!AccountUtils.exists(id))
-          return false;
-        if (cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
-          double difference = cost.getAmount() - AccountUtils.getFunds(id, world);
-          //TODO: Check if bank balance pay is enabled?
-          if (BankUtils.hasBank(id, world) && BankUtils.getBankBalance(id, world) >= difference) {
-            BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) - difference));
-            AccountUtils.setFunds(id, world, 0.0);
-            return true;
-          }
-          return false;
+          return TransactionResult.FAILED;
+
+        if(cost.getAmount() > 0.0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
+          return TransactionResult.FAILED;
         }
-        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) - cost.getAmount()));
-        return true;
+
+        if(cost.getItems().size() > 0 && !MISCUtils.hasItems(id, cost.getItems())) {
+          return TransactionResult.FAILED;
+        }
+
+        AccountUtils.removeFunds(id, world, cost.getAmount());
+        MISCUtils.setItems(id, cost.getItems(), false);
+        return TransactionResult.SUCCESS;
       }
-      return true;
+      return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_GIVE)) {
-      if(recipient != null) {
-        UUID id = MISCUtils.distringuishId(recipient);
-        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
-      }
-      return true;
-    } else if(type.equals(TransactionType.MONEY_PAY)) {
-      UUID id = MISCUtils.distringuishId(recipient);
-      if(initiator == null || recipient == null) return false;
-      if(!AccountUtils.exists(id) || AccountUtils.exists(MISCUtils.distringuishId(recipient))) return false;
-      if(cost.getAmount() > 0 && AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) {
-        double difference = cost.getAmount() - AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world);
-        //TODO: Check if bank balance pay is enabled?
-        if(BankUtils.hasBank(MISCUtils.distringuishId(initiator), world) && BankUtils.getBankBalance(MISCUtils.distringuishId(initiator), world) >= difference) {
+      if(recipient == null) {
+        UUID id = MISCUtils.distringuishId(initiator);
+        if(cost.getAmount() > 0.0) {
           AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
-          return true;
         }
-        return false;
+
+        if(cost.getItems().size() > 0) {
+          MISCUtils.setItems(id, cost.getItems(), true);
+        }
       }
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
-      return true;
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.MONEY_PAY)) {
+      UUID id = MISCUtils.distringuishId(initiator);
+      if(initiator == null || recipient == null) return TransactionResult.FAILED;
+      if(!AccountUtils.exists(id) || AccountUtils.exists(MISCUtils.distringuishId(recipient))) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0.0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
+        return TransactionResult.FAILED;
+      }
+
+      if(cost.getItems().size() > 0 && !MISCUtils.hasItems(id, cost.getItems())) {
+        return TransactionResult.FAILED;
+      }
+
+      AccountUtils.removeFunds(id, world, cost.getAmount());
+      MISCUtils.setItems(id, cost.getItems(), false);
+      return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_INQUIRY)) {
-      return true;
+      UUID id = MISCUtils.distringuishId(initiator);
+      if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(recipient), world)) return TransactionResult.FAILED;
+      if(BankUtils.getBankBalance(id, world) < cost.getAmount()) return TransactionResult.FAILED;
+
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.BANK_WITHDRAWAL)) {
+      UUID id = MISCUtils.distringuishId(initiator);
+      if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(recipient), world)) return TransactionResult.FAILED;
+      if(BankUtils.getBankBalance(id, world) < cost.getAmount()) return TransactionResult.FAILED;
+      BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) - cost.getAmount()));
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
+      UUID id = MISCUtils.distringuishId(initiator);
+      if(!BankUtils.hasBank(MISCUtils.distringuishId(recipient), world)) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) return TransactionResult.FAILED;
+      if(!BankUtils.bankMember(MISCUtils.distringuishId(recipient), id, world)) return TransactionResult.FAILED;
+      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) - cost.getAmount()));
+      return TransactionResult.SUCCESS;
+    }
+    return TransactionResult.SUCCESS;
+  }
+
+  private TransactionResult handleRecipient() {
+    if(type.equals(TransactionType.MONEY_INQUIRY)) {
+      if(recipient != null) {
+        UUID id = MISCUtils.distringuishId(recipient);
+        if (!AccountUtils.exists(id))
+          return TransactionResult.FAILED;
+        if (cost.getAmount() > 0.0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
+          return TransactionResult.FAILED;
+        }
+
+        if(cost.getItems().size() > 0 && !MISCUtils.hasItems(id, cost.getItems())) {
+          return TransactionResult.FAILED;
+        }
+
+        return TransactionResult.SUCCESS;
+      }
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.MONEY_REMOVE)) {
+      if(recipient != null) {
+        UUID id = MISCUtils.distringuishId(recipient);
+        if (!AccountUtils.exists(id))
+          return TransactionResult.FAILED;
+        if (cost.getAmount() > 0.0 && AccountUtils.getFunds(id, world) < cost.getAmount()) {
+          return TransactionResult.FAILED;
+        }
+
+        if(cost.getItems().size() > 0 && !MISCUtils.hasItems(id, cost.getItems())) {
+          return TransactionResult.FAILED;
+        }
+
+        AccountUtils.removeFunds(id, world, cost.getAmount());
+        MISCUtils.setItems(id, cost.getItems(), false);
+        return TransactionResult.SUCCESS;
+      }
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.MONEY_GIVE)) {
+      if(recipient != null) {
+        UUID id = MISCUtils.distringuishId(recipient);
+        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
+        MISCUtils.setItems(id, cost.getItems(), true);
+      }
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.MONEY_PAY)) {
+      UUID id = MISCUtils.distringuishId(recipient);
+      if(initiator == null || recipient == null) return TransactionResult.FAILED;
+      if(!AccountUtils.exists(id) || AccountUtils.exists(MISCUtils.distringuishId(recipient))) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0.0 && AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) {
+        return TransactionResult.FAILED;
+      }
+
+      if(cost.getItems().size() > 0 && !MISCUtils.hasItems(MISCUtils.distringuishId(initiator), cost.getItems())) {
+        return TransactionResult.FAILED;
+      }
+
+      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
+      MISCUtils.setItems(id, cost.getItems(), true);
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.BANK_INQUIRY)) {
+      return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_WITHDRAWAL)) {
       UUID id = MISCUtils.distringuishId(recipient);
-      if(!BankUtils.hasBank(id, world)) return false;
-      if(recipient != null && !BankUtils.bankMember(MISCUtils.distringuishId(initiator), id, world)) return false;
-      if(cost.getAmount() > 0 && BankUtils.getBankBalance(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) return false;
+      if(!BankUtils.hasBank(id, world)) return TransactionResult.FAILED;
+      if(recipient != null && !BankUtils.bankMember(MISCUtils.distringuishId(initiator), id, world)) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0.0 && BankUtils.getBankBalance(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) return TransactionResult.FAILED;
       AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
-      return true;
+      return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = MISCUtils.distringuishId(recipient);
-      if(!BankUtils.hasBank(id, world)) return false;
-      if(cost.getAmount() > 0 && AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) return false;
-      if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(initiator), world)) return false;
+      if(!BankUtils.hasBank(id, world)) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0 && AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) return TransactionResult.FAILED;
+      if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(initiator), world)) return TransactionResult.FAILED;
       BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) + cost.getAmount()));
-      return true;
+      return TransactionResult.SUCCESS;
     }
-    return true;
+    return TransactionResult.SUCCESS;
   }
 
   public String getInitiator() {

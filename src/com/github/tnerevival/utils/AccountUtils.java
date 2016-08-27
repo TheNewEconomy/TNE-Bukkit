@@ -156,23 +156,36 @@ public class AccountUtils {
 	}
 	
 	public static Double getFunds(UUID id) {
-		return getBalance(id);
+		return getFunds(id, MISCUtils.getWorld(id));
 	}
 	
 	public static Double getFunds(UUID id, String world) {
-		world = MISCUtils.getWorld(id);
-		return getBalance(id, world);
+	  double funds = getBalance(id, world);
+		if(TNE.configurations.getBoolean("Core.Bank.Connected")) {
+		  funds += BankUtils.getBankBalance(id, world);
+    }
+		return funds;
 	}
 	
 	public static void setFunds(UUID id, double amount) {
+	  setFunds(id, MISCUtils.getWorld(id), amount);
 		amount = round(amount);
 		setBalance(id, amount);
 	}
 	
 	public static void setFunds(UUID id, String world, double amount) {
-		amount = round(amount);
-		setBalance(id, world, amount);
+		setBalance(id, world, round(amount));
 	}
+
+	public static void removeFunds(UUID id, String world, double amount) {
+    double difference = amount - getBalance(id, world);
+    if(difference > 0) {
+      BankUtils.setBankBalance(id, world, round(BankUtils.getBankBalance(id, world) - difference));
+      setBalance(id, world, 0.0);
+      return;
+    }
+    setBalance(id, world, round(getBalance(id, world) - amount));
+  }
 	
 	public static void initializeWorldData(UUID id, String world) {
 		Account account = getAccount(id);
