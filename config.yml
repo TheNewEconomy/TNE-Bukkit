@@ -138,9 +138,8 @@ Core:
             #The maximum amount of sell signs a player can make.
             Max: 10
 
-       #All configurations relating to buy signs.
-       Buy:
-
+        #All configurations relating to buy signs.
+        Buy:
             #Whether or not buy signs are enabled.
             Enabled: false
 

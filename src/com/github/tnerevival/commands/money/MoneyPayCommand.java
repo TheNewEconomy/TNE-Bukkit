@@ -63,6 +63,7 @@ public class MoneyPayCommand extends TNECommand {
 				Message insufficient = new Message("Messages.Money.Insufficient");
 				insufficient.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
 				player.sendMessage(insufficient.translate());
+				return false;
 			}
 		} else {
 			help(sender);

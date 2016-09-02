@@ -41,6 +41,9 @@ public class ShareEntry implements Serializable {
 
 	public static ShareEntry fromString(String parse) {
 	  String[] data = parse.split("=");
-		return new ShareEntry(UUID.fromString(data[0]), Double.valueOf(data[1]));
+    if(data.length == 2) {
+      return new ShareEntry(UUID.fromString(data[0]), Double.valueOf(data[1]));
+    }
+    return null;
 	}
 }

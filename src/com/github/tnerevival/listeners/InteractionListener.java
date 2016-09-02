@@ -625,7 +625,7 @@ public class InteractionListener implements Listener {
 						if(skelly.getSkeletonType().equals(SkeletonType.WITHER)) {
 							mob = "WitherSkeleton";
 							break;
-						}  else if(skelly.getSkeletonType().equals(SkeletonType.STRAY)) {
+						}  else if(MISCUtils.isOneTen() && skelly.getSkeletonType().equals(SkeletonType.STRAY)) {
 							mob = "Stray";
 							break;
 						}
@@ -635,7 +635,7 @@ public class InteractionListener implements Listener {
 						mob = "Slime";
 						break;
 					case SNOWMAN:
-						mob = "SnowMan";
+						mob = "SnowGolem";
 						break;
 					case SPIDER:
 						mob = "Spider";
@@ -661,7 +661,7 @@ public class InteractionListener implements Listener {
 							mob = "ZombieVillager";
 							break;
 						}
-						if(zombles.getVillagerProfession().equals(Villager.Profession.HUSK)) {
+						if(MISCUtils.isOneTen() && zombles.getVillagerProfession().equals(Villager.Profession.HUSK)) {
 							mob = "Husk";
 							break;
 						}

@@ -1,16 +1,21 @@
 package com.github.tnerevival;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.github.tnerevival.commands.CommandManager;
+import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.*;
+import com.github.tnerevival.core.api.TNEAPI;
+import com.github.tnerevival.core.configurations.ConfigurationManager;
+import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.listeners.ConnectionListener;
+import com.github.tnerevival.listeners.InteractionListener;
+import com.github.tnerevival.listeners.InventoryListener;
+import com.github.tnerevival.listeners.WorldListener;
+import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.worker.InterestWorker;
+import com.github.tnerevival.worker.InventoryTimeWorker;
+import com.github.tnerevival.worker.SaveWorker;
+import com.github.tnerevival.worker.StatisticsWorker;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,24 +25,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.tnerevival.commands.CommandManager;
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.EconomyManager;
-import com.github.tnerevival.core.SaveManager;
-import com.github.tnerevival.core.Statistics;
-import com.github.tnerevival.core.TNEVaultEconomy;
-import com.github.tnerevival.core.UpdateChecker;
-import com.github.tnerevival.core.api.TNEAPI;
-import com.github.tnerevival.core.configurations.ConfigurationManager;
-import com.github.tnerevival.core.configurations.ObjectConfiguration;
-import com.github.tnerevival.listeners.ConnectionListener;
-import com.github.tnerevival.listeners.InteractionListener;
-import com.github.tnerevival.listeners.InventoryListener;
-import com.github.tnerevival.listeners.WorldListener;
-import com.github.tnerevival.worker.InterestWorker;
-import com.github.tnerevival.worker.InventoryTimeWorker;
-import com.github.tnerevival.worker.SaveWorker;
-import com.github.tnerevival.worker.StatisticsWorker;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class TNE extends JavaPlugin {
 	
@@ -48,6 +39,7 @@ public class TNE extends JavaPlugin {
 	public TNEAPI api = null;
 	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
+	public static final boolean debugMode = true;
 	
 	// Files & Custom Configuration Files
 	public File mobs;
@@ -132,7 +124,7 @@ public class TNE extends JavaPlugin {
 			}
 		}
 		
-		getLogger().info("The New Economy v0.0.2.4 has been enabled!");
+		getLogger().info("The New Economy v0.0.3.0 has been enabled!");
 		
 		String updateMessage = (updater.latest()) ? "Using the latest version: " + updater.getCurrentBuild() : "Outdated! The current build is " + updater.getCurrentBuild();
 		getLogger().info(updateMessage);
@@ -152,7 +144,7 @@ public class TNE extends JavaPlugin {
 			//Task was not scheduled
 		}
 		saveManager.save();
-		getLogger().info("The New Economy v0.0.2.4 has been disabled!");
+		getLogger().info("The New Economy v0.0.3.0 has been disabled!");
 	}
 	
 	@Override
@@ -246,6 +238,6 @@ public class TNE extends JavaPlugin {
 			return;
 		}
         getServer().getServicesManager().register(Economy.class, new TNEVaultEconomy(this), this, ServicePriority.Highest);
-        getLogger().info("Hooked into Vault");
+        MISCUtils.debug("Hooked into Vault");
 	}
 }

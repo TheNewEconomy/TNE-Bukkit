@@ -25,10 +25,10 @@ public class ConnectionListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		MISCUtils.debug(MISCUtils.getID(player) + "");
 		if(!plugin.manager.accounts.containsKey(MISCUtils.getID(player))) {
 			AccountUtils.createAccount(MISCUtils.getID(player));
 		}
-		
 		if(player.hasPermission("tne.admin") && !TNE.updater.latest()) {
 			player.sendMessage(ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.updater.getCurrentBuild());
 		}

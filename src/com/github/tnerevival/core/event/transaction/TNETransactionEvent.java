@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
  * Created by Daniel on 8/15/2016.
  */
 public class TNETransactionEvent extends Event implements Cancellable {
+  private static final HandlerList handlers = new HandlerList();
 
   private Transaction transaction;
   private boolean cancelled;
@@ -27,7 +28,7 @@ public class TNETransactionEvent extends Event implements Cancellable {
 
   @Override
   public HandlerList getHandlers() {
-    return null;
+    return handlers;
   }
 
   @Override

@@ -6,6 +6,7 @@ import org.bukkit.event.HandlerList;
 import java.util.UUID;
 
 public class TNEAccountEvent extends Event {
+  private static final HandlerList handlers = new HandlerList();
 	private UUID id;
 
   public TNEAccountEvent(UUID id) {
@@ -22,6 +23,6 @@ public class TNEAccountEvent extends Event {
 
   @Override
   public HandlerList getHandlers() {
-    return null;
+    return handlers;
   }
 }

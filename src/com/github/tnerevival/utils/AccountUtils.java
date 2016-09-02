@@ -24,6 +24,7 @@ public class AccountUtils {
 	  Account a = new Account(id);
     a.setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
 		TNEAccountCreationEvent e = new TNEAccountCreationEvent(id, a);
+		MISCUtils.debug(e.getId() + "");
 		Bukkit.getServer().getPluginManager().callEvent(e);
     TNE.instance.manager.accounts.put(e.getId(), e.getAccount());
 	}

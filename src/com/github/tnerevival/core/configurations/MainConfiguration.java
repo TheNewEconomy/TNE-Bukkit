@@ -14,7 +14,7 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Update.Check", true);
 		configurations.put("Core.Update.Notify", true);
 		configurations.put("Core.AutoSaver.Enabled", true);
-		configurations.put("Core.AutoSaver.Interval", 10);
+		configurations.put("Core.AutoSaver.Interval", 600);
 		configurations.put("Core.Currency.Advanced", false);
 		configurations.put("Core.Currency.ItemCurrency", false);
 		configurations.put("Core.Currency.ItemMajor", "GOLD_INGOT");
@@ -36,11 +36,6 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Death.Lose", false);
 		configurations.put("Core.Death.Robbing", false);
 		configurations.put("Core.Death.RobbingInterval", 600);
-		configurations.put("Core.Company.Enabled", true);
-		configurations.put("Core.Company.Cost", 20.0);
-		configurations.put("Core.Company.InitialBalance", 100.0);
-		configurations.put("Core.Company.PayRate", 2400);
-		configurations.put("Core.Company.Failure", -2000.0);
 		configurations.put("Core.Bank.Enabled", false);
 		configurations.put("Core.Bank.Sign", false);
 		configurations.put("Core.Bank.Command", true);

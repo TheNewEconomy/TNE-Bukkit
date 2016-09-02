@@ -51,9 +51,8 @@ public class ShopBrowseCommand extends TNECommand {
       }
       //TODO: Shop does not exist
       return false;
-    } else {
-      help(sender);
     }
+    help(sender);
     return false;
   }
 

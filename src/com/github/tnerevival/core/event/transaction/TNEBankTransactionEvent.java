@@ -12,6 +12,7 @@ import java.util.UUID;
  * Called when a player adds/removes an item from a bank.
  */
 public class TNEBankTransactionEvent extends Event implements Cancellable {
+  private static final HandlerList handlers = new HandlerList();
 
   private UUID player;
   private Bank bank;
@@ -33,7 +34,7 @@ public class TNEBankTransactionEvent extends Event implements Cancellable {
 
   @Override
   public HandlerList getHandlers() {
-    return null;
+    return handlers;
   }
 
   @Override

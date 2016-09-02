@@ -9,6 +9,7 @@ import java.util.UUID;
  * Created by Daniel on 8/15/2016.
  */
 public class TNEInventoryEvent extends Event {
+  private static final HandlerList handlers = new HandlerList();
 
   private UUID player;
   private boolean viewOnly = true;
@@ -31,6 +32,6 @@ public class TNEInventoryEvent extends Event {
 
   @Override
   public HandlerList getHandlers() {
-    return null;
+    return handlers;
   }
 }

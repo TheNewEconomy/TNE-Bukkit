@@ -26,7 +26,17 @@ import java.util.UUID;
 
 public class MISCUtils {
 
+  //Minecraft Version Utils
+  public static boolean isOneTen(){
+    return Bukkit.getBukkitVersion().contains("1.10");
+  }
+
 	//True MISC Utils
+	public static void debug(String message) {
+	  if(TNE.debugMode) {
+	    TNE.instance.getLogger().info("[DEBUG MODE]" + message);
+    }
+  }
 	/**
 	 * Returns the player's account world(or the world it's meant to share accounts with if configured to do so)
 	 */
@@ -267,7 +277,7 @@ public class MISCUtils {
 	
 	public static UUID genUUID() {
 		UUID id = UUID.randomUUID();
-		while(TNE.instance.manager.accounts.containsKey(id) || TNE.instance.manager.ecoIDs.containsKey(id)) {
+		while(TNE.instance.manager.accounts.containsKey(id) || TNE.instance.manager.ecoIDs.containsValue(id)) {
 			//This should never happen, but we'll play it safe
 			id = UUID.randomUUID();
 		}
@@ -275,8 +285,7 @@ public class MISCUtils {
 	}
 	
 	public static String ecoToUsername(UUID id) {
-		String username = (String) getKey(TNE.instance.manager.ecoIDs, id);
-		return username;
+		return (String) getKey(TNE.instance.manager.ecoIDs, id);
 	}
 	
 	public static UUID getID(String player) {

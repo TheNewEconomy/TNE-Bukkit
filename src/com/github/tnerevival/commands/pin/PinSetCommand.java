@@ -39,11 +39,11 @@ public class PinSetCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		if(arguments.length > 0 && arguments.length < 4) {
+		if(arguments.length == 2) {
 			Player player = (Player)sender;
 			Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
 			
-			if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && arguments.length == 2) {
+			if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
 				help(sender);
 				return false;
 			}

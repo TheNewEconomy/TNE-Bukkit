@@ -81,7 +81,9 @@ public class Account implements Serializable {
 		
 		for(String s : b) {
 			String[] balance = s.split("\\,");
-			balances.put(balance[0], Double.valueOf(balance[1]));
+      if(balance.length == 2) {
+        balances.put(balance[0], Double.valueOf(balance[1]));
+      }
 		}
 	}
 
@@ -105,7 +107,9 @@ public class Account implements Serializable {
 
     for(String s : values) {
       String[] data = s.split("=");
-      commands.put(data[0], Integer.valueOf(data[1]));
+      if(data.length == 2) {
+        commands.put(data[0], Integer.valueOf(data[1]));
+      }
     }
   }
 
@@ -129,7 +133,9 @@ public class Account implements Serializable {
 
     for(String s : values) {
       String[] data = s.split("=");
-      credits.put(data[0], CreditsEntry.fromString(data[1]));
+			if(data.length == 2) {
+				credits.put(data[0], CreditsEntry.fromString(data[1]));
+			}
     }
   }
 	

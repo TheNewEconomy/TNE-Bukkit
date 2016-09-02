@@ -222,11 +222,13 @@ public class Shop implements Serializable {
     String[] parsed = parse.split(",");
 
     for(String s : parsed) {
-      if(blacklist) {
-        this.blacklist.add(UUID.fromString(s));
-        continue;
-      }
-      this.whitelist.add(UUID.fromString(s));
+    	if(MISCUtils.isUUID(s)) {
+				if (blacklist) {
+					this.blacklist.add(UUID.fromString(s));
+					continue;
+				}
+				this.whitelist.add(UUID.fromString(s));
+			}
     }
   }
 
@@ -244,7 +246,10 @@ public class Shop implements Serializable {
     String[] parsed = parse.split(",");
 
     for(String s : parsed) {
-      shares.add(ShareEntry.fromString(s));
+      ShareEntry entry = ShareEntry.fromString(s);
+      if(entry != null) {
+        shares.add(ShareEntry.fromString(s));
+      }
     }
   }
 
