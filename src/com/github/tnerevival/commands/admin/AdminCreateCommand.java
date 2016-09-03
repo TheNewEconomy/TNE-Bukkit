@@ -17,7 +17,7 @@ public class AdminCreateCommand extends TNECommand {
 
   @Override
   public String getName() {
-    return "save";
+    return "create";
   }
 
   @Override
@@ -27,7 +27,7 @@ public class AdminCreateCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.admin.save";
+    return "tne.admin.create";
   }
 
   @Override

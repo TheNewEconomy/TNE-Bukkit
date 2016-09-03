@@ -77,8 +77,8 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Objects.ItemUsePaid", "<white> You were given <gold>$amount<white> for using item \"$name\".");
 		configurations.put("Messages.Objects.PotionUseCharged", "<white> You were charged <gold>$amount<white> for using a \"$name\" potion.");
 		configurations.put("Messages.Objects.PotionUsePaid", "<white> You were given <gold>$amount<white> for using a \"$name\" potion.");
-		configurations.put("Messages.Mob.Killed", "<white>You received $reward for killing a <green>$mob<white>.");
-		configurations.put("Messages.Mob.KilledVowel", "<white>You received $reward for killing an <green>$mob<white>.");
+		configurations.put("Messages.Mob.Killed", "<white>You received $reward <white>for killing a <green>$mob<white>.");
+		configurations.put("Messages.Mob.KilledVowel", "<white>You received $reward <white>for killing an <green>$mob<white>.");
 		configurations.put("Messages.World.Change", "<white>You have been charged <gold> $amount<white> for changing worlds.");
 		configurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
 		

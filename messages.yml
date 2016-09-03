@@ -139,8 +139,8 @@ Messages:
        PotionUsePaid: <white> You were given <gold>$amount<white> for using a "$name" potion.
        
     Mob:
-       Killed: <white>You received $reward for killing a <green>$mob<white>.
-       KilledVowel: <white>You received $reward for killing an <green>$mob<white>.
+       Killed: <white>You received $reward <white>for killing a <green>$mob<white>.
+       KilledVowel: <white>You received $reward <white>for killing an <green>$mob<white>.
     
     World:
        Change: <red>You have been charged <gold> $amount<red> for changing worlds.

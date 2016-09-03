@@ -1,5 +1,6 @@
 package com.github.tnerevival.serializable;
 
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,7 @@ public class SerializableItemStack implements Serializable {
 			this.lore = i.getItemMeta().getLore();
 		}
 		this.enchantments = getEnchantmentsFromStack(i);
+    MISCUtils.debug("Name:" + this.getName() + "Lore:" + loreToString() + "damage:" + damage);
 	}
 	
 	/**
@@ -204,8 +206,10 @@ public class SerializableItemStack implements Serializable {
 					stack.addUnsafeEnchantment(enchant.getEnchantment(), enchantments.get(enchant));
 				}
 			}
-			
-			ItemMeta stackMeta = stack.getItemMeta();
+
+      MISCUtils.debug("Name:" + this.getName() + "Lore:" + loreToString() + "damage:" + damage);
+
+      ItemMeta stackMeta = stack.getItemMeta();
 			if(!this.lore.isEmpty()) {
 				stackMeta.setLore(this.lore);
 			}
@@ -244,8 +248,9 @@ public class SerializableItemStack implements Serializable {
 
 			for(String s : enchantmentsArray) {
 				String[] enchantmentVariables = s.split("\\,");
-
-				enchantments.put(new SerializableEnchantment(enchantmentVariables[0]), Integer.valueOf(enchantmentVariables[1]));
+				if(enchantmentVariables.length == 2) {
+					enchantments.put(new SerializableEnchantment(enchantmentVariables[0]), Integer.valueOf(enchantmentVariables[1]));
+				}
 			}
 			stack.setEnchantments(enchantments);
 		}

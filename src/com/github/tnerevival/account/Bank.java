@@ -126,8 +126,12 @@ public class Bank implements Serializable {
     String[] parsed = parse.split(":");
     Bank b = new Bank(UUID.fromString(parsed[0]), Integer.valueOf(parsed[1]));
     b.setGold(Double.valueOf(parsed[2]));
-    b.itemsFromString(parsed[3]);
-    b.membersFromString(parsed[4]);
+    if(parsed.length >= 4) {
+      b.itemsFromString(parsed[3]);
+    }
+		if(parsed.length >= 5) {
+			b.membersFromString(parsed[4]);
+		}
 
     return b;
   }

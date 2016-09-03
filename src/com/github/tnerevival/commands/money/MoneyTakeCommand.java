@@ -52,9 +52,8 @@ public class MoneyTakeCommand extends TNECommand {
           return true;
         }
 			}
-		} else {
-			help(sender);
 		}
+		help(sender);
 		return false;
 	}
 

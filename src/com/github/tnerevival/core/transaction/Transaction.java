@@ -31,7 +31,7 @@ public class Transaction {
   }
 
   public boolean perform() {
-    return(handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
+    return !(handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
   }
 
   private TransactionResult handleInitiator() {
