@@ -7,7 +7,6 @@ Inventory systems(cost, blacklisted items, view controlling, and access lists sh
 
 Bugs Found
 ----------
-- Version checker needs improved to take full version string into consideration
 - Potion cost error: NPE - InteractionListener:481
 - Command help takes up too much screen space
 - /tne create not found
@@ -19,4 +18,3 @@ Bugs Found
 - enchanted books, potions, and new arrow types should be blacklisted
 from banks as we cannot properly save them without building for specific
 minecraft versions
-- 

@@ -1,5 +1,6 @@
 package com.github.tnerevival.listeners;
 
+import com.github.tnerevival.core.version.ReleaseType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +30,7 @@ public class ConnectionListener implements Listener {
 		if(!plugin.manager.accounts.containsKey(MISCUtils.getID(player))) {
 			AccountUtils.createAccount(MISCUtils.getID(player));
 		}
-		if(player.hasPermission("tne.admin") && !TNE.updater.latest()) {
+		if(player.hasPermission("tne.admin") && TNE.updater.getRelease().equals(ReleaseType.OUTDATED)) {
 			player.sendMessage(ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.updater.getCurrentBuild());
 		}
 		

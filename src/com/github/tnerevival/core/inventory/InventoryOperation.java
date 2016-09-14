@@ -12,9 +12,5 @@ public enum InventoryOperation {
   /**
    * Denotes items removed from the inventory.
    */
-  REMOVE,
-  /**
-   * Denotes when all items and counts remain the same, but some items are in different slot locations.
-   */
-  SORT
+  REMOVE
 }

@@ -406,9 +406,6 @@ public class MISCUtils {
 				case "brew":
 					search = "Brewing Cost:";
 					break;
-				default:
-					search = "Enchanting Cost:";
-					break;
 			}
 			
 			for(String s : lore) {

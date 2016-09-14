@@ -1,23 +1,164 @@
 package com.github.tnerevival.core.inventory;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.inventory.impl.BankInventory;
+import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Daniel on 9/2/2016.
  */
 public abstract class TNEInventory {
-  public List<InventoryViewer> viewers = new ArrayList<>();
+  /**
+   * A List of all players currently viewing this inventory
+   */
+  private List<InventoryViewer> viewers = new ArrayList<>();
+
+  private Inventory inventory;
+
+  /**
+   * The title this inventory should have.
+   */
+  public String title = "";
+
+  /**
+   * The amount of slots this inventory has.
+   */
+  public Integer size = 27;
+
+  /**
+   * An array of blacklisted materials, that cannot be placed into this inventory.
+   * @return
+   */
+  public abstract List<Material> getBlacklisted();
 
   /**
    * An array of valid slots for inventories that don't allow players to use majority slots.
    * @return
    */
-  public abstract int[] getValidSlots();
+  public abstract List<Integer> getValidSlots();
 
   /**
    * An array of slots that a player cannot interact with due to some restriction and/or feature of the inventory.
    * @return
    */
-  public abstract int[] getInvalidSlots();
+  public abstract List<Integer> getInvalidSlots();
+
+  /**
+   * Returns the Bukkit-based inventory class.
+   * @return
+   */
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+  /**
+   * Used to override the inventory class.
+   * @param inventory
+   */
+  public void setInventory(Inventory inventory) {
+    this.inventory = inventory;
+  }
+
+  public int getValidSlot() {
+    return getValidSlot(0);
+  }
+
+  public int getValidSlot(int recommended) {
+    if(getValidSlots().size() > 0 && getValidSlots().contains(recommended)) return recommended;
+    if(getInvalidSlots().size() > 0 && !getInvalidSlots().contains(recommended)) return recommended;
+
+    return inventory.firstEmpty();
+  }
+
+  private String charge(InventoryViewer viewer) {
+    Account acc = AccountUtils.getAccount(viewer.getUUID());
+    ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
+
+    if(!acc.getStatus().getBalance())
+      return "Messages.Account.Locked";
+
+    if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
+      return "Messages.Account.Set";
+    else if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(viewer.getUUID()))
+      return "Messages.Account.Confirm";
+
+    if(config.inventoryEnabled(inventory.getType())) {
+      if(config.isTimed(inventory.getType())) {
+        if(acc.getTimeLeft(MISCUtils.getWorld(viewer.getUUID()), TNE.configurations.getObjectConfiguration().inventoryType(inventory.getType())) <= 0) {
+          return "Messages.Package.Unable";
+        }
+      } else {
+        if(!AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType()), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(viewer.getUUID()))) {
+          return "Messages.Money.Insufficient";
+        } else {
+          AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType()), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(viewer.getUUID()));
+          return "Messages.Inventory.Charge";
+        }
+      }
+    }
+    return "successful";
+  }
+
+  public void onOpen(InventoryViewer viewer) {
+    boolean canView = false;
+    ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
+
+    if(!(this instanceof BankInventory)) {
+      String charge = charge(viewer);
+      if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
+        Message m = new Message(charge);
+        m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType()))));
+        m.addVariable("$type", config.inventoryType(inventory.getType()));
+        MISCUtils.getPlayer(viewer.getUUID()).sendMessage(m.translate());
+
+        return;
+      }
+
+      if(charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
+        Message m = new Message(charge);
+        m.addVariable("$type", config.inventoryType(inventory.getType()));
+        MISCUtils.getPlayer(viewer.getUUID()).sendMessage(m.translate());
+      }
+    }
+
+    viewers.add(viewer);
+  }
+
+  /**
+   * Called when a viewer closes the inventory.
+   * @param viewer
+   */
+  public void onClose(InventoryViewer viewer) {
+    viewers.remove(viewer);
+    Iterator<Map.Entry<SerializableItemStack, InventoryOperation>> it = viewer.getOperations().entrySet().iterator();
+    while(it.hasNext()) {
+      Map.Entry<SerializableItemStack, InventoryOperation> entry = it.next();
+
+      switch(entry.getValue()) {
+        case ADD:
+          inventory.addItem(entry.getKey().toItemStack());
+          break;
+        case REMOVE:
+          inventory.removeItem(entry.getKey().toItemStack());
+          break;
+      }
+    }
+
+    for(InventoryViewer view : viewers) {
+      MISCUtils.getPlayer(view.getUUID()).openInventory(inventory);
+    }
+  }
 }

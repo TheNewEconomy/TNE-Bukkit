@@ -6,6 +6,7 @@ import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
 import com.github.tnerevival.listeners.InventoryListener;
@@ -124,9 +125,11 @@ public class TNE extends JavaPlugin {
 			}
 		}
 		
-		getLogger().info("The New Economy v0.0.3.0 has been enabled!");
-		
-		String updateMessage = (updater.latest()) ? "Using the latest version: " + updater.getCurrentBuild() : "Outdated! The current build is " + updater.getCurrentBuild();
+		getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled!");
+
+		String updateMessage = "Using the latest version: " + updater.getCurrentBuild();
+		if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";
+    if(updater.getRelease().equals(ReleaseType.OUTDATED)) updateMessage = "Outdated! The current build is " + updater.getLatestBuild();
 		getLogger().info(updateMessage);
 	}
 	
@@ -144,7 +147,7 @@ public class TNE extends JavaPlugin {
 			//Task was not scheduled
 		}
 		saveManager.save();
-		getLogger().info("The New Economy v0.0.3.0 has been disabled!");
+		getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been disabled!");
 	}
 	
 	@Override

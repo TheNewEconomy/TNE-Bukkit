@@ -14,7 +14,7 @@ public class InventoryViewer {
   /**
    * Used to track the operations this viewer has performed on the inventory for update purposes.
    */
-  Map<SerializableItemStack, InventoryOperation> operations = new HashMap<>();
+  private Map<SerializableItemStack, InventoryOperation> operations = new HashMap<>();
 
   /**
    * The UUID of the player viewing the inventory.
@@ -35,4 +35,20 @@ public class InventoryViewer {
    * Used to determine if the inventory should be closed due to insufficient inventory credits.
    */
   private boolean close;
+
+  public UUID getUUID() {
+    return viewer;
+  }
+
+  public Map<SerializableItemStack, InventoryOperation> getOperations() {
+    return operations;
+  }
+
+  public boolean willSave() {
+    return save;
+  }
+
+  public boolean willClose() {
+    return close;
+  }
 }
