@@ -21,6 +21,8 @@ public class InventoryViewer {
    */
   private UUID viewer;
 
+  private String world;
+
   /**
    * Whether or not the inventory should be saved when the viewer closes it. This helps to prevent saving for admin viewing, etc.
    */
@@ -36,12 +38,25 @@ public class InventoryViewer {
    */
   private boolean close;
 
+  public InventoryViewer(UUID viewer, String world) {
+    this.viewer = viewer;
+    this.world = world;
+  }
+
   public UUID getUUID() {
     return viewer;
   }
 
+  public String getWorld() {
+    return world;
+  }
+
   public Map<SerializableItemStack, InventoryOperation> getOperations() {
     return operations;
+  }
+
+  public long getOpened() {
+    return opened;
   }
 
   public boolean willSave() {

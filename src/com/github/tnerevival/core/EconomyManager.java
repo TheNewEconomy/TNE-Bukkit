@@ -1,9 +1,7 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Account;
-import com.github.tnerevival.core.inventory.View;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.serializable.SerializableLocation;
@@ -19,10 +17,6 @@ public class EconomyManager {
 	 * Format: Player UUID, Account Class Instance
 	 */
 	public Map<UUID, Account> accounts = new HashMap<>();
-	
-	public Map<UUID, View> viewers = new HashMap<>();
-	
-	public Map<UUID, Access> accessing = new HashMap<>();
 
 	public Map<String, UUID> ecoIDs = new HashMap<>();
 	

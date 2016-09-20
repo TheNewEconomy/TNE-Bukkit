@@ -12,9 +12,3 @@ Bugs Found
 - /tne create not found
 - /tne purge doesn't reflect on reload
 - /tne delete shows no message after deleting an account
-- players can still be charged for chest access without confirming their pin
-- players still being charged for commands without confirming pin
-- text shown for when players cannot afford the command cost
-- enchanted books, potions, and new arrow types should be blacklisted
-from banks as we cannot properly save them without building for specific
-minecraft versions

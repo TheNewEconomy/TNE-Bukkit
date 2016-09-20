@@ -39,8 +39,6 @@ public class BankViewCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		//TODO: Better reorganize inventory access to be more generalized,
-		//and include support for the new multi-player banks.
 
 		Player player = getPlayer(sender);
 		if(BankUtils.command(player.getWorld().getName())) {

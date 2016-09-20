@@ -129,8 +129,8 @@ public class BankUtils {
 		}
 		
 		Bank bank = getBank(owner, world);
-		String gold = "Gold: " + MISCUtils.getShort(bank.getGold());
-		Inventory bankInventory = Bukkit.createInventory(null, size(world), ChatColor.WHITE + "Bank " + ChatColor.GOLD + gold);
+		String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Bank" + ChatColor.GOLD + "]" + ChatColor.WHITE + MISCUtils.getPlayer(owner).getDisplayName();
+		Inventory bankInventory = Bukkit.createInventory(null, size(world), title);
 		if(bank.getItems().size() > 0) {
 			List<SerializableItemStack> items = bank.getItems();
 			

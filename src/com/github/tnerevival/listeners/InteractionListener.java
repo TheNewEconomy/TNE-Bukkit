@@ -69,10 +69,21 @@ public class InteractionListener implements Listener {
 			commandCost.addVariable("$command", commandFirstArg);
 			
 			if(cost > 0.0) {
+			  String message = "";
+        Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
+        if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
+          message = "Messages.Account.Set";
+        else if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(acc.getUid()))
+          message = "Messages.Account.Confirm";
+
+        if(!message.equals("")) {
+          event.setCancelled(true);
+          player.sendMessage(new Message(message).translate());
+          return;
+        }
 				event.setCancelled(true);
 				
 				boolean paid = false;
-				Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
 				
 				if(acc.hasCredit(commandFirstArg)) {
 					acc.removeCredit(commandFirstArg);

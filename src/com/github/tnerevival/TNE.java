@@ -6,6 +6,7 @@ import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.inventory.InventoryManager;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
@@ -35,6 +36,7 @@ public class TNE extends JavaPlugin {
 	
 	public static TNE instance;
 	public EconomyManager manager;
+	public InventoryManager inventoryManager;
 	public SaveManager saveManager;
 	private CommandManager commandManager;
 	public TNEAPI api = null;
@@ -88,6 +90,7 @@ public class TNE extends JavaPlugin {
 		configurations = new ConfigurationManager();
 		
 		manager = new EconomyManager();
+		inventoryManager = new InventoryManager();
 		saveManager = new SaveManager();
 		commandManager = new CommandManager();
 		

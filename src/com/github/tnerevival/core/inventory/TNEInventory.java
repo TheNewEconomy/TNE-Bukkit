@@ -8,14 +8,14 @@ import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Daniel on 9/2/2016.
@@ -24,19 +24,12 @@ public abstract class TNEInventory {
   /**
    * A List of all players currently viewing this inventory
    */
-  private List<InventoryViewer> viewers = new ArrayList<>();
+  protected List<InventoryViewer> viewers = new ArrayList<>();
 
-  private Inventory inventory;
+  protected UUID owner;
+  protected String world;
 
-  /**
-   * The title this inventory should have.
-   */
-  public String title = "";
-
-  /**
-   * The amount of slots this inventory has.
-   */
-  public Integer size = 27;
+  protected Inventory inventory;
 
   /**
    * An array of blacklisted materials, that cannot be placed into this inventory.
@@ -76,6 +69,28 @@ public abstract class TNEInventory {
     return getValidSlot(0);
   }
 
+  public void setOwner(UUID owner) {
+    this.owner = owner;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
+  }
+
+  public List<InventoryViewer> getViewers() {
+    return viewers;
+  }
+
+  public void addViewer(InventoryViewer viewer) {
+    viewers.add(viewer);
+  }
+
+  public void removeViewer(UUID id) {
+    viewers.removeIf(inventoryViewer -> {
+      return inventoryViewer.getUUID().equals(id);
+    });
+  }
+
   public int getValidSlot(int recommended) {
     if(getValidSlots().size() > 0 && getValidSlots().contains(recommended)) return recommended;
     if(getInvalidSlots().size() > 0 && !getInvalidSlots().contains(recommended)) return recommended;
@@ -112,29 +127,43 @@ public abstract class TNEInventory {
     return "successful";
   }
 
-  public void onOpen(InventoryViewer viewer) {
+  public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
+
+    if(getBlacklisted().contains(item.getType())) return false;
+    if(getValidSlots().size() > 0 && !getValidSlots().contains(slot)) return false;
+    if(getInvalidSlots().size() > 0 && getInvalidSlots().contains(slot)) return false;
+
+    return true;
+  }
+
+  public boolean onOpen(InventoryViewer viewer) {
     boolean canView = false;
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
 
     if(!(this instanceof BankInventory)) {
       String charge = charge(viewer);
+      MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
         m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
         MISCUtils.getPlayer(viewer.getUUID()).sendMessage(m.translate());
 
-        return;
+        return false;
       }
 
       if(charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
+        m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
         MISCUtils.getPlayer(viewer.getUUID()).sendMessage(m.translate());
       }
+    } else if(this instanceof BankInventory) {
+      if(!BankUtils.bankMember(owner, viewer.getUUID(), viewer.getWorld())) {
+        return false;
+      }
     }
-
-    viewers.add(viewer);
+    return true;
   }
 
   /**
@@ -142,7 +171,6 @@ public abstract class TNEInventory {
    * @param viewer
    */
   public void onClose(InventoryViewer viewer) {
-    viewers.remove(viewer);
     Iterator<Map.Entry<SerializableItemStack, InventoryOperation>> it = viewer.getOperations().entrySet().iterator();
     while(it.hasNext()) {
       Map.Entry<SerializableItemStack, InventoryOperation> entry = it.next();
@@ -157,8 +185,16 @@ public abstract class TNEInventory {
       }
     }
 
-    for(InventoryViewer view : viewers) {
-      MISCUtils.getPlayer(view.getUUID()).openInventory(inventory);
+    Iterator<InventoryViewer> itr = viewers.iterator();
+
+    while(itr.hasNext()) {
+      InventoryViewer entry = itr.next();
+
+      if(entry.getUUID().equals(viewer.getUUID())) {
+        itr.remove();
+        continue;
+      }
+      MISCUtils.getPlayer(entry.getUUID()).openInventory(inventory);
     }
   }
 }

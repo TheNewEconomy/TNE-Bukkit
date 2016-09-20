@@ -1,17 +1,15 @@
 package com.github.tnerevival.commands.admin;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Access;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class AdminBankCommand extends TNECommand {
 	
@@ -47,8 +45,8 @@ public class AdminBankCommand extends TNECommand {
 				Account acc = AccountUtils.getAccount(MISCUtils.getID(arguments[0]));
 				if(acc.getBanks().containsKey(world)) {
 					Player player = (Player)sender;
-					Access access = new Access(MISCUtils.getID(arguments[0]), world, false);
-					TNE.instance.manager.accessing.put(MISCUtils.getID(player), access);
+					//Access access = new Access(MISCUtils.getID(arguments[0]), world, false);
+					//TNE.instance.manager.accessing.put(MISCUtils.getID(player), access);
 					player.openInventory(BankUtils.getBankInventory(MISCUtils.getID(arguments[0])));
 					return true;
 				}
