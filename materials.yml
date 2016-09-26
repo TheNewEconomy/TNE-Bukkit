@@ -5,24 +5,6 @@
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 
 Materials:
-
-    #All configurations relating to potions
-    Potions:
-        
-        #Whether or not a message should be sent even if the charge is 0
-        ZeroMessage: false
-        
-        #For reference purposes
-        Example:
-            
-            #The cost to brew this potion
-            Brew: 10.00
-            
-            #The cost to consume this potion
-            Consume: 5.00
-            
-            #The cost to splash this potion
-            Splash: 5.00
         
     #All configurations relating to items
     Items:

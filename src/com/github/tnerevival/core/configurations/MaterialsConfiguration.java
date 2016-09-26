@@ -1,44 +1,22 @@
 package com.github.tnerevival.core.configurations;
 
-import java.util.HashMap;
-import java.util.Set;
-
-import org.bukkit.configuration.file.FileConfiguration;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.objects.BlockObject;
 import com.github.tnerevival.core.objects.ItemObject;
-import com.github.tnerevival.core.objects.PotionObject;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.HashMap;
+import java.util.Set;
 
 public class MaterialsConfiguration extends Configuration {
 
-	HashMap<String, PotionObject> potions = new HashMap<String, PotionObject>();
-	HashMap<String, ItemObject> items = new HashMap<String, ItemObject>();
-	HashMap<String, BlockObject> blocks = new HashMap<String, BlockObject>();
+	HashMap<String, ItemObject> items = new HashMap<>();
+	HashMap<String, BlockObject> blocks = new HashMap<>();
 	
 	@Override
 	public void load(FileConfiguration configurationFile) {
-		//Load Potion Materials
-		String baseNode = "Materials.Potions";
-		configurations.put(baseNode + ".ZeroMessage", false);
-		
-		Set<String> potionNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
-		
-		for(String potionName : potionNames) {
-			String node = baseNode + "." + potionName;
-			
-			PotionObject potion = new PotionObject(potionName);
-			double brewCost = (configurationFile.contains(node + ".Brew"))? configurationFile.getDouble(node + ".Brew") : 0.0;
-			double useCost = (configurationFile.contains(node + ".Use"))? configurationFile.getDouble(node + ".Use") : 0.0;
-			
-			potion.setBrew(brewCost);
-			potion.setUse(useCost);
-			
-			potions.put(potion.getName(), potion);			
-		}
-
-		//Load Item Materials
-		baseNode = "Materials.Items";
+		//Load Materials
+		String baseNode = "Materials.Items";
 		configurations.put(baseNode + ".ZeroMessage", false);
 		
 		Set<String> itemNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
@@ -95,20 +73,12 @@ public class MaterialsConfiguration extends Configuration {
 		super.load(TNE.instance.objectConfigurations);
 	}
 	
-	public Boolean containsPotion(String name) {
-		return potions.containsKey(name);
-	}
-	
 	public Boolean containsItem(String name) {
 		return items.containsKey(name);
 	}
 	
 	public Boolean containsBlock(String name) {
 		return blocks.containsKey(name);
-	}
-	
-	public PotionObject getPotion(String name) {
-		return potions.get(name);
 	}
 	
 	public ItemObject getItem(String name) {

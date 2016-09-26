@@ -72,6 +72,7 @@ public class InventoryListener implements Listener {
   public void onInventoryClick(InventoryClickEvent event) {
     Player player = (Player)event.getWhoClicked();
     int slot = event.getRawSlot();
+
     if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
       InventoryViewer viewer = TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player));
       if(!TNE.instance.inventoryManager.getViewing(MISCUtils.getID(player)).onClick(viewer, event.getClick(), slot, event.getCurrentItem())) {

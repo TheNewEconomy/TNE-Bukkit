@@ -4,7 +4,6 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
-import com.github.tnerevival.core.potion.PotionHelper;
 import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.TransactionType;
@@ -27,18 +26,15 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -227,84 +223,7 @@ public class InteractionListener implements Listener {
 			}
 		}
 	}
-	
-	@EventHandler
-	public void onBrew(BrewEvent event) {
-		
-		final BrewEvent finalE = event;
-		new BukkitRunnable() {
-				@Override
-				public void run() {
-					Double cost = 0.0;
-					BrewerInventory inv = finalE.getContents();
-					if(inv.getItem(0) != null && !inv.getItem(0).getType().equals(Material.AIR)) {
-						System.out.println(inv.getItem(0).getDurability());
-						String name = PotionHelper.getName(inv.getItem(0));
-						if(name != null) {
-							if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-								cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
-							} else {
-								return;
-							}
-							
-							List<String> lore = new ArrayList<String>();
-							lore.add(ChatColor.WHITE + "Brewing Cost: " + ChatColor.GOLD + cost);
-							
-							ItemStack result = inv.getItem(0);
-							ItemMeta meta = result.getItemMeta();
-							meta.setLore(lore);
-							
-							result.setItemMeta(meta);
-							inv.setItem(0, result);
-						}
-					}
-					
-					if(inv.getItem(1) != null && !inv.getItem(1).getType().equals(Material.AIR)) {
-						String name = PotionHelper.getName(inv.getItem(1));
-						
-						if(name != null) {
-							if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-								cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
-							} else {
-								return;
-							}
-							
-							List<String> lore = new ArrayList<String>();
-							lore.add(ChatColor.WHITE + "Brewing Cost: " + ChatColor.GOLD + cost);
-							
-							ItemStack result = inv.getItem(1);
-							ItemMeta meta = result.getItemMeta();
-							meta.setLore(lore);
-							
-							result.setItemMeta(meta);
-							inv.setItem(1, result);
-						}
-					}
-					
-					if(inv.getItem(2) != null && !inv.getItem(2).getType().equals(Material.AIR)) {
-						String name = PotionHelper.getName(inv.getItem(2));
-						
-						if(name != null) {
-							if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-								cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getBrew();
-							} else {
-								return;
-							}
-							
-							List<String> lore = new ArrayList<String>();
-							lore.add(ChatColor.WHITE + "Brewing Cost: " + ChatColor.GOLD + cost);
-							
-							ItemStack result = inv.getItem(2);
-							ItemMeta meta = result.getItemMeta();
-							meta.setLore(lore);
-							
-							result.setItemMeta(meta);
-							inv.setItem(2, result);
-						}
-					}
-				}
-		}.runTaskLater(TNE.instance, 1L);
-	}
+
 	@EventHandler
 	public void onEnchant(EnchantItemEvent event) {
 		if(event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
@@ -428,15 +347,10 @@ public class InteractionListener implements Listener {
 		if(MISCUtils.multiWorld()) {
 			world = player.getWorld().getName();
 		}
-		
-		//TODO: Either fix or remove.
+
 		if(entity instanceof Villager) {
 			Villager villager = (Villager)entity;
-			if(player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !player.hasPermission("tne.bypass.nametag")) {
-				event.setCancelled(true);
-				player.sendMessage("I'm sorry, but you cannot use a name tag on a villager.");
-			}
-			
+
 			if(villager.getCustomName() != null && villager.getCustomName().equalsIgnoreCase("banker")) {
 				event.setCancelled(true);
 				if(player.hasPermission("tne.bank.use")) {
@@ -476,35 +390,18 @@ public class InteractionListener implements Listener {
             event.setCancelled(true);
           }
         }
-      }
-
-      if (action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
-
       } else {
-        //TODO: Move to PlayerConsumeEvent, and PotionSplashEvent
         Double cost = 0.0;
         String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getMaterial()).toLowerCase();
-        boolean potion = false;
         if(event.getItem() != null) {
-          if(event.getItem().getType().equals(Material.POTION)) {
-            potion = true;
-
-            name = PotionHelper.getName(event.getItem()).toLowerCase() ;
-
-            if(TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-              cost = TNE.configurations.getMaterialsConfiguration().getPotion(name).getUse();
-            }
-          } else {
-            if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-              cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getUse();
-            }
+          if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+            cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getUse();
           }
 
-          if(!potion && TNE.configurations.getMaterialsConfiguration().containsItem(name) || potion && TNE.configurations.getMaterialsConfiguration().containsPotion(name)) {
-
-            String message = (potion)? "Messages.Objects.PotionUseCharged" : "Messages.Objects.ItemUseCharged";
-            if(cost > 0.0) {
-              if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+          if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
+            String message = "Messages.Objects.ItemUseCharged";
+            if (cost > 0.0) {
+              if (AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
                 AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
               } else {
                 event.setCancelled(true);
@@ -513,12 +410,9 @@ public class InteractionListener implements Listener {
                 player.sendMessage(insufficient.translate());
                 return;
               }
-            } else {
-              AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
-              message = (potion)? "Messages.Objects.PotionUsePaid" : "Messages.Objects.ItemUsePaid";
             }
 
-            if(cost > 0.0 || cost < 0.0  || cost == 0.0 && !potion && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")  || cost == 0.0 && potion && TNE.configurations.getBoolean("Materials.Potions.ZeroMessage")) {
+            if(cost > 0.0 || cost < 0.0  || cost == 0.0 && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")) {
 
               Message m = new Message(message);
               m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
@@ -527,7 +421,7 @@ public class InteractionListener implements Listener {
             }
           }
         }
-      }
+			}
     }
   }
 

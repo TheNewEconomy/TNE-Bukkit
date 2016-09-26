@@ -19,6 +19,20 @@ public class BankInventory extends GenericInventory {
     this.owner = owner;
   }
 
+
+  @Override
+  public List<Material> getBlacklisted() {
+    List<Material> blocked = new ArrayList<>();
+    blocked.add(Material.ENCHANTED_BOOK);
+    blocked.add(Material.SPECTRAL_ARROW);
+    blocked.add(Material.TIPPED_ARROW);
+    blocked.add(Material.POTION);
+    blocked.add(Material.LINGERING_POTION);
+    blocked.add(Material.SPLASH_POTION);
+
+    return blocked;
+  }
+
   @Override
   public List<Integer> getValidSlots() {
     return new ArrayList<>();
