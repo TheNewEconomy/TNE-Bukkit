@@ -2,31 +2,20 @@ package com.github.tnerevival.core.signs;
 
 public enum SignType {
 	
-	UNKNOWN("unknown", "", "", ""),
-	BANK("bank", "[bank]", "tne.place.bank", "tne.use.bank"),
-	BUY("buy", "[buy]", "tne.place.buy", "tne.use.buy"),
-	SELL("sell", "[sell]", "tne.place.sell", "tne.use.sell"),
-	SHOP("shop", "[shop]", "tne.place.shop", "tne.use.shop");
+	UNKNOWN("unknown", "", ""),
+	BANK("bank", "tne.place.bank", "tne.use.bank"),
+	BUY("buy", "tne.place.buy", "tne.use.buy"),
+	SELL("sell", "tne.place.sell", "tne.use.sell"),
+	SHOP("shop", "tne.place.shop", "tne.use.shop");
 	
 	private String name;
-	private String identifier;
 	private String placePermission;
 	private String usePermission;
 	
-	SignType(String name, String identifier, String placePermission, String usePermission) {
+	SignType(String name, String placePermission, String usePermission) {
 		this.name = name;
-		this.identifier = identifier;
 		this.placePermission = placePermission;
 		this.usePermission = usePermission;
-	}
-	
-	public static SignType fromLine(String identifier) {
-		for(SignType type : values()) {
-			if(type.getIdentifier().equalsIgnoreCase(identifier)) {
-				return type;
-			}
-		}
-		return UNKNOWN;
 	}
 	
 	public static SignType fromName(String name) {
@@ -44,14 +33,6 @@ public enum SignType {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
 	}
 
 	public String getPlacePermission() {

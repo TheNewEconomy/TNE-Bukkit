@@ -83,9 +83,16 @@ permissions:
          tne.shop.share: true
          tne.shop.toggle: true
          tne.shop.whitelist: true
-         tne.sign: true
-         tne.sign.main: true
-         tne.sign.bank: true
+         tne.place: true
+         tne.place.bank: true
+         tne.place.buy: true
+         tne.place.sell: true
+         tne.place.shop: true
+         tne.use: true
+         tne.use.bank: true
+         tne.use.buy: true
+         tne.use.sell: true
+         tne.use.shop: true
 
    tne.admin.*:
       description: Gives access to all TNE Admin Commands and bypasses.
@@ -180,9 +187,20 @@ permissions:
          tne.shop.toggle: true
          tne.shop.whitelist: true
          
-   tne.sign.*:
+   tne.place.*:
       description: Gives access to creating all sign types
       children:
-         tne.sign: true
-         tne.sign.main: true
-         tne.sign.bank: true
+         tne.place: true
+         tne.place.bank: true
+         tne.place.buy: true
+         tne.place.sell: true
+         tne.place.shop: true
+
+   tne.use.*:
+      description: Gives access to using all sign types.
+      children:
+         tne.use: true
+         tne.use.bank: true
+         tne.use.buy: true
+         tne.use.sell: true
+         tne.use.shop: true

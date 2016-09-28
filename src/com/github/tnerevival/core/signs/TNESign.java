@@ -15,7 +15,6 @@ public abstract class TNESign {
 	protected SignType type;
 	protected SerializableLocation location;
 	protected Inventory inventory = null;
-	protected String permission = null;
 	
 	public TNESign(UUID owner) {
 		this.owner = owner;
@@ -28,6 +27,9 @@ public abstract class TNESign {
 	 */
 	public boolean onCreate(Player player) {
 	  TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.CREATED);
+    if(!player.hasPermission(type.getPlacePermission())) {
+      event.setCancelled(true);
+    }
     Bukkit.getServer().getPluginManager().callEvent(event);
     return (!event.isCancelled());
   }
@@ -50,6 +52,9 @@ public abstract class TNESign {
 	 */
 	public boolean onClick(Player player) {
 		TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.LEFT_CLICKED);
+    if(!player.hasPermission(type.getUsePermission())) {
+      event.setCancelled(true);
+    }
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		return (!event.isCancelled());
 	}
@@ -61,6 +66,9 @@ public abstract class TNESign {
 	 */
 	public boolean onRightClick(Player player) {
 		TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.RIGHT_CLICKED);
+    if(!player.hasPermission(type.getUsePermission())) {
+      event.setCancelled(true);
+    }
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		return (!event.isCancelled());
 	}
@@ -117,14 +125,6 @@ public abstract class TNESign {
 
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
-	}
-
-	public String getPermission() {
-		return permission;
-	}
-
-	public void setPermission(String permission) {
-		this.permission = permission;
 	}
 
 	public void loadMeta(String data) {

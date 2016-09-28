@@ -221,11 +221,11 @@ public class BankUtils {
 	
 	public static Boolean sign(String world) {
 		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Sign")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Sign");
+			if(MISCUtils.worldConfigExists("Worlds." + world + ".Signs.Bank.Enabled")) {
+				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Signs.Bank.Enabled");
 			}
 		}
-		return TNE.configurations.getBoolean("Core.Bank.Sign");
+		return TNE.configurations.getBoolean("Core.Signs.Bank.Enabled");
 	}
 	
 	public static Boolean npc(String world) {

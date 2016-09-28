@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.UUID;
@@ -43,6 +44,13 @@ public class ShopSign extends TNESign {
 		if(TNE.instance.manager.shops.containsKey(name)) {
 		  this.shop = TNE.instance.manager.shops.get(name);
     }
+	}
+
+	@Override
+	public boolean onRightClick(Player player) {
+	  player.sendMessage("Allo");
+
+    return super.onRightClick(player);
 	}
 
 	@Override

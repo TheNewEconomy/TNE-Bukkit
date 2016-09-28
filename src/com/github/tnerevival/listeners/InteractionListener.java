@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -113,7 +112,7 @@ public class InteractionListener implements Listener {
 		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType()).toLowerCase();
 
     if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
-      if(SignUtils.validSign((Sign)event.getBlock().getState())) {
+      if(SignUtils.validSign(event.getBlock().getLocation())) {
         SerializableLocation location = new SerializableLocation(event.getBlock().getLocation());
         TNESign sign = SignUtils.getSign(location);
 
@@ -123,6 +122,7 @@ public class InteractionListener implements Listener {
         } else {
           SignUtils.removeSign(location);
         }
+        return;
       }
     }
 
@@ -162,7 +162,8 @@ public class InteractionListener implements Listener {
 		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType()).toLowerCase();
 
     if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
-      if(SignUtils.validSign((Sign)event.getBlock().getState())) {
+      if(SignUtils.validSign(event.getBlock().getLocation())) {
+      	MISCUtils.debug("Sign placed");
         return;
       }
     }
@@ -339,7 +340,7 @@ public class InteractionListener implements Listener {
 
       if (match.length > 1) {
         MISCUtils.debug(match[0] + " type: " + match[1]);
-        SignType type = SignType.fromLine(match[1]);
+        SignType type = SignType.fromName(match[1]);
 
         TNESign sign = SignUtils.instance(type.getName(), MISCUtils.getID(event.getPlayer()));
         sign.setLocation(new SerializableLocation(event.getBlock().getLocation()));
@@ -352,7 +353,6 @@ public class InteractionListener implements Listener {
           event.setCancelled(true);
         } else {
           TNE.instance.manager.signs.put(sign.getLocation(), sign);
-          MISCUtils.debug("Sign added!" + TNE.instance.manager.signs.size());
         }
       }
     }

@@ -4,7 +4,6 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.signs.*;
 import com.github.tnerevival.serializable.SerializableLocation;
 import org.bukkit.Location;
-import org.bukkit.block.Sign;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -47,14 +46,6 @@ public class SignUtils {
     return null;
   }
 
-	public static Boolean validSign(Sign sign) {
-		return sign.getLine(0).toLowerCase().contains("tne:");
-	}
-	
-	public static SignType getType(Sign sign) {
-		return SignType.fromLine(sign.getLine(1));
-	}
-
 	public static TNESign instance(String type, UUID owner) {
 	  switch(type.toLowerCase()) {
       case "bank":
@@ -66,6 +57,7 @@ public class SignUtils {
       case "buy":
         return new BuySign(owner);
       default:
+        MISCUtils.debug("defaulting...");
         return new BankSign(owner);
     }
   }
