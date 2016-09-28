@@ -2,6 +2,7 @@ package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
@@ -64,10 +65,12 @@ public class ShopCreateCommand extends TNECommand {
 					s.setHidden(true);
 				}
 				TNE.instance.manager.shops.put(s.getName(), s);
-				//TODO: Shop created message.
+				Message created = new Message("Messages.Shop.Created");
+				created.addVariable("$shop", s.getName());
+				getPlayer(sender).sendMessage(created.translate());
 				return true;
 			}
-			//TODO: Shop with that name already exists message.
+			getPlayer(sender).sendMessage(new Message("Messages.Shop.Already").translate());
 			return false;
 		} else {
 			help(sender);

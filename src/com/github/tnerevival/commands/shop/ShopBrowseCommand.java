@@ -2,6 +2,7 @@ package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -49,7 +50,7 @@ public class ShopBrowseCommand extends TNECommand {
         ((Player)sender).openInventory(s.getInventory());
         return true;
       }
-      //TODO: Shop does not exist
+      getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
       return false;
     }
     help(sender);

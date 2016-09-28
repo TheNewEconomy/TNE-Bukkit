@@ -1,16 +1,16 @@
 package com.github.tnerevival.commands.shop;
 
-import java.util.UUID;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.shops.ShareEntry;
+import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.shops.ShareEntry;
-import com.github.tnerevival.core.shops.Shop;
-import com.github.tnerevival.utils.MISCUtils;
+import java.util.UUID;
 
 public class ShopShareCommand extends TNECommand {
 
@@ -53,8 +53,10 @@ public class ShopShareCommand extends TNECommand {
 					if(!s.isAdmin()) {
 						if(Shop.shares(arguments[0], target)) {
 							s.removeShares(target);
-							
-							//TODO: Removed $player from profit sharing.
+
+							Message hidden = new Message("Messages.Shop.ShareRemoved");
+							hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
+							getPlayer(sender).sendMessage(hidden.translate());
 							return true;
 						} else {
 							//TODO: Default sharing percent configuration.
@@ -64,22 +66,24 @@ public class ShopShareCommand extends TNECommand {
 								ShareEntry entry = new ShareEntry(target, percent);
 								
 								s.addShares(entry);
-								//TODO: Added player to shop's profit sharing.
+								Message hidden = new Message("Messages.Shop.ShareAdded");
+								hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
+								getPlayer(sender).sendMessage(hidden.translate());
 								return true;
 							} else {
-								//TODO: Total shares cannot be > 100%
+								getPlayer(sender).sendMessage(new Message("Messages.Shop.ShareGreater").translate());
 								return false;
 							}
 						}
 					}
-					
-					//TODO: Can't profit share on admin shops.
+
+					getPlayer(sender).sendMessage(new Message("Messages.Shop.ShareAdmin").translate());
 					return false;
 				}
-				//TODO: Must be shop owner to do that.
+				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
 				return false;
 			}
-			//TODO: Shop doesn't exist message.
+			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
 			return false;
 		} else {
 			help(sender);

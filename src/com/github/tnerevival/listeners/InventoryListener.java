@@ -5,6 +5,8 @@ import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.GenericInventory;
+import com.github.tnerevival.core.inventory.impl.ShopInventory;
+import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -43,7 +45,14 @@ public class InventoryListener implements Listener {
       UUID owner = MISCUtils.getID(ChatColor.stripColor(ownerUser));
       inventory = new BankInventory(owner);
     } else if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
+      String name = event.getInventory().getTitle().split("]")[1].trim();
+      Shop s = TNE.instance.manager.shops.get(ChatColor.stripColor(name));
 
+      MISCUtils.debug(ChatColor.stripColor(name));
+      MISCUtils.debug(s.getName());
+      MISCUtils.debug(player.getUniqueId().toString());
+      s.addShopper(player.getUniqueId());
+      inventory = new ShopInventory(s);
     }
     inventory.addViewer(viewer);
     inventory.setInventory(event.getInventory());

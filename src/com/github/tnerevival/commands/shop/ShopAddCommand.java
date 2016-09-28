@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.shop;
 
+import com.github.tnerevival.core.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -54,11 +55,30 @@ public class ShopAddCommand extends TNECommand {
 					
 					ItemStack item = p.getInventory().getItemInMainHand().clone();
 					item.setAmount(1);
-					double gold = -1.0;
+					double gold = 50.0;
 					ItemStack trade = null;
 					
 					if(arguments.length == 2) {
+            try {
+              Integer.parseInt(arguments[1]);
+            } catch(NumberFormatException e) {
+              help(sender);
+              return false;
+            }
 						item.setAmount(Integer.parseInt(arguments[1]));
+            if(s.addItem(new ShopEntry(new SerializableItemStack(s.getItems().size(), item), gold))) {
+              Message hidden = new Message("Messages.Shop.ItemAdded");
+              hidden.addVariable("$shop", s.getName());
+              hidden.addVariable("$item", item.getType().name());
+              getPlayer(sender).sendMessage(hidden.translate());
+              return true;
+            }
+
+            Message hidden = new Message("Messages.Shop.ItemWrong");
+            hidden.addVariable("$shop", s.getName());
+            hidden.addVariable("$item", item.getType().name());
+            getPlayer(sender).sendMessage(hidden.translate());
+            return false;
 					} else if(arguments.length > 2 && arguments.length <= 5) {
 						if(arguments.length > 2 && arguments.length < 5 && !arguments[2].contains(":")) {
 							Material mat = MaterialHelper.getMaterial(arguments[2]);
@@ -66,17 +86,32 @@ public class ShopAddCommand extends TNECommand {
 							if(mat != Material.AIR) {
 								item = new ItemStack(mat, Integer.parseInt(arguments[1]));
 
-								if(s.addItem(new ShopEntry(new SerializableItemStack((s.getItems().size() - 1), item), gold))) {
-									//TODO: Added item $name message.
+								if(s.addItem(new ShopEntry(new SerializableItemStack(s.getItems().size(), item), gold))) {
+                  Message hidden = new Message("Messages.Shop.ItemAdded");
+                  hidden.addVariable("$shop", s.getName());
+                  hidden.addVariable("$item", item.getType().name());
+                  getPlayer(sender).sendMessage(hidden.translate());
 									return true;
 								}
-								
-								//TODO: Couldn't add item to shop.
+
+                Message hidden = new Message("Messages.Shop.ItemWrong");
+                hidden.addVariable("$shop", s.getName());
+                hidden.addVariable("$item", arguments[2]);
+                getPlayer(sender).sendMessage(hidden.translate());
 								return false;
 							}
-							//TODO: Invalid item name entered.
+              Message hidden = new Message("Messages.Shop.ItemInvalid");
+              hidden.addVariable("$shop", s.getName());
+              hidden.addVariable("$item", arguments[2]);
+              getPlayer(sender).sendMessage(hidden.translate());
 							return false;
 						} else if(arguments.length > 2 && arguments.length < 5 && arguments[2].contains(":")) {
+              try {
+                Integer.parseInt(arguments[1]);
+              } catch(NumberFormatException e) {
+                help(sender);
+                return false;
+              }
 							item.setAmount(Integer.parseInt(arguments[1]));
 							gold = Double.parseDouble(arguments[2].split(":")[1]);
 							
@@ -87,28 +122,49 @@ public class ShopAddCommand extends TNECommand {
 									Integer amount = (split.length == 3) ? Integer.parseInt(split[2]) : 1;
 									trade = new ItemStack(mat, amount);
 									
-									if(s.addItem(new ShopEntry(new SerializableItemStack((s.getItems().size() - 1), item), gold, new SerializableItemStack(0, trade)))) {
-										//TODO: Added item $name message.
+									if(s.addItem(new ShopEntry(new SerializableItemStack(s.getItems().size(), item), gold, new SerializableItemStack(0, trade)))) {
+										Message hidden = new Message("Messages.Shop.ItemAdded");
+										hidden.addVariable("$shop", s.getName());
+										hidden.addVariable("$item", item.getType().name());
+										getPlayer(sender).sendMessage(hidden.translate());
 										return true;
 									}
-									
-									//TODO: Couldn't add item to shop.
+
+									Message hidden = new Message("Messages.Shop.ItemWrong");
+									hidden.addVariable("$shop", s.getName());
+									hidden.addVariable("$item", arguments[2]);
+									getPlayer(sender).sendMessage(hidden.translate());
 									return false;
 								}
-								//TODO: Invalid trade item name entered.
+								Message hidden = new Message("Messages.Shop.ItemTrade");
+								hidden.addVariable("$shop", s.getName());
+								hidden.addVariable("$item", arguments[2]);
+								getPlayer(sender).sendMessage(hidden.translate());
 								return false;
 							}
 
-							if(s.addItem(new ShopEntry(new SerializableItemStack((s.getItems().size() - 1), item), gold))) {
-								//TODO: Added item $name message.
+							if(s.addItem(new ShopEntry(new SerializableItemStack(s.getItems().size(), item), gold))) {
+                Message hidden = new Message("Messages.Shop.ItemAdded");
+                hidden.addVariable("$shop", s.getName());
+                hidden.addVariable("$item", item.getType().name());
+                getPlayer(sender).sendMessage(hidden.translate());
 								return true;
 							}
-							
-							//TODO: Couldn't add item to shop.
+
+              Message hidden = new Message("Messages.Shop.ItemWrong");
+              hidden.addVariable("$shop", s.getName());
+              hidden.addVariable("$item", arguments[2]);
+              getPlayer(sender).sendMessage(hidden.translate());
 							return false;
 						} else {
 							Material mat = MaterialHelper.getMaterial(arguments[2]);
 							if(mat != Material.AIR) {
+                try {
+                  Integer.parseInt(arguments[1]);
+                } catch(NumberFormatException e) {
+                  help(sender);
+                  return false;
+                }
 								item = new ItemStack(mat, Integer.parseInt(arguments[1]));
 								
 								String[] split = arguments[3].split(":");
@@ -117,27 +173,39 @@ public class ShopAddCommand extends TNECommand {
 									Integer amount = (split.length == 3) ? Integer.parseInt(split[2]) : 1;
 									trade = new ItemStack(tradeMat, amount);
 
-									if(s.addItem(new ShopEntry(new SerializableItemStack((s.getItems().size() - 1), item), gold, new SerializableItemStack(0, trade)))) {
-										//TODO: Added item $name message.
+									if(s.addItem(new ShopEntry(new SerializableItemStack(s.getItems().size(), item), gold, new SerializableItemStack(0, trade)))) {
+                    Message hidden = new Message("Messages.Shop.ItemAdded");
+                    hidden.addVariable("$shop", s.getName());
+                    hidden.addVariable("$item", item.getType().name());
+                    getPlayer(sender).sendMessage(hidden.translate());
 										return true;
 									}
-									
-									//TODO: Couldn't add item to shop.
+
+                  Message hidden = new Message("Messages.Shop.ItemWrong");
+                  hidden.addVariable("$shop", s.getName());
+                  hidden.addVariable("$item", arguments[2]);
+                  getPlayer(sender).sendMessage(hidden.translate());
 									return false;
 								}
-								
-								//TODO: Invalid trade item name entered.
+
+                Message hidden = new Message("Messages.Shop.ItemTrade");
+                hidden.addVariable("$shop", s.getName());
+                hidden.addVariable("$item", arguments[2]);
+                getPlayer(sender).sendMessage(hidden.translate());
 								return false;
 							}
-							//TODO: Invalid item name entered.
+              Message hidden = new Message("Messages.Shop.ItemInvalid");
+              hidden.addVariable("$shop", s.getName());
+              hidden.addVariable("$item", arguments[2]);
+              getPlayer(sender).sendMessage(hidden.translate());
 							return false;
 						}
 					}
 				}
-				//TODO: Must be shop owner to do that.
+				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
 				return false;
 			}
-			//TODO: Shop doesn't exist message.
+			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
 			return false;
 		} else {
 			help(sender);

@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.shop;
 
+import com.github.tnerevival.core.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -65,7 +66,10 @@ public class ShopRemoveCommand extends TNECommand {
 								Material mat = MaterialHelper.getMaterial(arguments[2]);
 								if(mat.equals(Material.AIR)) {
 
-									//TODO: Item not found in shop.
+									Message hidden = new Message("Messages.Shop.ItemNone");
+									hidden.addVariable("$shop", s.getName());
+									hidden.addVariable("$item", arguments[2]);
+									getPlayer(sender).sendMessage(hidden.translate());
 									return false;
 								} 
 								item.setType(mat);
@@ -79,11 +83,17 @@ public class ShopRemoveCommand extends TNECommand {
 									if(s.hasItem(item.getType(), gold)) {
 
 										s.removeItem(item, gold);
-										//TODO: Remove item from shop.
+										Message hidden = new Message("Messages.Shop.ItemRemoved");
+										hidden.addVariable("$shop", s.getName());
+										hidden.addVariable("$item", arguments[2]);
+										getPlayer(sender).sendMessage(hidden.translate());
 										return true;
 									}
-									
-									//TODO: Item not found in shop.
+
+									Message hidden = new Message("Messages.Shop.ItemNone");
+									hidden.addVariable("$shop", s.getName());
+									hidden.addVariable("$item", arguments[2]);
+									getPlayer(sender).sendMessage(hidden.translate());
 									return false;
 								} else {
 									Material mat = MaterialHelper.getMaterial(split[1]);
@@ -93,26 +103,35 @@ public class ShopRemoveCommand extends TNECommand {
 										if(s.hasItem(item.getType(), mat.toString())) {
 
 											s.removeItem(item, trade);
-											//TODO: Remove item from shop.
+											Message hidden = new Message("Messages.Shop.ItemRemoved");
+											hidden.addVariable("$shop", s.getName());
+											hidden.addVariable("$item", arguments[2]);
+											getPlayer(sender).sendMessage(hidden.translate());
 											return true;
 										}
 									}
 
-									//TODO: Item not found in shop.
+									Message hidden = new Message("Messages.Shop.ItemNone");
+									hidden.addVariable("$shop", s.getName());
+									hidden.addVariable("$item", arguments[2]);
+									getPlayer(sender).sendMessage(hidden.translate());
 									return false;
 								}
 							}
 						}
 
 						s.removeItem(item);
-						//TODO: Remove item from shop.
+						Message hidden = new Message("Messages.Shop.ItemRemoved");
+						hidden.addVariable("$shop", s.getName());
+						hidden.addVariable("$item", arguments[2]);
+						getPlayer(sender).sendMessage(hidden.translate());
 						return true;
 					}
 				}
-				//TODO: Must be shop owner to do that.
+				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
 				return false;
 			}
-			//TODO: Shop doesn't exist message.
+			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
 			return false;
 		} else {
 			help(sender);

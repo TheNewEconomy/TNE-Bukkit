@@ -87,19 +87,30 @@ Messages:
        Negative: <red>Amount cannot be a negative value!
        SelfPay: <red>You can't pay yourself!
        
-    Auction:
-       None: <white>Auction for lot $lot has ended with no bids.
-       Start: <white>Auction for lot $lot has started! $command_string
-       Announce: <white>Auction for lot $lot ends in $time.
-       Winner: <white>$player has won the auction for lot $lot for <gold>$amount<white>.
-       Win: <white>Congratulations! You won the auction for lot $lot for <gold>$amount<white>.
-       
     Shop:
+       None: <red>A shop with that name doesn't exist!
+       Already: <red>A shop with that name already exists!
+       Created: <white> Successfully created shop "$shop".
        Permission: <red>You must be the owner of this shop to perform that action!
        WhitelistAdded: <white>Successfully added $player to your shop's whitelist.
        WhitelistRemoved: <white>Successfully removed $player from your shop's whitelist.
        BlacklistAdded: <white>Successfully added $player to your shop's blacklist.
        BlacklistRemoved: <white>Successfully removed $player from your shop's blacklist.
+       Visible: <white>The shop "$shop" is no longer hidden.
+       Hidden: <white>The shop "$shop" is now hidden.
+       MustWhitelist: <red>You must be whitelisted to view this shop!
+       ShareAdmin: <red>You can't profit share administrator shops!
+       ShareGreater: <red>You can't share more than 100% of profits!
+       ShareAdded: <red>Added player "$player" to the shop's profit sharing.
+       ShareRemoved: <red>Removed player "$player" from the shop's profit sharing.
+       ClosedBrowse: <white>The shop you were browsing has been closed!
+       Closed: <white>The shop "$shop" has been closed!
+       ItemNone: <white>The item "$item" could not been found in the shop "$shop".
+       ItemRemoved: <white>The item "$item" has been removed from the shop "$shop".
+       ItemAdded: <white>The item "$item" has been added to the shop "$shop".
+       ItemWrong: <white>Something went wrong adding item "$item" to the shop "$shop".
+       ItemInvalid: <white>The item name "$item" is invalid.
+       ItemTrade: <white>The trade item name "$item" is invalid.
         
     
     Bank:
@@ -120,23 +131,18 @@ Messages:
        Invalid: <red>I'm sorry, but you don't have access to the bank of $name!
        
     Objects:
-       PotionWarning: <white>Once finished, you'll be charged <gold>$amount<white> for removing your potions from the brewing stand.
        CraftingCharged: <white> You were charged <gold>$amount<white> for crafting $stack_size "$item".
        CraftingPaid: <white> You were given <gold>$amount<white> for crafting $stack_size "$item".
        SmeltingCharged: <white> You were charged <gold>$amount<white> for smelting $stack_size "$item".
        SmeltingPaid: <white> You were given <gold>$amount<white> for smelting $stack_size "$item".
        EnchantingCharged: <white> You were charged <gold>$amount<white> for enchanting $stack_size "$item".
        EnchantingPaid: <white> You were given <gold>$amount<white> for enchanting $stack_size "$item".
-       BrewingCharged: <white> You were charged <gold>$amount<white> for brewing $stack_size "$item".
-       BrewingPaid: <white> You were given <gold>$amount<white> for brewing $stack_size "$item".
        MiningCharged: <white> You were charged <gold>$amount<white> for mining one "$name" block.
        MiningPaid: <white> You were given <gold>$amount<white> for mining one "$name" block.
        PlacingCharged: <white> You were charged <gold>$amount<white> for placing one "$name" block.
        PlacingPaid: <white> You were given <gold>$amount<white> for placing one "$name" block.
        ItemUseCharged: <white> You were charged <gold>$amount<white> for using item "$name".
        ItemUsePaid: <white> You were given <gold>$amount<white> for using item "$name".
-       PotionUseCharged: <white> You were charged <gold>$amount<white> for using a "$name" potion.
-       PotionUsePaid: <white> You were given <gold>$amount<white> for using a "$name" potion.
        
     Mob:
        Killed: <white>You received $reward <white>for killing a <green>$mob<white>.

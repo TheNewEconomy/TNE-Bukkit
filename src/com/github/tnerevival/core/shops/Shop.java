@@ -297,7 +297,8 @@ public class Shop implements Serializable {
 		if(exists(name)) {
 			Shop s = getShop(name);
 			return s.getOwner() == null && p.hasPermission("tne.shop.admin") ||
-				   s.getOwner() != null && s.getOwner().equals(MISCUtils.getID(p));
+				   s.getOwner() != null && s.getOwner().equals(MISCUtils.getID(p)) ||
+					 s.isAdmin() && p.hasPermission("tne.shop.admin");
 		}
 		return false;
 	}

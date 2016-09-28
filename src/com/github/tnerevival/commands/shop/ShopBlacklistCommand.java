@@ -1,15 +1,15 @@
 package com.github.tnerevival.commands.shop;
 
-import java.util.UUID;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.shops.Shop;
-import com.github.tnerevival.utils.MISCUtils;
+import java.util.UUID;
 
 public class ShopBlacklistCommand extends TNECommand {
 
@@ -51,17 +51,17 @@ public class ShopBlacklistCommand extends TNECommand {
 					UUID target = MISCUtils.getID(arguments[1]);
 					if(s.blacklisted(MISCUtils.getID(arguments[1]))) {
 						s.addBlacklist(target);
-						//TODO: Player has been removed from the shop's blacklist.
+						getPlayer(sender).sendMessage(new Message("Messages.Shop.BlacklistRemoved").translate());
 					} else {
 						s.removeBlacklist(target);
-						//TODO: Player has been added to the shop's blacklist.
+						getPlayer(sender).sendMessage(new Message("Messages.Shop.BlacklistAdded").translate());
 					}
 					return true;
 				}
-				//TODO: Must be shop owner to do that.
+				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
 				return false;
 			}
-			//TODO: Shop doesn't exist message.
+			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
 			return false;
 		} else {
 			help(sender);

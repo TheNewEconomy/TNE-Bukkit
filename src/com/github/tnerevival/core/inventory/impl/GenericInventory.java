@@ -3,6 +3,8 @@ package com.github.tnerevival.core.inventory.impl;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.inventory.TNEInventory;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,10 @@ public class GenericInventory extends TNEInventory {
   @Override
   public boolean onOpen(InventoryViewer viewer) {
     return super.onOpen(viewer);
+  }
+
+  public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
+    return super.onClick(viewer, type, slot, item);
   }
 
   @Override

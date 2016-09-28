@@ -1,15 +1,15 @@
 package com.github.tnerevival.commands.shop;
 
-import java.util.UUID;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.shops.Shop;
-import com.github.tnerevival.utils.MISCUtils;
+import java.util.UUID;
 
 public class ShopToggleCommand extends TNECommand {
 
@@ -50,7 +50,9 @@ public class ShopToggleCommand extends TNECommand {
 					Shop s = Shop.getShop(arguments[0]);
 					if(s.isHidden()) {
 						s.setHidden(false);
-						//TODO: Shop is no longer hidden.
+						Message hidden = new Message("Messages.Shop.Visible");
+						hidden.addVariable("$shop", s.getName());
+						getPlayer(sender).sendMessage(hidden.translate());
 					} else {
 						s.setHidden(true);
 						
@@ -58,17 +60,21 @@ public class ShopToggleCommand extends TNECommand {
 							if(!s.whitelisted(shopper)) {
 								Player p = MISCUtils.getPlayer(shopper);
 								p.closeInventory();
-								//TODO: Shop has been hidden message.
+								Message hidden = new Message("Messages.Shop.MustWhitelist");
+								hidden.addVariable("$shop", s.getName());
+								getPlayer(sender).sendMessage(hidden.translate());
 							}
 						}
-						//TODO: Shop is now hidden.
+						Message hidden = new Message("Messages.Shop.Hidden");
+						hidden.addVariable("$shop", s.getName());
+						getPlayer(sender).sendMessage(hidden.translate());
 					}
 					return true;
 				}
-				//TODO: Must be shop owner to do that.
+				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
 				return false;
 			}
-			//TODO: Shop doesn't exist message.
+			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
 			return false;
 		} else {
 			help(sender);
