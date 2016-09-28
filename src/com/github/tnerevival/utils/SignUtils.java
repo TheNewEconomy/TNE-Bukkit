@@ -6,6 +6,8 @@ import com.github.tnerevival.serializable.SerializableLocation;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 public class SignUtils {
@@ -20,8 +22,33 @@ public class SignUtils {
     return false;
   }
 
+  public static void removeSign(SerializableLocation location) {
+    Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance.manager.signs.entrySet().iterator();
+
+    while(i.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> e = i.next();
+
+      if(e.getKey().equals(location)) {
+        i.remove();
+      }
+    }
+  }
+
+  public static TNESign getSign(SerializableLocation location) {
+    Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance.manager.signs.entrySet().iterator();
+
+    while(i.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> e = i.next();
+
+      if(e.getKey().equals(location)) {
+        return e.getValue();
+      }
+    }
+    return null;
+  }
+
 	public static Boolean validSign(Sign sign) {
-		return sign.getLine(0).equalsIgnoreCase("[tne]");
+		return sign.getLine(0).toLowerCase().contains("tne:");
 	}
 	
 	public static SignType getType(Sign sign) {

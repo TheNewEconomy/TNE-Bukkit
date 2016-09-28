@@ -7,6 +7,7 @@ Inventory systems(cost, blacklisted items, view controlling, and access lists sh
 
 Bugs Found
 ----------
+- NPE - InteractionListener:406
 - Command help takes up too much screen space
 - /tne create not found
 - /tne purge doesn't reflect on reload

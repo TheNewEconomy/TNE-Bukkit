@@ -22,7 +22,7 @@ public class BankSign extends TNESign {
 	public boolean onRightClick(Player player) {
 		if(player.hasPermission(SignType.BANK.getUsePermission()) && getPermission() != null && player.hasPermission(getPermission())) {
 			inventory = BankUtils.getBankInventory(MISCUtils.getID(player));
-			if(!super.onOpen(player)) {
+			if(super.onOpen(player)) {
 				player.openInventory(inventory);
 				return true;
 			}

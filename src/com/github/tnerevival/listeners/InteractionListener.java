@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.signs.ShopSign;
 import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.TransactionType;
@@ -113,11 +114,15 @@ public class InteractionListener implements Listener {
 
     if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
       if(SignUtils.validSign((Sign)event.getBlock().getState())) {
-        TNESign sign = TNE.instance.manager.signs.get(new SerializableLocation(event.getBlock().getLocation()));
+        SerializableLocation location = new SerializableLocation(event.getBlock().getLocation());
+        TNESign sign = SignUtils.getSign(location);
+
+				MISCUtils.debug(sign.toString() + "");
         if(!sign.onDestroy(event.getPlayer())) {
           event.setCancelled(true);
+        } else {
+          SignUtils.removeSign(location);
         }
-        return;
       }
     }
 
@@ -329,11 +334,26 @@ public class InteractionListener implements Listener {
 	
 	@EventHandler
 	public void onChange(SignChangeEvent event) {
-    SignType type = SignType.fromLine(event.getLine(1));
-    if(event.getLine(0).contains("[tne]") && type != SignType.UNKNOWN) {
-      TNESign sign = SignUtils.instance(type.getName(), MISCUtils.getID(event.getPlayer()));
-      if(!sign.onCreate(event.getPlayer())) {
-        event.setCancelled(true);
+	  if(event.getLine(0).contains("tne:")) {
+      String[] match = event.getLine(0).substring(1, event.getLine(0).length() - 1).split(":");
+
+      if (match.length > 1) {
+        MISCUtils.debug(match[0] + " type: " + match[1]);
+        SignType type = SignType.fromLine(match[1]);
+
+        TNESign sign = SignUtils.instance(type.getName(), MISCUtils.getID(event.getPlayer()));
+        sign.setLocation(new SerializableLocation(event.getBlock().getLocation()));
+
+        if(sign instanceof ShopSign) {
+          ((ShopSign) sign).setName(event.getLine(1));
+        }
+
+        if (!sign.onCreate(event.getPlayer())) {
+          event.setCancelled(true);
+        } else {
+          TNE.instance.manager.signs.put(sign.getLocation(), sign);
+          MISCUtils.debug("Sign added!" + TNE.instance.manager.signs.size());
+        }
       }
     }
 	}
@@ -381,12 +401,24 @@ public class InteractionListener implements Listener {
     Player player = event.getPlayer();
     String world = player.getWorld().getName();
     Block block = event.getClickedBlock();
+    MISCUtils.debug(TNE.instance.manager.signs.size() + "");
 
     if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
       if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
         if(SignUtils.validSign(block.getLocation())) {
-          TNESign sign = TNE.instance.manager.signs.get(new SerializableLocation(block.getLocation()));
-          if(sign.onRightClick(player)) {
+          SerializableLocation location = new SerializableLocation(block.getLocation());
+          TNESign sign = SignUtils.getSign(location);
+
+          for(TNESign s : TNE.instance.manager.signs.values()) {
+            MISCUtils.debug(s.getLocation().toString() + ";" + s.getType() + ";" + s.getOwner());
+          }
+          MISCUtils.debug(SignUtils.validSign(block.getLocation()) + "");
+          MISCUtils.debug(SignUtils.getSign(location).toString() + "");
+          if(sign == null) {
+            MISCUtils.debug("Sign instance is null");
+          }
+
+          if(!sign.onRightClick(player)) {
             event.setCancelled(true);
           }
         }
