@@ -14,6 +14,7 @@ import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.serializable.SerializableLocation;
+import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.SignUtils;
 
 import java.io.File;
@@ -157,6 +158,8 @@ public class Alpha3_0 extends Version {
       s.listFromString((String)info.getData("blacklist"), true);
       s.listFromString((String)info.getData("whitelist"), false);
       s.sharesFromString((String)info.getData("shares"));
+      MISCUtils.debug("Items:" + info.getData("items"));
+      s.itemsFromString((String)info.getData("items"));
 
       TNE.instance.manager.shops.put(shopEntry.getKey(), s);
     }
@@ -247,6 +250,7 @@ public class Alpha3_0 extends Version {
       info.addData("owner", s.getOwner().toString());
       info.addData("hidden", s.isHidden());
       info.addData("admin", s.isAdmin());
+      MISCUtils.debug("Items:" + s.itemsToString());
       info.addData("items", s.itemsToString());
       info.addData("blacklist", s.listToString(true));
       info.addData("whitelist", s.listToString(false));

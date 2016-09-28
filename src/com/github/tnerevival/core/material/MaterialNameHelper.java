@@ -8,15 +8,13 @@ public class MaterialNameHelper {
 	String minecraftName;
 	String[] commonNames;
 	
-	public MaterialNameHelper(Material material, String name) {
-		this.material = material;
-		this.minecraftName = name;
-		this.commonNames = new String[0];
+	public MaterialNameHelper(Material material) {
+		this(material, new String[0]);
 	}
 	
-	public MaterialNameHelper(Material material, String name, String[] commonNames) {
+	public MaterialNameHelper(Material material, String[] commonNames) {
 		this.material = material;
-		this.minecraftName = name;
+		this.minecraftName = material.name();
 		this.commonNames = commonNames;
 	}
 	

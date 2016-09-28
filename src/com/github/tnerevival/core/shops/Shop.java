@@ -265,6 +265,7 @@ public class Shop implements Serializable {
   }
 
   public void itemsFromString(String parse) {
+  	MISCUtils.debug(parse);
     String[] parsed = parse.split("=");
 
     for(String s : parsed) {

@@ -85,7 +85,7 @@ public class ShopRemoveCommand extends TNECommand {
 										s.removeItem(item, gold);
 										Message hidden = new Message("Messages.Shop.ItemRemoved");
 										hidden.addVariable("$shop", s.getName());
-										hidden.addVariable("$item", arguments[2]);
+										hidden.addVariable("$item", item.getType().name());
 										getPlayer(sender).sendMessage(hidden.translate());
 										return true;
 									}
@@ -105,7 +105,7 @@ public class ShopRemoveCommand extends TNECommand {
 											s.removeItem(item, trade);
 											Message hidden = new Message("Messages.Shop.ItemRemoved");
 											hidden.addVariable("$shop", s.getName());
-											hidden.addVariable("$item", arguments[2]);
+											hidden.addVariable("$item", item.getType().name());
 											getPlayer(sender).sendMessage(hidden.translate());
 											return true;
 										}
@@ -123,7 +123,7 @@ public class ShopRemoveCommand extends TNECommand {
 						s.removeItem(item);
 						Message hidden = new Message("Messages.Shop.ItemRemoved");
 						hidden.addVariable("$shop", s.getName());
-						hidden.addVariable("$item", arguments[2]);
+						hidden.addVariable("$item", item.getType().name());
 						getPlayer(sender).sendMessage(hidden.translate());
 						return true;
 					}

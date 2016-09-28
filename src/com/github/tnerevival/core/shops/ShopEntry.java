@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.shops;
 
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.io.Serializable;
 
@@ -64,8 +65,11 @@ public class ShopEntry implements Serializable {
   }
 
   public static ShopEntry fromString(String parse) {
+		MISCUtils.debug(parse);
     String[] parsed = parse.split("\\*");
 
+		MISCUtils.debug(parsed[0]);
+		MISCUtils.debug(parsed[1]);
     if(parsed.length == 3) {
       return new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), SerializableItemStack.fromString(parsed[2]));
     }

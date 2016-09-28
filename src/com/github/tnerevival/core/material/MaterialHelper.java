@@ -1,13 +1,13 @@
 package com.github.tnerevival.core.material;
 
+import org.bukkit.Material;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Material;
-
 public class MaterialHelper {
 	
-	public static List<MaterialNameHelper> validNames = new ArrayList<MaterialNameHelper>();
+	public static List<MaterialNameHelper> validNames = new ArrayList<>();
 	
 	static {
 		
