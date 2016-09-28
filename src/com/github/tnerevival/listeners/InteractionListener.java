@@ -371,6 +371,11 @@ public class InteractionListener implements Listener {
 		if(entity instanceof Villager) {
 			Villager villager = (Villager)entity;
 
+      if(player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !player.hasPermission("tne.bypass.nametag")) {
+        event.setCancelled(true);
+        player.sendMessage(new Message("Messages.Mob.NPCTag").translate());
+      }
+
 			if(villager.getCustomName() != null && villager.getCustomName().equalsIgnoreCase("banker")) {
 				event.setCancelled(true);
 				if(player.hasPermission("tne.bank.use")) {
