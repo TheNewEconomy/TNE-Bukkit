@@ -244,7 +244,7 @@ public class InteractionListener implements Listener {
 				return;
 			}
 			
-			List<String> lore = new ArrayList<String>();
+			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
 			
 			ItemMeta meta = result.getItemMeta();
@@ -273,7 +273,7 @@ public class InteractionListener implements Listener {
 				return;
 			}
 			
-			List<String> lore = new ArrayList<String>();
+			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
 			
 			ItemStack result = event.getInventory().getResult();

@@ -53,10 +53,8 @@ Needs Tested:
 * Inventory & Command Credits
 * Shops
 * Administrative commands
-* Rewards for above completed features
 * Disabling UUID support
 * Shared economy data for worlds
-* Bank balances for transactions
 * Ability to create accounts via command
 
 

@@ -21,8 +21,6 @@ commands:
       description: The base command for all credit-related commands.
    pin:
       description: The base command for all pin-related commands.
-   shop:
-      description: The base command for all shop-related commands.
    theneweconomy:
       description: The base command for all The New Economy core commands.
       aliases: tne

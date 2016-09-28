@@ -270,6 +270,9 @@ public class Alpha3_0 extends Version {
       info.addData("type", sign.getType().getName());
       info.addData("extra", sign.getMeta());
       info.addData("location", sign.getLocation().toString());
+      a.addEntry(info);
+
+      signs.addArticle(sign.getLocation().toString(), a);
     }
 
     try {

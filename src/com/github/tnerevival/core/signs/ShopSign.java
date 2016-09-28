@@ -3,7 +3,7 @@ package com.github.tnerevival.core.signs;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
-import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -16,7 +16,6 @@ public class ShopSign extends TNESign {
 	
 	public ShopSign(UUID owner) {
 		super(owner);
-		this.title = MISCUtils.getPlayer(owner).getDisplayName() + "'s Shop";
 		setType(SignType.SHOP);
 	}
 
@@ -42,7 +41,8 @@ public class ShopSign extends TNESign {
 
 	public void setName(String name) {
 		if(TNE.instance.manager.shops.containsKey(name)) {
-		  this.shop = TNE.instance.manager.shops.get(name);
+		  this.title = ChatColor.GOLD + "[Shop]" + ChatColor.WHITE + name;
+      this.shop = TNE.instance.manager.shops.get(name);
     }
 	}
 
