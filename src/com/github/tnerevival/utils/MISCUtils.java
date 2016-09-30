@@ -89,6 +89,17 @@ public class MISCUtils {
   	  setItemCount(id, type, getItemCount(id, type) - item.getAmount());
     }
 	}
+
+	public static Integer getItemCount(UUID id, ItemStack stack) {
+		Player p = MISCUtils.getPlayer(id);
+		int count = 0;
+    for(ItemStack i : p.getInventory().getContents()) {
+      if(i != null && i.getType() != null && i.equals(stack)) {
+        count += i.getAmount();
+      }
+    }
+		return count;
+	}
 	
 	public static Integer getItemCount(UUID id, Material item) {
 		Player p = MISCUtils.getPlayer(id);
@@ -102,6 +113,59 @@ public class MISCUtils {
 		}
 		return count;
 	}
+
+	public static void setItemCount(UUID id, ItemStack stack, Integer amount) {
+    Player p = MISCUtils.getPlayer(id);
+    Integer count = getItemCount(id, stack);
+    if(stack != null) {
+      if(count > amount) {
+        Integer remove = count - amount;
+        Integer slot = 0;
+        for(ItemStack i : p.getInventory().getContents()) {
+          if(i != null && i.getType() != null && i.equals(stack)) {
+            if(remove > i.getAmount()) {
+              remove -= i.getAmount();
+              i.setAmount(0);
+              p.getInventory().setItem(slot, null);
+            } else {
+              if(i.getAmount() - remove > 0) {
+                i.setAmount(i.getAmount() - remove);
+                p.getInventory().setItem(slot, i);
+                return;
+              }
+              p.getInventory().setItem(slot, null);
+              return;
+            }
+          }
+          slot++;
+        }
+      } else if(count < amount) {
+        Integer add = amount - count;
+
+        while(add > 0) {
+          if(add > stack.getMaxStackSize()) {
+            ItemStack temp = stack.clone();
+            temp.setAmount(stack.getMaxStackSize());
+            if(p.getInventory().firstEmpty() != -1) {
+              p.getInventory().addItem(temp);
+            } else {
+              p.getWorld().dropItemNaturally(p.getLocation(), temp);
+            }
+            add -= stack.getMaxStackSize();
+          } else {
+            ItemStack temp = stack.clone();
+            temp.setAmount(add);
+            if(p.getInventory().firstEmpty() != -1) {
+              p.getInventory().addItem(temp);
+            } else {
+              p.getWorld().dropItemNaturally(p.getLocation(), temp);
+            }
+            add = 0;
+          }
+        }
+      }
+    }
+  }
 	
 	public static void setItemCount(UUID id, Material item, Integer amount) {
 		Player p = MISCUtils.getPlayer(id);
