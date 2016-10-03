@@ -62,7 +62,12 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Shop.ItemAdded", "<white>The item \"$item\" has been added to the shop \"$shop\".");
 		configurations.put("Messages.Shop.ItemWrong", "<white>Something went wrong adding item \"$item\" to the shop \"$shop\".");
 		configurations.put("Messages.Shop.ItemInvalid", "<white>The item name \"$item\" is invalid.");
-		configurations.put("Messages.Shop.ItemTrade", "<white>The trade item name \"$item\" is invalid.");
+		configurations.put("Messages.Shop.NotEnough", "<white>You do not have $amount of item \"$item\".");
+		configurations.put("Messages.Shop.InvalidAmount", "<white>Invalid item amount value entered.");
+		configurations.put("Messages.Shop.InvalidStock", "<white>Invalid item initial stock value entered.");
+		configurations.put("Messages.Shop.InvalidTradeAmount", "<white>Invalid trade item amount value entered.");
+		configurations.put("Messages.Shop.InvalidTrade", "<white>The trade item name \"$item\" is invalid.");
+		configurations.put("Messages.Shop.InvalidCost", "<white>Invalid cost format entered.");
 
 		configurations.put("Messages.Bank.Added", "<white>$player has been added to your bank!");
 		configurations.put("Messages.Bank.Removed", "<white>$player has been removed from your bank!");

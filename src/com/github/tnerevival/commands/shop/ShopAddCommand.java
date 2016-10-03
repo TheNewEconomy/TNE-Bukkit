@@ -43,7 +43,7 @@ public class ShopAddCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount] [item name:stock] [gold:#] [trade:name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade]. Leave out item name to use currently held item.");
+		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name] [type:(sell/buy)][stock:#] [gold:#] [trade:name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade]. Leave out item name to use currently held item.");
 	}
 	
 	@Override
@@ -54,66 +54,85 @@ public class ShopAddCommand extends TNECommand {
           Player p = (Player)sender;
           Shop s = Shop.getShop(arguments[0]);
           ItemStack item = p.getInventory().getItemInMainHand().clone();
-          item.setAmount(1);
-          double cost = 50.0;
+          int amount = 1;
+          double cost = 50.00;
           int stock = 0;
-          ItemStack trade = null;
+          boolean buy = true;
+          ItemStack trade = new ItemStack(Material.AIR);
 
           if(arguments.length >= 2) {
+            Material mat;
             for (int i = 1; i < arguments.length; i++) {
               if(arguments[i].contains(":")) {
-                String[] split = arguments[i].split(":");
-                Material mat;
+                String[] split = arguments[i].toLowerCase().split(":");
                 switch(split[0]) {
                   case "gold":
                     try {
                       cost = Double.parseDouble(split[1]);
                     } catch(NumberFormatException e) {
-                      //TODO: Send invalid cost format message.
+                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidCost").translate());
                       return false;
                     }
                     break;
                   case "trade":
                     mat = MaterialHelper.getMaterial(split[1]);
                     if(mat.equals(Material.AIR)) {
-                      //TODO: Send trade item invalid.
+                      Message invalidItem = new Message("Messages.Shop.InvalidTrade");
+                      invalidItem.addVariable("$item", split[1]);
+                      getPlayer(sender).sendMessage(invalidItem.translate());
                       return false;
                     }
                     trade = new ItemStack(mat);
                     try {
-                      Integer amount = (split.length == 3)? Integer.parseInt(split[2]) : 1;
-                      trade.setAmount(amount);
+                      Integer tradeAmount = (split.length == 3)? Integer.parseInt(split[2]) : 1;
+                      trade.setAmount(tradeAmount);
                     } catch(NumberFormatException e) {
-                      //TODO: Invalid trade amount.
+                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidTradeAmount").translate());
+                      return false;
+                    }
+                    break;
+                  case "stock":
+                    try {
+                      stock = Integer.parseInt(split[1]);
+                    } catch(NumberFormatException e) {
+                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidStock").translate());
+                      return false;
+                    }
+                    break;
+                  case "type":
+                    if(split[1].equals("buy")) {
+                      buy = false;
+                      continue;
+                    }
+                    buy = true;
+                    break;
+                  case "amount":
+                    try {
+                      amount = Integer.parseInt(split[1]);
+                    } catch(NumberFormatException e) {
+                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidAmount").translate());
                       return false;
                     }
                     break;
                   default:
-                    mat = MaterialHelper.getMaterial(split[0]);
-                    if(mat.equals(Material.AIR)) {
-                      //TODO: Send invalid item for shop.
-                      return false;
-                    }
-                    item = new ItemStack(mat);
-                    try {
-                      stock = Integer.parseInt(split[1]);
-                    } catch(NumberFormatException e) {
-                      //TODO: Invalid stock amount.
-                      return false;
-                    }
+                    help(sender);
+                    break;
                 }
                 continue;
               }
-              try {
-                Integer.parseInt(arguments[i]);
-              } catch(NumberFormatException e) {
-                help(sender);
+              mat = MaterialHelper.getMaterial(arguments[i]);
+              if(mat == null || mat.equals(Material.AIR)) {
+                Message invalidItem = new Message("Messages.Shop.ItemInvalid");
+                invalidItem.addVariable("$item", arguments[i]);
+                getPlayer(sender).sendMessage(invalidItem.translate());
                 return false;
               }
+              item = new ItemStack(mat);
             }
           }
+          item.setAmount(amount);
           if(MISCUtils.getItemCount(p.getUniqueId(), item) >= stock) {
-            if(s.addItem(new ShopEntry(new SerializableItemStack(1, item), cost, stock, new SerializableItemStack(1, trade)))) {
+            if(s.addItem(new ShopEntry(new SerializableItemStack(1, item), cost, stock, buy, new SerializableItemStack(1, trade)))) {
               MISCUtils.setItemCount(p.getUniqueId(), item, (MISCUtils.getItemCount(p.getUniqueId(), item) - stock));
               Message added = new Message("Messages.Shop.ItemAdded");
               added.addVariable("$shop", s.getName());
@@ -127,7 +146,10 @@ public class ShopAddCommand extends TNECommand {
             getPlayer(sender).sendMessage(wrong.translate());
             return false;
           }
-          //TODO: Player doesn't have X amount of item.
+          Message invalidStock = new Message("Messages.Shop.NotEnough");
+          invalidStock.addVariable("$amount", stock + "");
+          invalidStock.addVariable("$item", item.getType().name());
+          getPlayer(sender).sendMessage(invalidStock.translate());
           return false;
         }
         getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());

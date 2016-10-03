@@ -110,23 +110,31 @@ public class Shop implements Serializable {
 	}
 
 	public Inventory getInventory() {
-		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "[SHOP]" + ChatColor.RESET + name);
+		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
 		for(ShopEntry entry : items) {
+		  MISCUtils.debug("" + entry.isBuy());
+		  String prefix = ChatColor.GOLD + ((entry.isBuy())? "[Buy]" : "[Sell]") + ChatColor.WHITE;
 			ItemStack stack = entry.getItem().toItemStack();
-			List<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.WHITE + "Left Click to buy. Right Click to trade.");
+			List<String> lore = new ArrayList<>();
+      String instruction = (entry.isBuy())? "Left Click to buy. Right Click to trade." : "Left Click to sell.";
+			lore.add(ChatColor.WHITE + instruction);
+      if(entry.isBuy()) {
+        lore.add(ChatColor.WHITE + "Stock: " + ChatColor.GOLD + entry.getStock());
+      }
 			if(entry.getCost() > 0.0) {
-				lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GOLD + entry.getCost());
+			  String cost = ChatColor.WHITE + ((entry.isBuy())? "Cost:" : "Receive:" );
+				lore.add(cost + " " + ChatColor.GOLD + entry.getCost());
 			}
 			
-			if(entry.getTrade() != null) {
+			if(entry.getTrade() != null && !entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
 				lore.add(ChatColor.WHITE + "Trade: " + entry.getTrade().getAmount() + entry.getTrade().getName());
 			}
 			
 			ItemMeta meta = stack.getItemMeta();
+      meta.setDisplayName(prefix + entry.getItem().getName());
 			meta.setLore(lore);
 			stack.setItemMeta(meta);
-			inventory.setItem(entry.getItem().getSlot(), stack);
+			inventory.setItem(inventory.firstEmpty(), stack);
 		}
 		return inventory;
 	}
@@ -269,7 +277,9 @@ public class Shop implements Serializable {
     String[] parsed = parse.split("=");
 
     for(String s : parsed) {
-      items.add(ShopEntry.fromString(s));
+    	if(ShopEntry.fromString(s) != null) {
+				items.add(ShopEntry.fromString(s));
+			}
     }
   }
 	

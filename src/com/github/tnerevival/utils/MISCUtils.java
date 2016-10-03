@@ -27,9 +27,13 @@ import java.util.UUID;
 public class MISCUtils {
 
   //Minecraft Version Utils
-  public static boolean isOneTen(){
+  public static boolean isOneTen() {
     return Bukkit.getBukkitVersion().contains("1.10");
   }
+
+  public static boolean isOneNine() {
+    return Bukkit.getBukkitVersion().contains("1.9");
+	}
 
 	//True MISC Utils
 	public static void debug(String message) {
@@ -94,7 +98,7 @@ public class MISCUtils {
 		Player p = MISCUtils.getPlayer(id);
 		int count = 0;
     for(ItemStack i : p.getInventory().getContents()) {
-      if(i != null && i.getType() != null && i.equals(stack)) {
+      if(i != null && i.getType() != null && i.getType().equals(stack.getType()) && i.getDurability() == stack.getDurability()) {
         count += i.getAmount();
       }
     }
@@ -406,7 +410,7 @@ public class MISCUtils {
 	}
 	
 	public static String formatBalance(String world, double balance, Boolean shorten) {
-		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
+		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".00";
 		String[] split = balanceString.split("\\.");
 		if(Integer.valueOf(split[1]) > 0) {
 			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0])) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
@@ -497,7 +501,7 @@ public class MISCUtils {
 	}
 	
 	public static Boolean worldConfigExists(String node, String world) {
-		return (TNE.instance.worldConfigurations.get("Worlds." + world + "." + node) != null);
+		return worldConfigExists("Worlds." + world + "." + node);
 	}
 	
 	public static Boolean worldConfigExists(String node) {

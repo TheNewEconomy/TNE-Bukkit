@@ -74,12 +74,12 @@ public class TNE extends JavaPlugin {
 	public static HashMap<String, UUID> uuidCache = new HashMap<String, UUID>();
 	
 	public void onLoad() {
+		instance = this;
 		api = new TNEAPI(this);
 		setupVault();
 	}
 	
 	public void onEnable() {
-		instance = this;
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
 		updater = new UpdateChecker();
 		

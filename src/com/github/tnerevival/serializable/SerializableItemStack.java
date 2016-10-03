@@ -33,12 +33,15 @@ public class SerializableItemStack implements Serializable {
 		this.amount = i.getAmount();
 		this.damage = i.getDurability();
 		this.customName = "TNENOSTRINGVALUE";
-		if(i.getItemMeta().hasDisplayName()) {
-			this.customName = i.getItemMeta().getDisplayName();
-		}
-		if(i.getItemMeta().hasLore()) {
-			this.lore = i.getItemMeta().getLore();
-		}
+    if(i.hasItemMeta()) {
+      if(i.getItemMeta().hasDisplayName()) {
+        MISCUtils.debug("" + i.getItemMeta().getDisplayName());
+        this.customName = i.getItemMeta().getDisplayName();
+      }
+      if(i.getItemMeta().hasLore()) {
+        this.lore = i.getItemMeta().getLore();
+      }
+    }
 		this.enchantments = getEnchantmentsFromStack(i);
     MISCUtils.debug("Name:" + this.getName() + "Lore:" + loreToString() + "damage:" + damage);
 	}

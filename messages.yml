@@ -111,6 +111,12 @@ Messages:
        ItemWrong: <white>Something went wrong adding item "$item" to the shop "$shop".
        ItemInvalid: <white>The item name "$item" is invalid.
        ItemTrade: <white>The trade item name "$item" is invalid.
+       NotEnough: <white>You do not have $amount of item "$item".
+       InvalidAmount: <white>Invalid item amount value entered.
+       InvalidStock: <white>Invalid item initial stock value entered.
+       InvalidTradeAmount: <white>Invalid trade item amount value entered.
+       InvalidTrade: <white>The trade item name "$item" is invalid.
+       InvalidCost: <white>Invalid cost format entered.
         
     
     Bank:

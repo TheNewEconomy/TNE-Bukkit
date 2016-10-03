@@ -5,6 +5,7 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
+import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
@@ -140,7 +141,7 @@ public abstract class TNEInventory {
     boolean canView = false;
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
 
-    if(!(this instanceof BankInventory)) {
+    if(!(this instanceof BankInventory) && !(this instanceof ShopInventory)) {
       String charge = charge(viewer);
       MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {

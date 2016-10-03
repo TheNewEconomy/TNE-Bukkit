@@ -89,6 +89,6 @@ public class ShopCommand extends TNECommand {
 		sender.sendMessage(ChatColor.GOLD + "/shop close <name> - Close the specified shop.");
 		sender.sendMessage(ChatColor.GOLD + "/shop share <name> <player> [percent](decimal) - Allow/disallow profit sharing with another player.");
 		sender.sendMessage(ChatColor.GOLD + "/shop remove <name> <amount> [item] [cost(gold:amount or trade:name:amount)] - Remove a specific item from your shop. Cost is required if multiple entries exist.");
-		sender.sendMessage(ChatColor.GOLD + "/shop add <name> <amount> [item] [gold:amount] [trade:block/item name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade]. Leave out item name to use currently held item.");
+		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name] [stock:#] [gold:#] [trade:name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade]. Leave out item name to use currently held item.");
 	}
 }

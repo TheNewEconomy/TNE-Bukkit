@@ -159,7 +159,10 @@ public class Alpha3_0 extends Version {
       s.listFromString((String)info.getData("whitelist"), false);
       s.sharesFromString((String)info.getData("shares"));
       MISCUtils.debug("Items:" + info.getData("items"));
-      s.itemsFromString((String)info.getData("items"));
+
+      if(((String)info.getData("items")).trim() != "") {
+        s.itemsFromString((String) info.getData("items"));
+      }
 
       TNE.instance.manager.shops.put(shopEntry.getKey(), s);
     }
