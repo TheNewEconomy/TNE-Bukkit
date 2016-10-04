@@ -81,6 +81,7 @@ permissions:
          tne.shop.create: true
          tne.shop.remove: true
          tne.shop.share: true
+         tne.shop.stock: true
          tne.shop.toggle: true
          tne.shop.whitelist: true
          tne.place: true
@@ -184,6 +185,7 @@ permissions:
          tne.shop.create: true
          tne.shop.remove: true
          tne.shop.share: true
+         tne.shop.stock: true
          tne.shop.toggle: true
          tne.shop.whitelist: true
          

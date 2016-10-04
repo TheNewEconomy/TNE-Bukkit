@@ -108,6 +108,7 @@ Messages:
        ItemNone: <white>The item "$item" could not been found in the shop "$shop".
        ItemRemoved: <white>The item "$item" has been removed from the shop "$shop".
        ItemAdded: <white>The item "$item" has been added to the shop "$shop".
+       StockModified: <white>Successfully $value $amount of item "$item" for shop "$shop".
        ItemWrong: <white>Something went wrong adding item "$item" to the shop "$shop".
        ItemInvalid: <white>The item name "$item" is invalid.
        ItemTrade: <white>The trade item name "$item" is invalid.

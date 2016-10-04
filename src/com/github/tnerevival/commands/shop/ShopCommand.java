@@ -20,6 +20,7 @@ public class ShopCommand extends TNECommand {
 		subCommands.add(new ShopCreateCommand(plugin));
 		subCommands.add(new ShopRemoveCommand(plugin));
 		subCommands.add(new ShopShareCommand(plugin));
+		subCommands.add(new ShopStockCommand(plugin));
 		subCommands.add(new ShopToggleCommand(plugin));
 		subCommands.add(new ShopWhitelistCommand(plugin));
 	}
