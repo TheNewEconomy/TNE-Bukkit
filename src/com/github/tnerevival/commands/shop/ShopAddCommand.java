@@ -43,7 +43,7 @@ public class ShopAddCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name] [type:(sell/buy)][stock:#] [gold:#] [trade:name:amount(default 1)]  - Add a new item to your shop for [cost] and/or [trade]. Leave out item name to use currently held item.");
+		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)][stock:#/unlimited] [gold:#] [trade:name:amount(default 1)]  - Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.");
 	}
 	
 	@Override
@@ -54,10 +54,12 @@ public class ShopAddCommand extends TNECommand {
           Player p = (Player)sender;
           Shop s = Shop.getShop(arguments[0]);
           ItemStack item = p.getInventory().getItemInMainHand().clone();
+          short damage = 0;
           int amount = 1;
           double cost = 50.00;
           int stock = 0;
-          boolean buy = true;
+          boolean buy = false;
+          boolean unlimited = false;
           ItemStack trade = new ItemStack(Material.AIR);
 
           if(arguments.length >= 2) {
@@ -92,6 +94,11 @@ public class ShopAddCommand extends TNECommand {
                     }
                     break;
                   case "stock":
+                    if(split[1].equalsIgnoreCase("unlimited") && s.isAdmin()) {
+                      unlimited = true;
+                      stock = 0;
+                      continue;
+                    }
                     try {
                       stock = Integer.parseInt(split[1]);
                     } catch(NumberFormatException e) {
@@ -100,11 +107,7 @@ public class ShopAddCommand extends TNECommand {
                     }
                     break;
                   case "type":
-                    if(split[1].equals("buy")) {
-                      buy = false;
-                      continue;
-                    }
-                    buy = true;
+                    buy = !split[1].equals("buy");
                     break;
                   case "amount":
                     try {
@@ -115,7 +118,20 @@ public class ShopAddCommand extends TNECommand {
                     }
                     break;
                   default:
-                    help(sender);
+                    mat = MaterialHelper.getMaterial(split[0]);
+                    if(mat == null || mat.equals(Material.AIR)) {
+                      Message invalidItem = new Message("Messages.Shop.ItemInvalid");
+                      invalidItem.addVariable("$item", arguments[i]);
+                      getPlayer(sender).sendMessage(invalidItem.translate());
+                      return false;
+                    }
+                    item = new ItemStack(mat);
+                    try {
+                      item.setDurability(Short.valueOf(split[1]));
+                    } catch(NumberFormatException e) {
+                      help(sender);
+                      return false;
+                    }
                     break;
                 }
                 continue;
@@ -131,9 +147,18 @@ public class ShopAddCommand extends TNECommand {
             }
           }
           item.setAmount(amount);
-          if(MISCUtils.getItemCount(p.getUniqueId(), item) >= stock) {
-            if(s.addItem(new ShopEntry(new SerializableItemStack(1, item), cost, stock, buy, new SerializableItemStack(1, trade)))) {
-              MISCUtils.setItemCount(p.getUniqueId(), item, (MISCUtils.getItemCount(p.getUniqueId(), item) - stock));
+          if(!buy || MISCUtils.getItemCount(p.getUniqueId(), item) >= stock) {
+            ShopEntry entry = new ShopEntry(new SerializableItemStack(s.getItems().size(), item), cost, ((buy)? stock : 0), buy, unlimited, new SerializableItemStack(1, trade));
+            if(!buy) {
+              entry.setMaxstock(stock);
+            }
+            if(s.addItem(entry)) {
+              if(buy) {
+                //TODO: Move this to a transaction possibly?
+                ItemStack temp = item.clone();
+                temp.setAmount(stock);
+                p.getInventory().removeItem(temp);
+              }
               Message added = new Message("Messages.Shop.ItemAdded");
               added.addVariable("$shop", s.getName());
               added.addVariable("$item", item.getType().name());

@@ -80,6 +80,9 @@ Core:
         #Whether or not shops are enabled
         Enabled: true
 
+        #The cost to create a shop.
+        Cost: 10.00
+
         #The max amount of shops a single player can own.
         Amount: 5
 

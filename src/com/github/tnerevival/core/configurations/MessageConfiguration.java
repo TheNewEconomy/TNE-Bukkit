@@ -60,7 +60,7 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Shop.ItemNone", "<white>The item \"$item\" could not been found in the shop \"$shop\".");
 		configurations.put("Messages.Shop.ItemRemoved", "<white>The item \"$item\" has been removed from the shop \"$shop\".");
 		configurations.put("Messages.Shop.ItemAdded", "<white>The item \"$item\" has been added to the shop \"$shop\".");
-		configurations.put("Messages.Shop.ItemWrong", "<white>Something went wrong adding item \"$item\" to the shop \"$shop\".");
+		configurations.put("Messages.Shop.ItemWrong", "<white>Something went wrong performing the action on item \"$item\" to the shop \"$shop\".");
 		configurations.put("Messages.Shop.ItemInvalid", "<white>The item name \"$item\" is invalid.");
 		configurations.put("Messages.Shop.NotEnough", "<white>You do not have $amount of item \"$item\".");
 		configurations.put("Messages.Shop.InvalidAmount", "<white>Invalid item amount value entered.");

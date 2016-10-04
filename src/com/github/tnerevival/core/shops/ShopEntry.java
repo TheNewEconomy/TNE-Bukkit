@@ -2,6 +2,7 @@ package com.github.tnerevival.core.shops;
 
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Material;
 
 import java.io.Serializable;
 
@@ -10,28 +11,34 @@ public class ShopEntry implements Serializable {
 	
 	private SerializableItemStack item = null;
   private boolean buy = true;
+	private boolean unlimited = false;
 	private int stock = 0;
+  private int maxstock = 0;
 	private double cost = 0.0;
 	private SerializableItemStack trade = null;
+
+  public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy) {
+    this.item = item;
+    this.cost = cost;
+    this.stock = stock;
+    this.buy = buy;
+  }
+
+  public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, boolean unlimited) {
+    this.item = item;
+    this.cost = cost;
+    this.stock = stock;
+    this.buy = buy;
+    this.unlimited = unlimited;
+  }
 	
-	public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy) {
+	public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, boolean unlimited, SerializableItemStack trade) {
 		this.item = item;
 		this.cost = cost;
     this.stock = stock;
     this.buy = buy;
-	}
-	
-	public ShopEntry(SerializableItemStack item, SerializableItemStack trade) {
-		this.item = item;
-		this.trade = trade;
-	}
-	
-	public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, SerializableItemStack trade) {
-		this.item = item;
-		this.cost = cost;
-    this.stock = stock;
-		this.trade = trade;
-    this.buy = buy;
+    this.unlimited = unlimited;
+    this.trade = trade;
 	}
 
 	public SerializableItemStack getItem() {
@@ -50,6 +57,14 @@ public class ShopEntry implements Serializable {
     this.buy = buy;
   }
 
+  public boolean isUnlimited() {
+    return unlimited;
+  }
+
+  public void setUnlimited(boolean unlimited) {
+    this.unlimited = unlimited;
+  }
+
   public int getStock() {
 	  return this.stock;
   }
@@ -58,7 +73,15 @@ public class ShopEntry implements Serializable {
     this.stock = stock;
   }
 
-	public double getCost() {
+  public int getMaxstock() {
+    return maxstock;
+  }
+
+  public void setMaxstock(int maxstock) {
+    this.maxstock = maxstock;
+  }
+
+  public double getCost() {
 		return cost;
 	}
 
@@ -81,7 +104,9 @@ public class ShopEntry implements Serializable {
     builder.append(item.toString());
     builder.append("*" + cost);
     builder.append("*" + stock);
-    builder.append("*" + ((buy)? "buy" : "sell"));
+    builder.append("*" + buy);
+    builder.append("*" + unlimited);
+    builder.append("*" + maxstock);
     if(trade != null) {
       builder.append("*" + trade.toString());
     }
@@ -89,21 +114,40 @@ public class ShopEntry implements Serializable {
   }
 
   public static ShopEntry fromString(String parse) {
-		MISCUtils.debug(parse);
     String[] parsed = parse.split("\\*");
-    MISCUtils.debug(parsed[0]);
-    MISCUtils.debug(parsed[1]);
-    MISCUtils.debug(parsed[2]);
-    MISCUtils.debug(parsed[3]);
 
-		if(parsed.length >= 4) {
-		  boolean buyValue = parsed[3].trim().equals("buy");
-      MISCUtils.debug("" + buyValue);
-			if (parsed.length == 5) {
-				return new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), Integer.valueOf(parsed[2]), buyValue, SerializableItemStack.fromString(parsed[4]));
+    MISCUtils.debug(parsed[0]);
+
+		if(parsed.length >= 6) {
+		  ShopEntry entry =  new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), Integer.valueOf(parsed[2]), Boolean.valueOf(parsed[3]), Boolean.valueOf(parsed[4]));
+			entry.setMaxstock(Integer.valueOf(parsed[5]));
+      if (parsed.length == 7) {
+			  entry.setTrade(SerializableItemStack.fromString(parsed[6]));
 			}
-			return new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), Integer.valueOf(parsed[2]), buyValue);
+
+			return entry;
 		}
 		return null;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(obj == null) return false;
+    if(getClass() != obj.getClass()) return false;
+
+    final ShopEntry entry = (ShopEntry)obj;
+    if(!item.getName().equals(entry.getItem().getName())) return false;
+    if(Short.compare(item.getDamage(), entry.getItem().getDamage()) != 0) return false;
+    if(Integer.compare(item.getAmount(), entry.getItem().getAmount()) != 0) return false;
+    if(Boolean.compare(buy, entry.isBuy()) != 0) return false;
+    if(Boolean.compare(unlimited, entry.isUnlimited()) != 0) return false;
+    if(Double.compare(cost, entry.getCost()) != 0) return false;
+    if(trade != null && !trade.getName().equals(Material.AIR.toString())) {
+      if(!trade.getName().equals(entry.getTrade().getName())) return false;
+      if(Short.compare(trade.getDamage(), entry.getTrade().getDamage()) != 0) return false;
+      if(Integer.compare(trade.getAmount(), entry.getTrade().getAmount()) != 0) return false;
+    }
+
+    return true;
   }
 }

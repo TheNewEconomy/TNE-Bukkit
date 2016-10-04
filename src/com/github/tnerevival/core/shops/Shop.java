@@ -1,6 +1,9 @@
 package com.github.tnerevival.core.shops;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,20 +44,142 @@ public class Shop implements Serializable {
 	public void setAdmin(boolean admin) {
 	  this.admin = admin;
   }
-	
-	public ShopEntry getItem(int id) {
-		for(ShopEntry entry : this.items) {
-			if(entry.getItem().getSlot() == id) {
-				return entry;
-			}
-		}
-		return null;
-	}
+
+  public List<ShopEntry> getSale() {
+    return items;
+  }
+
+  public void setSale(List<ShopEntry> sale) {
+    this.items = sale;
+  }
+  public List<UUID> getShoppers() {
+    return shoppers;
+  }
+
+  public void setShoppers(List<UUID> shoppers) {
+    this.shoppers = shoppers;
+  }
+
+  public void addShopper(UUID shopper) {
+    shoppers.add(shopper);
+  }
+
+  public void removeShopper(UUID shopper) {
+    shoppers.remove(shopper);
+  }
+
+  public List<ShopEntry> getItems() {
+    return items;
+  }
+
+  public void setItems(List<ShopEntry> items) {
+    this.items = items;
+  }
+
+  public List<UUID> getBlacklist() {
+    return blacklist;
+  }
+
+  public boolean blacklisted(UUID player) {
+    return blacklist.contains(player);
+  }
+
+  public void addBlacklist(UUID player) {
+    blacklist.add(player);
+  }
+
+  public void removeBlacklist(UUID player) {
+    blacklist.remove(player);
+  }
+
+  public void setBlacklist(List<UUID> blacklist) {
+    this.blacklist = blacklist;
+  }
+
+  public List<UUID> getWhitelist() {
+    return whitelist;
+  }
+
+  public void setWhitelist(List<UUID> whitelist) {
+    this.whitelist = whitelist;
+  }
+
+  public boolean whitelisted(UUID player) {
+    return whitelist.contains(player);
+  }
+
+  public void addWhitelist(UUID player) {
+    whitelist.add(player);
+  }
+
+  public void removeWhitelist(UUID player) {
+    whitelist.remove(player);
+  }
+
+  public List<ShareEntry> getShares() {
+    return shares;
+  }
+
+  public void setShares(List<ShareEntry> shares) {
+    this.shares = shares;
+  }
+
+  public UUID getOwner() {
+    return owner;
+  }
+
+  public void setOwner(UUID owner) {
+    this.owner = owner;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public boolean isHidden() {
+    return hidden;
+  }
+
+  public void setHidden(boolean hidden) {
+    this.hidden = hidden;
+  }
+
+
+  public ShopEntry getItem(int slot) {
+    for(ShopEntry entry : this.items) {
+      if(entry.getItem().getSlot() == slot) {
+        return entry;
+      }
+    }
+    return null;
+  }
+
+  public int getItem(ItemStack stack, double cost) {
+    return getItem(stack, cost, true);
+  }
+
+  public int getItem(ItemStack stack, double cost, boolean buy) {
+    return getItem(stack, cost, buy, null);
+  }
+
+  public int getItem(ItemStack stack, double cost, boolean buy, ItemStack trade) {
+    for(ShopEntry entry : items) {
+      final ShopEntry temp = new ShopEntry(new SerializableItemStack(0, stack), cost, 0, buy, false, new SerializableItemStack(0, trade));
+      if(entry.equals(temp)) {
+        return entry.getItem().getSlot();
+      }
+    }
+    return -1;
+  }
 	
 	public boolean addItem(ShopEntry entry) {
 		if(items.size() >= 27) { return false; }
 		Material mat = Material.getMaterial(entry.getItem().getName());
-		if(hasItem(mat)) {
+		if(hasItem(entry.getItem().toItemStack(), entry.getCost(), entry.isBuy())) {
 			if(getCost(mat) < 0.0 && entry.getTrade() != null && getTrade(mat) != null && entry.getTrade().getName().equals(getTrade(mat)) || getCost(mat) == entry.getCost()) {
 				return false;
 			}
@@ -62,52 +187,48 @@ public class Shop implements Serializable {
 		this.items.add(entry);
 		return true;
 	}
-	
-	public boolean removeItem(ItemStack item) {
-		Iterator<ShopEntry> i = items.iterator();
-		while(i.hasNext()) {
-			ShopEntry entry = i.next();
-			if(entry.getItem().getName().equalsIgnoreCase(item.getType().toString())) {
-				i.remove();
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean removeItem(ItemStack item, double cost) {
-		Iterator<ShopEntry> i = items.iterator();
-		while(i.hasNext()) {
-			ShopEntry entry = i.next();
-			if(entry.getItem().getName().equalsIgnoreCase(item.getType().toString()) && entry.getCost() == cost) {
-				i.remove();
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean removeItem(ItemStack item, ItemStack trade) {
-		Iterator<ShopEntry> i = items.iterator();
-		while(i.hasNext()) {
-			ShopEntry entry = i.next();
-			if(entry.getItem().getName().equalsIgnoreCase(item.getType().toString()) &&
-			   entry.getTrade().getName().equalsIgnoreCase(trade.getType().toString())) {
-				i.remove();
-				return true;
-			}
-		}
-		return false;
-		
-	}
 
-	public List<ShopEntry> getSale() {
-		return items;
-	}
+  public boolean removeItem(ItemStack stack, double cost) {
+    return removeItem(stack, cost, true);
+  }
 
-	public void setSale(List<ShopEntry> sale) {
-		this.items = sale;
-	}
+  public boolean removeItem(ItemStack stack, double cost, boolean buy) {
+    return removeItem(stack, cost, buy, null);
+  }
+
+  public boolean removeItem(ItemStack stack, double cost, boolean buy, ItemStack trade) {
+    Iterator<ShopEntry> i = items.iterator();
+    final ShopEntry temp = new ShopEntry(new SerializableItemStack(0, stack), cost, 0, buy, false, new SerializableItemStack(0, trade));
+    while(i.hasNext()) {
+      ShopEntry entry = i.next();
+      if(entry.equals(temp)) {
+        i.remove();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean hasItem(ItemStack stack, double cost) {
+    return hasItem(stack, cost, true);
+  }
+
+  public boolean hasItem(ItemStack stack, double cost, boolean buy) {
+    return hasItem(stack, cost, buy, null);
+  }
+
+  public boolean hasItem(ItemStack stack, double cost, boolean buy, ItemStack trade) {
+    for(ShopEntry entry : items) {
+      if(entry.getItem().toItemStack().getType().equals(stack.getType())
+          && entry.isBuy() == buy && entry.getCost() == cost) {
+        if(trade != null && !trade.getType().equals(Material.AIR) && !entry.getTrade().toItemStack().equals(trade)) {
+          return false;
+        }
+        return true;
+      }
+    }
+    return false;
+  }
 
 	public Inventory getInventory() {
 		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
@@ -118,9 +239,11 @@ public class Shop implements Serializable {
 			List<String> lore = new ArrayList<>();
       String instruction = (entry.isBuy())? "Left Click to buy. Right Click to trade." : "Left Click to sell.";
 			lore.add(ChatColor.WHITE + instruction);
-      if(entry.isBuy()) {
-        lore.add(ChatColor.WHITE + "Stock: " + ChatColor.GOLD + entry.getStock());
-      }
+
+      String message = (entry.isBuy())? "Stock: " : "Limit: ";
+      String stock = (entry.isUnlimited())? "---" : "" + ((entry.isBuy())? entry.getStock() : (entry.getMaxstock() - entry.getStock()));
+      lore.add(ChatColor.WHITE + message + ChatColor.GOLD + stock);
+
 			if(entry.getCost() > 0.0) {
 			  String cost = ChatColor.WHITE + ((entry.isBuy())? "Cost:" : "Receive:" );
 				lore.add(cost + " " + ChatColor.GOLD + entry.getCost());
@@ -134,11 +257,14 @@ public class Shop implements Serializable {
       meta.setDisplayName(prefix + entry.getItem().getName());
 			meta.setLore(lore);
 			stack.setItemMeta(meta);
-			inventory.setItem(inventory.firstEmpty(), stack);
+
+      MISCUtils.debug(entry.getItem().getName() + ":" + entry.getItem().getSlot());
+
+			inventory.setItem(entry.getItem().getSlot(), stack);
 		}
 		return inventory;
 	}
-	
+
 	public double getCost(Material mat) {
 		for(ShopEntry entry : items) {
 			if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
@@ -147,7 +273,7 @@ public class Shop implements Serializable {
 		}
 		return 0.0;
 	}
-	
+
 	public String getTrade(Material mat) {
 		for(ShopEntry entry : items) {
 			if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
@@ -157,36 +283,19 @@ public class Shop implements Serializable {
 		return null;
 	}
 	
-	public boolean hasItem(Material mat) {
-		for(ShopEntry entry : items) {
-			if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean hasItem(Material mat, double cost) {
-		for(ShopEntry entry : items) {
-			if(Material.getMaterial(entry.getItem().getName()).equals(mat) && entry.getCost() == cost) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean hasItem(Material mat, String trade) {
-		for(ShopEntry entry : items) {
-			if(Material.getMaterial(entry.getItem().getName()).equals(mat) && entry.getTrade().getName().equalsIgnoreCase(trade)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public boolean hasPermission(UUID player) {
 		return owner.equals(player);
 	}
+
+	public void handlePayment(double amount) {
+	  double split = amount;
+    for(ShareEntry entry : shares) {
+      double pay = Math.round((amount * entry.getPercent()) * 100.0) / 100.0;
+      split -= pay;
+      AccountUtils.transaction(entry.getShareOwner().toString(), null, pay, TransactionType.MONEY_GIVE, MISCUtils.getWorld(entry.getShareOwner()));
+    }
+    AccountUtils.transaction(owner.toString(), null, split, TransactionType.MONEY_GIVE, MISCUtils.getWorld(owner));
+  }
 	
 	public double totalSharePercent() {
 		double total = 0.00;
@@ -195,6 +304,12 @@ public class Shop implements Serializable {
 		}
 		return total;
 	}
+
+	public void remove(int slot, int amount) {
+	  ShopEntry entry = getItem(slot);
+	  int stock = (entry.isBuy())? entry.getStock() - amount : entry.getStock() + amount;
+    entry.setStock(stock);
+  }
 	
 	public double canBeShared() {
 		return (100.00 - totalSharePercent());
@@ -314,74 +429,6 @@ public class Shop implements Serializable {
 		return false;
 	}
 
-	/*
-	 * Getters and setters
-	 */
-
-	
-	public List<UUID> getShoppers() {
-		return shoppers;
-	}
-
-	public void setShoppers(List<UUID> shoppers) {
-		this.shoppers = shoppers;
-	}
-	
-	public void addShopper(UUID shopper) {
-		shoppers.add(shopper);
-	}
-	
-	public void removeShopper(UUID shopper) {
-		shoppers.remove(shopper);
-	}
-	
-	public List<ShopEntry> getItems() {
-		return items;
-	}
-
-	public void setItems(List<ShopEntry> items) {
-		this.items = items;
-	}
-
-	public List<UUID> getBlacklist() {
-		return blacklist;
-	}
-	
-	public boolean blacklisted(UUID player) {
-		return blacklist.contains(player);
-	}
-	
-	public void addBlacklist(UUID player) {
-		blacklist.add(player);
-	}
-	
-	public void removeBlacklist(UUID player) {
-		blacklist.remove(player);
-	}
-
-	public void setBlacklist(List<UUID> blacklist) {
-		this.blacklist = blacklist;
-	}
-
-	public List<UUID> getWhitelist() {
-		return whitelist;
-	}
-
-	public void setWhitelist(List<UUID> whitelist) {
-		this.whitelist = whitelist;
-	}
-	
-	public boolean whitelisted(UUID player) {
-		return whitelist.contains(player);
-	}
-	
-	public void addWhitelist(UUID player) {
-		whitelist.add(player);
-	}
-	
-	public void removeWhitelist(UUID player) {
-		whitelist.remove(player);
-	}
 	
 	public boolean shares(UUID player) {
 		for(ShareEntry entry : shares) {
@@ -390,37 +437,5 @@ public class Shop implements Serializable {
 			}
 		}
 		return false;
-	}
-
-	public List<ShareEntry> getShares() {
-		return shares;
-	}
-
-	public void setShares(List<ShareEntry> shares) {
-		this.shares = shares;
-	}
-
-	public UUID getOwner() {
-		return owner;
-	}
-
-	public void setOwner(UUID owner) {
-		this.owner = owner;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public boolean isHidden() {
-		return hidden;
-	}
-
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
 	}
 }
