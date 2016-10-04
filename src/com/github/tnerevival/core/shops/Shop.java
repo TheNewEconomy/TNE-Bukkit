@@ -418,6 +418,19 @@ public class Shop implements Serializable {
 		}
 		return false;
 	}
+
+	public static boolean canView(String name, UUID id) {
+    if(!TNE.configurations.getBoolean("Core.Shops.Enabled")) return false;
+	  if(exists(name)) {
+      Shop s = getShop(name);
+      if(s.isHidden() && !s.whitelisted(id)) return false;
+      if(s.blacklisted(id)) return false;
+      if(s.getShoppers().size() >= TNE.configurations.getInt("Core.Shops.MaxShoppers")) return false;
+
+      return true;
+    }
+    return false;
+  }
 	
 	public static boolean canModify(String name, Player p) {
 		if(exists(name)) {

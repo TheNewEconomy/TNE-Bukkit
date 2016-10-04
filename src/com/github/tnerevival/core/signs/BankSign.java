@@ -21,22 +21,24 @@ public class BankSign extends TNESign {
 
 	@Override
 	public boolean onRightClick(Player player) {
-		if(player.hasPermission(SignType.BANK.getUsePermission())) {
+		if(super.onRightClick(player)) {
+			if (player.hasPermission(SignType.BANK.getUsePermission())) {
 
-		  if(!BankUtils.hasBank(MISCUtils.getID(player))) {
-        player.sendMessage(new Message("Messages.Bank.None").translate());
-        return false;
-      }
+				if (!BankUtils.hasBank(MISCUtils.getID(player))) {
+					player.sendMessage(new Message("Messages.Bank.None").translate());
+					return false;
+				}
 
-      if(!BankUtils.sign(MISCUtils.getWorld(player))) {
-        player.sendMessage(new Message("Messages.Bank.NoSign").translate());
-        return false;
-      }
+				if (!BankUtils.sign(MISCUtils.getWorld(player))) {
+					player.sendMessage(new Message("Messages.Bank.NoSign").translate());
+					return false;
+				}
 
-			inventory = BankUtils.getBankInventory(MISCUtils.getID(player));
-			if(super.onOpen(player)) {
-				player.openInventory(inventory);
-				return true;
+				inventory = BankUtils.getBankInventory(MISCUtils.getID(player));
+				if (super.onOpen(player)) {
+					player.openInventory(inventory);
+					return true;
+				}
 			}
 		}
 		return false;

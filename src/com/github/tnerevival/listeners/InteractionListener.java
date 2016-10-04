@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.ShopSign;
 import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
@@ -14,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -346,6 +348,10 @@ public class InteractionListener implements Listener {
         sign.setLocation(new SerializableLocation(event.getBlock().getLocation()));
 
         if(sign instanceof ShopSign) {
+        	if(!Shop.exists(event.getLine(1))) {
+        		event.setCancelled(true);
+            return;
+					}
           ((ShopSign) sign).setName(event.getLine(1));
         }
 
@@ -412,6 +418,7 @@ public class InteractionListener implements Listener {
       if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
         if(SignUtils.validSign(block.getLocation())) {
           SerializableLocation location = new SerializableLocation(block.getLocation());
+          Sign b = (Sign)block.getState();
           TNESign sign = SignUtils.getSign(location);
 
           for(TNESign s : TNE.instance.manager.signs.values()) {
@@ -423,8 +430,14 @@ public class InteractionListener implements Listener {
             MISCUtils.debug("Sign instance is null");
           }
 
-          if(!sign.onRightClick(player)) {
-            event.setCancelled(true);
+          if(sign instanceof ShopSign) {
+            if(!((ShopSign)sign).onRightClick(player, b.getLine(1))) {
+              event.setCancelled(true);
+            }
+          } else{
+            if (!sign.onRightClick(player)) {
+              event.setCancelled(true);
+            }
           }
         }
       } else {

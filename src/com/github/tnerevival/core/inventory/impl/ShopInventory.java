@@ -17,6 +17,11 @@ public class ShopInventory extends GenericInventory {
   }
 
   @Override
+  public void onClose(InventoryViewer viewer) {
+    s.removeShopper(viewer.getUUID());
+  }
+
+  @Override
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
     return false;
   }

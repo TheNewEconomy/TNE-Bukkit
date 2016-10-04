@@ -51,7 +51,6 @@ public class InventoryListener implements Listener {
       MISCUtils.debug(ChatColor.stripColor(name));
       MISCUtils.debug(s.getName());
       MISCUtils.debug(player.getUniqueId().toString());
-      s.addShopper(player.getUniqueId());
       inventory = new ShopInventory(s);
     }
     inventory.addViewer(viewer);

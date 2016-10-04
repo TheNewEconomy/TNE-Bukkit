@@ -46,11 +46,21 @@ public class ShopSign extends TNESign {
     }
 	}
 
-	@Override
-	public boolean onRightClick(Player player) {
-	  player.sendMessage("Allo");
+	public boolean onRightClick(Player player, String name) {
+	  if(super.onRightClick(player)) {
+      if (player.hasPermission(SignType.SHOP.getUsePermission())) {
+        setName(name);
+        inventory = shop.getInventory();
 
-    return super.onRightClick(player);
+        if (Shop.canView(getName(), player.getUniqueId())) {
+          if (super.onOpen(player)) {
+            player.openInventory(inventory);
+            return true;
+          }
+        }
+      }
+    }
+    return false;
 	}
 
 	@Override

@@ -138,7 +138,6 @@ public abstract class TNEInventory {
   }
 
   public boolean onOpen(InventoryViewer viewer) {
-    boolean canView = false;
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
 
     if(!(this instanceof BankInventory) && !(this instanceof ShopInventory)) {
