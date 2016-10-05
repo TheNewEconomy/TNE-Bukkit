@@ -49,10 +49,10 @@ public class ShopStockCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String[] arguments) {
     if(sender instanceof Player && arguments.length >= 2) {
-      if(Shop.exists(arguments[0])) {
+      if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         if(Shop.canModify(arguments[0], (Player)sender)) {
           Player p = (Player)sender;
-          Shop s = Shop.getShop(arguments[0]);
+          Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
           ItemStack item = p.getInventory().getItemInMainHand().clone();
           boolean add = (arguments[1].equalsIgnoreCase("add"));
           short damage = 0;

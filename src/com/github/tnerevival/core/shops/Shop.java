@@ -29,15 +29,25 @@ public class Shop implements Serializable {
 	private List<ShareEntry> shares = new ArrayList<>();
 	
 	private UUID owner;
+  private String world;
 	private String name;
 	private boolean hidden = false;
 	private boolean admin = false;
 
-	public Shop(String name) {
+	public Shop(String name, String world) {
 		this.name = name;
+    this.world = world;
 	}
-	
-	public boolean isAdmin() {
+
+  public String getWorld() {
+    return world;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
+  }
+
+  public boolean isAdmin() {
 		return admin;
 	}
 
@@ -230,6 +240,13 @@ public class Shop implements Serializable {
     return false;
   }
 
+  public void update() {
+    for(UUID id : shoppers) {
+      Inventory inv = getInventory();
+      MISCUtils.getPlayer(id).openInventory(inv);
+    }
+  }
+
 	public Inventory getInventory() {
 		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
 		for(ShopEntry entry : items) {
@@ -292,9 +309,9 @@ public class Shop implements Serializable {
     for(ShareEntry entry : shares) {
       double pay = Math.round((amount * entry.getPercent()) * 100.0) / 100.0;
       split -= pay;
-      AccountUtils.transaction(entry.getShareOwner().toString(), null, pay, TransactionType.MONEY_GIVE, MISCUtils.getWorld(entry.getShareOwner()));
+      AccountUtils.transaction(entry.getShareOwner().toString(), null, pay, TransactionType.MONEY_GIVE, getWorld());
     }
-    AccountUtils.transaction(owner.toString(), null, split, TransactionType.MONEY_GIVE, MISCUtils.getWorld(owner));
+    AccountUtils.transaction(owner.toString(), null, split, TransactionType.MONEY_GIVE, getWorld());
   }
 	
 	public double totalSharePercent() {
@@ -401,28 +418,28 @@ public class Shop implements Serializable {
 	/*
 	 * Static methods
 	 */
-	public static boolean exists(String name) {
-		return TNE.instance.manager.shops.containsKey(name);
+	public static boolean exists(String name, String world) {
+		return TNE.instance.manager.shops.containsKey(name + ":" + world);
 	}
 	
-	public static Shop getShop(String name) {
-		if(exists(name)) {
-			return TNE.instance.manager.shops.get(name);
+	public static Shop getShop(String name, String world) {
+		if(exists(name, world)) {
+			return TNE.instance.manager.shops.get(name + ":" + world);
 		}
 		return null;
 	}
 	
 	public static boolean shares(String name, UUID player) {
-		if(exists(name)) {
-			return getShop(name).shares(player);
+		if(exists(name, MISCUtils.getWorld(player))) {
+			return getShop(name, MISCUtils.getWorld(player)).shares(player);
 		}
 		return false;
 	}
 
 	public static boolean canView(String name, UUID id) {
     if(!TNE.configurations.getBoolean("Core.Shops.Enabled")) return false;
-	  if(exists(name)) {
-      Shop s = getShop(name);
+	  if(exists(name, MISCUtils.getWorld(id))) {
+      Shop s = getShop(name, MISCUtils.getWorld(id));
       if(s.isHidden() && !s.whitelisted(id)) return false;
       if(s.blacklisted(id)) return false;
       if(s.getShoppers().size() >= TNE.configurations.getInt("Core.Shops.MaxShoppers")) return false;
@@ -433,8 +450,8 @@ public class Shop implements Serializable {
   }
 	
 	public static boolean canModify(String name, Player p) {
-		if(exists(name)) {
-			Shop s = getShop(name);
+		if(exists(name, MISCUtils.getWorld(p))) {
+			Shop s = getShop(name, MISCUtils.getWorld(p));
 			return s.getOwner() == null && p.hasPermission("tne.shop.admin") ||
 				   s.getOwner() != null && s.getOwner().equals(MISCUtils.getID(p)) ||
 					 s.isAdmin() && p.hasPermission("tne.shop.admin");

@@ -46,12 +46,12 @@ public class InventoryListener implements Listener {
       inventory = new BankInventory(owner);
     } else if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
       String name = event.getInventory().getTitle().split("]")[1].trim();
-      Shop s = TNE.instance.manager.shops.get(ChatColor.stripColor(name));
+      Shop s = TNE.instance.manager.shops.get(ChatColor.stripColor(name) + ":" + player.getWorld().getName());
 
       MISCUtils.debug(ChatColor.stripColor(name));
-      MISCUtils.debug(s.getName());
       MISCUtils.debug(player.getUniqueId().toString());
       inventory = new ShopInventory(s);
+      s.addShopper(MISCUtils.getID(player));
     }
     inventory.addViewer(viewer);
     inventory.setInventory(event.getInventory());
@@ -80,6 +80,8 @@ public class InventoryListener implements Listener {
   public void onInventoryClick(InventoryClickEvent event) {
     Player player = (Player)event.getWhoClicked();
     int slot = event.getRawSlot();
+
+    MISCUtils.debug("" + slot);
 
     if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
       InventoryViewer viewer = TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player));

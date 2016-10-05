@@ -348,11 +348,11 @@ public class InteractionListener implements Listener {
         sign.setLocation(new SerializableLocation(event.getBlock().getLocation()));
 
         if(sign instanceof ShopSign) {
-        	if(!Shop.exists(event.getLine(1))) {
+        	if(!Shop.exists(event.getLine(1), event.getBlock().getWorld().getName())) {
         		event.setCancelled(true);
             return;
 					}
-          ((ShopSign) sign).setName(event.getLine(1));
+          ((ShopSign) sign).setName(event.getLine(1), event.getBlock().getWorld().getName());
         }
 
         if (!sign.onCreate(event.getPlayer())) {
@@ -431,7 +431,7 @@ public class InteractionListener implements Listener {
           }
 
           if(sign instanceof ShopSign) {
-            if(!((ShopSign)sign).onRightClick(player, b.getLine(1))) {
+            if(!((ShopSign)sign).onRightClick(player, b.getLine(1), b.getWorld().getName())) {
               event.setCancelled(true);
             }
           } else{

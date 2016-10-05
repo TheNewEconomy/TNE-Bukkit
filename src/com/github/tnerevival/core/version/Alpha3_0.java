@@ -46,13 +46,15 @@ public class Alpha3_0 extends Version {
       table = prefix + "_SHOPS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_owner` VARCHAR(36)," +
-          "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
+          "`shop_name` VARCHAR(60) NOT NULL," +
+          "`shop_world` VARCHAR(60) NOT NULL," +
           "`shop_hidden` TINYINT(1)," +
           "`shop_admin` TINYINT(1)," +
           "`shop_items` LONGTEXT," +
           "`shop_blacklist` LONGTEXT," +
           "`shop_whitelist` LONGTEXT," +
           "`shop_shares` LONGTEXT," +
+          "PRIMARY KEY(shop_name, shop_world)" +
           ");");
 
       table = prefix + "_USERS";
@@ -63,8 +65,7 @@ public class Alpha3_0 extends Version {
       mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(uuid)");
 
       table = prefix + "_BANKS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(uuid)");
-      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(world)");
+      mysql().executeUpdate("ALTER TABLE `" + table + "` DROP PRIMARY KEY, ADD PRIMARY KEY (uuid, world)");
 
       table = prefix + "_SIGNS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -149,8 +150,8 @@ public class Alpha3_0 extends Version {
     while(shopsIterator.hasNext()) {
       Map.Entry<String, Article> shopEntry = shopsIterator.next();
 
-      Shop s = new Shop(shopEntry.getKey());
       Entry info = shopEntry.getValue().getEntry("info");
+      Shop s = new Shop(shopEntry.getKey(), (String)info.getData("world"));
 
       s.setOwner(UUID.fromString((String)info.getData("owner")));
       s.setHidden((boolean)info.getData("hidden"));
@@ -164,7 +165,7 @@ public class Alpha3_0 extends Version {
         s.itemsFromString((String) info.getData("items"));
       }
 
-      TNE.instance.manager.shops.put(shopEntry.getKey(), s);
+      TNE.instance.manager.shops.put(shopEntry.getKey() + ":" + s.getWorld(), s);
     }
 
     Iterator<Map.Entry<String, Article>> signsIterator = signs.getArticle().entrySet().iterator();
@@ -251,6 +252,7 @@ public class Alpha3_0 extends Version {
       Entry info = new Entry("info");
 
       info.addData("owner", s.getOwner().toString());
+      info.addData("world", s.getWorld());
       info.addData("hidden", s.isHidden());
       info.addData("admin", s.isAdmin());
       MISCUtils.debug("Items:" + s.itemsToString());
@@ -334,7 +336,7 @@ public class Alpha3_0 extends Version {
       table = prefix + "_SHOPS";
       mysql().executeQuery("SELECT * FROM `" + table + "`;");
       while(mysql().results().next()) {
-        Shop s = new Shop(mysql().results().getString("shop_name"));
+        Shop s = new Shop(mysql().results().getString("shop_name"), mysql().results().getString("shop_world"));
         s.setOwner(UUID.fromString(mysql().results().getString("shop_owner")));
         s.setHidden(SQLDatabase.boolFromDB(mysql().results().getInt("shop_hidden")));
         s.setAdmin(SQLDatabase.boolFromDB(mysql().results().getInt("shop_admin")));
@@ -342,7 +344,7 @@ public class Alpha3_0 extends Version {
         s.listFromString(mysql().results().getString("shop_blacklist"), true);
         s.listFromString(mysql().results().getString("shop_whitelist"), false);
         s.sharesFromString(mysql().results().getString("shop_shares"));
-        TNE.instance.manager.shops.put(s.getName(), s);
+        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
       }
       mysql().close();
 
@@ -428,10 +430,11 @@ public class Alpha3_0 extends Version {
       Shop s = shopEntry.getValue();
 
       table = prefix + "_SHOPS";
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_world, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
           new Object[] {
               shopEntry.getKey(),
+              s.getWorld(),
               s.getOwner(),
               SQLDatabase.boolToDB(s.isHidden()),
               SQLDatabase.boolToDB(s.isAdmin()),
@@ -519,7 +522,7 @@ public class Alpha3_0 extends Version {
       table = prefix + "_SHOPS";
       h2().executeQuery("SELECT * FROM `" + table + "`;");
       while(h2().results().next()) {
-        Shop s = new Shop(h2().results().getString("shop_name"));
+        Shop s = new Shop(h2().results().getString("shop_name"), h2().results().getString("shop_world"));
         s.setOwner(UUID.fromString(h2().results().getString("shop_owner")));
         s.setHidden(SQLDatabase.boolFromDB(h2().results().getInt("shop_hidden")));
         s.setAdmin(SQLDatabase.boolFromDB(h2().results().getInt("shop_admin")));
@@ -527,7 +530,7 @@ public class Alpha3_0 extends Version {
         s.listFromString(h2().results().getString("shop_blacklist"), true);
         s.listFromString(h2().results().getString("shop_whitelist"), false);
         s.sharesFromString(h2().results().getString("shop_shares"));
-        TNE.instance.manager.shops.put(s.getName(), s);
+        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
       }
 
       table = prefix + "_SIGNS";
@@ -615,10 +618,11 @@ public class Alpha3_0 extends Version {
       Shop s = shopEntry.getValue();
 
       table = prefix + "_SHOPS";
-      h2().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_world, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
           new Object[] {
               shopEntry.getKey(),
+              s.getWorld(),
               s.getOwner(),
               SQLDatabase.boolToDB(s.isHidden()),
               SQLDatabase.boolToDB(s.isAdmin()),
@@ -693,20 +697,23 @@ public class Alpha3_0 extends Version {
       table = prefix + "_SHOPS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_owner` VARCHAR(36)," +
-          "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
+          "`shop_world` VARCHAR(50) NOT NULL," +
+          "`shop_name` VARCHAR(60) NOT NULL," +
           "`shop_hidden` TINYINT(1)," +
           "`shop_admin` TINYINT(1)," +
           "`shop_items` LONGTEXT," +
           "`shop_blacklist` LONGTEXT," +
           "`shop_whitelist` LONGTEXT," +
           "`shop_shares` LONGTEXT," +
+          "PRIMARY KEY(shop_name, shop_world)" +
           ");");
 			
 			table = prefix + "_BANKS";
 			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
-					"`world` VARCHAR(50) NOT NULL UNIQUE," +
-					"`bank` LONGTEXT" +
+          "`uuid` VARCHAR(36) NOT NULL," +
+					"`world` VARCHAR(50) NOT NULL," +
+					"`bank` LONGTEXT," +
+          "PRIMARY KEY(uuid, world)" +
 					");");
 
       table = prefix + "_SIGNS";
@@ -757,6 +764,7 @@ public class Alpha3_0 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_owner` VARCHAR(36)," +
           "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
+          "`shop_world` VARCHAR(50) NOT NULL UNIQUE," +
           "`shop_hidden` TINYINT(1)," +
           "`shop_admin` TINYINT(1)," +
           "`shop_items` LONGTEXT," +

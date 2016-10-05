@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,8 +46,8 @@ public class ShopBrowseCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String[] arguments) {
     if(arguments.length >= 1) {
-      if(Shop.exists(arguments[0])) {
-        Shop s = Shop.getShop(arguments[0]);
+      if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+        Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
         ((Player)sender).openInventory(s.getInventory());
         return true;
       }

@@ -6,6 +6,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -46,10 +47,10 @@ public class ShopRemoveCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		if(sender instanceof Player && arguments.length >= 1) {
-			if(Shop.exists(arguments[0])) {
+			if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
 				if(Shop.canModify(arguments[0], (Player)sender)) {
 					Player p = (Player)sender;
-					Shop s = Shop.getShop(arguments[0]);
+					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
 					
 					ItemStack item = p.getInventory().getItemInMainHand().clone();
           int amount = 1;

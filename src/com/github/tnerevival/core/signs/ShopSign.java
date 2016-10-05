@@ -39,17 +39,17 @@ public class ShopSign extends TNESign {
 		return shop.getName();
 	}
 
-	public void setName(String name) {
-		if(TNE.instance.manager.shops.containsKey(name)) {
+	public void setName(String name, String world) {
+		if(TNE.instance.manager.shops.containsKey(name + ":" + world)) {
 		  this.title = ChatColor.GOLD + "[Shop]" + ChatColor.WHITE + name;
-      this.shop = TNE.instance.manager.shops.get(name);
+      this.shop = TNE.instance.manager.shops.get(name + ":" + world);
     }
 	}
 
-	public boolean onRightClick(Player player, String name) {
+	public boolean onRightClick(Player player, String name, String world) {
 	  if(super.onRightClick(player)) {
       if (player.hasPermission(SignType.SHOP.getUsePermission())) {
-        setName(name);
+        setName(name, world);
         inventory = shop.getInventory();
 
         if (Shop.canView(getName(), player.getUniqueId())) {

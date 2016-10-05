@@ -45,7 +45,7 @@ public class ShopCreateCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		if(arguments.length >= 1) {
-			if(!Shop.exists(arguments[0])) {
+			if(!Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
 				UUID owner = null;
 				if(sender instanceof Player) {
 					owner = MISCUtils.getID((Player)sender);
@@ -55,7 +55,7 @@ public class ShopCreateCommand extends TNECommand {
 					owner = null;
 				}
 
-        Shop s = new Shop(arguments[0]);
+        Shop s = new Shop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
 				s.setOwner(owner);
         if(owner == null) {
           s.setAdmin(true);
@@ -64,7 +64,7 @@ public class ShopCreateCommand extends TNECommand {
 				if(arguments.length >= 3 && arguments[2].equalsIgnoreCase("true")) {
 					s.setHidden(true);
 				}
-				TNE.instance.manager.shops.put(s.getName(), s);
+				TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
 				Message created = new Message("Messages.Shop.Created");
 				created.addVariable("$shop", s.getName());
 				getPlayer(sender).sendMessage(created.translate());
