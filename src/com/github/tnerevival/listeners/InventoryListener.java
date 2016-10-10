@@ -6,6 +6,7 @@ import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.GenericInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
+import com.github.tnerevival.core.inventory.impl.ShopItemInventory;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
@@ -13,10 +14,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 
 import java.util.UUID;
 
@@ -29,13 +27,25 @@ public class InventoryListener implements Listener {
 	}
 
 	@EventHandler
+  public void onPrepAnvil(PrepareAnvilEvent event) {
+	  event.getInventory().setItem(2, ShopItemInventory.confirm);
+  }
+
+	@EventHandler
   public void onInventoryOpen(InventoryOpenEvent event) {
     Player player = (Player)event.getPlayer();
     InventoryType type = event.getInventory().getType();
     InventoryViewer viewer = new InventoryViewer(MISCUtils.getID(player), MISCUtils.getWorld(player));
     TNEInventory inventory = new GenericInventory();
 
-    MISCUtils.debug(player.getDisplayName() + " opened an inventory!");
+    MISCUtils.debug(player.getDisplayName() + " opened an inventory!" + event.getInventory().getTitle());
+
+    if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
+      TNE.instance.inventoryManager.getViewing(MISCUtils.getID(player)).onOpen(
+          TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player))
+      );
+      return;
+    }
 
     if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("bank")) {
       String ownerUser = event.getInventory().getTitle().split("]")[1].trim();

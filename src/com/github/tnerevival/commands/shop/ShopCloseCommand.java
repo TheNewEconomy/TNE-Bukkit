@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.shops.ShopEntry;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -48,6 +49,12 @@ public class ShopCloseCommand extends TNECommand {
 			if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
 				if(Shop.canModify(arguments[0], (Player)sender)) {
 					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+
+          if(!s.isAdmin()) {
+            for (ShopEntry entry : s.getItems()) {
+              ((Player) sender).getInventory().addItem(entry.getItem().toItemStack());
+            }
+          }
 					
 					for(UUID shopper : s.getShoppers()) {
 						Player p = MISCUtils.getPlayer(shopper);

@@ -50,7 +50,7 @@ public class ShopSign extends TNESign {
 	  if(super.onRightClick(player)) {
       if (player.hasPermission(SignType.SHOP.getUsePermission())) {
         setName(name, world);
-        inventory = shop.getInventory();
+        inventory = shop.getInventory(Shop.canModify(name, player));
 
         if (Shop.canView(getName(), player.getUniqueId())) {
           if (super.onOpen(player)) {
@@ -65,7 +65,7 @@ public class ShopSign extends TNESign {
 
 	@Override
 	public Inventory getInventory() {
-		return shop.getInventory();
+		return inventory;
 	}
 	
 }

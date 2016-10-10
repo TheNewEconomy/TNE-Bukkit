@@ -6,6 +6,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.ObjectConfiguration;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
+import com.github.tnerevival.core.inventory.impl.ShopItemInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
@@ -130,7 +131,7 @@ public abstract class TNEInventory {
 
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
 
-    if(getBlacklisted().contains(item.getType())) return false;
+    if(item != null && getBlacklisted().contains(item.getType())) return false;
     if(getValidSlots().size() > 0 && !getValidSlots().contains(slot)) return false;
     if(getInvalidSlots().size() > 0 && getInvalidSlots().contains(slot)) return false;
 
@@ -140,7 +141,7 @@ public abstract class TNEInventory {
   public boolean onOpen(InventoryViewer viewer) {
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
 
-    if(!(this instanceof BankInventory) && !(this instanceof ShopInventory)) {
+    if(!(this instanceof BankInventory) && !(this instanceof ShopInventory) && !(this instanceof ShopItemInventory)) {
       String charge = charge(viewer);
       MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
@@ -171,17 +172,19 @@ public abstract class TNEInventory {
    * @param viewer
    */
   public void onClose(InventoryViewer viewer) {
-    Iterator<Map.Entry<SerializableItemStack, InventoryOperation>> it = viewer.getOperations().entrySet().iterator();
-    while(it.hasNext()) {
-      Map.Entry<SerializableItemStack, InventoryOperation> entry = it.next();
+    if(viewer != null) {
+      Iterator<Map.Entry<SerializableItemStack, InventoryOperation>> it = viewer.getOperations().entrySet().iterator();
+      while (it.hasNext()) {
+        Map.Entry<SerializableItemStack, InventoryOperation> entry = it.next();
 
-      switch(entry.getValue()) {
-        case ADD:
-          inventory.addItem(entry.getKey().toItemStack());
-          break;
-        case REMOVE:
-          inventory.removeItem(entry.getKey().toItemStack());
-          break;
+        switch (entry.getValue()) {
+          case ADD:
+            inventory.addItem(entry.getKey().toItemStack());
+            break;
+          case REMOVE:
+            inventory.removeItem(entry.getKey().toItemStack());
+            break;
+        }
       }
     }
 

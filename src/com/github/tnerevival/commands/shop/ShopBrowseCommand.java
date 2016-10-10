@@ -48,7 +48,7 @@ public class ShopBrowseCommand extends TNECommand {
     if(arguments.length >= 1) {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-        ((Player)sender).openInventory(s.getInventory());
+        ((Player)sender).openInventory(s.getInventory(Shop.canModify(s.getName(), getPlayer(sender))));
         return true;
       }
       getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());

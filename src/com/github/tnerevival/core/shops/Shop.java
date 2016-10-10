@@ -242,12 +242,12 @@ public class Shop implements Serializable {
 
   public void update() {
     for(UUID id : shoppers) {
-      Inventory inv = getInventory();
+      Inventory inv = getInventory(Shop.canModify(name, MISCUtils.getPlayer(id)));
       MISCUtils.getPlayer(id).openInventory(inv);
     }
   }
 
-	public Inventory getInventory() {
+	public Inventory getInventory(boolean modifier) {
 		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
 		for(ShopEntry entry : items) {
 		  MISCUtils.debug("" + entry.isBuy());
@@ -256,6 +256,9 @@ public class Shop implements Serializable {
 			List<String> lore = new ArrayList<>();
       String instruction = (entry.isBuy())? "Left Click to buy. Right Click to trade." : "Left Click to sell.";
 			lore.add(ChatColor.WHITE + instruction);
+      if(modifier) {
+        lore.add(ChatColor.WHITE + "Shift Right Click to remove this item.");
+      }
 
       String message = (entry.isBuy())? "Stock: " : "Limit: ";
       String stock = (entry.isUnlimited())? "---" : "" + ((entry.isBuy())? entry.getStock() : (entry.getMaxstock() - entry.getStock()));
