@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.inventory.impl;
 
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
@@ -32,30 +33,49 @@ public class ShopInventory extends GenericInventory {
     ShopEntry i = s.getItem(slot);
     if(type.equals(ClickType.RIGHT)) {
       if(slot < Shop.getSlots() && i != null && i.getTrade() != null  && !i.getTrade().toItemStack().getType().equals(Material.AIR)) {
-        if (!s.getOwner().equals(viewer.getUUID())) {
-
+        if (i.getStock() >= i.getItem().getAmount()) {
+          if (MISCUtils.getItemCount(viewer.getUUID(), i.getTrade().toItemStack()) >= i.getTrade().getAmount()) {
+            s.remove(slot, i.getItem().getAmount());
+            MISCUtils.getPlayer(viewer.getUUID()).getInventory().removeItem(i.getTrade().toItemStack());
+            return false;
+          }
+          Message invalidStock = new Message("Messages.Shop.NotEnough");
+          invalidStock.addVariable("$amount", i.getTrade().getAmount() + "");
+          invalidStock.addVariable("$item", i.getTrade().toItemStack().getType().name());
+          MISCUtils.getPlayer(viewer.getUUID()).sendMessage(invalidStock.translate());
+          return false;
         }
-        //TODO: You cannot buy from your own shop.
+        MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoStock").translate());
         return false;
       }
-      //TODO: There is no trade option for this item.
+      MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoTrade").translate());
       return false;
     } else if(type.equals(ClickType.LEFT)) {
       if(slot < Shop.getSlots()  && i != null) {
         if (i.isBuy()) {
-          if (i.getStock() > 0) {
-            if (AccountUtils.transaction(viewer.getUUID().toString(), null, i.getCost(), TransactionType.MONEY_INQUIRY, s.getWorld())) {
-              AccountUtils.transaction(viewer.getUUID().toString(), null, i.getCost(), TransactionType.MONEY_REMOVE, s.getWorld());
-              s.handlePayment(i.getCost());
-              s.remove(slot, i.getItem().getAmount());
-              MISCUtils.getPlayer(viewer.getUUID()).getInventory().addItem(i.getItem().toItemStack());
-              s.update();
-              //TODO: successful!
+          if(i.getCost() > 0.0 || i.getCost() <= 0.0 && i.getTrade() == null || i.getCost() <= 0.0 && i.getTrade().toItemStack().getType().equals(Material.AIR)) {
+            if (i.getStock() >= i.getItem().getAmount()) {
+              if (AccountUtils.transaction(viewer.getUUID().toString(), null, i.getCost(), TransactionType.MONEY_INQUIRY, s.getWorld())) {
+                AccountUtils.transaction(viewer.getUUID().toString(), null, i.getCost(), TransactionType.MONEY_REMOVE, s.getWorld());
+                s.handlePayment(i.getCost());
+                s.remove(slot, i.getItem().getAmount());
+                MISCUtils.getPlayer(viewer.getUUID()).getInventory().addItem(i.getItem().toItemStack());
+                s.update();
+                return false;
+              }
+              Message insufficient = new Message("Messages.Money.Insufficient");
+
+              insufficient.addVariable("$amount", MISCUtils.formatBalance(
+                  MISCUtils.getWorld(viewer.getUUID()),
+                  i.getCost()
+              ));
+              MISCUtils.getPlayer(viewer.getUUID()).sendMessage(insufficient.translate());
               return false;
             }
-            //TODO: Insufficient funds.
+            MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoStock").translate());
             return false;
           }
+          MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoBuy").translate());
           return false;
         } else {
           if (i.getMaxstock() - i.getStock() > 0) {
@@ -65,15 +85,18 @@ public class ShopInventory extends GenericInventory {
                 s.remove(slot, i.getItem().getAmount());
                 MISCUtils.getPlayer(viewer.getUUID()).getInventory().removeItem(i.getItem().toItemStack());
                 s.update();
-                //TODO: Successfully sold item!
+                return false;
               }
-              //TODO: Shop does not have enough funds.
+              MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.FundsLack").translate());
               return false;
             }
-            //TODO: Not enough of $item.
+            Message invalidStock = new Message("Messages.Shop.NotEnough");
+            invalidStock.addVariable("$amount", i.getItem().getAmount() + "");
+            invalidStock.addVariable("$item", i.getItem().toItemStack().getType().name());
+            MISCUtils.getPlayer(viewer.getUUID()).sendMessage(invalidStock.translate());
             return false;
           }
-          //Shop has reached buy limit.
+          MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.BuyLimit").translate());
           return false;
         }
       }
@@ -86,10 +109,9 @@ public class ShopInventory extends GenericInventory {
           MISCUtils.getPlayer(viewer.getUUID()).getInventory().addItem(temp);
         }
         s.update();
-        //TODO: Successful!
         return false;
       }
-      //TODO: You don't have permission to do that.
+      MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.Permission").translate());
       return false;
     } /*else if(type.equals(ClickType.SHIFT_LEFT)) {
       if(Shop.canModify(s.getName(), MISCUtils.getPlayer(viewer.getUUID()))) {
@@ -106,8 +128,9 @@ public class ShopInventory extends GenericInventory {
             return false;
           }
         }
+        return false;
       }
-      //TODO: You don't have permission to do that.
+      MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.Permission").translate());
       return false;
     }*/
     return false;

@@ -264,9 +264,10 @@ public class Shop implements Serializable {
       String stock = (entry.isUnlimited())? "---" : "" + ((entry.isBuy())? entry.getStock() : (entry.getMaxstock() - entry.getStock()));
       lore.add(ChatColor.WHITE + message + ChatColor.GOLD + stock);
 
-			if(entry.getCost() > 0.0) {
-			  String cost = ChatColor.WHITE + ((entry.isBuy())? "Cost:" : "Receive:" );
-				lore.add(cost + " " + ChatColor.GOLD + entry.getCost());
+			if(entry.getCost() > 0.0 || entry.getCost() <= 0.0 && entry.getTrade() == null ||
+         entry.getCost() <= 0.0 && entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
+        String cost = ChatColor.WHITE + ((entry.isBuy()) ? "Cost:" : "Receive:");
+        lore.add(cost + " " + ChatColor.GOLD + entry.getCost());
 			}
 			
 			if(entry.getTrade() != null && !entry.getTrade().toItemStack().getType().equals(Material.AIR)) {

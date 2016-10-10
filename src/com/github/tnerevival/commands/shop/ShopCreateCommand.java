@@ -83,7 +83,7 @@ public class ShopCreateCommand extends TNECommand {
 
 				  Message insufficient = new Message("Messages.Money.Insufficient");
 
-          insufficient.addVariable("$amound", MISCUtils.formatBalance(
+          insufficient.addVariable("$amount", MISCUtils.formatBalance(
               MISCUtils.getWorld(getPlayer(sender)),
               TNE.configurations.getDouble("Core.Shops.Cost")
           ));

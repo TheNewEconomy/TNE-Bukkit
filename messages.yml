@@ -88,6 +88,11 @@ Messages:
        SelfPay: <red>You can't pay yourself!
        
     Shop:
+       BuyLimit: <red>Shop has reached its buy limit for this item.
+       NoStock: <red>The item you wish to purchase is currently out of stock.
+       NoTrade: <red>This shop currently no trade option for that item.
+       NoBuy: <red>This shop currently has no buy option for that item.
+       FundsLack: <red>This shop is lacking funds to purchase any more items.
        Shoppers: <red>This shop currently has the maximum number of shoppers!
        ShareNone: <red>Shop profit sharing is diabled in this world!
        ShareMax: <red>You have the max number of players profit sharing for this shop!
