@@ -1,21 +1,25 @@
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.TNE;
+
 public enum SignType {
 	
-	UNKNOWN("unknown", "", ""),
-	BANK("bank", "tne.place.bank", "tne.use.bank"),
-	BUY("buy", "tne.place.buy", "tne.use.buy"),
-	SELL("sell", "tne.place.sell", "tne.use.sell"),
-	SHOP("shop", "tne.place.shop", "tne.use.shop");
+	UNKNOWN("unknown", "", "", ""),
+	BANK("bank", "tne.place.bank", "tne.use.bank", "Core.Signs.Bank"),
+	BUY("buy", "tne.place.buy", "tne.use.buy", "Core.Signs.Buy"),
+	SELL("sell", "tne.place.sell", "tne.use.sell", "Core.Signs.Sell"),
+	SHOP("shop", "tne.place.shop", "tne.use.shop", "Core.Signs.Shop");
 	
 	private String name;
 	private String placePermission;
 	private String usePermission;
-	
-	SignType(String name, String placePermission, String usePermission) {
+	private String configuration;
+
+	SignType(String name, String placePermission, String usePermission, String configuration) {
 		this.name = name;
 		this.placePermission = placePermission;
 		this.usePermission = usePermission;
+		this.configuration = configuration;
 	}
 	
 	public static SignType fromName(String name) {
@@ -50,4 +54,16 @@ public enum SignType {
 	public void setUsePermission(String usePermission) {
 		this.usePermission = usePermission;
 	}
+
+	public Boolean enabled() {
+	  return TNE.instance.configurations.getBoolean(configuration + ".Enabled");
+  }
+
+  public Double place() {
+    return TNE.instance.configurations.getDouble(configuration + ".Place");
+  }
+
+  public Double use() {
+    return TNE.instance.configurations.getDouble(configuration + ".Use");
+  }
 }

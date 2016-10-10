@@ -60,6 +60,11 @@ public class ShopCommand extends TNECommand {
 			help(sender);
 			return false;
 		}
+
+		if(!TNE.configurations.getBoolean("Core.Shops.Enabled")) {
+		  sender.sendMessage(new Message("Messages.Shop.Disabled").translate());
+      return false;
+    }
 		
 		TNECommand sub = FindSub(arguments[0]);
 		if(sub == null) {

@@ -84,14 +84,14 @@ Core:
         Cost: 10.00
 
         #The max amount of shops a single player can own.
-        Amount: 5
+        Max: 5
 
         #The number of rows a shop has.( minimum is 1, maximum is 6)
         #1 row = 9 slots
         Rows: 3
 
         #The max amount of people that can browse a single shop at a time.
-        MaxShoppers: 10
+        Shoppers: 10
 
         #All configurations relating to shop money sharing.
         Shares:
@@ -100,7 +100,7 @@ Core:
             Enabled: true
 
             #The max amount of people that can share money for a shop.
-            MaxSharers: 3
+            Max: 3
 
     #All configurations relating to the TNE Sign System
     Signs:
@@ -112,7 +112,7 @@ Core:
             Enabled: false
 
             #The cost to make a bank sign, if the player has valid permissions.
-            Cost: 20.0
+            Place: 20.0
 
             #The cost to use a bank sign, if the player has valid permissions.
             Use: 20.0
@@ -124,47 +124,16 @@ Core:
             Enabled: false
 
             #The cost to make a shop sign, if the player has valid permissions.
-            Cost: 20.0
+            Place: 20.0
 
             #The cost to use a shop sign, if the player has valid permissions.
             Use: 20.0
 
-        #All configurations relating to sell signs.
-        Sell:
-
-            #Whether or not sell signs are enabled.
-            Enabled: false
-
-            #The cost to make a sell sign, if the player has valid permissions.
-            Cost: 20.0
-
-            #The maximum amount of sell signs a player can make.
-            Max: 10
-
-        #All configurations relating to buy signs.
-        Buy:
-            #Whether or not buy signs are enabled.
-            Enabled: false
-
-            #The cost to make a buy sign, if the player has valid permissions.
-            Cost: 20.0
-
-            #The maximum amount of buy signs a player can make.
-            Max: 10
-            
     #All configurations relating to player death.
     Death:
-        
+
         #Whether or not players who die lose all their money
         Lose: false
-        
-        #Currently doesn't work
-        #Whether or not players who have killed other players have access to their bank for the specified interval
-        Robbing: false
-        
-        #Currently doesn't work
-        #The amount of time players have access to the other player's bank if Robbing is enabled(in seconds)
-        RobbingInterval: 600
 
 
     #All configurations relating to banks.

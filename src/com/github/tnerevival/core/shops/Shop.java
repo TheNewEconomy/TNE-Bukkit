@@ -248,7 +248,7 @@ public class Shop implements Serializable {
   }
 
 	public Inventory getInventory(boolean modifier) {
-		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
+		Inventory inventory = Bukkit.createInventory(null, getSlots(), ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
 		for(ShopEntry entry : items) {
 		  MISCUtils.debug("" + entry.isBuy());
 		  String prefix = ChatColor.GOLD + ((entry.isBuy())? "[Buy]" : "[Sell]") + ChatColor.WHITE;
@@ -445,7 +445,6 @@ public class Shop implements Serializable {
       Shop s = getShop(name, MISCUtils.getWorld(id));
       if(s.isHidden() && !s.whitelisted(id)) return false;
       if(s.blacklisted(id)) return false;
-      if(s.getShoppers().size() >= TNE.configurations.getInt("Core.Shops.MaxShoppers")) return false;
 
       return true;
     }
@@ -471,4 +470,22 @@ public class Shop implements Serializable {
 		}
 		return false;
 	}
+
+	public static int getSlots() {
+	  int amount = 6;
+    int config = TNE.configurations.getInt("Core.Shops.Rows");
+    if(config >= 1 && config <= 6) amount = config;
+
+    return amount * 9;
+  }
+
+	public static int amount(UUID id) {
+	  int amount = 1;
+	  for(Shop s : TNE.instance.manager.shops.values()) {
+	    if(!s.isAdmin() && s.getOwner().equals(id)) {
+	      amount++;
+      }
+    }
+    return amount;
+  }
 }

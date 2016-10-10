@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
 import org.bukkit.ChatColor;
@@ -51,6 +52,13 @@ public class ShopSign extends TNESign {
       if (player.hasPermission(SignType.SHOP.getUsePermission())) {
         setName(name, world);
         inventory = shop.getInventory(Shop.canModify(name, player));
+
+
+
+				if(shop.getShoppers() != null && shop.getShoppers().size() >= TNE.configurations.getInt("Core.Shops.Shoppers")) {
+					player.sendMessage(new Message("Messages.Shop.Shoppers").translate());
+					return false;
+				}
 
         if (Shop.canView(getName(), player.getUniqueId())) {
           if (super.onOpen(player)) {

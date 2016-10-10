@@ -4,6 +4,8 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -46,6 +48,11 @@ public class ShopCreateCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		if(arguments.length >= 1) {
 			if(!Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+				if(arguments[0].length() > 16) {
+          getPlayer(sender).sendMessage(new Message("Messages.Shop.Long").translate());
+					return false;
+				}
+
 				UUID owner = null;
 				if(sender instanceof Player) {
 					owner = MISCUtils.getID((Player)sender);
@@ -60,10 +67,33 @@ public class ShopCreateCommand extends TNECommand {
         if(owner == null) {
           s.setAdmin(true);
         }
+
+        if(!s.isAdmin() && Shop.amount(s.getOwner()) >= TNE.configurations.getInt("Core.Shops.Max")) {
+          getPlayer(sender).sendMessage(new Message("Messages.Shop.Max").translate());
+          return false;
+        }
 				
 				if(arguments.length >= 3 && arguments[2].equalsIgnoreCase("true")) {
 					s.setHidden(true);
 				}
+
+				if(!s.isAdmin() && !AccountUtils.transaction(s.getOwner().toString(), null,
+            TNE.configurations.getDouble("Core.Shops.Cost"),
+            TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(getPlayer(sender)))) {
+
+				  Message insufficient = new Message("Messages.Money.Insufficient");
+
+          insufficient.addVariable("$amound", MISCUtils.formatBalance(
+              MISCUtils.getWorld(getPlayer(sender)),
+              TNE.configurations.getDouble("Core.Shops.Cost")
+          ));
+				  return false;
+        }
+        if(!s.isAdmin()) {
+          AccountUtils.transaction(s.getOwner().toString(), null,
+              TNE.configurations.getDouble("Core.Shops.Cost"),
+              TransactionType.MONEY_REMOVE, MISCUtils.getWorld(getPlayer(sender)));
+        }
 				TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
 				Message created = new Message("Messages.Shop.Created");
 				created.addVariable("$shop", s.getName());

@@ -88,6 +88,12 @@ Messages:
        SelfPay: <red>You can't pay yourself!
        
     Shop:
+       Shoppers: <red>This shop currently has the maximum number of shoppers!
+       ShareNone: <red>Shop profit sharing is diabled in this world!
+       ShareMax: <red>You have the max number of players profit sharing for this shop!
+       Disabled: <red>Shops are disabled in this world!
+       Max: <red>You already own the maximum number of shops allowed!
+       Long: <red>Shop names must be no larger than 16 characters long!
        None: <red>A shop with that name doesn't exist!
        Already: <red>A shop with that name already exists!
        Created: <white> Successfully created shop "$shop".
@@ -138,6 +144,9 @@ Messages:
        Invalid: <red>I'm sorry, but you don't have access to the bank of $name!
        
     Objects:
+       SignDisabled: <red>This type of sign has been disabled for this world!
+       SignUse: <white>You were charged "<gold>$amount<white>" for using this sign.
+       SignPlace: <white>You were charged "<gold>$amount<white>" for placing this sign.
        CraftingCharged: <white> You were charged <gold>$amount<white> for crafting $stack_size "$item".
        CraftingPaid: <white> You were given <gold>$amount<white> for crafting $stack_size "$item".
        SmeltingCharged: <white> You were charged <gold>$amount<white> for smelting $stack_size "$item".

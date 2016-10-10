@@ -31,7 +31,7 @@ public class ShopInventory extends GenericInventory {
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
     ShopEntry i = s.getItem(slot);
     if(type.equals(ClickType.RIGHT)) {
-      if(slot < 27 && i != null && i.getTrade() != null  && !i.getTrade().toItemStack().getType().equals(Material.AIR)) {
+      if(slot < Shop.getSlots() && i != null && i.getTrade() != null  && !i.getTrade().toItemStack().getType().equals(Material.AIR)) {
         if (!s.getOwner().equals(viewer.getUUID())) {
 
         }
@@ -41,7 +41,7 @@ public class ShopInventory extends GenericInventory {
       //TODO: There is no trade option for this item.
       return false;
     } else if(type.equals(ClickType.LEFT)) {
-      if(slot < 27  && i != null) {
+      if(slot < Shop.getSlots()  && i != null) {
         if (i.isBuy()) {
           if (i.getStock() > 0) {
             if (AccountUtils.transaction(viewer.getUUID().toString(), null, i.getCost(), TransactionType.MONEY_INQUIRY, s.getWorld())) {
@@ -78,7 +78,7 @@ public class ShopInventory extends GenericInventory {
         }
       }
     } else if(type.equals(ClickType.SHIFT_RIGHT)) {
-      if(slot < 27 && Shop.canModify(s.getName(), MISCUtils.getPlayer(viewer.getUUID())) && i != null) {
+      if(slot < Shop.getSlots() && Shop.canModify(s.getName(), MISCUtils.getPlayer(viewer.getUUID())) && i != null) {
         s.removeItem(i.getItem().toItemStack(), i.getCost(), i.isBuy(), i.getTrade().toItemStack());
         if(i.getStock() > 0) {
           ItemStack temp = i.getItem().toItemStack();

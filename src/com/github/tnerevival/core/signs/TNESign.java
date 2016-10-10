@@ -1,8 +1,11 @@
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.event.sign.SignEventAction;
 import com.github.tnerevival.core.event.sign.TNESignEvent;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableLocation;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,6 +33,13 @@ public abstract class TNESign {
     if(!player.hasPermission(type.getPlacePermission())) {
       event.setCancelled(true);
     }
+
+    if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, type.place(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+      Message insufficient = new Message("Messages.Money.Insufficient");
+      insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), type.place()));
+      event.setCancelled(true);
+    }
+
     Bukkit.getServer().getPluginManager().callEvent(event);
     return (!event.isCancelled());
   }
@@ -69,6 +79,18 @@ public abstract class TNESign {
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
     }
+
+    if(!type.enabled()) {
+      player.sendMessage(new Message("Messages.Objects.SignDisabled").translate());
+      event.setCancelled(true);
+    }
+
+    if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, type.use(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+      Message insufficient = new Message("Messages.Money.Insufficient");
+      insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), type.use()));
+      event.setCancelled(true);
+    }
+
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		return (!event.isCancelled());
 	}

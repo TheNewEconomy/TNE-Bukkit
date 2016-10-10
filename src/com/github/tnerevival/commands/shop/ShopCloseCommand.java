@@ -9,6 +9,7 @@ import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
@@ -52,7 +53,9 @@ public class ShopCloseCommand extends TNECommand {
 
           if(!s.isAdmin()) {
             for (ShopEntry entry : s.getItems()) {
-              ((Player) sender).getInventory().addItem(entry.getItem().toItemStack());
+            	ItemStack stack = entry.getItem().toItemStack();
+							stack.setAmount(entry.getStock());
+              ((Player) sender).getInventory().addItem(stack);
             }
           }
 					

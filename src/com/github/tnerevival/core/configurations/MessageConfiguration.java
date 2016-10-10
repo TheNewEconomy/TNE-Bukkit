@@ -40,6 +40,12 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");
 		configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
 
+		configurations.put("Messages.Shop.Shoppers", "<red>This shop currently has the maximum number of shoppers!");
+		configurations.put("Messages.Shop.ShareNone", "<red>Shop profit sharing is diabled in this world!");
+		configurations.put("Messages.Shop.ShareMax", "<red>You have the max number of players profit sharing for this shop!");
+		configurations.put("Messages.Shop.Disabled", "<red>Shops are disabled in this world!");
+		configurations.put("Messages.Shop.Max", "<red>You already own the maximum number of shops allowed!");
+		configurations.put("Messages.Shop.Long", "<red>Shop names must be no larger than 16 characters long!");
 		configurations.put("Messages.Shop.None", "<red>A shop with that name doesn't exist!");
 		configurations.put("Messages.Shop.Already", "<red>A shop with that name already exists!");
 		configurations.put("Messages.Shop.Created", "<white> Successfully created shop \"$shop\".");
@@ -86,6 +92,8 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Bank.Withdraw", "<white>You have withdrawn <gold>$amount<gold> from the bank of $name.");
 		configurations.put("Messages.Bank.Cost", "<white>A bank is currently <gold>$amount<white>.");
 		configurations.put("Messages.Bank.Invalid", "<red>I'm sorry, but you don't have access to $owner's bank!");
+
+		configurations.put("Messages.Objects.SignDisabled", "<red>This type of sign has been disabled for this world!");
 		configurations.put("Messages.Objects.CraftingCharged", "<white> You were charged <gold>$amount<white> for crafting $stack_size \"$item\".");
 		configurations.put("Messages.Objects.CraftingPaid", "<white> You were given <gold>$amount<white> for crafting $stack_size \"$item\".");
 		configurations.put("Messages.Objects.SmeltingCharged", "<white> You were charged <gold>$amount<white> for smelting $stack_size \"$item\".");
@@ -98,9 +106,11 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Objects.PlacingPaid", "<white> You were given <gold>$amount<white> for placing one \"$name\" block.");
 		configurations.put("Messages.Objects.ItemUseCharged", "<white> You were charged <gold>$amount<white> for using item \"$name\".");
 		configurations.put("Messages.Objects.ItemUsePaid", "<white> You were given <gold>$amount<white> for using item \"$name\".");
+
 		configurations.put("Messages.Mob.Killed", "<white>You received $reward <white>for killing a <green>$mob<white>.");
 		configurations.put("Messages.Mob.KilledVowel", "<white>You received $reward <white>for killing an <green>$mob<white>.");
 		configurations.put("Messages.Mob.NPCTag", "<red>I'm sorry, but you cannot use a name tag on a villager");
+
 		configurations.put("Messages.World.Change", "<white>You have been charged <gold> $amount<white> for changing worlds.");
 		configurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
 		

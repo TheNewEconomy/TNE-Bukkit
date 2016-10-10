@@ -51,6 +51,16 @@ public class ShopShareCommand extends TNECommand {
 					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
 					UUID target = MISCUtils.getID(arguments[1]);
 					if(!s.isAdmin()) {
+						if(!TNE.configurations.getBoolean("Core.Shops.Shares.Enabled")) {
+						  getPlayer(sender).sendMessage(new Message("Messages.Shop.ShareNone").translate());
+              return false;
+            }
+
+            if(s.getShares().size() >= TNE.configurations.getInt("Core.Shops.Shares.Max")) {
+              getPlayer(sender).sendMessage(new Message("Messages.Shop.ShareMax").translate());
+              return false;
+            }
+
 						if(Shop.shares(arguments[0], target)) {
 							s.removeShares(target);
 
@@ -59,8 +69,7 @@ public class ShopShareCommand extends TNECommand {
 							getPlayer(sender).sendMessage(hidden.translate());
 							return true;
 						} else {
-							//TODO: Default sharing percent configuration.
-							double percent = (arguments.length >= 3)? Double.parseDouble(arguments[2]) : 0.01;
+							double percent = (arguments.length >= 3)? Double.parseDouble(arguments[2]) : 0.1;
 							
 							if(percent <= s.canBeShared()) {
 								ShareEntry entry = new ShareEntry(target, percent);
