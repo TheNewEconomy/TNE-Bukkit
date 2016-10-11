@@ -28,6 +28,9 @@ public class SaveManager {
 	
 	public SaveManager() {
 		versionInstance = versions.get(currentSaveVersion);
+
+
+
 		if(firstRun()) {
 			initiate();
 		} else {
@@ -49,8 +52,11 @@ public class SaveManager {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				connection = DriverManager.getConnection("jdbc:mysql://" + versionInstance.mysqlHost + ":" + versionInstance.mysqlPort + "/" + versionInstance.mysqlDatabase, versionInstance.mysqlUser, versionInstance.mysqlPassword);
+
+
         result = connection.getMetaData().getTables(null, null, table, null);
-        return result.next();
+
+        return !result.next();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

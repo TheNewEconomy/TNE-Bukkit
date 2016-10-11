@@ -43,7 +43,7 @@ public class ShopAddCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)][stock:#/unlimited] [gold:#] [trade:name:amount(default 1)]  - Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.");
+		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]  - Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.");
 	}
 	
 	@Override
@@ -87,6 +87,8 @@ public class ShopAddCommand extends TNECommand {
                     trade = new ItemStack(mat);
                     try {
                       Integer tradeAmount = (split.length == 3)? Integer.parseInt(split[2]) : 1;
+                      Short tradeDamage = (split.length == 4)? Short.parseShort(split[3]) : 1;
+                      trade.setDurability(tradeDamage);
                       trade.setAmount(tradeAmount);
                     } catch(NumberFormatException e) {
                       getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidTradeAmount").translate());

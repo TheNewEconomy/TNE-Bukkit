@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.utils.MISCUtils;
 
 public enum SignType {
 	
@@ -56,14 +57,16 @@ public enum SignType {
 	}
 
 	public Boolean enabled() {
-	  return TNE.instance.configurations.getBoolean(configuration + ".Enabled");
+	  return TNE.configurations.getBoolean(configuration + ".Enabled");
   }
 
   public Double place() {
-    return TNE.instance.configurations.getDouble(configuration + ".Place");
+    MISCUtils.debug(configuration + ".Place");
+    MISCUtils.debug(TNE.configurations.getDouble(configuration + ".Place") + "");
+    return TNE.configurations.getDouble(configuration + ".Place");
   }
 
   public Double use() {
-    return TNE.instance.configurations.getDouble(configuration + ".Use");
+    return TNE.configurations.getDouble(configuration + ".Use");
   }
 }

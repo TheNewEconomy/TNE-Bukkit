@@ -36,7 +36,9 @@ public class ShopInventory extends GenericInventory {
         if (i.getStock() >= i.getItem().getAmount()) {
           if (MISCUtils.getItemCount(viewer.getUUID(), i.getTrade().toItemStack()) >= i.getTrade().getAmount()) {
             s.remove(slot, i.getItem().getAmount());
+            MISCUtils.getPlayer(viewer.getUUID()).getInventory().addItem(i.getItem().toItemStack());
             MISCUtils.getPlayer(viewer.getUUID()).getInventory().removeItem(i.getTrade().toItemStack());
+            s.update();
             return false;
           }
           Message invalidStock = new Message("Messages.Shop.NotEnough");

@@ -429,20 +429,21 @@ public class Alpha3_0 extends Version {
 
       Shop s = shopEntry.getValue();
 
+      MISCUtils.debug(s.getOwner().toString());
       table = prefix + "_SHOPS";
       mysql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_world, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
           new Object[] {
-              shopEntry.getKey(),
+              s.getName(),
               s.getWorld(),
-              s.getOwner(),
+              s.getOwner().toString(),
               SQLDatabase.boolToDB(s.isHidden()),
               SQLDatabase.boolToDB(s.isAdmin()),
               s.itemsToString(),
               s.listToString(true),
               s.listToString(false),
               s.sharesToString(),
-              s.getOwner(),
+              s.getOwner().toString(),
               SQLDatabase.boolToDB(s.isHidden()),
               SQLDatabase.boolToDB(s.isAdmin()),
               s.itemsToString(),
@@ -691,7 +692,7 @@ public class Alpha3_0 extends Version {
           "`balances` LONGTEXT," +
           "`joinedDate` VARCHAR(60)," +
           "`accountnumber` INTEGER," +
-          "`accountstatus` VARCHAR(60)," +
+          "`accountstatus` VARCHAR(60)" +
           ");");
 
       table = prefix + "_SHOPS";
@@ -720,7 +721,7 @@ public class Alpha3_0 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
                    ");");
 			mysql().close();
@@ -757,26 +758,26 @@ public class Alpha3_0 extends Version {
           "`balances` LONGTEXT," +
           "`joinedDate` VARCHAR(60)," +
           "`accountnumber` INTEGER," +
-          "`accountstatus` VARCHAR(60)," +
+          "`accountstatus` VARCHAR(60)" +
           ");");
 
       table = prefix + "_SHOPS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_owner` VARCHAR(36)," +
-          "`shop_name` VARCHAR(60) NOT NULL UNIQUE," +
-          "`shop_world` VARCHAR(50) NOT NULL UNIQUE," +
+          "`shop_name` VARCHAR(60) NOT NULL PRIMARY KEY," +
+          "`shop_world` VARCHAR(50) NOT NULL PRIMARY KEY," +
           "`shop_hidden` TINYINT(1)," +
           "`shop_admin` TINYINT(1)," +
           "`shop_items` LONGTEXT," +
           "`shop_blacklist` LONGTEXT," +
           "`shop_whitelist` LONGTEXT," +
-          "`shop_shares` LONGTEXT," +
+          "`shop_shares` LONGTEXT" +
           ");");
 
       table = prefix + "_BANKS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
-          "`world` VARCHAR(50) NOT NULL UNIQUE," +
+          "`uuid` VARCHAR(36) NOT NULL PRIMARY KEY," +
+          "`world` VARCHAR(50) NOT NULL PRIMARY KEY," +
           "`bank` LONGTEXT" +
           ");");
 
@@ -784,7 +785,7 @@ public class Alpha3_0 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
       h2().close();

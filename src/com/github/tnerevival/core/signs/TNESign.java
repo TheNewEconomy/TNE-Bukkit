@@ -34,10 +34,12 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, type.place(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-      Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), type.place()));
-      event.setCancelled(true);
+    if(type.place() != null && type.place() > 0.0) {
+      if (!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, type.place(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+        Message insufficient = new Message("Messages.Money.Insufficient");
+        insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), type.place()));
+        event.setCancelled(true);
+      }
     }
 
     Bukkit.getServer().getPluginManager().callEvent(event);

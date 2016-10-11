@@ -40,6 +40,11 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");
 		configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
 
+		configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
+		configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");
+		configurations.put("Messages.Shop.NoTrade", "<red>This shop currently no trade option for that item.");
+		configurations.put("Messages.Shop.NoBuy", "<red>This shop currently has no buy option for that item.");
+		configurations.put("Messages.Shop.FundsLack", "<red>This shop is lacking funds to purchase any more items.");
 		configurations.put("Messages.Shop.Shoppers", "<red>This shop currently has the maximum number of shoppers!");
 		configurations.put("Messages.Shop.ShareNone", "<red>Shop profit sharing is diabled in this world!");
 		configurations.put("Messages.Shop.ShareMax", "<red>You have the max number of players profit sharing for this shop!");
@@ -94,6 +99,8 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Bank.Invalid", "<red>I'm sorry, but you don't have access to $owner's bank!");
 
 		configurations.put("Messages.Objects.SignDisabled", "<red>This type of sign has been disabled for this world!");
+		configurations.put("Messages.Objects.SignUse", "<white>You were charged \"<gold>$amount<white>\" for using this sign.");
+		configurations.put("Messages.Objects.SignPlace", "<white>You were charged \"<gold>$amount<white>\" for placing this sign.");
 		configurations.put("Messages.Objects.CraftingCharged", "<white> You were charged <gold>$amount<white> for crafting $stack_size \"$item\".");
 		configurations.put("Messages.Objects.CraftingPaid", "<white> You were given <gold>$amount<white> for crafting $stack_size \"$item\".");
 		configurations.put("Messages.Objects.SmeltingCharged", "<white> You were charged <gold>$amount<white> for smelting $stack_size \"$item\".");

@@ -358,10 +358,14 @@ public class InteractionListener implements Listener {
         if (!sign.onCreate(event.getPlayer())) {
           event.setCancelled(true);
         } else {
-        	AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, sign.getType().place(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
-          Message charged = new Message("Messages.Objects.SignPlace");
-          charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), sign.getType().place()));
-          event.getPlayer().sendMessage(charged.translate());
+          MISCUtils.debug("Interaction " + sign.getType().place());
+          MISCUtils.debug("Interaction " + sign.getType().name());
+          if(sign.getType().place() != null && sign.getType().place() > 0.0) {
+            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, sign.getType().place(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
+            Message charged = new Message("Messages.Objects.SignPlace");
+            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), sign.getType().place()));
+            event.getPlayer().sendMessage(charged.translate());
+          }
           TNE.instance.manager.signs.put(sign.getLocation(), sign);
         }
       }

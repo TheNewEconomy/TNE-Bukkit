@@ -42,7 +42,7 @@ public class TNE extends JavaPlugin {
 	public TNEAPI api = null;
 	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
-	public static final boolean debugMode = true;
+	public static final boolean debugMode = false;
 	
 	// Files & Custom Configuration Files
 	public File mobs;
@@ -108,7 +108,6 @@ public class TNE extends JavaPlugin {
 		if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
 			invWorker.runTaskTimer(this, 20, 20);
 		}
-		
 
 		//Listeners
 		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
