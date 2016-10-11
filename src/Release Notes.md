@@ -1,7 +1,14 @@
+Alpha 3.1
+============
+Feature Set:
+------------
+
+* Bug fixes for Alpha 3.0
+
 Alpha 3.0
 ============
 Feature Set:
-----------
+------------
 
 * Add support for H2 in place of SQLite
   * Your SQLite database will be automatically converted for you.
@@ -46,19 +53,3 @@ Possible Features:
 * Ability to change configurations via command
 * Ability to create Auctions(?)
 * Ability to have server, and world-wide lotteries
-
-Needs Tested:
--------------
-* Account purging
-* Inventory & Command Credits
-* Shops
-* Administrative commands
-* Disabling UUID support
-* Shared economy data for worlds
-* Ability to create accounts via command
-
-
-Alpha 3.1
-================
-
-* Bug fixes for Alpha 3.0

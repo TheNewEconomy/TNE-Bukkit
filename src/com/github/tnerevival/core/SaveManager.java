@@ -17,20 +17,17 @@ public class SaveManager {
 	static {
 		versions = new HashMap<>();
 		versions.put(2.2, new Alpha2_2());
-		versions.put(3.0, new Alpha3_0());
+		versions.put(3.1, new Alpha3_0());
 	}
 	
 	Version versionInstance;
-	Double currentSaveVersion = 3.0;
+	Double currentSaveVersion = 3.1;
 	Double saveVersion = 0.0;
 	String type = TNE.configurations.getString("Core.Database.Type");
 	File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
 	
 	public SaveManager() {
 		versionInstance = versions.get(currentSaveVersion);
-
-
-
 		if(firstRun()) {
 			initiate();
 		} else {
