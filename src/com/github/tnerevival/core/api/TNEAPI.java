@@ -202,19 +202,40 @@ public class TNEAPI {
   }
 
   public Double getDouble(String configuration) {
-    return (Double)getConfiguration(configuration, TNE.instance.defaultWorld);
+  	String world = TNE.instance.defaultWorld;
+    String value = getConfiguration(configuration, world, "").toString();
+    String replaced = value.replace(getString("Core.Currency.Decimal", world, ""), ".");
+    MISCUtils.debug(getString("Core.Currency.Decimal", world, ""));
+    MISCUtils.debug(value);
+    MISCUtils.debug(replaced);
+		return Double.valueOf(replaced);
   }
 
   public Double getDouble(String configuration, String world) {
-    return (Double)getConfiguration(configuration, world, "");
+    String value = getConfiguration(configuration, world, "").toString();
+    String replaced = value.replace(getString("Core.Currency.Decimal", world, ""), ".");
+    MISCUtils.debug(getString("Core.Currency.Decimal", world, ""));
+    MISCUtils.debug(value);
+    MISCUtils.debug(replaced);
+		return Double.valueOf(replaced);
   }
 
   public Double getDouble(String configuration, String world, UUID uuid) {
-    return (Double)getConfiguration(configuration, world, uuid.toString());
+    String value = getConfiguration(configuration, world, uuid).toString();
+    String replaced = value.replace(getString("Core.Currency.Decimal", world, uuid), ".");
+    MISCUtils.debug(getString("Core.Currency.Decimal", world, uuid));
+    MISCUtils.debug(value);
+    MISCUtils.debug(replaced);
+    return Double.valueOf(replaced);
   }
 
   public Double getDouble(String configuration, String world, String player) {
-    return (Double)getConfiguration(configuration, world, player);
+    String value = getConfiguration(configuration, world, player).toString();
+    String replaced = value.replace(getString("Core.Currency.Decimal", world, player), ".");
+    MISCUtils.debug(getString("Core.Currency.Decimal", world, player));
+    MISCUtils.debug(value);
+    MISCUtils.debug(replaced);
+		return Double.valueOf(replaced);
   }
 
   public Integer getInteger(String configuration) {

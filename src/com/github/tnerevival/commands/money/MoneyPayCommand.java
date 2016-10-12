@@ -41,7 +41,8 @@ public class MoneyPayCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(arguments.length == 2) {
-			if(Double.valueOf(arguments[1]) < 0) {
+			Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
+			if(value < 0) {
 				player.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
@@ -49,11 +50,11 @@ public class MoneyPayCommand extends TNECommand {
 				player.sendMessage(new Message("Messages.Money.SelfPay").translate());
 				return false;
 			}
-			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.round(Double.valueOf(arguments[1])), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.round(value), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
 				if(getPlayer(sender, arguments[0]) != null) {
-					if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), AccountUtils.round(Double.valueOf(arguments[1])), TransactionType.MONEY_PAY, MISCUtils.getWorld(player))) {
+					if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), AccountUtils.round(value), TransactionType.MONEY_PAY, MISCUtils.getWorld(player))) {
 						Message paid = new Message("Messages.Money.Paid");
-						paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
+						paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(value)));
 						paid.addVariable("$player", arguments[0]);
 						player.sendMessage(paid.translate());
 						return true;

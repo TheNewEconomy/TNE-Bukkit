@@ -47,18 +47,20 @@ public class BankWithdrawCommand extends TNECommand {
 
     if(arguments.length == 1) {
       if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+				Double value = Double.valueOf(arguments[0].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
-          if(AccountUtils.transaction(MISCUtils.getID(owner).toString(), MISCUtils.getID(player).toString(), Double.valueOf(arguments[0]), TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
+          if(AccountUtils.transaction(MISCUtils.getID(owner).toString(), MISCUtils.getID(player).toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
-            withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             withdrawn.addVariable("$name",  ownerName);
             player.sendMessage(withdrawn.translate());
             return true;
           } else {
             Message overdraw = new Message("Messages.Bank.Overdraw");
-            overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             overdraw.addVariable("$name",  ownerName);
             player.sendMessage(overdraw.translate());
+						return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");

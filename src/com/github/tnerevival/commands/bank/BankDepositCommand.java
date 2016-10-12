@@ -46,16 +46,17 @@ public class BankDepositCommand extends TNECommand {
 
     if(arguments.length == 1) {
       if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+				Double value = Double.valueOf(arguments[0].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
-          if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(owner).toString(), Double.valueOf(arguments[0]), TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
+          if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
             Message deposit = new Message("Messages.Bank.Deposit");
-            deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             deposit.addVariable("$name",  ownerName);
             player.sendMessage(deposit.translate());
             return true;
           } else {
             Message insufficient = new Message("Messages.Money.Insufficient");
-            insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), Double.valueOf(arguments[0])));
+            insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             insufficient.addVariable("$name",  ownerName);
             player.sendMessage(insufficient.translate());
             return false;

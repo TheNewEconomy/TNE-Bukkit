@@ -1,6 +1,7 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.serializable.SerializableItemStack;
+import org.bukkit.Material;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -108,9 +109,11 @@ public class Bank implements Serializable {
 
   public void itemsFromString(String parse) {
     String[] parsed = parse.split("\\*");
-
-    for(String s : parsed) {
-      items.add(SerializableItemStack.fromString(s));
+    for (String s : parsed) {
+      SerializableItemStack item = SerializableItemStack.fromString(s);
+      if(!item.toItemStack().getType().equals(Material.AIR)) {
+        items.add(SerializableItemStack.fromString(s));
+      }
     }
   }
 

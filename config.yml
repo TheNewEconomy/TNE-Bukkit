@@ -52,6 +52,9 @@ Core:
     #All configurations relating to currency.
     Currency:
 
+        #The character to use as the decimal place holder.
+        Decimal: .
+
         #Would you like to use an item as the currency?
         ItemCurrency: false
         

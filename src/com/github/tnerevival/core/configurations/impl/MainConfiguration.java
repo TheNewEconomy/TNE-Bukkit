@@ -19,6 +19,7 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.AutoSaver.Enabled", true);
 		configurations.put("Core.AutoSaver.Interval", 600);
 		configurations.put("Core.Currency.Advanced", false);
+		configurations.put("Core.Currency.Decimal", ",");
 		configurations.put("Core.Currency.ItemCurrency", false);
 		configurations.put("Core.Currency.ItemMajor", "GOLD_INGOT");
 		configurations.put("Core.Currency.ItemMinor", "IRON_INGOT");

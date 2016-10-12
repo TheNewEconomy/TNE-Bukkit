@@ -182,9 +182,9 @@ public class Transaction {
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_WITHDRAWAL)) {
       UUID id = MISCUtils.distringuishId(recipient);
-      if(!BankUtils.hasBank(id, world)) return TransactionResult.FAILED;
-      if(recipient != null && !BankUtils.bankMember(MISCUtils.distringuishId(initiator), id, world)) return TransactionResult.FAILED;
-      if(cost.getAmount() > 0.0 && BankUtils.getBankBalance(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) return TransactionResult.FAILED;
+      UUID initID = MISCUtils.distringuishId(initiator);
+      if(!BankUtils.hasBank(initID, world)) return TransactionResult.FAILED;
+      if(recipient != null && !BankUtils.bankMember(initID, id, world)) return TransactionResult.FAILED;
       AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {

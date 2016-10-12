@@ -232,6 +232,7 @@ public class SerializableItemStack implements Serializable {
 
 	public static SerializableItemStack fromString(String itemString) {
 		String[] variables = itemString.split("\\;");
+		if(variables.length < 5) return new SerializableItemStack(0, new ItemStack(Material.AIR));
 		SerializableItemStack stack = new SerializableItemStack(Integer.valueOf(variables[1]));
 		stack.setName(variables[0]);
 		stack.setAmount(Integer.valueOf(variables[2]));

@@ -39,15 +39,17 @@ public class MoneyGiveCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		if(arguments.length == 2) {
-			if(Double.valueOf(arguments[1]) < 0) {
+      Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
+			if(value < 0) {
 				sender.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
 			
 			if(getPlayer(sender, arguments[0]) != null) {
-				AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), Double.valueOf(arguments[1]), TransactionType.MONEY_GIVE, MISCUtils.getWorld(MISCUtils.getID(getPlayer(sender, arguments[0]))));
+
+        AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_GIVE, MISCUtils.getWorld(MISCUtils.getID(getPlayer(sender, arguments[0]))));
 				Message gave = new Message("Messages.Money.Gave");
-				gave.addVariable("$amount",  MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
+				gave.addVariable("$amount",  MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(value)));
 				gave.addVariable("$player", arguments[0]);
 				sender.sendMessage(gave.translate());
 				return true;

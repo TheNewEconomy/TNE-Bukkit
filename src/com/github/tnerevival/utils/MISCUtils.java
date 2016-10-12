@@ -410,22 +410,23 @@ public class MISCUtils {
 	}
 	
 	public static String formatBalance(String world, double balance, Boolean shorten) {
-		String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".00";
+		String balanceString = (String.valueOf(balance).contains("."))? String.valueOf(balance) : String.valueOf(balance) + ".00";
 		String[] split = balanceString.split("\\.");
 		if(Integer.valueOf(split[1]) > 0) {
-			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0])) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
+			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0]), world) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
 		} else {
-			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0])) + " " + getName(world, balance, "major") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major");
+			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0]), world) + " " + getName(world, balance, "major") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major");
 		}
 	}
 	
-	public static String getShort(double balance) {
+	public static String getShort(double balance, String world) {
 		Integer dollars = (int) Math.floor(balance);
 		if (dollars < 1000) {
 			return "" + dollars;
 		}
 	    int exp = (int) (Math.log(dollars) / Math.log(1000));
-	    return String.format("%.1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
+		  String decimal = TNE.instance.api.getString("Core.Currency.Decimal", world);
+	    return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
 	}
 	
 	public static String getName(String world, double balance, String type) {
