@@ -4,6 +4,8 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
+import com.github.tnerevival.core.event.object.InteractionType;
+import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.ShopSign;
 import com.github.tnerevival.core.signs.SignType;
@@ -11,6 +13,7 @@ import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -132,35 +135,12 @@ public class InteractionListener implements Listener {
       }
     }
 
-		if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
-			Player player = event.getPlayer();
-			Double cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getMine();
-			
+    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), name, InteractionType.CRAFTING);
+    Bukkit.getServer().getPluginManager().callEvent(e);
 
-			String message = "Messages.Objects.MiningCharged";
-			if(cost > 0.0) {
-				if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-					AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-				} else {
-					event.setCancelled(true);
-					Message insufficient = new Message("Messages.Money.Insufficient");
-					insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-					player.sendMessage(insufficient.translate());
-					return;
-				}
-			} else {
-        AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
-				message = "Messages.Objects.MiningPaid";
-			}
-			
-			if(cost > 0.0 || cost < 0.0 || cost == 0.0 && TNE.configurations.getBoolean("Materials.Blocks.ZeroMessage")) {
-				
-				Message m = new Message(message);
-				m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-				m.addVariable("$name", name);
-				player.sendMessage(m.translate());
-			}
-		}
+    if(e.isCancelled()) {
+      event.setCancelled(true);
+    }
 	}
 
 	@EventHandler
@@ -174,56 +154,26 @@ public class InteractionListener implements Listener {
       }
     }
 
-		if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
-			Player player = event.getPlayer();
-			Double cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getPlace();
-			
+    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), name, InteractionType.PLACING);
+    Bukkit.getServer().getPluginManager().callEvent(e);
 
-			String message = "Messages.Objects.PlacingCharged";
-			if(cost > 0.0) {
-				if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-          AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-				} else {
-					event.setCancelled(true);
-					Message insufficient = new Message("Messages.Money.Insufficient");
-					insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-					player.sendMessage(insufficient.translate());
-					return;
-				}
-			} else {
-        AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
-				message = "Messages.Objects.PlacingPaid";
-			}
-			
-			if(cost > 0.0 || cost < 0.0 || cost == 0.0 && TNE.configurations.getBoolean("Materials.Blocks.ZeroMessage")) {
-				
-				Message m = new Message(message);
-				m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-				m.addVariable("$name", name);
-				player.sendMessage(m.translate());
-			}
-		}
+    if(e.isCancelled()) {
+      event.setCancelled(true);
+    }
 	}
 	
 	@EventHandler
 	public void onSmelt(FurnaceSmeltEvent event) {
 		if(event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
 			String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getSource().getType()).toLowerCase();
-			Double cost = 0.0;
 			if(event.getBlock().getState() instanceof Furnace) {
 				Furnace f = (Furnace)event.getBlock().getState();
 				
 				int amount = (f.getInventory().getResult() != null) ? f.getInventory().getResult().getAmount() : 1;
+
+				Double cost = InteractionType.SMELTING.getCost(name) * amount;
 				
-				if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-					cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getSmelt() * amount;
-				} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
-					cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getSmelt() * amount;
-				} else {
-					return;
-				}
-				
-				List<String> lore = new ArrayList<String>();
+				List<String> lore = new ArrayList<>();
 				lore.add(ChatColor.WHITE + "Smelting Cost: " + ChatColor.GOLD + cost);
 				
 				ItemStack result = event.getResult();
@@ -242,13 +192,7 @@ public class InteractionListener implements Listener {
 			
 			ItemStack result = event.getItem();
 			String name = MaterialUtils.formatMaterialNameWithoutSpace(result.getType()).toLowerCase();
-			Double cost = 0.0;
-			
-			if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-				cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
-			} else {
-				return;
-			}
+			Double cost = InteractionType.ENCHANT.getCost(name);
 			
 			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
@@ -269,15 +213,7 @@ public class InteractionListener implements Listener {
 	public void onPreCraft(PrepareItemCraftEvent event) {
 		if(event.getInventory().getResult() != null) {
 			String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType()).toLowerCase();
-			Double cost = 0.0;
-			
-			if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-				cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
-			} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
-				cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getCrafting();
-			} else {
-				return;
-			}
+			Double cost = InteractionType.CRAFTING.getCost(name);
 			
 			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
@@ -294,49 +230,22 @@ public class InteractionListener implements Listener {
 	public void onCraft(CraftItemEvent event) {
 		
 		String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType()).toLowerCase();
-		Double cost = 0.0;
-		boolean item = false;
-		
-		if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-			cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getCrafting();
-			item = true;
-		} else if(TNE.configurations.getMaterialsConfiguration().containsBlock(name)) {
-			cost = TNE.configurations.getMaterialsConfiguration().getBlock(name).getCrafting();
-		}
 		
 		ItemStack result = event.getInventory().getResult();
 		ItemMeta meta = result.getItemMeta();
-		meta.setLore(new ArrayList<String>());
+		meta.setLore(new ArrayList<>());
 		result.setItemMeta(meta);
 		
 		Player player = (Player)event.getWhoClicked();
-		String message = "Messages.Objects.CraftingCharged";
-		if(cost > 0.0) {
-			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-        AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-			} else {
-				event.setCancelled(true);
-				Message insufficient = new Message("Messages.Money.Insufficient");
-				insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-				player.sendMessage(insufficient.translate());
-				return;
-			}
-		} else {
-      AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
-			message = "Messages.Objects.CraftingPaid";
-		}
-		
-		if(cost > 0.0 || cost < 0.0  || cost == 0.0 && item && TNE.configurations.getBoolean("Materials.Items.ZeroMessage") || cost == 0.0 && !item && TNE.configurations.getBoolean("Materials.Blocks.ZeroMessage")) {
-			String newName = (result.getAmount() > 1)? name + "'s" : name;
-			
-			Message m = new Message(message);
-			m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-			m.addVariable("$stack_size", result.getAmount() + "");
-			m.addVariable("$item", newName);
-			player.sendMessage(m.translate());
-		}
-		
-		event.getInventory().setResult(result);
+
+    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
+    Bukkit.getServer().getPluginManager().callEvent(e);
+
+    if(e.isCancelled()) {
+      event.setCancelled(true);
+      return;
+    }
+    event.getInventory().setResult(result);
 	}
 	
 	@EventHandler
@@ -461,35 +370,13 @@ public class InteractionListener implements Listener {
           }
         }
       } else {
-        Double cost = 0.0;
         String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getMaterial()).toLowerCase();
-        if(event.getItem() != null) {
-          if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-            cost = TNE.configurations.getMaterialsConfiguration().getItem(name).getUse();
-          }
+        TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
+        Bukkit.getServer().getPluginManager().callEvent(e);
 
-          if(TNE.configurations.getMaterialsConfiguration().containsItem(name)) {
-            String message = "Messages.Objects.ItemUseCharged";
-            if (cost > 0.0) {
-              if (AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-                AccountUtils.transaction(MISCUtils.getID(player).toString(), null, cost, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-              } else {
-                event.setCancelled(true);
-                Message insufficient = new Message("Messages.Money.Insufficient");
-                insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-                player.sendMessage(insufficient.translate());
-                return;
-              }
-            }
-
-            if(cost > 0.0 || cost < 0.0  || cost == 0.0 && TNE.configurations.getBoolean("Materials.Items.ZeroMessage")) {
-
-              Message m = new Message(message);
-              m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.round(cost)));
-              m.addVariable("$item", name);
-              player.sendMessage(m.translate());
-            }
-          }
+        if(e.isCancelled()) {
+          event.setCancelled(true);
+          return;
         }
 			}
     }

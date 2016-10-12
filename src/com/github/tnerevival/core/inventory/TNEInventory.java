@@ -4,6 +4,8 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
+import com.github.tnerevival.core.event.object.InteractionType;
+import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.inventory.impl.ShopItemInventory;
@@ -12,8 +14,11 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.MaterialUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -138,6 +143,20 @@ public abstract class TNEInventory {
     if(item != null && getBlacklisted().contains(item.getType())) return false;
     if(getValidSlots().size() > 0 && !getValidSlots().contains(slot)) return false;
     if(getInvalidSlots().size() > 0 && getInvalidSlots().contains(slot)) return false;
+
+    InteractionType intType = InteractionType.SMELTING;
+    if(inventory.getType().equals(InventoryType.ENCHANTING) || inventory.getType().equals(InventoryType.FURNACE)) {
+      if(inventory.getType().equals(InventoryType.ENCHANTING)) {
+        intType = InteractionType.ENCHANT;
+      }
+      String name = MaterialUtils.formatMaterialNameWithoutSpace(item.getType()).toLowerCase();
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(MISCUtils.getPlayer(viewer.getUUID()), name, intType);
+      Bukkit.getServer().getPluginManager().callEvent(e);
+
+      if(e.isCancelled()) {
+        return false;
+      }
+    }
 
     return true;
   }
