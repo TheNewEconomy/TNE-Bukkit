@@ -47,7 +47,7 @@ public class ShopCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		String name = "";
     String world = TNE.instance.defaultWorld;
 		if(sender instanceof Player) {
@@ -82,7 +82,7 @@ public class ShopCommand extends TNECommand {
 			sender.sendMessage(unable.translate());
 			return false;
 		}
-		return sub.execute(sender, removeSub(arguments));
+		return sub.execute(sender, command, removeSub(arguments));
 	}
 	
 	@Override

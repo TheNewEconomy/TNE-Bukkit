@@ -44,7 +44,7 @@ public class ShopBrowseCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String[] arguments) {
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));

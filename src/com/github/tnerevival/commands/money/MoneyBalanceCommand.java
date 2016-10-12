@@ -36,7 +36,7 @@ public class MoneyBalanceCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = getPlayer(sender);
 		Message balance = new Message("Messages.Money.Balance");
 		balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), plugin.api.getBalance(player)));

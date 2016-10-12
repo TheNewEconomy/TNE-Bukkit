@@ -1,16 +1,15 @@
 package com.github.tnerevival.commands.packages;
 
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.objects.TNEAccessPackage;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class PackageListCommand extends TNECommand {
 	
@@ -39,7 +38,7 @@ public class PackageListCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 1) {
 			Player player = (Player)sender;
 			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0]);

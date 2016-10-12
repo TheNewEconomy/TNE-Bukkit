@@ -40,7 +40,7 @@ public class PackageCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = getPlayer(sender);
 		
 		Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
@@ -84,7 +84,7 @@ public class PackageCommand extends TNECommand {
 			sender.sendMessage(unable.translate());
 			return false;
 		}
-		return sub.execute(sender, removeSub(arguments));
+		return sub.execute(sender, command, removeSub(arguments));
 	}
 
 	@Override

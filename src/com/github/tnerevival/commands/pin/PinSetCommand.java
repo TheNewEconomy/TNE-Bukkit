@@ -38,7 +38,7 @@ public class PinSetCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 2) {
 			Player player = (Player)sender;
 			Account acc = AccountUtils.getAccount(MISCUtils.getID(player));

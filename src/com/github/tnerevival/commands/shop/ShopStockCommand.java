@@ -47,7 +47,7 @@ public class ShopStockCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String[] arguments) {
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(sender instanceof Player && arguments.length >= 2) {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         if(Shop.canModify(arguments[0], (Player)sender)) {

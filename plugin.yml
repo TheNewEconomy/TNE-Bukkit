@@ -11,6 +11,12 @@ softdepend: [Vault]
 
 #Command Data
 commands:
+   balance:
+       description: Shortcut for /money balance.
+   bal:
+       description: Shortcut for /money balance.
+   pay:
+       description: Shortcut for /money pay.
    bank:
       description: The base command for all bank-related commands.
    money:

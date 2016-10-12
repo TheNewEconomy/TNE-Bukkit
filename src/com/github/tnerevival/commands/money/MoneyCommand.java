@@ -28,7 +28,10 @@ public class MoneyCommand extends TNECommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[0];
+		if(TNE.instance.api.getBoolean("Core.Commands.BalanceShort")) {
+		  return new String[] { "bal", "balance" };
+    }
+    return new String[0];
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class MoneyCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		
 		if(sender instanceof Player) {
 			Player player = getPlayer(sender);
@@ -66,17 +69,19 @@ public class MoneyCommand extends TNECommand {
       }
 		}
 		
-		if(arguments.length == 0 && sender instanceof Player) {
+		if(arguments.length == 0 && sender instanceof Player && !command.equalsIgnoreCase("pay")) {
 			TNECommand sub = FindSub("balance");
-			return sub.execute(sender, arguments);
+			return sub.execute(sender, command, arguments);
 		}
 		
-		if(arguments.length == 0 || arguments.length == 1 && arguments[0].equalsIgnoreCase("help")) {
+		if(arguments.length == 0 && !command.equalsIgnoreCase("pay") || arguments.length == 1 && arguments[0].equalsIgnoreCase("help") && !command.equalsIgnoreCase("pay")) {
 			help(sender);
 			return false;
 		}
-		
-		TNECommand sub = FindSub(arguments[0]);
+
+		String subFind = (command.equalsIgnoreCase("pay"))? "pay" : arguments[0];
+
+		TNECommand sub = FindSub(subFind);
 		if(sub == null) {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
@@ -90,7 +95,10 @@ public class MoneyCommand extends TNECommand {
 			sender.sendMessage(unable.translate());
 			return false;
 		}
-		return sub.execute(sender, removeSub(arguments));
+		if(command.equalsIgnoreCase("pay")) {
+		  return sub.execute(sender, command, arguments);
+    }
+		return sub.execute(sender, command, removeSub(arguments));
 	}
 
 	@Override

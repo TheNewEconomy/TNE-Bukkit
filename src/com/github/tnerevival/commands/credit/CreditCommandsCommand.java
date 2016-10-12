@@ -37,15 +37,15 @@ public class CreditCommandsCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 0) {
 			Player player = (Player)sender;
 			Map<String, Integer> credits = AccountUtils.getAccount(MISCUtils.getID(player)).getCredits();
 			sender.sendMessage(ChatColor.WHITE + "Command ~ Credits");
 			sender.sendMessage(ChatColor.WHITE + "==============================");
 			if(credits.size() > 0) {
-				for(String command : credits.keySet()) {
-					sender.sendMessage(ChatColor.WHITE + command + " ~ " + credits.get(command));
+				for(String c : credits.keySet()) {
+					sender.sendMessage(ChatColor.WHITE + c + " ~ " + credits.get(c));
 				}
 				return true;
 			}

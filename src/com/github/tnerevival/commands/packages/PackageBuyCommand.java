@@ -40,7 +40,7 @@ public class PackageBuyCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = (Player)sender;
 		
 		if(!AccountUtils.getAccount(MISCUtils.getID(player)).getStatus().getBalance()) {

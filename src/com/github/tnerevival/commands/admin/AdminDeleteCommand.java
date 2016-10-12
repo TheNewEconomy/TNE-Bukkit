@@ -36,7 +36,7 @@ public class AdminDeleteCommand extends TNECommand {
   }
   
   @Override
-  public boolean execute(CommandSender sender, String[] arguments) {
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
       //TODO: Messages
       if(AccountUtils.exists(MISCUtils.getID(arguments[0]))) {

@@ -34,7 +34,7 @@ public class AdminReloadCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length < 2) {
 			if(arguments.length == 0) {
 				MISCUtils.reloadConfigurations("config");

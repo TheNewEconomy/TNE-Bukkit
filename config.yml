@@ -30,6 +30,15 @@ Core:
 
         #Whether or not players must set their pin before using money-related functions
         Force: true
+
+    #All configurations relating to TNE commands
+    Commands:
+
+        #Whether or not players should be able to use /pay instead of /money pay
+        PayShort: true
+
+        #Whether or not players should be able to use /balance instead of /money
+        BalanceShort: true
     
     #All configurations relating to update checking
     Update:

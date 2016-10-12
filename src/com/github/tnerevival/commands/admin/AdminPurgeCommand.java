@@ -34,7 +34,7 @@ public class AdminPurgeCommand extends TNECommand {
   }
   
   @Override
-  public boolean execute(CommandSender sender, String[] arguments) {
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
     boolean world = arguments.length >= 1;
     //TODO: Messages
     if(world) {

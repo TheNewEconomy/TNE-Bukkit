@@ -38,7 +38,7 @@ public class BankViewCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 
 		Player player = getPlayer(sender);
 		if(BankUtils.command(player.getWorld().getName(), MISCUtils.getID(player).toString())) {

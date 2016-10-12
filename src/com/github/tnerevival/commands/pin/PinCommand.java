@@ -38,7 +38,7 @@ public class PinCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 	  Player player = (Player)sender;
 
     if(!TNE.instance.api.getBoolean("Core.Pins.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
@@ -70,7 +70,7 @@ public class PinCommand extends TNECommand {
 			sender.sendMessage(unable.translate());
 			return false;
 		}
-		return sub.execute(sender, removeSub(arguments));
+		return sub.execute(sender, command, removeSub(arguments));
 	}
 
 	@Override

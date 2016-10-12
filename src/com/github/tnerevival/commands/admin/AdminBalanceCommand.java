@@ -39,7 +39,7 @@ public class AdminBalanceCommand extends TNECommand {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 1 || arguments.length == 2) {
 			String world = (arguments.length == 2) ? arguments[1] : TNE.instance.defaultWorld;
 			if(MISCUtils.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(MISCUtils.getID(arguments[0]))) {

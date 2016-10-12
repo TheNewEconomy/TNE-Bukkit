@@ -1,14 +1,13 @@
 package com.github.tnerevival.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.Message;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class TNECommand {
 	
@@ -25,7 +24,7 @@ public abstract class TNECommand {
 	public abstract boolean console();
 	public abstract void help(CommandSender sender);
 	
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 0) {
 			help(sender);
 			return false;
@@ -50,7 +49,7 @@ public abstract class TNECommand {
 			sender.sendMessage(unable.translate());
 			return false;
 		}
-		return sub.execute(sender, removeSub(arguments));
+		return sub.execute(sender, command, removeSub(arguments));
 	}
 	
 	protected String[] removeSub(String[] oldArguments) {

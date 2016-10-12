@@ -1,12 +1,11 @@
 package com.github.tnerevival.commands.admin;
 
-import java.io.IOException;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.commands.TNECommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.commands.TNECommand;
+import java.io.IOException;
 
 public class AdminBackupCommand extends TNECommand {
 	
@@ -35,7 +34,7 @@ public class AdminBackupCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		try {
 			if(this.plugin.saveManager.backupDatabase()) {
 				this.plugin.saveManager.save();

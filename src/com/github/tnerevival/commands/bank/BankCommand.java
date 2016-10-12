@@ -47,7 +47,7 @@ public class BankCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(!BankUtils.enabled(player.getWorld().getName(), MISCUtils.getID(player).toString())) {
 			player.sendMessage(new Message("Messages.Bank.Disabled").translate());
@@ -103,7 +103,7 @@ public class BankCommand extends TNECommand {
 			sender.sendMessage(unable.translate());
 			return false;
 		}
-		return sub.execute(sender, removeSub(arguments));
+		return sub.execute(sender, command, removeSub(arguments));
 	}
 
 	@Override

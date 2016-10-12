@@ -40,7 +40,7 @@ public class BankBuyCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(BankUtils.hasBank(MISCUtils.getID(player))) {
 			player.sendMessage(new Message("Messages.Bank.Already").translate());

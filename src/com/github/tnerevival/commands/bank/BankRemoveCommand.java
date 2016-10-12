@@ -39,7 +39,7 @@ public class BankRemoveCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String[] arguments) {
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = MISCUtils.getPlayer(sender.getName());
 
     if(arguments.length >= 1) {

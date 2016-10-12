@@ -162,7 +162,7 @@ public class TNE extends JavaPlugin {
 				sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
 				return false;
 			}
-			return ecoCommand.execute(sender, arguments);
+			return ecoCommand.execute(sender, label, arguments);
 		}
 		return false;
 	}

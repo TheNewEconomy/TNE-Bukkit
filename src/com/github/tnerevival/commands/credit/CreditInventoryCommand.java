@@ -38,7 +38,7 @@ public class CreditInventoryCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 1) {
 			Player player = (Player)sender;
 			Map<String, Long> credits = AccountUtils.getAccount(MISCUtils.getID(player)).getTimes(arguments[0]);

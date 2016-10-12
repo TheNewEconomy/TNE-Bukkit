@@ -1,8 +1,5 @@
 package com.github.tnerevival.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.admin.AdminCommand;
 import com.github.tnerevival.commands.bank.BankCommand;
@@ -11,6 +8,9 @@ import com.github.tnerevival.commands.money.MoneyCommand;
 import com.github.tnerevival.commands.packages.PackageCommand;
 import com.github.tnerevival.commands.pin.PinCommand;
 import com.github.tnerevival.commands.shop.ShopCommand;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandManager {
 	
@@ -25,9 +25,10 @@ public class CommandManager {
 		commands.add(new PinCommand(TNE.instance));
 		commands.add(new ShopCommand(TNE.instance));
 	}
-	
+
 	public TNECommand Find(String name) {
 		for(TNECommand c : commands) {
+		  if(name.equalsIgnoreCase("pay") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
 			if(c.getName().equalsIgnoreCase(name)) {
 				return c;
 			}

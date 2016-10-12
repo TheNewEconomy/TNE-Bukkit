@@ -38,7 +38,7 @@ public class PinConfirmCommand extends TNECommand {
 	}
 	
 	@Override
-	public boolean execute(CommandSender sender, String[] arguments) {
+	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = (Player)sender;
 		
 		if(TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
