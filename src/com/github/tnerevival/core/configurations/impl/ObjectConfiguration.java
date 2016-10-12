@@ -108,42 +108,15 @@ public class ObjectConfiguration extends Configuration {
 		}
 	}
 	
-	public TNEAccessPackage getPackage(InventoryType type, Object identifier) {
-		String typeString = inventoryType(type);
-		TNEInventoryObject inventoryObject = inventories.get(typeString);
-		if(inventoryObject != null) {
-			if(identifier instanceof Double) {
-				return inventoryObject.findPackage((Double)(identifier));
-			} else if(identifier instanceof Long) {
-				return inventoryObject.findPackage((Long)(identifier));
-			}
-			return inventoryObject.findPackage((String)identifier);
-		}
-		return null;
-	}
-	
-	public boolean hasInventory(String type) {
-		return inventories.containsKey(type);
-	}
-	
 	public List<TNEAccessPackage> getInventoryPackages(String type) {
 		if(inventories.containsKey(type)) {
 			return inventories.get(type).getPackages();
 		}
-		return new ArrayList<TNEAccessPackage>();
-	}
-	
-	public List<TNEAccessPackage> getInventoryPackages(InventoryType type) {
-		String typeString = inventoryType(type);
-		return getInventoryPackages(typeString);
+		return new ArrayList<>();
 	}
 	
 	public boolean isTimed(InventoryType type) {
-		String typeString = inventoryType(type);
-		if(inventories.containsKey(typeString)) {
-			return inventories.get(typeString).isTimed();
-		}
-		return false;
+		return inventories.get(inventoryType(type)).isTimed();
 	}
 	
 	public boolean inventoryEnabled(InventoryType type) {
