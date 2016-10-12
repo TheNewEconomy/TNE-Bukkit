@@ -63,8 +63,8 @@ public class ShopCommand extends TNECommand {
 			help(sender);
 			return false;
 		}
+
 		if(!TNE.instance.api.getBoolean("Core.Shops.Enabled", world, name)) {
-		  sender.sendMessage(new Message("Messages.Shop.Disabled").translate());
       return false;
     }
 		
