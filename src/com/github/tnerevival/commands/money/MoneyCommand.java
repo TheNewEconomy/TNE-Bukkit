@@ -18,6 +18,7 @@ public class MoneyCommand extends TNECommand {
 		subCommands.add(new MoneyBalanceCommand(plugin));
 		subCommands.add(new MoneyGiveCommand(plugin));
 		subCommands.add(new MoneyPayCommand(plugin));
+		subCommands.add(new MoneySetCommand(plugin));
 		subCommands.add(new MoneyTakeCommand(plugin));
 	}
 

@@ -38,8 +38,9 @@ public class MoneyGiveCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		if(arguments.length == 2) {
-      Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
+		if(arguments.length >= 2) {
+      String world = (arguments.length == 3)? arguments[2] : TNE.instance.defaultWorld;
+      Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world, MISCUtils.getID(getPlayer(sender)).toString()), "."));
 			if(value < 0) {
 				sender.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
@@ -47,9 +48,9 @@ public class MoneyGiveCommand extends TNECommand {
 			
 			if(getPlayer(sender, arguments[0]) != null) {
 
-        AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_GIVE, MISCUtils.getWorld(MISCUtils.getID(getPlayer(sender, arguments[0]))));
+        AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_GIVE, world);
 				Message gave = new Message("Messages.Money.Gave");
-				gave.addVariable("$amount",  MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(value)));
+				gave.addVariable("$amount",  MISCUtils.formatBalance(world, AccountUtils.round(value)));
 				gave.addVariable("$player", arguments[0]);
 				sender.sendMessage(gave.translate());
 				return true;
@@ -64,7 +65,6 @@ public class MoneyGiveCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/money give <player> <amount> - summon money from air and give it to a player");
+		sender.sendMessage(ChatColor.GOLD + "/money give <player> <amount> [world] - summon money from air and give it to a player");
 	}
-	
 }

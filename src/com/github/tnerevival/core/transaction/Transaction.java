@@ -71,6 +71,18 @@ public class Transaction {
         return TransactionResult.SUCCESS;
       }
       return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.MONEY_SET)) {
+      if(recipient == null) {
+        UUID id = MISCUtils.distringuishId(initiator);
+        if(cost.getAmount() > 0.0) {
+          AccountUtils.setFunds(id, world, cost.getAmount());
+        }
+
+        if(cost.getItems().size() > 0) {
+          MISCUtils.setItems(id, cost.getItems(), true, true);
+        }
+      }
+      return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_GIVE)) {
       if(recipient == null) {
         UUID id = MISCUtils.distringuishId(initiator);
@@ -154,6 +166,13 @@ public class Transaction {
         AccountUtils.removeFunds(id, world, cost.getAmount());
         MISCUtils.setItems(id, cost.getItems(), false);
         return TransactionResult.SUCCESS;
+      }
+      return TransactionResult.SUCCESS;
+    } else if(type.equals(TransactionType.MONEY_SET)) {
+      if(recipient != null) {
+        UUID id = MISCUtils.distringuishId(recipient);
+        AccountUtils.setFunds(id, world, cost.getAmount());
+        MISCUtils.setItems(id, cost.getItems(), true, true);
       }
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_GIVE)) {

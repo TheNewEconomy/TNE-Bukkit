@@ -84,8 +84,17 @@ public class MISCUtils {
   }
 
   public static void setItems(UUID id, List<SerializableItemStack> items, boolean add) {
+    setItems(id, items, add, false);
+  }
+
+  public static void setItems(UUID id, List<SerializableItemStack> items, boolean add, boolean set) {
   	for(SerializableItemStack item : items) {
   	  Material type = item.toItemStack().getType();
+      if(set) {
+        setItemCount(id, type, item.getAmount());
+        continue;
+      }
+
   	  if(add) {
         setItemCount(id, type, getItemCount(id, type) + item.getAmount());
   	    continue;

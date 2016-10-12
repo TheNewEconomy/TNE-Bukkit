@@ -36,6 +36,7 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Money.Insufficient", "<red>I'm sorry, but you do not have <gold>$amount<red>.");
 		configurations.put("Messages.Money.Balance", "<white>You currently have <gold>$amount<white> on you.");
 		configurations.put("Messages.Money.Gave", "<white>Successfully gave $player <gold>$amount<white>.");
+		configurations.put("Messages.Money.Set", "<white>Successfully set $player\'s balance to <gold>$amount<white>.");
 		configurations.put("Messages.Money.Paid", "<white>Successfully paid $player <gold>$amount<white>.");
 		configurations.put("Messages.Money.Took", "<white>Successfully took <gold>$amount<white> from $player.");
 		configurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");

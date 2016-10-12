@@ -82,6 +82,7 @@ Messages:
        Insufficient: <red>I'm sorry, but you do not have <gold>$amount<red>.
        Balance: <white>You currently have <gold>$amount<white> on you.
        Gave: <white>Successfully gave $player <gold>$amount<white>.
+       Set: <white>Successfully set $player's balance to <gold>$amount<white>.
        Paid: <white>Successfully paid $player <gold>$amount<white>.
        Took: <white>Successfully took <gold>$amount<white> from $player.
        Negative: <red>Amount cannot be a negative value!

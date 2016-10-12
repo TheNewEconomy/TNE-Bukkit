@@ -38,16 +38,17 @@ public class MoneyTakeCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		if(arguments.length == 2) {
-			Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
+		if(arguments.length >= 2) {
+			String world = (arguments.length == 3)? arguments[2] : TNE.instance.defaultWorld;
+			Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world, MISCUtils.getID(getPlayer(sender)).toString()), "."));
 			if(value < 0) {
 				sender.sendMessage(new Message("Messages.Money.Negative").translate());
 				return false;
 			}
 			if(getPlayer(sender, arguments[0]) != null) {
-				if(AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), AccountUtils.round(value), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(getPlayer(sender)))) {
+				if(AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), AccountUtils.round(value), TransactionType.MONEY_REMOVE, world)) {
           Message took = new Message("Messages.Money.Took");
-          took.addVariable("$amount", MISCUtils.formatBalance(getPlayer(sender, arguments[0]).getWorld().getName(), AccountUtils.round(value)));
+          took.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(value)));
           took.addVariable("$player", arguments[0]);
           sender.sendMessage(took.translate());
           return true;
@@ -60,7 +61,7 @@ public class MoneyTakeCommand extends TNECommand {
 
 	@Override
 	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/money take <player> <amount> - make some of <player>'s money vanish into thin air");
+		sender.sendMessage(ChatColor.GOLD + "/money take <player> <amount> [world] - make some of <player>'s money vanish into thin air");
 	}
 	
 }
