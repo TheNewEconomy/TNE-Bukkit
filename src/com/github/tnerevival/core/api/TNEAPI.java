@@ -246,6 +246,7 @@ public class TNEAPI {
   }
 
   public Object getConfiguration(String configuration, String world, String player) {
+    if(configuration.toLowerCase().contains("database")) return "";
     return TNE.configurations.getConfiguration(configuration, world, player);
   }
 }
