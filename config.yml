@@ -21,6 +21,15 @@ Core:
     
     #whether or not to enable plugin metrics for TNE
     Metrics: true
+
+    #All configurations relating to account pins
+    Pins:
+
+        #Whether or not account pins should be enabled
+        Enabled: true
+
+        #Whether or not players must set their pin before using money-related functions
+        Force: true
     
     #All configurations relating to update checking
     Update:

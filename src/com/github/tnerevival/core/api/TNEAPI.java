@@ -169,6 +169,69 @@ public class TNEAPI {
 	/*
 	 * Configuration-related Methods.
 	 */
+  public String getString(String configuration) {
+    return (String)getConfiguration(configuration, TNE.instance.defaultWorld);
+  }
+
+  public String getString(String configuration, String world) {
+    return (String)getConfiguration(configuration, world, "");
+  }
+
+  public String getString(String configuration, String world, UUID uuid) {
+    return (String)getConfiguration(configuration, world, uuid.toString());
+  }
+
+  public String getString(String configuration, String world, String player) {
+    return (String)getConfiguration(configuration, world, player);
+  }
+
+  public Boolean getBoolean(String configuration) {
+    return (Boolean)getConfiguration(configuration, TNE.instance.defaultWorld);
+  }
+
+  public Boolean getBoolean(String configuration, String world) {
+    return (Boolean)getConfiguration(configuration, world, "");
+  }
+
+  public Boolean getBoolean(String configuration, String world, UUID uuid) {
+    return (Boolean)getConfiguration(configuration, world, uuid.toString());
+  }
+
+  public Boolean getBoolean(String configuration, String world, String player) {
+    return (Boolean)getConfiguration(configuration, world, player);
+  }
+
+  public Double getDouble(String configuration) {
+    return (Double)getConfiguration(configuration, TNE.instance.defaultWorld);
+  }
+
+  public Double getDouble(String configuration, String world) {
+    return (Double)getConfiguration(configuration, world, "");
+  }
+
+  public Double getDouble(String configuration, String world, UUID uuid) {
+    return (Double)getConfiguration(configuration, world, uuid.toString());
+  }
+
+  public Double getDouble(String configuration, String world, String player) {
+    return (Double)getConfiguration(configuration, world, player);
+  }
+
+  public Integer getInteger(String configuration) {
+    return (Integer)getConfiguration(configuration, TNE.instance.defaultWorld);
+  }
+
+  public Integer getInteger(String configuration, String world) {
+    return (Integer)getConfiguration(configuration, world, "");
+  }
+
+  public Integer getInteger(String configuration, String world, UUID uuid) {
+    return (Integer)getConfiguration(configuration, world, uuid.toString());
+  }
+
+  public Integer getInteger(String configuration, String world, String player) {
+    return (Integer)getConfiguration(configuration, world, player);
+  }
 
 	public Object getConfiguration(String configuration) {
 	  return getConfiguration(configuration, TNE.instance.defaultWorld);

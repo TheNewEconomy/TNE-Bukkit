@@ -49,7 +49,7 @@ public class BankCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = getPlayer(sender);
-		if(!BankUtils.enabled(player.getWorld().getName())) {
+		if(!BankUtils.enabled(player.getWorld().getName(), MISCUtils.getID(player).toString())) {
 			player.sendMessage(new Message("Messages.Bank.Disabled").translate());
 			return false;
 		}
@@ -62,17 +62,21 @@ public class BankCommand extends TNECommand {
 			sender.sendMessage(locked.translate());
 			return false;
 		}
-		
-		if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-			Message set = new Message("Messages.Account.Set");
-			sender.sendMessage(set.translate());
-			return false;
-		}
-		
-		if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
-			Message confirm = new Message("Messages.Account.Confirm");
-			sender.sendMessage(confirm.translate());
-			return false;
+
+		if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+		  if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+        if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          Message set = new Message("Messages.Account.Set");
+          sender.sendMessage(set.translate());
+          return false;
+        }
+
+        if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          Message confirm = new Message("Messages.Account.Confirm");
+          sender.sendMessage(confirm.translate());
+          return false;
+        }
+      }
 		}
 		
 		if(arguments.length == 0) {

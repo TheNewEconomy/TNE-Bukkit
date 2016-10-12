@@ -1,11 +1,10 @@
 package com.github.tnerevival.core;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
+import com.github.tnerevival.TNE;
 import org.bukkit.ChatColor;
 
-import com.github.tnerevival.TNE;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Message {
 
@@ -61,9 +60,9 @@ public class Message {
 	}
 	
 	public String translate() {
-		if(TNE.configurations.getMessage(this.node) == null) return this.node;
+		if(TNE.instance.api.getString("Messages." + this.node) == null) return this.node;
 		
-		String message = replaceColours((String)TNE.configurations.getMessage(this.node));
+		String message = replaceColours(TNE.instance.api.getString("Messages." + this.node));
 		Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
 		
 		while(it.hasNext()) {

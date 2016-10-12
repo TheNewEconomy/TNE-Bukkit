@@ -44,17 +44,20 @@ public class PackageCommand extends TNECommand {
 		Player player = getPlayer(sender);
 		
 		Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-		
-		if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-			Message set = new Message("Messages.Account.Set");
-			sender.sendMessage(set.translate());
-			return false;
-		}
-		
-		if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
-			Message confirm = new Message("Messages.Account.Confirm");
-			sender.sendMessage(confirm.translate());
-			return false;
+		if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+      if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+        if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          Message set = new Message("Messages.Account.Set");
+          sender.sendMessage(set.translate());
+          return false;
+        }
+
+        if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          Message confirm = new Message("Messages.Account.Confirm");
+          sender.sendMessage(confirm.translate());
+          return false;
+        }
+      }
 		}
 		
 		if(arguments.length == 0) {

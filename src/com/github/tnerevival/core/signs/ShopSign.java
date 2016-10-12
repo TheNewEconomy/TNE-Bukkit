@@ -55,7 +55,7 @@ public class ShopSign extends TNESign {
 
 
 
-				if(shop.getShoppers() != null && shop.getShoppers().size() >= TNE.configurations.getInt("Core.Shops.Shoppers")) {
+				if(shop.getShoppers() != null && shop.getShoppers().size() >= TNE.instance.api.getInteger("Core.Shops.Shoppers", shop.getWorld(), shop.getOwner())) {
 					player.sendMessage(new Message("Messages.Shop.Shoppers").translate());
 					return false;
 				}

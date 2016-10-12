@@ -44,18 +44,22 @@ public class AccountUtils {
 			player.sendMessage(locked.translate());
 			return true;
 		}
-		
-		if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-			Message set = new Message("Messages.Account.Set");
-			player.sendMessage(set.translate());
-			return true;
-		}
-		
-		if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
-			Message confirm = new Message("Messages.Account.Confirm");
-			player.sendMessage(confirm.translate());
-			return true;
-		}
+
+		if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+      if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+        if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          Message set = new Message("Messages.Account.Set");
+          player.sendMessage(set.translate());
+          return false;
+        }
+
+        if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          Message confirm = new Message("Messages.Account.Confirm");
+          player.sendMessage(confirm.translate());
+          return false;
+        }
+      }
+    }
 		return false;
 	}
 	
@@ -70,25 +74,15 @@ public class AccountUtils {
 		
 		if(MISCUtils.multiWorld()) {
 			world = MISCUtils.getWorld(id);
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Currency.ItemCurrency")) {
-				if(TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Currency.ItemCurrency")) {
-					Material majorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMajor"));
-					Material minorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMinor"));
-					Integer major = MISCUtils.getItemCount(id, majorItem);
-					Integer minor = MISCUtils.getItemCount(id, minorItem);
-					String balance = major + "." + minor;
-					return Double.valueOf(balance);
-				}
-			}
 			if(!account.getBalances().containsKey(world)) {
 				initializeWorldData(id, world);
 			}
 			
 			return round(account.getBalance(MISCUtils.getWorld(id)));
 		}
-		if(TNE.configurations.getBoolean("Core.Currency.ItemCurrency")) {
-			Material majorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMajor"));
-			Material minorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMinor"));
+		if(TNE.instance.api.getBoolean("Core.Currency.ItemCurrency", world)) {
+			Material majorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMajor", world));
+			Material minorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMinor", world));
 			Integer major = MISCUtils.getItemCount(id, majorItem);
 			Integer minor = MISCUtils.getItemCount(id, minorItem);
 			String balance = major + "." + minor;
@@ -125,9 +119,9 @@ public class AccountUtils {
 				account.setBalance(world, balance);
 			}
 		}
-		if(TNE.configurations.getBoolean("Core.Currency.ItemCurrency")) {
-			Material majorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMajor"));
-			Material minorItem = Material.getMaterial(TNE.configurations.getString("Core.Currency.ItemMinor"));
+		if(TNE.instance.api.getBoolean("Core.Currency.ItemCurrency", world)) {
+			Material majorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMajor", world));
+			Material minorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMinor", world));
 			MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
 			MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
 		} else {
@@ -162,7 +156,7 @@ public class AccountUtils {
 	
 	public static Double getFunds(UUID id, String world) {
 	  double funds = getBalance(id, world);
-		if(TNE.configurations.getBoolean("Core.Bank.Connected")) {
+		if(TNE.instance.api.getBoolean("Core.Bank.Connected", world)) {
 		  funds += BankUtils.getBankBalance(id, world);
     }
 		return funds;
@@ -202,7 +196,7 @@ public class AccountUtils {
 				return round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Balance"));
 			}
 		}
-		return round(TNE.configurations.getDouble("Core.Balance"));
+		return round(TNE.instance.api.getDouble("Core.Balance", world));
 	}
 
 	public static Double getWorldCost(String world) {
@@ -211,6 +205,6 @@ public class AccountUtils {
 				return round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee"));
 			}
 		}
-		return round(TNE.configurations.getDouble("Core.World.ChangeFee"));
+		return round(TNE.instance.api.getDouble("Core.World.ChangeFee", world));
 	}
 }

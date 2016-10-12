@@ -86,6 +86,7 @@ Messages:
        Took: <white>Successfully took <gold>$amount<white> from $player.
        Negative: <red>Amount cannot be a negative value!
        SelfPay: <red>You can't pay yourself!
+       NoPins: <red>Pins are disabled in this world!
        
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.

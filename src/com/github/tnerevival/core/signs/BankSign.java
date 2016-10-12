@@ -29,7 +29,7 @@ public class BankSign extends TNESign {
 					return false;
 				}
 
-				if (!BankUtils.sign(MISCUtils.getWorld(player))) {
+				if (!BankUtils.sign(MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
 					player.sendMessage(new Message("Messages.Bank.NoSign").translate());
 					return false;
 				}

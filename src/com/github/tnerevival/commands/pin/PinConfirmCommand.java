@@ -41,7 +41,7 @@ public class PinConfirmCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 		Player player = (Player)sender;
 		
-		if(TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
+		if(TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
 			Message message = new Message("Messages.Pin.Already");
 			sender.sendMessage(message.translate());
 			return false;

@@ -248,7 +248,7 @@ public class Shop implements Serializable {
   }
 
 	public Inventory getInventory(boolean modifier) {
-		Inventory inventory = Bukkit.createInventory(null, getSlots(), ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
+		Inventory inventory = Bukkit.createInventory(null, getSlots(world, owner), ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
 		for(ShopEntry entry : items) {
 		  MISCUtils.debug("" + entry.isBuy());
 		  String prefix = ChatColor.GOLD + ((entry.isBuy())? "[Buy]" : "[Sell]") + ChatColor.WHITE;
@@ -441,7 +441,7 @@ public class Shop implements Serializable {
 	}
 
 	public static boolean canView(String name, UUID id) {
-    if(!TNE.configurations.getBoolean("Core.Shops.Enabled")) return false;
+    if(!TNE.instance.api.getBoolean("Core.Shops.Enabled", MISCUtils.getWorld(id), id)) return false;
 	  if(exists(name, MISCUtils.getWorld(id))) {
       Shop s = getShop(name, MISCUtils.getWorld(id));
       if(s.isHidden() && !s.whitelisted(id)) return false;
@@ -472,9 +472,11 @@ public class Shop implements Serializable {
 		return false;
 	}
 
-	public static int getSlots() {
+	public static int getSlots(String world, UUID owner) {
+	  String name = (owner != null)? owner.toString() : "";
+
 	  int amount = 6;
-    int config = TNE.configurations.getInt("Core.Shops.Rows");
+    int config = TNE.instance.api.getInteger("Core.Shops.Rows", world, name);
     if(config >= 1 && config <= 6) amount = config;
 
     return amount * 9;

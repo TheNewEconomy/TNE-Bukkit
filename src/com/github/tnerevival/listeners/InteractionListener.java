@@ -69,10 +69,14 @@ public class InteractionListener implements Listener {
 			if(cost > 0.0) {
 			  String message = "";
         Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-        if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
-          message = "Messages.Account.Set";
-        else if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(acc.getUid()))
-          message = "Messages.Account.Confirm";
+        if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+          if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+            if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
+              message = "Messages.Account.Set";
+            else if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
+              message = "Messages.Account.Confirm";
+          }
+        }
 
         if(!message.equals("")) {
           event.setCancelled(true);
@@ -358,12 +362,13 @@ public class InteractionListener implements Listener {
         if (!sign.onCreate(event.getPlayer())) {
           event.setCancelled(true);
         } else {
-          MISCUtils.debug("Interaction " + sign.getType().place());
+        	Double place = sign.getType().place(MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
+          MISCUtils.debug("Interaction " + place);
           MISCUtils.debug("Interaction " + sign.getType().name());
-          if(sign.getType().place() != null && sign.getType().place() > 0.0) {
-            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, sign.getType().place(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
+          if(place != null && place > 0.0) {
+            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, place, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignPlace");
-            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), sign.getType().place()));
+            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), place));
             event.getPlayer().sendMessage(charged.translate());
           }
           TNE.instance.manager.signs.put(sign.getLocation(), sign);
@@ -393,7 +398,7 @@ public class InteractionListener implements Listener {
 			if(villager.getCustomName() != null && villager.getCustomName().equalsIgnoreCase("banker")) {
 				event.setCancelled(true);
 				if(player.hasPermission("tne.bank.use")) {
-					if(BankUtils.enabled(world)) {
+					if(BankUtils.enabled(world, MISCUtils.getID(player).toString())) {
 						if(BankUtils.npc(world)) {
 							if(BankUtils.hasBank(MISCUtils.getID(player))) {
 								Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
@@ -448,9 +453,10 @@ public class InteractionListener implements Listener {
             }
           }
           if(!event.isCancelled()) {
-            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, sign.getType().use(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
+            Double use = sign.getType().use(MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
+            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, use, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignUse");
-            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), sign.getType().use()));
+            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), use));
             event.getPlayer().sendMessage(charged.translate());
           }
         }

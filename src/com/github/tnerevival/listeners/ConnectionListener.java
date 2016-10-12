@@ -35,14 +35,18 @@ public class ConnectionListener implements Listener {
 		}
 		
 		Account account = AccountUtils.getAccount(MISCUtils.getID(player));
-		
-		String node = "Messages.Account.Confirm";
-		if(account.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-			node = "Messages.Account.Set";
-		}
-		
-		Message message = new Message(node);
-		player.sendMessage(message.translate());
+
+		if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+		  if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+        String node = "Messages.Account.Confirm";
+        if (account.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+          node = "Messages.Account.Set";
+        }
+
+        Message message = new Message(node);
+        player.sendMessage(message.translate());
+      }
+    }
 	}
 	
 	@EventHandler
@@ -54,7 +58,7 @@ public class ConnectionListener implements Listener {
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
-		if(TNE.configurations.getBoolean("Core.Death.Lose")) {
+		if(TNE.instance.api.getBoolean("Core.Death.Lose", MISCUtils.getWorld(event.getEntity()), MISCUtils.getID(event.getEntity()))) {
 			AccountUtils.setFunds(MISCUtils.getID(event.getEntity()), 0.0);
 		}
 	}

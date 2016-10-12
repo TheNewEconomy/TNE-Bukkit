@@ -34,10 +34,12 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    if(type.place() != null && type.place() > 0.0) {
-      if (!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, type.place(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+    Double place = type.place(MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+
+    if(place != null && place > 0.0) {
+      if (!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), type.place()));
+        insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), place));
         event.setCancelled(true);
       }
     }
@@ -82,14 +84,16 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    if(!type.enabled()) {
+    Double use = type.use(MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+
+    if(!type.enabled(MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
       player.sendMessage(new Message("Messages.Objects.SignDisabled").translate());
       event.setCancelled(true);
     }
 
-    if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, type.use(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+    if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), type.use()));
+      insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), use));
       event.setCancelled(true);
     }
 

@@ -40,6 +40,7 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Money.Took", "<white>Successfully took <gold>$amount<white> from $player.");
 		configurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");
 		configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
+		configurations.put("Messages.Money.NoPins", "<red>Pins are disabled in this world!");
 
 		configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
 		configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");

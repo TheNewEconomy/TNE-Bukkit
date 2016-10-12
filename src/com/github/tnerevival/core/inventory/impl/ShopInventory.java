@@ -32,7 +32,7 @@ public class ShopInventory extends GenericInventory {
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
     ShopEntry i = s.getItem(slot);
     if(type.equals(ClickType.RIGHT)) {
-      if(slot < Shop.getSlots() && i != null && i.getTrade() != null  && !i.getTrade().toItemStack().getType().equals(Material.AIR)) {
+      if(slot < Shop.getSlots(s.getWorld(), s.getOwner()) && i != null && i.getTrade() != null  && !i.getTrade().toItemStack().getType().equals(Material.AIR)) {
         if (i.getStock() >= i.getItem().getAmount()) {
           if (MISCUtils.getItemCount(viewer.getUUID(), i.getTrade().toItemStack()) >= i.getTrade().getAmount()) {
             s.remove(slot, i.getItem().getAmount());
@@ -53,7 +53,7 @@ public class ShopInventory extends GenericInventory {
       MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoTrade").translate());
       return false;
     } else if(type.equals(ClickType.LEFT)) {
-      if(slot < Shop.getSlots()  && i != null) {
+      if(slot < Shop.getSlots(s.getWorld(), s.getOwner())  && i != null) {
         if (i.isBuy()) {
           if(i.getCost() > 0.0 || i.getCost() <= 0.0 && i.getTrade() == null || i.getCost() <= 0.0 && i.getTrade().toItemStack().getType().equals(Material.AIR)) {
             if (i.getStock() >= i.getItem().getAmount()) {
@@ -103,7 +103,7 @@ public class ShopInventory extends GenericInventory {
         }
       }
     } else if(type.equals(ClickType.SHIFT_RIGHT)) {
-      if(slot < Shop.getSlots() && Shop.canModify(s.getName(), MISCUtils.getPlayer(viewer.getUUID())) && i != null) {
+      if(slot < Shop.getSlots(s.getWorld(), s.getOwner()) && Shop.canModify(s.getName(), MISCUtils.getPlayer(viewer.getUUID())) && i != null) {
         s.removeItem(i.getItem().toItemStack(), i.getCost(), i.isBuy(), i.getTrade().toItemStack());
         if(i.getStock() > 0) {
           ItemStack temp = i.getItem().toItemStack();

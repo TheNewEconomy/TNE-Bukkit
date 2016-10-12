@@ -319,7 +319,7 @@ public class MISCUtils {
 	
 	@SuppressWarnings("deprecation")
 	public static Player getPlayer(String username) {
-		if(!TNE.configurations.getBoolean("Core.UUID")) {
+		if(!TNE.instance.api.getBoolean("Core.UUID")) {
 			return Bukkit.getPlayer(username);
 		}
 		UUID id = getID(username);
@@ -328,7 +328,7 @@ public class MISCUtils {
 	
 	@SuppressWarnings("deprecation")
 	public static Player getPlayer(UUID id) {
-		if(!TNE.configurations.getBoolean("Core.UUID")) {
+		if(!TNE.instance.api.getBoolean("Core.UUID")) {
 			return Bukkit.getPlayer(ecoToUsername(id));
 		}
 		return Bukkit.getPlayer(id);
@@ -365,7 +365,7 @@ public class MISCUtils {
 			return MISCUtils.ecoID(player);
 		}
 		
-		if(!TNE.configurations.getBoolean("Core.UUID")) {
+		if(!TNE.instance.api.getBoolean("Core.UUID")) {
 			return ecoID(player);
 		}
 		
@@ -374,14 +374,14 @@ public class MISCUtils {
 	}
 	
 	public static UUID getID(Player player) {
-		if(!TNE.configurations.getBoolean("Core.UUID")) {
+		if(!TNE.instance.api.getBoolean("Core.UUID")) {
 			return ecoID(player.getDisplayName());
 		}
 		return player.getUniqueId();
 	}
 	
 	public static UUID getID(OfflinePlayer player) {
-		if(!TNE.configurations.getBoolean("Core.UUID")) {
+		if(!TNE.instance.api.getBoolean("Core.UUID")) {
 			return ecoID(player.getName());
 		}
 		return player.getUniqueId();
@@ -402,7 +402,7 @@ public class MISCUtils {
 		if(multiWorld() && worldConfigExists("Worlds." + world + ".Shorten")) {
 			return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Shorten");
 		}
-		return TNE.configurations.getBoolean("Core.Shorten");
+		return TNE.instance.api.getBoolean("Core.Shorten", world);
 	}
 	
 	public static String formatBalance(String world, double balance) {
@@ -440,17 +440,11 @@ public class MISCUtils {
 	}
 	
 	public static String getMajorCurrencyName(String world, Boolean singular) {
-		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MajorName")) {
-			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Single") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MajorName.Plural");
-		}
-		return (singular) ? TNE.configurations.getString("Core.Currency.MajorName.Single") : TNE.configurations.getString("Core.Currency.MajorName.Plural");
+		return (singular) ? TNE.instance.api.getString("Core.Currency.MajorName.Single", world) : TNE.instance.api.getString("Core.Currency.MajorName.Plural", world);
 	}
 	
 	public static String getMinorCurrencyName(String world, Boolean singular) {
-		if(multiWorld() && worldConfigExists("Worlds." + world + ".Currency.MinorName")) {
-			return (singular) ? TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Singular") : TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.MinorName.Plural");
-		}
-		return (singular) ? TNE.configurations.getString("Core.Currency.MinorName.Single") : TNE.configurations.getString("Core.Currency.MinorName.Plural");
+		return (singular) ? TNE.instance.api.getString("Core.Currency.MinorName.Single", world) : TNE.instance.api.getString("Core.Currency.MinorName.Plural", world);
 	}
 	
 	//ItemStack Utils
@@ -492,12 +486,12 @@ public class MISCUtils {
 			}
 			return false;
 		}
-		return TNE.configurations.getBoolean("Core.Bank.Connected");
+		return TNE.instance.api.getBoolean("Core.Bank.Connected", world);
 	}
 	
 	//World Utils
 	public static Boolean multiWorld() {
-		return TNE.configurations.getBoolean("Core.Multiworld");
+		return TNE.instance.api.getBoolean("Core.Multiworld");
 	}
 	
 	public static Boolean worldConfigExists(String node, String world) {

@@ -12,6 +12,8 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Balance", 200.0);
 		configurations.put("Core.Shorten", true);
 		configurations.put("Core.Metrics", true);
+		configurations.put("Core.Pins.Enabled", true);
+		configurations.put("Core.Pins.Force", true);
 		configurations.put("Core.Update.Check", true);
 		configurations.put("Core.Update.Notify", true);
 		configurations.put("Core.AutoSaver.Enabled", true);

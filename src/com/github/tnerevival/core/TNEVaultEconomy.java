@@ -46,7 +46,7 @@ public class TNEVaultEconomy implements Economy {
 	public EconomyResponse createBank(String name, OfflinePlayer player) {
 	  String world = MISCUtils.getWorld(player.getPlayer());
 
-    if(!BankUtils.enabled(world)) {
+    if(!BankUtils.enabled(world, MISCUtils.getID(player).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -54,13 +54,13 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " already has a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world), TransactionType.MONEY_INQUIRY, world)) {
+    if(!AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world, MISCUtils.getID(player).toString()), TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " does not have enough funds for a bank in this world!");
     }
 
-    Bank b = new Bank(getBankAccount(name), BankUtils.size(world));
+    Bank b = new Bank(getBankAccount(name), BankUtils.size(world, MISCUtils.getID(player).toString()));
     AccountUtils.getAccount(getBankAccount(name)).setBank(world, b);
-    AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world), TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world, MISCUtils.getID(player).toString()), TransactionType.MONEY_REMOVE, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " now owns a bank in this world!");
 	}
 
@@ -232,7 +232,7 @@ public class TNEVaultEconomy implements Economy {
 	@Deprecated
 	public EconomyResponse bankBalance(String username) {
     String world = MISCUtils.getWorld(getBankAccount(username));
-    if(!BankUtils.enabled(world)) {
+    if(!BankUtils.enabled(world, getBankAccount(username).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -246,7 +246,7 @@ public class TNEVaultEconomy implements Economy {
 	@Deprecated
 	public EconomyResponse bankDeposit(String username, double amount) {
     String world = MISCUtils.getWorld(getBankAccount(username));
-    if(!BankUtils.enabled(world)) {
+    if(!BankUtils.enabled(world, getBankAccount(username).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -265,7 +265,7 @@ public class TNEVaultEconomy implements Economy {
 	@Deprecated
 	public EconomyResponse bankHas(String username, double amount) {
 	  String world = MISCUtils.getWorld(getBankAccount(username));
-    if(!BankUtils.enabled(world)) {
+    if(!BankUtils.enabled(world, getBankAccount(username).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -283,7 +283,7 @@ public class TNEVaultEconomy implements Economy {
 	@Deprecated
 	public EconomyResponse bankWithdraw(String username, double amount) {
     String world = MISCUtils.getWorld(getBankAccount(username));
-    if(!BankUtils.enabled(world)) {
+    if(!BankUtils.enabled(world, getBankAccount(username).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -301,7 +301,7 @@ public class TNEVaultEconomy implements Economy {
 	@Override
 	@Deprecated
 	public EconomyResponse createBank(String username, String world) {
-	  if(!BankUtils.enabled(world)) {
+	  if(!BankUtils.enabled(world, getBankAccount(username).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -309,13 +309,13 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " already has a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, BankUtils.cost(world), TransactionType.MONEY_INQUIRY, world)) {
+    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, BankUtils.cost(world, getBankAccount(username).toString()), TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not have enough funds for a bank in this world!");
     }
 
-    Bank b = new Bank(getBankAccount(username), BankUtils.size(world));
+    Bank b = new Bank(getBankAccount(username), BankUtils.size(world, getBankAccount(username).toString()));
     AccountUtils.getAccount(getBankAccount(username)).setBank(world, b);
-    AccountUtils.transaction(getBankAccount(username).toString(), null, BankUtils.cost(world), TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(getBankAccount(username).toString(), null, BankUtils.cost(world, getBankAccount(username).toString()), TransactionType.MONEY_REMOVE, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " now owns a bank in this world!");
   }
 

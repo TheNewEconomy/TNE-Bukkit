@@ -1,11 +1,12 @@
 package com.github.tnerevival.commands.pin;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class PinCommand extends TNECommand {
 
@@ -38,6 +39,13 @@ public class PinCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
+	  Player player = (Player)sender;
+
+    if(!TNE.instance.api.getBoolean("Core.Pins.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
+      player.sendMessage(new Message("Messages.Money.NoPins").translate());
+      return false;
+    }
+
 		if(arguments.length == 0) {
 			help(sender);
 			return false;

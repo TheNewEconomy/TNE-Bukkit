@@ -107,10 +107,14 @@ public abstract class TNEInventory {
     if(!acc.getStatus().getBalance())
       return "Messages.Account.Locked";
 
-    if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
-      return "Messages.Account.Set";
-    else if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(viewer.getUUID()))
-      return "Messages.Account.Confirm";
+    if(TNE.instance.manager.enabled(viewer.getUUID(), MISCUtils.getWorld(viewer.getUUID()))) {
+      if (!TNE.instance.manager.confirmed(viewer.getUUID(), MISCUtils.getWorld(viewer.getUUID()))) {
+        if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
+          return "Messages.Account.Set";
+        else if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
+          return "Messages.Account.Confirm";
+      }
+    }
 
     if(config.inventoryEnabled(inventory.getType())) {
       if(config.isTimed(inventory.getType())) {

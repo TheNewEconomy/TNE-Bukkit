@@ -1,5 +1,6 @@
 package com.github.tnerevival.commands.shop;
 
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,10 +48,12 @@ public class ShopCommand extends TNECommand {
 	
 	@Override
 	public boolean execute(CommandSender sender, String[] arguments) {
-		
+		String name = "";
+    String world = TNE.instance.defaultWorld;
 		if(sender instanceof Player) {
 			Player player = getPlayer(sender);
-			
+			name = MISCUtils.getID(player).toString();
+			world = MISCUtils.getWorld(player);
 			if(AccountUtils.commandLocked(player)) {
 				return false;
 			}
@@ -60,8 +63,7 @@ public class ShopCommand extends TNECommand {
 			help(sender);
 			return false;
 		}
-
-		if(!TNE.configurations.getBoolean("Core.Shops.Enabled")) {
+		if(!TNE.instance.api.getBoolean("Core.Shops.Enabled", world, name)) {
 		  sender.sendMessage(new Message("Messages.Shop.Disabled").translate());
       return false;
     }

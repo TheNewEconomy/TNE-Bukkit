@@ -55,18 +55,15 @@ public class MoneyCommand extends TNECommand {
 				sender.sendMessage(locked.translate());
 				return false;
 			}
-			
-			if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-				Message set = new Message("Messages.Account.Set");
-				sender.sendMessage(set.translate());
-				return false;
-			}
-			
-			if(!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") && !TNE.instance.manager.confirmed.contains(MISCUtils.getID(player))) {
-				Message confirm = new Message("Messages.Account.Confirm");
-				sender.sendMessage(confirm.translate());
-				return false;
-			}
+			if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+        if (!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+
+          boolean set = !acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE");
+
+          String message = (set)? "Messages.Account.Confirm" : "Messages.Account.Set";
+          player.sendMessage(new Message(message).translate());
+        }
+      }
 		}
 		
 		if(arguments.length == 0 && sender instanceof Player) {

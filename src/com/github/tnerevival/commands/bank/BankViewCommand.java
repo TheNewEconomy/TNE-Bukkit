@@ -41,7 +41,7 @@ public class BankViewCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String[] arguments) {
 
 		Player player = getPlayer(sender);
-		if(BankUtils.command(player.getWorld().getName())) {
+		if(BankUtils.command(player.getWorld().getName(), MISCUtils.getID(player).toString())) {
 			if(BankUtils.hasBank(MISCUtils.getID(player))) {
 				Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
 				player.openInventory(bankInventory);

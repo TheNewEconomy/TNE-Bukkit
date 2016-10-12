@@ -49,7 +49,7 @@ public class ShopBrowseCommand extends TNECommand {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
 
-        if(s.getShoppers() != null && s.getShoppers().size() >= TNE.configurations.getInt("Core.Shops.Shoppers")) {
+        if(s.getShoppers() != null && s.getShoppers().size() >= TNE.instance.api.getInteger("Core.Shops.Shoppers")) {
           sender.sendMessage(new Message("Messages.Shop.Shoppers").translate());
           return false;
         }

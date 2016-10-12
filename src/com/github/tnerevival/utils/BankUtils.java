@@ -22,30 +22,20 @@ public class BankUtils {
 		while(it.hasNext()) {
 			Entry<String, Bank> entry = it.next();
 			
-			if(interestEnabled(entry.getKey())) {
+			if(interestEnabled(entry.getKey(), id.toString())) {
 				Double gold = entry.getValue().getGold();
-				Double interestEarned = gold * interestRate(entry.getKey());
+				Double interestEarned = gold * interestRate(entry.getKey(), id.toString());
 				entry.getValue().setGold(gold + AccountUtils.round(interestEarned));
 			}
 		}
 	}
 	
-	public static Boolean interestEnabled(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Interest.Enabled")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Interest.Enabled");
-			}
-		}
-		return TNE.configurations.getBoolean("Core.Bank.Interest.Enabled");
+	private static Boolean interestEnabled(String world, String player) {
+		return TNE.instance.api.getBoolean("Core.Bank.Interest.Enabled", world, player);
 	}
 	
-	public static Double interestRate(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Interest.Rate")) {
-				return TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Interest.Rate");
-			}
-		}
-		return TNE.configurations.getDouble("Core.Bank.Interest.Rate");
+	private static Double interestRate(String world, String player) {
+		return TNE.instance.api.getDouble("Core.Bank.Interest.Rate", world, player);
 	}
 
 	public static boolean bankMember(UUID owner, UUID id) {
@@ -118,7 +108,7 @@ public class BankUtils {
 		return bank;
 	}
 	
-	public static Inventory getBankInventory(UUID owner, String world) {
+	private static Inventory getBankInventory(UUID owner, String world) {
 		
 		if(!hasBank(owner, world)) {
 			return null;
@@ -130,7 +120,7 @@ public class BankUtils {
 		
 		Bank bank = getBank(owner, world);
 		String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Bank" + ChatColor.GOLD + "]" + ChatColor.WHITE + MISCUtils.getPlayer(owner).getDisplayName();
-		Inventory bankInventory = Bukkit.createInventory(null, size(world), title);
+		Inventory bankInventory = Bukkit.createInventory(null, size(world, owner.toString()), title);
 		if(bank.getItems().size() > 0) {
 			List<SerializableItemStack> items = bank.getItems();
 			
@@ -164,76 +154,38 @@ public class BankUtils {
 	}
 
   public static void setBankBalance(UUID owner, String world, Double amount) {
-    if(!AccountUtils.getAccount(owner).getStatus().getBank()) {
-      return;
+    if(AccountUtils.getAccount(owner).getStatus().getBank()) {
+			if(hasBank(owner, world)) {
+				Bank bank = getBank(owner, world);
+				bank.setGold(AccountUtils.round(amount));
+			}
     }
-    if(hasBank(owner, world)) {
-      Bank bank = getBank(owner, world);
-      bank.setGold(AccountUtils.round(amount));
-      return;
-    }
-  }
-
-  public static void setBankBalance(UUID owner, Double amount) {
-    setBankBalance(owner, TNE.instance.defaultWorld, amount);
   }
 	
 	//Configuration-related Utils
 	
-	public static Integer size(String world) {
-		Integer rows = 3;
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Rows")) {
-				rows = TNE.instance.worldConfigurations.getInt("Worlds." + world + ".Bank.Rows");
-			}
-		} else {
-			rows = TNE.configurations.getInt("Core.Bank.Rows");
-		}
+	public static Integer size(String world, String player) {
+		Integer rows = TNE.instance.api.getInteger("Core.Bank.Rows", world, player);
 		return (rows >= 1 && rows <= 6) ? (rows * 9) : 27;
 	}
 	
-	public static Boolean enabled(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Enabled")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Enabled");
-			}
-		}
-		return TNE.configurations.getBoolean("Core.Bank.Enabled");
+	public static Boolean enabled(String world, String player) {
+		return TNE.instance.api.getBoolean("Core.Bank.Enabled", world, player);
 	}
 	
-	public static Boolean command(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Command")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Command");
-			}
-		}
-		return TNE.configurations.getBoolean("Core.Bank.Command");
+	public static Boolean command(String world, String player) {
+		return TNE.instance.api.getBoolean("Core.Bank.Command", world, player);
 	}
 	
-	public static Double cost(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.Cost")) {
-				return AccountUtils.round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Bank.Cost"));
-			}
-		}
-		return AccountUtils.round(TNE.configurations.getDouble("Core.Bank.Cost"));
+	public static Double cost(String world, String player) {
+		return AccountUtils.round(TNE.instance.api.getDouble("Core.Bank.Cost", world, player));
 	}
 	
-	public static Boolean sign(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Signs.Bank.Enabled")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Signs.Bank.Enabled");
-			}
-		}
-		return TNE.configurations.getBoolean("Core.Signs.Bank.Enabled");
+	public static Boolean sign(String world, String player) {
+		return TNE.instance.api.getBoolean("Core.Signs.Bank.Enabled", world, player);
 	}
 	
 	public static Boolean npc(String world) {
-		if(MISCUtils.multiWorld()) {
-			if(MISCUtils.worldConfigExists("Worlds." + world + ".Bank.NPC")) {
-				return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.NPC");
-			}
-		}
-		return TNE.configurations.getBoolean("Core.Bank.NPC");
+		return TNE.instance.api.getBoolean("Core.Bank.NPC", world);
 	}
 }

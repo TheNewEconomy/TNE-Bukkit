@@ -68,7 +68,7 @@ public class ShopCreateCommand extends TNECommand {
           s.setAdmin(true);
         }
 
-        if(!s.isAdmin() && Shop.amount(s.getOwner()) >= TNE.configurations.getInt("Core.Shops.Max")) {
+        if(!s.isAdmin() && Shop.amount(s.getOwner()) >= TNE.instance.api.getInteger("Core.Shops.Max", s.getWorld(), s.getOwner().toString())) {
           getPlayer(sender).sendMessage(new Message("Messages.Shop.Max").translate());
           return false;
         }
@@ -78,20 +78,20 @@ public class ShopCreateCommand extends TNECommand {
 				}
 
 				if(!s.isAdmin() && !AccountUtils.transaction(s.getOwner().toString(), null,
-            TNE.configurations.getDouble("Core.Shops.Cost"),
+            TNE.instance.api.getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString()),
             TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(getPlayer(sender)))) {
 
 				  Message insufficient = new Message("Messages.Money.Insufficient");
 
           insufficient.addVariable("$amount", MISCUtils.formatBalance(
               MISCUtils.getWorld(getPlayer(sender)),
-              TNE.configurations.getDouble("Core.Shops.Cost")
+              TNE.instance.api.getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString())
           ));
 				  return false;
         }
         if(!s.isAdmin()) {
           AccountUtils.transaction(s.getOwner().toString(), null,
-              TNE.configurations.getDouble("Core.Shops.Cost"),
+              TNE.instance.api.getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString()),
               TransactionType.MONEY_REMOVE, MISCUtils.getWorld(getPlayer(sender)));
         }
 				TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);

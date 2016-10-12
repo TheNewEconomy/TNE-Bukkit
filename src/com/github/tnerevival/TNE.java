@@ -60,7 +60,6 @@ public class TNE extends JavaPlugin {
 	public FileConfiguration worldConfigurations;
 	
 	public static ConfigurationManager configurations;
-	//public static Configurations configurations;
 	public static UpdateChecker updater;
 	
 	public String defaultWorld;
@@ -143,8 +142,6 @@ public class TNE extends JavaPlugin {
 		configurations.save(messageConfigurations, "messages");
 		configurations.save(objectConfigurations, "objects");
 		configurations.save(materialConfigurations, "materials");
-		configurations.save(playerConfigurations, "players");
-		configurations.save(worldConfigurations, "worlds");
 		saveConfigurations();
 		try {
 			saveWorker.cancel();

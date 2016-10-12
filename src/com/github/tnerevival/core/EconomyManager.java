@@ -59,4 +59,22 @@ public class EconomyManager {
       }
     }
 	}
+
+	public boolean enabled(UUID id, String world) {
+	  return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
+  }
+
+	public boolean confirmed(UUID id, String world) {
+	  Boolean enabled = TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
+    Boolean force = TNE.instance.api.getBoolean("Core.Pins.Force", world, id);
+
+    if(!enabled) {
+      MISCUtils.getPlayer(id).sendMessage(new Message("Messages.Money.NoPins").translate());
+      return true;
+    }
+
+    if(!force) return true;
+    if(confirmed.contains(id)) return true;
+    return false;
+  }
 }
