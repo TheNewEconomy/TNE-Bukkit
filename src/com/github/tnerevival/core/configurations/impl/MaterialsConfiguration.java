@@ -1,6 +1,6 @@
-package com.github.tnerevival.core.configurations;
+package com.github.tnerevival.core.configurations.impl;
 
-import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.configurations.Configuration;
 import com.github.tnerevival.core.objects.BlockObject;
 import com.github.tnerevival.core.objects.ItemObject;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,8 +10,8 @@ import java.util.Set;
 
 public class MaterialsConfiguration extends Configuration {
 
-	HashMap<String, ItemObject> items = new HashMap<>();
-	HashMap<String, BlockObject> blocks = new HashMap<>();
+	private HashMap<String, ItemObject> items = new HashMap<>();
+	private HashMap<String, BlockObject> blocks = new HashMap<>();
 	
 	@Override
 	public void load(FileConfiguration configurationFile) {
@@ -70,7 +70,7 @@ public class MaterialsConfiguration extends Configuration {
 		}
 		
 		
-		super.load(TNE.instance.objectConfigurations);
+		super.load(configurationFile);
 	}
 	
 	public Boolean containsItem(String name) {

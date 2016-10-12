@@ -6,7 +6,6 @@ import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.GenericInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
-import com.github.tnerevival.core.inventory.impl.ShopItemInventory;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
@@ -14,7 +13,10 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 import java.util.UUID;
 
@@ -25,11 +27,6 @@ public class InventoryListener implements Listener {
 	public InventoryListener(TNE plugin) {
 		this.plugin = plugin;
 	}
-
-	@EventHandler
-  public void onPrepAnvil(PrepareAnvilEvent event) {
-	  event.getInventory().setItem(2, ShopItemInventory.confirm);
-  }
 
 	@EventHandler
   public void onInventoryOpen(InventoryOpenEvent event) {

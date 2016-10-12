@@ -1,22 +1,18 @@
-package com.github.tnerevival.core.configurations;
+package com.github.tnerevival.core.configurations.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.inventory.InventoryType;
-
-import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.configurations.Configuration;
 import com.github.tnerevival.core.objects.TNEAccessPackage;
 import com.github.tnerevival.core.objects.TNECommandObject;
 import com.github.tnerevival.core.objects.TNEInventoryObject;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.inventory.InventoryType;
+
+import java.util.*;
 
 public class ObjectConfiguration extends Configuration {
 	
-	HashMap<String, TNECommandObject> commands = new HashMap<String, TNECommandObject>();
-	HashMap<String, TNEInventoryObject> inventories = new HashMap<String, TNEInventoryObject>();
+	private Map<String, TNECommandObject> commands = new HashMap<>();
+	private Map<String, TNEInventoryObject> inventories = new HashMap<>();
 	
 	@Override
 	public void load(FileConfiguration configurationFile) {		
@@ -72,7 +68,7 @@ public class ObjectConfiguration extends Configuration {
 			}
 			inventories.put(inventoryName, inventory);
 		}
-		super.load(TNE.instance.objectConfigurations);
+		super.load(configurationFile);
 	}
 	
 	public String inventoryType(InventoryType type) {

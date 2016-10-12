@@ -1,5 +1,6 @@
-package com.github.tnerevival.core.configurations;
+package com.github.tnerevival.core.configurations.impl;
 
+import com.github.tnerevival.core.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class MainConfiguration extends Configuration {

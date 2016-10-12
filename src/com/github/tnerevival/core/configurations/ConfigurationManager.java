@@ -1,14 +1,14 @@
 package com.github.tnerevival.core.configurations;
 
-import java.util.HashMap;
-
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.configurations.impl.*;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.github.tnerevival.TNE;
+import java.util.HashMap;
 
 public class ConfigurationManager {
 	
-	public HashMap<String, Configuration> configurations = new HashMap<String, Configuration>();
+	public HashMap<String, Configuration> configurations = new HashMap<>();
 	
 	public ConfigurationManager() {
 		MainConfiguration main = new MainConfiguration();
@@ -21,7 +21,7 @@ public class ConfigurationManager {
 		mob.load(TNE.instance.mobConfigurations);
 		objects.load(TNE.instance.objectConfigurations);
 		materials.load(TNE.instance.materialConfigurations);
-		
+
 		configurations.put("main", main);
 		configurations.put("mob", mob);
 		configurations.put("messages", message);
@@ -37,7 +37,7 @@ public class ConfigurationManager {
 		return getDouble("Mobs." + mob + ".Reward", "mob");
 	}
 	
-	public Configuration getConfiguration(String id) {
+	private Configuration getConfiguration(String id) {
 		return configurations.get(id);
 	}
 	
@@ -55,6 +55,10 @@ public class ConfigurationManager {
 	
 	public void save(FileConfiguration configurationFile, String configID) {
 		getConfiguration(configID).save(configurationFile);
+	}
+
+	public Object getValue(String node, String configuration) {
+		return getConfiguration(configuration).getValue(node);
 	}
 	
 	public String getMessage(String node) {
@@ -86,18 +90,55 @@ public class ConfigurationManager {
 	}
 	
 	public Integer getInt(String node, String configID) {
-		return (Integer)getConfiguration(configID).getValue(node);
+		return (Integer)getValue(node, configID);
 	}
 	
 	public Double getDouble(String node, String configID) {
-		return (Double)getConfiguration(configID).getValue(node);
+		return (Double)getValue(node, configID);
 	}
 	
 	public Long getLong(String node, String configID) {
-		return Long.valueOf(((Integer)getConfiguration(configID).getValue(node)).longValue());
+		return Long.valueOf(getInt(node, configID));
 	}
 	
 	public String getString(String node, String configID) {
-		return (String)getConfiguration(configID).getValue(node);
+		return (String)getValue(node, configID);
 	}
+
+	/*
+	 * Helper methods for configurations.
+	 */
+  public Object getConfiguration(String configuration, String world, String player) {
+    String[] exploded = configuration.split("\\.");
+    String path = configuration;
+    String prefix = "Core";
+    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN) {
+      prefix = exploded[0];
+      path = path.replace(prefix + ".", "");
+    }
+
+    if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
+    if(getBoolean("Core.Multiworld") && worldEnabled(path, world)) return getWorldConfiguration(path, world);
+    return getValue(prefix + "." + path, ConfigurationType.fromPrefix(prefix).getIdentifier());
+  }
+
+  public boolean playerEnabled(String node, String player) {
+    String path = ConfigurationType.PLAYERS.getPrefix() + "." + player + "." + node;
+    return TNE.instance.playerConfigurations.contains(path);
+  }
+
+  public Object getPlayerConfiguration(String node, String player) {
+    String path = ConfigurationType.PLAYERS.getPrefix() + "." + player + "." + node;
+    return TNE.instance.playerConfigurations.get(path);
+  }
+
+  public boolean worldEnabled(String node, String world) {
+    String path = ConfigurationType.WORLDS.getPrefix() + "." + world + "." + node;
+    return TNE.instance.worldConfigurations.contains(path);
+  }
+
+  public Object getWorldConfiguration(String node, String world) {
+    String path = ConfigurationType.WORLDS.getPrefix() + "." + world + "." + node;
+    return TNE.instance.worldConfigurations.get(path);
+  }
 }

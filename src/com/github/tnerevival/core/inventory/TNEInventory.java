@@ -3,7 +3,7 @@ package com.github.tnerevival.core.inventory;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.configurations.ObjectConfiguration;
+import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.inventory.impl.ShopItemInventory;

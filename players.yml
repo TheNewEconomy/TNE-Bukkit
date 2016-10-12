@@ -1,0 +1,16 @@
+# The New Economy v0.0.3.0
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+
+
+#Used for per-player configurations.
+Players:
+
+    #The username field could be the player's username or UUID.
+    Username:
+        #Now we Simply override and configurations we want for this specific player.
+        #This allows us even more control over our server.
+        Shops:
+            Enabled: false

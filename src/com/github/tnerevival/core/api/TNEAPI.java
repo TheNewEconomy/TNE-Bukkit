@@ -2,6 +2,7 @@ package com.github.tnerevival.core.api;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -16,6 +17,11 @@ public class TNEAPI {
 	public TNEAPI(TNE plugin) {
 		this.plugin = plugin;
 	}
+
+
+  /*
+   * Account-related Methods
+   */
 	
 	@Deprecated
 	public Boolean accountExists(String username) {
@@ -81,6 +87,10 @@ public class TNEAPI {
 		AccountUtils.createAccount(MISCUtils.getID(player));
 	}
 
+	public boolean transaction(OfflinePlayer player, OfflinePlayer recipient, String world, TransactionCost cost, TransactionType type) {
+	  return AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(recipient).toString(), cost, type, world);
+  }
+
 	public void fundsAdd(OfflinePlayer player, Double amount) {
     fundsAdd(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
 	}
@@ -117,6 +127,10 @@ public class TNEAPI {
 		return AccountUtils.getFunds(MISCUtils.getID(player), world);
 	}
 
+	/*
+	 * Currency-related Methods.
+	 */
+
 	public String format(Double amount) {
 		return MISCUtils.formatBalance(plugin.defaultWorld, amount);
 	}
@@ -151,4 +165,24 @@ public class TNEAPI {
 		}
 		return MISCUtils.getID(username);
 	}
+
+	/*
+	 * Configuration-related Methods.
+	 */
+
+	public Object getConfiguration(String configuration) {
+	  return getConfiguration(configuration, TNE.instance.defaultWorld);
+  }
+
+  public Object getConfiguration(String configuration, String world) {
+    return getConfiguration(configuration, world, "");
+  }
+
+  public Object getConfiguration(String configuration, String world, UUID uuid) {
+    return getConfiguration(configuration, world, uuid.toString());
+  }
+
+  public Object getConfiguration(String configuration, String world, String player) {
+    return TNE.configurations.getConfiguration(configuration, world, player);
+  }
 }
