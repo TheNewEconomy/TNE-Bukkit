@@ -47,6 +47,7 @@ public class ShopCloseCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(sender instanceof Player && arguments.length >= 1) {
+			Player player = getPlayer(sender);
 			if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
 				if(Shop.canModify(arguments[0], (Player)sender)) {
 					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
@@ -62,20 +63,20 @@ public class ShopCloseCommand extends TNECommand {
 					for(UUID shopper : s.getShoppers()) {
 						Player p = MISCUtils.getPlayer(shopper);
 						p.closeInventory();
-						getPlayer(sender).sendMessage(new Message("Messages.Shop.ClosedBrowse").translate());
+						new Message("Messages.Shop.ClosedBrowse").translate(MISCUtils.getWorld(player), player);
 					}
 					s.getShoppers().clear();
 					
 					TNE.instance.manager.shops.remove(arguments[0]);
 					Message hidden = new Message("Messages.Shop.Closed");
 					hidden.addVariable("$shop", s.getName());
-					getPlayer(sender).sendMessage(hidden.translate());
+					hidden.translate(MISCUtils.getWorld(player), player);
 					return true;
 				}
-				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
+				new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
-			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
+			new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
 			return false;
 		} else {
 			help(sender);

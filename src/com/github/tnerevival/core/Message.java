@@ -1,16 +1,20 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Message {
 
-	private static final HashMap<String, String> colours;
+	private static final Map<String, String> colours;
 	static {
-		colours = new HashMap<String, String>();
+		colours = new HashMap<>();
 		//Colour Characters
 		colours.put("<aqua>", ChatColor.AQUA.toString());
 		colours.put("<black>", ChatColor.BLACK.toString());
@@ -59,16 +63,19 @@ public class Message {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 	
-	public String translate() {
-		if(TNE.instance.api.getString("Messages." + this.node) == null) return this.node;
+	public void translate(String world, CommandSender sender) {
+	  String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+	  String found = TNE.instance.api.getString("Messages." + this.node, world, id);
 		
-		String message = replaceColours(TNE.instance.api.getString("Messages." + this.node));
-		Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
-		
-		while(it.hasNext()) {
-			java.util.Map.Entry<String, String> entry = it.next();
-			message = message.replace(entry.getKey(), entry.getValue());
-		}
-		return message;
+		String message = (found == null)? this.node : replaceColours(found);
+    if(!message.equals(this.node)) {
+      Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
+
+      while (it.hasNext()) {
+        java.util.Map.Entry<String, String> entry = it.next();
+        message = message.replace(entry.getKey(), entry.getValue());
+      }
+    }
+		sender.sendMessage(message);
 	}
 }

@@ -41,7 +41,7 @@ public class AccountUtils {
 		if(!acc.getStatus().getBalance()) {
 			Message locked = new Message("Messages.Account.Locked");
 			locked.addVariable("$player", player.getDisplayName());
-			player.sendMessage(locked.translate());
+			locked.translate(MISCUtils.getWorld(player), player);
 			return true;
 		}
 
@@ -49,13 +49,13 @@ public class AccountUtils {
       if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
         if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
           Message set = new Message("Messages.Account.Set");
-          player.sendMessage(set.translate());
+          set.translate(MISCUtils.getWorld(player), player);
           return false;
         }
 
         if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
           Message confirm = new Message("Messages.Account.Confirm");
-          player.sendMessage(confirm.translate());
+          confirm.translate(MISCUtils.getWorld(player), player);
           return false;
         }
       }

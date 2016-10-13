@@ -25,12 +25,12 @@ public class BankSign extends TNESign {
 			if (player.hasPermission(SignType.BANK.getUsePermission())) {
 
 				if (!BankUtils.hasBank(MISCUtils.getID(player))) {
-					player.sendMessage(new Message("Messages.Bank.None").translate());
+					new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
 					return false;
 				}
 
 				if (!BankUtils.sign(MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
-					player.sendMessage(new Message("Messages.Bank.NoSign").translate());
+					new Message("Messages.Bank.NoSign").translate(MISCUtils.getWorld(player), player);
 					return false;
 				}
 

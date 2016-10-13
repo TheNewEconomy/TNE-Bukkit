@@ -5,6 +5,7 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,6 +29,8 @@ public class InventoryTimeWorker extends BukkitRunnable {
     while(it.hasNext()) {
       Entry<UUID, Integer> entry = it.next();
 
+      Player player = MISCUtils.getPlayer(entry.getKey());
+
       Account acc = AccountUtils.getAccount(entry.getKey());
       InventoryType invType = plugin.inventoryManager.getViewing(entry.getKey()).getInventory().getType();
       String type = TNE.configurations.getObjectConfiguration().inventoryType(invType);
@@ -43,7 +46,7 @@ public class InventoryTimeWorker extends BukkitRunnable {
           MISCUtils.getPlayer(entry.getKey()).closeInventory();
           Message m = new Message(message);
           m.addVariable("$type", type);
-          MISCUtils.getPlayer(entry.getKey()).sendMessage(m.translate());
+          m.translate(MISCUtils.getWorld(player), player);
           continue;
         }
 
@@ -53,7 +56,7 @@ public class InventoryTimeWorker extends BukkitRunnable {
           Message m = new Message(message);
           m.addVariable("$type", type);
           m.addVariable("$amount", timeUsed + ((timeUsed == 1) ? " second" : " seconds"));
-          MISCUtils.getPlayer(entry.getKey()).sendMessage(m.translate());
+          m.translate(MISCUtils.getWorld(player), player);
           acc.setTime(MISCUtils.getWorld(MISCUtils.getPlayer(entry.getKey())), type, timeRemaining);
           it.remove();
         }

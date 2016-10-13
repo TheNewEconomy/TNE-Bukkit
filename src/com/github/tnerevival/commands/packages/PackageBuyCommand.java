@@ -46,7 +46,7 @@ public class PackageBuyCommand extends TNECommand {
 		if(!AccountUtils.getAccount(MISCUtils.getID(player)).getStatus().getBalance()) {
 			Message locked = new Message("Messages.Account.Locked");
 			locked.addVariable("$player", player.getDisplayName());
-			sender.sendMessage(locked.translate());
+			locked.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		
@@ -62,12 +62,12 @@ public class PackageBuyCommand extends TNECommand {
 							bought.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));
 							bought.addVariable("$name",  p.getName());
 							bought.addVariable("$type",  arguments[0]);
-							player.sendMessage(bought.translate());
+							bought.translate(MISCUtils.getWorld(player), player);
 							return true;
 						} else {
 							Message insufficient = new Message("Messages.Money.Insufficient");
 							insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));
-							player.sendMessage(insufficient.translate());
+							insufficient.translate(MISCUtils.getWorld(player), player);
 							return false;
 						}
 					}
@@ -76,7 +76,7 @@ public class PackageBuyCommand extends TNECommand {
 			Message insufficient = new Message("Messages.Package.None");
 			insufficient.addVariable("$name",  arguments[1]);
 			insufficient.addVariable("$type",  arguments[0]);
-			player.sendMessage(insufficient.translate());
+			insufficient.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		help(sender);

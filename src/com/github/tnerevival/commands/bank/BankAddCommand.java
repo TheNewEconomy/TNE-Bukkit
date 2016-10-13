@@ -49,17 +49,17 @@ public class BankAddCommand extends TNECommand {
             BankUtils.getBank(MISCUtils.getID(player)).addMember(MISCUtils.getID(MISCUtils.getPlayer(arguments[0])));
             Message added = new Message("Messages.Bank.Added");
             added.addVariable("$player", arguments[0]);
-            player.sendMessage(added.translate());
+            added.translate(MISCUtils.getWorld(player), player);
           }
-          player.sendMessage(new Message("Messages.General.NoPerm").translate());
+          new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
           return false;
         }
-        player.sendMessage(new Message("Messages.Bank.None").translate());
+        new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
         return false;
       }
       Message notFound = new Message("Messages.General.NoPlayer");
       notFound.addVariable("$player", arguments[0]);
-      player.sendMessage(notFound.translate());
+      notFound.translate(MISCUtils.getWorld(player), player);
       return false;
     }
     help(sender);

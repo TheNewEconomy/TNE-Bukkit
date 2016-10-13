@@ -112,14 +112,14 @@ public class ConfigurationManager {
     String[] exploded = configuration.split("\\.");
     String path = configuration;
     String prefix = "Core";
-    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN) {
+    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN && ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.MESSAGES) {
       prefix = exploded[0];
       path = path.replace(prefix + ".", "");
     }
 
     if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
     if(getBoolean("Core.Multiworld") && worldEnabled(path, world)) return getWorldConfiguration(path, world);
-    return getValue(prefix + "." + path, ConfigurationType.fromPrefix(prefix).getIdentifier());
+    return getValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
   }
 
   public boolean playerEnabled(String node, String player) {

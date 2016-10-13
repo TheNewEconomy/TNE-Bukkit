@@ -53,22 +53,22 @@ public class BankWithdrawCommand extends TNECommand {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
             withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             withdrawn.addVariable("$name",  ownerName);
-            player.sendMessage(withdrawn.translate());
+            withdrawn.translate(MISCUtils.getWorld(player), player);
             return true;
           } else {
             Message overdraw = new Message("Messages.Bank.Overdraw");
             overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             overdraw.addVariable("$name",  ownerName);
-            player.sendMessage(overdraw.translate());
+            overdraw.translate(MISCUtils.getWorld(player), player);
 						return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");
         noAccess.addVariable("$name", ownerName);
-        player.sendMessage(noAccess.translate());
+        noAccess.translate(MISCUtils.getWorld(player), player);
         return false;
       }
-      player.sendMessage(new Message("Messages.Bank.None").translate());
+      new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
       return false;
     }
     help(sender);

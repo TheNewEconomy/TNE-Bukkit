@@ -45,23 +45,24 @@ public class ShopWhitelistCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(sender instanceof Player && arguments.length >= 1) {
-			if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
-				if(Shop.canModify(arguments[0], (Player)sender)) {
-					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+			Player player = getPlayer(sender);
+			if(Shop.exists(arguments[0], MISCUtils.getWorld(player))) {
+				if(Shop.canModify(arguments[0], player)) {
+					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(player));
 					UUID target = MISCUtils.getID(arguments[1]);
 					if(s.whitelisted(MISCUtils.getID(arguments[1]))) {
 						s.addWhitelist(target);
-						getPlayer(sender).sendMessage(new Message("Messages.Shop.WhitelistRemoved").translate());
+						new Message("Messages.Shop.WhitelistRemoved").translate(MISCUtils.getWorld(player), player);
 					} else {
 						s.removeWhitelist(target);
-						getPlayer(sender).sendMessage(new Message("Messages.Shop.WhitelistAdded").translate());
+						new Message("Messages.Shop.WhitelistAdded").translate(MISCUtils.getWorld(player), player);
 					}
 					return true;
 				}
-				getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
+				new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
-			getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
+			new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
 			return false;
 		} else {
 			help(sender);

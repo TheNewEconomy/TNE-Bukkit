@@ -42,7 +42,7 @@ public class PinCommand extends TNECommand {
 	  Player player = (Player)sender;
 
     if(!TNE.instance.api.getBoolean("Core.Pins.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
-      player.sendMessage(new Message("Messages.Money.NoPins").translate());
+			new Message("Message.Money.NoPins").translate(MISCUtils.getWorld(player), player);
       return false;
     }
 
@@ -61,13 +61,13 @@ public class PinCommand extends TNECommand {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
-			sender.sendMessage(noCommand.translate());
+			noCommand.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());
-			sender.sendMessage(unable.translate());
+			unable.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		return sub.execute(sender, command, removeSub(arguments));

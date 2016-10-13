@@ -43,7 +43,7 @@ public class PinConfirmCommand extends TNECommand {
 		
 		if(TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
 			Message message = new Message("Messages.Pin.Already");
-			sender.sendMessage(message.translate());
+			message.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		
@@ -51,7 +51,7 @@ public class PinConfirmCommand extends TNECommand {
 			Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
 			if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
 				Message message = new Message("Messages.Account.Set");
-				sender.sendMessage(message.translate());
+				message.translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 			
@@ -62,7 +62,7 @@ public class PinConfirmCommand extends TNECommand {
 			
 			TNE.instance.manager.confirmed.add(MISCUtils.getID(player));
 			Message message = new Message("Messages.Pin.Confirmed");
-			sender.sendMessage(message.translate());
+			message.translate(MISCUtils.getWorld(player), player);
 			return true;
 		}
 		help(sender);

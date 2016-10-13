@@ -1,9 +1,27 @@
+Alpha 3.2
+============
+Feature Set:
+------------
+
+* /money set <player> <amount> [world] command.
+  * This allows administrators to set <player>' balance to <amount>.
+* Addition of optional world parameter to money commands for multi-world balance support
+* Addition of configuration to allow the use of /pay, /bal, and /balance
+as shortcuts.
+* Release /shop command when TNE's shop system is disabled.
+* Add configuration for decimal value. This prevents any funky errors when
+used on servers that don't normally use the standard decimal value.
+* Allow message translations to be set on a per-player and per-world basis.
+
+
 Alpha 3.1
 ============
 Feature Set:
 ------------
 
 * Bug fixes for Alpha 3.0
+* Ability to disable pins
+* Per-player and more per-world configurations
 
 Alpha 3.0
 ============
@@ -15,13 +33,11 @@ Feature Set:
 * New internal transaction system
   * this is a giant step towards full transaction tracking, and history
   * This new system improves code readability, and will better help pin point the location of any bugs that occur during a transaction.
-* Ability to reward/charge for using potions
 * Ability to reward/charge for using items
 * Ability to reward/charge for crafting
 * Ability to reward/charge for smelting
 * Ability to reward/charge for enchanting
 * Ability to reward/charge for mining
-* Ability to reward/charge for brewing potions
 * Ability to charge for inventory use
   * Ability to charge per use(on open)
   * Ability to create packages and charge per second of use
@@ -47,9 +63,3 @@ Feature Set:
   * Bank owners can now use /bank add, and /bank remove to give/revoke a player's access to their bank.
 * Internal optimizations to allow for better code readability, and allow updates to be done in a more straight forward, and faster way.
 
-Possible Features:
------------------
-* Ability to import data from iConomy
-* Ability to change configurations via command
-* Ability to create Auctions(?)
-* Ability to have server, and world-wide lotteries

@@ -46,10 +46,10 @@ public class BankViewCommand extends TNECommand {
 				Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
 				player.openInventory(bankInventory);
 			} else {
-				player.sendMessage(new Message("Messages.Bank.None").translate());
+				new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
 			}
 		} else {
-			player.sendMessage(new Message("Messages.Bank.NoCommand").translate());
+			new Message("Messages.Bank.NoCommand").translate(MISCUtils.getWorld(player), player);
 		}
 		return false;
 	}

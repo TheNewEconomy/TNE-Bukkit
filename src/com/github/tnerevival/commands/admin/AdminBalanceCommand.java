@@ -49,18 +49,18 @@ public class AdminBalanceCommand extends TNECommand {
 					balance.addVariable("$player", arguments[0]);
 					balance.addVariable("$world", world);
 					balance.addVariable("$amount", MISCUtils.formatBalance(world, plugin.api.getBalance(Bukkit.getPlayer(arguments[0]), world)));
-					sender.sendMessage(balance.translate());
+					balance.translate(world, sender);
 					return true;
 				}
 				Message noBalance = new Message("Messages.Admin.NoBalance");
 				noBalance.addVariable("$player", arguments[0]);
 				noBalance.addVariable("$world", world);
-				sender.sendMessage(noBalance.translate());
+				noBalance.translate(world, sender);
 				return false;
 			}
 			Message noPlayer = new Message("Messages.General.NoPlayer");
 			noPlayer.addVariable("$player", arguments[0]);
-			sender.sendMessage(noPlayer.translate());
+			noPlayer.translate(world, sender);
 			return false;
 		}
 		help(sender);

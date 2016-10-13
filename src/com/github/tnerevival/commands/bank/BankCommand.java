@@ -50,7 +50,7 @@ public class BankCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(!BankUtils.enabled(player.getWorld().getName(), MISCUtils.getID(player).toString())) {
-			player.sendMessage(new Message("Messages.Bank.Disabled").translate());
+			new Message("Messages.Bank.Disabled").translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		
@@ -59,7 +59,7 @@ public class BankCommand extends TNECommand {
 		if(!acc.getStatus().getBank()) {
 			Message locked = new Message("Messages.Account.Locked");
 			locked.addVariable("$player", player.getDisplayName());
-			sender.sendMessage(locked.translate());
+			locked.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 
@@ -67,13 +67,13 @@ public class BankCommand extends TNECommand {
 		  if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
         if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
           Message set = new Message("Messages.Account.Set");
-          sender.sendMessage(set.translate());
+          set.translate(MISCUtils.getWorld(player), player);
           return false;
         }
 
         if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
           Message confirm = new Message("Messages.Account.Confirm");
-          sender.sendMessage(confirm.translate());
+          confirm.translate(MISCUtils.getWorld(player), player);
           return false;
         }
       }
@@ -94,13 +94,13 @@ public class BankCommand extends TNECommand {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
-			sender.sendMessage(noCommand.translate());
+			noCommand.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());
-			sender.sendMessage(unable.translate());
+			unable.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		return sub.execute(sender, command, removeSub(arguments));

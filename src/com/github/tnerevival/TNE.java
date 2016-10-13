@@ -8,10 +8,7 @@ import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.inventory.InventoryManager;
 import com.github.tnerevival.core.version.ReleaseType;
-import com.github.tnerevival.listeners.ConnectionListener;
-import com.github.tnerevival.listeners.InteractionListener;
-import com.github.tnerevival.listeners.InventoryListener;
-import com.github.tnerevival.listeners.WorldListener;
+import com.github.tnerevival.listeners.*;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.worker.InterestWorker;
 import com.github.tnerevival.worker.InventoryTimeWorker;
@@ -115,8 +112,10 @@ public class TNE extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
 		getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
+		getServer().getPluginManager().registerEvents(new PlotListener(this), this);
+		getServer().getPluginManager().registerEvents(new TNEListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
-		
+
 		statsWorker = new StatisticsWorker(this);
 		if(configurations.getBoolean("Core.Metrics")) {
 			statsWorker.runTaskTimer(this, 24000, 24000);

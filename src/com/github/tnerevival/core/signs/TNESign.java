@@ -87,13 +87,14 @@ public abstract class TNESign {
     Double use = type.use(MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 
     if(!type.enabled(MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
-      player.sendMessage(new Message("Messages.Objects.SignDisabled").translate());
+      new Message("Messages.Objects.SignDisabled").translate(MISCUtils.getWorld(player), player);
       event.setCancelled(true);
     }
 
     if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), use));
+			insufficient.translate(MISCUtils.getWorld(player), player);
       event.setCancelled(true);
     }
 

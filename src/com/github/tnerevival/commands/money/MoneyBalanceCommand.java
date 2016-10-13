@@ -40,7 +40,7 @@ public class MoneyBalanceCommand extends TNECommand {
 		Player player = getPlayer(sender);
 		Message balance = new Message("Messages.Money.Balance");
 		balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), plugin.api.getBalance(player)));
-		player.sendMessage(balance.translate());
+		balance.translate(MISCUtils.getWorld(player), player);
 		return true;
 	}
 

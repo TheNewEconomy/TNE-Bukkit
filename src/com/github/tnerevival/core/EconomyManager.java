@@ -7,6 +7,7 @@ import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -69,7 +70,8 @@ public class EconomyManager {
     Boolean force = TNE.instance.api.getBoolean("Core.Pins.Force", world, id);
 
     if(!enabled) {
-      MISCUtils.getPlayer(id).sendMessage(new Message("Messages.Money.NoPins").translate());
+    	Player p = MISCUtils.getPlayer(id);
+      new Message("Messages.Money.NoPins").translate(MISCUtils.getWorld(p), p);
       return true;
     }
 

@@ -73,13 +73,13 @@ public class ShopCommand extends TNECommand {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
-			sender.sendMessage(noCommand.translate());
+			noCommand.translate(world, sender);
 			return false;
 		}
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());
-			sender.sendMessage(unable.translate());
+			unable.translate(world, sender);
 			return false;
 		}
 		return sub.execute(sender, command, removeSub(arguments));

@@ -17,6 +17,7 @@ import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.MaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -163,6 +164,7 @@ public abstract class TNEInventory {
 
   public boolean onOpen(InventoryViewer viewer) {
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
+    Player player = MISCUtils.getPlayer(viewer.getUUID());
 
     if(!(this instanceof BankInventory) && !(this instanceof ShopInventory) && !(this instanceof ShopItemInventory)) {
       String charge = charge(viewer);
@@ -171,7 +173,7 @@ public abstract class TNEInventory {
         Message m = new Message(charge);
         m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
-        MISCUtils.getPlayer(viewer.getUUID()).sendMessage(m.translate());
+        m.translate(MISCUtils.getWorld(player), player);
 
         return false;
       }
@@ -180,7 +182,7 @@ public abstract class TNEInventory {
         Message m = new Message(charge);
         m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
-        MISCUtils.getPlayer(viewer.getUUID()).sendMessage(m.translate());
+        m.translate(MISCUtils.getWorld(player), player);
       }
     } else if(this instanceof BankInventory) {
       if(!BankUtils.bankMember(owner, viewer.getUUID(), viewer.getWorld())) {

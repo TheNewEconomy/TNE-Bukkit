@@ -2,6 +2,7 @@ package com.github.tnerevival.commands;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,13 +41,13 @@ public abstract class TNECommand {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
-			sender.sendMessage(noCommand.translate());
+			noCommand.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
 			return false;
 		}
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());
-			sender.sendMessage(unable.translate());
+			unable.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
 			return false;
 		}
 		return sub.execute(sender, command, removeSub(arguments));

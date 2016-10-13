@@ -44,13 +44,13 @@ public class ShopInventory extends GenericInventory {
           Message invalidStock = new Message("Messages.Shop.NotEnough");
           invalidStock.addVariable("$amount", i.getTrade().getAmount() + "");
           invalidStock.addVariable("$item", i.getTrade().toItemStack().getType().name());
-          MISCUtils.getPlayer(viewer.getUUID()).sendMessage(invalidStock.translate());
+          invalidStock.translate(world, MISCUtils.getPlayer(viewer.getUUID()));
           return false;
         }
-        MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoStock").translate());
+        new Message("Messages.Shop.NoStock").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
         return false;
       }
-      MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoTrade").translate());
+      new Message("Messages.Shop.NoTrade").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
       return false;
     } else if(type.equals(ClickType.LEFT)) {
       if(slot < Shop.getSlots(s.getWorld(), s.getOwner())  && i != null) {
@@ -71,13 +71,13 @@ public class ShopInventory extends GenericInventory {
                   MISCUtils.getWorld(viewer.getUUID()),
                   i.getCost()
               ));
-              MISCUtils.getPlayer(viewer.getUUID()).sendMessage(insufficient.translate());
+              insufficient.translate(world, MISCUtils.getPlayer(viewer.getUUID()));
               return false;
             }
-            MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoStock").translate());
+            new Message("Messages.Shop.NoStock").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
             return false;
           }
-          MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.NoBuy").translate());
+          new Message("Messages.Shop.NoBuy").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
           return false;
         } else {
           if (i.getMaxstock() - i.getStock() > 0) {
@@ -89,16 +89,16 @@ public class ShopInventory extends GenericInventory {
                 s.update();
                 return false;
               }
-              MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.FundsLack").translate());
+              new Message("Messages.Shop.FundsLack").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
               return false;
             }
             Message invalidStock = new Message("Messages.Shop.NotEnough");
             invalidStock.addVariable("$amount", i.getItem().getAmount() + "");
             invalidStock.addVariable("$item", i.getItem().toItemStack().getType().name());
-            MISCUtils.getPlayer(viewer.getUUID()).sendMessage(invalidStock.translate());
+            invalidStock.translate(world, MISCUtils.getPlayer(viewer.getUUID()));
             return false;
           }
-          MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.BuyLimit").translate());
+          new Message("Messages.Shop.BuyLimit").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
           return false;
         }
       }
@@ -113,7 +113,7 @@ public class ShopInventory extends GenericInventory {
         s.update();
         return false;
       }
-      MISCUtils.getPlayer(viewer.getUUID()).sendMessage(new Message("Messages.Shop.Permission").translate());
+      new Message("Messages.Shop.Permission").translate(world, MISCUtils.getPlayer(viewer.getUUID()));
       return false;
     } /*else if(type.equals(ClickType.SHIFT_LEFT)) {
       if(Shop.canModify(s.getName(), MISCUtils.getPlayer(viewer.getUUID()))) {

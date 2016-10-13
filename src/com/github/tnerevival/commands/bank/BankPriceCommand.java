@@ -41,7 +41,7 @@ public class BankPriceCommand extends TNECommand {
 		Player player = getPlayer(sender);
 		Message cost = new Message("Messages.Bank.Cost");
 		cost.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), MISCUtils.getID(player).toString())));
-		player.sendMessage(cost.translate());
+		cost.translate(MISCUtils.getWorld(player), player);
 		return true;
 	}
 

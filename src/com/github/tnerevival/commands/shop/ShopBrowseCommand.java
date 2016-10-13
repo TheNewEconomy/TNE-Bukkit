@@ -46,18 +46,19 @@ public class ShopBrowseCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
+      Player player = getPlayer(sender);
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
-        Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+        Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(player));
 
         if(s.getShoppers() != null && s.getShoppers().size() >= TNE.instance.api.getInteger("Core.Shops.Shoppers")) {
-          sender.sendMessage(new Message("Messages.Shop.Shoppers").translate());
+          new Message("Messages.Shop.Shoppers").translate(MISCUtils.getWorld(player), player);
           return false;
         }
 
         ((Player)sender).openInventory(s.getInventory(Shop.canModify(s.getName(), getPlayer(sender))));
         return true;
       }
-      getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
+      new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
       return false;
     }
     help(sender);

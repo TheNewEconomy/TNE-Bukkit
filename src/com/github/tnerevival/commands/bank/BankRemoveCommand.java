@@ -49,17 +49,17 @@ public class BankRemoveCommand extends TNECommand {
             BankUtils.getBank(MISCUtils.getID(player)).removeMember(MISCUtils.getID(MISCUtils.getPlayer(arguments[0])));
             Message added = new Message("Messages.Bank.Removed");
             added.addVariable("$player", arguments[0]);
-            player.sendMessage(added.translate());
+            added.translate(MISCUtils.getWorld(player), player);
           }
-          player.sendMessage(new Message("Messages.General.NoPerm").translate());
+          new Message("Messages.General.NoPerm").translate(MISCUtils.getWorld(player), player);
           return false;
         }
-        player.sendMessage(new Message("Messages.Bank.None").translate());
+        new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
         return false;
       }
       Message notFound = new Message("Messages.General.NoPlayer");
       notFound.addVariable("$player", arguments[0]);
-      player.sendMessage(notFound.translate());
+      notFound.translate(MISCUtils.getWorld(player), player);
       return false;
     }
     help(sender);

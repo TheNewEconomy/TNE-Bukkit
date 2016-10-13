@@ -56,7 +56,7 @@ public class MoneyCommand extends TNECommand {
 			if(!acc.getStatus().getBalance()) {
 				Message locked = new Message("Messages.Account.Locked");
 				locked.addVariable("$player", player.getDisplayName());
-				sender.sendMessage(locked.translate());
+				locked.translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 			if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
@@ -65,7 +65,7 @@ public class MoneyCommand extends TNECommand {
           boolean set = !acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE");
 
           String message = (set)? "Messages.Account.Confirm" : "Messages.Account.Set";
-          player.sendMessage(new Message(message).translate());
+          new Message(message).translate(MISCUtils.getWorld(player), player);
         }
       }
 		}
@@ -87,13 +87,13 @@ public class MoneyCommand extends TNECommand {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
-			sender.sendMessage(noCommand.translate());
+			noCommand.translate(TNE.instance.defaultWorld, sender);
 			return false;
 		}
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());
-			sender.sendMessage(unable.translate());
+			unable.translate(TNE.instance.defaultWorld, sender);
 			return false;
 		}
 		if(command.equalsIgnoreCase("pay")) {

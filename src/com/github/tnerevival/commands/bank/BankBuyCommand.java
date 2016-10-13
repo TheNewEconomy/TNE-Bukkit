@@ -43,7 +43,7 @@ public class BankBuyCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		Player player = getPlayer(sender);
 		if(BankUtils.hasBank(MISCUtils.getID(player))) {
-			player.sendMessage(new Message("Messages.Bank.Already").translate());
+			new Message("Messages.Bank.Already").translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
 		
@@ -53,13 +53,13 @@ public class BankBuyCommand extends TNECommand {
 			} else {
 				Message insufficient = new Message("Messages.Money.Insufficient");
 				insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), BankUtils.cost(player.getWorld().getName(), MISCUtils.getID(player).toString())));
-				player.sendMessage(insufficient.translate());
+				insufficient.translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 		}
 		Bank bank = new Bank(MISCUtils.getID(player), BankUtils.size(player.getWorld().getName(), MISCUtils.getID(player).toString()));
 		AccountUtils.getAccount(MISCUtils.getID(player)).getBanks().put(MISCUtils.getWorld(player), bank);
-		player.sendMessage(new Message("Messages.Bank.Bought").translate());
+		new Message("Messages.Bank.Bought").translate(MISCUtils.getWorld(player), player);
 		return true;
 	}
 

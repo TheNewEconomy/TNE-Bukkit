@@ -44,7 +44,7 @@ public class ConnectionListener implements Listener {
         }
 
         Message message = new Message(node);
-        player.sendMessage(message.translate());
+        message.translate(MISCUtils.getWorld(player), player);
       }
     }
 	}

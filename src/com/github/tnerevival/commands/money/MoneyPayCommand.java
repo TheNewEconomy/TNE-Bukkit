@@ -43,11 +43,11 @@ public class MoneyPayCommand extends TNECommand {
 		if(arguments.length == 2) {
 			Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
 			if(value < 0) {
-				player.sendMessage(new Message("Messages.Money.Negative").translate());
+				new Message("Messages.Money.Negative").translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 			if(getPlayer(sender, arguments[0]) != null && MISCUtils.getID(player).equals(MISCUtils.getID(getPlayer(sender, arguments[0])))) {
-				player.sendMessage(new Message("Messages.Money.SelfPay").translate());
+				new Message("Messages.Money.SelfPay").translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 			if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.round(value), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
@@ -56,14 +56,14 @@ public class MoneyPayCommand extends TNECommand {
 						Message paid = new Message("Messages.Money.Paid");
 						paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(value)));
 						paid.addVariable("$player", arguments[0]);
-						player.sendMessage(paid.translate());
+						paid.translate(MISCUtils.getWorld(player), player);
 						return true;
 					}
 				}
 			} else {
 				Message insufficient = new Message("Messages.Money.Insufficient");
 				insufficient.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
-				player.sendMessage(insufficient.translate());
+				insufficient.translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 		} else {

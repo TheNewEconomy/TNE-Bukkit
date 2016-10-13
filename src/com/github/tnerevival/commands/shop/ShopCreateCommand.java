@@ -36,7 +36,7 @@ public class ShopCreateCommand extends TNECommand {
 
 	@Override
 	public boolean console() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -47,9 +47,10 @@ public class ShopCreateCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length >= 1) {
+			Player player = getPlayer(sender);
 			if(!Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
 				if(arguments[0].length() > 16) {
-          getPlayer(sender).sendMessage(new Message("Messages.Shop.Long").translate());
+          new Message("Messages.Shop.Long").translate(MISCUtils.getWorld(player), player);
 					return false;
 				}
 
@@ -69,7 +70,7 @@ public class ShopCreateCommand extends TNECommand {
         }
 
         if(!s.isAdmin() && Shop.amount(s.getOwner()) >= TNE.instance.api.getInteger("Core.Shops.Max", s.getWorld(), s.getOwner().toString())) {
-          getPlayer(sender).sendMessage(new Message("Messages.Shop.Max").translate());
+          new Message("Messages.Shop.Max").translate(MISCUtils.getWorld(player), player);
           return false;
         }
 				
@@ -97,10 +98,10 @@ public class ShopCreateCommand extends TNECommand {
 				TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
 				Message created = new Message("Messages.Shop.Created");
 				created.addVariable("$shop", s.getName());
-				getPlayer(sender).sendMessage(created.translate());
+				created.translate(MISCUtils.getWorld(player), player);
 				return true;
 			}
-			getPlayer(sender).sendMessage(new Message("Messages.Shop.Already").translate());
+			new Message("Messages.Shop.Already").translate(MISCUtils.getWorld(player), player);
 			return false;
 		} else {
 			help(sender);

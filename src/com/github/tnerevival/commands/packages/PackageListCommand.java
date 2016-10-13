@@ -52,7 +52,7 @@ public class PackageListCommand extends TNECommand {
 			} else {
 				Message insufficient = new Message("Messages.Package.Empty");
 				insufficient.addVariable("$type",  arguments[0]);
-				player.sendMessage(insufficient.translate());
+				insufficient.translate(MISCUtils.getWorld(player), player);
 				return false;
 			}
 		}

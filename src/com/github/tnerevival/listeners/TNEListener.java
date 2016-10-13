@@ -38,7 +38,7 @@ public class TNEListener implements Listener {
           event.setCancelled(true);
           Message insufficient = new Message("Messages.Money.Insufficient");
           insufficient.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(cost)));
-          event.getPlayer().sendMessage(insufficient.translate());
+          insufficient.translate(world, event.getPlayer());
           return;
         }
       } else {
@@ -52,7 +52,7 @@ public class TNEListener implements Listener {
       m.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(cost)));
       m.addVariable("$stack_size", event.getAmount() + "");
       m.addVariable("$item", newName);
-      event.getPlayer().sendMessage(m.translate());
+      m.translate(world, event.getPlayer());
     }
   }
 }

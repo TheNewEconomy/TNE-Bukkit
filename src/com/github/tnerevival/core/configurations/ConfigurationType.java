@@ -14,7 +14,6 @@ public enum ConfigurationType {
   WORLDS("worlds", "Worlds");
 
   private String identifier;
-
   private String prefix;
 
   ConfigurationType(String identifier, String prefix) {

@@ -42,7 +42,7 @@ public class MoneyTakeCommand extends TNECommand {
 			String world = (arguments.length == 3)? arguments[2] : TNE.instance.defaultWorld;
 			Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world, MISCUtils.getID(getPlayer(sender)).toString()), "."));
 			if(value < 0) {
-				sender.sendMessage(new Message("Messages.Money.Negative").translate());
+				new Message("Messages.Money.Negative").translate(world, sender);
 				return false;
 			}
 			if(getPlayer(sender, arguments[0]) != null) {
@@ -50,7 +50,7 @@ public class MoneyTakeCommand extends TNECommand {
           Message took = new Message("Messages.Money.Took");
           took.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(value)));
           took.addVariable("$player", arguments[0]);
-          sender.sendMessage(took.translate());
+          took.translate(world, sender);
           return true;
         }
 			}

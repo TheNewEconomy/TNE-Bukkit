@@ -52,22 +52,22 @@ public class BankDepositCommand extends TNECommand {
             Message deposit = new Message("Messages.Bank.Deposit");
             deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             deposit.addVariable("$name",  ownerName);
-            player.sendMessage(deposit.translate());
+            deposit.translate(MISCUtils.getWorld(player), player);
             return true;
           } else {
             Message insufficient = new Message("Messages.Money.Insufficient");
             insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             insufficient.addVariable("$name",  ownerName);
-            player.sendMessage(insufficient.translate());
+            insufficient.translate(MISCUtils.getWorld(player), player);
             return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");
         noAccess.addVariable("$name", ownerName);
-        player.sendMessage(noAccess.translate());
+        noAccess.translate(MISCUtils.getWorld(player), player);
         return false;
       }
-      player.sendMessage(new Message("Messages.Bank.None").translate());
+      new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
       return false;
 		}
 		help(sender);

@@ -49,11 +49,11 @@ public class ShopAddCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(sender instanceof Player && arguments.length >= 1) {
+		  Player player = getPlayer(sender);
 		  if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
 		    if(Shop.canModify(arguments[0], (Player)sender)) {
-          Player p = (Player)sender;
           Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-          ItemStack item = p.getInventory().getItemInMainHand().clone();
+          ItemStack item = player.getInventory().getItemInMainHand().clone();
           short damage = 0;
           int amount = 1;
           double cost = 50.00;
@@ -72,7 +72,7 @@ public class ShopAddCommand extends TNECommand {
                     try {
                       cost = Double.parseDouble(split[1]);
                     } catch(NumberFormatException e) {
-                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidCost").translate());
+                      new Message("Messages.Shop.InvalidCost").translate(MISCUtils.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -81,7 +81,7 @@ public class ShopAddCommand extends TNECommand {
                     if(mat.equals(Material.AIR)) {
                       Message invalidItem = new Message("Messages.Shop.InvalidTrade");
                       invalidItem.addVariable("$item", split[1]);
-                      getPlayer(sender).sendMessage(invalidItem.translate());
+                      invalidItem.translate(MISCUtils.getWorld(player), player);
                       return false;
                     }
                     trade = new ItemStack(mat);
@@ -91,7 +91,7 @@ public class ShopAddCommand extends TNECommand {
                       trade.setDurability(tradeDamage);
                       trade.setAmount(tradeAmount);
                     } catch(NumberFormatException e) {
-                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidTradeAmount").translate());
+                      new Message("Messages.Shop.InvalidTradeAmount").translate(MISCUtils.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -104,7 +104,7 @@ public class ShopAddCommand extends TNECommand {
                     try {
                       stock = Integer.parseInt(split[1]);
                     } catch(NumberFormatException e) {
-                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidStock").translate());
+                      new Message("Messages.Shop.InvalidStock").translate(MISCUtils.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -115,7 +115,7 @@ public class ShopAddCommand extends TNECommand {
                     try {
                       amount = Integer.parseInt(split[1]);
                     } catch(NumberFormatException e) {
-                      getPlayer(sender).sendMessage(new Message("Messages.Shop.InvalidAmount").translate());
+                      new Message("Messages.Shop.InvalidAmount").translate(MISCUtils.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -124,7 +124,7 @@ public class ShopAddCommand extends TNECommand {
                     if(mat == null || mat.equals(Material.AIR)) {
                       Message invalidItem = new Message("Messages.Shop.ItemInvalid");
                       invalidItem.addVariable("$item", arguments[i]);
-                      getPlayer(sender).sendMessage(invalidItem.translate());
+                      invalidItem.translate(MISCUtils.getWorld(player), player);
                       return false;
                     }
                     item = new ItemStack(mat);
@@ -142,14 +142,14 @@ public class ShopAddCommand extends TNECommand {
               if(mat == null || mat.equals(Material.AIR)) {
                 Message invalidItem = new Message("Messages.Shop.ItemInvalid");
                 invalidItem.addVariable("$item", arguments[i]);
-                getPlayer(sender).sendMessage(invalidItem.translate());
+                invalidItem.translate(MISCUtils.getWorld(player), player);
                 return false;
               }
               item = new ItemStack(mat);
             }
           }
           item.setAmount(amount);
-          if(!buy || MISCUtils.getItemCount(p.getUniqueId(), item) >= stock) {
+          if(!buy || MISCUtils.getItemCount(player.getUniqueId(), item) >= stock) {
             ShopEntry entry = new ShopEntry(new SerializableItemStack(s.getItems().size(), item), cost, ((buy)? stock : 0), buy, unlimited, new SerializableItemStack(1, trade));
             if(!buy) {
               entry.setMaxstock(stock);
@@ -159,30 +159,30 @@ public class ShopAddCommand extends TNECommand {
                 //TODO: Move this to a transaction possibly?
                 ItemStack temp = item.clone();
                 temp.setAmount(stock);
-                p.getInventory().removeItem(temp);
+                player.getInventory().removeItem(temp);
               }
               Message added = new Message("Messages.Shop.ItemAdded");
               added.addVariable("$shop", s.getName());
               added.addVariable("$item", item.getType().name());
-              getPlayer(sender).sendMessage(added.translate());
+              added.translate(MISCUtils.getWorld(player), player);
               return true;
             }
             Message wrong = new Message("Messages.Shop.ItemWrong");
             wrong.addVariable("$shop", s.getName());
             wrong.addVariable("$item", item.getType().name());
-            getPlayer(sender).sendMessage(wrong.translate());
+            wrong.translate(MISCUtils.getWorld(player), player);
             return false;
           }
           Message invalidStock = new Message("Messages.Shop.NotEnough");
           invalidStock.addVariable("$amount", stock + "");
           invalidStock.addVariable("$item", item.getType().name());
-          getPlayer(sender).sendMessage(invalidStock.translate());
+          invalidStock.translate(MISCUtils.getWorld(player), player);
           return false;
         }
-        getPlayer(sender).sendMessage(new Message("Messages.Shop.Permission").translate());
+        new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
         return false;
       }
-      getPlayer(sender).sendMessage(new Message("Messages.Shop.None").translate());
+      new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
       return false;
     } else {
       help(sender);

@@ -31,12 +31,12 @@ public class WorldListener implements Listener {
 					AccountUtils.initializeWorldData(MISCUtils.getID(player), world);
 					Message change = new Message("Messages.World.Change");
 					change.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
-					player.sendMessage(change.translate());
+					change.translate(world, player);
 				} else {
 					player.teleport(event.getFrom().getSpawnLocation());
 					Message changeFailed = new Message("Messages.World.ChangeFailed");
 					changeFailed.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
-					player.sendMessage(changeFailed.translate());
+					changeFailed.translate(world, player);
 				}
 			} else {
 				AccountUtils.initializeWorldData(MISCUtils.getID(player), world);

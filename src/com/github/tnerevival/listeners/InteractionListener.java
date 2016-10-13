@@ -83,7 +83,7 @@ public class InteractionListener implements Listener {
 
         if(!message.equals("")) {
           event.setCancelled(true);
-          player.sendMessage(new Message(message).translate());
+          new Message(message).translate(MISCUtils.getWorld(player), player);
           return;
         }
 				event.setCancelled(true);
@@ -105,13 +105,13 @@ public class InteractionListener implements Listener {
 						return;
 					}		
 					
-					player.sendMessage(commandCost.translate());
+					commandCost.translate(MISCUtils.getWorld(player), player);
 				}
 				return;
 			}
 			
 			if(TNE.configurations.getBoolean("Objects.Commands.ZeroMessage", "objects")) {
-				player.sendMessage(commandCost.translate());
+				commandCost.translate(MISCUtils.getWorld(player), player);
 			}
 		}
 	}
@@ -252,6 +252,7 @@ public class InteractionListener implements Listener {
 	public void onChange(SignChangeEvent event) {
 	  if(event.getLine(0).contains("tne:")) {
       String[] match = event.getLine(0).substring(1, event.getLine(0).length() - 1).split(":");
+      Player player = event.getPlayer();
 
       if (match.length > 1) {
         MISCUtils.debug(match[0] + " type: " + match[1]);
@@ -278,7 +279,7 @@ public class InteractionListener implements Listener {
             AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, place, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignPlace");
             charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), place));
-            event.getPlayer().sendMessage(charged.translate());
+            charged.translate(MISCUtils.getWorld(player), player);
           }
           TNE.instance.manager.signs.put(sign.getLocation(), sign);
         }
@@ -301,7 +302,7 @@ public class InteractionListener implements Listener {
 
       if(player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !player.hasPermission("tne.bypass.nametag")) {
         event.setCancelled(true);
-        player.sendMessage(new Message("Messages.Mob.NPCTag").translate());
+        new Message("Messages.Mob.NPCTag").translate(MISCUtils.getWorld(player), player);
       }
 
 			if(villager.getCustomName() != null && villager.getCustomName().equalsIgnoreCase("banker")) {
@@ -313,16 +314,16 @@ public class InteractionListener implements Listener {
 								Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
 								player.openInventory(bankInventory);
 							} else {
-								player.sendMessage(new Message("Messages.Bank.None").translate());
+								new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
 							}
 						} else {
-							player.sendMessage(new Message("Messages.Bank.NoNPC").translate());
+							new Message("Messages.Bank.NoNPC").translate(MISCUtils.getWorld(player), player);
 						}
 					} else {
-						player.sendMessage(new Message("Messages.Bank.Disabled").translate());
+						new Message("Messages.Bank.Disabled").translate(MISCUtils.getWorld(player), player);
 					}
 				} else {
-					player.sendMessage(new Message("Messages.General.NoPerm").translate());
+					new Message("Messages.General.NoPerm").translate(MISCUtils.getWorld(player), player);
 				}
 			}
 		}
@@ -366,7 +367,7 @@ public class InteractionListener implements Listener {
             AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, use, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignUse");
             charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), use));
-            event.getPlayer().sendMessage(charged.translate());
+            charged.translate(MISCUtils.getWorld(player), player);
           }
         }
       } else {
@@ -542,7 +543,7 @@ public class InteractionListener implements Listener {
 					Message mobKilled = new Message(messageNode);
 					mobKilled.addVariable("$mob", mob);
 					mobKilled.addVariable("$reward", MISCUtils.formatBalance(MISCUtils.getWorld(killer), reward));
-					killer.sendMessage(mobKilled.translate());
+					mobKilled.translate(MISCUtils.getWorld(killer), killer);
 				}
 			}
 		}

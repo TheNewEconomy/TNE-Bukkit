@@ -47,14 +47,14 @@ public class BankBalanceCommand extends TNECommand {
         Message balance = new Message("Messages.Bank.Balance");
         balance.addVariable("$amount",  MISCUtils.formatBalance(owner.getWorld().getName(), BankUtils.getBankBalance(MISCUtils.getID(player))));
         balance.addVariable("$name", ownerName);
-        player.sendMessage(balance.translate());
+        balance.translate(MISCUtils.getWorld(player), player);
         return true;
       }
       Message noAccess = new Message("Messages.Bank.Invalid");
       noAccess.addVariable("$name", ownerName);
-      player.sendMessage(noAccess.translate());
+      noAccess.translate(MISCUtils.getWorld(player), player);
 		}
-    player.sendMessage(new Message("Messages.Bank.None").translate());
+    new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
 		return false;
 	}
 
