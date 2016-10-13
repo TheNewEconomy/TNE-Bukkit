@@ -2,6 +2,7 @@ package com.github.tnerevival.core.configurations;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.configurations.impl.*;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -112,10 +113,16 @@ public class ConfigurationManager {
     String[] exploded = configuration.split("\\.");
     String path = configuration;
     String prefix = "Core";
-    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN && ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.MESSAGES) {
+    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN) {
       prefix = exploded[0];
-      path = path.replace(prefix + ".", "");
+			if(ConfigurationType.fromPrefix(prefix) != ConfigurationType.MESSAGES) {
+				path = path.replace(prefix + ".", "");
+			}
     }
+
+    MISCUtils.debug(prefix);
+    MISCUtils.debug(path);
+    MISCUtils.debug(configuration);
 
     if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
     if(getBoolean("Core.Multiworld") && worldEnabled(path, world)) return getWorldConfiguration(path, world);

@@ -1,12 +1,11 @@
 package com.github.tnerevival.core.event.sign;
 
-import java.util.UUID;
-
+import com.github.tnerevival.core.signs.TNESign;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.github.tnerevival.core.signs.TNESign;
+import java.util.UUID;
 
 public class TNESignEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
@@ -14,15 +13,15 @@ public class TNESignEvent extends Event implements Cancellable {
 	private UUID playerID;
 	private TNESign sign;
 	private SignEventAction action;
-    private Boolean cancelled = false;
+  private Boolean cancelled = false;
  
-    public TNESignEvent(UUID playerID, TNESign sign, SignEventAction action) {
-    	this.playerID = playerID;
-    	this.sign = sign;
-    	this.setAction(action);
-    }
+  public TNESignEvent(UUID playerID, TNESign sign, SignEventAction action) {
+    this.playerID = playerID;
+	  this.sign = sign;
+	  this.setAction(action);
+  }
  
-    public UUID getPlayerID() {
+  public UUID getPlayerID() {
 		return playerID;
 	}
 
@@ -50,7 +49,7 @@ public class TNESignEvent extends Event implements Cancellable {
         return handlers;
     }
  
-    public static HandlerList getHandlerList() {
+  public static HandlerList getHandlerList() {
         return handlers;
     }
 
@@ -58,7 +57,7 @@ public class TNESignEvent extends Event implements Cancellable {
         return cancelled;
     }
  
-    public void setCancelled(boolean cancel) {
+  public void setCancelled(boolean cancel) {
         cancelled = cancel;
     }
 }

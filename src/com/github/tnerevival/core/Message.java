@@ -65,7 +65,7 @@ public class Message {
 	
 	public void translate(String world, CommandSender sender) {
 	  String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
-	  String found = TNE.instance.api.getString("Messages." + this.node, world, id);
+	  String found = TNE.instance.api.getString(this.node, world, id);
 		
 		String message = (found == null)? this.node : replaceColours(found);
     if(!message.equals(this.node)) {
