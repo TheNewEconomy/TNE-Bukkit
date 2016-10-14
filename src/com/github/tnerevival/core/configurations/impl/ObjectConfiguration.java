@@ -68,6 +68,8 @@ public class ObjectConfiguration extends Configuration {
 			}
 			inventories.put(inventoryName, inventory);
 		}
+
+		//TODO: Determine best way to make these configurations viable on a per-world, and per-player basis
 		super.load(configurationFile);
 	}
 	

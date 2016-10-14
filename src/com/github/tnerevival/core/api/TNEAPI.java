@@ -270,4 +270,8 @@ public class TNEAPI {
     if(configuration.toLowerCase().contains("database")) return "";
     return TNE.configurations.getConfiguration(configuration, world, player);
   }
+
+  /*
+   * Inventory Methods
+   */
 }

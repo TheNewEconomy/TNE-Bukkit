@@ -62,10 +62,6 @@ public class ConfigurationManager {
 		return getConfiguration(configuration).getValue(node);
 	}
 	
-	public String getMessage(String node) {
-		return getString(node,"messages");
-	}
-	
 	public Boolean getBoolean(String node) {
 		return getBoolean(node, "main");
 	}
@@ -115,7 +111,7 @@ public class ConfigurationManager {
     String prefix = "Core";
     if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN) {
       prefix = exploded[0];
-			if(ConfigurationType.fromPrefix(prefix) != ConfigurationType.MESSAGES) {
+			if(ConfigurationType.fromPrefix(prefix) == ConfigurationType.MAIN) {
 				path = path.replace(prefix + ".", "");
 			}
     }

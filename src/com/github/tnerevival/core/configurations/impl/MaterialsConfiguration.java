@@ -1,8 +1,8 @@
 package com.github.tnerevival.core.configurations.impl;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.configurations.Configuration;
-import com.github.tnerevival.core.objects.BlockObject;
-import com.github.tnerevival.core.objects.ItemObject;
+import com.github.tnerevival.core.objects.MaterialObject;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -10,82 +10,75 @@ import java.util.Set;
 
 public class MaterialsConfiguration extends Configuration {
 
-	private HashMap<String, ItemObject> items = new HashMap<>();
-	private HashMap<String, BlockObject> blocks = new HashMap<>();
+	private HashMap<String, MaterialObject> materials = new HashMap<>();
 	
 	@Override
 	public void load(FileConfiguration configurationFile) {
 		//Load Materials
-		String baseNode = "Materials.Items";
-		configurations.put(baseNode + ".ZeroMessage", false);
-		
-		Set<String> itemNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
-		
-		for(String itemName : itemNames) {
-			String node = baseNode + "." + itemName;
-			
-			ItemObject item = new ItemObject(itemName);
-			double buyCost = (configurationFile.contains(node + ".Buy"))? configurationFile.getDouble(node + ".Buy") : 0.0;
-			double sellCost = (configurationFile.contains(node + ".Sell"))? configurationFile.getDouble(node + ".Sell") : 0.0;
-			double useCost = (configurationFile.contains(node + ".Use"))? configurationFile.getDouble(node + ".Use") : 0.0;
-			double craftingCost = (configurationFile.contains(node + ".Crafting"))? configurationFile.getDouble(node + ".Crafting") : 0.0;
-			double enchantCost = (configurationFile.contains(node + ".Enchant"))? configurationFile.getDouble(node + ".Enchant") : 0.0;
-			double smeltCost = (configurationFile.contains(node + ".Smelt"))? configurationFile.getDouble(node + ".Smelt") : 0.0;
-			
-			item.setCost(buyCost);
-			item.setValue(sellCost);
-			item.setUse(useCost);
-			item.setCrafting(craftingCost);
-			item.setEnchant(enchantCost);
-			item.setSmelt(smeltCost);
-			
-			items.put(item.getName(), item);			
-		}
-		
-		//Load Block Materials
-		baseNode = "Materials.Blocks";
-		configurations.put(baseNode + ".ZeroMessage", false);
-		
-		Set<String> blockNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
-		
-		for(String blockName : blockNames) {
-			String node = baseNode + "." + blockName;
-			
-			BlockObject block = new BlockObject(blockName);
-			double buyCost = (configurationFile.contains(node + ".Buy"))? configurationFile.getDouble(node + ".Buy") : 0.0;
-			double sellCost = (configurationFile.contains(node + ".Sell"))? configurationFile.getDouble(node + ".Sell") : 0.0;
-			double craftingCost = (configurationFile.contains(node + ".Crafting"))? configurationFile.getDouble(node + ".Crafting") : 0.0;
-			double placeCost = (configurationFile.contains(node + ".Place"))? configurationFile.getDouble(node + ".Place") : 0.0;
-			double mineCost = (configurationFile.contains(node + ".Mine"))? configurationFile.getDouble(node + ".Mine") : 0.0;
-			double smeltCost = (configurationFile.contains(node + ".Smelt"))? configurationFile.getDouble(node + ".Smelt") : 0.0;
-			
-			block.setCost(buyCost);
-			block.setValue(sellCost);
-			block.setCrafting(craftingCost);
-			block.setPlace(placeCost);
-			block.setMine(mineCost);
-			block.setSmelt(smeltCost);
-			
-			blocks.put(block.getName(), block);			
-		}
-		
-		
+    loadMaterials(configurationFile, "", null, true);
+    loadMaterials(configurationFile, "", null, false);
+
+    Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+    for(String identifier : identifiers) {
+      loadMaterials(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier, true);
+      loadMaterials(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier, false);
+    }
+
+    identifiers = TNE.instance.playerConfigurations.getConfigurationSection("Players").getKeys(false);
+    for(String identifier : identifiers) {
+      loadMaterials(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier, true);
+      loadMaterials(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier, false);
+    }
+
 		super.load(configurationFile);
 	}
-	
-	public Boolean containsItem(String name) {
-		return items.containsKey(name);
-	}
-	
-	public Boolean containsBlock(String name) {
-		return blocks.containsKey(name);
-	}
-	
-	public ItemObject getItem(String name) {
-		return items.get(name);
-	}
-	
-	public BlockObject getBlock(String name) {
-		return blocks.get(name);
-	}
+
+	private void loadMaterials(FileConfiguration configuration, String baseNode, String identifier, boolean item) {
+	  String base = baseNode + ((item)? "Materials.Items" : "Materials.Blocks");
+	  if(configuration.contains(base)) {
+      configurations.put(baseNode + ".ZeroMessage", false);
+
+      Set<String> materialNames = configuration.getConfigurationSection(base).getKeys(false);
+
+      for(String materialName : materialNames) {
+        String id = (identifier != null)? identifier + ":" + materialName : materialName;
+        String node = base + "." + materialName;
+
+        MaterialObject material = new MaterialObject(materialName);
+
+        double buyCost = (configuration.contains(node + ".Buy"))? configuration.getDouble(node + ".Buy") : 0.0;
+        double sellCost = (configuration.contains(node + ".Sell"))? configuration.getDouble(node + ".Sell") : 0.0;
+        double useCost = (configuration.contains(node + ".Use"))? configuration.getDouble(node + ".Use") : 0.0;
+        double craftingCost = (configuration.contains(node + ".Crafting"))? configuration.getDouble(node + ".Crafting") : 0.0;
+        double enchantCost = (configuration.contains(node + ".Enchant"))? configuration.getDouble(node + ".Enchant") : 0.0;
+        double placeCost = (configuration.contains(node + ".Place"))? configuration.getDouble(node + ".Place") : 0.0;
+        double mineCost = (configuration.contains(node + ".Mine"))? configuration.getDouble(node + ".Mine") : 0.0;
+        double smeltCost = (configuration.contains(node + ".Smelt"))? configuration.getDouble(node + ".Smelt") : 0.0;
+
+        material.setItem(item);
+        material.setCost(buyCost);
+        material.setValue(sellCost);
+        material.setUse(useCost);
+        material.setCrafting(craftingCost);
+        material.setEnchant(enchantCost);
+        material.setPlace(placeCost);
+        material.setMine(mineCost);
+        material.setSmelt(smeltCost);
+
+        materials.put(id, material);
+      }
+    }
+  }
+
+  public Boolean containsMaterial(String name, String world, String player) {
+    return materials.containsKey(player + ":" + name) ||
+           materials.containsKey(world + ":" + name) ||
+           materials.containsKey(name);
+  }
+
+	public MaterialObject getMaterial(String name, String world, String player) {
+	  if(materials.containsKey(player + ":" + name)) return materials.get(player + ":" + name);
+	  if(materials.containsKey(world + ":" + name)) return materials.get(world + ":" + name);
+	  return materials.get(name);
+  }
 }

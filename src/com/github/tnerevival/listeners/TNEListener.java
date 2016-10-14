@@ -27,7 +27,7 @@ public class TNEListener implements Listener {
 
     String id = MISCUtils.getID(event.getPlayer()).toString();
     String world = MISCUtils.getWorld(event.getPlayer());
-    double cost = event.getType().getCost(event.getIdentifier());
+    double cost = event.getType().getCost(event.getIdentifier(), MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
     if(cost != 0.0 && !event.isCancelled()) {

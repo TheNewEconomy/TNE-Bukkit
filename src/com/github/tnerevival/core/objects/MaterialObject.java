@@ -1,16 +1,19 @@
 package com.github.tnerevival.core.objects;
 
-public class BlockObject {
+public class MaterialObject {
 	
 	private String name;
+	private Boolean item;
 	private Double cost;
 	private Double value;
+	private Double use;
 	private Double crafting;
+	private Double enchant;
 	private Double place;
 	private Double mine;
 	private Double smelt;
 	
-	public BlockObject(String name) {
+	public MaterialObject(String name) {
 		this.name = name;
 	}
 
@@ -21,6 +24,14 @@ public class BlockObject {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public Boolean isItem() {
+	  return item;
+  }
+
+  public void setItem(Boolean item) {
+    this.item = item;
+  }
 
 	public Double getCost() {
 		return cost;
@@ -38,12 +49,28 @@ public class BlockObject {
 		this.value = value;
 	}
 
+	public Double getUse() {
+		return use;
+	}
+
+	public void setUse(Double use) {
+		this.use = use;
+	}
+
 	public Double getCrafting() {
 		return crafting;
 	}
 
 	public void setCrafting(Double crafting) {
 		this.crafting = crafting;
+	}
+
+	public Double getEnchant() {
+		return enchant;
+	}
+
+	public void setEnchant(Double enchant) {
+		this.enchant = enchant;
 	}
 
 	public Double getPlace() {

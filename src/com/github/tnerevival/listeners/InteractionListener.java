@@ -171,7 +171,7 @@ public class InteractionListener implements Listener {
 				
 				int amount = (f.getInventory().getResult() != null) ? f.getInventory().getResult().getAmount() : 1;
 
-				Double cost = InteractionType.SMELTING.getCost(name) * amount;
+				Double cost = InteractionType.SMELTING.getCost(name, event.getBlock().getWorld().toString(), "") * amount;
 				
 				List<String> lore = new ArrayList<>();
 				lore.add(ChatColor.WHITE + "Smelting Cost: " + ChatColor.GOLD + cost);
@@ -192,7 +192,7 @@ public class InteractionListener implements Listener {
 			
 			ItemStack result = event.getItem();
 			String name = MaterialUtils.formatMaterialNameWithoutSpace(result.getType()).toLowerCase();
-			Double cost = InteractionType.ENCHANT.getCost(name);
+			Double cost = InteractionType.ENCHANT.getCost(name, MISCUtils.getWorld(event.getEnchanter()), MISCUtils.getID(event.getEnchanter()).toString());
 			
 			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
@@ -212,8 +212,9 @@ public class InteractionListener implements Listener {
 	@EventHandler
 	public void onPreCraft(PrepareItemCraftEvent event) {
 		if(event.getInventory().getResult() != null) {
+		  Player player = (Player)event.getView().getPlayer();
 			String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType()).toLowerCase();
-			Double cost = InteractionType.CRAFTING.getCost(name);
+			Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 			
 			List<String> lore = new ArrayList<>();
 			lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);

@@ -76,7 +76,6 @@ public class EconomyManager {
     }
 
     if(!force) return true;
-    if(confirmed.contains(id)) return true;
-    return false;
+    return confirmed.contains(id);
   }
 }

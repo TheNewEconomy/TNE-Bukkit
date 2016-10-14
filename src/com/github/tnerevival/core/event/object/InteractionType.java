@@ -1,8 +1,7 @@
 package com.github.tnerevival.core.event.object;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.objects.BlockObject;
-import com.github.tnerevival.core.objects.ItemObject;
+import com.github.tnerevival.core.objects.MaterialObject;
 
 /**
  * Created by Daniel on 10/12/2016.
@@ -23,61 +22,44 @@ public enum InteractionType {
     this.paid = paid;
   }
 
-  public double getCost(String identifier) {
+  public double getCost(String identifier, String world, String player) {
     switch(this) {
       case MINING:
-        if(TNE.configurations.getMaterialsConfiguration().containsBlock(identifier)) {
-          return TNE.configurations.getMaterialsConfiguration().getBlock(identifier).getMine();
+        if(containsMaterial(identifier, world, player)) {
+          return getMaterial(identifier, world, player).getMine();
         }
-        return 0.0;
       case PLACING:
-        if(TNE.configurations.getMaterialsConfiguration().containsBlock(identifier)) {
-          return TNE.configurations.getMaterialsConfiguration().getBlock(identifier).getPlace();
+        if(containsMaterial(identifier, world, player)) {
+          return getMaterial(identifier, world, player).getPlace();
         }
-        return 0.0;
       case ITEM:
-        if(TNE.configurations.getMaterialsConfiguration().containsItem(identifier)) {
-          return TNE.configurations.getMaterialsConfiguration().getItem(identifier).getUse();
+        if(containsMaterial(identifier, world, player)) {
+          return getMaterial(identifier, world, player).getUse();
         }
-        return 0.0;
       case ENCHANT:
-        if(TNE.configurations.getMaterialsConfiguration().containsItem(identifier)) {
-          return TNE.configurations.getMaterialsConfiguration().getItem(identifier).getEnchant();
+        if(containsMaterial(identifier, world, player)) {
+          return getMaterial(identifier, world, player).getEnchant();
         }
-        return 0.0;
       case CRAFTING:
-        if(getBlock(identifier) != null) {
-          return getBlock(identifier).getCrafting();
+        if(containsMaterial(identifier, world, player)) {
+          return getMaterial(identifier, world, player).getCrafting();
         }
-
-        if(getItem(identifier) != null) {
-          return getItem(identifier).getCrafting();
-        }
-        return 0.0;
       case SMELTING:
-        if(getBlock(identifier) != null) {
-          return getBlock(identifier).getSmelt();
+        if(containsMaterial(identifier, world, player)) {
+          return getMaterial(identifier, world, player).getSmelt();
         }
-
-        if(getItem(identifier) != null) {
-          return getItem(identifier).getSmelt();
-        }
-        return 0.0;
       default:
         return 0.0;
     }
   }
 
-  private BlockObject getBlock(String identifier) {
-    if(TNE.configurations.getMaterialsConfiguration().containsBlock(identifier)) {
-      return TNE.configurations.getMaterialsConfiguration().getBlock(identifier);
-    }
-    return null;
+  private Boolean containsMaterial(String identifier, String world, String player) {
+    return TNE.configurations.getMaterialsConfiguration().containsMaterial(identifier, world, player);
   }
 
-  private ItemObject getItem(String identifier) {
-    if(TNE.configurations.getMaterialsConfiguration().containsItem(identifier)) {
-      return TNE.configurations.getMaterialsConfiguration().getItem(identifier);
+  private MaterialObject getMaterial(String identifier, String world, String player) {
+    if(TNE.configurations.getMaterialsConfiguration().containsMaterial(identifier, world, player)) {
+      return TNE.configurations.getMaterialsConfiguration().getMaterial(identifier, world, player);
     }
     return null;
   }
