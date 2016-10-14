@@ -63,7 +63,7 @@ public class InteractionListener implements Listener {
 			String[] commandSplit = command.split(" ");
 			String commandName = commandSplit[0];
 			String commandFirstArg = commandSplit[0] + ((commandSplit.length > 1) ? " " + commandSplit[1] : "");
-			double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0]);
+			double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 			
 			Message commandCost = new Message("Messages.Command.Charge");
 			commandCost.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), AccountUtils.round(cost)));

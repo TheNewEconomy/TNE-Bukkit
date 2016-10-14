@@ -12,6 +12,7 @@ as shortcuts.
 * Add configuration for decimal value. This prevents any funky errors when
 used on servers that don't normally use the standard decimal value.
 * Allow message translations to be set on a per-player and per-world basis.
+* Ability to set materials.yml configurations on a per-world and per-player basis.
 
 
 Alpha 3.1

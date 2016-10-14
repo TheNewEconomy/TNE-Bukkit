@@ -51,7 +51,7 @@ public class PackageBuyCommand extends TNECommand {
 		}
 		
 		if(arguments.length == 2) {
-			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0]);
+			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 			if(packages.size() > 0) {
 				for(TNEAccessPackage p : packages) {
 					if(p.getName().equalsIgnoreCase(arguments[1])) {

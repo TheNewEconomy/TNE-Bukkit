@@ -35,7 +35,7 @@ public class InventoryTimeWorker extends BukkitRunnable {
       InventoryType invType = plugin.inventoryManager.getViewing(entry.getKey()).getInventory().getType();
       String type = TNE.configurations.getObjectConfiguration().inventoryType(invType);
 
-      if(TNE.configurations.getObjectConfiguration().isTimed(invType)) {
+      if(TNE.configurations.getObjectConfiguration().isTimed(invType, MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
         long timeRemaining = (int) (acc.getTimeLeft(MISCUtils.getWorld(MISCUtils.getPlayer(entry.getKey())), type) - TimeUnit.SECONDS.convert(System.nanoTime() - plugin.inventoryManager.getViewer(entry.getKey()).getOpened(), TimeUnit.NANOSECONDS));
 
         String message = "Messages.Inventory.NoTime";

@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.configurations.impl;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.configurations.Configuration;
 import com.github.tnerevival.core.objects.TNEAccessPackage;
 import com.github.tnerevival.core.objects.TNECommandObject;
@@ -15,63 +16,90 @@ public class ObjectConfiguration extends Configuration {
 	private Map<String, TNEInventoryObject> inventories = new HashMap<>();
 	
 	@Override
-	public void load(FileConfiguration configurationFile) {		
-		//Load Command Objects
-		String baseNode = "Objects.Commands";
-		configurations.put(baseNode + ".Enabled", true);
-		configurations.put(baseNode + ".ZeroMessage", false);
-		
-		Set<String> commandNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
-		
-		for(String commandName : commandNames) {
-			
-			TNECommandObject command = new TNECommandObject(commandName.toLowerCase(), configurationFile.getDouble(baseNode + "." + commandName + ".Cost"));
-			
-			if(configurationFile.contains(baseNode + "." + commandName + ".SubCommands")) {
-				Set<String> subCommands = configurationFile.getConfigurationSection(baseNode + "." + commandName + ".SubCommands").getKeys(false);
-				
-				for(String subCommand : subCommands) {
-					TNECommandObject sub = new TNECommandObject(subCommand.toLowerCase(), configurationFile.getDouble(baseNode + "." + commandName + ".SubCommands." + subCommand + ".Cost"));
-					command.addSub(sub);
-				}
-			}
-			
-			commands.put(command.getIdentifier(), command);			
-		}
-		
-		//Load Inventory Objects
-		baseNode = "Objects.Inventories";
-		configurations.put(baseNode + ".Enabled", true);
-		configurations.put(baseNode + ".PerWorld", true);
-		configurations.put(baseNode + ".ZeroMessage", false);
-		
-		Set<String> inventoryNames = configurationFile.getConfigurationSection(baseNode).getKeys(false);
-		
-		for(String inventoryName : inventoryNames) {
-			
-			boolean enabled = configurationFile.getBoolean(baseNode + "." + inventoryName + ".Enabled");
-			boolean timed = configurationFile.getBoolean(baseNode + "." + inventoryName + ".Timed");
-			double cost = configurationFile.getDouble(baseNode + "." + inventoryName + ".Cost");
-			
-			TNEInventoryObject inventory = new TNEInventoryObject(inventoryName, enabled, timed, cost);
-			
-			if(configurationFile.contains(baseNode + "." + inventoryName + ".Packages")) {
-				Set<String> packageNames = configurationFile.getConfigurationSection(baseNode + "." + inventoryName + ".Packages").getKeys(false);
-				
-				for(String packageName : packageNames) {
-					
-					long packageTime = configurationFile.getLong(baseNode + "." + inventoryName + ".Packages" + "." + packageName + ".Time");
-					double packageCost = configurationFile.getDouble(baseNode + "." + inventoryName + ".Packages" + "." + packageName + ".Cost");
-					
-					inventory.addPackage(new TNEAccessPackage(packageName, packageTime, packageCost));
-				}
-			}
-			inventories.put(inventoryName, inventory);
-		}
+	public void load(FileConfiguration configurationFile) {
+    Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
-		//TODO: Determine best way to make these configurations viable on a per-world, and per-player basis
+    //Load Objects
+    loadCommands(configurationFile, "", null);
+    loadInventories(configurationFile, "", null);
+    for(String identifier : identifiers) {
+      loadCommands(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier);
+      loadInventories(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier);
+    }
+
+    identifiers = TNE.instance.playerConfigurations.getConfigurationSection("Players").getKeys(false);
+    for(String identifier : identifiers) {
+      loadCommands(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier);
+      loadInventories(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier);
+    }
 		super.load(configurationFile);
 	}
+
+	private void loadCommands(FileConfiguration configuration, String baseNode, String identifier) {
+	  String base = baseNode + "Objects.Commands";
+
+    if(configuration.contains(base)) {
+      Boolean zero = !configuration.contains(base + ".ZeroMessage") || configuration.getBoolean(base + ".ZeroMessage");
+      Boolean enabledMain = !configuration.contains(base + ".Enabled") || configuration.getBoolean(base + ".Enabled");
+      configurations.put(base + ".ZeroMessage", zero);
+      configurations.put(base + ".Enabled", enabledMain);
+
+      Set<String> commandNames = configuration.getConfigurationSection(base).getKeys(false);
+
+      for(String commandName : commandNames) {
+
+        String id = (identifier != null)? identifier + ":" + commandName : commandName;
+        TNECommandObject command = new TNECommandObject(commandName.toLowerCase(), configuration.getDouble(base + "." + commandName + ".Cost"));
+
+        if(configuration.contains(base + "." + commandName + ".SubCommands")) {
+          Set<String> subCommands = configuration.getConfigurationSection(base + "." + commandName + ".SubCommands").getKeys(false);
+
+          for(String subCommand : subCommands) {
+            TNECommandObject sub = new TNECommandObject(subCommand.toLowerCase(), configuration.getDouble(base + "." + commandName + ".SubCommands." + subCommand + ".Cost"));
+            command.addSub(sub);
+          }
+        }
+
+        commands.put(id, command);
+      }
+    }
+  }
+
+  private void loadInventories(FileConfiguration configuration, String baseNode, String identifier) {
+    String base = baseNode + "Objects.Inventories";
+
+    if(configuration.contains(base)) {
+      Boolean zero = !configuration.contains(base + ".ZeroMessage") || configuration.getBoolean(base + ".ZeroMessage");
+      Boolean enabledMain = !configuration.contains(base + ".Enabled") || configuration.getBoolean(base + ".Enabled");
+      configurations.put(base + ".ZeroMessage", zero);
+      configurations.put(base + ".Enabled", enabledMain);
+
+      Set<String> inventoryNames = configuration.getConfigurationSection(base).getKeys(false);
+
+      for(String inventoryName : inventoryNames) {
+
+        String id = (identifier != null)? identifier + ":" + inventoryName : inventoryName;
+        boolean enabled = configuration.getBoolean(base + "." + inventoryName + ".Enabled");
+        boolean timed = configuration.getBoolean(base + "." + inventoryName + ".Timed");
+        double cost = configuration.getDouble(base + "." + inventoryName + ".Cost");
+
+        TNEInventoryObject inventory = new TNEInventoryObject(inventoryName, enabled, timed, cost);
+
+        if(configuration.contains(base + "." + inventoryName + ".Packages")) {
+          Set<String> packageNames = configuration.getConfigurationSection(base + "." + inventoryName + ".Packages").getKeys(false);
+
+          for(String packageName : packageNames) {
+
+            long packageTime = configuration.getLong(base + "." + inventoryName + ".Packages" + "." + packageName + ".Time");
+            double packageCost = configuration.getDouble(base + "." + inventoryName + ".Packages" + "." + packageName + ".Cost");
+
+            inventory.addPackage(new TNEAccessPackage(packageName, packageTime, packageCost));
+          }
+        }
+        inventories.put(id, inventory);
+      }
+    }
+  }
 	
 	public String inventoryType(InventoryType type) {
 		switch(type) {
@@ -110,34 +138,68 @@ public class ObjectConfiguration extends Configuration {
 		}
 	}
 	
-	public List<TNEAccessPackage> getInventoryPackages(String type) {
+	public List<TNEAccessPackage> getInventoryPackages(String type, String world, String player) {
+	  List<TNEAccessPackage> packages = new ArrayList<>();
 		if(inventories.containsKey(type)) {
-			return inventories.get(type).getPackages();
+			packages.addAll(inventories.get(type).getPackages());
 		}
-		return new ArrayList<>();
+
+		if(inventories.containsKey(world + ":" + type)) {
+		  packages.addAll(inventories.get(world + ":" + type).getPackages());
+    }
+
+    if(inventories.containsKey(player + ":" + type)) {
+      packages.addAll(inventories.get(player + ":" + type).getPackages());
+    }
+
+		return packages;
 	}
 	
-	public boolean isTimed(InventoryType type) {
-		return inventories.get(inventoryType(type)).isTimed();
+	public boolean isTimed(InventoryType type, String world, String player) {
+	  String invType = inventoryType(type);
+	  if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).isTimed();
+	  if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).isTimed();
+		return containsInventory(invType) && inventories.get(invType).isTimed();
+	}
+
+	private boolean containsInventory(String type) {
+	  return inventories.containsKey(type);
+  }
+	
+	public boolean inventoryEnabled(InventoryType type, String world, String player) {
+    String invType = inventoryType(type);
+    if(configurations.containsKey("Players." + player + ".Objects.Inventories.Enabled"))
+      return (Boolean)configurations.get("Players." + player + ".Objects.Inventories.Enabled");
+    if(configurations.containsKey("Worlds." + world + ".Objects.Inventories.Enabled"))
+      return (Boolean)configurations.get("Worlds." + world + ".Objects.Inventories.Enabled");
+    if(configurations.containsKey("Objects.Inventories.Enabled"))
+      return (Boolean)configurations.get("Objects.Inventories.Enabled");
+
+    if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).isEnabled();
+    if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).isEnabled();
+    return containsInventory(invType) && inventories.get(invType).isEnabled();
 	}
 	
-	public boolean inventoryEnabled(InventoryType type) {
-		String typeString = inventoryType(type);
-		TNEInventoryObject inventoryObject = inventories.get(typeString);
-		return ((Boolean)configurations.get("Objects.Inventories.Enabled") && inventoryObject != null && inventoryObject.isEnabled());
-	}
-	
-	public double getInventoryCost(InventoryType type) {
-		String typeString = inventoryType(type);
-		TNEInventoryObject inventoryObject = inventories.get(typeString);
-		if((Boolean)configurations.get("Objects.Inventories.Enabled") && inventoryObject != null && inventoryObject.isEnabled()) {
-			return inventories.get(typeString).getCost();
-		}
+	public double getInventoryCost(InventoryType type, String world, String player) {
+	  if(inventoryEnabled(type, world, player)) {
+      String invType = inventoryType(type);
+      if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).getCost();
+      if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).getCost();
+      return (containsInventory(invType))? inventories.get(invType).getCost() : 0.0;
+    }
 		return 0.0;
 	}
 	
-	public double getCommandCost(String command, String[] arguments) {
-		TNECommandObject commandObject = commands.get(command);
+	public double getCommandCost(String command, String[] arguments, String world, String player) {
+	  TNECommandObject commandObject = commands.get(command);
+    if(commands.containsKey(world + ":" + command)) {
+      commandObject = commands.get(world + ":" + command);
+    }
+
+    if(commands.containsKey(player + ":" + command)) {
+      commandObject = commands.get(player + ":" + command);
+    }
+
 		if(commandObject != null) {
 			if(arguments.length > 0) {
 				TNECommandObject sub = commandObject.findSub(arguments[0]);

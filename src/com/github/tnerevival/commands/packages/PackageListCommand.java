@@ -41,7 +41,7 @@ public class PackageListCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 		if(arguments.length == 1) {
 			Player player = (Player)sender;
-			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0]);
+			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 			sender.sendMessage(ChatColor.WHITE + "Name ~ Cost ~ Seconds Provided");
 			sender.sendMessage(ChatColor.WHITE + "==============================");
 			if(packages.size() > 0) {
