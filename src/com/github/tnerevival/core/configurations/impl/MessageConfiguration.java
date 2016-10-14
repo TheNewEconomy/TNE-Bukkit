@@ -23,7 +23,12 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
 		configurations.put("Messages.Admin.NoBalance", "<red>$player has no balance data for the world \"$world\"!");
 		configurations.put("Messages.Admin.NoBank", "<red>$player has no bank data for the world \"$world\"!");
-		configurations.put("Messages.Admin.Balance", "<white>$player currently has <gold>$amount <white>for world \"$world\"!");
+		configurations.put("Messages.Admin.ID", "<white>The UUID for $player is $id.");
+		configurations.put("Messages.Admin.Exists", "<red>A player with that name already exists.");
+		configurations.put("Messages.Admin.Created", "<white>Successfully created account for $player.");
+		configurations.put("Messages.Admin.Deleted", "<white>Successfully deleted account for $player.");
+		configurations.put("Messages.Admin.Purge", "<white>Successfully purged all economy accounts.");
+		configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
 		configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
 		configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
 		configurations.put("Messages.Account.Confirm", "<yellow>You must use /pin confirm before accessing your money and/or bank.");

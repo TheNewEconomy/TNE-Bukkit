@@ -1,25 +1,26 @@
 package com.github.tnerevival.commands.admin;
 
-import com.github.tnerevival.core.Message;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Created by Daniel on 10/14/2016.
+ */
+public class AdminIDCommand extends TNECommand {
 
-public class AdminDeleteCommand extends TNECommand {
-  
-  public AdminDeleteCommand(TNE plugin) {
+  public AdminIDCommand(TNE plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "delete";
+    return "id";
   }
 
   @Override
@@ -29,25 +30,26 @@ public class AdminDeleteCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.admin.delete";
+    return "tne.admin.id";
   }
 
   @Override
   public boolean console() {
     return true;
   }
-  
+
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
       String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
-      if(AccountUtils.exists(MISCUtils.getID(arguments[0]))) {
-        TNE.instance.manager.deleteAccount(MISCUtils.getID(arguments[0]));
 
-        Message m = new Message("Messages.Admin.Deleted");
+      if(AccountUtils.exists(MISCUtils.getID(arguments[0]))) {
+        Message m = new Message("Messages.Admin.ID");
         m.addVariable("$player", arguments[0]);
+        m.addVariable("$id", MISCUtils.getID(arguments[0]).toString());
+
         m.translate(world, sender);
-        return true;
+
       }
       Message m = new Message("Messages.General.NoPlayer");
       m.addVariable("$player", arguments[0]);
@@ -60,6 +62,6 @@ public class AdminDeleteCommand extends TNECommand {
 
   @Override
   public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/tne delete <player> - Delete <player>'s account.");
+    sender.sendMessage(ChatColor.GOLD + "/tne id <player> - Get <player>'s id to be used for player configurations.");
   }
 }

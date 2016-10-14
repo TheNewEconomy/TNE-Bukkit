@@ -351,6 +351,13 @@ public class MISCUtils {
 		TNE.instance.manager.ecoIDs.put(username, eco);
 		return eco;
 	}
+
+	public static UUID genUUID(String name) {
+	  UUID id = MojangAPI.getPlayerUUID(name);
+    if(id!= null) return id;
+
+    return genUUID();
+  }
 	
 	public static UUID genUUID() {
 		UUID id = UUID.randomUUID();

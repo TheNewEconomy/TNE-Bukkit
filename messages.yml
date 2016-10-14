@@ -64,7 +64,12 @@ Messages:
        NoBalance: <red>$player has no balance data for the world "$world"!
        NoBank: <red>$player has no bank data for the world "$world"!
        Balance: <white>$player currently has <gold>$amount <white>for world "$world"!
-       
+       ID: <white>The UUID for $player is $id.
+       Exists: <red>A player with that name already exists.
+       Created: <white>Successfully created account for $player.
+       Purge: <white>Successfully purged all economy accounts.
+       PurgeWorld: <white>Successfully purged economy accounts in $world.
+
     Account:
        Locked: <red>You can't do that with a locked account($player)!
        Set: <yellow>You must use /pin set before accessing your money and/or bank.

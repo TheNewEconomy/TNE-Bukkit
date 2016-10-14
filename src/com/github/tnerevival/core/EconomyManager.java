@@ -27,16 +27,13 @@ public class EconomyManager {
 
 	public Map<SerializableLocation, TNESign> signs = new HashMap<>();
 	
-	public void purge() {
-	  purge(TNE.instance.defaultWorld);
-	}
-	
 	public void purge(String world) {
 	  Iterator<Account> it = accounts.values().iterator();
 	  while(it.hasNext()) {
 	    Account acc = it.next();
 	    
 	    if(acc.getBalance(world).equals(AccountUtils.getInitialBalance(world))) {
+        deleteAccount(acc.getUid());
 	      it.remove();
 	      ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
 	    }
@@ -53,13 +50,23 @@ public class EconomyManager {
           remove = false;
         }
       }
-      
+
       if(remove) {
+        deleteAccount(acc.getUid());
         it.remove();
         ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
       }
     }
 	}
+
+	public void deleteAccount(UUID id) {
+	  TNE.instance.saveManager.deleteAccount(id);
+  }
+
+  public void deleteShop(String name, String world) {
+    shops.remove(name + ":" + world);
+    TNE.instance.saveManager.deleteShop(name, world);
+  }
 
 	public boolean enabled(UUID id, String world) {
 	  return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);

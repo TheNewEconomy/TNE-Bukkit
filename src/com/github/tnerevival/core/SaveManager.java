@@ -8,6 +8,7 @@ import com.github.tnerevival.core.version.Version;
 import java.io.*;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -37,6 +38,25 @@ public class SaveManager {
 			convert();
 		}
 	}
+
+	public void deleteAccount(UUID id) {
+	  String table = versionInstance.prefix + "_USERS";
+    if(!type.equalsIgnoreCase("flatfile")) {
+      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE uuid = ?",
+          new Object[] { id.toString() });
+      table = versionInstance.prefix + "_ECOIDS";
+      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE uuid = ?",
+          new Object[] { id.toString() });
+    }
+  }
+
+  public void deleteShop(String name, String world) {
+    if(!type.equalsIgnoreCase("flatfile")) {
+      String table = versionInstance.prefix + "_SHOPS";
+      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE shop_name = ? AND shop_world = ?",
+          new Object[] { name, world });
+    }
+  }
 	
 	private Boolean firstRun() {
 		if(type.equalsIgnoreCase("flatfile")) {
