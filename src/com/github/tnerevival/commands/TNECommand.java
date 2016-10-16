@@ -18,7 +18,7 @@ public abstract class TNECommand {
 		this.plugin = plugin;
 	}
 
-	public List<TNECommand> subCommands = new ArrayList<TNECommand>();
+	public List<TNECommand> subCommands = new ArrayList<>();
 	public abstract String getName();
 	public abstract String[] getAliases();
 	public abstract String getNode();
@@ -31,19 +31,26 @@ public abstract class TNECommand {
 			return false;
 		}
 		
-		if(arguments[0].equalsIgnoreCase("help")) {
-			help(sender);
-			return false;
-		}
-		
 		TNECommand sub = FindSub(arguments[0]);
-		if(sub == null) {
+		if(sub == null && !arguments[0].equalsIgnoreCase("help")) {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
 			noCommand.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
 			return false;
 		}
+
+		if(arguments[0].equalsIgnoreCase("help")) {
+			help(sender);
+			return false;
+		}
+
+		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
+		  sub.help(sender);
+      return false;
+    }
+
+
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());

@@ -234,7 +234,7 @@ public class InteractionListener implements Listener {
 		
 		ItemStack result = event.getInventory().getResult();
 		ItemMeta meta = result.getItemMeta();
-		meta.setLore(new ArrayList<>());
+		meta.setLore(new ArrayList<String>());
 		result.setItemMeta(meta);
 		
 		Player player = (Player)event.getWhoClicked();

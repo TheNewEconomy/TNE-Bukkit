@@ -38,7 +38,12 @@ public class InventoryManager {
   public InventoryViewer getViewer(UUID id) {
     List<InventoryViewer> viewers =  viewed.get(accessing.get(id)).getViewers();
 
-    return viewers.stream().filter(inventoryViewer -> inventoryViewer.getUUID().equals(id)).findFirst().orElse(null);
+    for(InventoryViewer viewer : viewers) {
+      if(viewer.getUUID().equals(id)) {
+        return viewer;
+      }
+    }
+    return null;
   }
 
   public void removeViewer(UUID id) {

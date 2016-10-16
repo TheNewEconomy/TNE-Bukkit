@@ -72,7 +72,9 @@ public class MoneyCommand extends TNECommand {
 		
 		if(arguments.length == 0 && sender instanceof Player && !command.equalsIgnoreCase("pay")) {
 			TNECommand sub = FindSub("balance");
-			return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
 		}
 		
 		if(arguments.length == 0 && !command.equalsIgnoreCase("pay") || arguments.length == 1 && arguments[0].equalsIgnoreCase("help") && !command.equalsIgnoreCase("pay")) {
@@ -83,13 +85,24 @@ public class MoneyCommand extends TNECommand {
 		String subFind = (command.equalsIgnoreCase("pay"))? "pay" : arguments[0];
 
 		TNECommand sub = FindSub(subFind);
-		if(sub == null) {
+		if(sub == null && !arguments[0].equalsIgnoreCase("help")) {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
 			noCommand.translate(TNE.instance.defaultWorld, sender);
 			return false;
 		}
+
+    if(arguments[0].equalsIgnoreCase("help")) {
+      help(sender);
+      return false;
+    }
+
+    if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
+      sub.help(sender);
+      return false;
+    }
+
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());

@@ -59,7 +59,7 @@ public class ShopCommand extends TNECommand {
 			}
 		}
 		
-		if(arguments.length == 0 || arguments.length == 1 && arguments[0].equalsIgnoreCase("help")) {
+		if(arguments.length == 0) {
 			help(sender);
 			return false;
 		}
@@ -69,13 +69,24 @@ public class ShopCommand extends TNECommand {
     }
 		
 		TNECommand sub = FindSub(arguments[0]);
-		if(sub == null) {
+		if(sub == null && !arguments[0].equalsIgnoreCase("help")) {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
 			noCommand.translate(world, sender);
 			return false;
 		}
+
+		if(arguments[0].equalsIgnoreCase("help")) {
+			help(sender);
+			return false;
+		}
+
+		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
+			sub.help(sender);
+			return false;
+		}
+
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());

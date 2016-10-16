@@ -67,19 +67,25 @@ public class CreditCommand extends TNECommand {
 			return false;
 		}
 		
-		if(arguments[0].equalsIgnoreCase("help")) {
-			help(sender);
-			return false;
-		}
-		
 		TNECommand sub = FindSub(arguments[0]);
-		if(sub == null) {
+		if(sub == null && !arguments[0].equalsIgnoreCase("help")) {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
 			noCommand.translate(MISCUtils.getWorld(player), player);
 			return false;
 		}
+
+		if(arguments[0].equalsIgnoreCase("help")) {
+			help(sender);
+			return false;
+		}
+
+		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
+			sub.help(sender);
+			return false;
+		}
+
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());

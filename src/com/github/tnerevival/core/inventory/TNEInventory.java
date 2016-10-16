@@ -94,9 +94,13 @@ public abstract class TNEInventory {
   }
 
   public void removeViewer(UUID id) {
-    viewers.removeIf(inventoryViewer -> {
-      return inventoryViewer.getUUID().equals(id);
-    });
+    Iterator<InventoryViewer> i = viewers.iterator();
+    while(i.hasNext()) {
+      InventoryViewer viewer = i.next();
+      if(viewer.getUUID().equals(id)) {
+        i.remove();
+      }
+    }
   }
 
   public int getValidSlot(int recommended) {
