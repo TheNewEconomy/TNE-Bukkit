@@ -45,13 +45,21 @@ public class AdminCreateCommand extends TNECommand {
       UUID id = MISCUtils.genUUID(arguments[0]);
       if(!AccountUtils.exists(id)) {
         Account acc = new Account(id);
+        Double balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld);
         if(arguments.length > 1) {
-          acc.setBalance(TNE.instance.defaultWorld, Double.parseDouble(arguments[1]));
+          try {
+            balance = Double.parseDouble(arguments[1]);
+          } catch(Exception e) {
+            //Do Nothing
+          }
         }
+        acc.setBalance(TNE.instance.defaultWorld, balance);
         TNE.instance.manager.accounts.put(acc.getUid(), acc);
 
         Message m = new Message("Messages.Admin.Created");
         m.addVariable("$player", arguments[0]);
+        m.translate(world, sender);
+        return true;
       }
       new Message("Messages.Admin.Exists").translate(world, sender);
       return false;

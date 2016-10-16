@@ -23,6 +23,7 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.General.NoPlayer", "<red>Unable to locate player \"$player\"!");
 		configurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
 		configurations.put("Messages.Admin.NoBalance", "<red>$player has no balance data for the world \"$world\"!");
+		configurations.put("Messages.Admin.Balance", "<white>$player currently has <gold>$amount <white>for world \"$world\"!");
 		configurations.put("Messages.Admin.NoBank", "<red>$player has no bank data for the world \"$world\"!");
 		configurations.put("Messages.Admin.ID", "<white>The UUID for $player is $id.");
 		configurations.put("Messages.Admin.Exists", "<red>A player with that name already exists.");

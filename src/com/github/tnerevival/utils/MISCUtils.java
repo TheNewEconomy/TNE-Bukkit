@@ -354,7 +354,7 @@ public class MISCUtils {
 
 	public static UUID genUUID(String name) {
 	  UUID id = MojangAPI.getPlayerUUID(name);
-    if(id!= null) return id;
+    if(id != null) return id;
 
     return genUUID();
   }

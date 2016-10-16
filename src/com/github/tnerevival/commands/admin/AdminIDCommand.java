@@ -48,7 +48,7 @@ public class AdminIDCommand extends TNECommand {
         m.addVariable("$id", MISCUtils.getID(arguments[0]).toString());
 
         m.translate(world, sender);
-
+        return true;
       }
       Message m = new Message("Messages.General.NoPlayer");
       m.addVariable("$player", arguments[0]);

@@ -32,7 +32,7 @@ public class EconomyManager {
 	  while(it.hasNext()) {
 	    Account acc = it.next();
 	    
-	    if(acc.getBalance(world).equals(AccountUtils.getInitialBalance(world))) {
+	    if(acc.getBalances().containsKey(world) && acc.getBalance(world).equals(AccountUtils.getInitialBalance(world))) {
         deleteAccount(acc.getUid());
 	      it.remove();
 	      ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());

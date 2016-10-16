@@ -132,7 +132,8 @@ public abstract class TNECommand {
 		}
 
 		String player = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : "";
-    if(!sub.activated(MISCUtils.getWorld(getPlayer(sender)), player)) {
+    String world = (!player.equals(""))? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+    if(!sub.activated(world, player)) {
       Message noCommand = new Message("Messages.Command.InActive");
       noCommand.addVariable("$command", "/" + getName());
       noCommand.addVariable("$arguments", arguments[0]);

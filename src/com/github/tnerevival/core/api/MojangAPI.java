@@ -17,8 +17,7 @@ public class MojangAPI {
 			return TNE.uuidCache.get(name);
 		}
 		JSONObject object = send("users/profiles/minecraft/" + name);
-		MISCUtils.debug(object.toString());
-		UUID id = (object.containsKey("id")) ? UUID.fromString(dashUUID.matcher(((String) object.get("id"))).replaceAll("$1-$2-$3-$4-$5")) : null;
+		UUID id = (object != null && object.containsKey("id")) ? UUID.fromString(dashUUID.matcher(((String) object.get("id"))).replaceAll("$1-$2-$3-$4-$5")) : null;
 		
 		if(id != null) {
 			TNE.uuidCache.put(name, id);
