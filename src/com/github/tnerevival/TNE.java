@@ -39,7 +39,7 @@ public class TNE extends JavaPlugin {
 	public TNEAPI api = null;
 	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
-	public static final boolean debugMode = true;
+	public static final boolean debugMode = false;
 	
 	// Files & Custom Configuration Files
 	public File mobs;

@@ -18,7 +18,9 @@ Feature Set:
 as shortcuts.
   * Release /shop command when TNE's shop system is disabled.
   * Ability to use "?" as a shortcut to command help.
+  * Addition of command help pages to lessen the amount of information displayed on the screen at once with command help.
 * MISC Additions
+  * Switched from Java 8 back to Java 7 until hosts decide to pick up their game.
   * Add configuration for decimal value. This prevents any funky errors when
 used on servers that don't normally use the standard decimal value.
   * Allow message translations to be set on a per-player and per-world basis.
