@@ -25,7 +25,43 @@ public abstract class TNECommand {
 	public abstract String[] getAliases();
 	public abstract String getNode();
 	public abstract boolean console();
-	public abstract void help(CommandSender sender);
+
+	public String getHelp() {
+	  return "Command help coming soon!";
+  }
+
+  public void help(CommandSender sender) {
+    help(sender, 1);
+  }
+
+  public void help(CommandSender sender, Integer page) {
+    List<String> help = new ArrayList<>();
+    if(subCommands.size() > 0) {
+      for (TNECommand sub : subCommands) {
+        help.add(sub.getHelp());
+      }
+    } else {
+      help.add(getHelp());
+    }
+
+    Integer perPage = 4;
+    MISCUtils.debug(help.size() + "");
+    MISCUtils.debug((help.size() / perPage) + "");
+    Integer maxPage = help.size() / perPage;
+    if(help.size() % perPage > 0) maxPage++;
+    Integer currentPage = (page > maxPage || page <= 0)? 1 : page;
+    Integer start = (currentPage - 1) * perPage;
+    Integer stop = (currentPage * perPage > help.size())? help.size() : currentPage * perPage;
+
+    if(subCommands.size() > 0 ) {
+      String name = getName();
+      String formatted = name.substring(0, 1).toUpperCase() + name.substring(1);
+      sender.sendMessage(ChatColor.GOLD + "~~~" + ChatColor.WHITE + formatted + " Help " + currentPage + "/" + maxPage + ChatColor.GOLD + "~~~");
+    }
+    for(int i = start; i < stop; i++) {
+      sender.sendMessage(ChatColor.GOLD + help.get(i));
+    }
+  }
 
   public Boolean locked() {
     return false;
@@ -90,7 +126,8 @@ public abstract class TNECommand {
 		}
 
 		if(arguments[0].equalsIgnoreCase("help") || arguments[0].equalsIgnoreCase("?")) {
-			help(sender);
+		  Integer page = (arguments.length >= 2)? getPage(arguments[1]) : 1;
+			help(sender, page);
 			return false;
 		}
 
@@ -103,8 +140,10 @@ public abstract class TNECommand {
       return false;
     }
 
-		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
-		  sub.help(sender);
+		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?") || sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("help")) {
+		  int page = (arguments.length >= 3)? getPage(arguments[2]) : 1;
+
+		  sub.help(sender, page);
       return false;
     }
 
@@ -140,6 +179,16 @@ public abstract class TNECommand {
 		}
 		return null;
 	}
+
+	public Integer getPage(String pageValue) {
+	  Integer page = 1;
+	  try {
+	    page = Integer.valueOf(pageValue);
+    } catch(Exception e) {
+      return 1;
+    }
+	  return page;
+  }
 	
 	public boolean canExecute(CommandSender sender) {
 		if(sender instanceof Player) {

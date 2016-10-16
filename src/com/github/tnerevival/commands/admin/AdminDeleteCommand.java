@@ -1,13 +1,11 @@
 package com.github.tnerevival.commands.admin;
 
-import com.github.tnerevival.core.Message;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
@@ -59,7 +57,7 @@ public class AdminDeleteCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/tne delete <player> - Delete <player>'s account.");
+  public String getHelp() {
+    return "/tne delete <player> - Delete <player>'s account.";
   }
 }

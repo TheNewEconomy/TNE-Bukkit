@@ -6,7 +6,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -62,7 +61,7 @@ public class AdminCreateCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/tne create <player> [balance] - Create an account with <player> as the username. Optional starting balance parameter.([balance])");
+  public String getHelp() {
+    return "/tne create <player> [balance] - Create an account with <player> as the username. Optional starting balance parameter.([balance])";
   }
 }

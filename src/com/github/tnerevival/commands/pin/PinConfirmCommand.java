@@ -1,15 +1,13 @@
 package com.github.tnerevival.commands.pin;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class PinConfirmCommand extends TNECommand {
 	
@@ -70,7 +68,7 @@ public class PinConfirmCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/pin confirm <pin> - Cofirm your identity with your account pin. Pins are case-sensitive.");
+	public String getHelp() {
+		return "/pin confirm <pin> - Cofirm your identity with your account pin. Pins are case-sensitive.";
 	}
 }

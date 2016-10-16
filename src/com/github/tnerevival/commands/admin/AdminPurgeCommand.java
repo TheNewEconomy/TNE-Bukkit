@@ -5,7 +5,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -54,7 +53,7 @@ public class AdminPurgeCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/tne purge [world] - Deletes all accounts with a default balance in [world], otherwise checks every world for activity.");
+  public String getHelp() {
+    return "/tne purge [world] - Deletes all accounts with a default balance in [world], otherwise checks every world for activity.";
   }
 }

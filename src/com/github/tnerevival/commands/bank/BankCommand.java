@@ -3,7 +3,6 @@ package com.github.tnerevival.commands.bank;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.utils.BankUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class BankCommand extends TNECommand {
@@ -59,17 +58,4 @@ public class BankCommand extends TNECommand {
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
     return super.execute(sender, command, arguments);
 	}
-
-	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "~~~~~Bank Commands~~~~~");
-		sender.sendMessage(ChatColor.GOLD + "/bank help - general bank help");
-		sender.sendMessage(ChatColor.GOLD + "/bank balance - find out how much gold is in your bank");
-		sender.sendMessage(ChatColor.GOLD + "/bank buy - buy yourself a bank");
-		sender.sendMessage(ChatColor.GOLD + "/bank deposit <amount> - put the specified amount of money in your bank");
-		sender.sendMessage(ChatColor.GOLD + "/bank price - see how much a bank cost");
-		sender.sendMessage(ChatColor.GOLD + "/bank view - view your bank");
-		sender.sendMessage(ChatColor.GOLD + "/bank withdraw <amount> - withdraw the specified amout of money from your bank");
-	}
-	
 }

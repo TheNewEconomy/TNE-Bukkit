@@ -7,7 +7,6 @@ import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,8 +39,8 @@ public class ShopCreateCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop create <name> [admin] [hidden] - Create a new shop. [admin] true/false, [hidden] true/false");
+	public String getHelp() {
+    return "/shop create <name> [admin] [hidden] - Create a new shop. [admin] true/false, [hidden] true/false";
 	}
 	
 	@Override

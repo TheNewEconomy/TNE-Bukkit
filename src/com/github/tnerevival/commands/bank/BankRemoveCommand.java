@@ -5,7 +5,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -67,8 +66,8 @@ public class BankRemoveCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/bank remove <player> - Remove <player> from your bank.");
+  public String getHelp() {
+    return "/bank remove <player> - Remove <player> from your bank.";
   }
 
 }

@@ -2,7 +2,6 @@ package com.github.tnerevival.commands.pin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class PinCommand extends TNECommand {
@@ -43,13 +42,6 @@ public class PinCommand extends TNECommand {
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 	  return super.execute(sender, command, arguments);
-	}
-
-	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "~~~~~Pin Commands~~~~~");
-		sender.sendMessage(ChatColor.GOLD + "/pin confirm <pin> - Cofirm your identity with your account pin. Pins are case-sensitive.");
-		sender.sendMessage(ChatColor.GOLD + "/pin set <pin> <confirm pin> [old pin] - Set your pin to <pin>'s value. Old pin is required if you have one set. Pins are case-sensitive.");
 	}
 	
 }

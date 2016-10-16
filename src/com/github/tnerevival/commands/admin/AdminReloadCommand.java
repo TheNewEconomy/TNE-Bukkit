@@ -54,8 +54,8 @@ public class AdminReloadCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/theneweconomy reload <all/config/materials/messages/mobs/objects/worlds> - reload the TNE configurations or reload the specified file");
+	public String getHelp() {
+		return "/theneweconomy reload <all/config/materials/messages/mobs/objects/worlds> - reload the TNE configurations or reload the specified file";
 	}
 	
 }

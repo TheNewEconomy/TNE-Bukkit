@@ -7,7 +7,6 @@ import com.github.tnerevival.core.objects.TNEAccessPackage;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -84,7 +83,7 @@ public class PackageBuyCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/package buy <type> <package> - Buy <package> for inventory <type>");
+	public String getHelp() {
+		return "/package buy <type> <package> - Buy <package> for inventory <type>";
 	}
 }

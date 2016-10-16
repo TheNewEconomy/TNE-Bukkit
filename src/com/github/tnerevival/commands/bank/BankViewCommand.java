@@ -1,15 +1,13 @@
 package com.github.tnerevival.commands.bank;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class BankViewCommand extends TNECommand {
 	
@@ -55,8 +53,8 @@ public class BankViewCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/bank view - view your bank");
+	public String getHelp() {
+		return "/bank view - view your bank";
 	}
 	
 }

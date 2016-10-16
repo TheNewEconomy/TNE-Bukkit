@@ -55,7 +55,7 @@ public class CreditCommandsCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/credit commands - View all command credits you have accumulated.");
+	public String getHelp() {
+		return "/credit commands - View all command credits you have accumulated.";
 	}
 }

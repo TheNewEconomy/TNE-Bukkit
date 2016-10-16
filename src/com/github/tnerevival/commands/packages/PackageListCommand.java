@@ -61,7 +61,7 @@ public class PackageListCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/package list <type> - List all packages for the specified inventory <type>");
+	public String getHelp() {
+		return "/package list <type> - List all packages for the specified inventory <type>";
 	}
 }

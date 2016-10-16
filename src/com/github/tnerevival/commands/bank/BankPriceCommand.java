@@ -1,14 +1,12 @@
 package com.github.tnerevival.commands.bank;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class BankPriceCommand extends TNECommand {
 	
@@ -46,8 +44,8 @@ public class BankPriceCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/bank price - Displays the price of a bank.");
+	public String getHelp() {
+		return "/bank price - Displays the price of a bank.";
 	}
 	
 }

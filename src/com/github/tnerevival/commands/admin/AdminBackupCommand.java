@@ -2,7 +2,6 @@ package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class AdminBackupCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/theneweconomy backup - Saves & back ups the TNE Database file.(currently only FlatFile and SQLITE)");
+	public String getHelp() {
+		return "/theneweconomy backup - Saves & back ups the TNE Database file.(currently only FlatFile and SQLITE)";
 	}
 }

@@ -2,25 +2,28 @@ Alpha 3.2
 ============
 Feature Set:
 ------------
-* /tne delete \<player\>
-  * Delete the economy account for \<player\>
-* /tne purge [world]
-  * Remove all accounts with the default balance, optional [world] parameter.
-* /tne create \<player\> [balance]
-  * Create an account for \<player\>, optional [balance].
-* /tne id \<player\>
-  * Get \<player\>'s id to be used for player configurations.
-* /money set \<player\> \<amount\> [world] command.
-  * This allows administrators to set \<player\>'s balance to \<amount\>.
-* Addition of optional world parameter to money commands for multi-world balance support
-* Addition of configuration to allow the use of /pay, /bal, and /balance
+* Command Additions
+  * /tne delete \<player\>
+    * Delete the economy account for \<player\>
+  * /tne purge [world]
+    * Remove all accounts with the default balance, optional [world] parameter.
+  * /tne create \<player\> [balance]
+    * Create an account for \<player\>, optional [balance].
+  * /tne id \<player\>
+    * Get \<player\>'s id to be used for player configurations.
+  * /money set \<player\> \<amount\> [world] command.
+    * This allows administrators to set \<player\>'s balance to \<amount\>.
+  * Addition of optional world parameter to money commands for multi-world balance support
+  * Addition of configuration to allow the use of /pay, /bal, and /balance
 as shortcuts.
-* Release /shop command when TNE's shop system is disabled.
-* Add configuration for decimal value. This prevents any funky errors when
+  * Release /shop command when TNE's shop system is disabled.
+  * Ability to use "?" as a shortcut to command help.
+* MISC Additions
+  * Add configuration for decimal value. This prevents any funky errors when
 used on servers that don't normally use the standard decimal value.
-* Allow message translations to be set on a per-player and per-world basis.
-* Ability to set materials.yml configurations on a per-world and per-player basis.
-* Ability to set objects.yml configurations on a per-world and per-player basis.
+  * Allow message translations to be set on a per-player and per-world basis.
+  * Ability to set materials.yml configurations on a per-world and per-player basis.
+  * Ability to set objects.yml configurations on a per-world and per-player basis.
 
 
 Alpha 3.1

@@ -5,7 +5,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,8 +38,8 @@ public class ShopBrowseCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/shop browse <name> - Browse the specified shop.");
+  public String getHelp() {
+    return "/shop browse <name> - Browse the specified shop.";
   }
 
   @Override

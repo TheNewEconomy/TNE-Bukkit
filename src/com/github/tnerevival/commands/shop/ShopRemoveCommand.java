@@ -7,7 +7,6 @@ import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,8 +39,8 @@ public class ShopRemoveCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop remove <shop> [amount:#] [item name[:damage]] [type:(buy/sell)] [trade:name] [gold:amount] - Remove a specific item from your shop. Cost is required if multiple entries exist.");
+	public String getHelp() {
+    return "/shop remove <shop> [amount:#] [item name[:damage]] [type:(buy/sell)] [trade:name] [gold:amount] - Remove a specific item from your shop. Cost is required if multiple entries exist.";
 	}
 	
 	@Override

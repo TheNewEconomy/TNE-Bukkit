@@ -1,17 +1,15 @@
 package com.github.tnerevival.commands.bank;
 
-import com.github.tnerevival.core.transaction.TransactionType;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class BankBuyCommand extends TNECommand {
 	
@@ -64,8 +62,8 @@ public class BankBuyCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/bank buy - buy yourself a bank");
+	public String getHelp() {
+		return "/bank buy - buy yourself a bank";
 	}
 	
 }

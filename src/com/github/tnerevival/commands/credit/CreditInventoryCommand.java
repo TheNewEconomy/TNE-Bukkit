@@ -62,7 +62,7 @@ public class CreditInventoryCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/credit inventory <inventory> - View time credits for <inventory> in every world.");
+	public String getHelp() {
+		return "/credit inventory <inventory> - View time credits for <inventory> in every world.";
 	}
 }

@@ -2,7 +2,6 @@ package com.github.tnerevival.core.configurations;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.configurations.impl.*;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -115,10 +114,6 @@ public class ConfigurationManager {
 				path = path.replace(prefix + ".", "");
 			}
     }
-
-    MISCUtils.debug(prefix);
-    MISCUtils.debug(path);
-    MISCUtils.debug(configuration);
 
     if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
     if(getBoolean("Core.Multiworld") && worldEnabled(path, world)) return getWorldConfiguration(path, world);

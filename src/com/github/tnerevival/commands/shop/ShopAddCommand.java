@@ -1,19 +1,17 @@
 package com.github.tnerevival.commands.shop;
 
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class ShopAddCommand extends TNECommand {
 
@@ -42,8 +40,8 @@ public class ShopAddCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]  - Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.");
+	public String getHelp() {
+		return "/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]  - Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.";
 	}
 	
 	@Override

@@ -7,7 +7,6 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,7 +65,7 @@ public class AdminBankCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/theneweconomy bank <player> [world] - View the specified player's bank for [world]");
+	public String getHelp() {
+		return "/theneweconomy bank <player> [world] - View the specified player's bank for [world]";
 	}
 }

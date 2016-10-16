@@ -5,7 +5,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -61,7 +60,7 @@ public class AdminIDCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/tne id <player> - Get <player>'s id to be used for player configurations.");
+  public String getHelp() {
+    return "/tne id <player> - Get <player>'s id to be used for player configurations.";
   }
 }

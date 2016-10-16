@@ -1,15 +1,13 @@
 package com.github.tnerevival.commands.admin;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
 public class AdminBalanceCommand extends TNECommand {
 	
@@ -68,7 +66,7 @@ public class AdminBalanceCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/theneweconomy balance <player> [world] - Check the specified player's balance for [world]");
+	public String getHelp() {
+		return "/theneweconomy balance <player> [world] - Check the specified player's balance for [world]";
 	}
 }

@@ -1,10 +1,8 @@
 package com.github.tnerevival.commands.admin;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import org.bukkit.command.CommandSender;
 
 public class AdminSaveCommand extends TNECommand {
 	
@@ -40,7 +38,7 @@ public class AdminSaveCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/theneweconomy save - force saves all TNE data");
+	public String getHelp() {
+		return "/theneweconomy save - force saves all TNE data";
 	}
 }

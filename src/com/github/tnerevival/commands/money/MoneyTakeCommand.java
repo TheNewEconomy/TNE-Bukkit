@@ -1,14 +1,12 @@
 package com.github.tnerevival.commands.money;
 
-import com.github.tnerevival.core.transaction.TransactionType;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.command.CommandSender;
 
 public class MoneyTakeCommand extends TNECommand {
 
@@ -60,8 +58,8 @@ public class MoneyTakeCommand extends TNECommand {
 	}
 
 	@Override
-	public void help(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "/money take <player> <amount> [world] - make some of <player>'s money vanish into thin air");
+	public String getHelp() {
+		return "/money take <player> <amount> [world] - make some of <player>'s money vanish into thin air";
 	}
 	
 }

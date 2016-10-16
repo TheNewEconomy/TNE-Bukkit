@@ -6,7 +6,6 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,8 +41,8 @@ public class ShopStockCommand extends TNECommand {
   }
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/shop stock <shop> <add/remove> [quantity:#] [amount:#] [item name[:damage]] [type:(sell/buy)] [gold:#]  - Add/Remove stock of an item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.");
+  public String getHelp() {
+    return "/shop stock <shop> <add/remove> [quantity:#] [amount:#] [item name[:damage]] [type:(sell/buy)] [gold:#]  - Add/Remove stock of an item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.";
   }
 
   @Override

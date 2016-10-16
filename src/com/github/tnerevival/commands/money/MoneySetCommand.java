@@ -6,7 +6,6 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -66,7 +65,7 @@ public class MoneySetCommand extends TNECommand {
 
 
   @Override
-  public void help(CommandSender sender) {
-    sender.sendMessage(ChatColor.GOLD + "/money set <player> <amount> [world] - Set <player>'s balance to <amount>.");
+  public String getHelp() {
+    return "/money set <player> <amount> [world] - Set <player>'s balance to <amount>.";
   }
 }
