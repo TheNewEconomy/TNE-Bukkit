@@ -29,12 +29,12 @@ public class Alpha3_0 extends Version {
 
 	@Override
 	public double versionNumber() {
-		return 3.2;
+		return 3.3;
 	}
 
 	@Override
 	public void update(double version, String type) {
-	  if(version == 3.0 || version == 3.1) return;
+	  if(version == 3.0 || version == 3.1 || version == 3.2) return;
 		String table = prefix + "_ECOIDS";
 		if(type.equalsIgnoreCase("mysql")) {
 			db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);

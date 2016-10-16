@@ -77,34 +77,40 @@ public abstract class TNECommand {
 	
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
 
+    String player = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : "";
+    String world = (!player.equals(""))? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+    if(!activated(world, player)) {
+      return false;
+    }
+
 	  if(locked() && !(sender instanceof Player)) return false;
     if(locked()) {
-      Player player = (Player)sender;
+      Player p = (Player)sender;
       Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
 
       if(!acc.getStatus().getBalance()) {
         Message locked = new Message("Messages.Account.Locked");
-        locked.addVariable("$player", player.getDisplayName());
-        locked.translate(MISCUtils.getWorld(player), player);
+        locked.addVariable("$player", p.getDisplayName());
+        locked.translate(MISCUtils.getWorld(p), p);
         return false;
       }
     }
 
 	  if(confirm() && !(sender instanceof Player)) return false;
     if(confirm()) {
-      Player player = (Player)sender;
+      Player p = (Player)sender;
       Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-      if (TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
-        if (!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+      if (TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(p))) {
+        if (!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(p))) {
           if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
             Message set = new Message("Messages.Account.Set");
-            set.translate(MISCUtils.getWorld(player), player);
+            set.translate(MISCUtils.getWorld(p), p);
             return false;
           }
 
           if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
             Message confirm = new Message("Messages.Account.Confirm");
-            confirm.translate(MISCUtils.getWorld(player), player);
+            confirm.translate(MISCUtils.getWorld(p), p);
             return false;
           }
         }
@@ -130,16 +136,6 @@ public abstract class TNECommand {
 			help(sender, page);
 			return false;
 		}
-
-		String player = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : "";
-    String world = (!player.equals(""))? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
-    if(!sub.activated(world, player)) {
-      Message noCommand = new Message("Messages.Command.InActive");
-      noCommand.addVariable("$command", "/" + getName());
-      noCommand.addVariable("$arguments", arguments[0]);
-      noCommand.translate(MISCUtils.getWorld(getPlayer(sender)), sender);
-      return false;
-    }
 
 		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?") || sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("help")) {
 		  int page = (arguments.length >= 3)? getPage(arguments[2]) : 1;
