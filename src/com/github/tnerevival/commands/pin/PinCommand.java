@@ -2,11 +2,8 @@ package com.github.tnerevival.commands.pin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class PinCommand extends TNECommand {
 
@@ -36,47 +33,16 @@ public class PinCommand extends TNECommand {
 	public boolean console() {
 		return false;
 	}
+
+
+  @Override
+  public Boolean activated(String world, String player) {
+    return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, player);
+  }
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
-	  Player player = (Player)sender;
-
-    if(!TNE.instance.api.getBoolean("Core.Pins.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
-			new Message("Message.Money.NoPins").translate(MISCUtils.getWorld(player), player);
-      return false;
-    }
-
-		if(arguments.length == 0) {
-			help(sender);
-			return false;
-		}
-		
-		TNECommand sub = FindSub(arguments[0]);
-		if(sub == null && !arguments[0].equalsIgnoreCase("help")) {
-			Message noCommand = new Message("Messages.Command.None");
-			noCommand.addVariable("$command", "/" + getName());
-			noCommand.addVariable("$arguments", arguments[0]);
-			noCommand.translate(MISCUtils.getWorld(player), player);
-			return false;
-		}
-
-		if(arguments[0].equalsIgnoreCase("help")) {
-			help(sender);
-			return false;
-		}
-
-		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
-			sub.help(sender);
-			return false;
-		}
-
-		if(!sub.canExecute(sender)) {
-			Message unable = new Message("Messages.Command.Unable");
-			unable.addVariable("$command", "/" + getName());
-			unable.translate(MISCUtils.getWorld(player), player);
-			return false;
-		}
-		return sub.execute(sender, command, removeSub(arguments));
+	  return super.execute(sender, command, arguments);
 	}
 
 	@Override

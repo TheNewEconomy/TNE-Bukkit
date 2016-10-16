@@ -39,6 +39,7 @@ Messages:
     Command:
        Unable: <red>I'm sorry, but you're not allowed to use that command.
        None: <yellow>Command $command $arguments could not be found! Try using $command help.
+       InActive: <red>Command $command $arguments has been deactivated! Try using $command help.
        Charge: <white>You have been charged <gold>$amount<white> for using $command.
        
     Inventory:

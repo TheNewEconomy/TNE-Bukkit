@@ -9,6 +9,7 @@ public class MessageConfiguration extends Configuration {
 	public void load(FileConfiguration configurationFile) {
 		configurations.put("Messages.Command.Unable", "<red>I'm sorry, but you're not allowed to use that command.");
 		configurations.put("Messages.Command.None", "<yellow>Command $command $arguments could not be found! Try using $command help.");
+		configurations.put("Messages.Command.InActive", "<red>Command $command $arguments has been deactivated! Try using $command help.");
 		configurations.put("Messages.Command.Charge", "<white>You have been charged <gold>$amount<white> for using $command.");
 		configurations.put("Messages.Inventory.Charge", "<white>You have been charged <gold>$amount<white> for opening inventory of type \"$type.\"");
 		configurations.put("Messages.Inventory.NoTime", "<white>You have run out of time for using inventory of type \"$type.\"");

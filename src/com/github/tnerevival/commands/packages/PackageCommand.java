@@ -38,6 +38,9 @@ public class PackageCommand extends TNECommand {
 	public boolean console() {
 		return false;
 	}
+
+	@Override
+	public Boolean confirm() { return true; }
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {

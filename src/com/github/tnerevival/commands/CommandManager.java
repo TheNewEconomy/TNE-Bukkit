@@ -29,6 +29,8 @@ public class CommandManager {
 	public TNECommand Find(String name) {
 		for(TNECommand c : commands) {
 		  if(name.equalsIgnoreCase("pay") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
+		  if(name.equalsIgnoreCase("balance") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
+		  if(name.equalsIgnoreCase("bal") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
 			if(c.getName().equalsIgnoreCase(name)) {
 				return c;
 			}

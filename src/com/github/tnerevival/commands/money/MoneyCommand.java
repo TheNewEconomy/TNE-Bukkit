@@ -1,15 +1,11 @@
 package com.github.tnerevival.commands.money;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 
 public class MoneyCommand extends TNECommand {
 
@@ -44,75 +40,39 @@ public class MoneyCommand extends TNECommand {
 	public boolean console() {
 		return true;
 	}
+
+	@Override
+  public Boolean confirm() {
+	  return true;
+  }
+
+  @Override
+  public Boolean locked() {
+    return true;
+  }
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		
-		if(sender instanceof Player) {
-			Player player = getPlayer(sender);
-			
-			Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-			
-			if(!acc.getStatus().getBalance()) {
-				Message locked = new Message("Messages.Account.Locked");
-				locked.addVariable("$player", player.getDisplayName());
-				locked.translate(MISCUtils.getWorld(player), player);
-				return false;
-			}
-			if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
-        if (!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
 
-          boolean set = !acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE");
-
-          String message = (set)? "Messages.Account.Confirm" : "Messages.Account.Set";
-          new Message(message).translate(MISCUtils.getWorld(player), player);
-        }
-      }
-		}
-		
-		if(arguments.length == 0 && sender instanceof Player && !command.equalsIgnoreCase("pay")) {
-			TNECommand sub = FindSub("balance");
+	  if(command.equalsIgnoreCase("bal") || command.equalsIgnoreCase("balance") ||
+       arguments.length == 0 && sender instanceof Player && !command.equalsIgnoreCase("pay")) {
+      TNECommand sub = FindSub("balance");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
+      } else {
+        Message unable = new Message("Messages.Command.Unable");
+        unable.addVariable("$command", "/" + getName());
+        unable.translate(TNE.instance.defaultWorld, sender);
+        return false;
       }
-		}
+    }
+
+    if(command.equalsIgnoreCase("pay")) {
+      TNECommand sub = FindSub("pay");
+      return sub.execute(sender, command, arguments);
+    }
 		
-		if(arguments.length == 0 && !command.equalsIgnoreCase("pay") || arguments.length == 1 && arguments[0].equalsIgnoreCase("help") && !command.equalsIgnoreCase("pay")) {
-			help(sender);
-			return false;
-		}
-
-		String subFind = (command.equalsIgnoreCase("pay"))? "pay" : arguments[0];
-
-		TNECommand sub = FindSub(subFind);
-		if(sub == null && !arguments[0].equalsIgnoreCase("help")) {
-			Message noCommand = new Message("Messages.Command.None");
-			noCommand.addVariable("$command", "/" + getName());
-			noCommand.addVariable("$arguments", arguments[0]);
-			noCommand.translate(TNE.instance.defaultWorld, sender);
-			return false;
-		}
-
-    if(arguments[0].equalsIgnoreCase("help")) {
-      help(sender);
-      return false;
-    }
-
-    if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?")) {
-      sub.help(sender);
-      return false;
-    }
-
-		if(!sub.canExecute(sender)) {
-			Message unable = new Message("Messages.Command.Unable");
-			unable.addVariable("$command", "/" + getName());
-			unable.translate(TNE.instance.defaultWorld, sender);
-			return false;
-		}
-		if(command.equalsIgnoreCase("pay")) {
-		  return sub.execute(sender, command, arguments);
-    }
-		return sub.execute(sender, command, removeSub(arguments));
+		return super.execute(sender, command, arguments);
 	}
 
 	@Override
