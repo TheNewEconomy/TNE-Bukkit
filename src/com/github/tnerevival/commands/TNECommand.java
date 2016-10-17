@@ -38,10 +38,14 @@ public abstract class TNECommand {
     List<String> help = new ArrayList<>();
     if(subCommands.size() > 0) {
       for (TNECommand sub : subCommands) {
-        help.add(sub.getHelp());
+      	if(sender.hasPermission(sub.getNode())) {
+					help.add(sub.getHelp());
+				}
       }
     } else {
-      help.add(getHelp());
+    	if(sender.hasPermission(getNode())) {
+				help.add(getHelp());
+			}
     }
 
     Integer perPage = 4;
