@@ -390,10 +390,13 @@ public class MISCUtils {
 	}
 	
 	public static UUID getID(Player player) {
-		if(!TNE.instance.api.getBoolean("Core.UUID")) {
-			return ecoID(player.getDisplayName());
+		if(player != null) {
+			if (!TNE.instance.api.getBoolean("Core.UUID")) {
+				return ecoID(player.getDisplayName());
+			}
+			return player.getUniqueId();
 		}
-		return player.getUniqueId();
+		return genUUID();
 	}
 	
 	public static UUID getID(OfflinePlayer player) {

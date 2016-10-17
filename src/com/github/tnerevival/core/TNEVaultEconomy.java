@@ -39,7 +39,7 @@ public class TNEVaultEconomy implements Economy {
 	
 	@Override
 	public boolean hasBankSupport() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -444,18 +444,9 @@ public class TNEVaultEconomy implements Economy {
 	}
 
 	public UUID getBankAccount(String identifier) {
-	  Player player = (isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
+	  Player player = (MISCUtils.isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
 
     return MISCUtils.getID(player);
-  }
-
-  public boolean isUUID(String value) {
-    try {
-      UUID.fromString(value);
-      return true;
-    } catch (Exception ex) {
-      return false;
-    }
   }
 
 }
