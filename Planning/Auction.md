@@ -8,8 +8,10 @@ Commands
 /silentauction[/sauction] - Base silent auction command  
 /auction - Base auction command  
 /[base] start [configurations]  
-/[base] bid <amount>
+/[base] bid <amount>  
+/[base] claim
 /[base] cancel  
+/[base] info
 /[base] end [winner(true/false)] [world]
 
 

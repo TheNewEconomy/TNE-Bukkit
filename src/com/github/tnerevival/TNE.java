@@ -10,10 +10,7 @@ import com.github.tnerevival.core.inventory.InventoryManager;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.*;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.worker.InterestWorker;
-import com.github.tnerevival.worker.InventoryTimeWorker;
-import com.github.tnerevival.worker.SaveWorker;
-import com.github.tnerevival.worker.StatisticsWorker;
+import com.github.tnerevival.worker.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,10 +61,11 @@ public class TNE extends JavaPlugin {
 	/*
 	 * Instances of the main runnables.
 	 */
-	public SaveWorker saveWorker;
-	public InterestWorker interestWorker;
-	public StatisticsWorker statsWorker;
-	public InventoryTimeWorker invWorker;
+	private AuctionWorker auctionWorker;
+	private SaveWorker saveWorker;
+	private InterestWorker interestWorker;
+	private StatisticsWorker statsWorker;
+	private InventoryTimeWorker invWorker;
 	
 	public static HashMap<String, UUID> uuidCache = new HashMap<String, UUID>();
 	
@@ -78,7 +76,6 @@ public class TNE extends JavaPlugin {
 	}
 	
 	public void onEnable() {
-	  getDataFolder().mkdir();
 		defaultWorld = Bukkit.getServer().getWorlds().get(0).getName();
 		updater = new UpdateChecker();
 		
@@ -92,7 +89,8 @@ public class TNE extends JavaPlugin {
 		inventoryManager = new InventoryManager();
 		saveManager = new SaveManager();
 		commandManager = new CommandManager();
-		
+
+    auctionWorker = new AuctionWorker(this);
 		saveWorker = new SaveWorker(this);
 		interestWorker = new InterestWorker(this);
 		invWorker = new InventoryTimeWorker(this);
@@ -107,6 +105,8 @@ public class TNE extends JavaPlugin {
 		if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
 			invWorker.runTaskTimer(this, 20, 20);
 		}
+
+		auctionWorker.runTaskTimer(this, 20, 20);
 
 		//Listeners
 		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);

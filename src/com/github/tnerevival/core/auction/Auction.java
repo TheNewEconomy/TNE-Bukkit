@@ -3,8 +3,11 @@ package com.github.tnerevival.core.auction;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Daniel on 10/17/2016.
@@ -13,6 +16,7 @@ public class Auction {
 
   private Integer lotNumber;
   private long added = System.nanoTime();
+  private long startTime = System.nanoTime();
   private UUID player;
   private String world = TNE.instance.defaultWorld;
   private Boolean silent;
@@ -33,6 +37,22 @@ public class Auction {
   public Auction(UUID player, String world) {
     this.player = player;
     this.world = world;
+  }
+
+  public Integer remaining() {
+    long elapsed = System.nanoTime() - startTime;
+    return time - (int)TimeUnit.SECONDS.convert(elapsed, TimeUnit.NANOSECONDS);
+  }
+
+  public String getNotification() {
+    StringBuilder builder = new StringBuilder();
+    if(remaining() == time) {
+      builder.append(ChatColor.WHITE + "Auction started for " + item.getName() + " starting bid is " + ChatColor.GOLD + MISCUtils.formatBalance(world, start) + ChatColor.WHITE + ".");
+    } else {
+      builder.append(ChatColor.WHITE + "The auction for " + item.getName() + " will end in " + ChatColor.GREEN + remaining() + ChatColor.WHITE + ".");
+    }
+    builder.append(ChatColor.WHITE + "Type /auction info for more information.");
+    return builder.toString();
   }
 
   public Integer getLotNumber() {
