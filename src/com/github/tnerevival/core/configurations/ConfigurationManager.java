@@ -7,7 +7,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.HashMap;
 
 public class ConfigurationManager {
-	
+
+	public boolean save = false;
+
 	public HashMap<String, Configuration> configurations = new HashMap<>();
 	
 	public ConfigurationManager() {

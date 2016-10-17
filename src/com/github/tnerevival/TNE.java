@@ -23,11 +23,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class TNE extends JavaPlugin {
-	
+
+  public List<String> modified = new ArrayList<>();
+
 	public static TNE instance;
 	public EconomyManager manager;
 	public InventoryManager inventoryManager;
@@ -198,7 +202,9 @@ public class TNE extends JavaPlugin {
 	}
 	
 	private void saveConfigurations() {
-		saveConfig();
+		if(modified.contains("config.yml")) {
+			saveConfig();
+		}
 		try {
 			mobConfigurations.save(mobs);
 			messageConfigurations.save(messages);
