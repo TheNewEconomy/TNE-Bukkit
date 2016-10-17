@@ -7,15 +7,21 @@ Commands
 --------
 /silentauction[/sauction] - Base silent auction command  
 /auction - Base auction command  
-/[base] start <slot> <starting amount> [configurations]  
+/[base] start [configurations]  
 /[base] bid <amount>
 /[base] cancel  
-/[base] end [winner(true/false)]
+/[base] end [winner(true/false)] [world]
 
 
 Configurations
 --------------
+Item - The name of the item to auction off   
+Slot - The slot of the item to auction off  
+Amount - The amount of <item> to auction off  
+Start - The starting bid for this item  
+Item Cost - The cost of this item. 
 Increment - The increment in which bids will be increased.  
-Permission - The permission needed to partake in this auction.  
-Item Cost - Whether or not to use an item as payment.  
-Item - The name of the item to use as payment
+Admin - Whether or not this is an administrator auction.  
+Time - The length(in seconds) this auction will go on for.  
+Global - Whether or not this auction is global or world-based.  
+Permission - The permission needed to partake in this auction.[for admin auctions only]  

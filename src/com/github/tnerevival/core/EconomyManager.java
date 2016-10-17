@@ -2,6 +2,7 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.serializable.SerializableLocation;
@@ -26,6 +27,8 @@ public class EconomyManager {
 	public List<UUID> confirmed = new ArrayList<>();
 
 	public Map<SerializableLocation, TNESign> signs = new HashMap<>();
+
+  public Map<Integer, Auction> auctions = new HashMap<>();
 	
 	public void purge(String world) {
 	  Iterator<Account> it = accounts.values().iterator();
