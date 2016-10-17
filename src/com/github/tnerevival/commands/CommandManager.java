@@ -2,6 +2,7 @@ package com.github.tnerevival.commands;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.admin.AdminCommand;
+import com.github.tnerevival.commands.auction.AuctionCommand;
 import com.github.tnerevival.commands.bank.BankCommand;
 import com.github.tnerevival.commands.credit.CreditCommand;
 import com.github.tnerevival.commands.money.MoneyCommand;
@@ -17,11 +18,12 @@ public class CommandManager {
 	public List<TNECommand> commands = new ArrayList<TNECommand>();
 	
 	public CommandManager() {
-		commands.add(new BankCommand(TNE.instance));
 		commands.add(new AdminCommand(TNE.instance));
+		commands.add(new AuctionCommand(TNE.instance));
+    commands.add(new BankCommand(TNE.instance));
+    commands.add(new CreditCommand(TNE.instance));
 		commands.add(new MoneyCommand(TNE.instance));
 		commands.add(new PackageCommand(TNE.instance));
-		commands.add(new CreditCommand(TNE.instance));
 		commands.add(new PinCommand(TNE.instance));
 		commands.add(new ShopCommand(TNE.instance));
 	}
