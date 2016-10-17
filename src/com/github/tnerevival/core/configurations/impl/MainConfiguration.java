@@ -29,6 +29,19 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Currency.MajorName.Plural", "Dollars");
 		configurations.put("Core.Currency.MinorName.Single", "Cent");
 		configurations.put("Core.Currency.MinorName.Plural", "Cents");
+		configurations.put("Core.Auctions.Enabled", true);
+		configurations.put("Core.Auctions.Cost", 10.00);
+		configurations.put("Core.Auctions.Multiple", false);
+		configurations.put("Core.Auctions.MaxMultiple", 3);
+		configurations.put("Core.Auctions.MaxQueue", 10);
+		configurations.put("Core.Auctions.AntiSnipe", true);
+		configurations.put("Core.Auctions.SnipePeriod", 30);
+		configurations.put("Core.Auctions.SnipeTime", 20);
+		configurations.put("Core.Auctions.Announce", true);
+		configurations.put("Core.Auctions.Interval", 10);
+		configurations.put("Core.Auctions.Countdown", true);
+		configurations.put("Core.Auctions.CountdownTime", 10);
+
 		configurations.put("Core.Shops.Enabled", true);
 		configurations.put("Core.Shops.Cost", 10.00);
 		configurations.put("Core.Shops.Max", 5);

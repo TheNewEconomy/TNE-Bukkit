@@ -50,6 +50,17 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
 		configurations.put("Messages.Money.NoPins", "<red>Pins are disabled in this world!");
 
+    configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
+    configurations.put("Messages.Auction.Return", "<white>Your items have been returned.");
+    configurations.put("Messages.Auction.FailedReturn", "<white>Auctioned items have been returned due to bidder's insufficient funds.");
+    configurations.put("Messages.Auction.Won", "<white>Congratulations! You won the auction for $item.");
+    configurations.put("Messages.Auction.Paid", "<white>You received <gold>$amount<white> from your recent auction.");
+    configurations.put("Messages.Auction.Under", "<red>Sorry, but your bid is under the minimum bid of <gold>$amount<red>.");
+    configurations.put("Messages.Auction.AntiSnipe", "<white>[<green>AntiSnipe<white>]$time seconds has been added to the auction.");
+    configurations.put("Messages.Auction.Bid", "<white>$player has raised the auction bid to <gold>$amount<white>.");
+    configurations.put("Messages.Auction.Winner", "<white>$player has won the auction for <gold>$amount<white>.");
+    configurations.put("Messages.Auction.NoWinner", "<white>Auction has ended with no bidders.");
+
 		configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
 		configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");
 		configurations.put("Messages.Shop.NoTrade", "<red>This shop currently no trade option for that item.");

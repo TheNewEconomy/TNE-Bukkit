@@ -22,7 +22,7 @@ public class Auction {
   private Boolean silent;
   private SerializableItemStack item;
   private TransactionCost cost = new TransactionCost(50.00);
-  private Bid highestBid;
+  private Bid highestBid = null;
   private Double start = 50.00;
   private Double increment = 10.00;
   private Boolean admin = false;

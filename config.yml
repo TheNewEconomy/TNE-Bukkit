@@ -95,6 +95,45 @@ Core:
             #The plural name. Example: Cents
             Plural: Cents
 
+    #All configurations relating to the TNE Auctions System.
+    Auctions:
+
+        #Whether or not auctions are enabled
+        Enabled: true
+
+        #The cost to start an auction.
+        Cost: 10.00
+
+        #Whether or not multiple auctions can be run at once
+        Multiple: false
+
+        #The maximum amount of simultaneous auctions at once.
+        MaxMultiple: 3
+
+        #The maximum number of auctions able to be in the queue for a single world.
+        MaxQueue: 10
+
+        #whether or not anti-snipe is enabled
+        AntiSnipe: true
+
+        #The time in seconds
+        SnipePeriod: 30
+
+        #The time in seconds the anti-snipe system should add on
+        SnipeTime: 20
+
+        #Whether or not periodic announcements should be made about the current auction(s)
+        Announce: true
+
+        #The interval for auction announcements if they're enabled
+        Interval: 10
+
+        #Whether or not the final <CountdownTime> seconds should be announced.
+        Countdown: true
+
+        #The time in seconds that should be classified as the final countdown period.
+        CountdownTime: 10
+
     #All configurations relating to the TNE Shop System
     Shops:
 

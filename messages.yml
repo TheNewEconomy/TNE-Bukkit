@@ -96,10 +96,17 @@ Messages:
        NoPins: <red>Pins are disabled in this world!
 
     Auction:
-       Return: <white>Auctioned items have been returned due to bidder's insufficient funds.
-       Winner: <white>Congratulations! You won the auction for $item.
-       Paid: <white> You received <gold>$amount<white> from your recent auction.
-       
+       Start: <white>Auction has started for $item. Starting bid is <gold>$start<white>.
+       Return: <white>Your items have been returned.
+       FailedReturn: <white>Auctioned items have been returned due to bidder's insufficient funds.
+       Won: <white>Congratulations! You won the auction for $item.
+       Paid: <white>You received <gold>$amount<white> from your recent auction.
+       Under: <red>Sorry, but your bid is under the minimum bid of <gold>$amount<red>.
+       AntiSnipe: <white>[<green>AntiSnipe<white>]$time seconds has been added to the auction.
+       Bid: <white>$player has raised the auction bid to <gold>$amount<white>.
+       Winner: <white>$player has won the auction for <gold>$amount<white>.
+       NoWinner: <white>Auction has ended with no bidders.
+
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.
        NoStock: <red>The item you wish to purchase is currently out of stock.

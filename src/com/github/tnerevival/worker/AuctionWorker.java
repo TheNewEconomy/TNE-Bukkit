@@ -24,18 +24,20 @@ public class AuctionWorker extends BukkitRunnable {
     for(int i = 0; i >= worlds.size(); i++) {
       String world = (i == worlds.size())? "Global" : worlds.get(i).getName();
       if(plugin.manager.auctionManager.hasActive(world)) {
-        Integer notificationTime = 10;
-        Boolean countdown = true;
-        Integer countdownStart = 10;
 
-        Auction auction = plugin.manager.auctionManager.getActive(world);
-        Integer remaining = auction.remaining();
-        if(remaining > 0) {
-          if((auction.getTime() - remaining) % notificationTime == 0 || remaining <= countdownStart && countdown) {
-            plugin.manager.auctionManager.notifyPlayers(world);
+        for(Auction auction : plugin.manager.auctionManager.getActive(world)) {
+          Integer notificationTime = TNE.instance.api.getInteger("Core.Auctions.Interval", world, auction.getPlayer().toString());
+          Boolean countdown = TNE.instance.api.getBoolean("Core.Auctions.Countdown", world, auction.getPlayer().toString());
+          Integer countdownStart = TNE.instance.api.getInteger("Core.Auctions.CountdownTime", world, auction.getPlayer().toString());
+
+          Integer remaining = auction.remaining();
+          if (remaining > 0) {
+            if ((auction.getTime() - remaining) % notificationTime == 0 || remaining <= countdownStart && countdown) {
+              plugin.manager.auctionManager.notifyPlayers(world, auction.getLotNumber(), false);
+            }
+          } else {
+            plugin.manager.auctionManager.end(world, auction.getLotNumber());
           }
-        } else {
-          plugin.manager.auctionManager.end(world);
         }
       } else {
         plugin.manager.auctionManager.startNext(world);
