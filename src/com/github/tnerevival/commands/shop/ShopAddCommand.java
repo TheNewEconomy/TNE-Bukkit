@@ -40,8 +40,8 @@ public class ShopAddCommand extends TNECommand {
 	}
 
 	@Override
-	public String getHelp() {
-		return "/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]  - Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item.";
+	public String[] getHelpLines() {
+		return new String[] {"/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]", "Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item." };
 	}
 	
 	@Override
