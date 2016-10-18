@@ -202,7 +202,7 @@ public class TNE extends JavaPlugin {
 	}
 	
 	private void saveConfigurations() {
-		if(modified.contains("config.yml")) {
+		if(!new File(getDataFolder(), "config.yml").exists() || modified.contains("config.yml")) {
 			saveConfig();
 		}
 		try {
