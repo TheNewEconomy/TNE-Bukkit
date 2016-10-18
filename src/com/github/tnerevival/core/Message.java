@@ -67,7 +67,7 @@ public class Message {
 	  String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
 	  String found = TNE.instance.api.getString(this.node, world, id);
 		
-		String message = (found == null)? this.node : replaceColours(found);
+		String message = (found == null)? this.node : found;
     if(!message.equals(this.node)) {
       Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
 
@@ -76,6 +76,6 @@ public class Message {
         message = message.replace(entry.getKey(), entry.getValue());
       }
     }
-		sender.sendMessage(message);
+		sender.sendMessage(replaceColours(message));
 	}
 }

@@ -71,10 +71,9 @@ public class CommandManager {
 
   private void register(String command) {
     try {
-      PluginCommand pluginCommand = null;
       Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
       c.setAccessible(true);
-      pluginCommand = c.newInstance(command, TNE.instance);
+      PluginCommand pluginCommand = c.newInstance(command, TNE.instance);
       if(pluginCommand != null) {
         ((SimpleCommandMap) commandMap.get(Bukkit.getServer())).register(command, pluginCommand);
         MISCUtils.debug("Registered command " + command);

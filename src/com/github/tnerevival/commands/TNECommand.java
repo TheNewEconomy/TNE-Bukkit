@@ -89,7 +89,8 @@ public abstract class TNECommand {
 
     for(Integer i : send) {
       for(String s : help.get(i)) {
-        sender.sendMessage(ChatColor.GOLD + s);
+        String message = s.replaceFirst("/" , "<green>/").replaceFirst("-", "<white>-");
+        new Message(message).translate("", sender);
       }
     }
   }
@@ -228,6 +229,10 @@ public abstract class TNECommand {
 		}
 		return console();
 	}
+
+	protected String getWorld(CommandSender sender) {
+	  return (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+  }
 	
 	protected Player getPlayer(CommandSender sender) {
 		if(sender instanceof Player) {

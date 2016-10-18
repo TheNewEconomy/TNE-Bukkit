@@ -21,26 +21,26 @@ import org.bukkit.command.CommandSender;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Created by creatorfromhell on 10/17/2016.
  */
-public class AuctionStartCommand extends TNECommand {
+public class AuctionCancelCommand extends TNECommand {
 
 
-  public AuctionStartCommand(TNE plugin) {
+  public AuctionCancelCommand(TNE plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "start";
+    return "cancel";
   }
 
   @Override
   public String[] getAliases() {
-    return new String[]{ "s" };
+    return new String[]{ "c" };
   }
 
   @Override
   public String getNode() {
-    return "tne.auction.start";
+    return "tne.auction.cancel";
   }
 
   @Override
@@ -51,17 +51,9 @@ public class AuctionStartCommand extends TNECommand {
   @Override
   public String[] getHelpLines() {
     return new String[] {
-      "/auction start [configurations] - Start a new auction.",
-      "[item:[data value]] - The name of the item to auction off",
-      "[slot:#] - The slot of the item to auction off",
-      "[amount:#] - The amount of <item> to auction off",
-      "[start:#] - The starting bid for this item",
-      "[cost:#] - The cost of this item.",
-      "[increment:#] - The increment in which bids will be increased.",
-      "[admin:true/false] - Whether or not this is an administrator auction.",
-      "[time:#] - The length(in seconds) this auction will go on for.",
-      "[global:true/false] - Whether or not this auction is global or world-based.",
-      "[permission:node] - The permission needed to partake in this auction."
+        "/auction cancel [lot] - Cancel an auction.",
+        "[lot] - The auction's lot number.",
+        "Only administrators are allowed to cancel auctions with bids."
     };
   }
 

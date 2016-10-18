@@ -8,15 +8,17 @@ Commands
 /silentauction[/sauction] - Base silent auction command  
 /auction - Base auction command  
 /[base] start [configurations]  
-/[base] bid <amount>  
-/[base] claim
-/[base] cancel  
-/[base] info
-/[base] end [winner(true/false)] [world]
+/[base] bid <amount> [lot]  
+/[base] claim [lot]  
+/[base] cancel [lot]    
+/[base] info [lot]  
+/[base] list [global/world]
+/[base] end [winner(true/false)] [lot]
 
 
 Configurations
 --------------
+Lot - The lot number of the auction  
 Item - The name of the item to auction off   
 Slot - The slot of the item to auction off  
 Amount - The amount of <item> to auction off  
