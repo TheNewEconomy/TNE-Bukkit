@@ -2,7 +2,13 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.inventory.InventoryViewer;
+import com.github.tnerevival.core.inventory.impl.AuctionItemInventory;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -59,8 +65,28 @@ public class AuctionInfoCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
+    Integer lot = (arguments.length >= 1 && MISCUtils.isInteger(arguments[0]))? Integer.valueOf(arguments[0]) : -1;
+    if(lot == -1) {
+      if(plugin.manager.auctionManager.requireLot(world)) {
+        new Message("Messages.Auction.LotRequire").translate(world, sender);
+        return false;
+      }
+      lot = plugin.manager.auctionManager.getLot(world);
+    }
 
+    if(!plugin.manager.auctionManager.exists(lot)) {
+      Message none = new Message("Messages.Auction.None");
+      none.addVariable("$lot", lot + "");
+      none.translate(world, sender);
+      return false;
+    }
 
-    return false;
+    Auction a = plugin.manager.auctionManager.getAuction(lot);
+    if(sender instanceof Player) {
+      AuctionItemInventory inv = new AuctionItemInventory(a.getLotNumber());
+      TNE.instance.inventoryManager.addInventory(inv, new InventoryViewer(getPlayer(sender).getUniqueId(), world));
+      getPlayer(sender).openInventory(inv.getInventory());
+    }
+    return true;
   }
 }

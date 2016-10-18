@@ -2,7 +2,10 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -51,16 +54,32 @@ public class AuctionClaimCommand extends TNECommand {
   @Override
   public String[] getHelpLines() {
     return new String[] {
-        "/auction claim [lot] - Claim an auction reward.",
-        "[lot] - The auction's lot number."
+        "/auction claim <lot> - Claim an auction reward.",
+        "<lot> - The auction's lot number."
     };
   }
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
+    Player player = getPlayer(sender);
+    if(arguments.length < 1 || !MISCUtils.isInteger(arguments[0])) {
+      new Message("Messages.Auction.LotRequire").translate(world, sender);
+      return false;
+    }
+    Integer lot = Integer.valueOf(arguments[0]);
 
+    if(!plugin.manager.auctionManager.unclaimed(MISCUtils.getID(player)).contains(lot)) {
+      Message noClaim = new Message("Messages.Auction.NoClaim");
+      noClaim.addVariable("$lot", lot + "");
+      noClaim.translate(world, sender);
+      return false;
+    }
 
-    return false;
+    plugin.manager.auctionManager.claim(lot, MISCUtils.getID(player));
+    Message processed = new Message("Messages.Auction.Claimed");
+    processed.addVariable("$lot", lot + "");
+    processed.translate(world, sender);
+    return true;
   }
 }

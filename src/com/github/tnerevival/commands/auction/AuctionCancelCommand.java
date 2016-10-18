@@ -2,7 +2,11 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -60,9 +64,37 @@ public class AuctionCancelCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
-    Boolean silent = command.equalsIgnoreCase("sauction");
+    if(arguments.length < 1 || !MISCUtils.isInteger(arguments[0])) {
+      new Message("Messages.Auction.LotRequire").translate(world, sender);
+      return false;
+    }
+    Integer lot = Integer.valueOf(arguments[0]);
 
+    if(!plugin.manager.auctionManager.exists(lot)) {
+      Message none = new Message("Messages.Auction.None");
+      none.addVariable("$lot", lot + "");
+      none.translate(world, sender);
+      return false;
+    }
 
-    return false;
+    Auction a = plugin.manager.auctionManager.getAuction(lot);
+
+    boolean admin = (plugin.manager.auctionManager.isActive(lot) && a.getHighestBid() != null
+                     || sender instanceof Player && !a.getPlayer().equals(MISCUtils.getID(getPlayer(sender))));
+
+    if(admin && !sender.hasPermission("tne.bypass.auction")) {
+      if(plugin.manager.auctionManager.isActive(lot) && a.getHighestBid() != null) {
+        new Message("Messages.Auction.NoCancel").translate(world, sender);
+        return false;
+      }
+      new Message("Messages.General.NoPerm").translate(world, sender);
+      return false;
+    }
+
+    plugin.manager.auctionManager.end(world, lot, false);
+    Message cancelled = new Message("Messages.Auction.Cancelled");
+    cancelled.addVariable("$lot", lot + "");
+    cancelled.translate(world, sender);
+    return true;
   }
 }

@@ -508,6 +508,28 @@ public class MISCUtils {
 		}
 		return TNE.instance.api.getBoolean("Core.Bank.Connected", world);
 	}
+
+	public static Boolean isBoolean(String value) {
+	  return value.equalsIgnoreCase(String.valueOf(true)) || value.equalsIgnoreCase(String.valueOf(false));
+  }
+
+  public static Boolean isDouble(String value, String world) {
+    try {
+      Double.valueOf(value.replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+      return true;
+    } catch(Exception e) {
+      return false;
+    }
+  }
+
+  public static Boolean isInteger(String value) {
+    try {
+      Integer.valueOf(value);
+      return true;
+    } catch(Exception e) {
+      return false;
+    }
+  }
 	
 	//World Utils
 	public static Boolean multiWorld() {

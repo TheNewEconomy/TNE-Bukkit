@@ -2,6 +2,9 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.transaction.TransactionCost;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -59,7 +62,34 @@ public class AuctionBidCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
+    if(arguments.length < 1 || !MISCUtils.isDouble(arguments[0], world)) {
+      new Message("Messages.Auction.BidRequire").translate(world, sender);
+      return false;
+    }
+    Double bid = Double.valueOf(arguments[0].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+    Integer lot = (arguments.length >= 2 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : -1;
+    if(lot == -1) {
+      if(plugin.manager.auctionManager.requireLot(world)) {
+        new Message("Messages.Auction.LotRequire").translate(world, sender);
+        return false;
+      }
+      lot = plugin.manager.auctionManager.getLot(world);
+    }
 
-    return false;
+    if(!plugin.manager.auctionManager.exists(lot)) {
+      Message none = new Message("Messages.Auction.None");
+      none.addVariable("$lot", lot + "");
+      none.translate(world, sender);
+      return false;
+    }
+
+    if(!plugin.manager.auctionManager.isActive(lot)) {
+      Message none = new Message("Messages.Auction.NotActive");
+      none.addVariable("$lot", lot + "");
+      none.translate(world, sender);
+      return false;
+    }
+
+    return plugin.manager.auctionManager.bid(world, lot, getPlayer(sender).getUniqueId(), new TransactionCost(bid));
   }
 }

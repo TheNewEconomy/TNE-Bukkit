@@ -60,6 +60,10 @@ Messages:
        NoPerm: <red>I'm sorry, but you do not have permission to do that.
        Saved: <yellow>Successfully saved all TNE Data!
        NoPlayer: <red>Unable to locate player "$player"!
+
+    Item:
+      Invalid: <red>Invalid item name and/or durability combination entered.
+      InvalidAmount: <red>Invalid item amount entered.
        
     Admin:
        NoBalance: <red>$player has no balance data for the world "$world"!
@@ -103,9 +107,24 @@ Messages:
        Paid: <white>You received <gold>$amount<white> from your recent auction.
        Under: <red>Sorry, but your bid is under the minimum bid of <gold>$amount<red>.
        AntiSnipe: <white>[<green>AntiSnipe<white>]$time seconds has been added to the auction.
+       Submitted: <white>Your bid of <gold>$amount <white>has been submitted for lot <green>$lot<white>.
        Bid: <white>$player has raised the auction bid to <gold>$amount<white>.
        Winner: <white>$player has won the auction for <gold>$amount<white>.
        NoWinner: <white>Auction has ended with no bidders.
+       LotRequire: <red>You must specify a lot number!
+       BidRequire: <red>You must enter a valid bid!
+       NotActive: <red>Lot $lot is not currently up for auction.
+       None: <red>There is no auction with the lot number $lot.
+       End: <white>Successfully ended auction for lot <green>$lot<white>.
+       NoClaim: <red>You don't have any unclaimed auction items for lot $lot.
+       Claimed: <white>You have claimed your items for lot $lot.
+       NoCancel: <red>You can't cancel an auction that has bids.
+       Cancelled: <white>You have cancelled the auction for lot <green>$lot<white>.
+       InvalidItem: <red>The item you tried auctioning is invalid.
+       NoItem: <red>You do not have $amount of item "$item".
+       PersonalQueue: <red>You have reached the maximum queue allowance.
+       MaxQueue: <red>The auction queue is currently full.
+       Queued: <white>Your auction has been added to the queue as lot <green>$lot<white>.
 
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.

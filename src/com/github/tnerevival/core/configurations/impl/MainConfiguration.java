@@ -20,6 +20,7 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Update.Notify", true);
 		configurations.put("Core.AutoSaver.Enabled", true);
 		configurations.put("Core.AutoSaver.Interval", 600);
+
 		configurations.put("Core.Currency.Advanced", false);
 		configurations.put("Core.Currency.Decimal", ",");
 		configurations.put("Core.Currency.ItemCurrency", false);
@@ -29,11 +30,20 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Currency.MajorName.Plural", "Dollars");
 		configurations.put("Core.Currency.MinorName.Single", "Cent");
 		configurations.put("Core.Currency.MinorName.Plural", "Cents");
+
 		configurations.put("Core.Auctions.Enabled", true);
 		configurations.put("Core.Auctions.Cost", 10.00);
+		configurations.put("Core.Auctions.AllowWorld", false);
 		configurations.put("Core.Auctions.Multiple", false);
 		configurations.put("Core.Auctions.MaxMultiple", 3);
+		configurations.put("Core.Auctions.PersonalQueue", 3);
 		configurations.put("Core.Auctions.MaxQueue", 10);
+		configurations.put("Core.Auctions.MaxStart", 2000);
+		configurations.put("Core.Auctions.MinStart", 1);
+		configurations.put("Core.Auctions.MaxIncrement", 1000);
+		configurations.put("Core.Auctions.MinIncrement", 1);
+		configurations.put("Core.Auctions.MaxTime", 60);
+		configurations.put("Core.Auctions.MinTime", 30);
 		configurations.put("Core.Auctions.AntiSnipe", true);
 		configurations.put("Core.Auctions.SnipePeriod", 30);
 		configurations.put("Core.Auctions.SnipeTime", 20);
@@ -49,6 +59,7 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Shops.Shoppers", 10);
 		configurations.put("Core.Shops.Shares.Enabled", true);
 		configurations.put("Core.Shops.Shares.Max", 3);
+
 		configurations.put("Core.Signs.Bank.Enabled", false);
 		configurations.put("Core.Signs.Bank.Place", 20.0);
 		configurations.put("Core.Signs.Bank.Use", 20.0);
@@ -63,7 +74,9 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Signs.Buy.Place", 20.0);
 		configurations.put("Core.Signs.Buy.Use", 20.0);
 		configurations.put("Core.Signs.Buy.Max", 10);
+
 		configurations.put("Core.Death.Lose", false);
+
 		configurations.put("Core.Bank.Enabled", false);
 		configurations.put("Core.Bank.Sign", false);
 		configurations.put("Core.Bank.Command", true);
@@ -74,8 +87,10 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Bank.Interest.Enabled", false);
 		configurations.put("Core.Bank.Interest.Rate", 0.2);
 		configurations.put("Core.Bank.Interest.Interval", 1800);
+
 		configurations.put("Core.World.EnableChangeFee", false);
 		configurations.put("Core.World.ChangeFee", 5.0);
+
 		configurations.put("Core.Database.Type", "FlatFile");
 		configurations.put("Core.Database.Prefix", "TNE");
 		configurations.put("Core.Database.Backup", true);

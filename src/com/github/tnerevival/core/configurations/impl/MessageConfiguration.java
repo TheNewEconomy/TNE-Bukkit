@@ -22,6 +22,9 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.General.NoPerm", "<red>I'm sorry, but you do not have permission to do that.");
 		configurations.put("Messages.General.NoPlayer", "<red>Unable to locate player \"$player\"!");
 		configurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
+		configurations.put("Messages.Item.Invalid", "<red>Invalid item name and/or durability combination entered.");
+		configurations.put("Messages.Item.InvalidAmount", "<red>Invalid item amount entered.");
+
 		configurations.put("Messages.Admin.NoBalance", "<red>$player has no balance data for the world \"$world\"!");
 		configurations.put("Messages.Admin.Balance", "<white>$player currently has <gold>$amount <white>for world \"$world\"!");
 		configurations.put("Messages.Admin.NoBank", "<red>$player has no bank data for the world \"$world\"!");
@@ -31,12 +34,15 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Admin.Deleted", "<white>Successfully deleted account for $player.");
 		configurations.put("Messages.Admin.Purge", "<white>Successfully purged all economy accounts.");
 		configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
+
 		configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
 		configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
 		configurations.put("Messages.Account.Confirm", "<yellow>You must use /pin confirm before accessing your money and/or bank.");
+
 		configurations.put("Messages.Pin.Set", "<white>Your pin has been set successfully.");
 		configurations.put("Messages.Pin.Confirmed", "<white>Your pin has been confirmed successfully.");
 		configurations.put("Messages.Pin.Already", "<white>Your pin has already been confirmed.");
+
 		configurations.put("Messages.Money.Given", "<white>You were given <gold>$amount<white>.");
 		configurations.put("Messages.Money.Received", "<white>You were paid <gold>$amount <white> by <white> $from.");
 		configurations.put("Messages.Money.Taken", "<white>$from took <gold>$amount<white> from you.");
@@ -60,6 +66,20 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Auction.Bid", "<white>$player has raised the auction bid to <gold>$amount<white>.");
     configurations.put("Messages.Auction.Winner", "<white>$player has won the auction for <gold>$amount<white>.");
     configurations.put("Messages.Auction.NoWinner", "<white>Auction has ended with no bidders.");
+    configurations.put("Messages.Auctions.LotRequire", "<red>You must specify a lot number!");
+    configurations.put("Messages.Auctions.BidRequire", "<red>You must enter a valid bid!");
+    configurations.put("Messages.Auctions.NotActive", "<red>Lot $lot is not currently up for auction.");
+    configurations.put("Messages.Auctions.None", "<red>There is no auction with the lot number $lot.");
+    configurations.put("Messages.Auctions.End", "<white>Successfully ended auction for lot <green>$lot<white>.");
+    configurations.put("Messages.Auctions.NoClaim", "<red>You don't have any unclaimed auction items for lot $lot.");
+    configurations.put("Messages.Auctions.Claimed", "<white>You have claimed your items for lot $lot.");
+    configurations.put("Messages.Auctions.NoCancel", "<red>You can't cancel an auction that has bids.");
+    configurations.put("Messages.Auctions.Cancelled", "<white>You have cancelled the auction for lot <green>$lot<white>.");
+    configurations.put("Messages.Auctions.InvalidItem", "<red>The item you tried auctioning is invalid.");
+    configurations.put("Messages.Auctions.NoItem", "<red>You do not have $amount of item \"$item\".");
+    configurations.put("Messages.Auctions.PersonalQueue", "<red>You have reached the maximum queue allowance.");
+    configurations.put("Messages.Auctions.MaxQueue", "<red>The auction queue is currently full.");
+    configurations.put("Messages.Auctions.Queued", "<white>Your auction has been added to the queue as lot <green>$lot<white>.");
 
 		configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
 		configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");

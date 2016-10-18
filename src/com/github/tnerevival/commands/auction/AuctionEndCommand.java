@@ -2,6 +2,8 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -45,13 +47,13 @@ public class AuctionEndCommand extends TNECommand {
 
   @Override
   public boolean console() {
-    return false;
+    return true;
   }
 
   @Override
   public String[] getHelpLines() {
     return new String[] {
-        "/auction end [winner] [lot] - Force end an auction.",
+        "/auction end [winner] [lot] - Force end any auction.",
         "[winner(true/false)] - Pick winner?, [lot] The auction's lot number."
     };
   }
@@ -59,8 +61,31 @@ public class AuctionEndCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
+    Boolean winner = (arguments.length >= 1 && MISCUtils.isBoolean(arguments[0]))? Boolean.valueOf(arguments[0]) : false;
+    Integer lot = (arguments.length >= 2 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : -1;
+    if(lot == -1) {
+      if(plugin.manager.auctionManager.requireLot(world)) {
+        new Message("Messages.Auction.LotRequire").translate(world, sender);
+        return false;
+      }
+      lot = plugin.manager.auctionManager.getLot(world);
+    }
 
+    if(!plugin.manager.auctionManager.exists(lot)) {
+      Message none = new Message("Messages.Auction.None");
+      none.addVariable("$lot", lot + "");
+      none.translate(world, sender);
+      return false;
+    }
 
-    return false;
+    if(plugin.manager.auctionManager.isQueued(lot)) {
+      plugin.manager.auctionManager.remove(lot);
+    } else {
+      plugin.manager.auctionManager.end(world, lot, winner);
+    }
+    Message ended = new Message("Messages.Auction.End");
+    ended.addVariable("$lot", lot + "");
+    ended.translate(world, sender);
+    return true;
   }
 }

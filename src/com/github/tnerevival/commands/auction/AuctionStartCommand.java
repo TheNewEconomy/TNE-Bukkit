@@ -2,7 +2,16 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.material.MaterialHelper;
+import com.github.tnerevival.core.transaction.TransactionCost;
+import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -52,14 +61,12 @@ public class AuctionStartCommand extends TNECommand {
   public String[] getHelpLines() {
     return new String[] {
       "/auction start [configurations] - Start a new auction.",
-      "[item:[data value]] - The name of the item to auction off",
-      "[slot:#] - The slot of the item to auction off",
+      "[item:[data value]] - The name of the item to auction off, defaults to held item",
       "[amount:#] - The amount of <item> to auction off",
       "[start:#] - The starting bid for this item",
-      "[cost:#] - The cost of this item.",
       "[increment:#] - The increment in which bids will be increased.",
-      "[admin:true/false] - Whether or not this is an administrator auction.",
       "[time:#] - The length(in seconds) this auction will go on for.",
+      "[silent:true/false] - Whether or not this auction is a silent auction.",
       "[global:true/false] - Whether or not this auction is global or world-based.",
       "[permission:node] - The permission needed to partake in this auction."
     };
@@ -68,9 +75,126 @@ public class AuctionStartCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
+    Player player = getPlayer(sender);
     Boolean silent = command.equalsIgnoreCase("sauction");
+    Integer slot = player.getInventory().getHeldItemSlot();
+    Integer amount = 1;
+    Double start = TNE.instance.api.getDouble("Core.Auctions.MinStart", world, MISCUtils.getID(player).toString());
+    Double increment = TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, MISCUtils.getID(player).toString());;
+    Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, MISCUtils.getID(player).toString());;
+    Boolean global = !TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, MISCUtils.getID(player).toString());
+    String permission = "";
+    ItemStack stack = null;
 
+    for (int i = 1; i < arguments.length; i++) {
+      if(arguments[i].contains(":")) {
+        String[] split = arguments[i].toLowerCase().split(":");
+        switch(split[0]) {
+          case "start":
+            if(MISCUtils.isDouble(split[1], world) && Double.valueOf(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), ".")) > start) {
+              start = Double.valueOf(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+            } else {
+              new Message("Messages.Auction.InvalidStart").translate(world, player);
+              return false;
+            }
+            break;
+          case "increment":
+            if(MISCUtils.isDouble(split[1], world)) {
+              Double value = Double.valueOf(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+              if(value > increment) {
+                increment = value;
+              }
+            }
+            break;
+          case "time":
+            if(MISCUtils.isInteger(split[1])) {
+              Integer value = Integer.valueOf(split[1]);
+              if(value > time) {
+                time = value;
+              }
+            }
+            break;
+          case "global":
+            global = (MISCUtils.isBoolean(split[1]))? Boolean.valueOf(split[1]) : true;
+            break;
+          case "permission":
+            if(player.hasPermission("tne.bypass.auction")) {
+              permission = split[1];
+            }
+            break;
+          case "item":
+            Material mat = MaterialHelper.getMaterial(split[1]);
+            if(mat.equals(Material.AIR)) {
+              Message invalidItem = new Message("Messages.Auction.InvalidItem");
+              invalidItem.addVariable("$item", split[1]);
+              invalidItem.translate(MISCUtils.getWorld(player), player);
+              return false;
+            }
+            stack = new ItemStack(mat);
+            try {
+              Short damage = (split.length == 3)? Short.parseShort(split[2]) : 1;
+              stack.setDurability(damage);
+            } catch(NumberFormatException e) {
+              new Message("Messages.Item.Invalid").translate(world, player);
+              return false;
+            }
+            break;
+          case "amount":
+            try {
+              amount = Integer.parseInt(split[1]);
+            } catch(NumberFormatException e) {
+              new Message("Messages.Item.InvalidAmount").translate(MISCUtils.getWorld(player), player);
+              return false;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }
 
-    return false;
+    if(amount < 1) {
+      amount = 1;
+    }
+
+    if(start > TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, MISCUtils.getID(player))) {
+      start = TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, MISCUtils.getID(player));
+    }
+
+    if(increment > TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, MISCUtils.getID(player))) {
+      increment = TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, MISCUtils.getID(player));
+    }
+
+    if(time > TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, MISCUtils.getID(player))) {
+      time = TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, MISCUtils.getID(player));
+    }
+
+    if(stack == null) {
+      stack = player.getInventory().getItem(slot);
+    }
+    stack.setAmount(amount);
+
+    if(stack == null || stack.getType().equals(Material.AIR)) {
+      new Message("Messages.Auction.InvalidItem").translate(world, player);
+      return false;
+    }
+
+    if(MISCUtils.getItemCount(MISCUtils.getID(player), stack) < amount) {
+      Message insufficient = new Message("Messages.Auction.NoItem");
+      insufficient.addVariable("$amount", amount + "");
+      insufficient.addVariable("$item", stack.getType().name() + "");
+      return false;
+    }
+
+    Auction auction = new Auction(MISCUtils.getID(player), world);
+    auction.setSilent(silent);
+    auction.setItem(new SerializableItemStack(0, stack));
+    auction.setCost(new TransactionCost(start));
+    auction.setIncrement(increment);
+    auction.setTime(time);
+    auction.setGlobal(global);
+    auction.setNode(permission);
+
+    return plugin.manager.auctionManager.add(auction);
   }
 }

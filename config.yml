@@ -102,7 +102,10 @@ Core:
         Enabled: true
 
         #The cost to start an auction.
-        Cost: 10.00
+        Cost: 10
+
+        #Whether or not world-based auctions are allowed.
+        AllowWorld: true
 
         #Whether or not multiple auctions can be run at once
         Multiple: false
@@ -110,8 +113,29 @@ Core:
         #The maximum amount of simultaneous auctions at once.
         MaxMultiple: 3
 
+        #The maximum number of auctions a single player can have in the queue.
+        PersonalQueue: 3
+
         #The maximum number of auctions able to be in the queue for a single world.
         MaxQueue: 10
+
+        #The maximum start price for auctions
+        MaxStart: 2000
+
+        #The minimum start price for auctions
+        MinStart: 1
+
+        #The max increment amount for auctions
+        MaxIncrement: 1000
+
+        #The minimum increment amount for auctions
+        MinIncrement: 1
+
+        #The max amount of time an auction can last(Seconds).
+        MaxTime: 60
+
+        #The minimum time an auction can last(Seconds).
+        MinTime: 30
 
         #whether or not anti-snipe is enabled
         AntiSnipe: true

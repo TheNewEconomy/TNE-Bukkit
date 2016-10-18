@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 public class Message {
 
@@ -62,20 +63,31 @@ public class Message {
 		}
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
+
+	public void translate(String world, UUID id) {
+	  translate(world, MISCUtils.getPlayer(id));
+  }
 	
 	public void translate(String world, CommandSender sender) {
 	  String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
 	  String found = TNE.instance.api.getString(this.node, world, id);
 		
-		String message = (found == null)? this.node : found;
-    if(!message.equals(this.node)) {
-      Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
+		String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");
+		for(String s : message) {
+			String send = s;
+			if (!send.equals(this.node)) {
+				Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
 
-      while (it.hasNext()) {
-        java.util.Map.Entry<String, String> entry = it.next();
-        message = message.replace(entry.getKey(), entry.getValue());
+				while (it.hasNext()) {
+					java.util.Map.Entry<String, String> entry = it.next();
+					send = send.replace(entry.getKey(), entry.getValue());
+				}
+			}
+			if(sender instanceof Player) {
+        ((Player)sender).sendRawMessage(replaceColours(send));
+      } else {
+        sender.sendMessage(replaceColours(send));
       }
-    }
-		sender.sendMessage(replaceColours(message));
+		}
 	}
 }

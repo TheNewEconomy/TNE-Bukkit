@@ -2,7 +2,13 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.inventory.InventoryViewer;
+import com.github.tnerevival.core.inventory.impl.AuctionItemInventory;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -51,7 +57,7 @@ public class AuctionListCommand extends TNECommand {
   @Override
   public String[] getHelpLines() {
     return new String[] {
-        "/auction list [global/world] - View a list of auctions.",
+        "/auction list [global/world] [page] - View a list of auctions.",
         "[global/world] - The scope to list, leave blank to show your auctions"
     };
   }
@@ -59,8 +65,18 @@ public class AuctionListCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
+    String scope = (arguments.length == 1 && arguments[0].equalsIgnoreCase("global")
+                    || arguments.length == 1 && arguments[0].equalsIgnoreCase("world"))? arguments[0] : "player";
+    Integer page = (arguments.length == 1 && MISCUtils.isInteger(arguments[0]))? Integer.valueOf(arguments[0])
+                   : ((arguments.length > 1 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : 1);
 
+    List<Integer> lots = plugin.manager.auctionManager.getLots(scope, page, getPlayer(sender).getUniqueId());
 
-    return false;
+    if(sender instanceof Player) {
+      AuctionItemInventory inv = new AuctionItemInventory(lots);
+      TNE.instance.inventoryManager.addInventory(inv, new InventoryViewer(getPlayer(sender).getUniqueId(), world));
+      getPlayer(sender).openInventory(inv.getInventory());
+    }
+    return true;
   }
 }

@@ -26,6 +26,13 @@ public class AuctionCommand extends TNECommand {
 
   public AuctionCommand(TNE plugin) {
     super(plugin);
+    subCommands.add(new AuctionBidCommand(plugin));
+    subCommands.add(new AuctionCancelCommand(plugin));
+    subCommands.add(new AuctionClaimCommand(plugin));
+    subCommands.add(new AuctionEndCommand(plugin));
+    subCommands.add(new AuctionInfoCommand(plugin));
+    subCommands.add(new AuctionListCommand(plugin));
+    subCommands.add(new AuctionStartCommand(plugin));
   }
 
   @Override
