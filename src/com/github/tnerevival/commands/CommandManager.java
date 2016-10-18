@@ -25,7 +25,6 @@ import java.util.Map;
 public class CommandManager {
 
   public Map<String[], TNECommand> commands = new HashMap<>();
-	//public List<TNECommand> commands = new ArrayList<>();
   private Field commandMap = null;
   private Field knownCommands = null;
 	
@@ -61,32 +60,36 @@ public class CommandManager {
         for (String s : entry.getKey()) {
           if(entry.getValue().activated("", "")) {
             if(registered(s)) {
-              try {
-                ((Map<String, Command>) knownCommands.get(commandMap.get(Bukkit.getServer()))).remove(s);
-              } catch(Exception e) {
-                //nothing to see here;
-              }
+              unregister(s);
             }
-            try {
-              PluginCommand command = null;
-              Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-              c.setAccessible(true);
-              command = c.newInstance(s, TNE.instance);
-              if(command != null) {
-                ((SimpleCommandMap) commandMap.get(Bukkit.getServer())).register(s, command);
-                MISCUtils.debug("Registered command " + s);
-              }
-            } catch(Exception e) {
-              //nothing to see here;
-            }
+            register(s);
           }
         }
       }
     }
   }
 
-  private void unregister() {
+  private void register(String command) {
+    try {
+      PluginCommand pluginCommand = null;
+      Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+      c.setAccessible(true);
+      pluginCommand = c.newInstance(command, TNE.instance);
+      if(pluginCommand != null) {
+        ((SimpleCommandMap) commandMap.get(Bukkit.getServer())).register(command, pluginCommand);
+        MISCUtils.debug("Registered command " + command);
+      }
+    } catch(Exception e) {
+      //nothing to see here;
+    }
+  }
 
+  private void unregister(String command) {
+    try {
+      ((Map<String, Command>) knownCommands.get(commandMap.get(Bukkit.getServer()))).remove(command);
+    } catch(Exception e) {
+      //nothing to see here;
+    }
   }
 
   private Boolean registered(String command) {
