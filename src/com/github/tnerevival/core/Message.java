@@ -47,6 +47,7 @@ public class Message {
 	private String node;
 	
 	public Message(String node) {
+    MISCUtils.debug(node);
 		this.node = node;
 	}
 	
@@ -67,6 +68,20 @@ public class Message {
 	public void translate(String world, UUID id) {
 	  translate(world, MISCUtils.getPlayer(id));
   }
+
+  public String grab(String world, CommandSender sender) {
+    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    String found = TNE.instance.api.getString(this.node, world, id);
+
+    String message = (found == null)? this.node : found;
+    Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
+
+    while (it.hasNext()) {
+      java.util.Map.Entry<String, String> entry = it.next();
+      message = message.replace(entry.getKey(), entry.getValue());
+    }
+    return message;
+  }
 	
 	public void translate(String world, CommandSender sender) {
 	  String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
@@ -75,6 +90,7 @@ public class Message {
 		String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");
 		for(String s : message) {
 			String send = s;
+      MISCUtils.debug(send);
 			if (!send.equals(this.node)) {
 				Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
 
@@ -83,11 +99,7 @@ public class Message {
 					send = send.replace(entry.getKey(), entry.getValue());
 				}
 			}
-			if(sender instanceof Player) {
-        ((Player)sender).sendRawMessage(replaceColours(send));
-      } else {
-        sender.sendMessage(replaceColours(send));
-      }
+      sender.sendMessage(replaceColours(send));
 		}
 	}
 }

@@ -109,7 +109,6 @@ public class TNE extends JavaPlugin {
 		if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
 			invWorker.runTaskTimer(this, 20, 20);
 		}
-
 		auctionWorker.runTaskTimer(this, 20, 20);
 
 		//Listeners

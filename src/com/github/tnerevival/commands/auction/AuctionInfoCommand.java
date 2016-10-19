@@ -65,7 +65,7 @@ public class AuctionInfoCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
-    Integer lot = (arguments.length >= 1 && MISCUtils.isInteger(arguments[0]))? Integer.valueOf(arguments[0]) : -1;
+    Integer lot = (arguments.length >= 1 && MISCUtils.isInteger(arguments[0]))? Integer.parseInt(arguments[0]) : -1;
     if(lot == -1) {
       if(plugin.manager.auctionManager.requireLot(world)) {
         new Message("Messages.Auction.LotRequire").translate(world, sender);
@@ -84,7 +84,9 @@ public class AuctionInfoCommand extends TNECommand {
     Auction a = plugin.manager.auctionManager.getAuction(lot);
     if(sender instanceof Player) {
       AuctionItemInventory inv = new AuctionItemInventory(a.getLotNumber());
-      TNE.instance.inventoryManager.addInventory(inv, new InventoryViewer(getPlayer(sender).getUniqueId(), world));
+      InventoryViewer viewer = new InventoryViewer(MISCUtils.getID(getPlayer(sender)), world);
+      inv.addViewer(viewer);
+      TNE.instance.inventoryManager.addInventory(inv, viewer);
       getPlayer(sender).openInventory(inv.getInventory());
     }
     return true;

@@ -3,8 +3,6 @@ package com.github.tnerevival.core.auction;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -40,17 +38,6 @@ public class Auction {
   public Integer remaining() {
     long elapsed = System.nanoTime() - startTime;
     return time - (int)TimeUnit.SECONDS.convert(elapsed, TimeUnit.NANOSECONDS);
-  }
-
-  public String getNotification() {
-    StringBuilder builder = new StringBuilder();
-    if(remaining().equals(time)) {
-      builder.append(ChatColor.WHITE + "Auction started for " + item.getName() + " starting bid is " + ChatColor.GOLD + MISCUtils.formatBalance(world, cost.getAmount()) + ChatColor.WHITE + ".");
-    } else {
-      builder.append(ChatColor.WHITE + "The auction for " + item.getName() + " will end in " + ChatColor.GREEN + remaining() + ChatColor.WHITE + ".");
-    }
-    builder.append(ChatColor.WHITE + "Type /auction info " + ChatColor.GREEN + lotNumber + ChatColor.WHITE + " for more information.");
-    return builder.toString();
   }
 
   public double getNextBid() {
@@ -151,5 +138,13 @@ public class Auction {
 
   public void setNode(String node) {
     this.node = node;
+  }
+
+  public long getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(long startTime) {
+    this.startTime = startTime;
   }
 }

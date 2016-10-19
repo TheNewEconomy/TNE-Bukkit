@@ -5,8 +5,8 @@ import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.utils.MISCUtils;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -56,14 +56,15 @@ public class AuctionItemInventory extends GenericInventory {
       ItemStack stack = a.getItem().toItemStack();
       List<String> lore = new ArrayList<>();
       if(!a.getSilent()) {
-        lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GOLD + a.getNextBid());
+        lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GREEN + a.getNextBid());
       }
+      lore.add(ChatColor.WHITE + "Amount: " + ChatColor.GREEN + a.getItem().getAmount());
       lore.add(ChatColor.WHITE + "Increment: " + ChatColor.GREEN + a.getIncrement());
       lore.add(ChatColor.WHITE + "Player: " + ChatColor.GREEN + MISCUtils.getPlayer(a.getPlayer()).getDisplayName());
       lore.add(ChatColor.WHITE + "World: " + ChatColor.GREEN + a.getWorld());
       lore.add(ChatColor.WHITE + "Time: " + ChatColor.GREEN + a.remaining());
       lore.add(ChatColor.WHITE + "Active: " + active);
-      lore.add(ChatColor.WHITE + "Right Click to place bid.");
+      lore.add(ChatColor.WHITE + "Left Click to place bid.");
       ItemMeta meta = stack.getItemMeta();
       meta.setLore(lore);
       stack.setItemMeta(meta);
@@ -79,10 +80,14 @@ public class AuctionItemInventory extends GenericInventory {
 
   @Override
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
-    if(type.equals(ClickType.RIGHT)) {
+    if(type.equals(ClickType.LEFT)) {
       if(inventory.getItem(slot) != null && !inventory.getItem(slot).getType().equals(Material.AIR)) {
-        Auction a = TNE.instance.manager.auctionManager.getAuction(lots.get(slot));
-        TNE.instance.manager.auctionManager.bid(viewer.getWorld(), lots.get(slot), viewer.getUUID(), new TransactionCost(a.getNextBid()));
+        int use = (lots.size() == 1)? 0 : slot;
+        Auction a = TNE.instance.manager.auctionManager.getAuction(lots.get(use));
+        TNE.instance.manager.auctionManager.bid(viewer.getWorld(), lots.get(use), viewer.getUUID(), new TransactionCost(a.getNextBid()));
+        MISCUtils.getPlayer(viewer.getUUID()).closeInventory();
+        onClose(viewer);
+        return false;
       }
     }
     return false;

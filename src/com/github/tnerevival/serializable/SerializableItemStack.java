@@ -210,7 +210,7 @@ public class SerializableItemStack implements Serializable {
 				}
 			}
 
-      MISCUtils.debug("Name:" + this.getName() + "Lore:" + loreToString() + "damage:" + damage);
+      MISCUtils.debug("Name:" + this.getName() + "Lore:" + loreToString() + "damage:" + damage + "Amount:" + amount);
 
       ItemMeta stackMeta = stack.getItemMeta();
 			if(!this.lore.isEmpty()) {

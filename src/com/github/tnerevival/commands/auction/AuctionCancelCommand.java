@@ -3,10 +3,8 @@ package com.github.tnerevival.commands.auction;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -77,24 +75,6 @@ public class AuctionCancelCommand extends TNECommand {
       return false;
     }
 
-    Auction a = plugin.manager.auctionManager.getAuction(lot);
-
-    boolean admin = (plugin.manager.auctionManager.isActive(lot) && a.getHighestBid() != null
-                     || sender instanceof Player && !a.getPlayer().equals(MISCUtils.getID(getPlayer(sender))));
-
-    if(admin && !sender.hasPermission("tne.bypass.auction")) {
-      if(plugin.manager.auctionManager.isActive(lot) && a.getHighestBid() != null) {
-        new Message("Messages.Auction.NoCancel").translate(world, sender);
-        return false;
-      }
-      new Message("Messages.General.NoPerm").translate(world, sender);
-      return false;
-    }
-
-    plugin.manager.auctionManager.end(world, lot, false);
-    Message cancelled = new Message("Messages.Auction.Cancelled");
-    cancelled.addVariable("$lot", lot + "");
-    cancelled.translate(world, sender);
-    return true;
+    return plugin.manager.auctionManager.cancel(lot, MISCUtils.getID(getPlayer(sender)), world);
   }
 }

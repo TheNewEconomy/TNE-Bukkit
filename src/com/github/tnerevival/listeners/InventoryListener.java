@@ -38,6 +38,9 @@ public class InventoryListener implements Listener {
     MISCUtils.debug(player.getDisplayName() + " opened an inventory!" + event.getInventory().getTitle());
 
     if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
+
+      UUID id = MISCUtils.getID(player);
+      MISCUtils.debug(id.toString());
       TNE.instance.inventoryManager.getViewing(MISCUtils.getID(player)).onOpen(
           TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player))
       );

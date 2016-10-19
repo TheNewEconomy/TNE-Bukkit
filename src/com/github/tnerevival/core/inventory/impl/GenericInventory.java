@@ -34,6 +34,7 @@ public class GenericInventory extends TNEInventory {
     return super.onOpen(viewer);
   }
 
+  @Override
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
     return super.onClick(viewer, type, slot, item);
   }
