@@ -1,10 +1,14 @@
-# The New Economy v0.0.4.0
-# Author: creatorfromhell
-# License: AGPLv3
-# If you would like to contribute to the plugin
-# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+Mob Configurations
+==========================
+Since its first release, TNE has had built-in support for mob rewards.
 
+File
+-----------------
+mobs.yml
 
+Configuration
+-----------------
+```YAML
 #All configurations relating to mobs.
 Mobs:
 
@@ -101,10 +105,10 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
-        Individual:
-          player-uuid-here:
-              Enabled: true
-              Reward: 10.00
+    #You can specify a specific player's name as well.
+    #ExamplePlayerName:
+    #    Enabled: true
+    #    Reward: 10.00
 
     PolarBear:
         Enabled: true
@@ -185,3 +189,4 @@ Mobs:
     ZombieVillager:
         Enabled: true
         Reward: 10.00
+```

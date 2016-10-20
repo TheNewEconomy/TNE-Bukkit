@@ -86,13 +86,13 @@ public class AuctionStartCommand extends TNECommand {
     String permission = "";
     ItemStack stack = null;
 
-    for (int i = 1; i < arguments.length; i++) {
+    for (int i = 0; i < arguments.length; i++) {
       if(arguments[i].contains(":")) {
         String[] split = arguments[i].toLowerCase().split(":");
         switch(split[0]) {
           case "start":
-            if(MISCUtils.isDouble(split[1], world) && Double.valueOf(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), ".")) > start) {
-              start = Double.valueOf(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+            if(MISCUtils.isDouble(split[1], world) && Double.parseDouble(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), ".")) > start) {
+              start = Double.parseDouble(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
             } else {
               new Message("Messages.Auction.InvalidStart").translate(world, player);
               return false;
@@ -100,7 +100,7 @@ public class AuctionStartCommand extends TNECommand {
             break;
           case "increment":
             if(MISCUtils.isDouble(split[1], world)) {
-              Double value = Double.valueOf(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+              Double value = Double.parseDouble(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
               if(value > increment) {
                 increment = value;
               }
@@ -108,14 +108,14 @@ public class AuctionStartCommand extends TNECommand {
             break;
           case "time":
             if(MISCUtils.isInteger(split[1])) {
-              Integer value = Integer.valueOf(split[1]);
+              Integer value = Integer.parseInt(split[1]);
               if(value > time) {
                 time = value;
               }
             }
             break;
           case "global":
-            global = (MISCUtils.isBoolean(split[1]))? Boolean.valueOf(split[1]) : true;
+            global = (MISCUtils.isBoolean(split[1]) || Boolean.parseBoolean(split[1]));
             break;
           case "permission":
             if(player.hasPermission("tne.bypass.auction")) {
@@ -157,6 +157,8 @@ public class AuctionStartCommand extends TNECommand {
       amount = 1;
     }
 
+    MISCUtils.debug((player == null) + "");
+
     if(start > TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, MISCUtils.getID(player))) {
       start = TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, MISCUtils.getID(player));
     }
@@ -172,12 +174,12 @@ public class AuctionStartCommand extends TNECommand {
     if(stack == null) {
       stack = player.getInventory().getItem(slot);
     }
-    stack.setAmount(amount);
 
     if(stack == null || stack.getType().equals(Material.AIR)) {
       new Message("Messages.Auction.InvalidItem").translate(world, player);
       return false;
     }
+    stack.setAmount(amount);
 
     if(MISCUtils.getItemCount(MISCUtils.getID(player), stack) < amount) {
       Message insufficient = new Message("Messages.Auction.NoItem");
@@ -186,6 +188,7 @@ public class AuctionStartCommand extends TNECommand {
       return false;
     }
 
+    MISCUtils.debug(stack.getAmount() + "");
     Auction auction = new Auction(MISCUtils.getID(player), world);
     auction.setSilent(silent);
     auction.setItem(new SerializableItemStack(0, stack));

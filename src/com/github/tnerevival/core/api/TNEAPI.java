@@ -205,36 +205,24 @@ public class TNEAPI {
   	String world = TNE.instance.defaultWorld;
     String value = getConfiguration(configuration, world, "").toString();
     String replaced = value.replace(getString("Core.Currency.Decimal", world, ""), ".");
-    MISCUtils.debug(getString("Core.Currency.Decimal", world, ""));
-    MISCUtils.debug(value);
-    MISCUtils.debug(replaced);
 		return Double.valueOf(replaced);
   }
 
   public Double getDouble(String configuration, String world) {
     String value = getConfiguration(configuration, world, "").toString();
     String replaced = value.replace(getString("Core.Currency.Decimal", world, ""), ".");
-    MISCUtils.debug(getString("Core.Currency.Decimal", world, ""));
-    MISCUtils.debug(value);
-    MISCUtils.debug(replaced);
 		return Double.valueOf(replaced);
   }
 
   public Double getDouble(String configuration, String world, UUID uuid) {
     String value = getConfiguration(configuration, world, uuid).toString();
     String replaced = value.replace(getString("Core.Currency.Decimal", world, uuid), ".");
-    MISCUtils.debug(getString("Core.Currency.Decimal", world, uuid));
-    MISCUtils.debug(value);
-    MISCUtils.debug(replaced);
     return Double.valueOf(replaced);
   }
 
   public Double getDouble(String configuration, String world, String player) {
     String value = getConfiguration(configuration, world, player).toString();
     String replaced = value.replace(getString("Core.Currency.Decimal", world, player), ".");
-    MISCUtils.debug(getString("Core.Currency.Decimal", world, player));
-    MISCUtils.debug(value);
-    MISCUtils.debug(replaced);
 		return Double.valueOf(replaced);
   }
 

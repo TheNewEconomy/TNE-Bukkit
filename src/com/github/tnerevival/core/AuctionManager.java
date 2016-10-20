@@ -9,6 +9,7 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,23 +23,25 @@ public class AuctionManager {
   private Map<Integer, Auction> active = new HashMap<>();
   private List<Claim> unclaimed = new ArrayList<>();
 
-  private int lastLot = 1;
+  private int lastLot = 0;
 
-  public void auctionMessage(CommandSender sender, String message, Auction auction) {
-
+  public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
     String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
     String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
 
     Message send = new Message(message);
     send.addVariable("$start", MISCUtils.formatBalance(auction.getWorld(), auction.getCost().getAmount()));
+    send.addVariable("$item", auction.getItem().toItemStack().getType().name());
     send.addVariable("$lot", auction.getLotNumber() + "");
     if(auction.getHighestBid() != null) {
       send.addVariable("$amount", MISCUtils.formatBalance(world, auction.getHighestBid().getBid().getAmount()));
       send.addVariable("$player", MISCUtils.getPlayer(auction.getHighestBid().getBidder()).getDisplayName());
     }
 
-    if(TNE.instance.api.getBoolean("Core.Auctions.Announce", auction.getWorld(), id)) {
-      if (auction.getNode().equalsIgnoreCase("") || !auction.getNode().equalsIgnoreCase("") && sender.hasPermission(auction.getNode())) {
+    MISCUtils.debug("Auction Message");
+    MISCUtils.debug(message);
+    if(!check || TNE.instance.api.getBoolean("Core.Auctions.Announce", auction.getWorld(), id)) {
+      if (auction.getNode().equalsIgnoreCase("") || sender.hasPermission(auction.getNode())) {
         send.translate(world, sender);
       }
     }
@@ -46,15 +49,24 @@ public class AuctionManager {
 
   public void notifyPlayers(String world, Integer lot, Boolean ignore) {
     Auction a = getActive(world, lot);
-    notifyPlayers(world, lot, a.getNotification(), ignore);
+    String message = ChatColor.WHITE + "Auction started for " + a.getItem().getName() + " starting bid is " + ChatColor.GOLD + MISCUtils.formatBalance(world, a.getCost().getAmount()) + ChatColor.WHITE + ".";
+    if(a.getStartTime() != System.nanoTime()) {
+      message = ChatColor.WHITE + "The auction for " + a.getItem().getName() + " will end in " + ChatColor.GREEN + a.remaining() + ChatColor.WHITE + ".";
+    }
+    notifyPlayers(world, lot, message, ignore, true);
+    notifyPlayers(world, lot, ChatColor.WHITE + "Type /auction info " + ChatColor.GREEN + a.getLotNumber() + ChatColor.WHITE + " for more information.", ignore, true);
   }
 
   public void notifyPlayers(String world, Integer lot, String message, Boolean ignore) {
+    notifyPlayers(world, lot, message, ignore, false);
+  }
+
+  public void notifyPlayers(String world, Integer lot, String message, Boolean ignore, Boolean check) {
     Auction a = getActive(world, lot);
-    if(!a.getSilent() && !ignore) {
+    if(ignore || !a.getSilent()) {
       Collection<? extends Player> players = (world.equalsIgnoreCase("Global")) ? Bukkit.getOnlinePlayers() : Bukkit.getWorld(world).getPlayers();
       for (Player p : players) {
-        auctionMessage(p, message, a);
+        auctionMessage(p, message, a, check);
       }
     }
   }
@@ -83,6 +95,7 @@ public class AuctionManager {
         Message paid = new Message("Messages.Auction.Paid");
         paid.addVariable("$amount", MISCUtils.formatBalance(world, bid.getAmount()));
         paid.translate(world, MISCUtils.getPlayer(a.getPlayer()));
+        active.remove(lot);
 
         String w = (a.getGlobal())? "Global" : a.getWorld();
         startNext(w);
@@ -95,7 +108,29 @@ public class AuctionManager {
     notifyPlayers(world, lot, "Messages.Auction.NoWinner", true);
     MISCUtils.getPlayer(a.getPlayer()).getInventory().addItem(a.getItem().toItemStack());
     new Message("Messages.Auction.Return").translate(world, MISCUtils.getPlayer(a.getPlayer()));
-    active.remove(world);
+    active.remove(lot);
+  }
+
+  public Boolean cancel(Integer lot, UUID id, String world) {
+    Auction a = getAuction(lot);
+    Player player =  MISCUtils.getPlayer(id);
+
+    boolean requiresAdmin = (isActive(lot) && a.getHighestBid() != null  || !a.getPlayer().equals(id));
+
+    if(requiresAdmin && !player.hasPermission("tne.bypass.auction")) {
+      if(isActive(lot) && a.getHighestBid() != null) {
+        new Message("Messages.Auction.NoCancel").translate(world, player);
+        return false;
+      }
+      new Message("Messages.General.NoPerm").translate(world, player);
+      return false;
+    }
+
+    end(world, lot, false);
+    Message cancelled = new Message("Messages.Auction.Cancelled");
+    cancelled.addVariable("$lot", lot + "");
+    cancelled.translate(world, MISCUtils.getPlayer(id));
+    return true;
   }
 
   public void claim(Integer lot, UUID player) {
@@ -104,7 +139,7 @@ public class AuctionManager {
     while(i.hasNext()) {
       Claim claim = i.next();
 
-      if(claim.getLot() == lot && claim.getPlayer().equals(player)) {
+      if(claim.getLot().equals(lot) && claim.getPlayer().equals(player)) {
         claim.claim();
         i.remove();
       }
@@ -175,6 +210,7 @@ public class AuctionManager {
 
     if(auction != null) {
       auctionQueue.remove(lot);
+      auction.setStartTime(System.nanoTime());
       active.put(lot, auction);
       notifyPlayers(auction.getWorld(), auction.getLotNumber(), "Messages.Auction.Start", true);
     }
@@ -209,10 +245,12 @@ public class AuctionManager {
     }
 
     if(snipeProtection && auction.remaining() <= snipePeriod) {
-      active.get(world).setTime(auction.getTime() + snipeTime);
-      notifyPlayers(world, lot, "Messages.Auction.AntiSnipe", false);
+      active.get(lot).setTime(auction.getTime() + snipeTime);
+      Message snipe = new Message("Messages.Auction.AntiSnipe");
+      snipe.addVariable("$time", snipeTime + "");
+      notifyPlayers(world, lot, snipe.grab(world, MISCUtils.getPlayer(player)), false);
     }
-    active.get(world).setHighestBid(new Bid(player, bid));
+    active.get(lot).setHighestBid(new Bid(player, bid));
 
     Message submitted = new Message("Messages.Auction.Submitted");
     submitted.addVariable("$amount", MISCUtils.formatBalance(world, bid.getAmount()));
@@ -286,7 +324,7 @@ public class AuctionManager {
   }
 
   public Boolean add(Auction auction) {
-
+    MISCUtils.debug("Auction Add");
     if(auction.getSilent() && !MISCUtils.getPlayer(auction.getPlayer()).hasPermission("tne.auction.sauction")) {
       new Message("Messages.General.NoPerm").translate(auction.getWorld(), auction.getPlayer());
       return false;
@@ -300,6 +338,7 @@ public class AuctionManager {
       insufficient.translate(auction.getWorld(), MISCUtils.getPlayer(auction.getPlayer()));
       return false;
     }
+    MISCUtils.debug("Cost: " + cost);
 
     if(getQueued(auction.getPlayer()) >= TNE.instance.api.getInteger("Core.Auctions.PersonalQueue", auction.getWorld(), auction.getPlayer())) {
       new Message("Messages.Auction.PersonalQueue").translate(MISCUtils.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
@@ -311,13 +350,18 @@ public class AuctionManager {
       return false;
     }
     auction.setLotNumber(lastLot + 1);
-    MISCUtils.getPlayer(auction.getPlayer()).getInventory().remove(auction.getItem().toItemStack());
+    MISCUtils.getPlayer(auction.getPlayer()).getInventory().removeItem(auction.getItem().toItemStack());
     AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TransactionType.MONEY_REMOVE, auction.getWorld());
     if(canStart(auction.getWorld(), auction.getPlayer().toString())) {
+      MISCUtils.debug("Starting Auction");
+      auction.setStartTime(System.nanoTime());
       active.put(auction.getLotNumber(), auction);
       notifyPlayers(auction.getWorld(), auction.getLotNumber(), "Messages.Auction.Start", true);
+      notifyPlayers(auction.getWorld(), auction.getLotNumber(), ChatColor.WHITE + "Type /auction info " + ChatColor.GREEN + auction.getLotNumber() + ChatColor.WHITE + " for more information.", true);
       return true;
     }
+    lastLot++;
+    MISCUtils.debug("Queueing Auction");
     auctionQueue.put(auction.getLotNumber(), auction);
     Message queued = new Message("Messages.Auction.Queued");
     queued.addVariable("$lot", auction.getLotNumber() + "");

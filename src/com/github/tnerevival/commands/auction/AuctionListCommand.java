@@ -74,7 +74,9 @@ public class AuctionListCommand extends TNECommand {
 
     if(sender instanceof Player) {
       AuctionItemInventory inv = new AuctionItemInventory(lots);
-      TNE.instance.inventoryManager.addInventory(inv, new InventoryViewer(getPlayer(sender).getUniqueId(), world));
+      InventoryViewer viewer = new InventoryViewer(MISCUtils.getID(getPlayer(sender)), world);
+      inv.addViewer(viewer);
+      TNE.instance.inventoryManager.addInventory(inv, viewer);
       getPlayer(sender).openInventory(inv.getInventory());
     }
     return true;

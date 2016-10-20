@@ -21,7 +21,7 @@ public class AuctionWorker extends BukkitRunnable {
   @Override
   public void run() {
     List<World> worlds = TNE.instance.getServer().getWorlds();
-    for(int i = 0; i >= worlds.size(); i++) {
+    for(int i = 0; i <= worlds.size(); i++) {
       String world = (i == worlds.size())? "Global" : worlds.get(i).getName();
       if(plugin.manager.auctionManager.hasActive(world)) {
 

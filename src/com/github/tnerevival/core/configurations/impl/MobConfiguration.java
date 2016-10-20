@@ -3,6 +3,8 @@ package com.github.tnerevival.core.configurations.impl;
 import com.github.tnerevival.core.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Set;
+
 public class MobConfiguration extends Configuration {
 
 	@Override
@@ -89,8 +91,20 @@ public class MobConfiguration extends Configuration {
 		configurations.put("Mobs.ZombieVillager.Enabled", true);
 		configurations.put("Mobs.ZombieVillager.Reward", 10.00);
 
-    //TODO: Load username-specific kill reward.
-
+    loadPlayers(configurationFile);
 		super.load(configurationFile);
+	}
+
+	public void loadPlayers(FileConfiguration configurationFile) {
+	  String base = "Mobs.Player.Individual";
+    Set<String> identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+
+    for(String s : identifiers) {
+      base = base + "." + s;
+      Boolean enabled = !configurationFile.contains(base + ".Enabled") || configurationFile.getBoolean(base + ".Enabled");
+      Double reward = (!configurationFile.contains(base + ".Reward"))? 10.0 : configurationFile.getDouble(base + ".Reward");;
+      configurations.put(base + ".Enabled", enabled);
+      configurations.put(base + ".Reward", reward);
+    }
 	}
 }

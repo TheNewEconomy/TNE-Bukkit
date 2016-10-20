@@ -393,6 +393,7 @@ public class InteractionListener implements Listener {
 			String mob = entity.getCustomName();
 			Double reward = TNE.configurations.mobReward("Default");
 			String messageNode = "Messages.Mob.Killed";
+      Boolean player = false;
 			
 			if((TNE.configurations.getBoolean("Mobs.Enabled", "mob"))) {
 				switch(entity.getType()) {
@@ -461,9 +462,12 @@ public class InteractionListener implements Listener {
           case PLAYER:
             mob = "Player";
             Player p = (Player)entity;
-            if(TNE.configurations.mobEnabled(p.getDisplayName())) {
-              mob = p.getDisplayName();
+            if(TNE.configurations.playerEnabled(p.getUniqueId())) {
+              mob = p.getUniqueId().toString();
+              player = true;
+              break;
             }
+            mob = "Player";
             break;
 					case POLAR_BEAR:
 						mob = "PolarBear";
@@ -472,6 +476,7 @@ public class InteractionListener implements Listener {
 						Rabbit rab = (Rabbit)entity;
 						if(rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
 							mob = "RabbitKiller";
+							break;
 						}
 						mob = "Rabbit";
 						break;
@@ -537,7 +542,7 @@ public class InteractionListener implements Listener {
 				}
 				mob = (mob.equalsIgnoreCase("Default")) ? (entity.getCustomName() != null) ? entity.getCustomName() : mob : mob;
 				Character firstChar = mob.charAt(0);
-				reward = TNE.configurations.mobReward(mob);
+				reward = (player)? TNE.configurations.playerReward(mob) : TNE.configurations.mobReward(mob);
 				messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
 				if(TNE.configurations.mobEnabled(mob)) {
           AccountUtils.transaction(MISCUtils.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));

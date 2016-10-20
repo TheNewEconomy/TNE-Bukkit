@@ -1,8 +1,13 @@
-# The New Economy v0.0.4.0
-# Author: creatorfromhell
-# License: AGPLv3
-# If you would like to contribute to the plugin
-# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+Main Configurations
+=========================
+
+File
+--------------
+config.yml
+
+Configuration
+--------------
+```YAML
 Core:
     
     #Whether or not to enable UUID support(results may vary if turned off).
@@ -321,3 +326,4 @@ Core:
             
             #The SQLite Database File
             File: economy.db
+```

@@ -228,7 +228,6 @@ public abstract class TNEInventory {
         }
       }
     }
-
     Iterator<InventoryViewer> itr = viewers.iterator();
 
     while(itr.hasNext()) {

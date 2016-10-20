@@ -1,5 +1,7 @@
 package com.github.tnerevival.core.inventory;
 
+import com.github.tnerevival.utils.MISCUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,9 @@ public class InventoryManager {
   }
 
   public boolean isViewing(UUID id) {
+    MISCUtils.debug("Inventory");
+    MISCUtils.debug(id.toString());
+    MISCUtils.debug(accessing.get(id) + "");
     return accessing.containsKey(id);
   }
 

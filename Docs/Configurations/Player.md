@@ -1,10 +1,13 @@
-# The New Economy v0.0.4.0
-# Author: creatorfromhell
-# License: AGPLv3
-# If you would like to contribute to the plugin
-# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+Player Configurations
+=======================
+As of TNE Alpha 3.2 servers owners have the ability to set every configuration on a per-world basis.
+File
+--------------
+players.yml
 
-
+Configuration
+----------------
+```YAML
 #Used for per-player configurations.
 Players:
 
@@ -16,3 +19,4 @@ Players:
         #This allows us even more control over our server.
         Shops:
             Enabled: false
+```
