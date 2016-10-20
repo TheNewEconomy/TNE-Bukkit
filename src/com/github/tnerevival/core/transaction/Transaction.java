@@ -5,6 +5,7 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 public class Transaction {
@@ -13,6 +14,7 @@ public class Transaction {
   private TransactionCost cost;
   private TransactionType type;
   private String world;
+  private Calendar time;
 
   public Transaction(String initiator, String recipient, TransactionCost cost) {
     this(initiator, recipient, cost, TransactionType.MONEY_GIVE, TNE.instance.defaultWorld);
@@ -31,7 +33,11 @@ public class Transaction {
   }
 
   public boolean perform() {
-    return !(handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
+    boolean failed = (handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
+    if(!failed) {
+      //TODO: Time
+    }
+    return !failed;
   }
 
   private TransactionResult handleInitiator() {

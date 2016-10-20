@@ -5,6 +5,7 @@ import com.github.tnerevival.core.configurations.impl.*;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ConfigurationManager {
 
@@ -30,6 +31,14 @@ public class ConfigurationManager {
 		configurations.put("objects", objects);
 		configurations.put("materials", materials);
 	}
+
+	public Boolean playerEnabled(UUID id) {
+	  return getBoolean("Mobs.Player.Individual." + id.toString() + ".Enabled", "mob");
+  }
+
+	public Double playerReward(String id) {
+    return getDouble("Mobs.Player.Individual." + id + ".Reward", "mob");
+  }
 	
 	public Boolean mobEnabled(String mob) {
 		return getBoolean("Mobs." + mob + ".Enabled", "mob");
