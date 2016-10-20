@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.transaction.Record;
+import com.github.tnerevival.core.transaction.TransactionHistory;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -80,9 +81,11 @@ public class MoneyHistoryCommand extends TNECommand {
       }
     }
 
-    List<Record> records = TNE.instance.manager.transactions.getHistory(MISCUtils.getID(player).toString()).getRecords(world, type, page);
+    TransactionHistory history = TNE.instance.manager.transactions.getHistory(MISCUtils.getID(player).toString());
 
-    player.sendMessage(ChatColor.WHITE + "Type | Player | World | Amount | BalanceAfter | Time");
+    List<Record> records = history.getRecords(world, type, page);
+
+    player.sendMessage(ChatColor.WHITE + "Type | Player | World | Amount | BalanceAfter | Time - Page " + page + "/" + history.getMaxPages(world, type, 5));
     if(records.size() > 0) {
       for(Record r : records) {
         Double difference = r.getOldBalance() - r.getBalance();
@@ -107,14 +110,10 @@ public class MoneyHistoryCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
-    return "/money history [page] [world:name/all] [type:type/all] - See a detailed break down of your transaction history.";
-  }
-
-  @Override
   public String[] getHelpLines() {
     return new String[] {
-        "/money history [world:name/all] [type:type/all] - See a detailed break down of your transaction history.",
+        "/money history [page:#] [world:name/all] [type:type/all] - See a detailed break down of your transaction history.",
+        "[page] - The page number you wish to view",
         "[world] - The world name you wish to filter, or all for every world. Defaults to current world.",
         "[type] - The transaction type you wish to filter, or all for every transaction."
     };

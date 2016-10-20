@@ -66,7 +66,7 @@ public class TransactionHistory {
     List<Record> pageRecords = new ArrayList<>();
 
     int recordPerPage = limit;
-    int max = getMaxPages(recordPerPage);
+    int max = getMaxPages(world, type, recordPerPage);
     int start = (page == 1)? 0 : ((page > max)? max : page);
 
     for(int i = start; i < start + recordPerPage; i++) {
@@ -77,9 +77,10 @@ public class TransactionHistory {
     return pageRecords;
   }
 
-  public Integer getMaxPages(int perPage) {
-    int max = records.size() / perPage;
-    if(records.size() % perPage > 0) max++;
+  public Integer getMaxPages(String world, String type, int perPage) {
+    sort(world, type);
+    int max = sorted.size() / perPage;
+    if(sorted.size() % perPage > 0) max++;
     return max;
   }
 }
