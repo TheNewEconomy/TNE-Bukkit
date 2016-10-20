@@ -8,10 +8,17 @@ Auctions
     - This gives a sense of mystery to auctions, and means players may be likely to be against their self.
   - Lots of configuration options
   
+Transactions
+- Ability to track transaction history.
+
 Configurations
 - We now only save configurations on start/stop when they're modified.
 
 Commands
+
+- Additions
+  - /money history
+    - /money history [page:#] [world:name/all] [type:type/all] - See a detailed break down of your transaction history.
 
 - Modifications
   - No longer registered via plugin.yml
