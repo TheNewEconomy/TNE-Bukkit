@@ -51,12 +51,11 @@ public class TransactionManager {
 
   public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
     if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, id)) {
-      Calendar time = new GregorianCalendar(TimeZone.getTimeZone(TNE.instance.api.getString("Core.Transactions.Timezone", world, id)));
-      time.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+      Date date = new Date();
 
       String playerFrom = (player == null)? "N/A" : player;
 
-      Record r = new Record(id, player, world, type.getID(), cost.getAmount(), oldBalance, balance, time.getTimeInMillis(), time.getTimeZone().getID());
+      Record r = new Record(id, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, date.getTime());
       if(!transactionHistory.containsKey(id)) {
         TransactionHistory history = new TransactionHistory();
         history.add(r);

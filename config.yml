@@ -54,6 +54,9 @@ Core:
         #Whether or not to track transaction history.
         Track: true
 
+        #The time format to use when displaying transaction history data.
+        Format: M, d y
+
         #The timezone to use for transactions.
         Timezone: US/Eastern
 

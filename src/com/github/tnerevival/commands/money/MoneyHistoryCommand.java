@@ -88,7 +88,7 @@ public class MoneyHistoryCommand extends TNECommand {
         Double difference = r.getOldBalance() - r.getBalance();
         String amount = ((difference >= 0.0)? ChatColor.GREEN + "+" : ChatColor.RED + "-") + difference;
 
-        String time = r.convert(TNE.instance.api.getString("Core.Transactions.Timezone", world, MISCUtils.getID(player)));
+        String time = r.convert(world, MISCUtils.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, MISCUtils.getID(player)));
 
         StringBuilder builder = new StringBuilder();
         builder.append(ChatColor.GREEN + r.getType() + ChatColor.WHITE + " | ");

@@ -1,5 +1,12 @@
 package com.github.tnerevival.core.transaction;
 
+import com.github.tnerevival.TNE;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.UUID;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -26,9 +33,8 @@ public class Record {
   public Double oldBalance;
   public Double balance;
   public long time;
-  public String zone;
 
-  public Record(String id, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time, String zone) {
+  public Record(String id, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time) {
     this.id = id;
     this.player = player;
     this.world = world;
@@ -37,12 +43,14 @@ public class Record {
     this.oldBalance = oldBalance;
     this.balance = balance;
     time = time;
-    zone = zone;
   }
 
-  public String convert(String timeZone) {
-    //TODO: Convert time.
-    return "Time coming soon.";
+  public String convert(String world, UUID id, String timeZone) {
+    final Date date = new Date(time);
+    final SimpleDateFormat dateFormat = new SimpleDateFormat(TNE.instance.api.getString("Core.Transactions.Format", world, id));
+    dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+
+    return dateFormat.format(date);
   }
 
   public String getId() {
@@ -107,13 +115,5 @@ public class Record {
 
   public void setTime(long time) {
     this.time = time;
-  }
-
-  public String getZone() {
-    return zone;
-  }
-
-  public void setZone(String zone) {
-    this.zone = zone;
   }
 }
