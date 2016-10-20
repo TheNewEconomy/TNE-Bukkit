@@ -1,13 +1,9 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.transaction.Transaction;
-import com.github.tnerevival.core.transaction.TransactionCost;
-import com.github.tnerevival.core.transaction.TransactionHistory;
+import com.github.tnerevival.core.transaction.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -27,15 +23,57 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionManager {
-  private Map<UUID, TransactionHistory> transactionHistory = new HashMap<>();
+  private Map<String, TransactionHistory> transactionHistory = new HashMap<>();
 
   public void add(Transaction transaction) {
+    if(transaction.getInitiator() != null) {
+      add(transaction.getInitiator(),
+          transaction.getRecipient(),
+          transaction.getWorld(),
+          transaction.getType(),
+          transaction.getCost(),
+          transaction.getInitiatorOldBalance(),
+          transaction.getInitiatorBalance()
+      );
+    }
 
+    if(transaction.getRecipient() != null) {
+      add(transaction.getRecipient(),
+          transaction.getInitiator(),
+          transaction.getWorld(),
+          transaction.getType(),
+          transaction.getCost(),
+          transaction.getRecipientOldBalance(),
+          transaction.getRecipientBalance()
+      );
+    }
   }
 
-  public void add(UUID id, String world, TransactionCost cost, Double oldBalance, Double newBalance) {
+  public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
     if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, id)) {
+      Calendar time = new GregorianCalendar(TimeZone.getTimeZone(TNE.instance.api.getString("Core.Transactions.Timezone", world, id)));
+      time.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
 
+      String playerFrom = (player == null)? "N/A" : player;
+
+      Record r = new Record(id, player, world, type.getID(), cost.getAmount(), oldBalance, balance, time.getTimeInMillis(), time.getTimeZone().getID());
+      if(!transactionHistory.containsKey(id)) {
+        TransactionHistory history = new TransactionHistory();
+        history.add(r);
+        transactionHistory.put(id, history);
+      }
+      transactionHistory.get(id).add(r);
     }
+  }
+
+  public boolean hasHistory(String id) {
+    return transactionHistory.containsKey(id);
+  }
+
+  public TransactionHistory getHistory(String id) {
+    if (hasHistory(id)) {
+      return transactionHistory.get(id);
+    }
+    return null;
   }
 }

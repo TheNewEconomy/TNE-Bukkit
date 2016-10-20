@@ -5,16 +5,19 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
-import java.util.Calendar;
 import java.util.UUID;
 
 public class Transaction {
   private String initiator;
   private String recipient;
+  private TransactionResult result = TransactionResult.FAILED;
   private TransactionCost cost;
   private TransactionType type;
   private String world;
-  private Calendar time;
+  private Double initiatorOldBalance;
+  private Double initiatorBalance;
+  private Double recipientOldBalance;
+  private Double recipientBalance;
 
   public Transaction(String initiator, String recipient, TransactionCost cost) {
     this(initiator, recipient, cost, TransactionType.MONEY_GIVE, TNE.instance.defaultWorld);
@@ -35,7 +38,9 @@ public class Transaction {
   public boolean perform() {
     boolean failed = (handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
     if(!failed) {
-      //TODO: Time
+      result = TransactionResult.SUCCESS;
+
+      TNE.instance.manager.transactions.add(this);
     }
     return !failed;
   }
@@ -55,6 +60,7 @@ public class Transaction {
           return TransactionResult.FAILED;
         }
 
+        initiatorBalance = AccountUtils.getFunds(id, world);
         return TransactionResult.SUCCESS;
       }
       return TransactionResult.SUCCESS;
@@ -72,8 +78,10 @@ public class Transaction {
           return TransactionResult.FAILED;
         }
 
+        initiatorOldBalance = AccountUtils.getFunds(id, world);
         AccountUtils.removeFunds(id, world, cost.getAmount());
         MISCUtils.setItems(id, cost.getItems(), false);
+        initiatorBalance = AccountUtils.getFunds(id, world);
         return TransactionResult.SUCCESS;
       }
       return TransactionResult.SUCCESS;
@@ -81,7 +89,9 @@ public class Transaction {
       if(recipient == null) {
         UUID id = MISCUtils.distringuishId(initiator);
         if(cost.getAmount() > 0.0) {
+          initiatorOldBalance = AccountUtils.getFunds(id, world);
           AccountUtils.setFunds(id, world, cost.getAmount());
+          initiatorBalance = AccountUtils.getFunds(id, world);
         }
 
         if(cost.getItems().size() > 0) {
@@ -93,7 +103,9 @@ public class Transaction {
       if(recipient == null) {
         UUID id = MISCUtils.distringuishId(initiator);
         if(cost.getAmount() > 0.0) {
+          initiatorOldBalance = AccountUtils.getFunds(id, world);
           AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
+          initiatorBalance = AccountUtils.getFunds(id, world);
         }
 
         if(cost.getItems().size() > 0) {
@@ -113,20 +125,25 @@ public class Transaction {
         return TransactionResult.FAILED;
       }
 
+      initiatorOldBalance = AccountUtils.getFunds(id, world);
       AccountUtils.removeFunds(id, world, cost.getAmount());
       MISCUtils.setItems(id, cost.getItems(), false);
+      initiatorBalance = AccountUtils.getFunds(id, world);
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_INQUIRY)) {
       UUID id = MISCUtils.distringuishId(initiator);
       if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(recipient), world)) return TransactionResult.FAILED;
       if(BankUtils.getBankBalance(id, world) < cost.getAmount()) return TransactionResult.FAILED;
 
+      initiatorBalance = BankUtils.getBankBalance(id, world);
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_WITHDRAWAL)) {
       UUID id = MISCUtils.distringuishId(initiator);
       if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(recipient), world)) return TransactionResult.FAILED;
       if(BankUtils.getBankBalance(id, world) < cost.getAmount()) return TransactionResult.FAILED;
+      initiatorOldBalance = BankUtils.getBankBalance(id, world);
       BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) - cost.getAmount()));
+      initiatorBalance = BankUtils.getBankBalance(id, world);
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = MISCUtils.distringuishId(initiator);
@@ -235,6 +252,10 @@ public class Transaction {
     this.recipient = recipient;
   }
 
+  public TransactionResult getResult() {
+    return result;
+  }
+
   public double getAmount() {
     return cost.getAmount();
   }
@@ -265,5 +286,37 @@ public class Transaction {
 
   public void setWorld(String world) {
     this.world = world;
+  }
+
+  public Double getInitiatorOldBalance() {
+    return initiatorOldBalance;
+  }
+
+  public void setInitiatorOldBalance(Double initiatorOldBalance) {
+    this.initiatorOldBalance = initiatorOldBalance;
+  }
+
+  public Double getInitiatorBalance() {
+    return initiatorBalance;
+  }
+
+  public void setInitiatorBalance(Double initiatorBalance) {
+    this.initiatorBalance = initiatorBalance;
+  }
+
+  public Double getRecipientOldBalance() {
+    return recipientOldBalance;
+  }
+
+  public void setRecipientOldBalance(Double recipientOldBalance) {
+    this.recipientOldBalance = recipientOldBalance;
+  }
+
+  public Double getRecipientBalance() {
+    return recipientBalance;
+  }
+
+  public void setRecipientBalance(Double recipientBalance) {
+    this.recipientBalance = recipientBalance;
   }
 }

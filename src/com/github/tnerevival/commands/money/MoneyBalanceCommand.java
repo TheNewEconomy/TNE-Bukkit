@@ -46,5 +46,4 @@ public class MoneyBalanceCommand extends TNECommand {
 	public String getHelp() {
 		return "/money balance - find out how much money you have on you";
 	}
-	
 }

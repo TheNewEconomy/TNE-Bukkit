@@ -79,6 +79,7 @@ Messages:
        Locked: <red>You can't do that with a locked account($player)!
        Set: <yellow>You must use /pin set before accessing your money and/or bank.
        Confirm: <yellow>You must use /pin confirm before accessing your money and/or bank.
+       NoTransactions: <white>You have no transactions to display at this time.
        
     Pin:
        Set: <white>Your pin has been set successfully.

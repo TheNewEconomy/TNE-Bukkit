@@ -21,5 +21,65 @@ import java.util.List;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionHistory {
-  private List<Transaction> transactions = new ArrayList<>();
+  private List<Record> records = new ArrayList<>();
+  List<Record> sorted = new ArrayList<>();
+
+  public void add(Record record) {
+    records.add(record);
+  }
+
+  public void sort(String world, String type) {
+    String worldFilter = world;
+    String typeFilter = type;
+
+    for(Record r : records) {
+      Boolean worldCheck = false;
+      Boolean typeCheck = false;
+      if(!worldFilter.equalsIgnoreCase("all")) {
+        if(worldFilter.equalsIgnoreCase(r.getWorld())) {
+
+        }
+      }
+
+      if(!typeFilter.equalsIgnoreCase("all")) {
+        if(typeFilter.equalsIgnoreCase(r.getType())) {
+
+        }
+      }
+
+      if(worldCheck && typeCheck) {
+        sorted.add(r);
+      }
+    }
+  }
+
+  public List<Record> getRecords() {
+    return records;
+  }
+
+  public List<Record> getRecords(String world, String type, int page) {
+    return getRecords(5, world, type, page);
+  }
+
+  public List<Record> getRecords(int limit, String world, String type, int page) {
+    sort(world, type);
+    List<Record> pageRecords = new ArrayList<>();
+
+    int recordPerPage = limit;
+    int max = getMaxPages(recordPerPage);
+    int start = (page == 1)? 0 : ((page > max)? max : page);
+
+    for(int i = start; i < start + recordPerPage; i++) {
+      if(i < sorted.size()) {
+        pageRecords.add(sorted.get(i));
+      }
+    }
+    return pageRecords;
+  }
+
+  public Integer getMaxPages(int perPage) {
+    int max = records.size() / perPage;
+    if(records.size() % perPage > 0) max++;
+    return max;
+  }
 }
