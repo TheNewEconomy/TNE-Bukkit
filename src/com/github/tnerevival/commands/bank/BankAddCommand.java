@@ -69,5 +69,4 @@ public class BankAddCommand extends TNECommand {
   public String getHelp() {
     return "/bank add <player> - Add <player> to your bank.";
   }
-
 }

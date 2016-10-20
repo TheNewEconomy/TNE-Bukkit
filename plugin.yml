@@ -9,30 +9,6 @@ main: com.github.tnerevival.TNE
 softdepend: [Vault]
 
 
-#Command Data
-commands:
-   balance:
-       description: Shortcut for /money balance.
-   bal:
-       description: Shortcut for /money balance.
-   pay:
-       description: Shortcut for /money pay.
-   bank:
-      description: The base command for all bank-related commands.
-   money:
-      description: The base command for all money-related commands.
-   package:
-      description: The base command for all inventory package-related commands.
-   credit:
-      description: The base command for all credit-related commands.
-   pin:
-      description: The base command for all pin-related commands.
-   shop:
-      description: The base command for all shop-related commands.
-   theneweconomy:
-      description: The base command for all The New Economy core commands.
-      aliases: tne
-
 permissions:
    tne.*:
       description: Gives access to all TNE commands

@@ -26,8 +26,12 @@ public abstract class TNECommand {
 	public abstract String getNode();
 	public abstract boolean console();
 
-	public String getHelp() {
-	  return "Command help coming soon!";
+  public String getHelp() {
+    return "Command help coming soon!";
+  }
+
+	public String[] getHelpLines() {
+	  return new String[] { getHelp() };
   }
 
   public void help(CommandSender sender) {
@@ -35,35 +39,59 @@ public abstract class TNECommand {
   }
 
   public void help(CommandSender sender, Integer page) {
-    List<String> help = new ArrayList<>();
+    List<String[]> help = new ArrayList<>();
     if(subCommands.size() > 0) {
       for (TNECommand sub : subCommands) {
       	if(sender.hasPermission(sub.getNode())) {
-					help.add(sub.getHelp());
+					help.add(sub.getHelpLines());
 				}
       }
     } else {
     	if(sender.hasPermission(getNode())) {
-				help.add(getHelp());
+				help.add(getHelpLines());
 			}
     }
 
-    Integer perPage = 4;
-    MISCUtils.debug(help.size() + "");
-    MISCUtils.debug((help.size() / perPage) + "");
-    Integer maxPage = help.size() / perPage;
-    if(help.size() % perPage > 0) maxPage++;
-    Integer currentPage = (page > maxPage || page <= 0)? 1 : page;
-    Integer start = (currentPage - 1) * perPage;
-    Integer stop = (currentPage * perPage > help.size())? help.size() : currentPage * perPage;
 
-    if(subCommands.size() > 0 ) {
+    Integer linesPerPage = 5;
+    Integer remaining = linesPerPage;
+    Integer maxPage = 1;
+    for(int i = 0; i < help.size(); i++) {
+      if(remaining <= 0) {
+        maxPage++;
+        remaining = linesPerPage;
+      }
+      Integer length = help.get(i).length;
+      if(i == help.size() - 1 && remaining - length < 0) maxPage++;
+      remaining -= length;
+    }
+
+    Integer loopPage = 1;
+    remaining = linesPerPage;
+    Integer helpPage = (page > maxPage)? maxPage : page;
+    List<Integer> send = new ArrayList<>();
+    for(int i = 0; i < help.size(); i++) {
+      if(remaining <= 0) {
+        loopPage++;
+        remaining = linesPerPage;
+      }
+      Integer length = help.get(i).length;
+      if(i == help.size() - 1 && remaining - length < 0) loopPage++;
+      if(loopPage == helpPage) send.add(i);
+      remaining -= length;
+    }
+
+    if(subCommands.size() > 0) {
       String name = getName();
       String formatted = name.substring(0, 1).toUpperCase() + name.substring(1);
-      sender.sendMessage(ChatColor.GOLD + "~~~" + ChatColor.WHITE + formatted + " Help " + currentPage + "/" + maxPage + ChatColor.GOLD + "~~~");
+      sender.sendMessage(ChatColor.GOLD + "~~~" + ChatColor.WHITE + formatted + " Help " + helpPage + "/" + maxPage + ChatColor.GOLD + "~~~");
     }
-    for(int i = start; i < stop; i++) {
-      sender.sendMessage(ChatColor.GOLD + help.get(i));
+
+    for(Integer i : send) {
+      for(String s : help.get(i)) {
+        String message = s.replaceFirst("/" , "<green>/").replaceFirst("-", "<white>-");
+        new Message(message).translate("", sender);
+      }
     }
   }
 
@@ -103,16 +131,20 @@ public abstract class TNECommand {
 	  if(confirm() && !(sender instanceof Player)) return false;
     if(confirm()) {
       Player p = (Player)sender;
-      Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-      if (TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(p))) {
-        if (!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(p))) {
+      Account acc = AccountUtils.getAccount(MISCUtils.getID(p));
+      if (TNE.instance.manager.enabled(MISCUtils.getID(p), MISCUtils.getWorld(p))) {
+        MISCUtils.debug(TNE.instance.manager.enabled(MISCUtils.getID(p), MISCUtils.getWorld(p)) + "");
+        if (!TNE.instance.manager.confirmed(MISCUtils.getID(p), MISCUtils.getWorld(p))) {
+          MISCUtils.debug(TNE.instance.manager.confirmed(MISCUtils.getID(p), MISCUtils.getWorld(p)) + "");
           if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+            MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
             Message set = new Message("Messages.Account.Set");
             set.translate(MISCUtils.getWorld(p), p);
             return false;
           }
 
           if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
+            MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
             Message confirm = new Message("Messages.Account.Confirm");
             confirm.translate(MISCUtils.getWorld(p), p);
             return false;
@@ -131,7 +163,7 @@ public abstract class TNECommand {
 			Message noCommand = new Message("Messages.Command.None");
 			noCommand.addVariable("$command", "/" + getName());
 			noCommand.addVariable("$arguments", arguments[0]);
-			noCommand.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
+			noCommand.translate(world, sender);
 			return false;
 		}
 
@@ -151,7 +183,7 @@ public abstract class TNECommand {
 		if(!sub.canExecute(sender)) {
 			Message unable = new Message("Messages.Command.Unable");
 			unable.addVariable("$command", "/" + getName());
-			unable.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
+			unable.translate(world, sender);
 			return false;
 		}
 		return sub.execute(sender, command, removeSub(arguments));
@@ -197,6 +229,10 @@ public abstract class TNECommand {
 		}
 		return console();
 	}
+
+	protected String getWorld(CommandSender sender) {
+	  return (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+  }
 	
 	protected Player getPlayer(CommandSender sender) {
 		if(sender instanceof Player) {

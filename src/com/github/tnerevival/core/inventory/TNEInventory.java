@@ -6,6 +6,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
+import com.github.tnerevival.core.inventory.impl.AuctionItemInventory;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.inventory.impl.ShopItemInventory;
@@ -36,6 +37,7 @@ public abstract class TNEInventory {
 
   protected UUID owner;
   protected String world;
+  protected Boolean update = false;
 
   protected Inventory inventory;
 
@@ -56,6 +58,14 @@ public abstract class TNEInventory {
    * @return
    */
   public abstract List<Integer> getInvalidSlots();
+
+  public void setUpdate(Boolean update) {
+    this.update = update;
+  }
+
+  public Boolean update() {
+    return update;
+  }
 
   /**
    * Returns the Bukkit-based inventory class.
@@ -171,7 +181,8 @@ public abstract class TNEInventory {
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
     Player player = MISCUtils.getPlayer(viewer.getUUID());
 
-    if(!(this instanceof BankInventory) && !(this instanceof ShopInventory) && !(this instanceof ShopItemInventory)) {
+    if(!(this instanceof BankInventory) && !(this instanceof ShopInventory) && !(this instanceof ShopItemInventory)
+       && !(this instanceof AuctionItemInventory)) {
       String charge = charge(viewer);
       MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {

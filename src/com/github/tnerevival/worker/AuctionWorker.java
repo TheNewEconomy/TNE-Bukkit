@@ -36,7 +36,7 @@ public class AuctionWorker extends BukkitRunnable {
               plugin.manager.auctionManager.notifyPlayers(world, auction.getLotNumber(), false);
             }
           } else {
-            plugin.manager.auctionManager.end(world, auction.getLotNumber());
+            plugin.manager.auctionManager.end(world, auction.getLotNumber(), true);
           }
         }
       } else {

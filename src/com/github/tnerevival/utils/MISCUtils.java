@@ -431,15 +431,15 @@ public class MISCUtils {
 	public static String formatBalance(String world, double balance, Boolean shorten) {
 		String balanceString = (String.valueOf(balance).contains("."))? String.valueOf(balance) : String.valueOf(balance) + ".00";
 		String[] split = balanceString.split("\\.");
-		if(Integer.valueOf(split[1]) > 0) {
-			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0]), world) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
+		if(Long.valueOf(split[1]) > 0) {
+			return (shorten) ? ChatColor.GOLD + getShort(Long.valueOf(split[0]), world) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
 		} else {
-			return (shorten) ? ChatColor.GOLD + getShort(Integer.valueOf(split[0]), world) + " " + getName(world, balance, "major") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major");
+			return (shorten) ? ChatColor.GOLD + getShort(Long.valueOf(split[0]), world) + " " + getName(world, balance, "major") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major");
 		}
 	}
 	
 	public static String getShort(double balance, String world) {
-		Integer dollars = (int) Math.floor(balance);
+		Long dollars = (long) Math.floor(balance);
 		if (dollars < 1000) {
 			return "" + dollars;
 		}
@@ -508,6 +508,28 @@ public class MISCUtils {
 		}
 		return TNE.instance.api.getBoolean("Core.Bank.Connected", world);
 	}
+
+	public static Boolean isBoolean(String value) {
+	  return value.equalsIgnoreCase(String.valueOf(true)) || value.equalsIgnoreCase(String.valueOf(false));
+  }
+
+  public static Boolean isDouble(String value, String world) {
+    try {
+      Double.valueOf(value.replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+      return true;
+    } catch(Exception e) {
+      return false;
+    }
+  }
+
+  public static Boolean isInteger(String value) {
+    try {
+      Integer.valueOf(value);
+      return true;
+    } catch(Exception e) {
+      return false;
+    }
+  }
 	
 	//World Utils
 	public static Boolean multiWorld() {

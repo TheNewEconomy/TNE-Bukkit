@@ -1,6 +1,11 @@
 package com.github.tnerevival.listeners;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.version.ReleaseType;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,12 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 
 public class ConnectionListener implements Listener {
 	
@@ -51,7 +50,7 @@ public class ConnectionListener implements Listener {
         message.translate(MISCUtils.getWorld(player), player);
       }
     }
-	}
+  }
 	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent event) {

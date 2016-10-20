@@ -19,13 +19,11 @@ public class Auction {
   private long startTime = System.nanoTime();
   private UUID player;
   private String world = TNE.instance.defaultWorld;
-  private Boolean silent;
+  private Boolean silent = false;
   private SerializableItemStack item;
   private TransactionCost cost = new TransactionCost(50.00);
   private Bid highestBid = null;
-  private Double start = 50.00;
   private Double increment = 10.00;
-  private Boolean admin = false;
   private Boolean global = true;
   private Integer time = 30;
   private String node = "";
@@ -46,13 +44,17 @@ public class Auction {
 
   public String getNotification() {
     StringBuilder builder = new StringBuilder();
-    if(remaining() == time) {
-      builder.append(ChatColor.WHITE + "Auction started for " + item.getName() + " starting bid is " + ChatColor.GOLD + MISCUtils.formatBalance(world, start) + ChatColor.WHITE + ".");
+    if(remaining().equals(time)) {
+      builder.append(ChatColor.WHITE + "Auction started for " + item.getName() + " starting bid is " + ChatColor.GOLD + MISCUtils.formatBalance(world, cost.getAmount()) + ChatColor.WHITE + ".");
     } else {
       builder.append(ChatColor.WHITE + "The auction for " + item.getName() + " will end in " + ChatColor.GREEN + remaining() + ChatColor.WHITE + ".");
     }
-    builder.append(ChatColor.WHITE + "Type /auction info for more information.");
+    builder.append(ChatColor.WHITE + "Type /auction info " + ChatColor.GREEN + lotNumber + ChatColor.WHITE + " for more information.");
     return builder.toString();
+  }
+
+  public double getNextBid() {
+    return (highestBid != null)? highestBid.getBid().getAmount() : cost.getAmount();
   }
 
   public Integer getLotNumber() {
@@ -80,7 +82,7 @@ public class Auction {
   }
 
   public String getWorld() {
-    return world;
+    return (global)? "Global" : world;
   }
 
   public void setWorld(String world) {
@@ -119,28 +121,12 @@ public class Auction {
     this.highestBid = highestBid;
   }
 
-  public Double getStart() {
-    return start;
-  }
-
-  public void setStart(Double start) {
-    this.start = start;
-  }
-
   public Double getIncrement() {
     return increment;
   }
 
   public void setIncrement(Double increment) {
     this.increment = increment;
-  }
-
-  public Boolean getAdmin() {
-    return admin;
-  }
-
-  public void setAdmin(Boolean admin) {
-    this.admin = admin;
   }
 
   public Boolean getGlobal() {

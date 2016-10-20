@@ -40,7 +40,7 @@ public class TNE extends JavaPlugin {
 	public TNEAPI api = null;
 	
 	public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
-	public static final boolean debugMode = false;
+	public static final boolean debugMode = true;
 	
 	// Files & Custom Configuration Files
 	public File mobs;
@@ -202,7 +202,7 @@ public class TNE extends JavaPlugin {
 	}
 	
 	private void saveConfigurations() {
-		if(modified.contains("config.yml")) {
+		if(!new File(getDataFolder(), "config.yml").exists() || modified.contains("config.yml")) {
 			saveConfig();
 		}
 		try {
@@ -255,7 +255,7 @@ public class TNE extends JavaPlugin {
 	    }
 	}
 	
-	private void setupVault() {
+	public void setupVault() {
 		if(getServer().getPluginManager().getPlugin("Vault") == null) {
 			return;
 		}
