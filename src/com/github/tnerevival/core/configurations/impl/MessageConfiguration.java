@@ -34,10 +34,15 @@ public class MessageConfiguration extends Configuration {
 		configurations.put("Messages.Admin.Deleted", "<white>Successfully deleted account for $player.");
 		configurations.put("Messages.Admin.Purge", "<white>Successfully purged all economy accounts.");
 		configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
+		configurations.put("Messages.Admin.ResetPin", "<white>Successfully set pin for $player to $pin.");
+		configurations.put("Messages.Admin.StatusChange", "<white>Status for $player has been changed to <green>$status<white>.");
 
 		configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
 		configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
 		configurations.put("Messages.Account.Confirm", "<yellow>You must use /pin confirm before accessing your money and/or bank.");
+		configurations.put("Messages.Account.NoTransactions", "<white>You have no transactions to display at this time.");
+		configurations.put("Messages.Account.Reset", "<white>Your pin has been reset to <green>$pin<white>.");
+		configurations.put("Messages.Account.StatusChange", "<white>Your account's status has been changed to <green>$status<white>.");
 
 		configurations.put("Messages.Pin.Set", "<white>Your pin has been set successfully.");
 		configurations.put("Messages.Pin.Confirmed", "<white>Your pin has been confirmed successfully.");

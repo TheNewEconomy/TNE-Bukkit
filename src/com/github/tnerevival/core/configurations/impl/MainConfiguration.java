@@ -18,6 +18,9 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Commands.BalanceShort", true);
 		configurations.put("Core.Update.Check", true);
 		configurations.put("Core.Update.Notify", true);
+		configurations.put("Core.Transactions.Track", true);
+		configurations.put("Core.Transactions.Format", "M, d y");
+		configurations.put("Core.Transactions.Timezone", "US/Eastern");
 		configurations.put("Core.AutoSaver.Enabled", true);
 		configurations.put("Core.AutoSaver.Interval", 600);
 

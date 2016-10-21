@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.AccountStatus;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
@@ -24,17 +25,17 @@ import org.bukkit.entity.Player;
  * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * Created by creatorfromhell on 10/20/2016.
+ * Created by creatorfromhell on 10/21/2016.
  */
-public class AdminPinCommand extends TNECommand {
+public class AdminStatusCommand extends TNECommand {
 
-  public AdminPinCommand(TNE plugin) {
+  public AdminStatusCommand(TNE plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "pin";
+    return "status";
   }
 
   @Override
@@ -44,7 +45,7 @@ public class AdminPinCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.admin.pin";
+    return "tne.admin.status";
   }
 
   @Override
@@ -58,18 +59,20 @@ public class AdminPinCommand extends TNECommand {
       if(AccountUtils.exists(MISCUtils.getID(arguments[0]))) {
         Player target = MISCUtils.getPlayer(arguments[0]);
 
-        AccountUtils.getAccount(MISCUtils.getID(target)).setPin(arguments[1]);
+        String status = AccountStatus.fromName(arguments[1]).getName();
+
+        AccountUtils.getAccount(MISCUtils.getID(target)).setStatus(status);
 
         if(Bukkit.getOnlinePlayers().contains(target)) {
           String world = MISCUtils.getWorld(target);
-          Message m = new Message("Messages.Account.Reset");
-          m.addVariable("$pin", arguments[1]);
+          Message m = new Message("Messages.Account.StatusChange");
+          m.addVariable("$status", status);
           m.translate(world, target);
         }
 
-        Message m = new Message("Messages.Admin.ResetPin");
+        Message m = new Message("Messages.Admin.Status");
         m.addVariable("$player", arguments[0]);
-        m.addVariable("$pin", arguments[1]);
+        m.addVariable("$status", arguments[1]);
         m.translate("", sender);
         return true;
       }
@@ -85,7 +88,10 @@ public class AdminPinCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
-    return "/theneweconomy pin <username> <new pin> - Reset <username>'s pin.";
+  public String[] getHelpLines() {
+    return new String[]{
+        "/theneweconomy status <username> <status> - Set <username>'s account status.",
+        "<status> - The status to set this account to. Valid options: Normal, Locked, BalanceLocked, and BankLocked."
+    };
   }
 }

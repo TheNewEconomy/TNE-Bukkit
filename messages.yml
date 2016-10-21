@@ -75,6 +75,7 @@ Messages:
        Purge: <white>Successfully purged all economy accounts.
        PurgeWorld: <white>Successfully purged economy accounts in $world.
        ResetPin: <white>Successfully set pin for $player to $pin.
+       StatusChange: <white>Status for $player has been changed to <green>$status<white>.
 
     Account:
        Locked: <red>You can't do that with a locked account($player)!
@@ -82,6 +83,7 @@ Messages:
        Confirm: <yellow>You must use /pin confirm before accessing your money and/or bank.
        NoTransactions: <white>You have no transactions to display at this time.
        Reset: <white>Your pin has been reset to <green>$pin<white>.
+       StatusChange: <white>Your account's status has been changed to <green>$status<white>.
        
     Pin:
        Set: <white>Your pin has been set successfully.

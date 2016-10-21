@@ -55,13 +55,17 @@ public class Message {
 		variables.put(variable, replacement);
 	}
 	
-	private String replaceColours(String message) {
+	private String replaceColours(String message, boolean strip) {
 		Iterator<java.util.Map.Entry<String, String>> it = colours.entrySet().iterator();
 		
 		while(it.hasNext()) {
 			java.util.Map.Entry<String, String> entry = it.next();
-			message = message.replace(entry.getKey(), entry.getValue());
+			String replacement = (strip)? "" : entry.getValue();
+			message = message.replace(entry.getKey(), replacement);
 		}
+		if(strip) {
+		  return ChatColor.stripColor(message);
+    }
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
@@ -99,7 +103,8 @@ public class Message {
 					send = send.replace(entry.getKey(), entry.getValue());
 				}
 			}
-      sender.sendMessage(replaceColours(send));
+			Boolean strip = !(sender instanceof Player);
+      sender.sendMessage(replaceColours(send, strip));
 		}
 	}
 }
