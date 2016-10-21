@@ -17,6 +17,9 @@ Configurations
 Commands
 
 - Additions
+  - /theneweconomy pin <username> <new pin> - Reset <username>'s pin.
+  - /theneweconomy status
+    - /theneweconomy status <username> <status> - Set <username>'s account status.
   - /money history
     - /money history [page:#] [world:name/all] [type:type/all] - See a detailed break down of your transaction history.
 
