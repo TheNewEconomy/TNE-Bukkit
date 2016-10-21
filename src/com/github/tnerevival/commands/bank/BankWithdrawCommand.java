@@ -77,5 +77,4 @@ public class BankWithdrawCommand extends TNECommand {
 	public String getHelp() {
 		return "/bank withdraw <amount> [owner] - Withdraw <amount> from [owner]'s bank. Defaults to your bank.";
 	}
-	
 }

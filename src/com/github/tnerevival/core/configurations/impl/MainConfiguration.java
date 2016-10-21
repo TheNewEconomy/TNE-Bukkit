@@ -79,6 +79,9 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.Signs.Buy.Max", 10);
 
 		configurations.put("Core.Death.Lose", false);
+		configurations.put("Core.Death.Bank.Drop", 0);
+		configurations.put("Core.Death.Bank.IncludeEmpty", true);
+		configurations.put("Core.Death.Bank.PlayerOnly", true);
 
 		configurations.put("Core.Bank.Enabled", false);
 		configurations.put("Core.Bank.Sign", false);

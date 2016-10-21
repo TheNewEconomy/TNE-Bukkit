@@ -1,12 +1,15 @@
 package com.github.tnerevival.account;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Material;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Bank implements Serializable {
 	
@@ -27,6 +30,27 @@ public class Bank implements Serializable {
 		this.size = size;
 		this.gold = gold;
 	}
+
+	public SerializableItemStack getItem(int slot) {
+	  for(SerializableItemStack item : items) {
+	    if(item.getSlot().equals(slot)) {
+	      return item;
+      }
+    }
+    return null;
+  }
+
+  public void removeItem(int slot) {
+    Iterator<SerializableItemStack> i = items.iterator();
+
+    while(i.hasNext()) {
+      SerializableItemStack item = i.next();
+
+      if(item.getSlot().equals(slot)) {
+        i.remove();
+      }
+    }
+  }
 
 	/**
 	 * @return the items
@@ -85,7 +109,33 @@ public class Bank implements Serializable {
 	public void setGold(Double gold) {
 		this.gold = gold;
 	}
-	
+
+	private List<Integer> validSlots(String world) {
+	  List<Integer> valid = new ArrayList<>();
+
+    for(int i = 0; i < size; i++) {
+      if(getItem(i) != null || TNE.instance.api.getBoolean("Core.Death.Bank.IncludeEmpty", world, owner)) {
+        valid.add(i);
+      }
+    }
+    return valid;
+  }
+
+	public List<Integer> generateSlots(String world) {
+	  List<Integer> valid = validSlots(world);
+	  List<Integer> generated = new ArrayList<>();
+	  int remaining = TNE.instance.api.getInteger("Core.Death.Bank.Drop", world, owner);
+
+    if(valid.size() <= remaining) return valid;
+
+    for(int i = 0; i < remaining; i++) {
+      int gen = valid.get(ThreadLocalRandom.current().nextInt(0, valid.size()));
+      generated.add(gen);
+      valid.remove(gen);
+    }
+    return generated;
+  }
+
 	private String itemsToString() {
     StringBuilder builder = new StringBuilder();
 
