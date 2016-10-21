@@ -115,7 +115,6 @@ public class TNE extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
 		getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
-		getServer().getPluginManager().registerEvents(new PlotListener(this), this);
 		getServer().getPluginManager().registerEvents(new TNEListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 
