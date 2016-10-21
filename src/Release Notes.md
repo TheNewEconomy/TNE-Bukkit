@@ -15,7 +15,6 @@ Configurations
 - We now only save configurations on start/stop when they're modified.
 
 Commands
-
 - Additions
   - /theneweconomy pin <username> <new pin> - Reset <username>'s pin.
   - /theneweconomy status
@@ -32,3 +31,8 @@ Commands
 Messages
 - Now support multi-line messages via messages.yml
   - Simply place <newline> where you wish to start your next line
+  
+MISC
+- Added the ability to make players drop items from their bank on death.
+  - Items chosen are completely random
+  - It's also possible to include empty bank slots in the drop.
