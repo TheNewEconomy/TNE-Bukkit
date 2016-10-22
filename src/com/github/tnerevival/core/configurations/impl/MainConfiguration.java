@@ -24,16 +24,6 @@ public class MainConfiguration extends Configuration {
 		configurations.put("Core.AutoSaver.Enabled", true);
 		configurations.put("Core.AutoSaver.Interval", 600);
 
-		configurations.put("Core.Currency.Advanced", false);
-		configurations.put("Core.Currency.Decimal", ",");
-		configurations.put("Core.Currency.ItemCurrency", false);
-		configurations.put("Core.Currency.ItemMajor", "GOLD_INGOT");
-		configurations.put("Core.Currency.ItemMinor", "IRON_INGOT");
-		configurations.put("Core.Currency.MajorName.Single", "Dollar");
-		configurations.put("Core.Currency.MajorName.Plural", "Dollars");
-		configurations.put("Core.Currency.MinorName.Single", "Cent");
-		configurations.put("Core.Currency.MinorName.Plural", "Cents");
-
 		configurations.put("Core.Auctions.Enabled", true);
 		configurations.put("Core.Auctions.Cost", 10.00);
 		configurations.put("Core.Auctions.AllowWorld", false);

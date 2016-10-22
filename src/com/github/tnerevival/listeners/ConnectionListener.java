@@ -77,13 +77,15 @@ public class ConnectionListener implements Listener {
 
 		if(TNE.instance.api.getInteger("Core.Death.Bank.Drop", world, id) > 0) {
 		  if(!TNE.instance.api.getBoolean("Core.Death.Bank.PlayerOnly", world, id) || killed.getKiller() != null) {
-        Bank bank = BankUtils.getBank(id, world);
-        List<Integer> toDrop = bank.generateSlots(world);
-        for(Integer i : toDrop) {
-          if(bank.getItem(i) != null || !bank.getItem(i).toItemStack().getType().equals(Material.AIR)) {
-            ItemStack drop = bank.getItem(i).toItemStack();
-            event.getDrops().add(drop);
-            bank.removeItem(i);
+		    if(BankUtils.hasBank(id, world)) {
+          Bank bank = BankUtils.getBank(id, world);
+          List<Integer> toDrop = bank.generateSlots(world);
+          for (Integer i : toDrop) {
+            if (bank.getItem(i) != null || !bank.getItem(i).toItemStack().getType().equals(Material.AIR)) {
+              ItemStack drop = bank.getItem(i).toItemStack();
+              event.getDrops().add(drop);
+              bank.removeItem(i);
+            }
           }
         }
       }

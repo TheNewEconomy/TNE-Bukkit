@@ -72,6 +72,29 @@ Core:
     #All configurations relating to currency.
     Currency:
 
+        #The format to use when outputting this currency into chat.
+        #The variables you're able to use here.
+        #{symbol} - The currency's symbol
+        #{decimal} - The currency's decimal.
+        #{major} - A combination of the currency's major amount and name
+        #{minor} - A combination of the currency's minor amount and name
+        #{major.name} - The currency's major name.
+        #{minor.name} - The currency's minor name.
+        #{major.amount} - The currency's major amount.
+        #{minor.amount} - The currency's minor amount.
+        #{shorten=true} - Whether or not to shorten this currency's name.
+        #This will override the major and minor variables in the currency's format.
+        #Defaults to true.
+        #Example: {major} and {minor}{shorten=false}
+        Format: {symbol}{major}{decimal}{minor}{shorten=true}
+
+        #The conversion power of this currency to other currencies.
+        #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+        Conversion: 1.0
+
+        #The character to use as the symbol for this currency.
+        Symbol: $
+
         #The character to use as the decimal place holder.
         Decimal: .
 

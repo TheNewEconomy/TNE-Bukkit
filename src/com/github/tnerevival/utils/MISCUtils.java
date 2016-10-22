@@ -3,10 +3,7 @@ package com.github.tnerevival.utils;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -55,6 +52,15 @@ public class MISCUtils {
 			}
 		}
 		return TNE.instance.defaultWorld;
+	}
+
+	public static String getWorld(String world) {
+		if(MISCUtils.multiWorld()) {
+      if(MISCUtils.worldConfigExists("Worlds." + world + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".ShareAccounts")) {
+        return TNE.instance.worldConfigurations.getString("Worlds." + world + ".ShareWorld");
+      }
+		}
+		return world;
 	}
 	
 	public static String getWorld(Player player) {

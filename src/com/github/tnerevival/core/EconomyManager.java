@@ -28,6 +28,7 @@ public class EconomyManager {
 	public Map<SerializableLocation, TNESign> signs = new HashMap<>();
 
   public AuctionManager auctionManager = new AuctionManager();
+  public CurrencyManager currencyManager = new CurrencyManager();
   public TransactionManager transactions = new TransactionManager();
 	
 	public void purge(String world) {
