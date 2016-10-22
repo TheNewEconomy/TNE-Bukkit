@@ -1,5 +1,7 @@
 Anything with {} are required arguments, () are optional.
 
+##Admin
+
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.*               | Gives access to ALL The New Economy commands listed below | |
@@ -15,6 +17,11 @@ Anything with {} are required arguments, () are optional.
 | tne.admin.purge     | Remove all accounts that have the default balance                                     | /tne purge
 | tne.admin.reload    | Reload the TNE configurations or reload the specified file                            | /tne reload {all/config/mobs/worlds}
 | tne.admin.save      | Force saves all TNE data                                                              | /tne save
+
+##Auction
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.auction.start   | Start a new auction                                                                   | /tne start {configuration}
 | tne.auction.bid     | Place a bid on an auction                                                             | /auction bid {bid} {lot}
 | tne.auction.claim   | Claim an auction reward                                                               | /auction claim {lot}
@@ -22,6 +29,11 @@ Anything with {} are required arguments, () are optional.
 | tne.auction.info    | View auction information                                                              | /auction info {lot}
 | tne.auction.list    | View a list of auctions                                                               | /auction list {global/world} {page}
 | tne.auction.end     | Force an end to any auctions                                                          | /auction end {winner} {lot}
+
+##Bank
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.bank.*          | Gives access to all Bank commands | |
 | tne.bank            | | |
 | tne.bank.help       | General bank help                                                                     | /bank help
@@ -34,19 +46,39 @@ Anything with {} are required arguments, () are optional.
 | tne.bank.use        | | |
 | tne.bank.view       | View your bank                                                                        | /bank view
 | tne.bank.withdraw   | Withdraw the specified amout of money from your bank                                  | /bank withdraw {amount}
+
+##Bypass
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.bypass.*        | Bypasses all costs | |
 | tne.bypass          | | |
 | tne.bypass.bank     | Bypass all bank costs | |
 | tne.bypass.inventory| Bypass all inventory costs | |
 | tne.bypass.nametag  | Bypass all nametag costs | |
 | tne.bypass.world    | Bypass all world costs | |
+
+##Credit
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.credit.*        | Gives access to all Credit commands | |
 | tne.credit          | | |
 | tne.credit.commands | View all command credits you have accumulated                                         | /credit commands
 | tne.credit.inventory| View time credits for {inventory} in every world                                      | /credit inventory {inventory}
+
+##Lottery
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.lottery.*       | Soon™ | |
 | tne.lottery.create  | Soon™ | |
 | tne.lottery.view    | Soon™ | |
+
+##Money
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.money.*         | Gives access to all Money commands | |
 | tne.money           | | |
 | tne.money.help      | General money help                                                                    | /money help
@@ -55,14 +87,29 @@ Anything with {} are required arguments, () are optional.
 | tne.money.set       | Set {player}'s balance to {amount}                                                    | /money set {player} {amount} (world)
 | tne.money.take      | Make some of {player}'s money vanish into thin air                                    | /money take {player} {amount}
 | tne.money.pay       | Pay a player money from your balance                                                  | /money pay {player} {amount}
+
+##Package
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.package.*       | Give access to all Package commands | |
 | tne.package         | | |
 | tne.package.list    | List all packages for the specified inventory {type}                                  | /package list {type}
 | tne.package.buy     | Buy {package} for inventory {type}                                                    | /package buy {type} {package}
+
+##Pin
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.pin.*           | Gives access to all Pin commands | |
 | tne.pin             | | |
 | tne.pin.set         | Set your pin to {pin}'s value. Old pin is required if you have one set. Pins are case-sensitive   | /pin set {pin} {confirm pin} (old pin)
 | tne.pin.confirm     | Cofirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin}
+
+##Shop
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.shop.*          | Gives access to all Shop commands | |
 | tne.shop            | | |
 | tne.shop.admin      | | |
@@ -76,6 +123,11 @@ Anything with {} are required arguments, () are optional.
 | tne.shop.stock      | Add/Remove stock of an item to your shop for (gold) and/or (trade). Leave out item name to use currently held item  | /shop stock {shop} {add/remove} (quantity:#) (amount:#) (item name(:damage)) (type:(sell/buy)) (gold:#)
 | tne.shop.toggle     | Toggle this shop's visibility. Only whitelisted players can buy from hidden shops                       | /shop toggle {name}
 | tne.shop.whitelist  | Add/remove the specified player to the shop's whitelist                                                 | /shop whitelist {name} {player}
+
+##Placement and use of all signs
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.place.*         | Gives access to creating all sign types | |
 | tne.place           | | |
 | tne.place.bank      | Can create Bank signs | |
@@ -88,3 +140,194 @@ Anything with {} are required arguments, () are optional.
 | tne.use.buy         | Can use Buy signs | |
 | tne.use.sell        | Can use Sell signs | |
 | tne.use.shop        | Can use Shop signs | |
+
+
+##Parent permissions
+
+This section is a complete list of all Parent and Child permissions. If you are unsure how this works, let me try to explain.
+
+`parent.permission` = This permission will give you every permission listed below.
+- `child.permission.one` = This permission does not need to be given to anyone with the parent permission
+- `child.permission.two` = This permission does not need to be given to anyone with the parent permission
+
+Use these in place of typing out each individual permission node.
+
+| Parent | Children |
+|-----|----|
+| tne.*:| |
+| | tne.admin
+| | tne.admin.backup
+| | tne.admin.balance
+| | tne.admin.bank
+| | tne.admin.create
+| | tne.admin.delete
+| | tne.admin.help
+| | tne.admin.purge
+| | tne.admin.reload
+| | tne.admin.save
+| | tne.bank
+| | tne.bank.help
+| | tne.bank.add
+| | tne.bank.balance
+| | tne.bank.buy
+| | tne.bank.deposit
+| | tne.bank.price
+| | tne.bank.remove
+| | tne.bank.use
+| | tne.bank.withdraw
+| | tne.bypass
+| | tne.bypass.bank
+| | tne.bypass.inventory
+| | tne.bypass.nametag
+| | tne.bypass.world
+| | tne.credit
+| | tne.credit.commands
+| | tne.credit.inventory
+| | tne.money
+| | tne.money.help
+| | tne.money.balance
+| | tne.money.give
+| | tne.money.set
+| | tne.money.take
+| | tne.money.pay
+| | tne.package
+| | tne.package.list
+| | tne.package.buy
+| | tne.pin
+| | tne.pin.set
+| | tne.pin.confirm
+| | tne.shop
+| | tne.shop.admin
+| | tne.shop.add
+| | tne.shop.blacklist
+| | tne.shop.browse
+| | tne.shop.close
+| | tne.shop.create
+| | tne.shop.remove
+| | tne.shop.share
+| | tne.shop.stock
+| | tne.shop.toggle
+| | tne.shop.whitelist
+| | tne.place
+| | tne.place.bank
+| | tne.place.buy
+| | tne.place.sell
+| | tne.place.shop
+| | tne.use
+| | tne.use.bank
+| | tne.use.buy
+| | tne.use.sell
+| | tne.use.shop
+
+| Parent | Children |
+|-----|----|
+| tne.admin.* | |
+| | tne.admin
+| | tne.admin.backup
+| | tne.admin.balance
+| | tne.admin.bank
+| | tne.admin.create
+| | tne.admin.delete
+| | tne.admin.help
+| | tne.admin.purge
+| | tne.admin.reload
+| | tne.admin.save
+| | tne.bypass.bank
+| | tne.bypass.inventory
+| | tne.bypass.nametag
+| | tne.bypass.world
+| | tne.shop.admin
+
+| Parent | Children |
+|-----|----|
+| tne.bank.* | |
+| | tne.bank
+| | tne.bank.help
+| | tne.bank.add
+| | tne.bank.balance
+| | tne.bank.buy
+| | tne.bank.deposit
+| | tne.bank.price
+| | tne.bank.remove
+| | tne.bank.use
+| | tne.bank.withdraw
+
+| Parent | Children |
+|-----|----|
+| tne.bypass.* | |
+| | tne.bypass
+| | tne.bypass.bank
+| | tne.bypass.inventory
+| | tne.bypass.nametag
+| | tne.bypass.world
+
+| Parent | Children |
+|-----|----|
+| tne.credit.* | |
+| | tne.credit
+| | tne.credit.commands
+| | tne.credit.inventory
+
+| Parent | Children |
+|-----|----|
+| tne.lottery.* | |
+| | tne.lottery.create
+| | tne.lottery.view
+
+| Parent | Children |
+|-----|----|
+| tne.money.* | |
+| | tne.money
+| | tne.money.help
+| | tne.money.balance
+| | tne.money.give
+| | tne.money.set
+| | tne.money.take
+| | tne.money.pay
+
+| Parent | Children |
+|-----|----|
+| tne.package.* | |
+| | tne.package
+| | tne.package.list
+| | tne.package.buy
+
+| Parent | Children |
+|-----|----|
+| tne.pin.* | |
+| | tne.pin
+| | tne.pin.set
+| | tne.pin.confirm
+
+| Parent | Children |
+|-----|----|
+| tne.shop.* | |
+| | tne.shop
+| | tne.shop.add
+| | tne.shop.blacklist
+| | tne.shop.browse
+| | tne.shop.close
+| | tne.shop.create
+| | tne.shop.remove
+| | tne.shop.share
+| | tne.shop.stock
+| | tne.shop.toggle
+| | tne.shop.whitelist
+
+| Parent | Children |
+|-----|----|
+| tne.place.* | |
+| | tne.place
+| | tne.place.bank
+| | tne.place.buy
+| | tne.place.sell
+| | tne.place.shop
+
+| Parent | Children |
+|-----|----|
+| tne.use.* | |
+| | tne.use
+| | tne.use.bank
+| | tne.use.buy
+| | tne.use.sell
+| | tne.use.shop
