@@ -27,27 +27,27 @@ public class CommandManager {
   public Map<String[], TNECommand> commands = new HashMap<>();
   private Field commandMap = null;
   private Field knownCommands = null;
-	
-	public CommandManager() {
-		commands.put(new String[] { "theneweconomy", "tne" }, new AdminCommand(TNE.instance));
-		commands.put(new String[] { "auction", "sauction" }, new AuctionCommand(TNE.instance));
+
+  public CommandManager() {
+    commands.put(new String[] { "theneweconomy", "tne" }, new AdminCommand(TNE.instance));
+    commands.put(new String[] { "auction", "sauction" }, new AuctionCommand(TNE.instance));
     commands.put(new String[] { "bank" }, new BankCommand(TNE.instance));
     commands.put(new String[] { "credit" }, new CreditCommand(TNE.instance));
-		commands.put(new String[] { "money", "bal", "balance" }, new MoneyCommand(TNE.instance));
-		commands.put(new String[] { "package" }, new PackageCommand(TNE.instance));
-		commands.put(new String[] { "pin" }, new PinCommand(TNE.instance));
-		commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance));
+    commands.put(new String[] { "money", "bal", "balance" }, new MoneyCommand(TNE.instance));
+    commands.put(new String[] { "package" }, new PackageCommand(TNE.instance));
+    commands.put(new String[] { "pin" }, new PinCommand(TNE.instance));
+    commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance));
     registerCommands();
-	}
+  }
 
-	private void registerCommands() {
+  private void registerCommands() {
     try {
       commandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
       commandMap.setAccessible(true);
       knownCommands = SimpleCommandMap.class.getDeclaredField("knownCommands");
       knownCommands.setAccessible(true);
     } catch (Exception e) {
-			/* do nothing */
+      /* do nothing */
     }
 
     if(commandMap != null && knownCommands != null) {
@@ -100,22 +100,22 @@ public class CommandManager {
     return false;
   }
 
-	public TNECommand Find(String name) {
-		for(TNECommand c : commands.values()) {
-		  if(name.equalsIgnoreCase("pay") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
-		  if(name.equalsIgnoreCase("balance") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
-		  if(name.equalsIgnoreCase("bal") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
-			if(c.getName().equalsIgnoreCase(name)) {
-				return c;
-			}
-		}
-		for(TNECommand c : commands.values()) {
-			for(String s : c.getAliases()) {
-				if(s.equalsIgnoreCase(name)) {
-					return c;
-				}
-			}
-		}
-		return null;
-	}
+  public TNECommand Find(String name) {
+    for(TNECommand c : commands.values()) {
+      if(name.equalsIgnoreCase("pay") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
+      if(name.equalsIgnoreCase("balance") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
+      if(name.equalsIgnoreCase("bal") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
+      if(c.getName().equalsIgnoreCase(name)) {
+        return c;
+      }
+    }
+    for(TNECommand c : commands.values()) {
+      for(String s : c.getAliases()) {
+        if(s.equalsIgnoreCase(name)) {
+          return c;
+        }
+      }
+    }
+    return null;
+  }
 }

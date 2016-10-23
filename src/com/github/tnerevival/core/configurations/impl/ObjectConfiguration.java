@@ -11,12 +11,12 @@ import org.bukkit.event.inventory.InventoryType;
 import java.util.*;
 
 public class ObjectConfiguration extends Configuration {
-	
-	private Map<String, TNECommandObject> commands = new HashMap<>();
-	private Map<String, TNEInventoryObject> inventories = new HashMap<>();
-	
-	@Override
-	public void load(FileConfiguration configurationFile) {
+
+  private Map<String, TNECommandObject> commands = new HashMap<>();
+  private Map<String, TNEInventoryObject> inventories = new HashMap<>();
+
+  @Override
+  public void load(FileConfiguration configurationFile) {
     Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
     //Load Objects
@@ -32,11 +32,11 @@ public class ObjectConfiguration extends Configuration {
       loadCommands(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier);
       loadInventories(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier);
     }
-		super.load(configurationFile);
-	}
+    super.load(configurationFile);
+  }
 
-	private void loadCommands(FileConfiguration configuration, String baseNode, String identifier) {
-	  String base = baseNode + "Objects.Commands";
+  private void loadCommands(FileConfiguration configuration, String baseNode, String identifier) {
+    String base = baseNode + "Objects.Commands";
 
     if(configuration.contains(base)) {
       Boolean zero = !configuration.contains(base + ".ZeroMessage") || configuration.getBoolean(base + ".ZeroMessage");
@@ -100,73 +100,73 @@ public class ObjectConfiguration extends Configuration {
       }
     }
   }
-	
-	public String inventoryType(InventoryType type) {
-		switch(type) {
-			case ANVIL:
-				return "Anvil";
-			case BEACON:
-				return "Beacon";
-			case BREWING:
-				return "BrewStand";
-			case CHEST:
-				return "Chest";
-			case CRAFTING:
-				return "Crafting";
-			case CREATIVE:
-				return "CreativeInventory";
-			case DISPENSER:
-				return "Dispenser";
-			case DROPPER:
-				return "Dropper";
-			case ENCHANTING:
-				return "EnchantmentTable";
-			case ENDER_CHEST:
-				return "EnderChest";
-			case FURNACE:
-				return "Furnace";
-			case HOPPER:
-				return "Hopper";
-			case MERCHANT:
-				return "Villager";
-			case PLAYER:
-				return "SurvivalInventory";
-			case WORKBENCH:
-				return "Workbench";
-			default:
-				return "Chest";
-		}
-	}
-	
-	public List<TNEAccessPackage> getInventoryPackages(String type, String world, String player) {
-	  List<TNEAccessPackage> packages = new ArrayList<>();
-		if(inventories.containsKey(type)) {
-			packages.addAll(inventories.get(type).getPackages());
-		}
 
-		if(inventories.containsKey(world + ":" + type)) {
-		  packages.addAll(inventories.get(world + ":" + type).getPackages());
+  public String inventoryType(InventoryType type) {
+    switch(type) {
+      case ANVIL:
+        return "Anvil";
+      case BEACON:
+        return "Beacon";
+      case BREWING:
+        return "BrewStand";
+      case CHEST:
+        return "Chest";
+      case CRAFTING:
+        return "Crafting";
+      case CREATIVE:
+        return "CreativeInventory";
+      case DISPENSER:
+        return "Dispenser";
+      case DROPPER:
+        return "Dropper";
+      case ENCHANTING:
+        return "EnchantmentTable";
+      case ENDER_CHEST:
+        return "EnderChest";
+      case FURNACE:
+        return "Furnace";
+      case HOPPER:
+        return "Hopper";
+      case MERCHANT:
+        return "Villager";
+      case PLAYER:
+        return "SurvivalInventory";
+      case WORKBENCH:
+        return "Workbench";
+      default:
+        return "Chest";
+    }
+  }
+
+  public List<TNEAccessPackage> getInventoryPackages(String type, String world, String player) {
+    List<TNEAccessPackage> packages = new ArrayList<>();
+    if(inventories.containsKey(type)) {
+      packages.addAll(inventories.get(type).getPackages());
+    }
+
+    if(inventories.containsKey(world + ":" + type)) {
+      packages.addAll(inventories.get(world + ":" + type).getPackages());
     }
 
     if(inventories.containsKey(player + ":" + type)) {
       packages.addAll(inventories.get(player + ":" + type).getPackages());
     }
 
-		return packages;
-	}
-	
-	public boolean isTimed(InventoryType type, String world, String player) {
-	  String invType = inventoryType(type);
-	  if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).isTimed();
-	  if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).isTimed();
-		return containsInventory(invType) && inventories.get(invType).isTimed();
-	}
-
-	private boolean containsInventory(String type) {
-	  return inventories.containsKey(type);
+    return packages;
   }
-	
-	public boolean inventoryEnabled(InventoryType type, String world, String player) {
+
+  public boolean isTimed(InventoryType type, String world, String player) {
+    String invType = inventoryType(type);
+    if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).isTimed();
+    if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).isTimed();
+    return containsInventory(invType) && inventories.get(invType).isTimed();
+  }
+
+  private boolean containsInventory(String type) {
+    return inventories.containsKey(type);
+  }
+
+  public boolean inventoryEnabled(InventoryType type, String world, String player) {
     String invType = inventoryType(type);
     if(configurations.containsKey("Players." + player + ".Objects.Inventories.Enabled"))
       return (Boolean)configurations.get("Players." + player + ".Objects.Inventories.Enabled");
@@ -178,20 +178,20 @@ public class ObjectConfiguration extends Configuration {
     if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).isEnabled();
     if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).isEnabled();
     return containsInventory(invType) && inventories.get(invType).isEnabled();
-	}
-	
-	public double getInventoryCost(InventoryType type, String world, String player) {
-	  if(inventoryEnabled(type, world, player)) {
+  }
+
+  public double getInventoryCost(InventoryType type, String world, String player) {
+    if(inventoryEnabled(type, world, player)) {
       String invType = inventoryType(type);
       if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).getCost();
       if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).getCost();
       return (containsInventory(invType))? inventories.get(invType).getCost() : 0.0;
     }
-		return 0.0;
-	}
-	
-	public double getCommandCost(String command, String[] arguments, String world, String player) {
-	  TNECommandObject commandObject = commands.get(command);
+    return 0.0;
+  }
+
+  public double getCommandCost(String command, String[] arguments, String world, String player) {
+    TNECommandObject commandObject = commands.get(command);
     if(commands.containsKey(world + ":" + command)) {
       commandObject = commands.get(world + ":" + command);
     }
@@ -200,15 +200,15 @@ public class ObjectConfiguration extends Configuration {
       commandObject = commands.get(player + ":" + command);
     }
 
-		if(commandObject != null) {
-			if(arguments.length > 0) {
-				TNECommandObject sub = commandObject.findSub(arguments[0]);
-				if(sub != null) {
-					return sub.getCost();
-				}
-			}
-			return commandObject.getCost();
-		}
-		return 0;
-	}
+    if(commandObject != null) {
+      if(arguments.length > 0) {
+        TNECommandObject sub = commandObject.findSub(arguments[0]);
+        if(sub != null) {
+          return sub.getCost();
+        }
+      }
+      return commandObject.getCost();
+    }
+    return 0;
+  }
 }

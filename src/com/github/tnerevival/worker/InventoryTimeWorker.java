@@ -15,17 +15,17 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class InventoryTimeWorker extends BukkitRunnable {
-	
-	private TNE plugin;
-	
-	public InventoryTimeWorker(TNE plugin) {
-		this.plugin = plugin;
-	}
 
-	@Override
-	public void run() {
+  private TNE plugin;
 
-	  Iterator<Entry<UUID, Integer>> it = plugin.inventoryManager.accessing.entrySet().iterator();
+  public InventoryTimeWorker(TNE plugin) {
+    this.plugin = plugin;
+  }
+
+  @Override
+  public void run() {
+
+    Iterator<Entry<UUID, Integer>> it = plugin.inventoryManager.accessing.entrySet().iterator();
     while(it.hasNext()) {
       Entry<UUID, Integer> entry = it.next();
 
@@ -62,5 +62,5 @@ public class InventoryTimeWorker extends BukkitRunnable {
         }
       }
     }
-	}
+  }
 }

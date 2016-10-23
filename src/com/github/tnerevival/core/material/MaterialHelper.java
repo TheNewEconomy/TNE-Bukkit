@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaterialHelper {
-	
-	private static List<MaterialNameHelper> validNames = new ArrayList<>();
-	
-	static {
+
+  private static List<MaterialNameHelper> validNames = new ArrayList<>();
+
+  static {
     validNames.add(new MaterialNameHelper(Material.AIR, new String[0]));
     validNames.add(new MaterialNameHelper(Material.STONE, new String[0]));
     validNames.add(new MaterialNameHelper(Material.GRASS, new String[0]));
@@ -434,19 +434,19 @@ public class MaterialHelper {
     validNames.add(new MaterialNameHelper(Material.RECORD_10, new String[0]));
     validNames.add(new MaterialNameHelper(Material.RECORD_11, new String[0]));
     validNames.add(new MaterialNameHelper(Material.RECORD_12, new String[0]));
-	}
-	
-	
-	public static Material getMaterial(String search) {
-		if(!Material.getMaterial(search.toUpperCase()).equals(Material.AIR)) {
-		  return Material.getMaterial(search.toUpperCase());
+  }
+
+
+  public static Material getMaterial(String search) {
+    if(!Material.getMaterial(search.toUpperCase()).equals(Material.AIR)) {
+      return Material.getMaterial(search.toUpperCase());
     }
 
-		for(MaterialNameHelper helper : validNames) {
-			if(helper.validName(search)) {
-				return helper.material;
-			}
-		}
-		return Material.AIR;
-	}
+    for(MaterialNameHelper helper : validNames) {
+      if(helper.validName(search)) {
+        return helper.material;
+      }
+    }
+    return Material.AIR;
+  }
 }

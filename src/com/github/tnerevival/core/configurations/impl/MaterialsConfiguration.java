@@ -10,13 +10,13 @@ import java.util.Set;
 
 public class MaterialsConfiguration extends Configuration {
 
-	private HashMap<String, MaterialObject> materials = new HashMap<>();
-	
-	@Override
-	public void load(FileConfiguration configurationFile) {
+  private HashMap<String, MaterialObject> materials = new HashMap<>();
+
+  @Override
+  public void load(FileConfiguration configurationFile) {
     Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
-		//Load Materials
+    //Load Materials
     loadMaterials(configurationFile, "", null, true);
     loadMaterials(configurationFile, "", null, false);
     for(String identifier : identifiers) {
@@ -29,13 +29,13 @@ public class MaterialsConfiguration extends Configuration {
       loadMaterials(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier, true);
       loadMaterials(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier, false);
     }
-		super.load(configurationFile);
-	}
+    super.load(configurationFile);
+  }
 
-	private void loadMaterials(FileConfiguration configuration, String baseNode, String identifier, boolean item) {
-	  String base = baseNode + ((item)? "Materials.Items" : "Materials.Blocks");
-	  if(configuration.contains(base)) {
-	    Boolean zero = (configuration.contains(base + ".ZeroMessage"))? configuration.getBoolean(base + ".ZeroMessage") : true;
+  private void loadMaterials(FileConfiguration configuration, String baseNode, String identifier, boolean item) {
+    String base = baseNode + ((item)? "Materials.Items" : "Materials.Blocks");
+    if(configuration.contains(base)) {
+      Boolean zero = (configuration.contains(base + ".ZeroMessage"))? configuration.getBoolean(base + ".ZeroMessage") : true;
       configurations.put(base + ".ZeroMessage", zero);
 
       Set<String> materialNames = configuration.getConfigurationSection(base).getKeys(false);
@@ -76,9 +76,9 @@ public class MaterialsConfiguration extends Configuration {
            materials.containsKey(name);
   }
 
-	public MaterialObject getMaterial(String name, String world, String player) {
-	  if(materials.containsKey(player + ":" + name)) return materials.get(player + ":" + name);
-	  if(materials.containsKey(world + ":" + name)) return materials.get(world + ":" + name);
-	  return materials.get(name);
+  public MaterialObject getMaterial(String name, String world, String player) {
+    if(materials.containsKey(player + ":" + name)) return materials.get(player + ":" + name);
+    if(materials.containsKey(world + ":" + name)) return materials.get(world + ":" + name);
+    return materials.get(name);
   }
 }

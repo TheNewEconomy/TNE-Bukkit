@@ -12,39 +12,39 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class EconomyManager {
-	
-	/**
-	 * A HashMap holding all accounts for the economy.
-	 * Format: Player UUID, Account Class Instance
-	 */
-	public Map<UUID, Account> accounts = new HashMap<>();
 
-	public Map<String, UUID> ecoIDs = new HashMap<>();
-	
-	public  Map<String, Shop> shops = new HashMap<>();
-	
-	public List<UUID> confirmed = new ArrayList<>();
+  /**
+   * A HashMap holding all accounts for the economy.
+   * Format: Player UUID, Account Class Instance
+   */
+  public Map<UUID, Account> accounts = new HashMap<>();
 
-	public Map<SerializableLocation, TNESign> signs = new HashMap<>();
+  public Map<String, UUID> ecoIDs = new HashMap<>();
+
+  public  Map<String, Shop> shops = new HashMap<>();
+
+  public List<UUID> confirmed = new ArrayList<>();
+
+  public Map<SerializableLocation, TNESign> signs = new HashMap<>();
 
   public AuctionManager auctionManager = new AuctionManager();
   public CurrencyManager currencyManager = new CurrencyManager();
   public TransactionManager transactions = new TransactionManager();
-	
-	public void purge(String world) {
-	  Iterator<Account> it = accounts.values().iterator();
-	  while(it.hasNext()) {
-	    Account acc = it.next();
-	    
-	    if(acc.getBalances().containsKey(world) && acc.getBalance(world).equals(AccountUtils.getInitialBalance(world))) {
+
+  public void purge(String world) {
+    Iterator<Account> it = accounts.values().iterator();
+    while(it.hasNext()) {
+      Account acc = it.next();
+
+      if(acc.getBalances().containsKey(world) && acc.getBalance(world).equals(AccountUtils.getInitialBalance(world))) {
         deleteAccount(acc.getUid());
-	      it.remove();
-	      ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
-	    }
-	  }
-	}
-	
-	public void purgeAll() {
+        it.remove();
+        ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
+      }
+    }
+  }
+
+  public void purgeAll() {
     Iterator<Account> it = accounts.values().iterator();
     while(it.hasNext()) {
       Account acc = it.next();
@@ -61,10 +61,10 @@ public class EconomyManager {
         ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
       }
     }
-	}
+  }
 
-	public void deleteAccount(UUID id) {
-	  TNE.instance.saveManager.deleteAccount(id);
+  public void deleteAccount(UUID id) {
+    TNE.instance.saveManager.deleteAccount(id);
   }
 
   public void deleteShop(String name, String world) {
@@ -72,16 +72,16 @@ public class EconomyManager {
     TNE.instance.saveManager.deleteShop(name, world);
   }
 
-	public boolean enabled(UUID id, String world) {
-	  return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
+  public boolean enabled(UUID id, String world) {
+    return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
   }
 
-	public boolean confirmed(UUID id, String world) {
-	  Boolean enabled = TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
+  public boolean confirmed(UUID id, String world) {
+    Boolean enabled = TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
     Boolean force = TNE.instance.api.getBoolean("Core.Pins.Force", world, id);
 
     if(!enabled) {
-    	Player p = MISCUtils.getPlayer(id);
+      Player p = MISCUtils.getPlayer(id);
       new Message("Messages.Money.NoPins").translate(MISCUtils.getWorld(p), p);
       return true;
     }

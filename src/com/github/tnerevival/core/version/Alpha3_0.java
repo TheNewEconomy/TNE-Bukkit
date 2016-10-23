@@ -27,22 +27,22 @@ import java.util.UUID;
 
 public class Alpha3_0 extends Version {
 
-	@Override
-	public double versionNumber() {
-		return 3.3;
-	}
+  @Override
+  public double versionNumber() {
+    return 3.3;
+  }
 
-	@Override
-	public void update(double version, String type) {
-	  if(version == 3.0 || version == 3.1 || version == 3.2) return;
-		String table = prefix + "_ECOIDS";
-		if(type.equalsIgnoreCase("mysql")) {
-			db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
-			
-			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-					   "`username` VARCHAR(20)," +
-					   "`uuid` VARCHAR(36) UNIQUE" +
-					   ");");
+  @Override
+  public void update(double version, String type) {
+    if(version == 3.0 || version == 3.1 || version == 3.2) return;
+    String table = prefix + "_ECOIDS";
+    if(type.equalsIgnoreCase("mysql")) {
+      db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
+
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+             "`username` VARCHAR(20)," +
+             "`uuid` VARCHAR(36) UNIQUE" +
+             ");");
 
       table = prefix + "_SHOPS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -75,11 +75,11 @@ public class Alpha3_0 extends Version {
           "`sign_location` LONGTEXT NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
-		}
-	}
+    }
+  }
 
-	@Override
-	public void loadFlat(File file) {
+  @Override
+  public void loadFlat(File file) {
     db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
     FlatFileConnection connection = (FlatFileConnection)db.connection();
     Section accounts = null;
@@ -180,10 +180,10 @@ public class Alpha3_0 extends Version {
 
       TNE.instance.manager.signs.put(sign.getLocation(), sign);
     }
-	}
+  }
 
-	@Override
-	public void saveFlat(File file) {
+  @Override
+  public void saveFlat(File file) {
     Iterator<java.util.Map.Entry<UUID, Account>> accIT = TNE.instance.manager.accounts.entrySet().iterator();
 
     Section accounts = new Section("accounts");
@@ -297,10 +297,10 @@ public class Alpha3_0 extends Version {
     } catch (IOException e) {
       e.printStackTrace();
     }
-	}
+  }
 
-	@Override
-	public void loadMySQL() {
+  @Override
+  public void loadMySQL() {
 
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
 
@@ -360,10 +360,10 @@ public class Alpha3_0 extends Version {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-	}
+  }
 
-	@Override
-	public void saveMySQL() {
+  @Override
+  public void saveMySQL() {
     String table = prefix + "_INFO";
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
     mysql().executePreparedUpdate("Update " + table + " SET version = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()) });
@@ -475,20 +475,20 @@ public class Alpha3_0 extends Version {
           });
     }
     mysql().close();
-	}
+  }
 
-	@Override
-	public void loadSQLite() {
-		loadH2();
-	}
+  @Override
+  public void loadSQLite() {
+    loadH2();
+  }
 
-	@Override
-	public void saveSQLite() {
-		saveH2();
-	}
+  @Override
+  public void saveSQLite() {
+    saveH2();
+  }
 
-	@Override
-	public void loadH2() {
+  @Override
+  public void loadH2() {
     db = new H2(h2File, mysqlUser, mysqlPassword);
 
     String table = prefix + "_USERS";
@@ -548,10 +548,10 @@ public class Alpha3_0 extends Version {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-	}
+  }
 
-	@Override
-	public void saveH2() {
+  @Override
+  public void saveH2() {
     String table = prefix + "_INFO";
     db = new H2(h2File, mysqlUser, mysqlPassword);
 
@@ -663,20 +663,20 @@ public class Alpha3_0 extends Version {
           });
     }
     h2().close();
-	}
+  }
 
-	@Override
-	public void createTables(String type) {
-		String table = prefix + "_INFO";
-		
-		if(type.equalsIgnoreCase("mysql")) {
-			db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
-			
-			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-					   "`id` INTEGER NOT NULL," +
-					   "`version` VARCHAR(10)" +
-					   ");");
-			mysql().executeUpdate("INSERT INTO " + table + " (id, version) VALUES(1, " + versionNumber() + ");");
+  @Override
+  public void createTables(String type) {
+    String table = prefix + "_INFO";
+
+    if(type.equalsIgnoreCase("mysql")) {
+      db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
+
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+             "`id` INTEGER NOT NULL," +
+             "`version` VARCHAR(10)" +
+             ");");
+      mysql().executeUpdate("INSERT INTO " + table + " (id, version) VALUES(1, " + versionNumber() + ");");
 
       table = prefix + "_ECOIDS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
@@ -709,14 +709,14 @@ public class Alpha3_0 extends Version {
           "`shop_shares` LONGTEXT," +
           "PRIMARY KEY(shop_name, shop_world)" +
           ");");
-			
-			table = prefix + "_BANKS";
-			mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+
+      table = prefix + "_BANKS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
-					"`world` VARCHAR(50) NOT NULL," +
-					"`bank` LONGTEXT," +
+          "`world` VARCHAR(50) NOT NULL," +
+          "`bank` LONGTEXT," +
           "PRIMARY KEY(uuid, world)" +
-					");");
+          ");");
 
       table = prefix + "_SIGNS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -725,18 +725,18 @@ public class Alpha3_0 extends Version {
           "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
                    ");");
-			mysql().close();
-		} else {
-			File h2DB = new File(h2File);
-			if(!h2DB.exists()) {
-				try {
+      mysql().close();
+    } else {
+      File h2DB = new File(h2File);
+      if(!h2DB.exists()) {
+        try {
           h2DB.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			db = new H2(h2File, mysqlUser, mysqlPassword);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+      db = new H2(h2File, mysqlUser, mysqlPassword);
 
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`id` INTEGER NOT NULL," +
@@ -790,7 +790,7 @@ public class Alpha3_0 extends Version {
           "`sign_meta` LONGTEXT" +
           ");");
       h2().close();
-		}
-	}
+    }
+  }
 
 }

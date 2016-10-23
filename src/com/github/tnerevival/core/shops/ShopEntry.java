@@ -7,15 +7,15 @@ import org.bukkit.Material;
 import java.io.Serializable;
 
 public class ShopEntry implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	private SerializableItemStack item = null;
+  private static final long serialVersionUID = 1L;
+
+  private SerializableItemStack item = null;
   private boolean buy = true;
-	private boolean unlimited = false;
-	private int stock = 0;
+  private boolean unlimited = false;
+  private int stock = 0;
   private int maxstock = 0;
-	private double cost = 0.0;
-	private SerializableItemStack trade = null;
+  private double cost = 0.0;
+  private SerializableItemStack trade = null;
 
   public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy) {
     this.item = item;
@@ -31,23 +31,23 @@ public class ShopEntry implements Serializable {
     this.buy = buy;
     this.unlimited = unlimited;
   }
-	
-	public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, boolean unlimited, SerializableItemStack trade) {
-		this.item = item;
-		this.cost = cost;
+
+  public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, boolean unlimited, SerializableItemStack trade) {
+    this.item = item;
+    this.cost = cost;
     this.stock = stock;
     this.buy = buy;
     this.unlimited = unlimited;
     this.trade = trade;
-	}
+  }
 
-	public SerializableItemStack getItem() {
-		return item;
-	}
+  public SerializableItemStack getItem() {
+    return item;
+  }
 
-	public void setItem(SerializableItemStack item) {
-		this.item = item;
-	}
+  public void setItem(SerializableItemStack item) {
+    this.item = item;
+  }
 
   public boolean isBuy() {
     return buy;
@@ -66,7 +66,7 @@ public class ShopEntry implements Serializable {
   }
 
   public int getStock() {
-	  return this.stock;
+    return this.stock;
   }
 
   public void setStock(int stock) {
@@ -82,24 +82,24 @@ public class ShopEntry implements Serializable {
   }
 
   public double getCost() {
-		return cost;
-	}
+    return cost;
+  }
 
-	public void setCost(double cost) {
-		this.cost = cost;
-	}
+  public void setCost(double cost) {
+    this.cost = cost;
+  }
 
-	public SerializableItemStack getTrade() {
-		return trade;
-	}
+  public SerializableItemStack getTrade() {
+    return trade;
+  }
 
-	public void setTrade(SerializableItemStack trade) {
-		this.trade = trade;
-	}
+  public void setTrade(SerializableItemStack trade) {
+    this.trade = trade;
+  }
 
-	@Override
+  @Override
   public String toString() {
-	  StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder();
 
     builder.append(item.toString());
     builder.append("*" + cost);
@@ -118,16 +118,16 @@ public class ShopEntry implements Serializable {
 
     MISCUtils.debug(parsed[0]);
 
-		if(parsed.length >= 6) {
-		  ShopEntry entry =  new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), Integer.valueOf(parsed[2]), Boolean.valueOf(parsed[3]), Boolean.valueOf(parsed[4]));
-			entry.setMaxstock(Integer.valueOf(parsed[5]));
+    if(parsed.length >= 6) {
+      ShopEntry entry =  new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), Integer.valueOf(parsed[2]), Boolean.valueOf(parsed[3]), Boolean.valueOf(parsed[4]));
+      entry.setMaxstock(Integer.valueOf(parsed[5]));
       if (parsed.length == 7) {
-			  entry.setTrade(SerializableItemStack.fromString(parsed[6]));
-			}
+        entry.setTrade(SerializableItemStack.fromString(parsed[6]));
+      }
 
-			return entry;
-		}
-		return null;
+      return entry;
+    }
+    return null;
   }
 
   @Override

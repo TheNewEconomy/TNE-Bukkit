@@ -13,25 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TNECommand {
-	
-	protected TNE plugin;
-	
-	public TNECommand(TNE plugin) {
-		this.plugin = plugin;
-	}
 
-	public List<TNECommand> subCommands = new ArrayList<>();
-	public abstract String getName();
-	public abstract String[] getAliases();
-	public abstract String getNode();
-	public abstract boolean console();
+  protected TNE plugin;
+
+  public TNECommand(TNE plugin) {
+    this.plugin = plugin;
+  }
+
+  public List<TNECommand> subCommands = new ArrayList<>();
+  public abstract String getName();
+  public abstract String[] getAliases();
+  public abstract String getNode();
+  public abstract boolean console();
 
   public String getHelp() {
     return "Command help coming soon!";
   }
 
-	public String[] getHelpLines() {
-	  return new String[] { getHelp() };
+  public String[] getHelpLines() {
+    return new String[] { getHelp() };
   }
 
   public void help(CommandSender sender) {
@@ -42,14 +42,14 @@ public abstract class TNECommand {
     List<String[]> help = new ArrayList<>();
     if(subCommands.size() > 0) {
       for (TNECommand sub : subCommands) {
-      	if(sender.hasPermission(sub.getNode())) {
-					help.add(sub.getHelpLines());
-				}
+        if(sender.hasPermission(sub.getNode())) {
+          help.add(sub.getHelpLines());
+        }
       }
     } else {
-    	if(sender.hasPermission(getNode())) {
-				help.add(getHelpLines());
-			}
+      if(sender.hasPermission(getNode())) {
+        help.add(getHelpLines());
+      }
     }
 
 
@@ -106,8 +106,8 @@ public abstract class TNECommand {
   public Boolean activated(String world, String player) {
     return true;
   }
-	
-	public boolean execute(CommandSender sender, String command, String[] arguments) {
+
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
 
     String player = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : "";
     String world = (!player.equals(""))? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
@@ -115,7 +115,7 @@ public abstract class TNECommand {
       return false;
     }
 
-	  if(locked() && !(sender instanceof Player)) return false;
+    if(locked() && !(sender instanceof Player)) return false;
     if(locked()) {
       Player p = (Player)sender;
       Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
@@ -128,7 +128,7 @@ public abstract class TNECommand {
       }
     }
 
-	  if(confirm() && !(sender instanceof Player)) return false;
+    if(confirm() && !(sender instanceof Player)) return false;
     if(confirm()) {
       Player p = (Player)sender;
       Account acc = AccountUtils.getAccount(MISCUtils.getID(p));
@@ -153,108 +153,108 @@ public abstract class TNECommand {
       }
     }
 
-		if(arguments.length == 0) {
-			help(sender);
-			return false;
-		}
-		
-		TNECommand sub = FindSub(arguments[0]);
-		if(sub == null && !arguments[0].equalsIgnoreCase("help") && !arguments[0].equalsIgnoreCase("?")) {
-			Message noCommand = new Message("Messages.Command.None");
-			noCommand.addVariable("$command", "/" + getName());
-			noCommand.addVariable("$arguments", arguments[0]);
-			noCommand.translate(world, sender);
-			return false;
-		}
-
-		if(arguments[0].equalsIgnoreCase("help") || arguments[0].equalsIgnoreCase("?")) {
-		  Integer page = (arguments.length >= 2)? getPage(arguments[1]) : 1;
-			help(sender, page);
-			return false;
-		}
-
-		if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?") || sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("help")) {
-		  int page = (arguments.length >= 3)? getPage(arguments[2]) : 1;
-
-		  sub.help(sender, page);
+    if(arguments.length == 0) {
+      help(sender);
       return false;
     }
 
-		if(!sub.canExecute(sender)) {
-			Message unable = new Message("Messages.Command.Unable");
-			unable.addVariable("$command", "/" + getName());
-			unable.translate(world, sender);
-			return false;
-		}
-		return sub.execute(sender, command, removeSub(arguments));
-	}
-	
-	protected String[] removeSub(String[] oldArguments) {
-		String[] arguments = new String[oldArguments.length - 1];
-		for(int i = 1; i < oldArguments.length; i++) {
-			arguments[i - 1] = oldArguments[i];
-		}
-		return arguments;
-	}
-	
-	public TNECommand FindSub(String name) {
-		for(TNECommand sub : subCommands) {
-			if(sub.getName().equalsIgnoreCase(name)) {
-				return sub;
-			}
-		}
-		for(TNECommand sub : subCommands) {
-			for(String s : sub.getAliases()) {
-				if(s.equalsIgnoreCase(name)) {
-					return sub;
-				}
-			}
-		}
-		return null;
-	}
+    TNECommand sub = FindSub(arguments[0]);
+    if(sub == null && !arguments[0].equalsIgnoreCase("help") && !arguments[0].equalsIgnoreCase("?")) {
+      Message noCommand = new Message("Messages.Command.None");
+      noCommand.addVariable("$command", "/" + getName());
+      noCommand.addVariable("$arguments", arguments[0]);
+      noCommand.translate(world, sender);
+      return false;
+    }
 
-	public Integer getPage(String pageValue) {
-	  Integer page = 1;
-	  try {
-	    page = Integer.valueOf(pageValue);
+    if(arguments[0].equalsIgnoreCase("help") || arguments[0].equalsIgnoreCase("?")) {
+      Integer page = (arguments.length >= 2)? getPage(arguments[1]) : 1;
+      help(sender, page);
+      return false;
+    }
+
+    if(sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("?") || sub.canExecute(sender) && arguments.length >= 2 && arguments[1].equalsIgnoreCase("help")) {
+      int page = (arguments.length >= 3)? getPage(arguments[2]) : 1;
+
+      sub.help(sender, page);
+      return false;
+    }
+
+    if(!sub.canExecute(sender)) {
+      Message unable = new Message("Messages.Command.Unable");
+      unable.addVariable("$command", "/" + getName());
+      unable.translate(world, sender);
+      return false;
+    }
+    return sub.execute(sender, command, removeSub(arguments));
+  }
+
+  protected String[] removeSub(String[] oldArguments) {
+    String[] arguments = new String[oldArguments.length - 1];
+    for(int i = 1; i < oldArguments.length; i++) {
+      arguments[i - 1] = oldArguments[i];
+    }
+    return arguments;
+  }
+
+  public TNECommand FindSub(String name) {
+    for(TNECommand sub : subCommands) {
+      if(sub.getName().equalsIgnoreCase(name)) {
+        return sub;
+      }
+    }
+    for(TNECommand sub : subCommands) {
+      for(String s : sub.getAliases()) {
+        if(s.equalsIgnoreCase(name)) {
+          return sub;
+        }
+      }
+    }
+    return null;
+  }
+
+  public Integer getPage(String pageValue) {
+    Integer page = 1;
+    try {
+      page = Integer.valueOf(pageValue);
     } catch(Exception e) {
       return 1;
     }
-	  return page;
+    return page;
   }
-	
-	public boolean canExecute(CommandSender sender) {
-		if(sender instanceof Player) {
-			return sender.hasPermission(getNode());
-		}
-		return console();
-	}
 
-	protected String getWorld(CommandSender sender) {
-	  return (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+  public boolean canExecute(CommandSender sender) {
+    if(sender instanceof Player) {
+      return sender.hasPermission(getNode());
+    }
+    return console();
   }
-	
-	protected Player getPlayer(CommandSender sender) {
-		if(sender instanceof Player) {
-			return (Player)sender;
-		}
-		return null;
-	}
-	
-	@SuppressWarnings("deprecation")
-	protected Player getPlayer(CommandSender sender, String username) {
-		if(username != null) {
-			List<Player> matches = sender.getServer().matchPlayer(username);
-			if(!matches.isEmpty()) {
-				return matches.get(0);
-			}
-			sender.sendMessage(ChatColor.WHITE + "Player \"" + ChatColor.RED + username + ChatColor.WHITE + "\" could not be found!");
-			return null;
-		} else {
-			if(sender instanceof Player) {
-				return (Player)sender;
-			}
-		}
-		return null;
-	}
+
+  protected String getWorld(CommandSender sender) {
+    return (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+  }
+
+  protected Player getPlayer(CommandSender sender) {
+    if(sender instanceof Player) {
+      return (Player)sender;
+    }
+    return null;
+  }
+
+  @SuppressWarnings("deprecation")
+  protected Player getPlayer(CommandSender sender, String username) {
+    if(username != null) {
+      List<Player> matches = sender.getServer().matchPlayer(username);
+      if(!matches.isEmpty()) {
+        return matches.get(0);
+      }
+      sender.sendMessage(ChatColor.WHITE + "Player \"" + ChatColor.RED + username + ChatColor.WHITE + "\" could not be found!");
+      return null;
+    } else {
+      if(sender instanceof Player) {
+        return (Player)sender;
+      }
+    }
+    return null;
+  }
 }

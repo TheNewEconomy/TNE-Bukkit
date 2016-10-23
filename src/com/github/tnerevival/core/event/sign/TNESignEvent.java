@@ -8,44 +8,44 @@ import org.bukkit.event.HandlerList;
 import java.util.UUID;
 
 public class TNESignEvent extends Event implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+  private static final HandlerList handlers = new HandlerList();
     
-	private UUID playerID;
-	private TNESign sign;
-	private SignEventAction action;
+  private UUID playerID;
+  private TNESign sign;
+  private SignEventAction action;
   private Boolean cancelled = false;
  
   public TNESignEvent(UUID playerID, TNESign sign, SignEventAction action) {
     this.playerID = playerID;
-	  this.sign = sign;
-	  this.setAction(action);
+    this.sign = sign;
+    this.setAction(action);
   }
  
   public UUID getPlayerID() {
-		return playerID;
-	}
+    return playerID;
+  }
 
-	public void setPlayerID(UUID playerID) {
-		this.playerID = playerID;
-	}
+  public void setPlayerID(UUID playerID) {
+    this.playerID = playerID;
+  }
 
-	public TNESign getSign() {
-		return sign;
-	}
+  public TNESign getSign() {
+    return sign;
+  }
 
-	public void setSign(TNESign sign) {
-		this.sign = sign;
-	}
+  public void setSign(TNESign sign) {
+    this.sign = sign;
+  }
 
-	public SignEventAction getAction() {
-		return action;
-	}
+  public SignEventAction getAction() {
+    return action;
+  }
 
-	public void setAction(SignEventAction action) {
-		this.action = action;
-	}
+  public void setAction(SignEventAction action) {
+    this.action = action;
+  }
 
-	public HandlerList getHandlers() {
+  public HandlerList getHandlers() {
         return handlers;
     }
  
@@ -53,7 +53,7 @@ public class TNESignEvent extends Event implements Cancellable {
         return handlers;
     }
 
-	public boolean isCancelled() {
+  public boolean isCancelled() {
         return cancelled;
     }
  

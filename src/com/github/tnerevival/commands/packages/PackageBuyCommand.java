@@ -13,77 +13,77 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class PackageBuyCommand extends TNECommand {
-	
-	public PackageBuyCommand(TNE plugin) {
-		super(plugin);
-	}
 
-	@Override
-	public String getName() {
-		return "buy";
-	}
+  public PackageBuyCommand(TNE plugin) {
+    super(plugin);
+  }
 
-	@Override
-	public String[] getAliases() {
-		return new String[0];
-	}
+  @Override
+  public String getName() {
+    return "buy";
+  }
 
-	@Override
-	public String getNode() {
-		return "tne.package.buy";
-	}
+  @Override
+  public String[] getAliases() {
+    return new String[0];
+  }
 
-	@Override
-	public boolean console() {
-		return false;
-	}
-	
-	@Override
-	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		Player player = (Player)sender;
-		
-		if(!AccountUtils.getAccount(MISCUtils.getID(player)).getStatus().getBalance()) {
-			Message locked = new Message("Messages.Account.Locked");
-			locked.addVariable("$player", player.getDisplayName());
-			locked.translate(MISCUtils.getWorld(player), player);
-			return false;
-		}
-		
-		if(arguments.length == 2) {
-			List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
-			if(packages.size() > 0) {
-				for(TNEAccessPackage p : packages) {
-					if(p.getName().equalsIgnoreCase(arguments[1])) {
-						if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-							AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-							AccountUtils.getAccount(MISCUtils.getID(player)).addTime(MISCUtils.getWorld(player), arguments[0], p.getTime());
-							Message bought = new Message("Messages.Package.Bought");
-							bought.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));
-							bought.addVariable("$name",  p.getName());
-							bought.addVariable("$type",  arguments[0]);
-							bought.translate(MISCUtils.getWorld(player), player);
-							return true;
-						} else {
-							Message insufficient = new Message("Messages.Money.Insufficient");
-							insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));
-							insufficient.translate(MISCUtils.getWorld(player), player);
-							return false;
-						}
-					}
-				}
-			}
-			Message insufficient = new Message("Messages.Package.None");
-			insufficient.addVariable("$name",  arguments[1]);
-			insufficient.addVariable("$type",  arguments[0]);
-			insufficient.translate(MISCUtils.getWorld(player), player);
-			return false;
-		}
-		help(sender);
-		return false;
-	}
+  @Override
+  public String getNode() {
+    return "tne.package.buy";
+  }
 
-	@Override
-	public String getHelp() {
-		return "/package buy <type> <package> - Buy <package> for inventory <type>";
-	}
+  @Override
+  public boolean console() {
+    return false;
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    Player player = (Player)sender;
+
+    if(!AccountUtils.getAccount(MISCUtils.getID(player)).getStatus().getBalance()) {
+      Message locked = new Message("Messages.Account.Locked");
+      locked.addVariable("$player", player.getDisplayName());
+      locked.translate(MISCUtils.getWorld(player), player);
+      return false;
+    }
+
+    if(arguments.length == 2) {
+      List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+      if(packages.size() > 0) {
+        for(TNEAccessPackage p : packages) {
+          if(p.getName().equalsIgnoreCase(arguments[1])) {
+            if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+              AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
+              AccountUtils.getAccount(MISCUtils.getID(player)).addTime(MISCUtils.getWorld(player), arguments[0], p.getTime());
+              Message bought = new Message("Messages.Package.Bought");
+              bought.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));
+              bought.addVariable("$name",  p.getName());
+              bought.addVariable("$type",  arguments[0]);
+              bought.translate(MISCUtils.getWorld(player), player);
+              return true;
+            } else {
+              Message insufficient = new Message("Messages.Money.Insufficient");
+              insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()));
+              insufficient.translate(MISCUtils.getWorld(player), player);
+              return false;
+            }
+          }
+        }
+      }
+      Message insufficient = new Message("Messages.Package.None");
+      insufficient.addVariable("$name",  arguments[1]);
+      insufficient.addVariable("$type",  arguments[0]);
+      insufficient.translate(MISCUtils.getWorld(player), player);
+      return false;
+    }
+    help(sender);
+    return false;
+  }
+
+  @Override
+  public String getHelp() {
+    return "/package buy <type> <package> - Buy <package> for inventory <type>";
+  }
 }

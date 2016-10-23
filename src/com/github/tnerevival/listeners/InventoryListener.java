@@ -21,14 +21,14 @@ import org.bukkit.event.inventory.InventoryType;
 import java.util.UUID;
 
 public class InventoryListener implements Listener {
-	
-	TNE plugin;
-	
-	public InventoryListener(TNE plugin) {
-		this.plugin = plugin;
-	}
 
-	@EventHandler
+  TNE plugin;
+
+  public InventoryListener(TNE plugin) {
+    this.plugin = plugin;
+  }
+
+  @EventHandler
   public void onInventoryOpen(InventoryOpenEvent event) {
     Player player = (Player)event.getPlayer();
     InventoryType type = event.getInventory().getType();

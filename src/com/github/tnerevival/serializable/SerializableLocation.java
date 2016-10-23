@@ -7,10 +7,10 @@ import org.bukkit.World;
 import java.io.Serializable;
 
 public class SerializableLocation implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private double x, y, z;
+
+  private static final long serialVersionUID = 1L;
+
+  private double x, y, z;
   private String world;
     
     public SerializableLocation(Location location) {

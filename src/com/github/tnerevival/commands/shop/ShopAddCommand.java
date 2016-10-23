@@ -15,41 +15,41 @@ import org.bukkit.inventory.ItemStack;
 
 public class ShopAddCommand extends TNECommand {
 
-	public ShopAddCommand(TNE plugin) {
-		super(plugin);
-	}
+  public ShopAddCommand(TNE plugin) {
+    super(plugin);
+  }
 
-	@Override
-	public String getName() {
-		return "add";
-	}
+  @Override
+  public String getName() {
+    return "add";
+  }
 
-	@Override
-	public String[] getAliases() {
-		return new String[] { "+i" };
-	}
+  @Override
+  public String[] getAliases() {
+    return new String[] { "+i" };
+  }
 
-	@Override
-	public String getNode() {
-		return "tne.shop.add";
-	}
+  @Override
+  public String getNode() {
+    return "tne.shop.add";
+  }
 
-	@Override
-	public boolean console() {
-		return false;
-	}
+  @Override
+  public boolean console() {
+    return false;
+  }
 
-	@Override
-	public String[] getHelpLines() {
-		return new String[] {"/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]", "Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item." };
-	}
-	
-	@Override
-	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		if(sender instanceof Player && arguments.length >= 1) {
-		  Player player = getPlayer(sender);
-		  if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
-		    if(Shop.canModify(arguments[0], (Player)sender)) {
+  @Override
+  public String[] getHelpLines() {
+    return new String[] {"/shop add <shop> [amount:#] [item name[:damage]] [type:(sell/buy)] [stock:#/unlimited] [gold:#] [trade:name:amount(default 1):damage(default 1)]", "Add a new item to your shop for [gold] and/or [trade]. Leave out item name to use currently held item." };
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(sender instanceof Player && arguments.length >= 1) {
+      Player player = getPlayer(sender);
+      if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+        if(Shop.canModify(arguments[0], (Player)sender)) {
           Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
           ItemStack item = player.getInventory().getItemInMainHand().clone();
           short damage = 0;
@@ -185,6 +185,6 @@ public class ShopAddCommand extends TNECommand {
     } else {
       help(sender);
     }
-		return false;
-	}
+    return false;
+  }
 }

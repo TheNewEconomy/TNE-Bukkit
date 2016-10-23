@@ -9,41 +9,41 @@ import org.bukkit.entity.Player;
 
 public class MoneyBalanceCommand extends TNECommand {
 
-	public MoneyBalanceCommand(TNE plugin) {
-		super(plugin);
-	}
+  public MoneyBalanceCommand(TNE plugin) {
+    super(plugin);
+  }
 
-	@Override
-	public String getName() {
-		return "balance";
-	}
+  @Override
+  public String getName() {
+    return "balance";
+  }
 
-	@Override
-	public String[] getAliases() {
-		return new String[0];
-	}
+  @Override
+  public String[] getAliases() {
+    return new String[0];
+  }
 
-	@Override
-	public String getNode() {
-		return "tne.money.balance";
-	}
+  @Override
+  public String getNode() {
+    return "tne.money.balance";
+  }
 
-	@Override
-	public boolean console() {
-		return false;
-	}
-	
-	@Override
-	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		Player player = getPlayer(sender);
-		Message balance = new Message("Messages.Money.Balance");
-		balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), plugin.api.getBalance(player)));
-		balance.translate(MISCUtils.getWorld(player), player);
-		return true;
-	}
+  @Override
+  public boolean console() {
+    return false;
+  }
 
-	@Override
-	public String getHelp() {
-		return "/money balance - find out how much money you have on you";
-	}
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    Player player = getPlayer(sender);
+    Message balance = new Message("Messages.Money.Balance");
+    balance.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), plugin.api.getBalance(player)));
+    balance.translate(MISCUtils.getWorld(player), player);
+    return true;
+  }
+
+  @Override
+  public String getHelp() {
+    return "/money balance - find out how much money you have on you";
+  }
 }

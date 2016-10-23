@@ -14,89 +14,89 @@ import java.io.ObjectOutputStream;
  *
  */
 public class FlatFileConnection {
-	
-	private File file;
-	private ObjectInputStream ois;
-	private ObjectOutputStream oos;
-	
-	public FlatFileConnection(String fileName) {
-		file = new File(fileName);
-	}
-	
-	public void close() {
-		try {
-			if(ois != null) {
-				ois.close();
-				ois = null;
-			}
-			
-			if(oos != null) {
-				oos.flush();
-				oos.close();
-				oos = null;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
-	/**
-	 * @return the fileName
-	 */
-	public File getFile() {
-		return file;
-	}
+  private File file;
+  private ObjectInputStream ois;
+  private ObjectOutputStream oos;
 
-	/**
-	 * @param fileName the fileName to set
-	 */
-	public void setFile(String fileName) {
-		file = new File(fileName);
-	}
+  public FlatFileConnection(String fileName) {
+    file = new File(fileName);
+  }
 
-	/**
-	 * @return the ois
-	 */
-	public ObjectInputStream getOIS() {
-		if(ois == null) {
-			try {
-				ois = new ObjectInputStream(new FileInputStream(file));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return ois;
-	}
+  public void close() {
+    try {
+      if(ois != null) {
+        ois.close();
+        ois = null;
+      }
 
-	/**
-	 * @param ois the ois to set
-	 */
-	public void setOIS(ObjectInputStream ois) {
-		this.ois = ois;
-	}
+      if(oos != null) {
+        oos.flush();
+        oos.close();
+        oos = null;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-	/**
-	 * @return the oos
-	 */
-	public ObjectOutputStream getOOS() {
-		if(oos == null) {
-			try {
-				oos = new ObjectOutputStream(new FileOutputStream(file));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return oos;
-	}
+  /**
+   * @return the fileName
+   */
+  public File getFile() {
+    return file;
+  }
 
-	/**
-	 * @param oos the oos to set
-	 */
-	public void setOOS(ObjectOutputStream oos) {
-		this.oos = oos;
-	}
+  /**
+   * @param fileName the fileName to set
+   */
+  public void setFile(String fileName) {
+    file = new File(fileName);
+  }
+
+  /**
+   * @return the ois
+   */
+  public ObjectInputStream getOIS() {
+    if(ois == null) {
+      try {
+        ois = new ObjectInputStream(new FileInputStream(file));
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return ois;
+  }
+
+  /**
+   * @param ois the ois to set
+   */
+  public void setOIS(ObjectInputStream ois) {
+    this.ois = ois;
+  }
+
+  /**
+   * @return the oos
+   */
+  public ObjectOutputStream getOOS() {
+    if(oos == null) {
+      try {
+        oos = new ObjectOutputStream(new FileOutputStream(file));
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return oos;
+  }
+
+  /**
+   * @param oos the oos to set
+   */
+  public void setOOS(ObjectOutputStream oos) {
+    this.oos = oos;
+  }
 }

@@ -20,24 +20,24 @@ import java.util.List;
 import java.util.UUID;
 
 public class Shop implements Serializable {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private List<UUID> shoppers = new ArrayList<>();
-	private List<ShopEntry> items = new ArrayList<>();
-	private List<UUID> blacklist = new ArrayList<>();
-	private List<UUID> whitelist = new ArrayList<>();
-	private List<ShareEntry> shares = new ArrayList<>();
-	
-	private UUID owner;
+  private List<UUID> shoppers = new ArrayList<>();
+  private List<ShopEntry> items = new ArrayList<>();
+  private List<UUID> blacklist = new ArrayList<>();
+  private List<UUID> whitelist = new ArrayList<>();
+  private List<ShareEntry> shares = new ArrayList<>();
+
+  private UUID owner;
   private String world;
-	private String name;
-	private boolean hidden = false;
-	private boolean admin = false;
+  private String name;
+  private boolean hidden = false;
+  private boolean admin = false;
 
-	public Shop(String name, String world) {
-		this.name = name;
+  public Shop(String name, String world) {
+    this.name = name;
     this.world = world;
-	}
+  }
 
   public String getWorld() {
     return world;
@@ -48,11 +48,11 @@ public class Shop implements Serializable {
   }
 
   public boolean isAdmin() {
-		return admin;
-	}
+    return admin;
+  }
 
-	public void setAdmin(boolean admin) {
-	  this.admin = admin;
+  public void setAdmin(boolean admin) {
+    this.admin = admin;
   }
 
   public List<ShopEntry> getSale() {
@@ -185,18 +185,18 @@ public class Shop implements Serializable {
     }
     return -1;
   }
-	
-	public boolean addItem(ShopEntry entry) {
-		if(items.size() >= 27) { return false; }
-		Material mat = Material.getMaterial(entry.getItem().getName());
-		if(hasItem(entry.getItem().toItemStack(), entry.getCost(), entry.isBuy())) {
-			if(getCost(mat) < 0.0 && entry.getTrade() != null && getTrade(mat) != null && entry.getTrade().getName().equals(getTrade(mat)) || getCost(mat) == entry.getCost()) {
-				return false;
-			}
-		}
-		this.items.add(entry);
-		return true;
-	}
+
+  public boolean addItem(ShopEntry entry) {
+    if(items.size() >= 27) { return false; }
+    Material mat = Material.getMaterial(entry.getItem().getName());
+    if(hasItem(entry.getItem().toItemStack(), entry.getCost(), entry.isBuy())) {
+      if(getCost(mat) < 0.0 && entry.getTrade() != null && getTrade(mat) != null && entry.getTrade().getName().equals(getTrade(mat)) || getCost(mat) == entry.getCost()) {
+        return false;
+      }
+    }
+    this.items.add(entry);
+    return true;
+  }
 
   public boolean removeItem(ItemStack stack, double cost) {
     return removeItem(stack, cost, true);
@@ -247,15 +247,15 @@ public class Shop implements Serializable {
     }
   }
 
-	public Inventory getInventory(boolean modifier) {
-		Inventory inventory = Bukkit.createInventory(null, getSlots(world, owner), ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
-		for(ShopEntry entry : items) {
-		  MISCUtils.debug("" + entry.isBuy());
-		  String prefix = ChatColor.GOLD + ((entry.isBuy())? "[Buy]" : "[Sell]") + ChatColor.WHITE;
-			ItemStack stack = entry.getItem().toItemStack();
-			List<String> lore = new ArrayList<>();
+  public Inventory getInventory(boolean modifier) {
+    Inventory inventory = Bukkit.createInventory(null, getSlots(world, owner), ChatColor.GOLD + "[Shop]" + ChatColor.RESET + name);
+    for(ShopEntry entry : items) {
+      MISCUtils.debug("" + entry.isBuy());
+      String prefix = ChatColor.GOLD + ((entry.isBuy())? "[Buy]" : "[Sell]") + ChatColor.WHITE;
+      ItemStack stack = entry.getItem().toItemStack();
+      List<String> lore = new ArrayList<>();
       String instruction = (entry.isBuy())? "Left Click to buy. Right Click to trade." : "Left Click to sell.";
-			lore.add(ChatColor.WHITE + instruction);
+      lore.add(ChatColor.WHITE + instruction);
       if(modifier) {
         lore.add(ChatColor.WHITE + "Shift Right Click to remove this item.");
       }
@@ -264,52 +264,52 @@ public class Shop implements Serializable {
       String stock = (entry.isUnlimited())? "---" : "" + ((entry.isBuy())? entry.getStock() : (entry.getMaxstock() - entry.getStock()));
       lore.add(ChatColor.WHITE + message + ChatColor.GOLD + stock);
 
-			if(entry.getCost() > 0.0 || entry.getCost() <= 0.0 && entry.getTrade() == null ||
+      if(entry.getCost() > 0.0 || entry.getCost() <= 0.0 && entry.getTrade() == null ||
          entry.getCost() <= 0.0 && entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
         String cost = ChatColor.WHITE + ((entry.isBuy()) ? "Cost:" : "Receive:");
         lore.add(cost + " " + ChatColor.GOLD + entry.getCost());
-			}
-			
-			if(entry.getTrade() != null && !entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
-				lore.add(ChatColor.WHITE + "Trade: " + entry.getTrade().getAmount() + entry.getTrade().getName());
-			}
-			
-			ItemMeta meta = stack.getItemMeta();
+      }
+
+      if(entry.getTrade() != null && !entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
+        lore.add(ChatColor.WHITE + "Trade: " + entry.getTrade().getAmount() + entry.getTrade().getName());
+      }
+
+      ItemMeta meta = stack.getItemMeta();
       meta.setDisplayName(prefix + entry.getItem().getName());
-			meta.setLore(lore);
-			stack.setItemMeta(meta);
+      meta.setLore(lore);
+      stack.setItemMeta(meta);
 
       MISCUtils.debug(entry.getItem().getName() + ":" + entry.getItem().getSlot());
 
-			inventory.setItem(entry.getItem().getSlot(), stack);
-		}
-		return inventory;
-	}
+      inventory.setItem(entry.getItem().getSlot(), stack);
+    }
+    return inventory;
+  }
 
-	public double getCost(Material mat) {
-		for(ShopEntry entry : items) {
-			if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
-				return entry.getCost();
-			}
-		}
-		return 0.0;
-	}
+  public double getCost(Material mat) {
+    for(ShopEntry entry : items) {
+      if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
+        return entry.getCost();
+      }
+    }
+    return 0.0;
+  }
 
-	public String getTrade(Material mat) {
-		for(ShopEntry entry : items) {
-			if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
-				return entry.getTrade().getName();
-			}
-		}
-		return null;
-	}
-	
-	public boolean hasPermission(UUID player) {
-		return owner.equals(player);
-	}
+  public String getTrade(Material mat) {
+    for(ShopEntry entry : items) {
+      if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
+        return entry.getTrade().getName();
+      }
+    }
+    return null;
+  }
 
-	public void handlePayment(double amount) {
-	  double split = amount;
+  public boolean hasPermission(UUID player) {
+    return owner.equals(player);
+  }
+
+  public void handlePayment(double amount) {
+    double split = amount;
     for(ShareEntry entry : shares) {
       double pay = Math.round((amount * entry.getPercent()) * 100.0) / 100.0;
       split -= pay;
@@ -317,41 +317,41 @@ public class Shop implements Serializable {
     }
     AccountUtils.transaction(owner.toString(), null, split, TransactionType.MONEY_GIVE, getWorld());
   }
-	
-	public double totalSharePercent() {
-		double total = 0.00;
-		for(ShareEntry entry : shares) {
-			total += entry.getPercent();
-		}
-		return total;
-	}
 
-	public void remove(int slot, int amount) {
-	  ShopEntry entry = getItem(slot);
-	  int stock = (entry.isBuy())? entry.getStock() - amount : entry.getStock() + amount;
+  public double totalSharePercent() {
+    double total = 0.00;
+    for(ShareEntry entry : shares) {
+      total += entry.getPercent();
+    }
+    return total;
+  }
+
+  public void remove(int slot, int amount) {
+    ShopEntry entry = getItem(slot);
+    int stock = (entry.isBuy())? entry.getStock() - amount : entry.getStock() + amount;
     entry.setStock(stock);
   }
-	
-	public double canBeShared() {
-		return (100.00 - totalSharePercent());
-	}
-	
-	public void removeShares(UUID player) {
-		Iterator<ShareEntry> i = shares.iterator();
-		while(i.hasNext()) {
-			ShareEntry entry = i.next();
-			if(entry.getShareOwner().equals(player)) {
-				i.remove();
-			}
-		}
-	}
-	
-	public void addShares(ShareEntry entry) {
-		shares.add(entry);
-	}
 
-	public String listToString(boolean blacklist) {
-	  StringBuilder builder = new StringBuilder();
+  public double canBeShared() {
+    return (100.00 - totalSharePercent());
+  }
+
+  public void removeShares(UUID player) {
+    Iterator<ShareEntry> i = shares.iterator();
+    while(i.hasNext()) {
+      ShareEntry entry = i.next();
+      if(entry.getShareOwner().equals(player)) {
+        i.remove();
+      }
+    }
+  }
+
+  public void addShares(ShareEntry entry) {
+    shares.add(entry);
+  }
+
+  public String listToString(boolean blacklist) {
+    StringBuilder builder = new StringBuilder();
 
     List<UUID> list = (blacklist)? this.blacklist : this.whitelist;
 
@@ -366,13 +366,13 @@ public class Shop implements Serializable {
     String[] parsed = parse.split(",");
 
     for(String s : parsed) {
-    	if(MISCUtils.isUUID(s)) {
-				if (blacklist) {
-					this.blacklist.add(UUID.fromString(s));
-					continue;
-				}
-				this.whitelist.add(UUID.fromString(s));
-			}
+      if(MISCUtils.isUUID(s)) {
+        if (blacklist) {
+          this.blacklist.add(UUID.fromString(s));
+          continue;
+        }
+        this.whitelist.add(UUID.fromString(s));
+      }
     }
   }
 
@@ -409,40 +409,40 @@ public class Shop implements Serializable {
   }
 
   public void itemsFromString(String parse) {
-  	MISCUtils.debug(parse);
+    MISCUtils.debug(parse);
     String[] parsed = parse.split("=");
 
     for(String s : parsed) {
-    	if(ShopEntry.fromString(s) != null) {
-				items.add(ShopEntry.fromString(s));
-			}
+      if(ShopEntry.fromString(s) != null) {
+        items.add(ShopEntry.fromString(s));
+      }
     }
   }
-	
-	/*
-	 * Static methods
-	 */
-	public static boolean exists(String name, String world) {
-		return TNE.instance.manager.shops.containsKey(name + ":" + world);
-	}
-	
-	public static Shop getShop(String name, String world) {
-		if(exists(name, world)) {
-			return TNE.instance.manager.shops.get(name + ":" + world);
-		}
-		return null;
-	}
-	
-	public static boolean shares(String name, UUID player) {
-		if(exists(name, MISCUtils.getWorld(player))) {
-			return getShop(name, MISCUtils.getWorld(player)).shares(player);
-		}
-		return false;
-	}
 
-	public static boolean canView(String name, UUID id) {
+  /*
+   * Static methods
+   */
+  public static boolean exists(String name, String world) {
+    return TNE.instance.manager.shops.containsKey(name + ":" + world);
+  }
+
+  public static Shop getShop(String name, String world) {
+    if(exists(name, world)) {
+      return TNE.instance.manager.shops.get(name + ":" + world);
+    }
+    return null;
+  }
+
+  public static boolean shares(String name, UUID player) {
+    if(exists(name, MISCUtils.getWorld(player))) {
+      return getShop(name, MISCUtils.getWorld(player)).shares(player);
+    }
+    return false;
+  }
+
+  public static boolean canView(String name, UUID id) {
     if(!TNE.instance.api.getBoolean("Core.Shops.Enabled", MISCUtils.getWorld(id), id)) return false;
-	  if(exists(name, MISCUtils.getWorld(id))) {
+    if(exists(name, MISCUtils.getWorld(id))) {
       Shop s = getShop(name, MISCUtils.getWorld(id));
       if(s.isHidden() && !s.whitelisted(id)) return false;
       if(s.blacklisted(id)) return false;
@@ -451,42 +451,42 @@ public class Shop implements Serializable {
     }
     return false;
   }
-	
-	public static boolean canModify(String name, Player p) {
-		if(exists(name, MISCUtils.getWorld(p))) {
-			Shop s = getShop(name, MISCUtils.getWorld(p));
-			return s.getOwner() == null && p.hasPermission("tne.shop.admin") ||
-				   s.getOwner() != null && s.getOwner().equals(MISCUtils.getID(p)) ||
-					 s.isAdmin() && p.hasPermission("tne.shop.admin");
-		}
-		return false;
-	}
 
-	
-	public boolean shares(UUID player) {
-		for(ShareEntry entry : shares) {
-			if(entry.getShareOwner().equals(player)) {
-				return true;
-			}
-		}
-		return false;
-	}
+  public static boolean canModify(String name, Player p) {
+    if(exists(name, MISCUtils.getWorld(p))) {
+      Shop s = getShop(name, MISCUtils.getWorld(p));
+      return s.getOwner() == null && p.hasPermission("tne.shop.admin") ||
+           s.getOwner() != null && s.getOwner().equals(MISCUtils.getID(p)) ||
+           s.isAdmin() && p.hasPermission("tne.shop.admin");
+    }
+    return false;
+  }
 
-	public static int getSlots(String world, UUID owner) {
-	  String name = (owner != null)? owner.toString() : "";
 
-	  int amount = 6;
+  public boolean shares(UUID player) {
+    for(ShareEntry entry : shares) {
+      if(entry.getShareOwner().equals(player)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static int getSlots(String world, UUID owner) {
+    String name = (owner != null)? owner.toString() : "";
+
+    int amount = 6;
     int config = TNE.instance.api.getInteger("Core.Shops.Rows", world, name);
     if(config >= 1 && config <= 6) amount = config;
 
     return amount * 9;
   }
 
-	public static int amount(UUID id) {
-	  int amount = 1;
-	  for(Shop s : TNE.instance.manager.shops.values()) {
-	    if(!s.isAdmin() && s.getOwner().equals(id)) {
-	      amount++;
+  public static int amount(UUID id) {
+    int amount = 1;
+    for(Shop s : TNE.instance.manager.shops.values()) {
+      if(!s.isAdmin() && s.getOwner().equals(id)) {
+        amount++;
       }
     }
     return amount;

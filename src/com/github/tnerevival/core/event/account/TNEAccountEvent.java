@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class TNEAccountEvent extends Event {
   private static final HandlerList handlers = new HandlerList();
-	private UUID id;
+  private UUID id;
 
   public TNEAccountEvent(UUID id) {
     this.id = id;

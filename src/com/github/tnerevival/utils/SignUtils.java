@@ -46,8 +46,8 @@ public class SignUtils {
     return null;
   }
 
-	public static TNESign instance(String type, UUID owner) {
-	  switch(type.toLowerCase()) {
+  public static TNESign instance(String type, UUID owner) {
+    switch(type.toLowerCase()) {
       case "bank":
         return new BankSign(owner);
       case "shop":

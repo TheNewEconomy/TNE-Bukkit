@@ -14,44 +14,44 @@ import org.bukkit.inventory.ItemStack;
 
 public class ShopRemoveCommand extends TNECommand {
 
-	public ShopRemoveCommand(TNE plugin) {
-		super(plugin);
-	}
+  public ShopRemoveCommand(TNE plugin) {
+    super(plugin);
+  }
 
-	@Override
-	public String getName() {
-		return "remove";
-	}
+  @Override
+  public String getName() {
+    return "remove";
+  }
 
-	@Override
-	public String[] getAliases() {
-		return new String[] { "-i" };
-	}
+  @Override
+  public String[] getAliases() {
+    return new String[] { "-i" };
+  }
 
-	@Override
-	public String getNode() {
-		return "tne.shop.remove";
-	}
+  @Override
+  public String getNode() {
+    return "tne.shop.remove";
+  }
 
-	@Override
-	public boolean console() {
-		return false;
-	}
+  @Override
+  public boolean console() {
+    return false;
+  }
 
-	@Override
-	public String getHelp() {
+  @Override
+  public String getHelp() {
     return "/shop remove <shop> [amount:#] [item name[:damage]] [type:(buy/sell)] [trade:name] [gold:amount] - Remove a specific item from your shop. Cost is required if multiple entries exist.";
-	}
-	
-	@Override
-	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		if(sender instanceof Player && arguments.length >= 1) {
-		  Player player = (Player)sender;
-			if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
-				if(Shop.canModify(arguments[0], player)) {
-					Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-					
-					ItemStack item = player.getInventory().getItemInMainHand().clone();
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(sender instanceof Player && arguments.length >= 1) {
+      Player player = (Player)sender;
+      if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+        if(Shop.canModify(arguments[0], player)) {
+          Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+
+          ItemStack item = player.getInventory().getItemInMainHand().clone();
           int amount = 1;
           double cost = 50.00;
           boolean buy = false;
@@ -150,15 +150,15 @@ public class ShopRemoveCommand extends TNECommand {
           wrong.addVariable("$item", item.getType().name());
           wrong.translate(MISCUtils.getWorld(player), player);
           return false;
-				}
-				new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
-				return false;
-			}
-			new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
-			return false;
-		} else {
-			help(sender);
-		}
-		return false;
-	}
+        }
+        new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
+        return false;
+      }
+      new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
+      return false;
+    } else {
+      help(sender);
+    }
+    return false;
+  }
 }

@@ -11,41 +11,41 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class BankWithdrawCommand extends TNECommand {
-	
-	public BankWithdrawCommand(TNE plugin) {
-		super(plugin);
-	}
 
-	@Override
-	public String getName() {
-		return "withdraw";
-	}
+  public BankWithdrawCommand(TNE plugin) {
+    super(plugin);
+  }
 
-	@Override
-	public String[] getAliases() {
-		return new String[0];
-	}
+  @Override
+  public String getName() {
+    return "withdraw";
+  }
 
-	@Override
-	public String getNode() {
-		return "tne.bank.withdraw";
-	}
+  @Override
+  public String[] getAliases() {
+    return new String[0];
+  }
 
-	@Override
-	public boolean console() {
-		return false;
-	}
-	
-	@Override
-	public boolean execute(CommandSender sender, String command, String[] arguments) {
-		String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
-		Player owner = MISCUtils.getPlayer(ownerName);
-		Player player = MISCUtils.getPlayer(sender.getName());
+  @Override
+  public String getNode() {
+    return "tne.bank.withdraw";
+  }
+
+  @Override
+  public boolean console() {
+    return false;
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
+    Player owner = MISCUtils.getPlayer(ownerName);
+    Player player = MISCUtils.getPlayer(sender.getName());
 
 
     if(arguments.length == 1) {
       if(BankUtils.hasBank(MISCUtils.getID(owner))) {
-				Double value = Double.valueOf(arguments[0].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
+        Double value = Double.valueOf(arguments[0].replace(TNE.instance.api.getString("Core.Currency.Decimal", MISCUtils.getWorld(getPlayer(sender)), MISCUtils.getID(getPlayer(sender)).toString()), "."));
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
           if(AccountUtils.transaction(MISCUtils.getID(owner).toString(), MISCUtils.getID(player).toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
@@ -58,7 +58,7 @@ public class BankWithdrawCommand extends TNECommand {
             overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
             overdraw.addVariable("$name",  ownerName);
             overdraw.translate(MISCUtils.getWorld(player), player);
-						return false;
+            return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");
@@ -71,10 +71,10 @@ public class BankWithdrawCommand extends TNECommand {
     }
     help(sender);
     return false;
-	}
+  }
 
-	@Override
-	public String getHelp() {
-		return "/bank withdraw <amount> [owner] - Withdraw <amount> from [owner]'s bank. Defaults to your bank.";
-	}
+  @Override
+  public String getHelp() {
+    return "/bank withdraw <amount> [owner] - Withdraw <amount> from [owner]'s bank. Defaults to your bank.";
+  }
 }

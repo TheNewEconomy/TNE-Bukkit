@@ -6,9 +6,9 @@ package com.github.tnerevival.core.db;
  *
  */
 public abstract class Database {
-	
-	public abstract Boolean connected();
-	public abstract void connect();
-	public abstract Object connection();
-	public abstract void close();
+
+  public abstract Boolean connected();
+  public abstract void connect();
+  public abstract Object connection();
+  public abstract void close();
 }
