@@ -48,7 +48,6 @@ public class MaterialUtils {
 
   public static String deformatMaterialNameWithSpace(String name) {
     String upperCase = name.toUpperCase();
-    String formatted = upperCase.replace(" ", "_");
-    return formatted;
+    return upperCase.replace(" ", "_");
   }
 }

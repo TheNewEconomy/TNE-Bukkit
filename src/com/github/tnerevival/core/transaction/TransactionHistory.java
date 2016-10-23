@@ -29,21 +29,19 @@ public class TransactionHistory {
   }
 
   public void sort(String world, String type) {
-    String worldFilter = world;
-    String typeFilter = type;
 
     for(Record r : records) {
       Boolean worldCheck = false;
       Boolean typeCheck = false;
-      if(!worldFilter.equalsIgnoreCase("all")) {
-        if(worldFilter.equalsIgnoreCase(r.getWorld())) {
-
+      if(!world.equalsIgnoreCase("all")) {
+        if(world.equalsIgnoreCase(r.getWorld())) {
+          worldCheck = true;
         }
       }
 
-      if(!typeFilter.equalsIgnoreCase("all")) {
-        if(typeFilter.equalsIgnoreCase(r.getType())) {
-
+      if(!type.equalsIgnoreCase("all")) {
+        if(type.equalsIgnoreCase(r.getType())) {
+          typeCheck = true;
         }
       }
 
@@ -61,15 +59,14 @@ public class TransactionHistory {
     return getRecords(5, world, type, page);
   }
 
-  public List<Record> getRecords(int limit, String world, String type, int page) {
+  private List<Record> getRecords(int limit, String world, String type, int page) {
     sort(world, type);
     List<Record> pageRecords = new ArrayList<>();
 
-    int recordPerPage = limit;
-    int max = getMaxPages(world, type, recordPerPage);
+    int max = getMaxPages(world, type, limit);
     int start = (page == 1)? 0 : ((page > max)? max : page);
 
-    for(int i = start; i < start + recordPerPage; i++) {
+    for(int i = start; i < start + limit; i++) {
       if(i < sorted.size()) {
         pageRecords.add(sorted.get(i));
       }

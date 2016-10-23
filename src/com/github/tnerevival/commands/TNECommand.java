@@ -77,7 +77,7 @@ public abstract class TNECommand {
       }
       Integer length = help.get(i).length;
       if(i == help.size() - 1 && remaining - length < 0) loopPage++;
-      if(loopPage == helpPage) send.add(i);
+      if(loopPage.equals(helpPage)) send.add(i);
       remaining -= length;
     }
 

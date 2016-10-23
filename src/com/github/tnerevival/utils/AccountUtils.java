@@ -2,15 +2,15 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
-import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
 import com.github.tnerevival.core.event.transaction.TNETransactionEvent;
+import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.transaction.Transaction;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -36,39 +36,9 @@ public class AccountUtils {
     return TNE.instance.manager.accounts.get(id);
   }
 
-  public static boolean commandLocked(Player player) {
-    Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-    if(!acc.getStatus().getBalance()) {
-      Message locked = new Message("Messages.Account.Locked");
-      locked.addVariable("$player", player.getDisplayName());
-      locked.translate(MISCUtils.getWorld(player), player);
-      return true;
-    }
-
-    if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
-      if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
-        if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-          Message set = new Message("Messages.Account.Set");
-          set.translate(MISCUtils.getWorld(player), player);
-          return false;
-        }
-
-        if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
-          Message confirm = new Message("Messages.Account.Confirm");
-          confirm.translate(MISCUtils.getWorld(player), player);
-          return false;
-        }
-      }
-    }
-    return false;
-  }
-
-  private static Double getBalance(UUID id) {
-    return getBalance(id, MISCUtils.getWorld(id));
-  }
-
-  private static Double getBalance(UUID id, String world) {
+  private static Double getBalance(UUID id, String world, String currencyName) {
     Account account = getAccount(id);
+    Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
 
     if(!account.getStatus().getBalance()) return 0.0;
 
@@ -80,9 +50,9 @@ public class AccountUtils {
 
       return round(account.getBalance(MISCUtils.getWorld(id)));
     }
-    if(TNE.instance.api.getBoolean("Core.Currency.ItemCurrency", world)) {
-      Material majorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMajor", world));
-      Material minorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMinor", world));
+    if(currency.isItem()) {
+      Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
+      Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
       Integer major = MISCUtils.getItemCount(id, majorItem);
       Integer minor = MISCUtils.getItemCount(id, minorItem);
       String balance = major + "." + minor;
@@ -91,37 +61,20 @@ public class AccountUtils {
     return round(account.getBalance(TNE.instance.defaultWorld));
   }
 
-  private static void setBalance(UUID id, Double balance) {
-    setBalance(id, MISCUtils.getWorld(id), balance);
-  }
+  private static void setBalance(UUID id, String world, String currencyName, Double balance) {
+    Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
 
-  private static void setBalance(UUID id, String world, Double balance) {
     balance = round(balance);
     Account account = getAccount(id);
 
     if(!account.getStatus().getBalance()) return;
 
-    String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
+    String balanceString = (String.valueOf(balance).contains("."))? String.valueOf(balance) : String.valueOf(balance) + ".0";
     String[] split = balanceString.split("\\.");
-    if(MISCUtils.multiWorld()) {
-      world = MISCUtils.getWorld(id);
-      if(MISCUtils.worldConfigExists("Worlds." + world + ".Currency.ItemCurrency")) {
-        if(TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Currency.ItemCurrency")) {
-          Material majorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMajor"));
-          Material minorItem = Material.getMaterial(TNE.instance.worldConfigurations.getString("Worlds." + world + ".Currency.ItemMinor"));
-          MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
-          MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
-        }
-      } else {
-        if(!account.getBalances().containsKey(world)) {
-          initializeWorldData(id, world);
-        }
-        account.setBalance(world, balance);
-      }
-    }
-    if(TNE.instance.api.getBoolean("Core.Currency.ItemCurrency", world)) {
-      Material majorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMajor", world));
-      Material minorItem = Material.getMaterial(TNE.instance.api.getString("Core.Currency.ItemMinor", world));
+
+    if(currency.isItem()) {
+      Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
+      Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
       MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
     } else {
@@ -155,31 +108,25 @@ public class AccountUtils {
   }
 
   public static Double getFunds(UUID id, String world) {
-    double funds = getBalance(id, world);
+    double funds = getBalance(id, world, "Default");
     if(TNE.instance.api.getBoolean("Core.Bank.Connected", world)) {
       funds += BankUtils.getBankBalance(id, world);
     }
     return funds;
   }
 
-  public static void setFunds(UUID id, double amount) {
-    setFunds(id, MISCUtils.getWorld(id), amount);
-    amount = round(amount);
-    setBalance(id, amount);
-  }
-
   public static void setFunds(UUID id, String world, double amount) {
-    setBalance(id, world, round(amount));
+    setBalance(id, world, "Default", round(amount));
   }
 
   public static void removeFunds(UUID id, String world, double amount) {
-    double difference = amount - getBalance(id, world);
+    double difference = amount - getBalance(id, world, "Default");
     if(difference > 0) {
       BankUtils.setBankBalance(id, world, round(BankUtils.getBankBalance(id, world) - difference));
-      setBalance(id, world, 0.0);
+      setBalance(id, world, "Default", 0.0);
       return;
     }
-    setBalance(id, world, round(getBalance(id, world) - amount));
+    setBalance(id, world, "Default", round(getBalance(id, world, "Default") - amount));
   }
 
   public static void initializeWorldData(UUID id, String world) {

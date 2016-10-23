@@ -47,7 +47,7 @@ public class CurrencyManager {
     String base = ((world)? "Worlds." + name : "Core") + ".Currency";
     if(configuration.contains(base)) {
       String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
-      String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "{major} and {minor}{shorten=false}";
+      String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten=false>";
       String curName = "Default";
       Boolean worldDefault = true;
       Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;

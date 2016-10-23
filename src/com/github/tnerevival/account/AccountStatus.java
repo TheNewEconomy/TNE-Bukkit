@@ -30,23 +30,11 @@ public enum AccountStatus {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public Boolean getBalance() {
     return balance;
   }
 
-  public void setBalance(Boolean balance) {
-    this.balance = balance;
-  }
-
   public Boolean getBank() {
     return bank;
-  }
-
-  public void setBank(Boolean bank) {
-    this.bank = bank;
   }
 }

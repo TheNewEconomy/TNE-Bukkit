@@ -117,4 +117,8 @@ public class Currency {
   public void setMinorPlural(String plural) {
     tiers.get("Minor").setPlural(plural);
   }
+
+  public Tier getTier(String id) {
+    return tiers.get(id);
+  }
 }

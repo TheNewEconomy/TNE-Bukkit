@@ -2,6 +2,7 @@ package com.github.tnerevival.core.api;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -65,8 +66,7 @@ public class TNEAPI {
 
   @Deprecated
   public Account getAccount(String username) {
-    Account account = AccountUtils.getAccount(getPlayerID(username));
-    return account;
+    return AccountUtils.getAccount(getPlayerID(username));
   }
 
   @Deprecated
@@ -202,28 +202,22 @@ public class TNEAPI {
   }
 
   public Double getDouble(String configuration) {
-    String world = TNE.instance.defaultWorld;
-    String value = getConfiguration(configuration, world, "").toString();
-    String replaced = value.replace(getString("Core.Currency.Decimal", world, ""), ".");
-    return Double.valueOf(replaced);
+    return getDouble(configuration, TNE.instance.defaultWorld);
   }
 
   public Double getDouble(String configuration, String world) {
     String value = getConfiguration(configuration, world, "").toString();
-    String replaced = value.replace(getString("Core.Currency.Decimal", world, ""), ".");
-    return Double.valueOf(replaced);
+    return CurrencyFormatter.translateDouble(value, world);
   }
 
   public Double getDouble(String configuration, String world, UUID uuid) {
     String value = getConfiguration(configuration, world, uuid).toString();
-    String replaced = value.replace(getString("Core.Currency.Decimal", world, uuid), ".");
-    return Double.valueOf(replaced);
+    return CurrencyFormatter.translateDouble(value, world);
   }
 
   public Double getDouble(String configuration, String world, String player) {
     String value = getConfiguration(configuration, world, player).toString();
-    String replaced = value.replace(getString("Core.Currency.Decimal", world, player), ".");
-    return Double.valueOf(replaced);
+    return CurrencyFormatter.translateDouble(value, world);
   }
 
   public Integer getInteger(String configuration) {

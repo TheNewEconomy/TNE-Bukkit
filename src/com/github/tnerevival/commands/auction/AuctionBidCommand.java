@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.auction;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
@@ -66,7 +67,7 @@ public class AuctionBidCommand extends TNECommand {
       new Message("Messages.Auction.BidRequire").translate(world, sender);
       return false;
     }
-    Double bid = Double.valueOf(arguments[0].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+    Double bid = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
     Integer lot = (arguments.length >= 2 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : -1;
     if(lot == -1) {
       if(plugin.manager.auctionManager.requireLot(world)) {

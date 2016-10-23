@@ -46,4 +46,16 @@ from the start of the expression.
 Comments are formatted in a specific way to improve readability, and help guide developers to writing cleaning
 code that requires less comments.
 
+###General
+Some general rules to follow for comments, no matter the type.
+- Never have any one line in a comment be of length greater than 80
+- Never use "leetspeak", or anything of the same nature, keep comments classy.
+- Be straight forward and to the point.
+
 ###Inline Comments
+Inline comments are meant to be used when you only require one to two lines for describing a class, method, and/or variable.
+
+When to use inline comments:
+- When one to two line comments are sufficient documentation for what you're describing.
+- Inline comments should always use the "//" comment declaration characters.
+

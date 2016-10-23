@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.money;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -38,7 +39,7 @@ public class MoneyGiveCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String world = (arguments.length == 3)? arguments[2] : TNE.instance.defaultWorld;
-      Double value = Double.valueOf(arguments[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world, MISCUtils.getID(getPlayer(sender)).toString()), "."));
+      Double value = CurrencyFormatter.translateDouble(arguments[1], world);
       if(value < 0) {
         new Message("Messages.Money.Negative").translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
         return false;

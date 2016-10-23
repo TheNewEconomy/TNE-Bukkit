@@ -20,6 +20,7 @@ public class AdminCommand extends TNECommand {
     subCommands.add(new AdminReloadCommand(plugin));
     subCommands.add(new AdminPinCommand(plugin));
     subCommands.add(new AdminSaveCommand(plugin));
+    subCommands.add(new AdminStatusCommand(plugin));
   }
 
   @Override

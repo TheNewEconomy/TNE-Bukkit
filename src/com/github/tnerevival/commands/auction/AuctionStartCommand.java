@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.serializable.SerializableItemStack;
@@ -80,8 +81,8 @@ public class AuctionStartCommand extends TNECommand {
     Integer slot = player.getInventory().getHeldItemSlot();
     Integer amount = 1;
     Double start = TNE.instance.api.getDouble("Core.Auctions.MinStart", world, MISCUtils.getID(player).toString());
-    Double increment = TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, MISCUtils.getID(player).toString());;
-    Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, MISCUtils.getID(player).toString());;
+    Double increment = TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, MISCUtils.getID(player).toString());
+    Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, MISCUtils.getID(player).toString());
     Boolean global = !TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, MISCUtils.getID(player).toString());
     String permission = "";
     ItemStack stack = null;
@@ -91,8 +92,8 @@ public class AuctionStartCommand extends TNECommand {
         String[] split = arguments[i].toLowerCase().split(":");
         switch(split[0]) {
           case "start":
-            if(MISCUtils.isDouble(split[1], world) && Double.parseDouble(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), ".")) > start) {
-              start = Double.parseDouble(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+            if(MISCUtils.isDouble(split[1], world) && CurrencyFormatter.translateDouble(split[1], world) > start) {
+              start = CurrencyFormatter.translateDouble(split[1], world);
             } else {
               new Message("Messages.Auction.InvalidStart").translate(world, player);
               return false;
@@ -100,7 +101,7 @@ public class AuctionStartCommand extends TNECommand {
             break;
           case "increment":
             if(MISCUtils.isDouble(split[1], world)) {
-              Double value = Double.parseDouble(split[1].replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+              Double value = CurrencyFormatter.translateDouble(split[1], world);
               if(value > increment) {
                 increment = value;
               }

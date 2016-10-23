@@ -36,7 +36,7 @@ public class UpdateChecker {
     Integer current = Integer.valueOf(getCurrentBuild().replace(".", ""));
 
     if(latest < current) return ReleaseType.PRERELEASE;
-    if(latest == current) return ReleaseType.LATEST;
+    if(latest.equals(current)) return ReleaseType.LATEST;
     return ReleaseType.OUTDATED;
   }
 }

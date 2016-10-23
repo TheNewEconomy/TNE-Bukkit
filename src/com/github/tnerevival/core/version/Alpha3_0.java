@@ -162,7 +162,7 @@ public class Alpha3_0 extends Version {
       s.sharesFromString((String)info.getData("shares"));
       MISCUtils.debug("Items:" + info.getData("items"));
 
-      if(((String)info.getData("items")).trim() != "") {
+      if(!((String)info.getData("items")).trim().equals("")) {
         s.itemsFromString((String) info.getData("items"));
       }
 

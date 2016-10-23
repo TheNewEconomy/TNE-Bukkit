@@ -34,15 +34,6 @@ public class Account implements Serializable {
 
   private UUID uid;
 
-  /**
-   * The account's balance of in-game virtual currency.
-   */
-  private double balance;
-
-  /**
-   * The status of this account in String form.
-   */
-  //TODO: Make use of account statuses
   private AccountStatus status;
 
   private String pin;
@@ -211,10 +202,6 @@ public class Account implements Serializable {
     return uid;
   }
 
-  public void setUid(UUID uid) {
-    this.uid = uid;
-  }
-
   /**
    * @return the joined
    */
@@ -227,13 +214,6 @@ public class Account implements Serializable {
    */
   public void setJoined(String joined) {
     this.joined = joined;
-  }
-
-  /**
-   * @return the balance
-   */
-  public double getBalance() {
-    return balance;
   }
 
   /**

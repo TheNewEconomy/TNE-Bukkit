@@ -216,7 +216,7 @@ public class SerializableItemStack implements Serializable {
       if(!this.lore.isEmpty()) {
         stackMeta.setLore(this.lore);
       }
-      if(!this.customName.equals(null) && !this.customName.equals("TNENOSTRINGVALUE") && !this.customName.isEmpty()) {
+      if(this.customName != null && !this.customName.equals("TNENOSTRINGVALUE") && !this.customName.isEmpty()) {
         stackMeta.setDisplayName(this.customName);
       }
       stack.setItemMeta(stackMeta);
