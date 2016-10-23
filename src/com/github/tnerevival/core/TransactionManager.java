@@ -4,6 +4,13 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.transaction.*;
 
 import java.util.*;
+import com.github.tnerevival.core.transaction.Transaction;
+import com.github.tnerevival.core.transaction.TransactionCost;
+import com.github.tnerevival.core.transaction.TransactionHistory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin

@@ -94,7 +94,7 @@ public class Message {
 		String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");
 		for(String s : message) {
 			String send = s;
-      MISCUtils.debug(send);
+            MISCUtils.debug(send);
 			if (!send.equals(this.node)) {
 				Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
 
@@ -104,7 +104,7 @@ public class Message {
 				}
 			}
 			Boolean strip = !(sender instanceof Player);
-      sender.sendMessage(replaceColours(send, strip));
+            sender.sendMessage(replaceColours(send, strip));
 		}
 	}
 }
