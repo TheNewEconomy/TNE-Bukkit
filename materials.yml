@@ -5,6 +5,8 @@
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 
 Materials:
+
+    Enabled: false
         
     #All configurations relating to items
     Items:

@@ -15,7 +15,6 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.MaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -165,8 +164,7 @@ public abstract class TNEInventory {
       if(inventory.getType().equals(InventoryType.ENCHANTING)) {
         intType = InteractionType.ENCHANT;
       }
-      String name = MaterialUtils.formatMaterialNameWithoutSpace(item.getType()).toLowerCase();
-      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(MISCUtils.getPlayer(viewer.getUUID()), name, intType);
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(MISCUtils.getPlayer(viewer.getUUID()), item.getType().name(), intType);
       Bukkit.getServer().getPluginManager().callEvent(e);
 
       if(e.isCancelled()) {

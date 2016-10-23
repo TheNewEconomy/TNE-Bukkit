@@ -17,6 +17,7 @@ public class MaterialsConfiguration extends Configuration {
     Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
     //Load Materials
+    configurations.put("Materials.Enabled", false);
     loadMaterials(configurationFile, "", null, true);
     loadMaterials(configurationFile, "", null, false);
     for(String identifier : identifiers) {

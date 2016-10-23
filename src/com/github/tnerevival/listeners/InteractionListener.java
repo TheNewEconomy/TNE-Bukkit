@@ -118,7 +118,7 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onBreak(BlockBreakEvent event) {
-    String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType()).toLowerCase();
+    String name = event.getBlock().getType().name();
 
     if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
       if(SignUtils.validSign(event.getBlock().getLocation())) {
@@ -145,7 +145,7 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onPlace(BlockPlaceEvent event) {
-    String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getBlock().getType()).toLowerCase();
+    String name = event.getBlock().getType().name();
 
     if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
       if(SignUtils.validSign(event.getBlock().getLocation())) {
@@ -165,7 +165,7 @@ public class InteractionListener implements Listener {
   @EventHandler
   public void onSmelt(FurnaceSmeltEvent event) {
     if(event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
-      String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getSource().getType()).toLowerCase();
+      String name = event.getBlock().getType().name();
       if(event.getBlock().getState() instanceof Furnace) {
         Furnace f = (Furnace)event.getBlock().getState();
 
@@ -191,7 +191,7 @@ public class InteractionListener implements Listener {
     if(event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
 
       ItemStack result = event.getItem();
-      String name = MaterialUtils.formatMaterialNameWithoutSpace(result.getType()).toLowerCase();
+      String name = result.getType().name();
       Double cost = InteractionType.ENCHANT.getCost(name, MISCUtils.getWorld(event.getEnchanter()), MISCUtils.getID(event.getEnchanter()).toString());
 
       List<String> lore = new ArrayList<>();
@@ -213,40 +213,53 @@ public class InteractionListener implements Listener {
   public void onPreCraft(PrepareItemCraftEvent event) {
     if(event.getInventory().getResult() != null) {
       Player player = (Player)event.getView().getPlayer();
-      String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType()).toLowerCase();
-      Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 
-      List<String> lore = new ArrayList<>();
-      lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
+      if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player))) {
+        String name = event.getInventory().getResult().getType().name();
+        Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 
-      ItemStack result = event.getInventory().getResult();
-      ItemMeta meta = result.getItemMeta();
-      meta.setLore(lore);
-      result.setItemMeta(meta);
-      event.getInventory().setResult(result);
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
+
+        ItemStack result = event.getInventory().getResult();
+        ItemMeta meta = result.getItemMeta();
+        meta.setLore(lore);
+        result.setItemMeta(meta);
+        event.getInventory().setResult(result);
+      }
     }
   }
 
   @EventHandler
   public void onCraft(CraftItemEvent event) {
 
-    String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getInventory().getResult().getType()).toLowerCase();
+    Player player = (Player) event.getWhoClicked();
 
-    ItemStack result = event.getInventory().getResult();
-    ItemMeta meta = result.getItemMeta();
-    meta.setLore(new ArrayList<String>());
-    result.setItemMeta(meta);
+    if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player))) {
 
-    Player player = (Player)event.getWhoClicked();
+      String name = event.getInventory().getResult().getType().name();
 
-    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
-    Bukkit.getServer().getPluginManager().callEvent(e);
+      Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+      ItemStack result = event.getInventory().getResult().clone();
+      ItemMeta meta = result.getItemMeta();
+      List<String> newLore = new ArrayList<>();
+      for(String s : meta.getLore()) {
+        if(!s.contains("Crafting Cost")) {
+          newLore.add(s);
+        }
+      }
+      meta.setLore(newLore);
+      result.setItemMeta(meta);
 
-    if(e.isCancelled()) {
-      event.setCancelled(true);
-      return;
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
+      Bukkit.getServer().getPluginManager().callEvent(e);
+
+      if (e.isCancelled()) {
+        event.setCancelled(true);
+        return;
+      }
+      event.setCurrentItem(result);
     }
-    event.getInventory().setResult(result);
   }
 
   @EventHandler
@@ -372,7 +385,7 @@ public class InteractionListener implements Listener {
           }
         }
       } else {
-        String name = MaterialUtils.formatMaterialNameWithoutSpace(event.getMaterial()).toLowerCase();
+        String name = event.getMaterial().name();
         TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
         Bukkit.getServer().getPluginManager().callEvent(e);
 
