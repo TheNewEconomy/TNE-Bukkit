@@ -8,6 +8,12 @@ Auctions
     - This gives a sense of mystery to auctions, and means players may be likely to be against their self.
   - Lots of configuration options
   
+Currency
+- Added in a new advanced currency system
+  - Ability to create a custom currency format for chat.
+  - Ability to configure custom symbols for currencies
+  - Ability to configure a conversion rating(not used at this time)
+  
 Transactions
 - Ability to track transaction history.
 
