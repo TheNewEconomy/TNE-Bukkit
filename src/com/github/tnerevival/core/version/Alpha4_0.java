@@ -3,6 +3,8 @@ package com.github.tnerevival.core.version;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.H2;
 import com.github.tnerevival.core.db.MySQL;
@@ -13,6 +15,8 @@ import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.transaction.TransactionCost;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.SignUtils;
@@ -34,7 +38,6 @@ public class Alpha4_0 extends Version {
 
   @Override
   public void update(double version, String type) {
-    if(version == 3.0 || version == 3.1 || version == 3.2 || version == 3.3) return;
     String table = prefix + "_ECOIDS";
     if(type.equalsIgnoreCase("mysql")) {
       db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
@@ -58,6 +61,33 @@ public class Alpha4_0 extends Version {
           "PRIMARY KEY(shop_name, shop_world)" +
           ");");
 
+      table = prefix + "_AUCTIONS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`auction_lot` INT(60) NOT NULL," +
+          "`auction_added` BIGINT(60) NOT NULL," +
+          "`auction_start` BIGINT(60) NOT NULL," +
+          "`auction_owner` VARCHAR(36)," +
+          "`auction_world` VARCHAR(36)," +
+          "`auction_silent` TINYINT(1)," +
+          "`auction_item` LONGTEXT," +
+          "`auction_cost` LONGTEXT," +
+          "`auction_increment` DOUBLE," +
+          "`auction_global` TINYINT(1)," +
+          "`auction_time` INT(20)," +
+          "`auction_node` LONGTEXT," +
+          "PRIMARY KEY(auction_lot)" +
+          ");");
+
+      table = prefix +"_CLAIMS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`claim_player` VARCHAR(36)," +
+          "`claim_lot` INT(60) NOT NULL," +
+          "`claim_item` LONGTEXT," +
+          "`claim_paid` TINYINT(1)," +
+          "`claim_cost` LONGTEXT," +
+          "PRIMARY KEY(claim_player, claim_lot)" +
+          ");");
+
       table = prefix + "_USERS";
       mysql().executeUpdate("ALTER TABLE `" + table + "` DROP COLUMN `overflow`");
       mysql().executeUpdate("ALTER TABLE `" + table + "` ADD COLUMN `acc_pin` VARCHAR(30)," +
@@ -72,8 +102,37 @@ public class Alpha4_0 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
+          ");");
+    } else if(type.equals("h2")) {
+      db = new H2(h2File, mysqlUser, mysqlPassword);
+
+      table = prefix + "_AUCTIONS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`auction_lot` INT(60) NOT NULL," +
+          "`auction_added` BIGINT(60) NOT NULL," +
+          "`auction_start` BIGINT(60) NOT NULL," +
+          "`auction_owner` VARCHAR(36)," +
+          "`auction_world` VARCHAR(36)," +
+          "`auction_silent` TINYINT(1)," +
+          "`auction_item` LONGTEXT," +
+          "`auction_cost` LONGTEXT," +
+          "`auction_increment` DOUBLE," +
+          "`auction_global` TINYINT(1)," +
+          "`auction_time` INT(20)," +
+          "`auction_node` LONGTEXT," +
+          "PRIMARY KEY(auction_lot)" +
+          ");");
+
+      table = prefix +"_CLAIMS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`claim_player` VARCHAR(36)," +
+          "`claim_lot` INT(60) NOT NULL," +
+          "`claim_item` LONGTEXT," +
+          "`claim_paid` TINYINT(1)," +
+          "`claim_cost` LONGTEXT," +
+          "PRIMARY KEY(claim_player, claim_lot)" +
           ");");
     }
   }
@@ -85,12 +144,16 @@ public class Alpha4_0 extends Version {
     Section accounts = null;
     Section ids = null;
     Section shops = null;
+    Section auctions = null;
+    Section claims = null;
     Section signs = null;
     try {
       connection.getOIS().readDouble();
       accounts = (Section) connection.getOIS().readObject();
       ids = (Section) connection.getOIS().readObject();
       shops = (Section) connection.getOIS().readObject();
+      auctions = (Section) connection.getOIS().readObject();
+      claims = (Section) connection.getOIS().readObject();
       signs = (Section) connection.getOIS().readObject();
       connection.close();
     } catch (Exception e) {
@@ -167,6 +230,38 @@ public class Alpha4_0 extends Version {
       }
 
       TNE.instance.manager.shops.put(shopEntry.getKey() + ":" + s.getWorld(), s);
+    }
+
+    for(Article a : auctions.getArticle().values()) {
+      Entry info = a.getEntry("info");
+      Auction auction = new Auction((int)info.getData("lot"));
+      auction.setAdded((int)info.getData("added"));
+      auction.setStartTime((int)info.getData("start"));
+      auction.setPlayer(UUID.fromString((String)info.getData("player")));
+      auction.setWorld((String)info.getData("world"));
+      auction.setSilent((boolean)info.getData("silent"));
+      auction.setItem(SerializableItemStack.fromString((String)info.getData("item")));
+      auction.setCost(new TransactionCost((double)info.getData("cost")));
+      auction.setIncrement((double)info.getData("increment"));
+      auction.setGlobal((boolean)info.getData("global"));
+      auction.setTime((int)info.getData("time"));
+      auction.setNode((String)info.getData("node"));
+
+      TNE.instance.manager.auctionManager.add(auction);
+    }
+
+    for(Article a : claims.getArticle().values()) {
+      Entry info = a.getEntry("info");
+
+      Claim claim = new Claim(
+          UUID.fromString((String)info.getData("player")),
+          (int)info.getData("lot"),
+          SerializableItemStack.fromString((String)info.getData("item")),
+          new TransactionCost((double)info.getData("cost"))
+      );
+      claim.setPaid((boolean)info.getData("paid"));
+
+      TNE.instance.manager.auctionManager.unclaimed.add(claim);
     }
 
     Iterator<Map.Entry<String, Article>> signsIterator = signs.getArticle().entrySet().iterator();
@@ -266,6 +361,39 @@ public class Alpha4_0 extends Version {
       shops.addArticle(s.getName(), a);
     }
 
+    Section auctions = new Section("AUCTIONS");
+    for(Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
+      Article a = new Article(auction.getLotNumber() + "");
+      Entry info = new Entry("info");
+      info.addData("lot", auction.getLotNumber());
+      info.addData("added", auction.getAdded());
+      info.addData("start", auction.getStartTime());
+      info.addData("player", auction.getPlayer().toString());
+      info.addData("world", auction.getWorld());
+      info.addData("silent", auction.getSilent());
+      info.addData("item", auction.getItem().toString());
+      info.addData("cost", auction.getCost().getAmount());
+      info.addData("increment", auction.getIncrement());
+      info.addData("global", auction.getGlobal());
+      info.addData("time", auction.getTime());
+      info.addData("node", auction.getNode());
+      a.addEntry(info);
+      auctions.addArticle(auction.getLotNumber() + "", a);
+    }
+
+    Section claims = new Section("CLAIMS");
+    for(Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
+      Article a = new Article(claim.getLot() + "");
+      Entry info = new Entry("info");
+      info.addData("player", claim.getPlayer().toString());
+      info.addData("lot", claim.getLot());
+      info.addData("item", claim.getItem().toString());
+      info.addData("paid", claim.isPaid());
+      info.addData("cost", claim.getCost().getAmount());
+      a.addEntry(info);
+      claims.addArticle(claim.getLot() + "", a);
+    }
+
     Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
     Section signs = new Section("SIGNS");
 
@@ -292,6 +420,8 @@ public class Alpha4_0 extends Version {
       connection.getOOS().writeObject(accounts);
       connection.getOOS().writeObject(ids);
       connection.getOOS().writeObject(shops);
+      connection.getOOS().writeObject(auctions);
+      connection.getOOS().writeObject(claims);
       connection.getOOS().writeObject(signs);
       connection.close();
     } catch (IOException e) {
@@ -347,7 +477,39 @@ public class Alpha4_0 extends Version {
         s.sharesFromString(mysql().results().getString("shop_shares"));
         TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
       }
-      mysql().close();
+
+      table = prefix + "_AUCTIONS";
+      mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results().next()) {
+        Auction auction = new Auction(mysql().results().getInt("auction_lot"));
+        auction.setAdded(mysql().results().getInt("auction_added"));
+        auction.setStartTime(mysql().results().getInt("auction_start"));
+        auction.setPlayer(UUID.fromString(mysql().results().getString("auction_owner")));
+        auction.setWorld(mysql().results().getString("auction_world"));
+        auction.setSilent(SQLDatabase.boolFromDB(mysql().results().getInt("auction_silent")));
+        auction.setItem(SerializableItemStack.fromString(mysql().results().getString("auction_item")));
+        auction.setCost(new TransactionCost(Double.valueOf(mysql().results().getString("auction_cost"))));
+        auction.setIncrement(mysql().results().getDouble("auction_increment"));
+        auction.setGlobal(SQLDatabase.boolFromDB(mysql().results().getInt("auction_global")));
+        auction.setTime(mysql().results().getInt("auction_time"));
+        auction.setNode(mysql().results().getString("auction_node"));
+
+        TNE.instance.manager.auctionManager.add(auction);
+      }
+
+      table = prefix + "_CLAIMS";
+      mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results().next()) {
+        Claim claim = new Claim(//uuid, lot, item, cost
+            UUID.fromString(mysql().results().getString("claim_player")),
+            mysql().results().getInt("claim_lot"),
+            SerializableItemStack.fromString(mysql().results().getString("claim_item")),
+            new TransactionCost(Double.valueOf(mysql().results().getString("claim_cost")))
+        );
+        claim.setPaid(SQLDatabase.boolFromDB(mysql().results().getInt("claim_paid")));
+
+        TNE.instance.manager.auctionManager.unclaimed.add(claim);
+      }
 
       table = prefix + "_SIGNS";
       mysql().executeQuery("SELECT * FROM `" + table + "`;");
@@ -357,6 +519,7 @@ public class Alpha4_0 extends Version {
         sign.loadMeta(mysql().results().getString("sign_meta"));
         TNE.instance.manager.signs.put(sign.getLocation(), sign);
       }
+      mysql().close();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -454,6 +617,54 @@ public class Alpha4_0 extends Version {
           });
     }
 
+    table = prefix + "_AUCTIONS";
+    for(Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
+
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (auction_lot, auction_added, auction_start, auction_owner, auction_world, auction_silent, auction_item, auction_cost, auction_increment, auction_global, auction_time, auction_node) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE auction_added = ?, auction_start = ?, auction_owner = ?, auction_world = ?, auction_silent = ?, auction_item = ?, auction_cost = ?, auction_increment = ?, auction_global = ?, auction_time = ?, auction_node = ?",
+          new Object[] {
+              auction.getLotNumber(),
+              auction.getAdded(),
+              auction.getStartTime(),
+              auction.getPlayer().toString(),
+              auction.getWorld(),
+              SQLDatabase.boolToDB(auction.getSilent()),
+              auction.getItem().toString(),
+              auction.getCost().getAmount(),
+              auction.getIncrement(),
+              SQLDatabase.boolToDB(auction.getGlobal()),
+              auction.getTime(),
+              auction.getNode(),
+              auction.getAdded(),
+              auction.getStartTime(),
+              auction.getPlayer().toString(),
+              auction.getWorld(),
+              SQLDatabase.boolToDB(auction.getSilent()),
+              auction.getItem().toString(),
+              auction.getCost().getAmount(),
+              auction.getIncrement(),
+              SQLDatabase.boolToDB(auction.getGlobal()),
+              auction.getTime(),
+              auction.getNode()
+          });
+    }
+
+    table = prefix + "_CLAIMS";
+    for(Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
+      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (claim_player, claim_lot, claim_item, claim_paid, claim_cost) VALUES(?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE claim_item = ?, claim_paid = ?, claim_cost = ?",
+          new Object[] {
+              claim.getPlayer().toString(),
+              claim.getLot(),
+              claim.getItem().toString(),
+              SQLDatabase.boolToDB(claim.isPaid()),
+              claim.getCost().getAmount(),
+              claim.getItem().toString(),
+              SQLDatabase.boolToDB(claim.isPaid()),
+              claim.getCost().getAmount()
+          });
+    }
+
     Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
 
     while(signIT.hasNext()) {
@@ -533,6 +744,39 @@ public class Alpha4_0 extends Version {
         s.listFromString(h2().results().getString("shop_whitelist"), false);
         s.sharesFromString(h2().results().getString("shop_shares"));
         TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
+      }
+
+      table = prefix + "_AUCTIONS";
+      h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results().next()) {
+        Auction auction = new Auction(h2().results().getInt("auction_lot"));
+        auction.setAdded(h2().results().getInt("auction_added"));
+        auction.setStartTime(h2().results().getInt("auction_start"));
+        auction.setPlayer(UUID.fromString(h2().results().getString("auction_owner")));
+        auction.setWorld(h2().results().getString("auction_world"));
+        auction.setSilent(SQLDatabase.boolFromDB(h2().results().getInt("auction_silent")));
+        auction.setItem(SerializableItemStack.fromString(h2().results().getString("auction_item")));
+        auction.setCost(new TransactionCost(Double.valueOf(h2().results().getString("auction_cost"))));
+        auction.setIncrement(h2().results().getDouble("auction_increment"));
+        auction.setGlobal(SQLDatabase.boolFromDB(h2().results().getInt("auction_global")));
+        auction.setTime(h2().results().getInt("auction_time"));
+        auction.setNode(h2().results().getString("auction_node"));
+
+        TNE.instance.manager.auctionManager.add(auction);
+      }
+
+      table = prefix + "_CLAIMS";
+      h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results().next()) {
+        Claim claim = new Claim(//uuid, lot, item, cost
+            UUID.fromString(h2().results().getString("claim_player")),
+            h2().results().getInt("claim_lot"),
+            SerializableItemStack.fromString(h2().results().getString("claim_item")),
+            new TransactionCost(Double.valueOf(h2().results().getString("claim_cost")))
+        );
+        claim.setPaid(SQLDatabase.boolFromDB(h2().results().getInt("claim_paid")));
+
+        TNE.instance.manager.auctionManager.unclaimed.add(claim);
       }
 
       table = prefix + "_SIGNS";
@@ -642,6 +886,54 @@ public class Alpha4_0 extends Version {
           });
     }
 
+    table = prefix + "_AUCTIONS";
+    for(Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
+
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (auction_lot, auction_added, auction_start, auction_owner, auction_world, auction_silent, auction_item, auction_cost, auction_increment, auction_global, auction_time, auction_node) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE auction_added = ?, auction_start = ?, auction_owner = ?, auction_world = ?, auction_silent = ?, auction_item = ?, auction_cost = ?, auction_increment = ?, auction_global = ?, auction_time = ?, auction_node = ?",
+          new Object[] {
+              auction.getLotNumber(),
+              auction.getAdded(),
+              auction.getStartTime(),
+              auction.getPlayer().toString(),
+              auction.getWorld(),
+              SQLDatabase.boolToDB(auction.getSilent()),
+              auction.getItem().toString(),
+              auction.getCost().getAmount(),
+              auction.getIncrement(),
+              SQLDatabase.boolToDB(auction.getGlobal()),
+              auction.getTime(),
+              auction.getNode(),
+              auction.getAdded(),
+              auction.getStartTime(),
+              auction.getPlayer().toString(),
+              auction.getWorld(),
+              SQLDatabase.boolToDB(auction.getSilent()),
+              auction.getItem().toString(),
+              auction.getCost().getAmount(),
+              auction.getIncrement(),
+              SQLDatabase.boolToDB(auction.getGlobal()),
+              auction.getTime(),
+              auction.getNode()
+          });
+    }
+
+    table = prefix + "_CLAIMS";
+    for(Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (claim_player, claim_lot, claim_item, claim_paid, claim_cost) VALUES(?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE claim_item = ?, claim_paid = ?, claim_cost = ?",
+          new Object[] {
+              claim.getPlayer().toString(),
+              claim.getLot(),
+              claim.getItem().toString(),
+              SQLDatabase.boolToDB(claim.isPaid()),
+              claim.getCost().getAmount(),
+              claim.getItem().toString(),
+              SQLDatabase.boolToDB(claim.isPaid()),
+              claim.getCost().getAmount()
+          });
+    }
+
     Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
 
     while(signIT.hasNext()) {
@@ -710,6 +1002,33 @@ public class Alpha4_0 extends Version {
           "PRIMARY KEY(shop_name, shop_world)" +
           ");");
 
+      table = prefix + "_AUCTIONS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`auction_lot` INT(60) NOT NULL," +
+          "`auction_added` BIGINT(60) NOT NULL," +
+          "`auction_start` BIGINT(60) NOT NULL," +
+          "`auction_owner` VARCHAR(36)," +
+          "`auction_world` VARCHAR(36)," +
+          "`auction_silent` TINYINT(1)," +
+          "`auction_item` LONGTEXT," +
+          "`auction_cost` LONGTEXT," +
+          "`auction_increment` DOUBLE," +
+          "`auction_global` TINYINT(1)," +
+          "`auction_time` INT(20)," +
+          "`auction_node` LONGTEXT," +
+          "PRIMARY KEY(auction_lot)" +
+          ");");
+
+      table = prefix +"_CLAIMS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`claim_player` VARCHAR(36)," +
+          "`claim_lot` INT(60) NOT NULL," +
+          "`claim_item` LONGTEXT," +
+          "`claim_paid` TINYINT(1)," +
+          "`claim_cost` LONGTEXT," +
+          "PRIMARY KEY(claim_player, claim_lot)" +
+          ");");
+
       table = prefix + "_BANKS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
@@ -773,6 +1092,33 @@ public class Alpha4_0 extends Version {
           "`shop_blacklist` LONGTEXT," +
           "`shop_whitelist` LONGTEXT," +
           "`shop_shares` LONGTEXT" +
+          ");");
+
+      table = prefix + "_AUCTIONS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`auction_lot` INT(60) NOT NULL," +
+          "`auction_added` BIGINT(60) NOT NULL," +
+          "`auction_start` BIGINT(60) NOT NULL," +
+          "`auction_owner` VARCHAR(36)," +
+          "`auction_world` VARCHAR(36)," +
+          "`auction_silent` TINYINT(1)," +
+          "`auction_item` LONGTEXT," +
+          "`auction_cost` LONGTEXT," +
+          "`auction_increment` DOUBLE," +
+          "`auction_global` TINYINT(1)," +
+          "`auction_time` INT(20)," +
+          "`auction_node` LONGTEXT," +
+          "PRIMARY KEY(auction_lot)" +
+          ");");
+
+      table = prefix +"_CLAIMS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`claim_player` VARCHAR(36)," +
+          "`claim_lot` INT(60) NOT NULL," +
+          "`claim_item` LONGTEXT," +
+          "`claim_paid` TINYINT(1)," +
+          "`claim_cost` LONGTEXT," +
+          "PRIMARY KEY(claim_player, claim_lot)" +
           ");");
 
       table = prefix + "_BANKS";

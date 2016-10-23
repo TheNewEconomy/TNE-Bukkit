@@ -239,7 +239,6 @@ public class InteractionListener implements Listener {
 
       String name = event.getInventory().getResult().getType().name();
 
-      Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
       ItemStack result = event.getInventory().getResult().clone();
       ItemMeta meta = result.getItemMeta();
       List<String> newLore = new ArrayList<>();

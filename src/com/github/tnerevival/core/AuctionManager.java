@@ -21,7 +21,7 @@ import java.util.*;
 public class AuctionManager {
   private Map<Integer, Auction> auctionQueue = new HashMap<>();
   private Map<Integer, Auction> active = new HashMap<>();
-  private List<Claim> unclaimed = new ArrayList<>();
+  public List<Claim> unclaimed = new ArrayList<>();
 
   private int lastLot = 0;
 
@@ -394,5 +394,12 @@ public class AuctionManager {
 
   public void remove(Integer lot) {
     auctionQueue.remove(lot);
+  }
+
+  public Collection<Auction> getJoined() {
+    Collection<Auction> joined = auctionQueue.values();
+    joined.addAll(active.values());
+
+    return joined;
   }
 }
