@@ -50,13 +50,13 @@ public class BankWithdrawCommand extends TNECommand {
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
           if(AccountUtils.transaction(MISCUtils.getID(owner).toString(), MISCUtils.getID(player).toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
-            withdrawn.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
+            withdrawn.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             withdrawn.addVariable("$name",  ownerName);
             withdrawn.translate(MISCUtils.getWorld(player), player);
             return true;
           } else {
             Message overdraw = new Message("Messages.Bank.Overdraw");
-            overdraw.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
+            overdraw.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             overdraw.addVariable("$name",  ownerName);
             overdraw.translate(MISCUtils.getWorld(player), player);
             return false;

@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.bank;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class BankPriceCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     Message cost = new Message("Messages.Bank.Cost");
-    cost.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), MISCUtils.getID(player).toString())));
+    cost.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), MISCUtils.getID(player).toString())));
     cost.translate(MISCUtils.getWorld(player), player);
     return true;
   }

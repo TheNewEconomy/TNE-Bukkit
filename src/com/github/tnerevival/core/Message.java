@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class Message {
 
-  private static final Map<String, String> colours;
+  public static final Map<String, String> colours;
   static {
     colours = new HashMap<>();
     //Colour Characters

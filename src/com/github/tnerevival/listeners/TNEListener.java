@@ -2,6 +2,7 @@ package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -37,7 +38,7 @@ public class TNEListener implements Listener {
         } else {
           event.setCancelled(true);
           Message insufficient = new Message("Messages.Money.Insufficient");
-          insufficient.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(cost)));
+          insufficient.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
           insufficient.translate(world, event.getPlayer());
           return;
         }
@@ -49,7 +50,7 @@ public class TNEListener implements Listener {
       String newName = event.getIdentifier() + ((event.getAmount() > 1 )? "\'s" : "");
 
       Message m = new Message(message);
-      m.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(cost)));
+      m.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
       m.addVariable("$stack_size", event.getAmount() + "");
       m.addVariable("$item", newName);
       m.translate(world, event.getPlayer());

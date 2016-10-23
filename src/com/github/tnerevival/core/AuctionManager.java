@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Bid;
 import com.github.tnerevival.core.auction.Claim;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -30,11 +31,11 @@ public class AuctionManager {
     String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
 
     Message send = new Message(message);
-    send.addVariable("$start", MISCUtils.formatBalance(auction.getWorld(), auction.getCost().getAmount()));
+    send.addVariable("$start", CurrencyFormatter.format(auction.getWorld(), auction.getCost().getAmount()));
     send.addVariable("$item", auction.getItem().toItemStack().getType().name());
     send.addVariable("$lot", auction.getLotNumber() + "");
     if(auction.getHighestBid() != null) {
-      send.addVariable("$amount", MISCUtils.formatBalance(world, auction.getHighestBid().getBid().getAmount()));
+      send.addVariable("$amount", CurrencyFormatter.format(world, auction.getHighestBid().getBid().getAmount()));
       send.addVariable("$player", MISCUtils.getPlayer(auction.getHighestBid().getBidder()).getDisplayName());
     }
 
@@ -49,7 +50,7 @@ public class AuctionManager {
 
   public void notifyPlayers(String world, Integer lot, Boolean ignore) {
     Auction a = getActive(world, lot);
-    String message = ChatColor.WHITE + "Auction started for " + a.getItem().getName() + " starting bid is " + ChatColor.GOLD + MISCUtils.formatBalance(world, a.getCost().getAmount()) + ChatColor.WHITE + ".";
+    String message = ChatColor.WHITE + "Auction started for " + a.getItem().getName() + " starting bid is " + ChatColor.GOLD + CurrencyFormatter.format(world, a.getCost().getAmount()) + ChatColor.WHITE + ".";
     if(a.getStartTime() != System.nanoTime()) {
       message = ChatColor.WHITE + "The auction for " + a.getItem().getName() + " will end in " + ChatColor.GREEN + a.remaining() + ChatColor.WHITE + ".";
     }
@@ -93,7 +94,7 @@ public class AuctionManager {
         notifyPlayers(world, lot, "Messages.Auction.Winner", true);
 
         Message paid = new Message("Messages.Auction.Paid");
-        paid.addVariable("$amount", MISCUtils.formatBalance(world, bid.getAmount()));
+        paid.addVariable("$amount", CurrencyFormatter.format(world, bid.getAmount()));
         paid.translate(world, MISCUtils.getPlayer(a.getPlayer()));
         active.remove(lot);
 
@@ -230,7 +231,7 @@ public class AuctionManager {
 
     if(!AccountUtils.transaction(player.toString(), null, bid, TransactionType.MONEY_INQUIRY, world)) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(bid.getAmount())));
+      insufficient.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(bid.getAmount())));
       insufficient.translate(world, MISCUtils.getPlayer(player));
       return false;
     }
@@ -238,7 +239,7 @@ public class AuctionManager {
     if(bid.getAmount() < minimum) {
       if(!auction.getSilent()) {
         Message under = new Message("Messages.Auction.Under");
-        under.addVariable("$amount", MISCUtils.formatBalance(world, minimum));
+        under.addVariable("$amount", CurrencyFormatter.format(world, minimum));
         under.translate(world, MISCUtils.getPlayer(player));
       }
       return false;
@@ -253,7 +254,7 @@ public class AuctionManager {
     active.get(lot).setHighestBid(new Bid(player, bid));
 
     Message submitted = new Message("Messages.Auction.Submitted");
-    submitted.addVariable("$amount", MISCUtils.formatBalance(world, bid.getAmount()));
+    submitted.addVariable("$amount", CurrencyFormatter.format(world, bid.getAmount()));
     submitted.addVariable("$lot", lot + "");
     submitted.translate(world, MISCUtils.getPlayer(player));
 
@@ -334,7 +335,7 @@ public class AuctionManager {
 
     if(cost > 0.0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", MISCUtils.formatBalance(auction.getWorld(), AccountUtils.round(cost)));
+      insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), AccountUtils.round(cost)));
       insufficient.translate(auction.getWorld(), MISCUtils.getPlayer(auction.getPlayer()));
       return false;
     }

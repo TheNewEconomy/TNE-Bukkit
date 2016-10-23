@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.money;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.transaction.TransactionHistory;
 import com.github.tnerevival.utils.MISCUtils;
@@ -98,7 +99,7 @@ public class MoneyHistoryCommand extends TNECommand {
         builder.append(ChatColor.GREEN + r.getPlayer() + ChatColor.WHITE + " | ");
         builder.append(ChatColor.GREEN + r.getWorld() + ChatColor.WHITE + " | ");
         builder.append(ChatColor.GREEN + amount + ChatColor.WHITE + " | ");
-        builder.append(ChatColor.GREEN + MISCUtils.formatBalance(r.getWorld(), r.getBalance()) + ChatColor.WHITE + " | ");
+        builder.append(ChatColor.GREEN + CurrencyFormatter.format(r.getWorld(), r.getBalance()) + ChatColor.WHITE + " | ");
         builder.append(ChatColor.GREEN + (r.getTime() + "") + ChatColor.WHITE);
 
         sender.sendMessage(builder.toString());

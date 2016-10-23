@@ -1,15 +1,15 @@
 package com.github.tnerevival.listeners;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 
 public class WorldListener implements Listener {
 
@@ -30,12 +30,12 @@ public class WorldListener implements Listener {
           AccountUtils.transaction(MISCUtils.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
           AccountUtils.initializeWorldData(MISCUtils.getID(player), world);
           Message change = new Message("Messages.World.Change");
-          change.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
+          change.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
           change.translate(world, player);
         } else {
           player.teleport(event.getFrom().getSpawnLocation());
           Message changeFailed = new Message("Messages.World.ChangeFailed");
-          changeFailed.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
+          changeFailed.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
           changeFailed.translate(world, player);
         }
       } else {

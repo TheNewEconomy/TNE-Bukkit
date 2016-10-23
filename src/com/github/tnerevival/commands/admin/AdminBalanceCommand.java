@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
@@ -45,7 +46,7 @@ public class AdminBalanceCommand extends TNECommand {
           Message balance = new Message("Messages.Admin.Balance");
           balance.addVariable("$player", arguments[0]);
           balance.addVariable("$world", world);
-          balance.addVariable("$amount", MISCUtils.formatBalance(world, acc.getBalance(world)));
+          balance.addVariable("$amount", CurrencyFormatter.format(world, acc.getBalance(world)));
           balance.translate(world, sender);
           return true;
         }

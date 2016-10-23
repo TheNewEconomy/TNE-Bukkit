@@ -53,7 +53,7 @@ public class MoneyPayCommand extends TNECommand {
         if(getPlayer(sender, arguments[0]) != null) {
           if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), AccountUtils.round(value), TransactionType.MONEY_PAY, MISCUtils.getWorld(player))) {
             Message paid = new Message("Messages.Money.Paid");
-            paid.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(value)));
+            paid.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), AccountUtils.round(value)));
             paid.addVariable("$player", arguments[0]);
             paid.translate(MISCUtils.getWorld(player), player);
             return true;
@@ -61,7 +61,7 @@ public class MoneyPayCommand extends TNECommand {
         }
       } else {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount", MISCUtils.formatBalance(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
+        insufficient.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
         insufficient.translate(MISCUtils.getWorld(player), player);
         return false;
       }

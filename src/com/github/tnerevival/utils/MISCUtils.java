@@ -422,57 +422,6 @@ public class MISCUtils {
     return null;
   }
 
-  //Format Utils
-  public static Boolean shorten(String world) {
-    if(multiWorld() && worldConfigExists("Worlds." + world + ".Shorten")) {
-      return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Shorten");
-    }
-    return TNE.instance.api.getBoolean("Core.Shorten", world);
-  }
-
-  public static String formatBalance(String world, double balance) {
-    return (shorten(world)) ? formatBalance(world, balance, true) : formatBalance(world, balance, false);
-  }
-
-  public static String formatBalance(String world, double balance, Boolean shorten) {
-    String balanceString = (String.valueOf(balance).contains("."))? String.valueOf(balance) : String.valueOf(balance) + ".00";
-    String[] split = balanceString.split("\\.");
-    if(Long.valueOf(split[1]) > 0) {
-      return (shorten) ? ChatColor.GOLD + getShort(Long.valueOf(split[0]), world) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major") + " and " + ChatColor.GOLD + Integer.valueOf(split[1]) + " " + getName(world, balance, "minor");
-    } else {
-      return (shorten) ? ChatColor.GOLD + getShort(Long.valueOf(split[0]), world) + " " + getName(world, balance, "major") : ChatColor.GOLD + "" + Integer.valueOf(split[0]) + " " + getName(world, balance, "major");
-    }
-  }
-
-  public static String getShort(double balance, String world) {
-    Long dollars = (long) Math.floor(balance);
-    if (dollars < 1000) {
-      return "" + dollars;
-    }
-      int exp = (int) (Math.log(dollars) / Math.log(1000));
-      String decimal = TNE.instance.api.getString("Core.Currency.Decimal", world);
-      return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
-  }
-
-  public static String getName(String world, double balance, String type) {
-    String balanceString = (String.valueOf(balance).contains(".")) ? String.valueOf(balance) : String.valueOf(balance) + ".0";
-    String[] split = balanceString.split("\\.");
-    if(type.equalsIgnoreCase("major")) {
-      return (Integer.valueOf(split[0]) != 1) ? getMajorCurrencyName(world, false) : getMajorCurrencyName(world, true);
-    } else if(type.equalsIgnoreCase("minor")) {
-      return (Integer.valueOf(split[0]) != 1) ? getMinorCurrencyName(world, false) : getMinorCurrencyName(world, true);
-    }
-    return (Integer.valueOf(split[0]) != 1) ? getMajorCurrencyName(world, false) : getMajorCurrencyName(world, true);
-  }
-
-  public static String getMajorCurrencyName(String world, Boolean singular) {
-    return (singular) ? TNE.instance.api.getString("Core.Currency.MajorName.Single", world) : TNE.instance.api.getString("Core.Currency.MajorName.Plural", world);
-  }
-
-  public static String getMinorCurrencyName(String world, Boolean singular) {
-    return (singular) ? TNE.instance.api.getString("Core.Currency.MinorName.Single", world) : TNE.instance.api.getString("Core.Currency.MinorName.Plural", world);
-  }
-
   //ItemStack Utils
   public static ItemStack getFurnaceSource(ItemStack result) {
     List<Recipe> recipes = TNE.instance.getServer().getRecipesFor(result);

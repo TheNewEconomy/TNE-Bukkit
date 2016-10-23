@@ -38,6 +38,10 @@ public class Currency {
     tiers.put(id, tier);
   }
 
+  public boolean shorten() {
+    return format.contains("<shorten>");
+  }
+
   public boolean isWorldDefault() {
     return worldDefault;
   }
@@ -90,6 +94,10 @@ public class Currency {
     return tiers.get("Major").getSingle();
   }
 
+  public String getMajor(boolean singular) {
+    return (singular)? getMajor() : getMajorPlural();
+  }
+
   public void setMajor(String singular) {
     tiers.get("Major").setSingle(singular);
   }
@@ -104,6 +112,10 @@ public class Currency {
 
   public String getMinor() {
     return tiers.get("Minor").getSingle();
+  }
+
+  public String getMinor(boolean singular) {
+    return (singular)? getMinor() : getMinorPlural();
   }
 
   public void setMinor(String singular) {

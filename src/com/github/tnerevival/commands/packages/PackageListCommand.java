@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.packages;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.objects.TNEAccessPackage;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
@@ -46,7 +47,7 @@ public class PackageListCommand extends TNECommand {
       sender.sendMessage(ChatColor.WHITE + "==============================");
       if(packages.size() > 0) {
         for(TNEAccessPackage p : packages) {
-          sender.sendMessage(ChatColor.WHITE + p.getName() + " ~ " + MISCUtils.formatBalance(MISCUtils.getWorld(player), p.getCost()) + ChatColor.WHITE + " ~ " + p.getTime());
+          sender.sendMessage(ChatColor.WHITE + p.getName() + " ~ " + CurrencyFormatter.format(MISCUtils.getWorld(player), p.getCost()) + ChatColor.WHITE + " ~ " + p.getTime());
         }
         return true;
       } else {

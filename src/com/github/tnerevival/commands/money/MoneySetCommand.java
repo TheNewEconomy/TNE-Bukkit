@@ -52,7 +52,7 @@ public class MoneySetCommand extends TNECommand {
 
         AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_SET, world);
         Message set = new Message("Messages.Money.Set");
-        set.addVariable("$amount",  MISCUtils.formatBalance(world, AccountUtils.round(value)));
+        set.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
         set.addVariable("$player", arguments[0]);
         set.translate(world, sender);
         return true;

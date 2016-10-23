@@ -132,15 +132,11 @@ public class TNEAPI {
    */
 
   public String format(Double amount) {
-    return MISCUtils.formatBalance(plugin.defaultWorld, amount);
+    return CurrencyFormatter.format(plugin.defaultWorld, amount);
   }
 
   public String format(String world, Double amount) {
-    return MISCUtils.formatBalance(world, amount);
-  }
-
-  public String format(String world, Double amount, Boolean shorten) {
-    return MISCUtils.formatBalance(world, amount, shorten);
+    return CurrencyFormatter.format(world, amount);
   }
 
   public String getCurrencyName(Boolean major, Boolean singular) {
@@ -148,7 +144,7 @@ public class TNEAPI {
   }
 
   public String getCurrencyName(Boolean major, Boolean singular, String world) {
-    return (major) ? MISCUtils.getMajorCurrencyName(world, singular) : MISCUtils.getMinorCurrencyName(world, singular);
+    return (major) ? plugin.manager.currencyManager.get(world).getMajor(singular)  : plugin.manager.currencyManager.get(world).getMinor(singular);
   }
 
   public Boolean getShorten() {
@@ -156,7 +152,7 @@ public class TNEAPI {
   }
 
   public Boolean getShorten(String world) {
-    return MISCUtils.shorten(world);
+    return plugin.manager.currencyManager.get(world).shorten();
   }
 
   public UUID getPlayerID(String username) {

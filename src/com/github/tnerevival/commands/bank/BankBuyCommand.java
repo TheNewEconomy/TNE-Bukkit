@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
@@ -50,7 +51,7 @@ public class BankBuyCommand extends TNECommand {
         AccountUtils.transaction(MISCUtils.getID(player).toString(), null, BankUtils.cost(MISCUtils.getWorld(player), MISCUtils.getID(player).toString()), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
       } else {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount",  MISCUtils.formatBalance(MISCUtils.getWorld(player), BankUtils.cost(player.getWorld().getName(), MISCUtils.getID(player).toString())));
+        insufficient.addVariable("$amount",  CurrencyFormatter.format(MISCUtils.getWorld(player), BankUtils.cost(player.getWorld().getName(), MISCUtils.getID(player).toString())));
         insufficient.translate(MISCUtils.getWorld(player), player);
         return false;
       }

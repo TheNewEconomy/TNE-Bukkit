@@ -47,7 +47,7 @@ public class MoneyTakeCommand extends TNECommand {
       if(getPlayer(sender, arguments[0]) != null) {
         if(AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), AccountUtils.round(value), TransactionType.MONEY_REMOVE, world)) {
           Message took = new Message("Messages.Money.Took");
-          took.addVariable("$amount", MISCUtils.formatBalance(world, AccountUtils.round(value)));
+          took.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(value)));
           took.addVariable("$player", arguments[0]);
           took.translate(world, sender);
           return true;

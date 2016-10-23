@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.sign.SignEventAction;
 import com.github.tnerevival.core.event.sign.TNESignEvent;
 import com.github.tnerevival.core.transaction.TransactionType;
@@ -39,7 +40,7 @@ public abstract class TNESign {
     if(place != null && place > 0.0) {
       if (!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), place));
+        insufficient.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), place));
         event.setCancelled(true);
       }
     }
@@ -93,7 +94,7 @@ public abstract class TNESign {
 
     if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(player), use));
+      insufficient.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), use));
       insufficient.translate(MISCUtils.getWorld(player), player);
       event.setCancelled(true);
     }

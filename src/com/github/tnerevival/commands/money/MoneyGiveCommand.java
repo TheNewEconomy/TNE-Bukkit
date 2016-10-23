@@ -49,7 +49,7 @@ public class MoneyGiveCommand extends TNECommand {
 
         AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
-        gave.addVariable("$amount",  MISCUtils.formatBalance(world, AccountUtils.round(value)));
+        gave.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
         gave.addVariable("$player", arguments[0]);
         gave.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
         return true;

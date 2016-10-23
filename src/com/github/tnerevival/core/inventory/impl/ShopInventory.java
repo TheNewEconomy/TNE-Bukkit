@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.inventory.impl;
 
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
@@ -67,7 +68,7 @@ public class ShopInventory extends GenericInventory {
               }
               Message insufficient = new Message("Messages.Money.Insufficient");
 
-              insufficient.addVariable("$amount", MISCUtils.formatBalance(
+              insufficient.addVariable("$amount", CurrencyFormatter.format(
                   MISCUtils.getWorld(viewer.getUUID()),
                   i.getCost()
               ));

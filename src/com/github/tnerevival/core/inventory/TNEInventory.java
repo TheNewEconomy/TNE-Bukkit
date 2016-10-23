@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.inventory.impl.AuctionItemInventory;
@@ -185,7 +186,7 @@ public abstract class TNEInventory {
       MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
-        m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()))));
+        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
         m.translate(MISCUtils.getWorld(player), player);
 
@@ -194,7 +195,7 @@ public abstract class TNEInventory {
 
       if(charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
-        m.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()))));
+        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
         m.translate(MISCUtils.getWorld(player), player);
       }

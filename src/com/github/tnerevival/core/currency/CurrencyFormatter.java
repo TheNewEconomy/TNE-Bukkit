@@ -1,6 +1,10 @@
 package com.github.tnerevival.core.currency;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.Message;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -30,7 +34,43 @@ public class CurrencyFormatter {
   }
 
   public static String format(Currency currency, double amount) {
-    return "";
+
+    String shortFormat = "<symbol> <short.amount>";
+    String format = currency.getFormat();
+
+    String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
+    Integer major = Integer.parseInt(amountStr[0]);
+    Integer minor = Integer.parseInt(amountStr[1]);
+    String majorName = (major == 1)? currency.getTier("Major").getSingle() : currency.getTier("Major").getPlural();
+    String minorName = (minor == 1)? currency.getTier("Minor").getSingle() : currency.getTier("Minor").getPlural();
+
+    Map<String, String> replacements = new HashMap<>();
+    replacements.put("<symbol>", currency.getTier("Major").getSymbol());
+    replacements.put("<decimal>", currency.getDecimal());
+    replacements.put("<major>", major + " " + majorName);
+    replacements.put("<minor>", minor + " " + minorName);
+    replacements.put("<major.name>", majorName);
+    replacements.put("<minor.name>", minorName);
+    replacements.put("<major.amount>", major + "");
+    replacements.put("<minor.amount>", minor + "");
+    replacements.put("<short.amount>", shorten(amount, currency.getDecimal()));
+    replacements.putAll(Message.colours);
+
+    String formatted = (currency.shorten())? shortFormat : format;
+
+    for(Map.Entry<String, String> entry : replacements.entrySet()) {
+      formatted = formatted.replace(entry.getKey(), entry.getValue());
+    }
+    return formatted;
+  }
+
+  private static String shorten(double balance, String decimal) {
+    Long dollars = (long) Math.floor(balance);
+    if (dollars < 1000) {
+      return "" + dollars;
+    }
+    int exp = (int) (Math.log(dollars) / Math.log(1000));
+    return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
   }
 
   public static Double translateDouble(String value, String world) {

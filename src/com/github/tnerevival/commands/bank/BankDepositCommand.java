@@ -49,13 +49,13 @@ public class BankDepositCommand extends TNECommand {
         if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
           if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
             Message deposit = new Message("Messages.Bank.Deposit");
-            deposit.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
+            deposit.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             deposit.addVariable("$name",  ownerName);
             deposit.translate(MISCUtils.getWorld(player), player);
             return true;
           } else {
             Message insufficient = new Message("Messages.Money.Insufficient");
-            insufficient.addVariable("$amount",  MISCUtils.formatBalance(player.getWorld().getName(), value));
+            insufficient.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             insufficient.addVariable("$name",  ownerName);
             insufficient.translate(MISCUtils.getWorld(player), player);
             return false;

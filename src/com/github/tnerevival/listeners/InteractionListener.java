@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.shops.Shop;
@@ -12,7 +13,10 @@ import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableLocation;
-import com.github.tnerevival.utils.*;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.SignUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -66,7 +70,7 @@ public class InteractionListener implements Listener {
       double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
 
       Message commandCost = new Message("Messages.Command.Charge");
-      commandCost.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), AccountUtils.round(cost)));
+      commandCost.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(event.getPlayer()), AccountUtils.round(cost)));
       commandCost.addVariable("$command", commandFirstArg);
 
       if(cost > 0.0) {
@@ -291,7 +295,7 @@ public class InteractionListener implements Listener {
           if(place != null && place > 0.0) {
             AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, place, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignPlace");
-            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), place));
+            charged.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(event.getPlayer()), place));
             charged.translate(MISCUtils.getWorld(player), player);
           }
           TNE.instance.manager.signs.put(sign.getLocation(), sign);
@@ -379,7 +383,7 @@ public class InteractionListener implements Listener {
             Double use = sign.getType().use(MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
             AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, use, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignUse");
-            charged.addVariable("$amount", MISCUtils.formatBalance(MISCUtils.getWorld(event.getPlayer()), use));
+            charged.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(event.getPlayer()), use));
             charged.translate(MISCUtils.getWorld(player), player);
           }
         }
@@ -560,7 +564,7 @@ public class InteractionListener implements Listener {
           AccountUtils.transaction(MISCUtils.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
           Message mobKilled = new Message(messageNode);
           mobKilled.addVariable("$mob", mob);
-          mobKilled.addVariable("$reward", MISCUtils.formatBalance(MISCUtils.getWorld(killer), reward));
+          mobKilled.addVariable("$reward", CurrencyFormatter.format(MISCUtils.getWorld(killer), reward));
           mobKilled.translate(MISCUtils.getWorld(killer), killer);
         }
       }

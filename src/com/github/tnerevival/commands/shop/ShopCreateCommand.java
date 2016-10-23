@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.shop;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -83,7 +84,7 @@ public class ShopCreateCommand extends TNECommand {
 
           Message insufficient = new Message("Messages.Money.Insufficient");
 
-          insufficient.addVariable("$amount", MISCUtils.formatBalance(
+          insufficient.addVariable("$amount", CurrencyFormatter.format(
               MISCUtils.getWorld(getPlayer(sender)),
               TNE.instance.api.getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString())
           ));

@@ -82,11 +82,12 @@ Core:
         #<minor.name> - The currency's minor name.
         #<major.amount> - The currency's major amount.
         #<minor.amount> - The currency's minor amount.
-        #<shorten=true> - Whether or not to shorten this currency's name.
-        #This will override the major and minor variables in the currency's format.
-        #Defaults to true.
-        #Example: <major> and <minor><shorten=false>
-        Format: <symbol><major><decimal><minor><shorten=true>
+        #<shorten.amount> - The currency's shortened amount.
+        #<shorten> - Added to make the outputted value shortened
+        # If shortened, it will ignore the value of Format.
+        #It's also possible to include all colour variables from messages.yml
+        #Example: <major> and <minor>
+        Format: <symbol><major><decimal><minor><shorten>
 
         #The conversion power of this currency to other currencies.
         #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
