@@ -260,7 +260,36 @@ public class InteractionListener implements Listener {
         event.setCancelled(true);
         return;
       }
-      event.setCurrentItem(result);
+      if(event.getClick().isShiftClick()) {
+        final Player p = player;
+        final ItemStack stack = result;
+        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+          @Override
+          public void run() {
+            ItemStack[] contents = p.getInventory().getContents().clone();
+            for(int i = 0; i < contents.length; i++) {
+              if(contents[i] != null && contents[i].getType().equals(stack.getType())) {
+                ItemStack cloneStack = contents[i].clone();
+                ItemMeta meta = cloneStack.getItemMeta();
+                List<String> newLore = new ArrayList<>();
+                if(meta.getLore() != null) {
+                  for (String s : meta.getLore()) {
+                    if (!s.contains("Crafting Cost")) {
+                      newLore.add(s);
+                    }
+                  }
+                }
+                meta.setLore(newLore);
+                cloneStack.setItemMeta(meta);
+                contents[i] = cloneStack;
+              }
+            }
+            p.getInventory().setContents(contents);
+          }
+        }, 5L);
+      } else {
+        event.setCurrentItem(result);
+      }
     }
   }
 
@@ -561,10 +590,12 @@ public class InteractionListener implements Listener {
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
         if(TNE.configurations.mobEnabled(mob)) {
           AccountUtils.transaction(MISCUtils.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
-          Message mobKilled = new Message(messageNode);
-          mobKilled.addVariable("$mob", mob);
-          mobKilled.addVariable("$reward", CurrencyFormatter.format(MISCUtils.getWorld(killer), reward));
-          mobKilled.translate(MISCUtils.getWorld(killer), killer);
+          if(TNE.instance.api.getBoolean("Mobs.Message")) {
+            Message mobKilled = new Message(messageNode);
+            mobKilled.addVariable("$mob", mob);
+            mobKilled.addVariable("$reward", CurrencyFormatter.format(MISCUtils.getWorld(killer), reward));
+            mobKilled.translate(MISCUtils.getWorld(killer), killer);
+          }
         }
       }
     }

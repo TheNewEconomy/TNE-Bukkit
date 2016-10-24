@@ -40,7 +40,7 @@ public class CurrencyFormatter {
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
     Integer major = Integer.parseInt(amountStr[0]);
-    Integer minor = Integer.parseInt(amountStr[1]);
+    Integer minor = Integer.parseInt((amountStr[1].length() == 1)? amountStr[1] + "0" : amountStr[1]);
     String majorName = (major == 1)? currency.getTier("Major").getSingle() : currency.getTier("Major").getPlural();
     String minorName = (minor == 1)? currency.getTier("Minor").getSingle() : currency.getTier("Minor").getPlural();
 

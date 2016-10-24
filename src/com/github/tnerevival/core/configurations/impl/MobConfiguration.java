@@ -10,6 +10,7 @@ public class MobConfiguration extends Configuration {
   @Override
   public void load(FileConfiguration configurationFile) {
     configurations.put("Mobs.Enabled", true);
+    configurations.put("Mobs.Message", true);
     configurations.put("Mobs.Default.Enabled", true);
     configurations.put("Mobs.Default.Reward", 10.00);
     configurations.put("Mobs.Bat.Enabled", true);
