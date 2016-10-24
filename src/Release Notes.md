@@ -22,6 +22,7 @@ Configurations
 
 Commands
 - Additions
+  - /tneneweconomy recreate - Attempts to recreate the database tables.
   - /theneweconomy pin <username> <new pin> - Reset <username>'s pin.
   - /theneweconomy status
     - /theneweconomy status <username> <status> - Set <username>'s account status.

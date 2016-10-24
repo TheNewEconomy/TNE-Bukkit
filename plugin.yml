@@ -20,10 +20,22 @@ permissions:
          tne.admin.bank: true
          tne.admin.create: true
          tne.admin.delete: true
+         tne.admin.id: true
          tne.admin.help: true
+         tne.admin.pin: true
          tne.admin.purge: true
+         tne.admin.recreate: true
          tne.admin.reload: true
          tne.admin.save: true
+         tne.admin.status: true
+         tne.auction: true
+         tne.auction.bid: true
+         tne.auction.cancel: true
+         tne.auction.claim: true
+         tne.auction.end: true
+         tne.auction.info: true
+         tne.auction.list: true
+         tne.auction.start: true
          tne.bank: true
          tne.bank.help: true
          tne.bank.add: true
@@ -46,6 +58,7 @@ permissions:
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
+         tne.money.history: true
          tne.money.set: true
          tne.money.take: true
          tne.money.pay: true
@@ -87,16 +100,31 @@ permissions:
          tne.admin.bank: true
          tne.admin.create: true
          tne.admin.delete: true
+         tne.admin.id: true
          tne.admin.help: true
+         tne.admin.pin: true
          tne.admin.purge: true
+         tne.admin.recreate: true
          tne.admin.reload: true
          tne.admin.save: true
+         tne.admin.status: true
          tne.bypass.bank: true
          tne.bypass.inventory: true
          tne.bypass.nametag: true
          tne.bypass.world: true
          tne.shop.admin: true
-          
+
+   tne.auction.*:
+      description: Gives access to all Auction Commands
+      children:
+         tne.auction.bid: true
+         tne.auction.cancel: true
+         tne.auction.claim: true
+         tne.auction.end: true
+         tne.auction.info: true
+         tne.auction.list: true
+         tne.auction.start: true
+
    tne.bank.*:
       description: Gives access to all TNE Bank Commands
       children:
@@ -140,6 +168,7 @@ permissions:
          tne.money.help: true
          tne.money.balance: true
          tne.money.give: true
+         tne.money.history: true
          tne.money.set: true
          tne.money.take: true
          tne.money.pay: true

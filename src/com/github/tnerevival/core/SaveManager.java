@@ -26,7 +26,7 @@ public class SaveManager {
   Version versionInstance;
   Double currentSaveVersion = 4.0;
   Double saveVersion = 0.0;
-  String type = TNE.configurations.getString("Core.Database.Type");
+  public String type = TNE.configurations.getString("Core.Database.Type");
   File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
 
   public SaveManager() {
@@ -57,6 +57,12 @@ public class SaveManager {
       String table = versionInstance.prefix + "_SHOPS";
       versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE shop_name = ? AND shop_world = ?",
           new Object[] { name, world });
+    }
+  }
+
+  public void recreate() {
+    if(!type.equalsIgnoreCase("flatfile")) {
+      versionInstance.createTables(type);
     }
   }
 

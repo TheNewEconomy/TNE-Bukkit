@@ -364,6 +364,7 @@ public class Alpha3_0 extends Version {
 
   @Override
   public void saveMySQL() {
+    createTables("mysql");
     String table = prefix + "_INFO";
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
     mysql().executePreparedUpdate("Update " + table + " SET version = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()) });
@@ -552,6 +553,7 @@ public class Alpha3_0 extends Version {
 
   @Override
   public void saveH2() {
+    createTables("h2");
     String table = prefix + "_INFO";
     db = new H2(h2File, mysqlUser, mysqlPassword);
 

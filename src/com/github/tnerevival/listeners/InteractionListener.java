@@ -242,8 +242,7 @@ public class InteractionListener implements Listener {
     if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player))) {
 
       String name = event.getInventory().getResult().getType().name();
-
-      ItemStack result = event.getInventory().getResult().clone();
+      ItemStack result = event.getCurrentItem().clone();
       ItemMeta meta = result.getItemMeta();
       List<String> newLore = new ArrayList<>();
       for(String s : meta.getLore()) {
