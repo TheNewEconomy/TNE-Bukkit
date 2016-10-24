@@ -5,6 +5,7 @@ import com.github.tnerevival.commands.admin.AdminCommand;
 import com.github.tnerevival.commands.auction.AuctionCommand;
 import com.github.tnerevival.commands.bank.BankCommand;
 import com.github.tnerevival.commands.credit.CreditCommand;
+import com.github.tnerevival.commands.eco.EcoCommand;
 import com.github.tnerevival.commands.money.MoneyCommand;
 import com.github.tnerevival.commands.packages.PackageCommand;
 import com.github.tnerevival.commands.pin.PinCommand;
@@ -30,6 +31,7 @@ public class CommandManager {
 
   public CommandManager() {
     commands.put(new String[] { "theneweconomy", "tne" }, new AdminCommand(TNE.instance));
+    commands.put(new String[] { "eco" }, new EcoCommand(TNE.instance));
     commands.put(new String[] { "auction", "sauction" }, new AuctionCommand(TNE.instance));
     commands.put(new String[] { "bank" }, new BankCommand(TNE.instance));
     commands.put(new String[] { "credit" }, new CreditCommand(TNE.instance));
