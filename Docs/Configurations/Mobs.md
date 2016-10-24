@@ -14,13 +14,16 @@ Mobs:
 
     #Whether or not mobs drop money on death.
     Enabled: true
-    
+
+    #Whether or not to send a message stating how much money a player got for killing a mob
+    Message: true
+
     #Reward configurations for individual mobs
     #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
     Default:
         Enabled: true
         Reward: 10.00
-    
+
     Bat:
         Enabled: true
         Reward: 10.00
@@ -60,7 +63,7 @@ Mobs:
     Ghast:
         Enabled: true
         Reward: 10.00
-        
+
     Giant:
         Enabled: true
         Reward: 10.00
@@ -117,7 +120,7 @@ Mobs:
     Rabbit:
         Enabled: true
         Reward: 10.00
-        
+
     RabbitKiller:
         Enabled: true
         Reward: 10.00

@@ -15,9 +15,12 @@ Anything with {} are required arguments, () are optional.
 | /tne delete {player}                                                          | tne.admin.delete    | Delete {player}'s account.                                                            |
 | /tne help                                                                     | tne.admin.help      | General TNE help                                                                      |
 | /tne id {player}                                                              | tne.admin.id        | Get {player}'s id to be used for player configurations                                |
+| /tne pin {username} {new pin}                                                 | tne.admin.pin       | Reset {username}'s pin.                                                               |
 | /tne purge                                                                    | tne.admin.purge     | Remove all accounts that have the default balance                                     |
+| /tne recreate                                                                 | tne.admin.recreate  | Attempts to recreate database tables                                                  |
 | /tne reload {all/config/mobs/worlds}                                          | tne.admin.reload    | Reload the TNE configurations or reload the specified file                            |
 | /tne save                                                                     | tne.admin.save      | Force saves all TNE data                                                              |
+| /tne status {username} {status}                                               | tne.admin.status    | Set {username}'s account status. Valid options:Normal, Locked, BalanceLocked, and BankLocked. |
 
 ##Auction
 
@@ -80,6 +83,7 @@ lot = The auction's lot number.
 | /money help                                                                   | tne.money.help      | General money help                                                                    |
 | /money balance                                                                | tne.money.balance   | Find out how much money you have on you                                               |
 | /money give                                                                   | tne.money.give      | Summon money from air and give it to a player                                         |
+| /money history {page:#} {world:name/all} {type:type/all}                      | tne.money.history   | See a detailed break down of your transaction history.                                |
 | /money set {player} {amount} (world)                                          | tne.money.set       | Set {player}'s balance to {amount}                                                    |
 | /money take {player} {amount}                                                 | tne.money.take      | Make some of {player}'s money vanish into thin air                                    |
 | /money pay {player} {amount}                                                  | tne.money.pay       | Pay a player money from your balance                                                  |
