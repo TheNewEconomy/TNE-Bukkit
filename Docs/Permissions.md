@@ -13,14 +13,18 @@ Anything with {} are required arguments, () are optional.
 | tne.admin.delete    | Delete {player}'s account.                                                            | /tne delete {player}
 | tne.admin.help      | General TNE help                                                                      | /tne help
 | tne.admin.id        | Get {player}'s id to be used for player configurations                                | /tne id {player}
+| tne.admin.pin       | Reset {username}'s pin.                                                               | /tne pin {username} {new pin}
 | tne.admin.purge     | Remove all accounts that have the default balance                                     | /tne purge
+| tne.admin.recreate  | Attempts to recreate database tables                                                  | /tne recreate
 | tne.admin.reload    | Reload the TNE configurations or reload the specified file                            | /tne reload {all/config/mobs/worlds}
 | tne.admin.save      | Force saves all TNE data                                                              | /tne save
+| tne.admin.status    | Set {username}'s account status. Valid options:Normal, Locked, BalanceLocked, and BankLocked. | /tne status {username} {status}
 
 ##Auction
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
+| tne.auction         |                                                                                       |
 | tne.auction.start   | Start a new auction                                                                   | /tne start {configuration}
 | tne.auction.bid     | Place a bid on an auction                                                             | /auction bid {bid} {lot}
 | tne.auction.claim   | Claim an auction reward                                                               | /auction claim {lot}
@@ -84,6 +88,7 @@ Anything with {} are required arguments, () are optional.
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.money.*         | Gives access to all Money commands | |
 | tne.money           | | |
+| tne.money.history   | See a detailed break down of your transaction history.                                | /money history {page:#} {world:name/all} {type:type/all}
 | tne.money.help      | General money help                                                                    | /money help
 | tne.money.balance   | Find out how much money you have on you                                               | /money balance
 | tne.money.give      | Summon money from air and give it to a player                                         | /money give
@@ -166,9 +171,12 @@ Use these in place of typing out each individual permission node.
 | | tne.admin.create
 | | tne.admin.delete
 | | tne.admin.help
+| | tne.admin.pin
 | | tne.admin.purge
+| | tne.admin.recreate
 | | tne.admin.reload
 | | tne.admin.save
+| | tne.admin.status
 | | tne.bank
 | | tne.bank.help
 | | tne.bank.add
@@ -188,6 +196,7 @@ Use these in place of typing out each individual permission node.
 | | tne.credit.commands
 | | tne.credit.inventory
 | | tne.money
+| | tne.money.history
 | | tne.money.help
 | | tne.money.balance
 | | tne.money.give
