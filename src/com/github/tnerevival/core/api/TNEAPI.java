@@ -88,7 +88,8 @@ public class TNEAPI {
   }
 
   public boolean transaction(OfflinePlayer player, OfflinePlayer recipient, String world, TransactionCost cost, TransactionType type) {
-    return AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(recipient).toString(), cost, type, world);
+    return !(player != null && MISCUtils.getID(player) != null) &&
+    AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(recipient).toString(), cost, type, world);
   }
 
   public void fundsAdd(OfflinePlayer player, Double amount) {
@@ -96,7 +97,9 @@ public class TNEAPI {
   }
 
   public void fundsAdd(OfflinePlayer player, String world, Double amount) {
-    AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_GIVE, world);
+    if(player != null && MISCUtils.getID(player) != null) {
+      AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_GIVE, world);
+    }
   }
 
   public Boolean fundsHas(OfflinePlayer player, Double amount) {
