@@ -506,10 +506,12 @@ public class InteractionListener implements Listener {
           case PLAYER:
             mob = "Player";
             Player p = (Player)entity;
-            if(TNE.configurations.playerEnabled(p.getUniqueId())) {
-              mob = p.getUniqueId().toString();
-              player = true;
-              break;
+            if(p.getUniqueId() != null) {
+              if (TNE.configurations.playerEnabled(p.getUniqueId())) {
+                mob = p.getUniqueId().toString();
+                player = true;
+                break;
+              }
             }
             mob = "Player";
             break;

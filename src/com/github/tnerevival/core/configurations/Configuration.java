@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.configurations;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -24,6 +25,7 @@ public abstract class Configuration {
   }
 
   public void save(FileConfiguration configurationFile) {
+    MISCUtils.debug(configurationFile.getName());
     if(!new File(TNE.instance.getDataFolder(), configurationFile.getName()).exists() || TNE.instance.modified.contains(configurationFile.getName())) {
       Iterator<java.util.Map.Entry<String, Object>> it = configurations.entrySet().iterator();
 

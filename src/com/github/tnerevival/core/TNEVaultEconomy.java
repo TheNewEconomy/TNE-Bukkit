@@ -81,7 +81,7 @@ public class TNEVaultEconomy implements Economy {
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
     if(!hasAccount(player)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+      AccountUtils.createAccount(MISCUtils.getID(player));
     }
 
     if(amount < 0) {
@@ -94,7 +94,7 @@ public class TNEVaultEconomy implements Economy {
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer player, String world, double amount) {
     if(!hasAccount(player)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+      AccountUtils.createAccount(MISCUtils.getID(player));
     }
 
     if(amount < 0) {
@@ -429,7 +429,7 @@ public class TNEVaultEconomy implements Economy {
   @Deprecated
   public EconomyResponse withdrawPlayer(String username, String world, double amount) {
     if(!hasAccount(username)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
     }
 
     if(amount < 0) {

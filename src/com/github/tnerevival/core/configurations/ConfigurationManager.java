@@ -14,6 +14,10 @@ public class ConfigurationManager {
   public HashMap<String, Configuration> configurations = new HashMap<>();
 
   public ConfigurationManager() {
+    loadAll();
+  }
+
+  public void loadAll() {
     MainConfiguration main = new MainConfiguration();
     MessageConfiguration message = new MessageConfiguration();
     MobConfiguration mob = new MobConfiguration();

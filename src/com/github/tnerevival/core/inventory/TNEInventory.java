@@ -137,6 +137,7 @@ public abstract class TNEInventory {
     }
 
     Player player = MISCUtils.getPlayer(viewer.getUUID());
+    MISCUtils.debug(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()) + "");
     if(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
       if(config.isTimed(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
         if(acc.getTimeLeft(MISCUtils.getWorld(viewer.getUUID()), TNE.configurations.getObjectConfiguration().inventoryType(inventory.getType())) <= 0) {

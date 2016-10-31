@@ -40,7 +40,7 @@ public class TNE extends JavaPlugin {
   public TNEAPI api = null;
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
-  public static final boolean debugMode = false;
+  public static final boolean debugMode = true;
 
   // Files & Custom Configuration Files
   public File mobs;
@@ -204,12 +204,24 @@ public class TNE extends JavaPlugin {
       saveConfig();
     }
     try {
-      mobConfigurations.save(mobs);
-      messageConfigurations.save(messages);
-      objectConfigurations.save(objects);
-      materialConfigurations.save(materials);
-      playerConfigurations.save(players);
-      worldConfigurations.save(worlds);
+      if(modified.contains(mobConfigurations.getName())) {
+        mobConfigurations.save(mobs);
+      }
+      if(modified.contains(mobConfigurations.getName())) {
+        messageConfigurations.save(messages);
+      }
+      if(modified.contains(mobConfigurations.getName())) {
+        objectConfigurations.save(objects);
+      }
+      if(modified.contains(mobConfigurations.getName())) {
+        materialConfigurations.save(materials);
+      }
+      if(modified.contains(mobConfigurations.getName())) {
+        playerConfigurations.save(players);
+      }
+      if(modified.contains(mobConfigurations.getName())) {
+        worldConfigurations.save(worlds);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
