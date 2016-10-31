@@ -26,6 +26,7 @@ import java.util.UUID;
  */
 public class Record {
   private String id = "";
+  private String initiator = "";
   private String player = "N/A";
   private String world = TNE.instance.defaultWorld;
   private String type = TransactionType.MONEY_INQUIRY.id;
@@ -34,8 +35,9 @@ public class Record {
   private Double balance = 0.0;
   private long time = new Date().getTime();
 
-  public Record(String id, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time) {
+  public Record(String id, String initiator, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time) {
     this.id = id;
+    this.initiator = initiator;
     this.player = player;
     this.world = world;
     this.type = type;
@@ -67,6 +69,14 @@ public class Record {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public String getInitiator() {
+    return initiator;
+  }
+
+  public void setInitiator(String initiator) {
+    this.initiator = initiator;
   }
 
   public String getPlayer() {

@@ -56,7 +56,7 @@ public class TransactionHistory {
     List<Record> pageRecords = new ArrayList<>();
 
     int max = getMaxPages(world, type, limit);
-    int start = (page == 1)? 0 : ((page > max)? max : page);
+    int start = (page == 0)? page : (page - 1) * limit;
 
     for(int i = start; i < start + limit; i++) {
       if(i < sorted.size()) {

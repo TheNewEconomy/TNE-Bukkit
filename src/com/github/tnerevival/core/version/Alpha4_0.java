@@ -75,6 +75,7 @@ public class Alpha4_0 extends Version {
       table = prefix + "_TRANSACTIONS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`trans_id` VARCHAR(36)," +
+          "`trans_initiator` VARCHAR(36)," +
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
@@ -82,6 +83,7 @@ public class Alpha4_0 extends Version {
           "`trans_oldBalance` DOUBLE" +
           "`trans_balance` DOUBLE" +
           "`trans_time` BIGINT(60)" +
+          "PRIMARY KEY(trans_id)" +
           ");");
     } else if(type.equals("h2")) {
       db = new H2(h2File, mysqlUser, mysqlPassword);
@@ -116,6 +118,7 @@ public class Alpha4_0 extends Version {
       table = prefix + "_TRANSACTIONS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`trans_id` VARCHAR(36)," +
+          "`trans_initiator` VARCHAR(36)," +
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
@@ -123,6 +126,7 @@ public class Alpha4_0 extends Version {
           "`trans_oldBalance` DOUBLE" +
           "`trans_balance` DOUBLE" +
           "`trans_time` BIGINT(60)" +
+          "PRIMARY KEY(trans_id)" +
           ");");
     }
   }
@@ -273,6 +277,7 @@ public class Alpha4_0 extends Version {
 
       TNE.instance.manager.transactions.add(
           (String)info.getData("id"),
+          (String)info.getData("initiator"),
           (String)info.getData("player"),
           (String)info.getData("world"),
           TransactionType.fromID((String)info.getData("type")),
@@ -423,9 +428,10 @@ public class Alpha4_0 extends Version {
     Section transactions = new Section("TRANSACTIONS");
     for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
       for(Record r : entry.getValue().getRecords()) {
-        Article a = new Article(entry.getKey());
+        Article a = new Article(r.getId());
         Entry info = new Entry("info");
         info.addData("id", r.getId());
+        info.addData("initiator", r.getInitiator());
         info.addData("player", r.getPlayer());
         info.addData("world", r.getWorld());
         info.addData("type", r.getType());
@@ -434,7 +440,7 @@ public class Alpha4_0 extends Version {
         info.addData("balance", r.getBalance());
         info.addData("time", r.getTime());
         a.addEntry(info);
-        transactions.addArticle(entry.getKey(), a);
+        transactions.addArticle(r.getId(), a);
       }
     }
 
@@ -551,6 +557,7 @@ public class Alpha4_0 extends Version {
       while(mysql().results().next()) {
         TNE.instance.manager.transactions.add(
             mysql().results().getString("trans_id"),
+            mysql().results().getString("trans_initiator"),
             mysql().results().getString("trans_player"),
             mysql().results().getString("trans_world"),
             TransactionType.fromID(mysql().results().getString("trans_type")),
@@ -732,30 +739,21 @@ public class Alpha4_0 extends Version {
     table = prefix + "_TRANSACTIONS";
     for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
       for(Record r : entry.getValue().getRecords()) {
-        try {
-          mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE trans_id = ? AND trans_time = ?",
-              new Object[]{
-                  r.getId(),
-                  r.getTime()
-              });
-
-          if(!mysql().results().next()) {
-            mysql().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
-                                          "VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
-                new Object[] {
-                    r.getId(),
-                    r.getPlayer(),
-                    r.getWorld(),
-                    r.getType(),
-                    r.getCost(),
-                    r.getOldBalance(),
-                    r.getBalance(),
-                    r.getTime()
-                });
-          }
-        } catch(SQLException e) {
-          e.printStackTrace();
-        }
+        mysql().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE trans_player = ?, trans_world = ?",
+            new Object[] {
+                r.getId(),
+                r.getInitiator(),
+                r.getPlayer(),
+                r.getWorld(),
+                r.getType(),
+                r.getCost(),
+                r.getOldBalance(),
+                r.getBalance(),
+                r.getTime(),
+                r.getPlayer(),
+                r.getWorld()
+            });
       }
     }
     mysql().close();
@@ -867,6 +865,7 @@ public class Alpha4_0 extends Version {
       while(h2().results().next()) {
         TNE.instance.manager.transactions.add(
             h2().results().getString("trans_id"),
+            h2().results().getString("trans_initiator"),
             h2().results().getString("trans_player"),
             h2().results().getString("trans_world"),
             TransactionType.fromID(h2().results().getString("trans_type")),
@@ -1048,30 +1047,21 @@ public class Alpha4_0 extends Version {
     table = prefix + "_TRANSACTIONS";
     for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
       for(Record r : entry.getValue().getRecords()) {
-        try {
-          h2().executePreparedQuery("SELECT * FROM " + table + " WHERE trans_id = ? AND trans_time = ?",
-              new Object[]{
-                  r.getId(),
-                  r.getTime()
-              });
-
-          if(!h2().results().next()) {
-            h2().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
-                new Object[] {
-                    r.getId(),
-                    r.getPlayer(),
-                    r.getWorld(),
-                    r.getType(),
-                    r.getCost(),
-                    r.getOldBalance(),
-                    r.getBalance(),
-                    r.getTime()
-                });
-          }
-        } catch(SQLException e) {
-          e.printStackTrace();
-        }
+        h2().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE trans_player = ?, trans_world = ?",
+            new Object[] {
+                r.getId(),
+                r.getInitiator(),
+                r.getPlayer(),
+                r.getWorld(),
+                r.getType(),
+                r.getCost(),
+                r.getOldBalance(),
+                r.getBalance(),
+                r.getTime(),
+                r.getPlayer(),
+                r.getWorld()
+            });
       }
     }
     h2().close();
@@ -1168,13 +1158,15 @@ public class Alpha4_0 extends Version {
       table = prefix + "_TRANSACTIONS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`trans_id` VARCHAR(36)," +
+          "`trans_initiator` VARCHAR(36)," +
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
           "`trans_cost` DOUBLE," +
           "`trans_oldBalance` DOUBLE" +
           "`trans_balance` DOUBLE" +
-          "`trans_time` BIGINT(60)" +
+          "`trans_time` BIGINT(60)," +
+          "PRIMARY KEY(trans_id)" +
           ");");
       mysql().close();
     } else {
@@ -1271,6 +1263,7 @@ public class Alpha4_0 extends Version {
       table = prefix + "_TRANSACTIONS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`trans_id` VARCHAR(36)," +
+          "`trans_initiator` VARCHAR(36)," +
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
@@ -1278,6 +1271,7 @@ public class Alpha4_0 extends Version {
           "`trans_oldBalance` DOUBLE" +
           "`trans_balance` DOUBLE" +
           "`trans_time` BIGINT(60)" +
+          "PRIMARY KEY(trans_id)" +
           ");");
       h2().close();
     }

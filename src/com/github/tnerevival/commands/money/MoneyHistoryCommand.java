@@ -81,6 +81,10 @@ public class MoneyHistoryCommand extends TNECommand {
             type = split[1];
             break;
         }
+      } else {
+        if(MISCUtils.isInteger(s)) {
+          page = Integer.parseInt(s);
+        }
       }
     }
 

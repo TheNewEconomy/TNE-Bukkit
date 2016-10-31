@@ -7,6 +7,7 @@ import com.github.tnerevival.utils.MISCUtils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -55,33 +56,33 @@ public class TransactionManager {
     }
   }
 
-  public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
+  public void add(String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
     Date date = new Date();
 
-    add(id, player, world, type, cost, oldBalance, balance, date.getTime());
+    add(UUID.randomUUID().toString(), initiator, player, world, type, cost, oldBalance, balance, date.getTime());
   }
 
-  public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance, Long time) {
-    if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, id)) {
+  public void add(String id, String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance, Long time) {
+    if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, initiator)) {
 
       String playerFrom = (player == null)? "N/A" : player;
 
-      Record r = new Record(id, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, time);
-      if(!transactionHistory.containsKey(id)) {
+      Record r = new Record(id, initiator, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, time);
+      if(!transactionHistory.containsKey(initiator)) {
         TransactionHistory history = new TransactionHistory();
         history.add(r);
-        transactionHistory.put(id, history);
+        transactionHistory.put(initiator, history);
       }
-      transactionHistory.get(id).add(r);
+      transactionHistory.get(initiator).add(r);
     }
   }
 
-  public boolean hasHistory(String id) {
-    return transactionHistory.containsKey(id);
+  public boolean hasHistory(String initiator) {
+    return transactionHistory.containsKey(initiator);
   }
 
-  public TransactionHistory getHistory(String id) {
-    MISCUtils.debug(id);
-    return transactionHistory.get(id);
+  public TransactionHistory getHistory(String initiator) {
+    MISCUtils.debug(initiator);
+    return transactionHistory.get(initiator);
   }
 }
