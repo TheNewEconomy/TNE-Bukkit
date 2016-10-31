@@ -3,12 +3,12 @@ package com.github.tnerevival.utils;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,10 +26,6 @@ public class MISCUtils {
   //Minecraft Version Utils
   public static boolean isOneTen() {
     return Bukkit.getBukkitVersion().contains("1.10");
-  }
-
-  public static boolean isOneNine() {
-    return Bukkit.getBukkitVersion().contains("1.9");
   }
 
   //True MISC Utils
@@ -65,18 +61,6 @@ public class MISCUtils {
 
   public static String getWorld(Player player) {
     return MISCUtils.getWorld(MISCUtils.getID(player));
-  }
-
-  /**
-   * Returns the player's actual current world
-   */
-  public static String getActualWorld(UUID id) {
-    if(MISCUtils.multiWorld()) {
-      if(MISCUtils.getPlayer(id) != null) {
-        return MISCUtils.getPlayer(id).getWorld().getName();
-      }
-    }
-    return TNE.instance.defaultWorld;
   }
 
   public static boolean hasItems(UUID id, List<SerializableItemStack> items) {
@@ -131,59 +115,6 @@ public class MISCUtils {
       }
     }
     return count;
-  }
-
-  public static void setItemCount(UUID id, ItemStack stack, Integer amount) {
-    Player p = MISCUtils.getPlayer(id);
-    Integer count = getItemCount(id, stack);
-    if(stack != null) {
-      if(count > amount) {
-        Integer remove = count - amount;
-        Integer slot = 0;
-        for(ItemStack i : p.getInventory().getContents()) {
-          if(i != null && i.getType() != null && i.equals(stack)) {
-            if(remove > i.getAmount()) {
-              remove -= i.getAmount();
-              i.setAmount(0);
-              p.getInventory().setItem(slot, null);
-            } else {
-              if(i.getAmount() - remove > 0) {
-                i.setAmount(i.getAmount() - remove);
-                p.getInventory().setItem(slot, i);
-                return;
-              }
-              p.getInventory().setItem(slot, null);
-              return;
-            }
-          }
-          slot++;
-        }
-      } else if(count < amount) {
-        Integer add = amount - count;
-
-        while(add > 0) {
-          if(add > stack.getMaxStackSize()) {
-            ItemStack temp = stack.clone();
-            temp.setAmount(stack.getMaxStackSize());
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(temp);
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), temp);
-            }
-            add -= stack.getMaxStackSize();
-          } else {
-            ItemStack temp = stack.clone();
-            temp.setAmount(add);
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(temp);
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), temp);
-            }
-            add = 0;
-          }
-        }
-      }
-    }
   }
 
   public static void setItemCount(UUID id, Material item, Integer amount) {
@@ -423,46 +354,6 @@ public class MISCUtils {
   }
 
   //ItemStack Utils
-  public static ItemStack getFurnaceSource(ItemStack result) {
-    List<Recipe> recipes = TNE.instance.getServer().getRecipesFor(result);
-    for(Recipe r : recipes) {
-      if(r instanceof FurnaceRecipe) {
-        return ((FurnaceRecipe) r).getInput();
-      }
-    }
-    return new ItemStack(Material.AIR, 1);
-  }
-
-  public static Boolean chargeClick(List<String> lore, String inv) {
-    if(lore != null) {
-      String search = "Enchanting Cost:";
-      switch(inv) {
-        case "smelt":
-          search = "Smelting Cost:";
-          break;
-        case "brew":
-          search = "Brewing Cost:";
-          break;
-      }
-
-      for(String s : lore) {
-        if(s.contains(search)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  public static Boolean useBankBalance(String world) {
-    if(multiWorld()) {
-      if(worldConfigExists("Bank.Connect", world)) {
-        return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Connected");
-      }
-      return false;
-    }
-    return TNE.instance.api.getBoolean("Core.Bank.Connected", world);
-  }
 
   public static Boolean isBoolean(String value) {
     return value.equalsIgnoreCase(String.valueOf(true)) || value.equalsIgnoreCase(String.valueOf(false));
@@ -489,10 +380,6 @@ public class MISCUtils {
   //World Utils
   public static Boolean multiWorld() {
     return TNE.instance.api.getBoolean("Core.Multiworld");
-  }
-
-  public static Boolean worldConfigExists(String node, String world) {
-    return worldConfigExists("Worlds." + world + "." + node);
   }
 
   public static Boolean worldConfigExists(String node) {

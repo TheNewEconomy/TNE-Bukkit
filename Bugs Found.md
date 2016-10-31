@@ -1,6 +1,4 @@
 Bugs
 ==================
-
-/money history   
-/tne reload    
-money limit not being caught
+money limit not being caught   
+auctions not taking correct amount of item
