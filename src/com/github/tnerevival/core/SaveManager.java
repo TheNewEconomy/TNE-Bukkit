@@ -60,6 +60,22 @@ public class SaveManager {
     }
   }
 
+  public void deleteAuction(Integer lot) {
+    if(!type.equalsIgnoreCase("flatfile")) {
+      String table = versionInstance.prefix + "_AUCTIONS";
+      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE auction_lot = ?",
+          new Object[] { lot });
+    }
+  }
+
+  public void deleteClaim(UUID player, Integer lot) {
+    if(!type.equalsIgnoreCase("flatfile")) {
+      String table = versionInstance.prefix + "_CLAIMS";
+      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE claim_player = ? AND claim_lot = ?",
+          new Object[] { player.toString(), lot });
+    }
+  }
+
   public void recreate() {
     if(!type.equalsIgnoreCase("flatfile")) {
       versionInstance.createTables(type);
