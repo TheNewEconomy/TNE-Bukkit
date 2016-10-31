@@ -22,4 +22,13 @@ public enum TransactionType {
   public String getID() {
     return id;
   }
+
+  public static TransactionType fromID(String id) {
+    for(TransactionType type : values()) {
+      if(type.getID().equalsIgnoreCase(id)) {
+        return type;
+      }
+    }
+    return MONEY_SET;
+  }
 }

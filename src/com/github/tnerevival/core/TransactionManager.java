@@ -2,15 +2,11 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.transaction.*;
+import com.github.tnerevival.utils.MISCUtils;
 
-import java.util.*;
-import com.github.tnerevival.core.transaction.Transaction;
-import com.github.tnerevival.core.transaction.TransactionCost;
-import com.github.tnerevival.core.transaction.TransactionHistory;
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -30,18 +26,21 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionManager {
-  private Map<String, TransactionHistory> transactionHistory = new HashMap<>();
+  public Map<String, TransactionHistory> transactionHistory = new HashMap<>();
 
   public void add(Transaction transaction) {
     if(transaction.getInitiator() != null) {
-      add(transaction.getInitiator(),
-          transaction.getRecipient(),
-          transaction.getWorld(),
-          transaction.getType(),
-          transaction.getCost(),
-          transaction.getInitiatorOldBalance(),
-          transaction.getInitiatorBalance()
-      );
+      if(transaction.getRecipient() == null ||
+         !transaction.getInitiator().equals(transaction.getRecipient())) {
+        add(transaction.getInitiator(),
+            transaction.getRecipient(),
+            transaction.getWorld(),
+            transaction.getType(),
+            transaction.getCost(),
+            transaction.getInitiatorOldBalance(),
+            transaction.getInitiatorBalance()
+        );
+      }
     }
 
     if(transaction.getRecipient() != null) {
@@ -57,12 +56,17 @@ public class TransactionManager {
   }
 
   public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
+    Date date = new Date();
+
+    add(id, player, world, type, cost, oldBalance, balance, date.getTime());
+  }
+
+  public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance, Long time) {
     if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, id)) {
-      Date date = new Date();
 
       String playerFrom = (player == null)? "N/A" : player;
 
-      Record r = new Record(id, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, date.getTime());
+      Record r = new Record(id, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, time);
       if(!transactionHistory.containsKey(id)) {
         TransactionHistory history = new TransactionHistory();
         history.add(r);
@@ -77,9 +81,7 @@ public class TransactionManager {
   }
 
   public TransactionHistory getHistory(String id) {
-    if (hasHistory(id)) {
-      return transactionHistory.get(id);
-    }
-    return null;
+    MISCUtils.debug(id);
+    return transactionHistory.get(id);
   }
 }

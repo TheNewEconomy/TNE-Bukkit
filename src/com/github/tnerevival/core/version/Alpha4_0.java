@@ -15,7 +15,10 @@ import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.transaction.TransactionCost;
+import com.github.tnerevival.core.transaction.TransactionHistory;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
@@ -41,25 +44,6 @@ public class Alpha4_0 extends Version {
     String table = prefix + "_ECOIDS";
     if(type.equalsIgnoreCase("mysql")) {
       db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
-
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`username` VARCHAR(20)," +
-          "`uuid` VARCHAR(36) UNIQUE" +
-          ");");
-
-      table = prefix + "_SHOPS";
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`shop_owner` VARCHAR(36)," +
-          "`shop_name` VARCHAR(60) NOT NULL," +
-          "`shop_world` VARCHAR(60) NOT NULL," +
-          "`shop_hidden` TINYINT(1)," +
-          "`shop_admin` TINYINT(1)," +
-          "`shop_items` LONGTEXT," +
-          "`shop_blacklist` LONGTEXT," +
-          "`shop_whitelist` LONGTEXT," +
-          "`shop_shares` LONGTEXT," +
-          "PRIMARY KEY(shop_name, shop_world)" +
-          ");");
 
       table = prefix + "_AUCTIONS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -88,22 +72,16 @@ public class Alpha4_0 extends Version {
           "PRIMARY KEY(claim_player, claim_lot)" +
           ");");
 
-      table = prefix + "_USERS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` DROP COLUMN `overflow`");
-      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD COLUMN `acc_pin` VARCHAR(30)," +
-          "ADD COLUMN `command_credits` LONGTEXT," +
-          "ADD COLUMN `inventory_credits` LONGTEXT AFTER `uuid`");
-      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(uuid)");
-
-      table = prefix + "_BANKS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` DROP PRIMARY KEY, ADD PRIMARY KEY (uuid, world)");
-
-      table = prefix + "_SIGNS";
+      table = prefix + "_TRANSACTIONS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_owner` VARCHAR(36)," +
-          "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
-          "`sign_meta` LONGTEXT" +
+          "`trans_id` VARCHAR(36)," +
+          "`trans_player` VARCHAR(36)," +
+          "`trans_world` VARCHAR(36)," +
+          "`trans_type` VARCHAR(36)," +
+          "`trans_cost` DOUBLE," +
+          "`trans_oldBalance` DOUBLE" +
+          "`trans_balance` DOUBLE" +
+          "`trans_time` BIGINT(60)" +
           ");");
     } else if(type.equals("h2")) {
       db = new H2(h2File, mysqlUser, mysqlPassword);
@@ -134,6 +112,18 @@ public class Alpha4_0 extends Version {
           "`claim_cost` LONGTEXT," +
           "PRIMARY KEY(claim_player, claim_lot)" +
           ");");
+
+      table = prefix + "_TRANSACTIONS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`trans_id` VARCHAR(36)," +
+          "`trans_player` VARCHAR(36)," +
+          "`trans_world` VARCHAR(36)," +
+          "`trans_type` VARCHAR(36)," +
+          "`trans_cost` DOUBLE," +
+          "`trans_oldBalance` DOUBLE" +
+          "`trans_balance` DOUBLE" +
+          "`trans_time` BIGINT(60)" +
+          ");");
     }
   }
 
@@ -147,6 +137,7 @@ public class Alpha4_0 extends Version {
     Section auctions = null;
     Section claims = null;
     Section signs = null;
+    Section transactions = null;
     try {
       connection.getOIS().readDouble();
       accounts = (Section) connection.getOIS().readObject();
@@ -155,6 +146,7 @@ public class Alpha4_0 extends Version {
       auctions = (Section) connection.getOIS().readObject();
       claims = (Section) connection.getOIS().readObject();
       signs = (Section) connection.getOIS().readObject();
+      transactions = (Section) connection.getOIS().readObject();
       connection.close();
     } catch (Exception e) {
       e.printStackTrace();
@@ -274,6 +266,21 @@ public class Alpha4_0 extends Version {
       sign.loadMeta((String)info.getData("meta"));
 
       TNE.instance.manager.signs.put(sign.getLocation(), sign);
+    }
+
+    for(Article a : transactions.getArticle().values()) {
+      Entry info = a.getEntry("info");
+
+      TNE.instance.manager.transactions.add(
+          (String)info.getData("id"),
+          (String)info.getData("player"),
+          (String)info.getData("world"),
+          TransactionType.fromID((String)info.getData("type")),
+          new TransactionCost((Double)info.getData("cost")),
+          (Double)info.getData("oldBalance"),
+          (Double)info.getData("balance"),
+          (Long)info.getData("time")
+      );
     }
   }
 
@@ -413,6 +420,24 @@ public class Alpha4_0 extends Version {
       signs.addArticle(sign.getLocation().toString(), a);
     }
 
+    Section transactions = new Section("TRANSACTIONS");
+    for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
+      for(Record r : entry.getValue().getRecords()) {
+        Article a = new Article(entry.getKey());
+        Entry info = new Entry("info");
+        info.addData("id", r.getId());
+        info.addData("player", r.getPlayer());
+        info.addData("world", r.getWorld());
+        info.addData("type", r.getType());
+        info.addData("cost", r.getCost());
+        info.addData("oldBalance", r.getOldBalance());
+        info.addData("balance", r.getBalance());
+        info.addData("time", r.getTime());
+        a.addEntry(info);
+        transactions.addArticle(entry.getKey(), a);
+      }
+    }
+
     try {
       db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
       FlatFileConnection connection = (FlatFileConnection)db.connection();
@@ -423,6 +448,7 @@ public class Alpha4_0 extends Version {
       connection.getOOS().writeObject(auctions);
       connection.getOOS().writeObject(claims);
       connection.getOOS().writeObject(signs);
+      connection.getOOS().writeObject(transactions);
       connection.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -519,6 +545,21 @@ public class Alpha4_0 extends Version {
         sign.loadMeta(mysql().results().getString("sign_meta"));
         TNE.instance.manager.signs.put(sign.getLocation(), sign);
       }
+
+      table = prefix + "_TRANSACTIONS";
+      mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results().next()) {
+        TNE.instance.manager.transactions.add(
+            mysql().results().getString("trans_id"),
+            mysql().results().getString("trans_player"),
+            mysql().results().getString("trans_world"),
+            TransactionType.fromID(mysql().results().getString("trans_type")),
+            new TransactionCost(mysql().results().getDouble("trans_cost")),
+            mysql().results().getDouble("trans_oldBalance"),
+            mysql().results().getDouble("trans_balance"),
+            mysql().results().getLong("trans_time")
+        );
+      }
       mysql().close();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -576,6 +617,7 @@ public class Alpha4_0 extends Version {
     }
     Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
 
+    table = prefix + "_ECOIDS";
     while(idsIT.hasNext()) {
       Map.Entry<String, UUID> idEntry = idsIT.next();
 
@@ -686,6 +728,36 @@ public class Alpha4_0 extends Version {
               sign.getMeta()
           });
     }
+
+    table = prefix + "_TRANSACTIONS";
+    for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
+      for(Record r : entry.getValue().getRecords()) {
+        try {
+          mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE trans_id = ? AND trans_time = ?",
+              new Object[]{
+                  r.getId(),
+                  r.getTime()
+              });
+
+          if(!mysql().results().next()) {
+            mysql().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
+                                          "VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                new Object[] {
+                    r.getId(),
+                    r.getPlayer(),
+                    r.getWorld(),
+                    r.getType(),
+                    r.getCost(),
+                    r.getOldBalance(),
+                    r.getBalance(),
+                    r.getTime()
+                });
+          }
+        } catch(SQLException e) {
+          e.printStackTrace();
+        }
+      }
+    }
     mysql().close();
   }
 
@@ -789,6 +861,21 @@ public class Alpha4_0 extends Version {
 
         TNE.instance.manager.signs.put(sign.getLocation(), sign);
       }
+
+      table = prefix + "_TRANSACTIONS";
+      h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results().next()) {
+        TNE.instance.manager.transactions.add(
+            h2().results().getString("trans_id"),
+            h2().results().getString("trans_player"),
+            h2().results().getString("trans_world"),
+            TransactionType.fromID(h2().results().getString("trans_type")),
+            new TransactionCost(h2().results().getDouble("trans_cost")),
+            h2().results().getDouble("trans_oldBalance"),
+            h2().results().getDouble("trans_balance"),
+            h2().results().getLong("trans_time")
+        );
+      }
       h2().close();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -847,6 +934,7 @@ public class Alpha4_0 extends Version {
     }
     Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
 
+    table = prefix + "_ECOIDS";
     while(idsIT.hasNext()) {
       Map.Entry<String, UUID> idEntry = idsIT.next();
 
@@ -956,6 +1044,36 @@ public class Alpha4_0 extends Version {
               sign.getMeta()
           });
     }
+
+    table = prefix + "_TRANSACTIONS";
+    for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
+      for(Record r : entry.getValue().getRecords()) {
+        try {
+          h2().executePreparedQuery("SELECT * FROM " + table + " WHERE trans_id = ? AND trans_time = ?",
+              new Object[]{
+                  r.getId(),
+                  r.getTime()
+              });
+
+          if(!h2().results().next()) {
+            h2().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                new Object[] {
+                    r.getId(),
+                    r.getPlayer(),
+                    r.getWorld(),
+                    r.getType(),
+                    r.getCost(),
+                    r.getOldBalance(),
+                    r.getBalance(),
+                    r.getTime()
+                });
+          }
+        } catch(SQLException e) {
+          e.printStackTrace();
+        }
+      }
+    }
     h2().close();
   }
 
@@ -1045,6 +1163,18 @@ public class Alpha4_0 extends Version {
           "`sign_type` VARCHAR(30) NOT NULL," +
           "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
+          ");");
+
+      table = prefix + "_TRANSACTIONS";
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`trans_id` VARCHAR(36)," +
+          "`trans_player` VARCHAR(36)," +
+          "`trans_world` VARCHAR(36)," +
+          "`trans_type` VARCHAR(36)," +
+          "`trans_cost` DOUBLE," +
+          "`trans_oldBalance` DOUBLE" +
+          "`trans_balance` DOUBLE" +
+          "`trans_time` BIGINT(60)" +
           ");");
       mysql().close();
     } else {
@@ -1136,6 +1266,18 @@ public class Alpha4_0 extends Version {
           "`sign_type` VARCHAR(30) NOT NULL," +
           "`sign_location` VARCHAR(230) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
+          ");");
+
+      table = prefix + "_TRANSACTIONS";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+          "`trans_id` VARCHAR(36)," +
+          "`trans_player` VARCHAR(36)," +
+          "`trans_world` VARCHAR(36)," +
+          "`trans_type` VARCHAR(36)," +
+          "`trans_cost` DOUBLE," +
+          "`trans_oldBalance` DOUBLE" +
+          "`trans_balance` DOUBLE" +
+          "`trans_time` BIGINT(60)" +
           ");");
       h2().close();
     }
