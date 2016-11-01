@@ -27,10 +27,7 @@ import com.github.tnerevival.utils.SignUtils;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Alpha4_0 extends Version {
 
@@ -41,6 +38,10 @@ public class Alpha4_0 extends Version {
 
   @Override
   public void update(double version, String type) {
+    TNE.instance.modified.add("mobs.yml");
+    TNE.instance.modified.add("config.yml");
+    TNE.instance.loadConfigurations();
+    TNE.instance.modified = new ArrayList<>();
     String table = prefix + "_ECOIDS";
     if(type.equalsIgnoreCase("mysql")) {
       db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);

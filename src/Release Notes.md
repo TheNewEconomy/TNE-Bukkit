@@ -43,3 +43,4 @@ MISC
 - Added the ability to make players drop items from their bank on death.
   - Items chosen are completely random
   - It's also possible to include empty bank slots in the drop.
+- A bunch of bug fixes.

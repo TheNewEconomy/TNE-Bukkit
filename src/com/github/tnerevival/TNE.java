@@ -40,7 +40,7 @@ public class TNE extends JavaPlugin {
   public TNEAPI api = null;
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
-  public static final boolean debugMode = true;
+  public static final boolean debugMode = false;
 
   // Files & Custom Configuration Files
   public File mobs;
@@ -188,15 +188,15 @@ public class TNE extends JavaPlugin {
     }
   }
 
-  private void loadConfigurations() {
-       getConfig().options().copyDefaults(true);
-       mobConfigurations.options().copyDefaults(true);
-       messageConfigurations.options().copyDefaults(true);
-       objectConfigurations.options().copyDefaults(true);
-       materialConfigurations.options().copyDefaults(true);
-       playerConfigurations.options().copyDefaults(true);
-       worldConfigurations.options().copyDefaults(true);
-       saveConfigurations();
+  public void loadConfigurations() {
+    getConfig().options().copyDefaults(true);
+    mobConfigurations.options().copyDefaults(true);
+    messageConfigurations.options().copyDefaults(true);
+    objectConfigurations.options().copyDefaults(true);
+    materialConfigurations.options().copyDefaults(true);
+    playerConfigurations.options().copyDefaults(true);
+    worldConfigurations.options().copyDefaults(true);
+    saveConfigurations();
   }
 
   private void saveConfigurations() {
@@ -207,19 +207,19 @@ public class TNE extends JavaPlugin {
       if(modified.contains(mobConfigurations.getName())) {
         mobConfigurations.save(mobs);
       }
-      if(modified.contains(mobConfigurations.getName())) {
+      if(modified.contains(messageConfigurations.getName())) {
         messageConfigurations.save(messages);
       }
-      if(modified.contains(mobConfigurations.getName())) {
+      if(modified.contains(objectConfigurations.getName())) {
         objectConfigurations.save(objects);
       }
-      if(modified.contains(mobConfigurations.getName())) {
+      if(modified.contains(materialConfigurations.getName())) {
         materialConfigurations.save(materials);
       }
-      if(modified.contains(mobConfigurations.getName())) {
+      if(modified.contains(playerConfigurations.getName())) {
         playerConfigurations.save(players);
       }
-      if(modified.contains(mobConfigurations.getName())) {
+      if(modified.contains(worldConfigurations.getName())) {
         worldConfigurations.save(worlds);
       }
     } catch (IOException e) {
