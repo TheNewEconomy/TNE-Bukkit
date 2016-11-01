@@ -38,6 +38,10 @@ public abstract class Configuration {
     }
   }
 
+  public Boolean hasNode(String node) {
+    return configurations.get(node) != null;
+  }
+
   public Object getValue(String node) {
     return configurations.get(node);
   }

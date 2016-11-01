@@ -20,11 +20,11 @@ public class SaveManager {
     versions = new HashMap<>();
     versions.put(2.2, new Alpha2_2());
     versions.put(3.3, new Alpha3_0());
-    versions.put(4.0, new Alpha4_0());
+    versions.put(4.1, new Alpha4_0());
   }
 
   Version versionInstance;
-  Double currentSaveVersion = 4.0;
+  Double currentSaveVersion = 4.1;
   Double saveVersion = 0.0;
   public String type = TNE.configurations.getString("Core.Database.Type");
   File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));

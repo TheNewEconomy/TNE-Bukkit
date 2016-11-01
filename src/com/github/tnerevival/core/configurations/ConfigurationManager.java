@@ -52,6 +52,21 @@ public class ConfigurationManager {
     return getDouble("Mobs." + mob + ".Reward", "mob");
   }
 
+  private FileConfiguration getFileConfiguration(String id) {
+    switch(id) {
+      case "messages":
+        return TNE.instance.messageConfigurations;
+      case "mob":
+        return TNE.instance.messageConfigurations;
+      case "objects":
+        return TNE.instance.messageConfigurations;
+      case "materials":
+        return TNE.instance.messageConfigurations;
+      default:
+        return TNE.instance.getConfig();
+    }
+  }
+
   private Configuration getConfiguration(String id) {
     return configurations.get(id);
   }
@@ -74,6 +89,15 @@ public class ConfigurationManager {
 
   public Object getValue(String node, String configuration) {
     return getConfiguration(configuration).getValue(node);
+  }
+
+  public void setValue(String node, String configuration, Object value) {
+    getConfiguration(configuration).setValue(node, value);
+    getConfiguration(configuration).save(getFileConfiguration(configuration));
+  }
+
+  public Boolean hasNode(String node, String configuration) {
+    return getConfiguration(configuration).hasNode(node);
   }
 
   public Boolean getBoolean(String node) {
@@ -133,6 +157,24 @@ public class ConfigurationManager {
     if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
     if(getBoolean("Core.Multiworld") && worldEnabled(path, world)) return getWorldConfiguration(path, world);
     return getValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
+  }
+
+  public void setConfiguration(String configuration, Object value) {
+    String[] exploded = configuration.split("\\.");
+    String prefix = "Core";
+    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN) {
+      prefix = exploded[0];
+    }
+    setValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier(), value);
+  }
+
+  public Boolean hasConfiguration(String configuration) {
+    String[] exploded = configuration.split("\\.");
+    String prefix = "Core";
+    if(ConfigurationType.fromPrefix(exploded[0]) != ConfigurationType.UNKNOWN) {
+      prefix = exploded[0];
+    }
+    return hasNode(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
   }
 
   public boolean playerEnabled(String node, String player) {

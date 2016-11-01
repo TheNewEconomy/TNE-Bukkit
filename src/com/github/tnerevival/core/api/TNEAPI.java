@@ -235,6 +235,11 @@ public class TNEAPI {
     return (Integer)getConfiguration(configuration, world, player);
   }
 
+  public boolean hasConfiguration(String configuration) {
+    if(configuration.toLowerCase().contains("database")) return false;
+    return TNE.configurations.hasConfiguration(configuration);
+  }
+
   public Object getConfiguration(String configuration) {
     return getConfiguration(configuration, TNE.instance.defaultWorld);
   }
@@ -250,6 +255,11 @@ public class TNEAPI {
   public Object getConfiguration(String configuration, String world, String player) {
     if(configuration.toLowerCase().contains("database")) return "";
     return TNE.configurations.getConfiguration(configuration, world, player);
+  }
+
+  public void setConfiguration(String configuration, Object value) {
+    if(configuration.toLowerCase().contains("database")) return;
+    TNE.configurations.setConfiguration(configuration, value);
   }
 
   /*

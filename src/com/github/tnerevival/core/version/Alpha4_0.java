@@ -33,11 +33,12 @@ public class Alpha4_0 extends Version {
 
   @Override
   public double versionNumber() {
-    return 4.0;
+    return 4.1;
   }
 
   @Override
   public void update(double version, String type) {
+    if(version == 4.0) return;
     TNE.instance.modified.add("mobs.yml");
     TNE.instance.modified.add("config.yml");
     TNE.instance.loadConfigurations();
@@ -81,9 +82,9 @@ public class Alpha4_0 extends Version {
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
           "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE" +
-          "`trans_balance` DOUBLE" +
-          "`trans_time` BIGINT(60)" +
+          "`trans_oldBalance` DOUBLE," +
+          "`trans_balance` DOUBLE," +
+          "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
     } else if(type.equals("h2")) {
@@ -124,9 +125,9 @@ public class Alpha4_0 extends Version {
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
           "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE" +
-          "`trans_balance` DOUBLE" +
-          "`trans_time` BIGINT(60)" +
+          "`trans_oldBalance` DOUBLE," +
+          "`trans_balance` DOUBLE," +
+          "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
     }
@@ -1164,8 +1165,8 @@ public class Alpha4_0 extends Version {
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
           "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE" +
-          "`trans_balance` DOUBLE" +
+          "`trans_oldBalance` DOUBLE," +
+          "`trans_balance` DOUBLE," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
@@ -1269,9 +1270,9 @@ public class Alpha4_0 extends Version {
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
           "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE" +
-          "`trans_balance` DOUBLE" +
-          "`trans_time` BIGINT(60)" +
+          "`trans_oldBalance` DOUBLE," +
+          "`trans_balance` DOUBLE," +
+          "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
       h2().close();

@@ -69,6 +69,9 @@ Messages:
        NoBalance: <red>$player has no balance data for the world "$world"!
        NoBank: <red>$player has no bank data for the world "$world"!
        Balance: <white>$player currently has <gold>$amount <white>for world "$world"!
+       NoTransactions: <white>$player has no transactions to display.
+       Configuration: <white>The value of $node is currently $value.
+       SetConfiguration: <white>The value of $node has been set to $value.
        ID: <white>The UUID for $player is $id.
        Exists: <red>A player with that name already exists.
        Created: <white>Successfully created account for $player.
