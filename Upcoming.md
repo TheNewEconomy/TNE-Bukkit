@@ -1,0 +1,14 @@
+- Version Unknown
+- Currency Improvements
+  - Ability to have tiered currencies
+- Lotteries
+- Administration command additions
+  - Ability to modify configurations in-game
+- Companies
+  - Ability to have custom jobs
+  - Ability to set custom paychecks
+- Shop Signs
+- Custom Plot Areas
+  - Ability to buy, sell, trade and auction plots
+- Different types(Bank, Company, Personal, Shop, Trade)
+- Direct Player Trading(Alternative to Sign Trading)
