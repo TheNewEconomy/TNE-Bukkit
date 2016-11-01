@@ -88,6 +88,7 @@ public class Message {
   }
 
   public void translate(String world, CommandSender sender) {
+    if(sender == null) return;
     String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
     String found = TNE.instance.api.getString(this.node, world, id);
 

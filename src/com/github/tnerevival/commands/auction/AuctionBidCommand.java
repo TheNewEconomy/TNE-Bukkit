@@ -63,7 +63,7 @@ public class AuctionBidCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
-    if(arguments.length < 1 || !MISCUtils.isDouble(arguments[0], world)) {
+    if(arguments.length < 1 || !CurrencyFormatter.isDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
       new Message("Messages.Auction.BidRequire").translate(world, sender);
       return false;
     }

@@ -249,9 +249,10 @@ public class MISCUtils {
   }
 
   public static UUID distringuishId(String identifier) {
-    Player player = (isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
-
-    return MISCUtils.getID(player);
+    if(isUUID(identifier)) {
+      return UUID.fromString(identifier);
+    }
+    return MISCUtils.getID(MISCUtils.getPlayer(identifier));
   }
 
   public static boolean isUUID(String value) {

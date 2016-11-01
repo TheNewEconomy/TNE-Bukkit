@@ -63,6 +63,7 @@ public class TransactionManager {
   }
 
   public void add(String id, String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance, Long time) {
+    if(type.equals(TransactionType.MONEY_INQUIRY)) return;
     if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, initiator)) {
 
       String playerFrom = (player == null)? "N/A" : player;

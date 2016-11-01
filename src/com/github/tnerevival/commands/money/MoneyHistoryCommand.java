@@ -106,7 +106,7 @@ public class MoneyHistoryCommand extends TNECommand {
           String time = r.convert(world, MISCUtils.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, MISCUtils.getID(player)));
 
           Player p = null;
-          if(r.getPlayer() != null) {
+          if(r.getPlayer() != null && MISCUtils.isUUID(r.getPlayer())) {
             p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
           }
           StringBuilder builder = new StringBuilder();

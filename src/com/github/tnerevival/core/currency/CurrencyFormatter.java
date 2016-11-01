@@ -73,6 +73,21 @@ public class CurrencyFormatter {
     return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
   }
 
+  public static Boolean isDouble(String value, String world) {
+    String major = TNE.instance.manager.currencyManager.get(world).getMajor();
+    return isDouble(value, major, world);
+  }
+
+  public static Boolean isDouble(String value, String currency, String world) {
+    String decimal = TNE.instance.manager.currencyManager.get(world, currency).getDecimal();
+    try {
+      Double.valueOf(value.replace(decimal, "."));
+      return true;
+    } catch(Exception e) {
+      return false;
+    }
+  }
+
   public static Double translateDouble(String value, String world) {
     String major = TNE.instance.manager.currencyManager.get(world).getMajor();
     return translateDouble(value, major, world);

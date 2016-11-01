@@ -3,7 +3,6 @@ package com.github.tnerevival.core.auction;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
@@ -39,9 +38,7 @@ public class Claim {
   }
 
   public void claim() {
-    if(Bukkit.getOnlinePlayers().contains(MISCUtils.getPlayer(player))) {
-      MISCUtils.getPlayer(player).getInventory().addItem(item.toItemStack());
-    }
+    MISCUtils.getPlayer(player).getInventory().addItem(item.toItemStack());
   }
 
   public UUID getPlayer() {
