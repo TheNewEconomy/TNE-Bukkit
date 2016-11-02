@@ -8,6 +8,7 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * Created by Daniel on 10/12/2016.
@@ -48,9 +49,11 @@ public class MoneySetCommand extends TNECommand {
         return false;
       }
 
-      if(getPlayer(sender, arguments[0]) != null) {
+      if(MISCUtils.getPlayer(arguments[0]) != null) {
 
-        AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_SET, world);
+        String id = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : null;
+
+        AccountUtils.transaction(MISCUtils.getID(MISCUtils.getPlayer(arguments[0])).toString(), id, value, TransactionType.MONEY_SET, world);
         Message set = new Message("Messages.Money.Set");
         set.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
         set.addVariable("$player", arguments[0]);

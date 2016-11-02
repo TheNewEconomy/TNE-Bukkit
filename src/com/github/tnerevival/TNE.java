@@ -144,7 +144,7 @@ public class TNE extends JavaPlugin {
     configurations.save(messageConfigurations, "messages");
     configurations.save(objectConfigurations, "objects");
     configurations.save(materialConfigurations, "materials");
-    saveConfigurations();
+    saveConfigurations(true);
     try {
       saveWorker.cancel();
       interestWorker.cancel();
@@ -196,30 +196,30 @@ public class TNE extends JavaPlugin {
     materialConfigurations.options().copyDefaults(true);
     playerConfigurations.options().copyDefaults(true);
     worldConfigurations.options().copyDefaults(true);
-    saveConfigurations();
+    saveConfigurations(false);
   }
 
-  private void saveConfigurations() {
-    if(!new File(getDataFolder(), "config.yml").exists() || modified.contains("config.yml")) {
+  private void saveConfigurations(boolean check) {
+    if(!check || !new File(getDataFolder(), "config.yml").exists() || modified.contains("config.yml")) {
       saveConfig();
     }
     try {
-      if(modified.contains(mobConfigurations.getName())) {
+      if(!check || !mobs.exists() || modified.contains(mobConfigurations.getName())) {
         mobConfigurations.save(mobs);
       }
-      if(modified.contains(messageConfigurations.getName())) {
+      if(!check || !messages.exists() || modified.contains(messageConfigurations.getName())) {
         messageConfigurations.save(messages);
       }
-      if(modified.contains(objectConfigurations.getName())) {
+      if(!check || !objects.exists() || modified.contains(objectConfigurations.getName())) {
         objectConfigurations.save(objects);
       }
-      if(modified.contains(materialConfigurations.getName())) {
+      if(!check || !materials.exists() || modified.contains(materialConfigurations.getName())) {
         materialConfigurations.save(materials);
       }
-      if(modified.contains(playerConfigurations.getName())) {
+      if(!check || !players.exists() || modified.contains(playerConfigurations.getName())) {
         playerConfigurations.save(players);
       }
-      if(modified.contains(worldConfigurations.getName())) {
+      if(!check || !worlds.exists() || modified.contains(worldConfigurations.getName())) {
         worldConfigurations.save(worlds);
       }
     } catch (IOException e) {

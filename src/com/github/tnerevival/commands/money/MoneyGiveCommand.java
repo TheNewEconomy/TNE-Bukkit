@@ -8,6 +8,7 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class MoneyGiveCommand extends TNECommand {
 
@@ -41,17 +42,18 @@ public class MoneyGiveCommand extends TNECommand {
       String world = (arguments.length == 3)? arguments[2] : TNE.instance.defaultWorld;
       Double value = CurrencyFormatter.translateDouble(arguments[1], world);
       if(value < 0) {
-        new Message("Messages.Money.Negative").translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
+        new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
 
-      if(getPlayer(sender, arguments[0]) != null) {
+      if(MISCUtils.getPlayer(arguments[0]) != null) {
 
-        AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), value, TransactionType.MONEY_GIVE, world);
+        String id = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : null;
+        AccountUtils.transaction(MISCUtils.getID(MISCUtils.getPlayer(arguments[0])).toString(), id, value, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
         gave.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
         gave.addVariable("$player", arguments[0]);
-        gave.translate(MISCUtils.getWorld(getPlayer(sender)), getPlayer(sender));
+        gave.translate(world, sender);
         return true;
       }
     } else {

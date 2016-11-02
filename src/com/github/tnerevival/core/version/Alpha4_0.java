@@ -274,20 +274,22 @@ public class Alpha4_0 extends Version {
       TNE.instance.manager.signs.put(sign.getLocation(), sign);
     }
 
-    for(Article a : transactions.getArticle().values()) {
-      Entry info = a.getEntry("info");
+    if(transactions != null) {
+      for (Article a : transactions.getArticle().values()) {
+        Entry info = a.getEntry("info");
 
-      TNE.instance.manager.transactions.add(
-          (String)info.getData("id"),
-          (String)info.getData("initiator"),
-          (String)info.getData("player"),
-          (String)info.getData("world"),
-          TransactionType.fromID((String)info.getData("type")),
-          new TransactionCost((Double)info.getData("cost")),
-          (Double)info.getData("oldBalance"),
-          (Double)info.getData("balance"),
-          (Long)info.getData("time")
-      );
+        TNE.instance.manager.transactions.add(
+            (String) info.getData("id"),
+            (String) info.getData("initiator"),
+            (String) info.getData("player"),
+            (String) info.getData("world"),
+            TransactionType.fromID((String) info.getData("type")),
+            new TransactionCost((Double) info.getData("cost")),
+            (Double) info.getData("oldBalance"),
+            (Double) info.getData("balance"),
+            (Long) info.getData("time")
+        );
+      }
     }
   }
 

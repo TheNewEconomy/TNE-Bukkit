@@ -93,7 +93,7 @@ public class CurrencyManager {
 
   public Currency get(String world) {
     for(Map.Entry<String, Currency> entry : currencies.entrySet()) {
-      if(entry.getKey().contains(world + ":") && entry.getValue().isWorldDefault()) {
+      if(entry.getKey().equalsIgnoreCase(world + ":Default") || entry.getKey().contains(world + ":") && entry.getValue().isWorldDefault()) {
         return entry.getValue();
       }
     }

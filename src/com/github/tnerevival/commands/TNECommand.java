@@ -115,8 +115,7 @@ public abstract class TNECommand {
       return false;
     }
 
-    if(locked() && !(sender instanceof Player)) return false;
-    if(locked()) {
+    if(locked() && sender instanceof Player) {
       Player p = (Player)sender;
       Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
 
@@ -128,8 +127,7 @@ public abstract class TNECommand {
       }
     }
 
-    if(confirm() && !(sender instanceof Player)) return false;
-    if(confirm()) {
+    if(confirm() && sender instanceof Player) {
       Player p = (Player)sender;
       Account acc = AccountUtils.getAccount(MISCUtils.getID(p));
       if (TNE.instance.manager.enabled(MISCUtils.getID(p), MISCUtils.getWorld(p))) {
