@@ -33,12 +33,12 @@ public class Alpha4_0 extends Version {
 
   @Override
   public double versionNumber() {
-    return 4.1;
+    return 4.2;
   }
 
   @Override
   public void update(double version, String type) {
-    if(version == 4.0) return;
+    if(version == 4.0 || version == 4.1) return;
     TNE.instance.modified.add("mobs.yml");
     TNE.instance.modified.add("config.yml");
     TNE.instance.loadConfigurations();
