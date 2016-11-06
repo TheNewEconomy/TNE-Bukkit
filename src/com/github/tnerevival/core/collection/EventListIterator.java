@@ -16,38 +16,33 @@
  */
 package com.github.tnerevival.core.collection;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 
 /**
- * Created by creatorfromhell on 11/2/2016.
+ * Created by creatorfromhell on 11/6/2016.
  **/
-public class EventMap<K, V> extends HashMap<K, V> {
+public class EventListIterator<E> {
 
-  public MapListener<K, V> listener;
-  public HashMap<K, V> map;
+  Iterator<E> iterator;
+  ListListener<E> listener;
+  E last;
 
-  public V get(Object key) {
-    return map.get(key);
-  }
-
-  public V put(K key, V value) {
-    listener.add(key, value);
-    return map.put(key, value);
-  }
-
-  public V remove(Object key) {
-    listener.preRemove(key, get(key));
-    V removed = map.remove(key);
-    listener.remove(key);
-    return removed;
-  }
-
-  public EventMapIterator<Map.Entry<K, V>> getIterator() {
-    return new EventMapIterator<>(map.entrySet().iterator(), listener);
-  }
-
-  public void setListener(MapListener<K, V> listener) {
+  public EventListIterator(Iterator<E> iterator, ListListener<E> listener) {
+    this.iterator = iterator;
     this.listener = listener;
+  }
+
+  public void remove() {
+    listener.remove(last);
+    iterator.remove();
+  }
+
+  public boolean hasNext() {
+    return iterator.hasNext();
+  }
+
+  public E next() {
+    last = iterator.next();
+    return last;
   }
 }
