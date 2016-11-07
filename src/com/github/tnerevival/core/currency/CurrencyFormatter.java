@@ -35,6 +35,8 @@ public class CurrencyFormatter {
 
   public static String format(Currency currency, double amount) {
 
+    if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, "Major");
+
     String shortFormat = "<symbol> <short.amount>";
     String format = currency.getFormat();
 
