@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -44,46 +45,51 @@ public class CurrencyManager {
   }
 
   private void loadCurrency(FileConfiguration configuration, boolean world, String name) {
-    String base = ((world)? "Worlds." + name : "Core") + ".Currency";
-    if(configuration.contains(base)) {
-      String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
-      String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten=false>";
-      String curName = "Default";
-      Boolean worldDefault = true;
-      Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
-      Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");
-      String symbol = configuration.contains(base + ".Symbol")? configuration.getString(base + ".Symbol") : "$";
-      String major = configuration.contains(base + ".MajorName.Single")? configuration.getString(base + ".MajorName.Single") : "dollar";
-      String majorPlural = configuration.contains(base + ".MajorName.Plural")? configuration.getString(base + ".MajorName.Plural") : "dollars";
-      String minor = configuration.contains(base + ".MinorName.Single")? configuration.getString(base + ".MinorName.Single") : "cent";
-      String minorPlural = configuration.contains(base + ".MinorName.Plural")? configuration.getString(base + ".MinorName.Plural") : "cents";
-      String majorItem = configuration.contains(base + ".ItemMajor")? configuration.getString(base + ".ItemMajor") : "GOLD_INGOT";
-      String minorItem = configuration.contains(base + ".ItemMinor")? configuration.getString(base + ".ItemMinor") : "IRON_INGOT";
+    String curBase = ((world)? "Worlds." + name : "Core") + ".Currency";
+    if(configuration.contains(curBase)) {
+
+      Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);
+
+      for(String cur : currencies) {
+        String base = curBase + "." + cur;
+        String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
+        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten=false>";
+        Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
+        Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
+        Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");
+        String symbol = configuration.contains(base + ".Symbol")? configuration.getString(base + ".Symbol") : "$";
+        String major = configuration.contains(base + ".MajorName.Single")? configuration.getString(base + ".MajorName.Single") : "dollar";
+        String majorPlural = configuration.contains(base + ".MajorName.Plural")? configuration.getString(base + ".MajorName.Plural") : "dollars";
+        String minor = configuration.contains(base + ".MinorName.Single")? configuration.getString(base + ".MinorName.Single") : "cent";
+        String minorPlural = configuration.contains(base + ".MinorName.Plural")? configuration.getString(base + ".MinorName.Plural") : "cents";
+        String majorItem = configuration.contains(base + ".ItemMajor")? configuration.getString(base + ".ItemMajor") : "GOLD_INGOT";
+        String minorItem = configuration.contains(base + ".ItemMinor")? configuration.getString(base + ".ItemMinor") : "IRON_INGOT";
 
 
-      Tier majorTier = new Tier();
-      majorTier.setSymbol(symbol);
-      majorTier.setMaterial(majorItem);
-      majorTier.setSingle(major);
-      majorTier.setPlural(majorPlural);
+        Tier majorTier = new Tier();
+        majorTier.setSymbol(symbol);
+        majorTier.setMaterial(majorItem);
+        majorTier.setSingle(major);
+        majorTier.setPlural(majorPlural);
 
-      Tier minorTier = new Tier();
-      minorTier.setSymbol(symbol);
-      minorTier.setMaterial(minorItem);
-      minorTier.setSingle(minor);
-      minorTier.setPlural(minorPlural);
+        Tier minorTier = new Tier();
+        minorTier.setSymbol(symbol);
+        minorTier.setMaterial(minorItem);
+        minorTier.setSingle(minor);
+        minorTier.setPlural(minorPlural);
 
-      Currency currency = new Currency();
-      currency.setDecimal(decimal);
-      currency.setFormat(format);
-      currency.setName(curName);
-      currency.setWorldDefault(worldDefault);
-      currency.setRate(rate);
-      currency.setItem(item);
-      currency.addTier("Major", majorTier);
-      currency.addTier("Minor", minorTier);
+        Currency currency = new Currency();
+        currency.setDecimal(decimal);
+        currency.setFormat(format);
+        currency.setName(cur);
+        currency.setWorldDefault(worldDefault);
+        currency.setRate(rate);
+        currency.setItem(item);
+        currency.addTier("Major", majorTier);
+        currency.addTier("Minor", minorTier);
 
-      add(name, currency);
+        add(name, currency);
+      }
     }
   }
 
@@ -100,9 +106,9 @@ public class CurrencyManager {
     return null;
   }
 
-  public Currency get(String world, String major) {
-    if(!contains(world, major)) {
-      return get(world);
+  public Currency get(String world, String name) {
+    if(contains(world, name)) {
+      return currencies.get(world + ":" + name);
     }
     return get(world);
   }

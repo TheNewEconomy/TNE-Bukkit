@@ -35,16 +35,49 @@ Worlds:
         #All configurations relating to currency.
         Currency:
 
+          #Name of the currency
+          Default:
+
+            #The format to use when outputting this currency into chat.
+            #The variables you're able to use here.
+            #<symbol> - The currency's symbol
+            #<decimal> - The currency's decimal.
+            #<major> - A combination of the currency's major amount and name
+            #<minor> - A combination of the currency's minor amount and name
+            #<major.name> - The currency's major name.
+            #<minor.name> - The currency's minor name.
+            #<major.amount> - The currency's major amount.
+            #<minor.amount> - The currency's minor amount.
+            #<shorten.amount> - The currency's shortened amount.
+            #<shorten> - Added to make the outputted value shortened
+            # If shortened, it will ignore the value of Format.
+            #It's also possible to include all colour variables from messages.yml
+            #Example: <major> and <minor>
+            Format: <symbol><major><decimal><minor><shorten>
+
+            #Whether or not this currency is the world's default.
+            Default: true
+
+            #The conversion power of this currency to other currencies.
+            #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+            Conversion: 1.0
+
+            #The character to use as the symbol for this currency.
+            Symbol: $
+
+            #The character to use as the decimal place holder.
+            Decimal: .
+
             #Would you like to use an item as the currency?
             ItemCurrency: false
-        
-            #If you want to use an item, which one?(USe the item's id for now)
-            #Example: 266(Gold Ingot)
-            ItemMajor: 266
-        
+
+            #If you want to use an item, which one?(Please use the name of the item)
+            #Example: GOLD_INGOT
+            ItemMajor: GOLD_INGOT
+
             #The minor item currency item.
             #Example: for USD this might be quarters or dimes
-            ItemMinor: 265
+            ItemMinor: IRON_INGOT
 
             #The name of the major currency
             #Example: Dollars
@@ -55,7 +88,7 @@ Worlds:
 
                 #The plural name. Example: Dollars
                 Plural: Dollars
-            
+
             #The name of the minor currency
             #Example: Cents
             MinorName:
