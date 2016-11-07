@@ -22,7 +22,8 @@ public class AccountUtils {
 
   public static void createAccount(UUID id) {
     Account a = new Account(id);
-    a.setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld));
+    String defaultCurrency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName();
+    a.setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld, defaultCurrency), defaultCurrency);
     TNEAccountCreationEvent e = new TNEAccountCreationEvent(id, a);
     MISCUtils.debug(e.getId() + "");
     Bukkit.getServer().getPluginManager().callEvent(e);
@@ -45,10 +46,10 @@ public class AccountUtils {
     if(MISCUtils.multiWorld()) {
       world = MISCUtils.getWorld(id);
       if(!account.getBalances().containsKey(world)) {
-        initializeWorldData(id, world);
+        initializeWorldData(id);
       }
 
-      return round(account.getBalance(MISCUtils.getWorld(id)));
+      return round(account.getBalance(MISCUtils.getWorld(id), currencyName));
     }
     if(currency.isItem()) {
       Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
@@ -58,7 +59,7 @@ public class AccountUtils {
       String balance = major + "." + minor;
       return Double.valueOf(balance);
     }
-    return round(account.getBalance(TNE.instance.defaultWorld));
+    return round(account.getBalance(TNE.instance.defaultWorld, currencyName));
   }
 
   private static void setBalance(UUID id, String world, String currencyName, Double balance) {
@@ -78,7 +79,7 @@ public class AccountUtils {
       MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
     } else {
-      account.setBalance(TNE.instance.defaultWorld, balance);
+      account.setBalance(TNE.instance.defaultWorld, balance, currencyName);
     }
   }
 
@@ -111,7 +112,7 @@ public class AccountUtils {
   }
 
   public static Double getFunds(UUID id, String world) {
-    return getFunds(id, world, "Default");
+    return getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName());
   }
 
   public static Double getFunds(UUID id, String world, String currency) {
@@ -122,16 +123,8 @@ public class AccountUtils {
     return funds;
   }
 
-  public static void setFunds(UUID id, String world, double amount) {
-    setBalance(id, world, "Default", round(amount));
-  }
-
   public static void setFunds(UUID id, String world, double amount, String currency) {
     setBalance(id, world, currency, round(amount));
-  }
-
-  public static void removeFunds(UUID id, String world, double amount) {
-    removeFunds(id, world, amount, "Default");
   }
 
   public static void removeFunds(UUID id, String world, double amount, String currency) {
@@ -144,26 +137,24 @@ public class AccountUtils {
     setBalance(id, world, currency, round(getBalance(id, world, currency) - amount));
   }
 
-  public static void initializeWorldData(UUID id, String world) {
+  public static void initializeWorldData(UUID id) {
     Account account = getAccount(id);
-    world = MISCUtils.getWorld(id);
-    if(!account.getBalances().containsKey(world)) {
-      account.setBalance(world, getInitialBalance(world));
+    String world = MISCUtils.getWorld(id);
+    for(Currency c : TNE.instance.manager.currencyManager.getWorldCurrencies(world)) {
+      if (!account.getBalances().containsKey(world + ":" + c.getName())) {
+        account.setBalance(world, getInitialBalance(world, c.getName()), c.getName());
+      }
     }
   }
 
-  public static Double getInitialBalance(String world) {
-    if(MISCUtils.multiWorld()) {
-      if(MISCUtils.worldConfigExists("Worlds." + world + ".Balance")) {
-        return round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".Balance"));
-      }
-    }
-    return round(TNE.instance.api.getDouble("Core.Balance", world));
+  public static Double getInitialBalance(String world, String currency) {
+    double balance = TNE.instance.manager.currencyManager.get(world, currency).getBalance();
+    return round(balance);
   }
 
   public static Double getWorldCost(String world) {
     if(MISCUtils.multiWorld()) {
-      if(MISCUtils.worldConfigExists("Worlds." + world + ".balance")) {
+      if(MISCUtils.worldConfigExists("Worlds." + world + ".ChangeFee")) {
         return round(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee"));
       }
     }

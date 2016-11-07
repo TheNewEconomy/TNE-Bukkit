@@ -73,7 +73,7 @@ public class ConnectionListener implements Listener {
     String world = MISCUtils.getWorld(killed);
     UUID id = IDFinder.getID(killed);
     if(TNE.instance.api.getBoolean("Core.Death.Lose", world, id)) {
-      AccountUtils.setFunds(id, world, 0.0);
+      AccountUtils.setFunds(id, world, 0.0, "Default");
     }
 
     if(TNE.instance.api.getInteger("Core.Death.Bank.Drop", world, id) > 0) {

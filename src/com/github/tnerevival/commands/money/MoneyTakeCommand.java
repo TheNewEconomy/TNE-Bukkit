@@ -8,6 +8,7 @@ import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 public class MoneyTakeCommand extends TNECommand {
@@ -43,10 +44,22 @@ public class MoneyTakeCommand extends TNECommand {
       String currencyName = (arguments.length >= 4)? arguments[3] : "Default";
       Currency currency = getCurrency(world, currencyName);
       Double value = CurrencyFormatter.translateDouble(arguments[1], world);
+
       if(value < 0) {
         new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
+
+      if(!TNE.instance.manager.currencyManager.contains(world, currencyName)) {
+        Message m = new Message("Messages.Money.NoCurrency");
+        m.addVariable("$currency", currencyName);
+        m.addVariable("$world", world);
+        m.translate(world, sender);
+        return false;
+      }
+
+      MISCUtils.debug(world);
+
       if(getPlayer(sender, arguments[0]) != null) {
         if(AccountUtils.transaction(IDFinder.getID(getPlayer(sender, arguments[0])).toString(), IDFinder.getID(getPlayer(sender)).toString(), AccountUtils.round(value), currency, TransactionType.MONEY_REMOVE, world)) {
           Message took = new Message("Messages.Money.Took");

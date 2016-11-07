@@ -105,7 +105,7 @@ public class Transaction {
         UUID id = MISCUtils.distringuishId(initiator);
         if(cost.getAmount() > 0.0) {
           initiatorOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
-          AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()), cost.getCurrency().getName());
+          AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, cost.getCurrency().getName()) + cost.getAmount()), cost.getCurrency().getName());
           initiatorBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
         }
 
@@ -150,9 +150,9 @@ public class Transaction {
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = MISCUtils.distringuishId(initiator);
       if(!BankUtils.hasBank(MISCUtils.distringuishId(recipient), world)) return TransactionResult.FAILED;
-      if(cost.getAmount() > 0 && AccountUtils.getFunds(id, world) < cost.getAmount()) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0 && AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName()) < cost.getAmount()) return TransactionResult.FAILED;
       if(!BankUtils.bankMember(MISCUtils.distringuishId(recipient), id, world)) return TransactionResult.FAILED;
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) - cost.getAmount()));
+      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName()) - cost.getAmount()), TNE.instance.manager.currencyManager.get(world).getName());
       return TransactionResult.SUCCESS;
     }
     return TransactionResult.SUCCESS;
@@ -210,7 +210,7 @@ public class Transaction {
       if(recipient != null) {
         UUID id = MISCUtils.distringuishId(recipient);
         recipientOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
-        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()), cost.getCurrency().getName());
+        AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, cost.getCurrency().getName()) + cost.getAmount()), cost.getCurrency().getName());
         MISCUtils.setItems(id, cost.getItems(), true);
         recipientBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
       }
@@ -228,7 +228,7 @@ public class Transaction {
       }
 
       recipientOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()), cost.getCurrency().getName());
+      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, cost.getCurrency().getName()) + cost.getAmount()), cost.getCurrency().getName());
       MISCUtils.setItems(id, cost.getItems(), true);
       recipientBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
       return TransactionResult.SUCCESS;
@@ -239,14 +239,14 @@ public class Transaction {
       UUID initID = MISCUtils.distringuishId(initiator);
       if(!BankUtils.hasBank(initID, world)) return TransactionResult.FAILED;
       if(recipient != null && !BankUtils.bankMember(initID, id, world)) return TransactionResult.FAILED;
-      recipientOldBalance = AccountUtils.getFunds(id, world);
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world) + cost.getAmount()));
-      recipientBalance = AccountUtils.getFunds(id, world);
+      recipientOldBalance = AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName());
+      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName()) + cost.getAmount()), TNE.instance.manager.currencyManager.get(world).getName());
+      recipientBalance = AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName());
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = MISCUtils.distringuishId(recipient);
       if(!BankUtils.hasBank(id, world)) return TransactionResult.FAILED;
-      if(cost.getAmount() > 0 && AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world) < cost.getAmount()) return TransactionResult.FAILED;
+      if(cost.getAmount() > 0 && AccountUtils.getFunds(MISCUtils.distringuishId(initiator), world, TNE.instance.manager.currencyManager.get(world).getName()) < cost.getAmount()) return TransactionResult.FAILED;
       if(recipient != null && !BankUtils.bankMember(id, MISCUtils.distringuishId(initiator), world)) return TransactionResult.FAILED;
       recipientOldBalance = BankUtils.getBankBalance(id, world);
       BankUtils.setBankBalance(id, world, (BankUtils.getBankBalance(id, world) + cost.getAmount()));

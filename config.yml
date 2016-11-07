@@ -11,14 +11,6 @@ Core:
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
     
-    #The initial balance for accounts.
-    #Will be used if no world-specific configurations are found if multiworld is enabled
-    Balance: 200.0
-
-    #Whether or not to shorten money amounts
-    #Example: 2100 would be 2.1k
-    Shorten: true
-    
     #whether or not to enable plugin metrics for TNE
     Metrics: true
 
@@ -90,6 +82,10 @@ Core:
             #It's also possible to include all colour variables from messages.yml
             #Example: <major> and <minor>
             Format: <symbol><major><decimal><minor><shorten>
+
+            #The initial balance for accounts.
+            #Will be used if no world-specific configurations are found if multiworld is enabled
+            Balance: 200.0
 
             #Whether or not this currency is the world's default.
             Default: true

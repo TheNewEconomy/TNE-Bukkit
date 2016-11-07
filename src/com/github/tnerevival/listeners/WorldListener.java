@@ -29,7 +29,7 @@ public class WorldListener implements Listener {
       if(!player.hasPermission("tne.bypass.world")) {
         if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
           AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-          AccountUtils.initializeWorldData(IDFinder.getID(player), world);
+          AccountUtils.initializeWorldData(IDFinder.getID(player));
           Message change = new Message("Messages.World.Change");
           change.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
           change.translate(world, player);
@@ -40,10 +40,10 @@ public class WorldListener implements Listener {
           changeFailed.translate(world, player);
         }
       } else {
-        AccountUtils.initializeWorldData(IDFinder.getID(player), world);
+        AccountUtils.initializeWorldData(IDFinder.getID(player));
       }
     } else {
-      AccountUtils.initializeWorldData(IDFinder.getID(player), world);
+      AccountUtils.initializeWorldData(IDFinder.getID(player));
     }
   }
 }

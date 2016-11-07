@@ -36,7 +36,14 @@ public class EconomyManager {
     while(it.hasNext()) {
       Account acc = it.next();
 
-      if(acc.getBalances().containsKey(world) && acc.getBalance(world).equals(AccountUtils.getInitialBalance(world))) {
+      List<com.github.tnerevival.core.currency.Currency> worldCurrencies = TNE.instance.manager.currencyManager.getWorldCurrencies(world);
+      Boolean remove = true;
+      for(com.github.tnerevival.core.currency.Currency c : worldCurrencies) {
+        if(acc.getBalances().containsKey(world + ":" + c.getName()) && !acc.getBalance(world, c.getName()).equals(AccountUtils.getInitialBalance(world, c.getName()))) {
+          remove = false;
+        }
+      }
+      if(remove) {
         deleteAccount(acc.getUid());
         it.remove();
         ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
@@ -50,7 +57,8 @@ public class EconomyManager {
       Account acc = it.next();
       boolean remove = true;
       for(String s : acc.getBalances().keySet()) {
-        if(!acc.getBalance(s).equals(AccountUtils.getInitialBalance(s))) {
+        String[] split = s.split(":");
+        if(!acc.getBalance(split[0], split[1]).equals(AccountUtils.getInitialBalance(split[0], split[1]))) {
           remove = false;
         }
       }
@@ -85,8 +93,6 @@ public class EconomyManager {
       new Message("Messages.Money.NoPins").translate(MISCUtils.getWorld(p), p);
       return true;
     }
-
-    if(!force) return true;
-    return confirmed.contains(id);
+    return !force || confirmed.contains(id);
   }
 }

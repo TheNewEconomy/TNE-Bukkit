@@ -2,6 +2,7 @@ package com.github.tnerevival.core.currency;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,9 @@ public class CurrencyFormatter {
 
   public static String format(Currency currency, double amount) {
 
-    if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, "Major");
+    if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
+
+    MISCUtils.debug(currency.getName() + " World: " + currency.getFormat());
 
     String shortFormat = "<symbol> <short.amount>";
     String format = currency.getFormat();

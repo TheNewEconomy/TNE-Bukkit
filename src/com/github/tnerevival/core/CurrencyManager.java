@@ -8,9 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -51,7 +49,9 @@ public class CurrencyManager {
       Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);
 
       for(String cur : currencies) {
+        MISCUtils.debug("Loading Currency: " + cur + " for world: " + name);
         String base = curBase + "." + cur;
+        Double balance = configuration.contains(base + ".Balance")?  configuration.getDouble(base + ".Balance") : 200.00;
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
         String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten>";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
@@ -79,6 +79,7 @@ public class CurrencyManager {
         minorTier.setPlural(minorPlural);
 
         Currency currency = new Currency();
+        currency.setBalance(balance);
         currency.setDecimal(decimal);
         currency.setFormat(format);
         currency.setName(cur);
@@ -103,7 +104,7 @@ public class CurrencyManager {
         return entry.getValue();
       }
     }
-    return null;
+    return get(TNE.instance.defaultWorld, "Default");
   }
 
   public Currency get(String world, String name) {
@@ -131,7 +132,21 @@ public class CurrencyManager {
     return false;
   }
 
-  public boolean contains(String world, String major) {
-    return currencies.containsKey(world + ":" + major);
+  public List<Currency> getWorldCurrencies(String world) {
+    List<Currency> values = new ArrayList<>();
+
+    for(String s : currencies.keySet()) {
+      if(s.contains(world + ":")) {
+        values.add(currencies.get(s));
+      }
+    }
+    if(values.size() == 0) {
+      values.add(get(TNE.instance.defaultWorld));
+    }
+    return values;
+  }
+
+  public boolean contains(String world, String name) {
+    return currencies.containsKey(world + ":" + name);
   }
 }

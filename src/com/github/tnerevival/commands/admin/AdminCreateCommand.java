@@ -46,7 +46,7 @@ public class AdminCreateCommand extends TNECommand {
       UUID id = IDFinder.genUUID(arguments[0]);
       if(!AccountUtils.exists(id)) {
         Account acc = new Account(id);
-        Double balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld);
+        Double balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(world).getName());
         if(arguments.length > 1) {
           try {
             balance = Double.parseDouble(arguments[1]);
@@ -54,7 +54,7 @@ public class AdminCreateCommand extends TNECommand {
             //Do Nothing
           }
         }
-        acc.setBalance(TNE.instance.defaultWorld, balance);
+        acc.setBalance(TNE.instance.defaultWorld, balance, TNE.instance.manager.currencyManager.get(world).getName());
         TNE.instance.manager.accounts.put(acc.getUid(), acc);
 
         Message m = new Message("Messages.Admin.Created");

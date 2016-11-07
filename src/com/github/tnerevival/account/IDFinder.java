@@ -83,9 +83,7 @@ public class IDFinder {
 
   public static UUID getID(String identifier) {
     identifier = ChatColor.stripColor(identifier);
-    MISCUtils.debug("ID IDENTIFIER: " + identifier);
     if(isUUID(identifier)) {
-      MISCUtils.debug("ID RETURNED");
       return UUID.fromString(identifier);
     }
 
@@ -98,21 +96,17 @@ public class IDFinder {
     }
 
     if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      MISCUtils.debug("ECO ID RETURNED");
       return ecoID(identifier);
     }
     Player p = Bukkit.getPlayer(identifier);
     if(p != null) {
-      MISCUtils.debug("Player ID RETURNED");
       return p.getUniqueId();
     }
 
     UUID mojangID = MojangAPI.getPlayerUUID(identifier);
     if(mojangID == null) {
-      MISCUtils.debug("ECO2 ID RETURNED");
       return ecoID(identifier);
     }
-    MISCUtils.debug("Mojang ID RETURNED");
     return mojangID;
   }
 

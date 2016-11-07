@@ -24,6 +24,7 @@ public class Currency {
   private Map<String, Tier> tiers = new HashMap<>();
 
   private boolean worldDefault = true;
+  private double balance;
   private boolean item;
   private String name;
   private String format;
@@ -48,6 +49,14 @@ public class Currency {
 
   public void setWorldDefault(boolean worldDefault) {
     this.worldDefault = worldDefault;
+  }
+
+  public double getBalance() {
+    return balance;
+  }
+
+  public void setBalance(double balance) {
+    this.balance = balance;
   }
 
   public boolean isItem() {

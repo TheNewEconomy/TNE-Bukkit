@@ -43,9 +43,11 @@ public class MISCUtils {
         if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
           return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
         }
+        MISCUtils.debug("WORLD USING: " + actualWorld);
         return actualWorld;
       }
     }
+    MISCUtils.debug("WORLD USING: Default");
     return TNE.instance.defaultWorld;
   }
 

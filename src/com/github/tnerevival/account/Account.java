@@ -48,7 +48,7 @@ public class Account implements Serializable {
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
-    setBalance(TNE.instance.defaultWorld, 0.0);
+    setBalance(TNE.instance.defaultWorld, 0.0, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
   }
 
   public String balancesToString() {
@@ -246,12 +246,12 @@ public class Account implements Serializable {
     this.balances = balances;
   }
 
-  public Double getBalance(String world) {
-    return balances.get(world);
+  public Double getBalance(String world, String currency) {
+    return balances.get(world + ":" + currency);
   }
 
-  public void setBalance(String world, Double balance) {
-    this.balances.put(world, AccountUtils.round(balance));
+  public void setBalance(String world, Double balance, String currency) {
+    this.balances.put(world + ":" + currency, AccountUtils.round(balance));
   }
 
   public Map<String, Bank> getBanks() {

@@ -49,6 +49,14 @@ public class MoneyGiveCommand extends TNECommand {
         return false;
       }
 
+      if(!TNE.instance.manager.currencyManager.contains(world, currencyName)) {
+        Message m = new Message("Messages.Money.NoCurrency");
+        m.addVariable("$currency", currencyName);
+        m.addVariable("$world", world);
+        m.translate(world, sender);
+        return false;
+      }
+
       if(IDFinder.getID(arguments[0]) != null) {
 
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
