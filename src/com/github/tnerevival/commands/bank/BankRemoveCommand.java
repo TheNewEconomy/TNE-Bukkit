@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
@@ -43,9 +44,9 @@ public class BankRemoveCommand extends TNECommand {
 
     if(arguments.length >= 1) {
       if(MISCUtils.getPlayer(arguments[0]) != null) {
-        if (BankUtils.hasBank(MISCUtils.getID(player))) {
-          if (BankUtils.getBank(MISCUtils.getID(player)).getOwner().equals(player.getUniqueId())) {
-            BankUtils.getBank(MISCUtils.getID(player)).removeMember(MISCUtils.getID(MISCUtils.getPlayer(arguments[0])));
+        if (BankUtils.hasBank(IDFinder.getID(player))) {
+          if (BankUtils.getBank(IDFinder.getID(player)).getOwner().equals(player.getUniqueId())) {
+            BankUtils.getBank(IDFinder.getID(player)).removeMember(IDFinder.getID(MISCUtils.getPlayer(arguments[0])));
             Message added = new Message("Messages.Bank.Removed");
             added.addVariable("$player", arguments[0]);
             added.translate(MISCUtils.getWorld(player), player);

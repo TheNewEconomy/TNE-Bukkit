@@ -1,11 +1,10 @@
 package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -60,7 +59,7 @@ public class MISCUtils {
   }
 
   public static String getWorld(Player player) {
-    return MISCUtils.getWorld(MISCUtils.getID(player));
+    return MISCUtils.getWorld(IDFinder.getID(player));
   }
 
   public static boolean hasItems(UUID id, List<SerializableItemStack> items) {
@@ -249,99 +248,23 @@ public class MISCUtils {
   }
 
   public static UUID distringuishId(String identifier) {
-    if(isUUID(identifier)) {
+    if(IDFinder.isUUID(identifier)) {
       return UUID.fromString(identifier);
     }
-    return MISCUtils.getID(MISCUtils.getPlayer(identifier));
-  }
-
-  public static boolean isUUID(String value) {
-    try {
-      UUID.fromString(value);
-      return true;
-    } catch (Exception ex) {
-      return false;
-    }
+    return IDFinder.getID(identifier);
   }
 
   @SuppressWarnings("deprecation")
   public static Player getPlayer(String username) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return Bukkit.getPlayer(username);
-    }
-    UUID id = getID(username);
-    return Bukkit.getPlayer(id);
+    return IDFinder.getPlayer(username);
   }
 
   @SuppressWarnings("deprecation")
   public static Player getPlayer(UUID id) {
     if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return Bukkit.getPlayer(ecoToUsername(id));
+      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
     return Bukkit.getPlayer(id);
-  }
-
-  public static UUID ecoID(String username) {
-    if(TNE.instance.manager.ecoIDs.containsKey(username)) {
-      return TNE.instance.manager.ecoIDs.get(username);
-    }
-    UUID eco = MISCUtils.genUUID();
-    TNE.instance.manager.ecoIDs.put(username, eco);
-    return eco;
-  }
-
-  public static UUID genUUID(String name) {
-    UUID id = MojangAPI.getPlayerUUID(name);
-    if(id != null) return id;
-
-    return genUUID();
-  }
-
-  public static UUID genUUID() {
-    UUID id = UUID.randomUUID();
-    while(TNE.instance.manager.accounts.containsKey(id) || TNE.instance.manager.ecoIDs.containsValue(id)) {
-      //This should never happen, but we'll play it safe
-      id = UUID.randomUUID();
-    }
-    return id;
-  }
-
-  public static String ecoToUsername(UUID id) {
-    return (String) getKey(TNE.instance.manager.ecoIDs, id);
-  }
-
-  public static UUID getID(String player) {
-    if(player.contains("town-")) {
-      return MISCUtils.ecoID(player);
-    }
-
-    if(player.contains("nation-")) {
-      return MISCUtils.ecoID(player);
-    }
-
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return ecoID(player);
-    }
-
-    UUID mojangID = MojangAPI.getPlayerUUID(player);
-    return (mojangID == null)? MISCUtils.ecoID(player) : mojangID;
-  }
-
-  public static UUID getID(Player player) {
-    if(player != null) {
-      if (!TNE.instance.api.getBoolean("Core.UUID")) {
-        return ecoID(player.getDisplayName());
-      }
-      return player.getUniqueId();
-    }
-    return genUUID();
-  }
-
-  public static UUID getID(OfflinePlayer player) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return ecoID(player.getName());
-    }
-    return player.getUniqueId();
   }
 
   @SuppressWarnings("rawtypes")

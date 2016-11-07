@@ -3,6 +3,7 @@ package com.github.tnerevival.listeners;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -32,9 +33,9 @@ public class ConnectionListener implements Listener {
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
-    MISCUtils.debug(MISCUtils.getID(player) + "");
-    if(!plugin.manager.accounts.containsKey(MISCUtils.getID(player))) {
-      AccountUtils.createAccount(MISCUtils.getID(player));
+    MISCUtils.debug(IDFinder.getID(player) + "");
+    if(!plugin.manager.accounts.containsKey(IDFinder.getID(player))) {
+      AccountUtils.createAccount(IDFinder.getID(player));
     }
     if(player.hasPermission("tne.admin") && !TNE.updater.getRelease().equals(ReleaseType.LATEST)) {
       String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.updater.getLatestBuild();
@@ -44,10 +45,10 @@ public class ConnectionListener implements Listener {
       player.sendMessage(message);
     }
 
-    Account account = AccountUtils.getAccount(MISCUtils.getID(player));
+    Account account = AccountUtils.getAccount(IDFinder.getID(player));
 
-    if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
-      if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+    if(TNE.instance.manager.enabled(IDFinder.getID(player), MISCUtils.getWorld(player))) {
+      if(!TNE.instance.manager.confirmed(IDFinder.getID(player), MISCUtils.getWorld(player))) {
         String node = "Messages.Account.Confirm";
         if (account.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
           node = "Messages.Account.Set";
@@ -63,14 +64,14 @@ public class ConnectionListener implements Listener {
   public void onLeave(PlayerQuitEvent event) {
     Player player = event.getPlayer();
 
-    TNE.instance.manager.confirmed.remove(MISCUtils.getID(player));
+    TNE.instance.manager.confirmed.remove(IDFinder.getID(player));
   }
 
   @EventHandler
   public void onDeath(PlayerDeathEvent event) {
     Player killed = event.getEntity();
     String world = MISCUtils.getWorld(killed);
-    UUID id = MISCUtils.getID(killed);
+    UUID id = IDFinder.getID(killed);
     if(TNE.instance.api.getBoolean("Core.Death.Lose", world, id)) {
       AccountUtils.setFunds(id, world, 0.0);
     }

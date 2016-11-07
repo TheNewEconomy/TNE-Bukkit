@@ -2,6 +2,7 @@ package com.github.tnerevival.core.inventory;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -137,17 +138,17 @@ public abstract class TNEInventory {
     }
 
     Player player = MISCUtils.getPlayer(viewer.getUUID());
-    MISCUtils.debug(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()) + "");
-    if(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
-      if(config.isTimed(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
+    MISCUtils.debug(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()) + "");
+    if(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
+      if(config.isTimed(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
         if(acc.getTimeLeft(MISCUtils.getWorld(viewer.getUUID()), TNE.configurations.getObjectConfiguration().inventoryType(inventory.getType())) <= 0) {
           return "Messages.Package.Unable";
         }
       } else {
-        if(!AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(viewer.getUUID()))) {
+        if(!AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(viewer.getUUID()))) {
           return "Messages.Money.Insufficient";
         } else {
-          AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(viewer.getUUID()));
+          AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(viewer.getUUID()));
           return "Messages.Inventory.Charge";
         }
       }
@@ -187,7 +188,7 @@ public abstract class TNEInventory {
       MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
-        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()))));
+        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
         m.translate(MISCUtils.getWorld(player), player);
 
@@ -196,7 +197,7 @@ public abstract class TNEInventory {
 
       if(charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
-        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), MISCUtils.getID(player).toString()))));
+        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
         m.translate(MISCUtils.getWorld(player), player);
       }

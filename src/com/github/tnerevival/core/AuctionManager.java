@@ -1,6 +1,7 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Bid;
 import com.github.tnerevival.core.auction.Claim;
@@ -27,7 +28,7 @@ public class AuctionManager {
   private int lastLot = 0;
 
   public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
-    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
 
     Message send = new Message(message);

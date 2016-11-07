@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.money;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -88,7 +89,7 @@ public class MoneyHistoryCommand extends TNECommand {
       }
     }
 
-    String id = MISCUtils.getID(player).toString();
+    String id = IDFinder.getID(player).toString();
     TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
 
     if(history != null) {
@@ -103,10 +104,10 @@ public class MoneyHistoryCommand extends TNECommand {
           Double difference = AccountUtils.round(r.getBalance() - r.getOldBalance());
           String amount = ((difference >= 0.0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
-          String time = r.convert(world, MISCUtils.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, MISCUtils.getID(player)));
+          String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 
           Player p = null;
-          if(r.getPlayer() != null && MISCUtils.isUUID(r.getPlayer())) {
+          if(r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {
             p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
           }
           StringBuilder builder = new StringBuilder();

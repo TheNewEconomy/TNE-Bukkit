@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.ShareEntry;
@@ -49,7 +50,7 @@ public class ShopShareCommand extends TNECommand {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         if(Shop.canModify(arguments[0], getPlayer(sender))) {
           Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-          UUID target = MISCUtils.getID(arguments[1]);
+          UUID target = IDFinder.getID(arguments[1]);
           if(!s.isAdmin()) {
             if(!TNE.instance.api.getBoolean("Core.Shops.Shares.Enabled", s.getWorld(), s.getOwner())) {
               new Message("Messages.Shop.ShareNone").translate(MISCUtils.getWorld(player), player);

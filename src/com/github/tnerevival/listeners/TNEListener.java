@@ -1,6 +1,7 @@
 package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
@@ -26,9 +27,9 @@ public class TNEListener implements Listener {
 
     if(event.isCancelled()) return;
 
-    String id = MISCUtils.getID(event.getPlayer()).toString();
+    String id = IDFinder.getID(event.getPlayer()).toString();
     String world = MISCUtils.getWorld(event.getPlayer());
-    double cost = event.getType().getCost(event.getIdentifier(), MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
+    double cost = event.getType().getCost(event.getIdentifier(), MISCUtils.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
     if(cost != 0.0 && !event.isCancelled()) {

@@ -2,11 +2,11 @@ package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 public class AdminBalanceCommand extends TNECommand {
@@ -40,8 +40,8 @@ public class AdminBalanceCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length == 1 || arguments.length == 2) {
       String world = (arguments.length == 2) ? arguments[1] : TNE.instance.defaultWorld;
-      if(MISCUtils.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(MISCUtils.getID(arguments[0]))) {
-        Account acc = AccountUtils.getAccount(MISCUtils.getID(arguments[0]));
+      if(IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
+        Account acc = AccountUtils.getAccount(IDFinder.getID(arguments[0]));
         if(acc.getBalances().containsKey(world)) {
           Message balance = new Message("Messages.Admin.Balance");
           balance.addVariable("$player", arguments[0]);

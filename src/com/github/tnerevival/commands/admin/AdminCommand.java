@@ -1,10 +1,9 @@
 package com.github.tnerevival.commands.admin;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 public class AdminCommand extends TNECommand {
 

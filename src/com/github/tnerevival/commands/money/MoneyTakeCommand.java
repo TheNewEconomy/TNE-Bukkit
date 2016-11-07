@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.money;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -45,7 +46,7 @@ public class MoneyTakeCommand extends TNECommand {
         return false;
       }
       if(getPlayer(sender, arguments[0]) != null) {
-        if(AccountUtils.transaction(MISCUtils.getID(getPlayer(sender, arguments[0])).toString(), MISCUtils.getID(getPlayer(sender)).toString(), AccountUtils.round(value), TransactionType.MONEY_REMOVE, world)) {
+        if(AccountUtils.transaction(IDFinder.getID(getPlayer(sender, arguments[0])).toString(), IDFinder.getID(getPlayer(sender)).toString(), AccountUtils.round(value), TransactionType.MONEY_REMOVE, world)) {
           Message took = new Message("Messages.Money.Took");
           took.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(value)));
           took.addVariable("$player", arguments[0]);

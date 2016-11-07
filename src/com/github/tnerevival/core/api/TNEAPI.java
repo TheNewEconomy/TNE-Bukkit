@@ -2,6 +2,7 @@ package com.github.tnerevival.core.api;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
@@ -84,12 +85,12 @@ public class TNEAPI {
   }
 
   public void createAccount(OfflinePlayer player) {
-    AccountUtils.createAccount(MISCUtils.getID(player));
+    AccountUtils.createAccount(IDFinder.getID(player));
   }
 
   public boolean transaction(OfflinePlayer player, OfflinePlayer recipient, String world, TransactionCost cost, TransactionType type) {
-    return !(player != null && MISCUtils.getID(player) != null) &&
-    AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(recipient).toString(), cost, type, world);
+    return !(player != null && IDFinder.getID(player) != null) &&
+    AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(recipient).toString(), cost, type, world);
   }
 
   public void fundsAdd(OfflinePlayer player, Double amount) {
@@ -97,8 +98,8 @@ public class TNEAPI {
   }
 
   public void fundsAdd(OfflinePlayer player, String world, Double amount) {
-    if(player != null && MISCUtils.getID(player) != null) {
-      AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_GIVE, world);
+    if(player != null && IDFinder.getID(player) != null) {
+      AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_GIVE, world);
     }
   }
 
@@ -107,7 +108,7 @@ public class TNEAPI {
   }
 
   public Boolean fundsHas(OfflinePlayer player, String world, Double amount) {
-    return AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_INQUIRY, world);
+    return AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_INQUIRY, world);
   }
 
   public void fundsRemove(OfflinePlayer player, Double amount) {
@@ -115,19 +116,19 @@ public class TNEAPI {
   }
 
   public void fundsRemove(OfflinePlayer player, String world, Double amount) {
-    AccountUtils.transaction(MISCUtils.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_REMOVE, world);
   }
 
   public Account getAccount(OfflinePlayer player) {
-    return AccountUtils.getAccount(MISCUtils.getID(player));
+    return AccountUtils.getAccount(IDFinder.getID(player));
   }
 
   public Double getBalance(OfflinePlayer player) {
-    return AccountUtils.getFunds(MISCUtils.getID(player));
+    return AccountUtils.getFunds(IDFinder.getID(player));
   }
 
   public Double getBalance(OfflinePlayer player, String world) {
-    return AccountUtils.getFunds(MISCUtils.getID(player), world);
+    return AccountUtils.getFunds(IDFinder.getID(player), world);
   }
 
   /*
@@ -162,7 +163,7 @@ public class TNEAPI {
     if(username.contains("faction-")) {
       return UUID.fromString(username.substring(8, username.length() - 1));
     }
-    return MISCUtils.getID(username);
+    return IDFinder.getID(username);
   }
 
   /*
@@ -261,8 +262,4 @@ public class TNEAPI {
     if(configuration.toLowerCase().contains("database")) return;
     TNE.configurations.setConfiguration(configuration, value);
   }
-
-  /*
-   * Inventory Methods
-   */
 }

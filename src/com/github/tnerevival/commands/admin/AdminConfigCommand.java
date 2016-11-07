@@ -17,6 +17,7 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.MISCUtils;
@@ -55,7 +56,7 @@ public class AdminConfigCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
-      String id = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : "";
+      String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : "";
       String world = (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
       String action = (arguments[0].equalsIgnoreCase("set"))? "set" : "get";
       if(TNE.instance.api.hasConfiguration(arguments[1])) {

@@ -1,9 +1,9 @@
 package com.github.tnerevival.commands.credit;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class CreditCommandsCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length == 0) {
       Player player = (Player)sender;
-      Map<String, Integer> credits = AccountUtils.getAccount(MISCUtils.getID(player)).getCredits();
+      Map<String, Integer> credits = AccountUtils.getAccount(IDFinder.getID(player)).getCredits();
       sender.sendMessage(ChatColor.WHITE + "Command ~ Credits");
       sender.sendMessage(ChatColor.WHITE + "==============================");
       if(credits.size() > 0) {

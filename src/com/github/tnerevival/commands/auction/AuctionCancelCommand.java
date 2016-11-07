@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.MISCUtils;
@@ -75,6 +76,6 @@ public class AuctionCancelCommand extends TNECommand {
       return false;
     }
 
-    return plugin.manager.auctionManager.cancel(lot, MISCUtils.getID(getPlayer(sender)), world);
+    return plugin.manager.auctionManager.cancel(lot, IDFinder.getID(getPlayer(sender)), world);
   }
 }

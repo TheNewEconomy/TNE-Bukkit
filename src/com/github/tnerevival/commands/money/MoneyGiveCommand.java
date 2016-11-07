@@ -1,12 +1,12 @@
 package com.github.tnerevival.commands.money;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -46,10 +46,10 @@ public class MoneyGiveCommand extends TNECommand {
         return false;
       }
 
-      if(MISCUtils.getPlayer(arguments[0]) != null) {
+      if(IDFinder.getID(arguments[0]) != null) {
 
-        String id = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : null;
-        AccountUtils.transaction(MISCUtils.getID(MISCUtils.getPlayer(arguments[0])).toString(), id, value, TransactionType.MONEY_GIVE, world);
+        String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
+        AccountUtils.transaction(IDFinder.getID(arguments[0]).toString(), id, value, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
         gave.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
         gave.addVariable("$player", arguments[0]);

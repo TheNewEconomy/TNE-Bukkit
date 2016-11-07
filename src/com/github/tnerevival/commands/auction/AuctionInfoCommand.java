@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.auction.Auction;
@@ -84,7 +85,7 @@ public class AuctionInfoCommand extends TNECommand {
     Auction a = plugin.manager.auctionManager.getAuction(lot);
     if(sender instanceof Player) {
       AuctionItemInventory inv = new AuctionItemInventory(a.getLotNumber());
-      InventoryViewer viewer = new InventoryViewer(MISCUtils.getID(getPlayer(sender)), world);
+      InventoryViewer viewer = new InventoryViewer(IDFinder.getID(getPlayer(sender)), world);
       inv.addViewer(viewer);
       TNE.instance.inventoryManager.addInventory(inv, viewer);
       getPlayer(sender).openInventory(inv.getInventory());

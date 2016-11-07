@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.BankUtils;
@@ -39,9 +40,10 @@ public class BankViewCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
     Player player = getPlayer(sender);
-    if(BankUtils.command(player.getWorld().getName(), MISCUtils.getID(player).toString())) {
-      if(BankUtils.hasBank(MISCUtils.getID(player))) {
-        Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
+    if(BankUtils.command(player.getWorld().getName(), IDFinder.getID(player).toString())) {
+      if(BankUtils.hasBank(IDFinder.getID(player))) {
+        MISCUtils.debug(IDFinder.getID(player).toString());
+        Inventory bankInventory = BankUtils.getBankInventory(IDFinder.getID(player));
         player.openInventory(bankInventory);
       } else {
         new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);

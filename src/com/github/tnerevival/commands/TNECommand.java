@@ -2,6 +2,7 @@ package com.github.tnerevival.commands;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -109,7 +110,7 @@ public abstract class TNECommand {
 
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
-    String player = (sender instanceof Player)? MISCUtils.getID(getPlayer(sender)).toString() : "";
+    String player = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : "";
     String world = (!player.equals(""))? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
     if(!activated(world, player)) {
       return false;
@@ -117,7 +118,7 @@ public abstract class TNECommand {
 
     if(locked() && sender instanceof Player) {
       Player p = (Player)sender;
-      Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
+      Account acc = AccountUtils.getAccount(IDFinder.getID(player));
 
       if(!acc.getStatus().getBalance()) {
         Message locked = new Message("Messages.Account.Locked");
@@ -129,11 +130,11 @@ public abstract class TNECommand {
 
     if(confirm() && sender instanceof Player) {
       Player p = (Player)sender;
-      Account acc = AccountUtils.getAccount(MISCUtils.getID(p));
-      if (TNE.instance.manager.enabled(MISCUtils.getID(p), MISCUtils.getWorld(p))) {
-        MISCUtils.debug(TNE.instance.manager.enabled(MISCUtils.getID(p), MISCUtils.getWorld(p)) + "");
-        if (!TNE.instance.manager.confirmed(MISCUtils.getID(p), MISCUtils.getWorld(p))) {
-          MISCUtils.debug(TNE.instance.manager.confirmed(MISCUtils.getID(p), MISCUtils.getWorld(p)) + "");
+      Account acc = AccountUtils.getAccount(IDFinder.getID(p));
+      if (TNE.instance.manager.enabled(IDFinder.getID(p), MISCUtils.getWorld(p))) {
+        MISCUtils.debug(TNE.instance.manager.enabled(IDFinder.getID(p), MISCUtils.getWorld(p)) + "");
+        if (!TNE.instance.manager.confirmed(IDFinder.getID(p), MISCUtils.getWorld(p))) {
+          MISCUtils.debug(TNE.instance.manager.confirmed(IDFinder.getID(p), MISCUtils.getWorld(p)) + "");
           if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
             MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
             Message set = new Message("Messages.Account.Set");

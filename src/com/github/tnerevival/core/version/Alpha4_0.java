@@ -38,98 +38,11 @@ public class Alpha4_0 extends Version {
 
   @Override
   public void update(double version, String type) {
-    if(version == 4.0 || version == 4.1) return;
-    TNE.instance.modified.add("mobs.yml");
-    TNE.instance.modified.add("config.yml");
-    TNE.instance.loadConfigurations();
-    TNE.instance.modified = new ArrayList<>();
     String table = prefix + "_ECOIDS";
     if(type.equalsIgnoreCase("mysql")) {
       db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
-
-      table = prefix + "_AUCTIONS";
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`auction_lot` INT(60) NOT NULL," +
-          "`auction_added` BIGINT(60) NOT NULL," +
-          "`auction_start` BIGINT(60) NOT NULL," +
-          "`auction_owner` VARCHAR(36)," +
-          "`auction_world` VARCHAR(36)," +
-          "`auction_silent` TINYINT(1)," +
-          "`auction_item` LONGTEXT," +
-          "`auction_cost` LONGTEXT," +
-          "`auction_increment` DOUBLE," +
-          "`auction_global` TINYINT(1)," +
-          "`auction_time` INT(20)," +
-          "`auction_node` LONGTEXT," +
-          "PRIMARY KEY(auction_lot)" +
-          ");");
-
-      table = prefix +"_CLAIMS";
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`claim_player` VARCHAR(36)," +
-          "`claim_lot` INT(60) NOT NULL," +
-          "`claim_item` LONGTEXT," +
-          "`claim_paid` TINYINT(1)," +
-          "`claim_cost` LONGTEXT," +
-          "PRIMARY KEY(claim_player, claim_lot)" +
-          ");");
-
-      table = prefix + "_TRANSACTIONS";
-      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`trans_id` VARCHAR(36)," +
-          "`trans_initiator` VARCHAR(36)," +
-          "`trans_player` VARCHAR(36)," +
-          "`trans_world` VARCHAR(36)," +
-          "`trans_type` VARCHAR(36)," +
-          "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE," +
-          "`trans_balance` DOUBLE," +
-          "`trans_time` BIGINT(60)," +
-          "PRIMARY KEY(trans_id)" +
-          ");");
     } else if(type.equals("h2")) {
       db = new H2(h2File, mysqlUser, mysqlPassword);
-
-      table = prefix + "_AUCTIONS";
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`auction_lot` INT(60) NOT NULL," +
-          "`auction_added` BIGINT(60) NOT NULL," +
-          "`auction_start` BIGINT(60) NOT NULL," +
-          "`auction_owner` VARCHAR(36)," +
-          "`auction_world` VARCHAR(36)," +
-          "`auction_silent` TINYINT(1)," +
-          "`auction_item` LONGTEXT," +
-          "`auction_cost` LONGTEXT," +
-          "`auction_increment` DOUBLE," +
-          "`auction_global` TINYINT(1)," +
-          "`auction_time` INT(20)," +
-          "`auction_node` LONGTEXT," +
-          "PRIMARY KEY(auction_lot)" +
-          ");");
-
-      table = prefix +"_CLAIMS";
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`claim_player` VARCHAR(36)," +
-          "`claim_lot` INT(60) NOT NULL," +
-          "`claim_item` LONGTEXT," +
-          "`claim_paid` TINYINT(1)," +
-          "`claim_cost` LONGTEXT," +
-          "PRIMARY KEY(claim_player, claim_lot)" +
-          ");");
-
-      table = prefix + "_TRANSACTIONS";
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`trans_id` VARCHAR(36)," +
-          "`trans_initiator` VARCHAR(36)," +
-          "`trans_player` VARCHAR(36)," +
-          "`trans_world` VARCHAR(36)," +
-          "`trans_type` VARCHAR(36)," +
-          "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE," +
-          "`trans_balance` DOUBLE," +
-          "`trans_time` BIGINT(60)," +
-          "PRIMARY KEY(trans_id)" +
-          ");");
     }
   }
 
@@ -640,12 +553,7 @@ public class Alpha4_0 extends Version {
           });
     }
 
-    Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance.manager.shops.entrySet().iterator();
-
-    while(shopIT.hasNext()) {
-      Map.Entry<String, Shop> shopEntry = shopIT.next();
-
-      Shop s = shopEntry.getValue();
+    for(Shop s : TNE.instance.manager.shops.values()) {
 
       MISCUtils.debug(s.getOwner().toString());
       table = prefix + "_SHOPS";
@@ -1086,7 +994,7 @@ public class Alpha4_0 extends Version {
 
       table = prefix + "_ECOIDS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-          "`username` VARCHAR(20)," +
+          "`username` VARCHAR(46)," +
           "`uuid` VARCHAR(36) UNIQUE" +
           ");");
 
@@ -1193,7 +1101,7 @@ public class Alpha4_0 extends Version {
 
       table = prefix + "_ECOIDS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " (" +
-          "`username` VARCHAR(20)," +
+          "`username` VARCHAR(46)," +
           "`uuid` VARCHAR(36) UNIQUE" +
           ");");
 

@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
@@ -48,8 +49,8 @@ public class ShopBlacklistCommand extends TNECommand {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
         if(Shop.canModify(arguments[0], (Player)sender)) {
           Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-          UUID target = MISCUtils.getID(arguments[1]);
-          if(s.blacklisted(MISCUtils.getID(arguments[1]))) {
+          UUID target = IDFinder.getID(arguments[1]);
+          if(s.blacklisted(IDFinder.getID(arguments[1]))) {
             s.addBlacklist(target);
             new Message("Messages.Shop.BlacklistRemoved").translate(MISCUtils.getWorld(player), player);
           } else {

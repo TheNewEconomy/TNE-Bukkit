@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -44,10 +45,10 @@ public class BankDepositCommand extends TNECommand {
     Player player = MISCUtils.getPlayer(sender.getName());
 
     if(arguments.length == 1) {
-      if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+      if(BankUtils.hasBank(IDFinder.getID(owner))) {
         Double value = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-        if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
-          if(AccountUtils.transaction(MISCUtils.getID(player).toString(), MISCUtils.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
+        if (BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName()))) {
+          if(AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
             Message deposit = new Message("Messages.Bank.Deposit");
             deposit.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             deposit.addVariable("$name",  ownerName);

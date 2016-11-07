@@ -1,6 +1,7 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -74,7 +75,7 @@ public class Message {
   }
 
   public String grab(String world, CommandSender sender) {
-    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String found = TNE.instance.api.getString(this.node, world, id);
 
     String message = (found == null)? this.node : found;
@@ -89,7 +90,7 @@ public class Message {
 
   public void translate(String world, CommandSender sender) {
     if(sender == null) return;
-    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String found = TNE.instance.api.getString(this.node, world, id);
 
     String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");

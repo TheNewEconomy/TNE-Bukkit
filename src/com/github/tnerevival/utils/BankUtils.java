@@ -3,6 +3,7 @@ package com.github.tnerevival.utils;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,7 +94,7 @@ public class BankUtils {
       UUID id = UUID.fromString(variables[0]);
       bank = new Bank(id, Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
     } catch(IllegalArgumentException e) {
-      bank = new Bank(MISCUtils.getID(variables[0]), Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
+      bank = new Bank(IDFinder.getID(variables[0]), Integer.parseInt(variables[2]), Double.parseDouble(variables[3]));
     }
 
     List<SerializableItemStack> items = new  ArrayList<SerializableItemStack>();
@@ -119,7 +120,9 @@ public class BankUtils {
     }
 
     Bank bank = getBank(owner, world);
-    String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Bank" + ChatColor.GOLD + "]" + ChatColor.WHITE + MISCUtils.getPlayer(owner).getDisplayName();
+    MISCUtils.debug("OWNER UUID: " + owner.toString());
+    MISCUtils.debug((IDFinder.getPlayer(owner.toString()) == null) + "");
+    String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Bank" + ChatColor.GOLD + "]" + ChatColor.WHITE + IDFinder.getPlayer(owner.toString()).getDisplayName();
     Inventory bankInventory = Bukkit.createInventory(null, size(world, owner.toString()), title);
     if(bank.getItems().size() > 0) {
       List<SerializableItemStack> items = bank.getItems();
@@ -133,7 +136,7 @@ public class BankUtils {
 
   public static Inventory getBankInventory(UUID owner) {
     String world = TNE.instance.defaultWorld;
-    if(MISCUtils.multiWorld()) {
+    if(MISCUtils.multiWorld() && MISCUtils.getWorld(owner) != null) {
       world = MISCUtils.getWorld(owner);
     }
     return getBankInventory(owner, world);

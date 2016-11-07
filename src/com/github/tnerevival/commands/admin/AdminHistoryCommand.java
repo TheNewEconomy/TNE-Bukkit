@@ -17,6 +17,7 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -67,8 +68,8 @@ public class AdminHistoryCommand extends TNECommand {
     String type = "all";
     int page = 1;
 
-    if(arguments.length > 1 && MISCUtils.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(MISCUtils.getID(arguments[0]))) {
-      Player target = MISCUtils.getPlayer(MISCUtils.getID(arguments[0]));
+    if(arguments.length > 1 && IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
+      Player target = MISCUtils.getPlayer(IDFinder.getID(arguments[0]));
       for (int i = 1; i < arguments.length; i++) {
         String s = arguments[i];
         if (s.contains(":")) {
@@ -93,7 +94,7 @@ public class AdminHistoryCommand extends TNECommand {
         }
       }
 
-      String id = MISCUtils.getID(target).toString();
+      String id = IDFinder.getID(target).toString();
       TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
 
       if (history != null) {
@@ -108,10 +109,10 @@ public class AdminHistoryCommand extends TNECommand {
             Double difference = AccountUtils.round(r.getBalance() - r.getOldBalance());
             String amount = ((difference >= 0.0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
-            String time = r.convert(world, MISCUtils.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, MISCUtils.getID(player)));
+            String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 
             Player p = null;
-            if (r.getPlayer() != null && MISCUtils.isUUID(r.getPlayer())) {
+            if (r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {
               p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
             }
             StringBuilder builder = new StringBuilder();

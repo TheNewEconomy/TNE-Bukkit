@@ -2,6 +2,7 @@ package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -67,7 +68,7 @@ public class InteractionListener implements Listener {
       String[] commandSplit = command.split(" ");
       String commandName = commandSplit[0];
       String commandFirstArg = commandSplit[0] + ((commandSplit.length > 1) ? " " + commandSplit[1] : "");
-      double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+      double cost = configuration.getCommandCost(commandName.toLowerCase(), (commandSplit.length > 1) ? new String[] { commandSplit[1].toLowerCase() } : new String[0], MISCUtils.getWorld(player), IDFinder.getID(player).toString());
 
       Message commandCost = new Message("Messages.Command.Charge");
       commandCost.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(event.getPlayer()), AccountUtils.round(cost)));
@@ -75,9 +76,9 @@ public class InteractionListener implements Listener {
 
       if(cost > 0.0) {
         String message = "";
-        Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
-        if(TNE.instance.manager.enabled(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
-          if(!TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+        Account acc = AccountUtils.getAccount(IDFinder.getID(player));
+        if(TNE.instance.manager.enabled(IDFinder.getID(player), MISCUtils.getWorld(player))) {
+          if(!TNE.instance.manager.confirmed(IDFinder.getID(player), MISCUtils.getWorld(player))) {
             if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
               message = "Messages.Account.Set";
             else if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
@@ -196,7 +197,7 @@ public class InteractionListener implements Listener {
 
       ItemStack result = event.getItem();
       String name = result.getType().name();
-      Double cost = InteractionType.ENCHANT.getCost(name, MISCUtils.getWorld(event.getEnchanter()), MISCUtils.getID(event.getEnchanter()).toString());
+      Double cost = InteractionType.ENCHANT.getCost(name, MISCUtils.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()).toString());
 
       List<String> lore = new ArrayList<>();
       lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
@@ -218,9 +219,9 @@ public class InteractionListener implements Listener {
     if(event.getInventory().getResult() != null) {
       Player player = (Player)event.getView().getPlayer();
 
-      if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player))) {
+      if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), IDFinder.getID(player))) {
         String name = event.getInventory().getResult().getType().name();
-        Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+        Double cost = InteractionType.CRAFTING.getCost(name, MISCUtils.getWorld(player), IDFinder.getID(player).toString());
 
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
@@ -239,7 +240,7 @@ public class InteractionListener implements Listener {
 
     Player player = (Player) event.getWhoClicked();
 
-    if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), MISCUtils.getID(player))) {
+    if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(player), IDFinder.getID(player))) {
 
       String name = event.getInventory().getResult().getType().name();
       ItemStack result = event.getCurrentItem().clone();
@@ -303,7 +304,7 @@ public class InteractionListener implements Listener {
         MISCUtils.debug(match[0] + " type: " + match[1]);
         SignType type = SignType.fromName(match[1]);
 
-        TNESign sign = SignUtils.instance(type.getName(), MISCUtils.getID(event.getPlayer()));
+        TNESign sign = SignUtils.instance(type.getName(), IDFinder.getID(event.getPlayer()));
         sign.setLocation(new SerializableLocation(event.getBlock().getLocation()));
 
         if(sign instanceof ShopSign) {
@@ -317,11 +318,11 @@ public class InteractionListener implements Listener {
         if (!sign.onCreate(event.getPlayer())) {
           event.setCancelled(true);
         } else {
-          Double place = sign.getType().place(MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
+          Double place = sign.getType().place(MISCUtils.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
           MISCUtils.debug("Interaction " + place);
           MISCUtils.debug("Interaction " + sign.getType().name());
           if(place != null && place > 0.0) {
-            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, place, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
+            AccountUtils.transaction(IDFinder.getID(event.getPlayer()).toString(), null, place, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignPlace");
             charged.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(event.getPlayer()), place));
             charged.translate(MISCUtils.getWorld(player), player);
@@ -353,10 +354,10 @@ public class InteractionListener implements Listener {
       if(villager.getCustomName() != null && villager.getCustomName().equalsIgnoreCase("banker")) {
         event.setCancelled(true);
         if(player.hasPermission("tne.bank.use")) {
-          if(BankUtils.enabled(world, MISCUtils.getID(player).toString())) {
+          if(BankUtils.enabled(world, IDFinder.getID(player).toString())) {
             if(BankUtils.npc(world)) {
-              if(BankUtils.hasBank(MISCUtils.getID(player))) {
-                Inventory bankInventory = BankUtils.getBankInventory(MISCUtils.getID(player));
+              if(BankUtils.hasBank(IDFinder.getID(player))) {
+                Inventory bankInventory = BankUtils.getBankInventory(IDFinder.getID(player));
                 player.openInventory(bankInventory);
               } else {
                 new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
@@ -408,8 +409,8 @@ public class InteractionListener implements Listener {
             }
           }
           if(!event.isCancelled()) {
-            Double use = sign.getType().use(MISCUtils.getWorld(event.getPlayer()), MISCUtils.getID(event.getPlayer()).toString());
-            AccountUtils.transaction(MISCUtils.getID(event.getPlayer()).toString(), null, use, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
+            Double use = sign.getType().use(MISCUtils.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+            AccountUtils.transaction(IDFinder.getID(event.getPlayer()).toString(), null, use, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignUse");
             charged.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(event.getPlayer()), use));
             charged.translate(MISCUtils.getWorld(player), player);
@@ -591,7 +592,7 @@ public class InteractionListener implements Listener {
         reward = (player)? TNE.configurations.playerReward(mob) : TNE.configurations.mobReward(mob);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
         if(TNE.configurations.mobEnabled(mob)) {
-          AccountUtils.transaction(MISCUtils.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
+          AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
           if(TNE.instance.api.getBoolean("Mobs.Message")) {
             Message mobKilled = new Message(messageNode);
             mobKilled.addVariable("$mob", mob);
