@@ -336,7 +336,7 @@ public class AuctionManager {
 
     Double cost = TNE.instance.api.getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer());
 
-    if(cost > 0.0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TransactionType.MONEY_INQUIRY, auction.getWorld())) {
+    if(cost > 0.0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), AccountUtils.round(cost)));
       insufficient.translate(auction.getWorld(), MISCUtils.getPlayer(auction.getPlayer()));
@@ -355,7 +355,7 @@ public class AuctionManager {
     }
     auction.setLotNumber(lastLot + 1);
     MISCUtils.getPlayer(auction.getPlayer()).getInventory().removeItem(auction.getItem().toItemStack());
-    AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TransactionType.MONEY_REMOVE, auction.getWorld());
+    AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_REMOVE, auction.getWorld());
     if(canStart(auction.getWorld(), auction.getPlayer().toString())) {
       MISCUtils.debug("Starting Auction");
       auction.setStartTime(System.nanoTime());

@@ -87,8 +87,11 @@ public class AccountUtils {
   }
 
   public static boolean transaction(String initiator, String recipient, double amount, TransactionType type, String world) {
-
     return transaction(initiator, recipient, new TransactionCost(amount), type, world);
+  }
+
+  public static boolean transaction(String initiator, String recipient, double amount, Currency currency, TransactionType type, String world) {
+    return transaction(initiator, recipient, new TransactionCost(amount, currency), type, world);
   }
 
   public static boolean transaction(String initiator, String recipient, TransactionCost cost, TransactionType type, String world) {
@@ -108,7 +111,11 @@ public class AccountUtils {
   }
 
   public static Double getFunds(UUID id, String world) {
-    double funds = getBalance(id, world, "Default");
+    return getFunds(id, world, "Default");
+  }
+
+  public static Double getFunds(UUID id, String world, String currency) {
+    double funds = getBalance(id, world, currency);
     if(TNE.instance.api.getBoolean("Core.Bank.Connected", world)) {
       funds += BankUtils.getBankBalance(id, world);
     }
@@ -119,14 +126,22 @@ public class AccountUtils {
     setBalance(id, world, "Default", round(amount));
   }
 
+  public static void setFunds(UUID id, String world, double amount, String currency) {
+    setBalance(id, world, currency, round(amount));
+  }
+
   public static void removeFunds(UUID id, String world, double amount) {
-    double difference = amount - getBalance(id, world, "Default");
+    removeFunds(id, world, amount, "Default");
+  }
+
+  public static void removeFunds(UUID id, String world, double amount, String currency) {
+    double difference = amount - getBalance(id, world, currency);
     if(difference > 0) {
       BankUtils.setBankBalance(id, world, round(BankUtils.getBankBalance(id, world) - difference));
-      setBalance(id, world, "Default", 0.0);
+      setBalance(id, world, currency, 0.0);
       return;
     }
-    setBalance(id, world, "Default", round(getBalance(id, world, "Default") - amount));
+    setBalance(id, world, currency, round(getBalance(id, world, currency) - amount));
   }
 
   public static void initializeWorldData(UUID id, String world) {

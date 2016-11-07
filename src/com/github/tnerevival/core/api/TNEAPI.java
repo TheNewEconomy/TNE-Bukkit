@@ -3,6 +3,7 @@ package com.github.tnerevival.core.api;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
@@ -42,7 +43,12 @@ public class TNEAPI {
 
   @Deprecated
   public void fundsAdd(String username, String world, Double amount) {
-    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, TransactionType.MONEY_GIVE, world);
+    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+  }
+
+  @Deprecated
+  public void fundsAdd(String username, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
   }
 
   @Deprecated
@@ -52,7 +58,12 @@ public class TNEAPI {
 
   @Deprecated
   public Boolean fundsHas(String username, String world, Double amount) {
-    return AccountUtils.transaction(getPlayerID(username).toString(), null, amount, TransactionType.MONEY_INQUIRY, world);
+    return AccountUtils.transaction(getPlayerID(username).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
+  }
+
+  @Deprecated
+  public Boolean fundsHas(String username, String world, Double amount, Currency currency) {
+    return AccountUtils.transaction(getPlayerID(username).toString(), null, amount, currency, TransactionType.MONEY_INQUIRY, world);
   }
 
   @Deprecated
@@ -62,7 +73,12 @@ public class TNEAPI {
 
   @Deprecated
   public void fundsRemove(String username, String world, Double amount) {
-    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
+  }
+
+  @Deprecated
+  public void fundsRemove(String username, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, currency, TransactionType.MONEY_REMOVE, world);
   }
 
   @Deprecated
@@ -99,7 +115,13 @@ public class TNEAPI {
 
   public void fundsAdd(OfflinePlayer player, String world, Double amount) {
     if(player != null && IDFinder.getID(player) != null) {
-      AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_GIVE, world);
+      AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+    }
+  }
+
+  public void fundsAdd(OfflinePlayer player, String world, Double amount, Currency currency) {
+    if(player != null && IDFinder.getID(player) != null) {
+      AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
     }
   }
 
@@ -108,7 +130,11 @@ public class TNEAPI {
   }
 
   public Boolean fundsHas(OfflinePlayer player, String world, Double amount) {
-    return AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_INQUIRY, world);
+    return AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount,  plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
+  }
+
+  public Boolean fundsHas(OfflinePlayer player, String world, Double amount, Currency currency) {
+    return AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount,  currency, TransactionType.MONEY_INQUIRY, world);
   }
 
   public void fundsRemove(OfflinePlayer player, Double amount) {
@@ -116,7 +142,11 @@ public class TNEAPI {
   }
 
   public void fundsRemove(OfflinePlayer player, String world, Double amount) {
-    AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
+  }
+
+  public void fundsRemove(OfflinePlayer player, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, currency, TransactionType.MONEY_REMOVE, world);
   }
 
   public Account getAccount(OfflinePlayer player) {
@@ -129,6 +159,10 @@ public class TNEAPI {
 
   public Double getBalance(OfflinePlayer player, String world) {
     return AccountUtils.getFunds(IDFinder.getID(player), world);
+  }
+
+  public Double getBalance(OfflinePlayer player, String world, Currency currency) {
+    return AccountUtils.getFunds(IDFinder.getID(player), world, currency.getName());
   }
 
   /*

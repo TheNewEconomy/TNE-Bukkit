@@ -19,7 +19,7 @@ public class Auction {
   private String world = TNE.instance.defaultWorld;
   private Boolean silent = false;
   private SerializableItemStack item;
-  private TransactionCost cost = new TransactionCost(50.00);
+  private TransactionCost cost = new TransactionCost(50.00, TNE.instance.manager.currencyManager.get(world));
   private Bid highestBid = null;
   private Double increment = 10.00;
   private Boolean global = true;

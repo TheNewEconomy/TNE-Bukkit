@@ -53,7 +53,7 @@ public class CurrencyManager {
       for(String cur : currencies) {
         String base = curBase + "." + cur;
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
-        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten=false>";
+        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten>";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
         Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");
@@ -111,6 +111,15 @@ public class CurrencyManager {
       return currencies.get(world + ":" + name);
     }
     return get(world);
+  }
+
+  public double convert(Currency from, Currency to, double amount) {
+    double fromRate = from.getRate();
+    double toRate = to.getRate();
+    double rate = (fromRate < toRate)? toRate - fromRate : fromRate - toRate;
+    double difference = amount * rate;
+
+    return (fromRate < toRate)? amount + difference : amount - difference;
   }
 
   public boolean contains(String world) {

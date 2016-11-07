@@ -4,8 +4,10 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -229,8 +231,21 @@ public abstract class TNECommand {
     return console();
   }
 
+  protected String getWorld(CommandSender sender, String name) {
+    if(Bukkit.getWorld(name) != null) return name;
+    return getWorld(sender);
+  }
+
   protected String getWorld(CommandSender sender) {
-    return (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+    if(sender instanceof Player) return MISCUtils.getWorld(getPlayer(sender));
+    return TNE.instance.defaultWorld;
+  }
+
+  protected Currency getCurrency(String world, String name) {
+    if(plugin.manager.currencyManager.contains(world, name)) {
+      return plugin.manager.currencyManager.get(world, name);
+    }
+    return plugin.manager.currencyManager.get(world);
   }
 
   protected Player getPlayer(CommandSender sender) {
