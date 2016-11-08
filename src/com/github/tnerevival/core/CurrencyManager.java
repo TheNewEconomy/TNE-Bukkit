@@ -4,8 +4,6 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.Tier;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
@@ -37,8 +35,9 @@ public class CurrencyManager {
   public void loadCurrencies() {
     loadCurrency(TNE.instance.getConfig(), false, MISCUtils.getWorld(TNE.instance.defaultWorld));
 
-    for(World w : Bukkit.getWorlds()) {
-      loadCurrency(TNE.instance.worldConfigurations, true, MISCUtils.getWorld(w.getName()));
+    Set<String> worlds = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+    for(String s : worlds) {
+      loadCurrency(TNE.instance.worldConfigurations, true, MISCUtils.getWorld(s));
     }
   }
 
@@ -95,6 +94,7 @@ public class CurrencyManager {
   }
 
   public void add(String world, Currency currency) {
+    MISCUtils.debug("Loading Currency: " + currency + " for world: " + world);
     this.currencies.put(world + ":" + currency.getName(), currency);
   }
 

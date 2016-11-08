@@ -55,7 +55,7 @@ public class MoneyBalanceCommand extends TNECommand {
     }
 
     Message balance = new Message("Messages.Money.Balance");
-    balance.addVariable("$amount",  CurrencyFormatter.format(world, plugin.api.getBalance(player, world, currency)));
+    balance.addVariable("$amount",  CurrencyFormatter.format(currency, plugin.api.getBalance(player, world, currency)));
     balance.translate(world, player);
     return true;
   }
