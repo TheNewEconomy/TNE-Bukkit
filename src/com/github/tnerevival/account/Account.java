@@ -2,6 +2,7 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -247,10 +248,12 @@ public class Account implements Serializable {
   }
 
   public Double getBalance(String world, String currency) {
+    MISCUtils.debug("Returning balance for " + world + ":" + currency);
     return balances.get(world + ":" + currency);
   }
 
   public void setBalance(String world, Double balance, String currency) {
+    MISCUtils.debug("Setting balance for " + world + ":" + currency);
     this.balances.put(world + ":" + currency, AccountUtils.round(balance));
   }
 

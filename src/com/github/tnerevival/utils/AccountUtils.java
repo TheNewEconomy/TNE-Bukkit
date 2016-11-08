@@ -44,12 +44,11 @@ public class AccountUtils {
     if(!account.getStatus().getBalance()) return 0.0;
 
     if(MISCUtils.multiWorld()) {
-      world = MISCUtils.getWorld(id);
-      if(!account.getBalances().containsKey(world)) {
+      if(!account.getBalances().containsKey(world + ":" + currencyName)) {
         initializeWorldData(id);
       }
 
-      return round(account.getBalance(MISCUtils.getWorld(id), currencyName));
+      return round(account.getBalance(world, currencyName));
     }
     if(currency.isItem()) {
       Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
@@ -79,7 +78,7 @@ public class AccountUtils {
       MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
     } else {
-      account.setBalance(TNE.instance.defaultWorld, balance, currencyName);
+      account.setBalance(world, balance, currencyName);
     }
   }
 

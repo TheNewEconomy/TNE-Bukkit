@@ -59,6 +59,7 @@ public class Transaction {
         if(cost.getItems().size() > 0 && !MISCUtils.hasItems(id, cost.getItems())) {
           return TransactionResult.FAILED;
         }
+        MISCUtils.debug("Transaction info: " + world + ":" + cost.getCurrency().getName());
 
         initiatorOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
         initiatorBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
@@ -105,6 +106,7 @@ public class Transaction {
         UUID id = MISCUtils.distringuishId(initiator);
         if(cost.getAmount() > 0.0) {
           initiatorOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
+          MISCUtils.debug("Transaction info: " + world + ":" + cost.getCurrency().getName());
           AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, cost.getCurrency().getName()) + cost.getAmount()), cost.getCurrency().getName());
           initiatorBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
         }
@@ -172,6 +174,7 @@ public class Transaction {
           return TransactionResult.FAILED;
         }
 
+        MISCUtils.debug("Transaction info: " + world + ":" + cost.getCurrency().getName());
         recipientOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
         recipientBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
         return TransactionResult.SUCCESS;
@@ -209,6 +212,7 @@ public class Transaction {
     } else if(type.equals(TransactionType.MONEY_GIVE)) {
       if(recipient != null) {
         UUID id = MISCUtils.distringuishId(recipient);
+        MISCUtils.debug("Transaction info: " + world + ":" + cost.getCurrency().getName());
         recipientOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
         AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, cost.getCurrency().getName()) + cost.getAmount()), cost.getCurrency().getName());
         MISCUtils.setItems(id, cost.getItems(), true);

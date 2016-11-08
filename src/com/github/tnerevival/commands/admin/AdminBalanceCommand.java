@@ -41,8 +41,8 @@ public class AdminBalanceCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1 && arguments.length <= 3) {
-      String world = (arguments.length == 2) ? arguments[1] : TNE.instance.defaultWorld;
-      String currencyName = (arguments.length == 3)? arguments[2] : "Default";
+      String world = (arguments.length >= 2)? getWorld(sender, arguments[1]) : getWorld(sender);
+      String currencyName = (arguments.length >= 3)? arguments[2] : "Default";
       Currency currency = getCurrency(world, currencyName);
       if(IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
         Account acc = AccountUtils.getAccount(IDFinder.getID(arguments[0]));
