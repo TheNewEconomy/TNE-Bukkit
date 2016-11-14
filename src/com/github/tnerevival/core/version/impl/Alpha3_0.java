@@ -1,4 +1,4 @@
-package com.github.tnerevival.core.version;
+package com.github.tnerevival.core.version.impl;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
@@ -13,6 +13,7 @@ import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.SignUtils;

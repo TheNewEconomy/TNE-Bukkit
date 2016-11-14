@@ -14,21 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.tnerevival.core.conversion;
-
-import com.github.tnerevival.core.exception.InvalidDatabaseImport;
+package com.github.tnerevival.listeners.collections;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
-public abstract class Importer {
-  public abstract String name();
-  public abstract void mysql() throws InvalidDatabaseImport;
-  public abstract void sqlite() throws InvalidDatabaseImport;
-  public abstract void h2() throws InvalidDatabaseImport;
-  public abstract void postgre() throws InvalidDatabaseImport;
-  public abstract void flatfile() throws InvalidDatabaseImport;
-  public abstract void yaml() throws InvalidDatabaseImport;
-  public abstract void inventoryDB() throws InvalidDatabaseImport;//iConomy Specific.
-  public abstract void expDB() throws InvalidDatabaseImport;//iConomy Specific.
+public class TransactionsListener {
 }

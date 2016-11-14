@@ -15,7 +15,7 @@ public abstract class Version {
   public String h2File = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.H2.File");
   public String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.SQLite.File");
 
-  Database db;
+  protected Database db;
 
   //Helper methods to automatically cast db to proper database class
   public MySQL mysql() {

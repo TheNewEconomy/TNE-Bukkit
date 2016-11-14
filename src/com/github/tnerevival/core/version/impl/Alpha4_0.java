@@ -1,4 +1,4 @@
-package com.github.tnerevival.core.version;
+package com.github.tnerevival.core.version.impl;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
@@ -19,6 +19,7 @@ import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionHistory;
 import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;

@@ -117,6 +117,11 @@ public class CurrencyManager {
   public double convert(Currency from, Currency to, double amount) {
     double fromRate = from.getRate();
     double toRate = to.getRate();
+
+    return convert(fromRate, toRate, amount);
+  }
+
+  public double convert(double fromRate, double toRate, double amount) {
     double rate = (fromRate < toRate)? toRate - fromRate : fromRate - toRate;
     double difference = amount * rate;
 

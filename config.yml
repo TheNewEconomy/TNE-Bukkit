@@ -360,3 +360,38 @@ Core:
             
             #The SQLite Database File
             File: economy.db
+
+    #All configurations relating to converter from another economy plugin.
+    #Please make sure you have the plugin's directory in your plugin's folder as we
+    #require it for automatically gathering specific data.
+    Conversion:
+
+        #Whether or not to convert data from a previous economy plugin.
+        #Remember to backup all data before converting.
+        Convert: false
+
+        #The economy plugin you wish you convert data from.
+        #Valid options are CraftConomy, MineConomy, FeConomy, iConomy
+        Name: iConomy
+
+        #The save format you wish to convert from.
+        #Valid options are  MySQL, SQLite, H2, YAML, FlatFile, Postgre, Inventory, Experience
+        Format: MySQL
+
+        #All conversion options.
+        Options:
+
+            #The host for sql-related formats.
+            Host: localhost
+
+            #The port for sql-related formats.
+            Port: 3306
+
+            #The database for sql-related formats.
+            Database: sql_eco
+
+            #The username for sql-related formats.
+            Username: root
+
+            #The password for sql-related formats.
+            Password: Password

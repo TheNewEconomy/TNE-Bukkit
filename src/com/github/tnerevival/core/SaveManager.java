@@ -1,9 +1,9 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.version.Alpha2_2;
-import com.github.tnerevival.core.version.Alpha3_0;
-import com.github.tnerevival.core.version.Alpha4_0;
+import com.github.tnerevival.core.version.impl.Alpha2_2;
+import com.github.tnerevival.core.version.impl.Alpha3_0;
+import com.github.tnerevival.core.version.impl.Alpha4_0;
 import com.github.tnerevival.core.version.Version;
 
 import java.io.*;
