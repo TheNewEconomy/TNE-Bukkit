@@ -5,7 +5,7 @@ Possible Features/Changes
   1) A vault
      - Used for storing items.
   2) A bank account
-     - Used for storing funds.   
+     - Used for storing funds.
 - Direct Player Trading.
 - Custom Plot Areas
   - Ability to buy, sell, trade and auction plots
