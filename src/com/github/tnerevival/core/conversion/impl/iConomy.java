@@ -81,7 +81,7 @@ public class iConomy extends Converter {
   @Override
   public void flatfile() throws InvalidDatabaseImport {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(new File("accounts.txt")));
+      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder() + "../iConomy", "accounts.mini")));
 
       String line;
       while((line = reader.readLine()) != null) {
