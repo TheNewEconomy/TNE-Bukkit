@@ -28,6 +28,8 @@ import java.util.*;
 public class CurrencyManager {
   private Map<String, Currency> currencies = new HashMap<>();
 
+  Set<String> worlds = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+
   public CurrencyManager() {
     loadCurrencies();
   }
@@ -35,9 +37,12 @@ public class CurrencyManager {
   public void loadCurrencies() {
     loadCurrency(TNE.instance.getConfig(), false, MISCUtils.getWorld(TNE.instance.defaultWorld));
 
-    Set<String> worlds = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
     for(String s : worlds) {
       loadCurrency(TNE.instance.worldConfigurations, true, MISCUtils.getWorld(s));
+    }
+
+    for(String s : currencies.keySet()) {
+      MISCUtils.debug(s);
     }
   }
 
@@ -48,6 +53,11 @@ public class CurrencyManager {
       Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);
 
       for(String cur : currencies) {
+        if (configuration.contains("Core.Currency." + cur + ".Disabled") &&
+            configuration.getBoolean("Core.Currency." + cur + ".Disabled")) {
+              return;
+        }
+
         MISCUtils.debug("Loading Currency: " + cur + " for world: " + name);
         String base = curBase + "." + cur;
         Double balance = configuration.contains(base + ".Balance")?  configuration.getDouble(base + ".Balance") : 200.00;
@@ -95,7 +105,27 @@ public class CurrencyManager {
 
   public void add(String world, Currency currency) {
     MISCUtils.debug("Loading Currency: " + currency + " for world: " + world);
-    this.currencies.put(world + ":" + currency.getName(), currency);
+    currencies.put(world + ":" + currency.getName(), currency);
+    copyToWorlds(currency);
+  }
+
+  public void copyToWorlds(Currency currency) {
+    if(!currencies.containsKey(TNE.instance.defaultWorld + ":" + currency.getName())) {
+      if (!TNE.instance.getConfig().contains("Core.Currency." + currency.getName() + ".Disabled") ||
+          !TNE.instance.getConfig().getBoolean("Core.Currency." + currency.getName() + ".Disabled")) {
+            currencies.put(TNE.instance.defaultWorld + ":" + currency.getName(), currency);
+      }
+    }
+
+    for(String s : worlds) {
+
+      if(!currencies.containsKey(s + ":" + currency.getName())) {
+        if (!TNE.instance.worldConfigurations.contains("Worlds." + s + ".Currency." + currency.getName() + ".Disabled") ||
+            !TNE.instance.worldConfigurations.getBoolean("Worlds." + s + ".Currency." + currency.getName() + ".Disabled")) {
+            currencies.put(s + ":" + currency.getName(), currency);
+        }
+      }
+    }
   }
 
   public Currency get(String world) {

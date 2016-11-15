@@ -14,6 +14,9 @@ Core:
     #whether or not to enable plugin metrics for TNE
     Metrics: true
 
+    #Whether or not to run the server in debug mode. OCD WARNING: Causes console spam.
+    Debug: false
+
     #All configurations relating to account pins
     Pins:
 
