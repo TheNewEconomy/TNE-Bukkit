@@ -1,14 +1,18 @@
+- Alpha 5.0
+   - Mob Reward Changes
+     - Ability to set specific rewards for baby versions of mobs.
+     - Added support for 1.11 mobs.
+     - Split horses into multiple categories depending on their variant.
+       - This is sorted into Llama, ZombieHorse, SkeletonHorse, Mule, Donkey,
+       and Horse.
+   - Major Currency Updates
+     - Ability to have multiple currencies per world.
+     - Ability to convert currencies between other currencies.
+   - Ability to import user data from other economy plugins.
+     - Currency supports iConomy, CraftConomy, MineConomy, and FeConomy.
+   - Ability to automatically save changes to the dabase when using a 
+   SQL-based database.
+   
 - Version Unknown
-- Currency Improvements
-  - Ability to have tiered currencies
-- Lotteries
-- Administration command additions
-  - Ability to modify configurations in-game
-- Companies
-  - Ability to have custom jobs
-  - Ability to set custom paychecks
-- Shop Signs
-- Custom Plot Areas
-  - Ability to buy, sell, trade and auction plots
-- Different types(Bank, Company, Personal, Shop, Trade)
-- Direct Player Trading(Alternative to Sign Trading)
+  - Administration command additions
+    - Ability to modify configurations in-game
