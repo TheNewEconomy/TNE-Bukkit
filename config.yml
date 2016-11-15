@@ -391,7 +391,7 @@ Core:
             Database: sql_eco
 
             #The username for sql-related formats.
-            Username: root
+            User: root
 
             #The password for sql-related formats.
             Password: Password

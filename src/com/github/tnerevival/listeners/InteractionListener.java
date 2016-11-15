@@ -26,7 +26,6 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -460,6 +459,12 @@ public class InteractionListener implements Listener {
           case CREEPER:
             mob = "Creeper";
             break;
+          case DONKEY:
+            mob = "Donkey";
+            break;
+          case ELDER_GUARDIAN:
+            mob = "GuardianElder";
+            break;
           case ENDER_DRAGON:
             mob = "EnderDragon";
             break;
@@ -469,6 +474,9 @@ public class InteractionListener implements Listener {
           case ENDERMITE:
             mob = "Endermite";
             break;
+          case EVOKER:
+            mob = "Evoker";
+            break;
           case GHAST:
             mob = "Ghast";
             break;
@@ -476,21 +484,25 @@ public class InteractionListener implements Listener {
             mob = "Giant";
             break;
           case GUARDIAN:
-            Guardian guard = (Guardian)entity;
-            if(guard.isElder()) {
-              mob = "GuardianElder";
-              break;
-            }
             mob = "Guardian";
             break;
           case HORSE:
             mob = "Horse";
             break;
+          case HUSK:
+            mob = "Husk";
+            break;
           case IRON_GOLEM:
             mob = "IronGolem";
             break;
+          case LLAMA:
+            mob = "Llama";
+            break;
           case MAGMA_CUBE:
             mob = "MagmaCube";
+            break;
+          case MULE:
+            mob = "Mule";
             break;
           case MUSHROOM_COW:
             mob = "Mooshroom";
@@ -537,15 +549,10 @@ public class InteractionListener implements Listener {
             mob = "Silverfish";
             break;
           case SKELETON:
-            Skeleton skelly = (Skeleton)entity;
-            if(skelly.getSkeletonType().equals(SkeletonType.WITHER)) {
-              mob = "WitherSkeleton";
-              break;
-            }  else if(MISCUtils.isOneTen() && skelly.getSkeletonType().equals(SkeletonType.STRAY)) {
-              mob = "Stray";
-              break;
-            }
             mob = "Skeleton";
+            break;
+          case SKELETON_HORSE:
+            mob = "SkeletonHorse";
             break;
           case SLIME:
             mob = "Slime";
@@ -559,8 +566,17 @@ public class InteractionListener implements Listener {
           case SQUID:
             mob = "Squid";
             break;
+          case STRAY:
+            mob = "Stray";
+            break;
+          case VEX:
+            mob = "Vex";
+            break;
           case VILLAGER:
             mob = "Villager";
+            break;
+          case VINDICATOR:
+            mob = "Vindicator";
             break;
           case WITCH:
             mob = "Witch";
@@ -568,26 +584,41 @@ public class InteractionListener implements Listener {
           case WITHER:
             mob = "Wither";
             break;
+          case WITHER_SKELETON:
+            mob = "WitherSkeleton";
+            break;
           case WOLF:
             mob = "Wolf";
             break;
           case ZOMBIE:
-            Zombie zombles = (Zombie)entity;
-            if(zombles.isVillager()) {
-              mob = "ZombieVillager";
-              break;
-            }
-            if(MISCUtils.isOneTen() && zombles.getVillagerProfession().equals(Villager.Profession.HUSK)) {
-              mob = "Husk";
-              break;
-            }
             mob = "Zombie";
+            break;
+          case ZOMBIE_HORSE:
+            mob = "ZombieHorse";
+            break;
+          case ZOMBIE_VILLAGER:
+            mob = "ZombieVillager";
             break;
           default:
             mob = "Default";
             break;
         }
-        mob = (mob.equalsIgnoreCase("Default")) ? (entity.getCustomName() != null) ? entity.getCustomName() : mob : mob;
+        mob = (mob.equalsIgnoreCase("Default")) ? (entity.getCustomName() != null)? entity.getCustomName() : mob : mob;
+
+        if(TNE.configurations.mobAge()) {
+          if (entity instanceof Ageable) {
+            Ageable e = (Ageable) entity;
+            if (!e.isAdult()) {
+              mob = mob + ".Baby";
+            }
+          } else if(entity instanceof Zombie) {
+            Zombie e = (Zombie)entity;
+            if(e.isBaby()) {
+              mob = mob + ".Baby";
+            }
+          }
+        }
+
         Character firstChar = mob.charAt(0);
         reward = (player)? TNE.configurations.playerReward(mob) : TNE.configurations.mobReward(mob);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";

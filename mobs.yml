@@ -11,6 +11,9 @@ Mobs:
     #Whether or not mobs drop money on death.
     Enabled: true
 
+    #Whether or not a mob is a baby affects the reward.
+    EnableAge: true
+
     #Whether or not to send a message stating how much money a player got for killing a mob
     Message: true
     
@@ -35,14 +38,27 @@ Mobs:
     Chicken:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Cow:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Creeper:
         Enabled: true
         Reward: 10.00
+
+    Donkey:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     EnderDragon:
         Enabled: true
@@ -53,6 +69,10 @@ Mobs:
         Reward: 10.00
 
     Endermite:
+        Enabled: true
+        Reward: 10.00
+
+    Evoker:
         Enabled: true
         Reward: 10.00
 
@@ -75,30 +95,59 @@ Mobs:
     Horse:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Husk:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     IronGolem:
         Enabled: true
         Reward: 10.00
 
+    Llama:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
     MagmaCube:
         Enabled: true
         Reward: 10.00
 
+    Mule:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
     Mooshroom:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Ocelot:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Pig:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Player:
         Enabled: true
@@ -112,10 +161,16 @@ Mobs:
     PolarBear:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Rabbit:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
         
     RabbitKiller:
         Enabled: true
@@ -124,6 +179,9 @@ Mobs:
     Sheep:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Shulker:
         Enabled: true
@@ -136,6 +194,13 @@ Mobs:
     Skeleton:
         Enabled: true
         Reward: 10.00
+
+    SkeletonHorse:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Slime:
         Enabled: true
@@ -157,7 +222,18 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    Vex:
+        Enabled: true
+        Reward: 10.00
+
     Villager:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
+    Vindicator:
         Enabled: true
         Reward: 10.00
 
@@ -176,15 +252,34 @@ Mobs:
     Wolf:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Zombie:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
+    ZombieHorse:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     ZombiePigman:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     ZombieVillager:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00

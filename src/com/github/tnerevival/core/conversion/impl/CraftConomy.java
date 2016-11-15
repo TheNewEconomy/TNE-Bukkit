@@ -16,13 +16,23 @@
  */
 package com.github.tnerevival.core.conversion.impl;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
 
 /**
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class CraftConomy extends Converter {
+  private File configFile = new File(TNE.instance.getDataFolder() + "../Craftconomy3", "config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+
+  private String prefix = config.getString("System.Database.Prefix");
+
   @Override
   public String name() {
     return "CraftConomy";

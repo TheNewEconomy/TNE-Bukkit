@@ -18,7 +18,7 @@ package com.github.tnerevival.commands.eco;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

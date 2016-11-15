@@ -44,6 +44,10 @@ public class ConfigurationManager {
     return getDouble("Mobs.Player.Individual." + id + ".Reward", "mob");
   }
 
+  public Boolean mobAge() {
+    return getBoolean("Mobs.EnableAge");
+  }
+
   public Boolean mobEnabled(String mob) {
     return getBoolean("Mobs." + mob + ".Enabled", "mob");
   }
