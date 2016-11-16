@@ -16,7 +16,11 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.collection.MapListener;
+import com.github.tnerevival.utils.MISCUtils;
+
+import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
@@ -24,7 +28,10 @@ import com.github.tnerevival.core.collection.MapListener;
 public class AccountsListener implements MapListener {
   @Override
   public void add(Object key, Object value) {
+    UUID id = (UUID)key;
+    Account acc = (Account)value;
 
+    MISCUtils.debug("AccountsListener: Added account #" + acc.getAccountNumber() + " for " + id.toString() + ".");
   }
 
   @Override

@@ -16,6 +16,8 @@
  */
 package com.github.tnerevival.core.collection;
 
+import com.github.tnerevival.utils.MISCUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,27 +26,34 @@ import java.util.Map;
  **/
 public class EventMap<K, V> extends HashMap<K, V> {
 
-  public MapListener<K, V> listener;
-  public HashMap<K, V> map;
+  private MapListener<K, V> listener;
 
-  public V get(Object key) {
-    return map.get(key);
+  public EventMap() {
+    super();
   }
 
+  @Override
+  public V get(Object key) {
+    MISCUtils.debug("Get called using key " + key.toString());
+    return super.get(key);
+  }
+
+  @Override
   public V put(K key, V value) {
     listener.add(key, value);
-    return map.put(key, value);
+    return super.put(key, value);
   }
 
+  @Override
   public V remove(Object key) {
     listener.preRemove(key, get(key));
-    V removed = map.remove(key);
+    V removed = super.remove(key);
     listener.remove(key);
     return removed;
   }
 
   public EventMapIterator<Map.Entry<K, V>> getIterator() {
-    return new EventMapIterator<>(map.entrySet().iterator(), listener);
+    return new EventMapIterator<>(super.entrySet().iterator(), listener);
   }
 
   public void setListener(MapListener<K, V> listener) {

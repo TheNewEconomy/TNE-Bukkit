@@ -17,13 +17,14 @@
 package com.github.tnerevival.core.collection;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by creatorfromhell on 11/2/2016.
  **/
 public class EventList<E> extends ArrayList<E> {
   public ListListener<E> listener;
-  public ArrayList<E> list;
+  public List<E> list = new ArrayList<>();
 
   public boolean add(E item) {
     boolean added = list.add(item);

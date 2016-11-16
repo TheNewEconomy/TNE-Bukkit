@@ -18,26 +18,25 @@ package com.github.tnerevival.commands.dev;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import org.bukkit.command.CommandSender;
 
 /**
  * Created by creatorfromhell on 11/7/2016.
  **/
-public class DeveloperCommand extends TNECommand {
+public class DeveloperAccountsCommand extends TNECommand {
 
-  public DeveloperCommand(TNE plugin) {
+  public DeveloperAccountsCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new DeveloperAccountsCommand(plugin));
-    subCommands.add(new DeveloperBalanceCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "theneweconomydev";
+    return "accounts";
   }
 
   @Override
   public String[] getAliases() {
-    return new String[] { "tnedev" };
+    return new String[0];
   }
 
   @Override
@@ -47,6 +46,17 @@ public class DeveloperCommand extends TNECommand {
 
   @Override
   public boolean console() {
-    return false;
+    return true;
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    sender.sendMessage(TNE.instance.manager.accounts.toString());
+    return true;
+  }
+
+  @Override
+  public String getHelp() {
+    return "/tnedev accounts - Raw list of accounts.";
   }
 }

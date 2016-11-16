@@ -58,7 +58,15 @@ public class AccountUtils {
       String balance = major + "." + minor;
       return Double.valueOf(balance);
     }
-    return round(account.getBalance(TNE.instance.defaultWorld, currencyName));
+    MISCUtils.debug("------- NULL Test -------");
+    MISCUtils.debug("" + (account == null));
+    MISCUtils.debug("" + (currencyName == null));
+    MISCUtils.debug("" + (TNE.instance.defaultWorld == null));
+    Double balance = account.getBalance(TNE.instance.defaultWorld, currencyName);
+    Double rounded = round(balance);
+    MISCUtils.debug("" + (balance == null));
+    MISCUtils.debug("" + (rounded == null));
+    return rounded;
   }
 
   private static void setBalance(UUID id, String world, String currencyName, Double balance) {
@@ -79,6 +87,7 @@ public class AccountUtils {
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
     } else {
       account.setBalance(world, balance, currencyName);
+      TNE.instance.manager.accounts.put(id, account);
     }
   }
 

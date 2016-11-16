@@ -5,6 +5,10 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.listeners.collections.AccountsListener;
+import com.github.tnerevival.listeners.collections.IDSListener;
+import com.github.tnerevival.listeners.collections.ShopsListener;
+import com.github.tnerevival.listeners.collections.SignsListener;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -18,19 +22,26 @@ public class EconomyManager {
    * A HashMap holding all accounts for the economy.
    * Format: Player UUID, Account Class Instance
    */
-  public Map<UUID, Account> accounts = new EventMap<>();
+  public EventMap<UUID, Account> accounts = new EventMap<>();
 
-  public Map<String, UUID> ecoIDs = new EventMap<>();
+  public EventMap<String, UUID> ecoIDs = new EventMap<>();
 
-  public  Map<String, Shop> shops = new EventMap<>();
+  public  EventMap<String, Shop> shops = new EventMap<>();
 
   public List<UUID> confirmed = new ArrayList<>();
 
-  public Map<SerializableLocation, TNESign> signs = new EventMap<>();
+  public EventMap<SerializableLocation, TNESign> signs = new EventMap<>();
 
   public AuctionManager auctionManager = new AuctionManager();
   public CurrencyManager currencyManager = new CurrencyManager();
   public TransactionManager transactions = new TransactionManager();
+
+  public EconomyManager() {
+    accounts.setListener(new AccountsListener());
+    ecoIDs.setListener(new IDSListener());
+    shops.setListener(new ShopsListener());
+    signs.setListener(new SignsListener());
+  }
 
   public void purge(String world) {
     Iterator<Account> it = accounts.values().iterator();

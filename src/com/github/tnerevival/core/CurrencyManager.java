@@ -27,8 +27,7 @@ import java.util.*;
  */
 public class CurrencyManager {
   private Map<String, Currency> currencies = new HashMap<>();
-
-  Set<String> worlds = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+  private Set<String> worlds = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
   public CurrencyManager() {
     loadCurrencies();
@@ -51,6 +50,7 @@ public class CurrencyManager {
     if(configuration.contains(curBase)) {
 
       Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);
+      MISCUtils.debug(currencies.toArray().toString());
 
       for(String cur : currencies) {
         if (configuration.contains("Core.Currency." + cur + ".Disabled") &&
@@ -58,7 +58,7 @@ public class CurrencyManager {
               return;
         }
 
-        MISCUtils.debug("Loading Currency: " + cur + " for world: " + name);
+        MISCUtils.debug("[Loop]Loading Currency: " + cur + " for world: " + name);
         String base = curBase + "." + cur;
         Double balance = configuration.contains(base + ".Balance")?  configuration.getDouble(base + ".Balance") : 200.00;
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
@@ -104,7 +104,7 @@ public class CurrencyManager {
   }
 
   public void add(String world, Currency currency) {
-    MISCUtils.debug("Loading Currency: " + currency + " for world: " + world);
+    MISCUtils.debug("[Add]Loading Currency: " + currency.getName() + " for world: " + world);
     currencies.put(world + ":" + currency.getName(), currency);
     copyToWorlds(currency);
   }
