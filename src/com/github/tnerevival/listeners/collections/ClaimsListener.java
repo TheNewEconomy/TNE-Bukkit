@@ -16,8 +16,24 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.core.collection.ListListener;
+
 /**
- * Created by creatorfromhell on 11/8/2016.
+ * Created by creatorfromhell on 11/15/2016.
  **/
-public class BanksListener {
+public class ClaimsListener implements ListListener {
+  @Override
+  public void add(Object item) {
+
+  }
+
+  @Override
+  public void preRemove(Object item) {
+
+  }
+
+  @Override
+  public void remove(Object item) {
+
+  }
 }

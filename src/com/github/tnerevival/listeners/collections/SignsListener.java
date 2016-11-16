@@ -16,8 +16,24 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.core.collection.MapListener;
+
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
-public class SignsListener {
+public class SignsListener implements MapListener {
+  @Override
+  public void add(Object key, Object value) {
+
+  }
+
+  @Override
+  public void preRemove(Object key, Object value) {
+
+  }
+
+  @Override
+  public void remove(Object key) {
+
+  }
 }
