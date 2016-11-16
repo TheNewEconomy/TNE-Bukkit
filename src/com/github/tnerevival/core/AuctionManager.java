@@ -5,6 +5,8 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Bid;
 import com.github.tnerevival.core.auction.Claim;
+import com.github.tnerevival.core.collection.EventList;
+import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
@@ -21,9 +23,9 @@ import java.util.*;
  * Created by Daniel on 10/17/2016.
  */
 public class AuctionManager {
-  private Map<Integer, Auction> auctionQueue = new HashMap<>();
-  private Map<Integer, Auction> active = new HashMap<>();
-  public List<Claim> unclaimed = new ArrayList<>();
+  private Map<Integer, Auction> auctionQueue = new EventMap<>();
+  private Map<Integer, Auction> active = new EventMap<>();
+  public List<Claim> unclaimed = new EventList<>();
 
   private int lastLot = 0;
 

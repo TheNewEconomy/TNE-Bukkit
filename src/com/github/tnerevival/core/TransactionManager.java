@@ -1,11 +1,11 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.transaction.*;
 import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,7 +27,7 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionManager {
-  public Map<String, TransactionHistory> transactionHistory = new HashMap<>();
+  public Map<String, TransactionHistory> transactionHistory = new EventMap<>();
 
   public void add(Transaction transaction) {
     if(transaction.getInitiator() != null) {

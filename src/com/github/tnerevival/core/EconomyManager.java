@@ -2,6 +2,7 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.serializable.SerializableLocation;
@@ -17,15 +18,15 @@ public class EconomyManager {
    * A HashMap holding all accounts for the economy.
    * Format: Player UUID, Account Class Instance
    */
-  public Map<UUID, Account> accounts = new HashMap<>();
+  public Map<UUID, Account> accounts = new EventMap<>();
 
-  public Map<String, UUID> ecoIDs = new HashMap<>();
+  public Map<String, UUID> ecoIDs = new EventMap<>();
 
-  public  Map<String, Shop> shops = new HashMap<>();
+  public  Map<String, Shop> shops = new EventMap<>();
 
   public List<UUID> confirmed = new ArrayList<>();
 
-  public Map<SerializableLocation, TNESign> signs = new HashMap<>();
+  public Map<SerializableLocation, TNESign> signs = new EventMap<>();
 
   public AuctionManager auctionManager = new AuctionManager();
   public CurrencyManager currencyManager = new CurrencyManager();

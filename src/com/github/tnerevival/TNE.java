@@ -71,7 +71,7 @@ public class TNE extends JavaPlugin {
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
 
-  public static HashMap<String, UUID> uuidCache = new HashMap<String, UUID>();
+  public static HashMap<String, UUID> uuidCache = new HashMap<>();
 
   public void onLoad() {
     instance = this;
