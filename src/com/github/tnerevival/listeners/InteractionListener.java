@@ -359,7 +359,9 @@ public class InteractionListener implements Listener {
                 Inventory bankInventory = BankUtils.getBankInventory(IDFinder.getID(player));
                 player.openInventory(bankInventory);
               } else {
-                new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+                Message none = new Message("Messages.Bank.None");
+                none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+                none.translate(MISCUtils.getWorld(player), player);
               }
             } else {
               new Message("Messages.Bank.NoNPC").translate(MISCUtils.getWorld(player), player);

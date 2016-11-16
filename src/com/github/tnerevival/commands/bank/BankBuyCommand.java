@@ -66,7 +66,7 @@ public class BankBuyCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/bank buy - buy yourself a bank";
+    return "/bank buy - Used to purchase a bank.";
   }
 
 }

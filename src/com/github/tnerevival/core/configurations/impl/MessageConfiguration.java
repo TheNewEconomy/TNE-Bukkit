@@ -138,7 +138,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Bank.Bought", "<white>Congratulations! You have successfully purchased a bank!");
     configurations.put("Messages.Bank.Insufficient", "<red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.");
     configurations.put("Messages.Bank.Overdraw", "<red>I'm sorry, but the bank of $name does not have <gold>$amount<red>.");
-    configurations.put("Messages.Bank.None", "<red>I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+    configurations.put("Messages.Bank.None", "<red>I'm sorry, but you do not own a bank. The current cost for a bank is <gold>$amount<red>. Use /bank buy to purchase one.");
     configurations.put("Messages.Bank.NoNPC", "<red>I'm sorry, but accessing banks via NPCs has been disabled in this world!");
     configurations.put("Messages.Bank.NoSign", "<red>I'm sorry, but accessing banks via signs has been disabled in this world!");
     configurations.put("Messages.Bank.NoCommand", "<red>I'm sorry, but accessing banks via /bank has been disabled in this world!");
@@ -146,7 +146,6 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Bank.Balance", "<white>There is currently <gold>$amount<white> in the bank of $name.");
     configurations.put("Messages.Bank.Deposit", "<white>You have deposited <gold>$amount<white> in the bank of $name.");
     configurations.put("Messages.Bank.Withdraw", "<white>You have withdrawn <gold>$amount<gold> from the bank of $name.");
-    configurations.put("Messages.Bank.Cost", "<white>A bank is currently <gold>$amount<white>.");
     configurations.put("Messages.Bank.Invalid", "<red>I'm sorry, but you don't have access to $owner's bank!");
 
     configurations.put("Messages.Objects.SignDisabled", "<red>This type of sign has been disabled for this world!");

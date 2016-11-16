@@ -54,7 +54,9 @@ public class BankBalanceCommand extends TNECommand {
       noAccess.addVariable("$name", ownerName);
       noAccess.translate(MISCUtils.getWorld(player), player);
     }
-    new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+    Message none = new Message("Messages.Bank.None");
+    none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+    none.translate(MISCUtils.getWorld(player), player);
     return false;
   }
 

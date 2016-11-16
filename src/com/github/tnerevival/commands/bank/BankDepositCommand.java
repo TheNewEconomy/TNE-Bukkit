@@ -67,7 +67,9 @@ public class BankDepositCommand extends TNECommand {
         noAccess.translate(MISCUtils.getWorld(player), player);
         return false;
       }
-      new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+      Message none = new Message("Messages.Bank.None");
+      none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+      none.translate(MISCUtils.getWorld(player), player);
       return false;
     }
     help(sender);

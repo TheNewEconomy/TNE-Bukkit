@@ -44,7 +44,7 @@ public class BankWithdrawCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
     UUID owner = IDFinder.getID(ownerName);
-    UUID player = IDFinder.getID(sender.getName());
+    UUID id = IDFinder.getID(sender.getName());
     String world = MISCUtils.getWorld((Player)sender);
 
 
@@ -52,26 +52,28 @@ public class BankWithdrawCommand extends TNECommand {
       if(BankUtils.hasBank(owner)) {
         Double value = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
         if (BankUtils.bankMember(owner, IDFinder.getID(sender.getName()))) {
-          if(AccountUtils.transaction(owner.toString(), player.toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
+          if(AccountUtils.transaction(owner.toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(id))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
             withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, value));
             withdrawn.addVariable("$name",  ownerName);
-            withdrawn.translate(MISCUtils.getWorld(player), player);
+            withdrawn.translate(MISCUtils.getWorld(id), id);
             return true;
           } else {
             Message overdraw = new Message("Messages.Bank.Overdraw");
             overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));
             overdraw.addVariable("$name",  ownerName);
-            overdraw.translate(MISCUtils.getWorld(player), player);
+            overdraw.translate(MISCUtils.getWorld(id), id);
             return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");
         noAccess.addVariable("$name", ownerName);
-        noAccess.translate(world, player);
+        noAccess.translate(world, id);
         return false;
       }
-      new Message("Messages.Bank.None").translate(world, player);
+      Message none = new Message("Messages.Bank.None");
+      none.addVariable("$amount",  CurrencyFormatter.format(MISCUtils.getWorld(id), BankUtils.cost(MISCUtils.getWorld(id), id.toString())));
+      none.translate(MISCUtils.getWorld(id), id);
       return false;
     }
     help(sender);

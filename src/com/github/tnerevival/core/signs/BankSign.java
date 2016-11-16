@@ -2,6 +2,7 @@ package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.entity.Player;
@@ -26,7 +27,9 @@ public class BankSign extends TNESign {
       if (player.hasPermission(SignType.BANK.getUsePermission())) {
 
         if (!BankUtils.hasBank(IDFinder.getID(player))) {
-          new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+          Message none = new Message("Messages.Bank.None");
+          none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+          none.translate(MISCUtils.getWorld(player), player);
           return false;
         }
 

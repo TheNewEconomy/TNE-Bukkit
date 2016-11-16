@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
@@ -46,7 +47,9 @@ public class BankViewCommand extends TNECommand {
         Inventory bankInventory = BankUtils.getBankInventory(IDFinder.getID(player));
         player.openInventory(bankInventory);
       } else {
-        new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+        Message none = new Message("Messages.Bank.None");
+        none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+        none.translate(MISCUtils.getWorld(player), player);
       }
     } else {
       new Message("Messages.Bank.NoCommand").translate(MISCUtils.getWorld(player), player);
