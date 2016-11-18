@@ -88,6 +88,7 @@ public class AccountUtils {
     } else {
       account.setBalance(world, balance, currencyName);
       TNE.instance.manager.accounts.put(id, account);
+
     }
   }
 
@@ -109,10 +110,7 @@ public class AccountUtils {
     TNETransactionEvent e = new TNETransactionEvent(t);
     Bukkit.getServer().getPluginManager().callEvent(e);
 
-    if(!e.isCancelled()) {
-      return t.perform();
-    }
-    return false;
+    return !e.isCancelled() && t.perform();
   }
 
   public static Double getFunds(UUID id) {

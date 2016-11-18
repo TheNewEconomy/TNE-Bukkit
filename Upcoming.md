@@ -9,7 +9,8 @@
      - Ability to have multiple currencies per world.
      - Ability to convert currencies between other currencies.
    - Ability to import user data from other economy plugins.
-     - Currency supports iConomy, CraftConomy, MineConomy, and FeConomy.
+     - Currency supports iConomy, CraftConomy, MineConomy, BOSEconomy,
+       Essentials, and FeConomy.
    - Ability to automatically save changes to the dabase when using a 
    SQL-based database.
    

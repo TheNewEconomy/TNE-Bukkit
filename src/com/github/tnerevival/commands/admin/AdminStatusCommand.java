@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.AccountStatus;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
@@ -63,8 +64,10 @@ public class AdminStatusCommand extends TNECommand {
 
         String status = AccountStatus.fromName(arguments[1]).getName();
 
-        AccountUtils.getAccount(target).setStatus(status);
+        Account acc = AccountUtils.getAccount(target);
+        acc.setStatus(status);
 
+        TNE.instance.manager.accounts.put(acc.getUid(), acc);
         if(Bukkit.getOnlinePlayers().contains(target)) {
           String world = MISCUtils.getWorld(target);
           Message m = new Message("Messages.Account.StatusChange");

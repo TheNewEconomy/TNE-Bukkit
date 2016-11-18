@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
@@ -60,8 +61,10 @@ public class AdminPinCommand extends TNECommand {
       if(AccountUtils.exists(IDFinder.getID(arguments[0]))) {
         UUID target = IDFinder.getID(arguments[0]);
 
-        AccountUtils.getAccount(target).setPin(arguments[1]);
+        Account acc = AccountUtils.getAccount(target);
+        acc.setPin(arguments[1]);
 
+        TNE.instance.manager.accounts.put(acc.getUid(), acc);
         if(Bukkit.getOnlinePlayers().contains(target)) {
           String world = MISCUtils.getWorld(target);
           Message m = new Message("Messages.Account.Reset");
