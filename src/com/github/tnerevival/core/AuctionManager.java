@@ -153,7 +153,7 @@ public class AuctionManager {
       Claim claim = i.next();
 
       if(claim.getLot().equals(lot) && claim.getPlayer().equals(player)) {
-        TNE.instance.saveManager.deleteClaim(player, lot);
+        TNE.instance.saveManager.versionInstance.deleteClaim(claim);
         claim.claim();
         i.remove();
       }
@@ -226,7 +226,6 @@ public class AuctionManager {
       auctionQueue.remove(lot);
       auction.setStartTime(System.nanoTime());
       active.put(lot, auction);
-      TNE.instance.saveManager.deleteAuction(lot);
       notifyPlayers(auction.getWorld(), auction.getLotNumber(), "Messages.Auction.Start", true);
     }
   }
@@ -371,7 +370,6 @@ public class AuctionManager {
       MISCUtils.debug("Starting Auction");
       auction.setStartTime(System.nanoTime());
       active.put(auction.getLotNumber(), auction);
-      TNE.instance.saveManager.deleteAuction(auction.getLotNumber());
       notifyPlayers(auction.getWorld(), auction.getLotNumber(), "Messages.Auction.Start", true);
       notifyPlayers(auction.getWorld(), auction.getLotNumber(), ChatColor.WHITE + "Type /auction info " + ChatColor.GREEN + auction.getLotNumber() + ChatColor.WHITE + " for more information.", true);
       return true;

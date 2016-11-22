@@ -25,7 +25,7 @@ public class EventList<E> extends ArrayList<E> {
   public ListListener<E> listener;
 
   public boolean add(E item) {
-    boolean added = this.add(item);
+    boolean added = super.add(item);
     if(added) listener.add(item);
     return added;
   }

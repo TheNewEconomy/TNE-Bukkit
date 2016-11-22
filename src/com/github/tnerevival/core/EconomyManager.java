@@ -56,7 +56,8 @@ public class EconomyManager {
         }
       }
       if(remove) {
-        deleteAccount(acc.getUid());
+        TNE.instance.saveManager.versionInstance.deleteAccount(acc.getUid());
+        TNE.instance.saveManager.versionInstance.removeID(acc.getUid());
         it.remove();
         ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
       }
@@ -76,20 +77,12 @@ public class EconomyManager {
       }
 
       if(remove) {
-        deleteAccount(acc.getUid());
+        TNE.instance.saveManager.versionInstance.deleteAccount(acc.getUid());
+        TNE.instance.saveManager.versionInstance.removeID(acc.getUid());
         it.remove();
         ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
       }
     }
-  }
-
-  public void deleteAccount(UUID id) {
-    TNE.instance.saveManager.deleteAccount(id);
-  }
-
-  public void deleteShop(String name, String world) {
-    shops.remove(name + ":" + world);
-    TNE.instance.saveManager.deleteShop(name, world);
   }
 
   public boolean enabled(UUID id, String world) {

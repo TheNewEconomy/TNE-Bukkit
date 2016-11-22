@@ -53,28 +53,35 @@ public class Account implements Serializable {
   }
 
   public String balancesToString() {
-    Iterator<Map.Entry<String, Double>> balanceIterator = balances.entrySet().iterator();
-
     int count = 0;
     String toReturn = "";
-    while(balanceIterator.hasNext()) {
-      Map.Entry<String, Double> balanceEntry = balanceIterator.next();
-      if(count > 0) {
-        toReturn += ":";
-      }
-      toReturn += balanceEntry.getKey() + "," + balanceEntry.getValue();
-      count++;
+    for(Map.Entry<String, Double> entry : balances.entrySet()) {
+        if(count > 0) toReturn += "-";
+        toReturn += entry.getKey() + "," + entry.getValue();
+        count++;
     }
     return toReturn;
   }
 
   public void balancesFromString(String from) {
-    String[] b = from.split("\\:");
+    String[] b = from.split("\\-");
 
     for(String s : b) {
       String[] balance = s.split("\\,");
       if(balance.length == 2) {
         balances.put(balance[0], Double.valueOf(balance[1]));
+      }
+    }
+  }
+
+  public void balancesFromStringOld(String from) {
+    String[] b = from.split("\\-");
+
+    for(String s : b) {
+      String[] balance = s.split("\\,");
+      if(balance.length == 2) {
+        String name = TNE.instance.manager.currencyManager.get(balance[0]).getName();
+        balances.put(balance[0] + ":" + name, Double.valueOf(balance[1]));
       }
     }
   }
@@ -245,6 +252,12 @@ public class Account implements Serializable {
 
   public void setBalances(Map<String, Double> balances) {
     this.balances = balances;
+  }
+
+  public void setBalancesOld(Map<String, Double> balances) {
+    for(Map.Entry<String, Double> entry : balances.entrySet()) {
+      setBalance(entry.getKey(), entry.getValue(), TNE.instance.manager.currencyManager.get(entry.getKey()).getName());
+    }
   }
 
   public Double getBalance(String world, String currency) {

@@ -94,6 +94,7 @@ public class TNE extends JavaPlugin {
     manager = new EconomyManager();
     inventoryManager = new InventoryManager();
     saveManager = new SaveManager();
+    saveManager.initialize();
     commandManager = new CommandManager();
 
     auctionWorker = new AuctionWorker(this);

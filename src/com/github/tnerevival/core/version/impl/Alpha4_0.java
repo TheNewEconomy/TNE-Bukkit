@@ -173,7 +173,7 @@ public class Alpha4_0 extends Version {
 
         balanceMap.put(balanceEntry.getKey(), (Double)balanceEntry.getValue());
       }
-      account.setBalances(balanceMap);
+      account.setBalancesOld(balanceMap);
 
       Iterator<java.util.Map.Entry<String, Object>> bankIterator = banks.getData().entrySet().iterator();
 
@@ -466,7 +466,7 @@ public class Alpha4_0 extends Version {
 
       while(mysql().results().next()) {
         Account account = new Account(UUID.fromString(mysql().results().getString("uuid")));
-        account.balancesFromString(mysql().results().getString("balances"));
+        account.balancesFromStringOld(mysql().results().getString("balances"));
         account.setAccountNumber(mysql().results().getInt("accountnumber"));
         account.setStatus(mysql().results().getString("accountstatus"));
         account.setJoined(mysql().results().getString("joinedDate"));
@@ -769,7 +769,7 @@ public class Alpha4_0 extends Version {
 
       while(h2().results().next()) {
         Account account = new Account(UUID.fromString(h2().results().getString("uuid")));
-        account.balancesFromString(h2().results().getString("balances"));
+        account.balancesFromStringOld(h2().results().getString("balances"));
         account.setAccountNumber(h2().results().getInt("accountnumber"));
         account.setStatus(h2().results().getString("accountstatus"));
         account.setJoined(h2().results().getString("joinedDate"));

@@ -10,7 +10,6 @@ import com.github.tnerevival.core.version.impl.Alpha5_0;
 import java.io.*;
 import java.sql.*;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -37,6 +36,9 @@ public class SaveManager {
 
   public SaveManager() {
     versionInstance = versions.get(currentSaveVersion);
+  }
+
+  public void initialize() {
     if(firstRun()) {
       initiate();
     } else {
@@ -44,41 +46,6 @@ public class SaveManager {
       TNE.instance.getLogger().info("Save file of version: " + saveVersion + " detected.");
       load();
       convert();
-    }
-  }
-
-  public void deleteAccount(UUID id) {
-    String table = versionInstance.prefix + "_USERS";
-    if(!type.equalsIgnoreCase("flatfile")) {
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE uuid = ?",
-          new Object[] { id.toString() });
-      table = versionInstance.prefix + "_ECOIDS";
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE uuid = ?",
-          new Object[] { id.toString() });
-    }
-  }
-
-  public void deleteShop(String name, String world) {
-    if(!type.equalsIgnoreCase("flatfile")) {
-      String table = versionInstance.prefix + "_SHOPS";
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE shop_name = ? AND shop_world = ?",
-          new Object[] { name, world });
-    }
-  }
-
-  public void deleteAuction(Integer lot) {
-    if(!type.equalsIgnoreCase("flatfile")) {
-      String table = versionInstance.prefix + "_AUCTIONS";
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE auction_lot = ?",
-          new Object[] { lot });
-    }
-  }
-
-  public void deleteClaim(UUID player, Integer lot) {
-    if(!type.equalsIgnoreCase("flatfile")) {
-      String table = versionInstance.prefix + "_CLAIMS";
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE claim_player = ? AND claim_lot = ?",
-          new Object[] { player.toString(), lot });
     }
   }
 

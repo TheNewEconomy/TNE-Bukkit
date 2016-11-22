@@ -38,6 +38,6 @@ public class AccountsListener implements MapListener {
 
   @Override
   public void remove(Object key) {
-    TNE.instance.saveManager.deleteAccount((UUID)key);
+    TNE.instance.saveManager.versionInstance.deleteAccount((UUID)key);
   }
 }

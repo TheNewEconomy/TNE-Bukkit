@@ -41,7 +41,7 @@ public class AdminDeleteCommand extends TNECommand {
     if(arguments.length >= 1) {
       String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
       if(AccountUtils.exists(IDFinder.getID(arguments[0]))) {
-        TNE.instance.manager.deleteAccount(IDFinder.getID(arguments[0]));
+        TNE.instance.saveManager.versionInstance.deleteAccount(IDFinder.getID(arguments[0]));
 
         Message m = new Message("Messages.Admin.Deleted");
         m.addVariable("$player", arguments[0]);

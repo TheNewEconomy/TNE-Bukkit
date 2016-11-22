@@ -759,7 +759,7 @@ public class Alpha5_0 extends Version {
     createTables("mysql");
     String table = prefix + "_INFO";
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
-    mysql().executePreparedUpdate("Update " + table + " SET version = ?, server_name = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()), TNE.instance.getServer().getName() });
+    mysql().executePreparedUpdate("Update " + table + " SET version = ?, server_name = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()), TNE.instance.getServer().getServerName() });
 
     for(Account acc : TNE.instance.manager.accounts.values()) {
       saveAccount(acc);
@@ -971,9 +971,9 @@ public class Alpha5_0 extends Version {
       mysql().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getName(),
+              TNE.instance.getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getName()
+              TNE.instance.getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";
@@ -1082,12 +1082,12 @@ public class Alpha5_0 extends Version {
           "`version` VARCHAR(10)," +
           "`server_name` VARCHAR(250)" +
           ");");
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
+      h2().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getName(),
+              TNE.instance.getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getName()
+              TNE.instance.getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";
