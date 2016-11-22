@@ -16,9 +16,9 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.collection.MapListener;
-import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.UUID;
 
@@ -28,10 +28,7 @@ import java.util.UUID;
 public class AccountsListener implements MapListener {
   @Override
   public void add(Object key, Object value) {
-    UUID id = (UUID)key;
-    Account acc = (Account)value;
-
-    MISCUtils.debug("AccountsListener: Added account #" + acc.getAccountNumber() + " for " + id.toString() + ".");
+    TNE.instance.saveManager.versionInstance.saveAccount((Account)value);
   }
 
   @Override
@@ -41,6 +38,6 @@ public class AccountsListener implements MapListener {
 
   @Override
   public void remove(Object key) {
-
+    TNE.instance.saveManager.deleteAccount((UUID)key);
   }
 }

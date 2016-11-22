@@ -16,6 +16,8 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.collection.ListListener;
 
 /**
@@ -24,7 +26,7 @@ import com.github.tnerevival.core.collection.ListListener;
 public class ClaimsListener implements ListListener {
   @Override
   public void add(Object item) {
-
+    TNE.instance.saveManager.versionInstance.saveClaim((Claim)item);
   }
 
   @Override
@@ -34,6 +36,6 @@ public class ClaimsListener implements ListListener {
 
   @Override
   public void remove(Object item) {
-
+    TNE.instance.saveManager.versionInstance.deleteClaim((Claim)item);
   }
 }

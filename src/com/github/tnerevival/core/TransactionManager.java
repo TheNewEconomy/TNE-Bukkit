@@ -27,11 +27,8 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionManager {
+  public static TransactionsListener transListener = new TransactionsListener();
   public EventMap<String, TransactionHistory> transactionHistory = new EventMap<>();
-
-  public TransactionManager() {
-    transactionHistory.setListener(new TransactionsListener());
-  }
 
   public void add(Transaction transaction) {
     if(transaction.getInitiator() != null) {

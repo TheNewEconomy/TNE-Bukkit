@@ -16,7 +16,9 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.MapListener;
+import com.github.tnerevival.core.signs.TNESign;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
@@ -24,16 +26,15 @@ import com.github.tnerevival.core.collection.MapListener;
 public class SignsListener implements MapListener {
   @Override
   public void add(Object key, Object value) {
-
+    TNE.instance.saveManager.versionInstance.saveSign((TNESign)value);
   }
 
   @Override
   public void preRemove(Object key, Object value) {
-
+    TNE.instance.saveManager.versionInstance.deleteSign((TNESign)value);
   }
 
   @Override
   public void remove(Object key) {
-
   }
 }

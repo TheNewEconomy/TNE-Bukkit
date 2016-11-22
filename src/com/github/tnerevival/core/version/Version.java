@@ -1,9 +1,16 @@
 package com.github.tnerevival.core.version;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.db.*;
+import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.transaction.Record;
 
 import java.io.File;
+import java.util.UUID;
 
 public abstract class Version {
   public String mysqlHost = TNE.configurations.getString("Core.Database.MySQL.Host");
@@ -18,6 +25,10 @@ public abstract class Version {
   protected Database db;
 
   //Helper methods to automatically cast db to proper database class
+  public SQLDatabase sql() {
+    return (SQLDatabase)db;
+  }
+
   public MySQL mysql() {
     return (MySQL)db;
   }
@@ -26,7 +37,10 @@ public abstract class Version {
     return (SQLite)db;
   }
 
-  public H2 h2() { return (H2)db; }
+  public H2 h2() {
+    return (H2)db;
+  }
+
 
   public FlatFile flatfile() {
     return (FlatFile)db;
@@ -35,6 +49,21 @@ public abstract class Version {
   //abstract methods to be implemented by each child class
   public abstract double versionNumber();
   public abstract void update(double version, String type);
+  public abstract void saveTransaction(Record record);
+  public abstract void deleteTransaction(UUID id);
+  public abstract void saveAccount(Account acc);
+  public abstract void deleteAccount(UUID id);
+  public abstract void saveShop(Shop shop);
+  public abstract void deleteShop(Shop shop);
+  public abstract void saveSign(TNESign sign);
+  public abstract void deleteSign(TNESign sign);
+  public abstract void saveAuction(Auction auction);
+  public abstract void deleteAuction(Auction auction);
+  public abstract void saveClaim(Claim claim);
+  public abstract void deleteClaim(Claim claim);
+  public abstract void saveID(String username, UUID id);
+  public abstract void removeID(String username);
+  public abstract void removeID(UUID id);
   public abstract void loadFlat(File file);
   public abstract void saveFlat(File file);
   public abstract void loadMySQL();

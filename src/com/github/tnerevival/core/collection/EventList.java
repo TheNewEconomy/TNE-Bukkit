@@ -17,30 +17,28 @@
 package com.github.tnerevival.core.collection;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by creatorfromhell on 11/2/2016.
  **/
 public class EventList<E> extends ArrayList<E> {
   public ListListener<E> listener;
-  public List<E> list = new ArrayList<>();
 
   public boolean add(E item) {
-    boolean added = list.add(item);
+    boolean added = this.add(item);
     if(added) listener.add(item);
     return added;
   }
 
   public boolean remove(Object item) {
     listener.preRemove(item);
-    boolean removed = list.remove(item);
+    boolean removed = super.remove(item);
     if(removed) listener.remove(item);
     return removed;
   }
 
   public EventListIterator<E> getIterator() {
-    return new EventListIterator<>(list.iterator(), listener);
+    return new EventListIterator<>(super.iterator(), listener);
   }
 
   public void setListener(ListListener<E> listener) {

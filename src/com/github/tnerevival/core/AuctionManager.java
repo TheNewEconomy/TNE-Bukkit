@@ -10,6 +10,8 @@ import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.listeners.collections.AuctionsListener;
+import com.github.tnerevival.listeners.collections.ClaimsListener;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
@@ -28,6 +30,13 @@ public class AuctionManager {
   public EventList<Claim> unclaimed = new EventList<>();
 
   private int lastLot = 0;
+
+  public AuctionManager() {
+    AuctionsListener listener = new AuctionsListener();
+    unclaimed.setListener(new ClaimsListener());
+    auctionQueue.setListener(listener);
+    active.setListener(listener);
+  }
 
   public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";

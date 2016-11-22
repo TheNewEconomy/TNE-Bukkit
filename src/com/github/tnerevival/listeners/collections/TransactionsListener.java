@@ -16,24 +16,28 @@
  */
 package com.github.tnerevival.listeners.collections;
 
-import com.github.tnerevival.core.collection.MapListener;
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.collection.ListListener;
+import com.github.tnerevival.core.transaction.Record;
+
+import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
-public class TransactionsListener implements MapListener {
+public class TransactionsListener implements ListListener {
   @Override
-  public void add(Object key, Object value) {
+  public void add(Object item) {
+    TNE.instance.saveManager.versionInstance.saveTransaction((Record)item);
+  }
+
+  @Override
+  public void preRemove(Object item) {
 
   }
 
   @Override
-  public void preRemove(Object key, Object value) {
-
-  }
-
-  @Override
-  public void remove(Object key) {
-
+  public void remove(Object item) {
+    TNE.instance.saveManager.versionInstance.deleteTransaction(UUID.fromString(((Record) item).getId()));
   }
 }

@@ -48,6 +48,81 @@ public class Alpha4_0 extends Version {
   }
 
   @Override
+  public void saveTransaction(Record record) {
+
+  }
+
+  @Override
+  public void deleteTransaction(UUID id) {
+
+  }
+
+  @Override
+  public void saveAccount(Account acc) {
+
+  }
+
+  @Override
+  public void deleteAccount(UUID id) {
+
+  }
+
+  @Override
+  public void saveShop(Shop shop) {
+
+  }
+
+  @Override
+  public void deleteShop(Shop shop) {
+
+  }
+
+  @Override
+  public void saveSign(TNESign sign) {
+
+  }
+
+  @Override
+  public void deleteSign(TNESign sign) {
+
+  }
+
+  @Override
+  public void saveAuction(Auction auction) {
+
+  }
+
+  @Override
+  public void deleteAuction(Auction auction) {
+
+  }
+
+  @Override
+  public void saveClaim(Claim claim) {
+
+  }
+
+  @Override
+  public void deleteClaim(Claim claim) {
+
+  }
+
+  @Override
+  public void saveID(String username, UUID id) {
+
+  }
+
+  @Override
+  public void removeID(String username) {
+
+  }
+
+  @Override
+  public void removeID(UUID id) {
+
+  }
+
+  @Override
   public void loadFlat(File file) {
     db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
     FlatFileConnection connection = (FlatFileConnection)db.connection();
@@ -577,7 +652,8 @@ public class Alpha4_0 extends Version {
               s.listToString(true),
               s.listToString(false),
               s.sharesToString()
-          });
+          }
+      );
     }
 
     table = prefix + "_AUCTIONS";

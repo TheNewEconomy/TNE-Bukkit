@@ -16,20 +16,27 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.collection.MapListener;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class AuctionsListener implements MapListener {
+
   @Override
   public void add(Object key, Object value) {
-
+    TNE.instance.saveManager.versionInstance.saveAuction((Auction)value);
   }
 
   @Override
   public void preRemove(Object key, Object value) {
+    Integer lot = (Integer)key;
 
+    if(!TNE.instance.manager.auctionManager.exists(lot)) {
+      TNE.instance.saveManager.versionInstance.deleteAuction((Auction)value);
+    }
   }
 
   @Override

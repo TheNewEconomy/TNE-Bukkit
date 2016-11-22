@@ -16,7 +16,10 @@
  */
 package com.github.tnerevival.listeners.collections;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.MapListener;
+
+import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
@@ -24,16 +27,15 @@ import com.github.tnerevival.core.collection.MapListener;
 public class IDSListener implements MapListener {
   @Override
   public void add(Object key, Object value) {
-
+    TNE.instance.saveManager.versionInstance.saveID((String)key, (UUID)value);
   }
 
   @Override
   public void preRemove(Object key, Object value) {
-
   }
 
   @Override
   public void remove(Object key) {
-
+    TNE.instance.saveManager.versionInstance.removeID((String)key);
   }
 }

@@ -3,6 +3,8 @@ package com.github.tnerevival.core.version.impl;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.H2;
 import com.github.tnerevival.core.db.MySQL;
@@ -13,6 +15,7 @@ import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
@@ -77,6 +80,81 @@ public class Alpha3_0 extends Version {
           "`sign_meta` LONGTEXT" +
           ");");
     }
+  }
+
+  @Override
+  public void saveTransaction(Record record) {
+
+  }
+
+  @Override
+  public void deleteTransaction(UUID id) {
+
+  }
+
+  @Override
+  public void saveAccount(Account acc) {
+
+  }
+
+  @Override
+  public void deleteAccount(UUID id) {
+
+  }
+
+  @Override
+  public void saveShop(Shop shop) {
+
+  }
+
+  @Override
+  public void deleteShop(Shop shop) {
+
+  }
+
+  @Override
+  public void saveSign(TNESign sign) {
+
+  }
+
+  @Override
+  public void deleteSign(TNESign sign) {
+
+  }
+
+  @Override
+  public void saveAuction(Auction auction) {
+
+  }
+
+  @Override
+  public void deleteAuction(Auction auction) {
+
+  }
+
+  @Override
+  public void saveClaim(Claim claim) {
+
+  }
+
+  @Override
+  public void deleteClaim(Claim claim) {
+
+  }
+
+  @Override
+  public void saveID(String username, UUID id) {
+
+  }
+
+  @Override
+  public void removeID(String username) {
+
+  }
+
+  @Override
+  public void removeID(UUID id) {
+
   }
 
   @Override

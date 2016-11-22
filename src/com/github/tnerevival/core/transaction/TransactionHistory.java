@@ -1,5 +1,7 @@
 package com.github.tnerevival.core.transaction;
 
+import com.github.tnerevival.core.TransactionManager;
+import com.github.tnerevival.core.collection.EventList;
 import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.ArrayList;
@@ -23,8 +25,12 @@ import java.util.List;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionHistory {
-  private List<Record> records = new ArrayList<>();
+  private EventList<Record> records = new EventList<>();
   private List<Record> sorted = new ArrayList<>();
+
+  public TransactionHistory() {
+    records.setListener(TransactionManager.transListener);
+  }
 
   public void add(Record record) {
     records.add(record);

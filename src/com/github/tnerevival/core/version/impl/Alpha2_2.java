@@ -3,6 +3,8 @@ package com.github.tnerevival.core.version.impl;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.core.auction.Auction;
+import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.db.SQLite;
@@ -10,6 +12,9 @@ import com.github.tnerevival.core.db.flat.Article;
 import com.github.tnerevival.core.db.flat.Entry;
 import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
+import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.utils.BankUtils;
 
@@ -30,6 +35,81 @@ public class Alpha2_2 extends Version {
   @Override
   public void update(double version, String type) {
     //we're not going to update old TNE versions since we haven't changed any data since around Alpha 2.1...
+  }
+
+  @Override
+  public void saveTransaction(Record record) {
+
+  }
+
+  @Override
+  public void deleteTransaction(UUID id) {
+
+  }
+
+  @Override
+  public void saveAccount(Account acc) {
+
+  }
+
+  @Override
+  public void deleteAccount(UUID id) {
+
+  }
+
+  @Override
+  public void saveShop(Shop shop) {
+
+  }
+
+  @Override
+  public void deleteShop(Shop shop) {
+
+  }
+
+  @Override
+  public void saveSign(TNESign sign) {
+
+  }
+
+  @Override
+  public void deleteSign(TNESign sign) {
+
+  }
+
+  @Override
+  public void saveAuction(Auction auction) {
+
+  }
+
+  @Override
+  public void deleteAuction(Auction auction) {
+
+  }
+
+  @Override
+  public void saveClaim(Claim claim) {
+
+  }
+
+  @Override
+  public void deleteClaim(Claim claim) {
+
+  }
+
+  @Override
+  public void saveID(String username, UUID id) {
+
+  }
+
+  @Override
+  public void removeID(String username) {
+
+  }
+
+  @Override
+  public void removeID(UUID id) {
+
   }
 
   @Override
