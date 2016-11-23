@@ -22,6 +22,7 @@ import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,7 +32,6 @@ import java.io.FileReader;
  * Created by creatorfromhell on 11/15/2016.
  **/
 public class BOSEconomy extends Converter {
-  private File dataFile = new File(TNE.instance.getDataFolder() + "../BOSEconomy", "accounts.txt");
 
   @Override
   public String name() {
@@ -41,7 +41,7 @@ public class BOSEconomy extends Converter {
   @Override
   public void flatfile() throws InvalidDatabaseImport {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder() + "../BOSEconomy", "accounts.txt")));
+      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder(), "../BOSEconomy/accounts.txt")));
 
       String line;
       String id = "";
@@ -100,6 +100,7 @@ public class BOSEconomy extends Converter {
       }
     } catch(Exception e) {
       System.out.println("Unable to read BOSEconomy Data.");
+      MISCUtils.debug(e);
     }
   }
 }

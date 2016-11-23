@@ -34,7 +34,7 @@ import java.util.UUID;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class FeConomy extends Converter {
-  private File configFile = new File(TNE.instance.getDataFolder() + "../Fe", "config.yml");
+  private File configFile = new File(TNE.instance.getDataFolder(), "../Fe/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String table = config.getString("mysql.tables.accounts");

@@ -38,7 +38,7 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class iConomy extends Converter {
-  private File configFile = new File(TNE.instance.getDataFolder() + "../iConomy", "Config.yml");
+  private File configFile = new File(TNE.instance.getDataFolder(), "../iConomy/Config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   private String table = config.getString("System.Database.Table");
 
@@ -81,7 +81,7 @@ public class iConomy extends Converter {
   @Override
   public void flatfile() throws InvalidDatabaseImport {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder() + "../iConomy", "accounts.mini")));
+      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder(), "../iConomy/accounts.mini")));
 
       String line;
       while((line = reader.readLine()) != null) {

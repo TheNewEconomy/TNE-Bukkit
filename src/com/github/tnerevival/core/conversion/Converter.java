@@ -69,6 +69,9 @@ public abstract class Converter {
         case "flatfile":
           flatfile();
           break;
+        case "mini":
+          flatfile();
+          break;
         case "yaml":
           yaml();
           break;

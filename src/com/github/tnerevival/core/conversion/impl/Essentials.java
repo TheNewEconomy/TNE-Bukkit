@@ -30,7 +30,7 @@ import java.io.File;
  * Created by creatorfromhell on 11/15/2016.
  **/
 public class Essentials extends Converter {
-  private File dataDirectory = new File(TNE.instance.getDataFolder() + "../Essentials/userdata");
+  private File dataDirectory = new File(TNE.instance.getDataFolder(), "../Essentials/userdata");
 
   @Override
   public String name() {

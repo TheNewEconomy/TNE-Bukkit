@@ -34,9 +34,9 @@ import java.util.UUID;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class MineConomy extends Converter {
-  private File accountsFile = new File(TNE.instance.getDataFolder() + "../MineConomy", "accounts.yml");
-  private File banksFile = new File(TNE.instance.getDataFolder() + "../MineConomy", "banks.yml");
-  private File currencyFile = new File(TNE.instance.getDataFolder() + "../MineConomy", "currencies.yml");
+  private File accountsFile = new File(TNE.instance.getDataFolder(), "../MineConomy/accounts.yml");
+  private File banksFile = new File(TNE.instance.getDataFolder(), "../MineConomy/banks.yml");
+  private File currencyFile = new File(TNE.instance.getDataFolder(), "../MineConomy/currencies.yml");
   private FileConfiguration accounts = YamlConfiguration.loadConfiguration(accountsFile);
   private FileConfiguration banks = YamlConfiguration.loadConfiguration(banksFile);
   private FileConfiguration currencies = YamlConfiguration.loadConfiguration(currencyFile);

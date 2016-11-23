@@ -36,7 +36,7 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class CraftConomy extends Converter {
-  private File configFile = new File(TNE.instance.getDataFolder() + "../Craftconomy3", "config.yml");
+  private File configFile = new File(TNE.instance.getDataFolder(), "../Craftconomy3/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String prefix = config.getString("System.Database.Prefix");

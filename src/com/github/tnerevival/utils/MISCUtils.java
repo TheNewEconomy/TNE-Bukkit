@@ -33,6 +33,18 @@ public class MISCUtils {
       TNE.instance.getLogger().info("[DEBUG MODE]" + message);
     }
   }
+
+  public static void debug(StackTraceElement[] stack) {
+    for(StackTraceElement element : stack) {
+      debug(element.toString());
+    }
+  }
+
+  public static void debug(Exception e) {
+    if(TNE.debugMode) {
+      e.printStackTrace();
+    }
+  }
   /**
    * Returns the player's account world(or the world it's meant to share accounts with if configured to do so)
    */
