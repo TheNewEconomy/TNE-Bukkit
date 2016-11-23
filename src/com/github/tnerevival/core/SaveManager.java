@@ -47,8 +47,8 @@ public class SaveManager {
       getVersion();
       TNE.instance.getLogger().info("Save file of version: " + saveVersion + " detected.");
       load();
-      convert();
     }
+    convert();
   }
 
   public void recreate() {
@@ -201,7 +201,7 @@ public class SaveManager {
       Converter converter = getConverter();
       if(converter != null) {
         converter.convert();
-        TNE.instance.getConfig().set("Core.Conversion.Conver", false);
+        TNE.instance.getConfig().set("Core.Conversion.Convert", false);
         return;
       }
       System.out.println("Invalid conversion attempted!");

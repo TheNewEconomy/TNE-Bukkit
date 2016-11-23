@@ -13,7 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class TNECommand {
 
@@ -240,6 +242,19 @@ public abstract class TNECommand {
       return sender.hasPermission(getNode());
     }
     return console();
+  }
+
+  protected Map<String, String> getArguments(String[] arguments) {
+    Map<String, String> parsed = new HashMap<>();
+    for(int i = 0; i < arguments.length; i++) {
+      if(arguments[i].contains(":")) {
+        String[] broken = arguments[i].split(":");
+        parsed.put(broken[0], broken[1]);
+        continue;
+      }
+      parsed.put(i + "", arguments[i]);
+    }
+    return parsed;
   }
 
   protected String getWorld(CommandSender sender, String name) {

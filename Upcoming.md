@@ -7,7 +7,6 @@
        and Horse.
    - Major Currency Updates
      - Ability to have multiple currencies per world.
-     - Ability to convert currencies between other currencies.
    - Ability to import user data from other economy plugins.
      - Currency supports iConomy, CraftConomy, MineConomy, BOSEconomy,
        Essentials, and FeConomy.
@@ -21,6 +20,9 @@
   - TNE API Improvements
     - Reformed API allows for greater access to TNE without the restrictions of vault
     - Additions of events for every TNE feature allows plugin developers to control TNE, almost as much as server owners
+  - Documentation Improvements
+    - Improved plugin documentation
+    - API documentation
     
 - Version Unknown
   - Administration command additions
