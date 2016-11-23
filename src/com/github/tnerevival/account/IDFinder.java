@@ -87,6 +87,10 @@ public class IDFinder {
       return UUID.fromString(identifier);
     }
 
+    if(identifier.contains("faction-")) {
+      return ecoID(identifier);
+    }
+
     if(identifier.contains("town-")) {
       return ecoID(identifier);
     }

@@ -2,12 +2,14 @@ package com.github.tnerevival.core.api;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.OfflinePlayer;
 
@@ -34,6 +36,42 @@ public class TNEAPI {
   @Deprecated
   public void createAccount(String username) {
     AccountUtils.createAccount(getPlayerID(username));
+  }
+
+  @Deprecated
+  public void createBank(String owner, String world) {
+    Bank b = new Bank(getPlayerID(owner), BankUtils.size(world, getPlayerID(owner).toString()));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  @Deprecated
+  public void addMember(String owner, String username, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.addMember(IDFinder.getID(username));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  @Deprecated
+  public void removeMember(String owner, String username, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.removeMember(IDFinder.getID(username));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  @Deprecated
+  public boolean bankExists(String owner, String world) {
+    return BankUtils.hasBank(getPlayerID(owner), world);
+  }
+
+  @Deprecated
+  public boolean bankMember(String owner, String username, String world) {
+    return BankUtils.bankMember(getPlayerID(owner), getPlayerID(username), world);
   }
 
   @Deprecated
@@ -102,6 +140,37 @@ public class TNEAPI {
 
   public void createAccount(OfflinePlayer player) {
     AccountUtils.createAccount(IDFinder.getID(player));
+  }
+
+  public void createBank(OfflinePlayer owner, String world) {
+    Bank b = new Bank(IDFinder.getID(owner), BankUtils.size(world, IDFinder.getID(owner).toString()));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  public void addMember(OfflinePlayer owner, OfflinePlayer username, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.addMember(IDFinder.getID(username));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  public void removeMember(OfflinePlayer owner, OfflinePlayer username, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.removeMember(IDFinder.getID(username));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  public boolean bankExists(OfflinePlayer owner, String world) {
+    return BankUtils.hasBank(IDFinder.getID(owner), world);
+  }
+
+  public boolean bankMember(OfflinePlayer owner, String username, String world) {
+    return BankUtils.bankMember(IDFinder.getID(owner), getPlayerID(username), world);
   }
 
   public boolean transaction(OfflinePlayer player, OfflinePlayer recipient, String world, TransactionCost cost, TransactionType type) {
@@ -194,9 +263,6 @@ public class TNEAPI {
   }
 
   public UUID getPlayerID(String username) {
-    if(username.contains("faction-")) {
-      return UUID.fromString(username.substring(8, username.length() - 1));
-    }
     return IDFinder.getID(username);
   }
 
