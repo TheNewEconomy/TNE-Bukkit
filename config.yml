@@ -374,11 +374,11 @@ Core:
         Convert: false
 
         #The economy plugin you wish you convert data from.
-        #Valid options are CraftConomy, MineConomy, FeConomy, iConomy
+        #Valid options are CraftConomy, MineConomy, FeConomy, iConomy, Essentials, BOSEconomy
         Name: iConomy
 
         #The save format you wish to convert from.
-        #Valid options are  MySQL, SQLite, H2, YAML, FlatFile, Postgre, Inventory, Experience
+        #Valid options are  MySQL, H2, YAML, FlatFile
         Format: MySQL
 
         #All conversion options.

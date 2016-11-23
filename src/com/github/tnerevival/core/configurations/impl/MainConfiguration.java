@@ -97,6 +97,15 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Database.H2.File", "Economy");
     configurations.put("Core.Database.SQLite.File", "economy.db");
 
+    configurations.put("Core.Conversion.Convert", false);
+    configurations.put("Core.Conversion.Name", "iConomy");
+    configurations.put("Core.Conversion.Format", "MySQL");
+    configurations.put("Core.Conversion.Options.Host", "localhost");
+    configurations.put("Core.Conversion.Options.Port", 3306);
+    configurations.put("Core.Conversion.Options.Database", "sql_eco");
+    configurations.put("Core.Conversion.Options.User", "root");
+    configurations.put("Core.Conversion.Options.Password", "Password");
+
     super.load(configurationFile);
   }
 

@@ -1,6 +1,8 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.conversion.Converter;
+import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.core.version.impl.Alpha2_2;
 import com.github.tnerevival.core.version.impl.Alpha3_0;
@@ -195,6 +197,35 @@ public class SaveManager {
   }
 
   private void convert() {
+    if(TNE.instance.api.getBoolean("Core.Conversion.Convert")) {
+      Converter converter = getConverter();
+      if(converter != null) {
+        converter.convert();
+        TNE.instance.getConfig().set("Core.Conversion.Conver", false);
+        return;
+      }
+      System.out.println("Invalid conversion attempted!");
+    }
+  }
+
+  public Converter getConverter() {
+    String name = TNE.instance.api.getString("Core.Conversion.Name").toLowerCase();
+
+    switch(name) {
+      case "iconomy":
+        return new iConomy();
+      case "boseconomy":
+        return new BOSEconomy();
+      case "essentials":
+        return new Essentials();
+      case "craftconomy":
+        return new CraftConomy();
+      case "mineconomy":
+        return new MineConomy();
+      case "feconomy":
+        return new FeConomy();
+    }
+    return null;
   }
 
   public void load() {

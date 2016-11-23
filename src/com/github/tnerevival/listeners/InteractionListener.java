@@ -628,7 +628,7 @@ public class InteractionListener implements Listener {
           AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
           if(TNE.instance.api.getBoolean("Mobs.Message")) {
             Message mobKilled = new Message(messageNode);
-            mobKilled.addVariable("$mob", mob);
+            mobKilled.addVariable("$mob", mob.replace(".", " "));
             mobKilled.addVariable("$reward", CurrencyFormatter.format(MISCUtils.getWorld(killer), reward));
             mobKilled.translate(MISCUtils.getWorld(killer), killer);
           }
