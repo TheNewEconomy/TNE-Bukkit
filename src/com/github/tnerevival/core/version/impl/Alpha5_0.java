@@ -55,12 +55,12 @@ import java.util.UUID;
 public class Alpha5_0 extends Version {
   @Override
   public double versionNumber() {
-    return 5.0;
+    return 5.1;
   }
 
   @Override
   public void update(double version, String type) {
-    if(version < 4.0) return;
+    if(version < 4.0 || version == 5.0) return;
 
     String table = prefix + "_INFO";
     if(type.equalsIgnoreCase("mysql")) {

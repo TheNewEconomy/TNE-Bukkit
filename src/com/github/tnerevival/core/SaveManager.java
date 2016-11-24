@@ -28,10 +28,11 @@ public class SaveManager {
     versions.put(4.2, new Alpha4_0());
     versions.put(4.3, new Alpha4_0());
     versions.put(5.0, new Alpha5_0());
+    versions.put(5.1, new Alpha5_0());
   }
 
   public Version versionInstance;
-  Double currentSaveVersion = 5.0;
+  Double currentSaveVersion = 5.1;
   Double saveVersion = 0.0;
   public String type = TNE.configurations.getString("Core.Database.Type");
   File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
