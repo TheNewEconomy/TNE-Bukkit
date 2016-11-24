@@ -152,10 +152,10 @@ public class CurrencyManager {
   }
 
   public double convert(double fromRate, double toRate, double amount) {
-    double rate = (fromRate < toRate)? toRate - fromRate : fromRate - toRate;
+    double rate = fromRate - toRate;
     double difference = amount * rate;
 
-    return (fromRate < toRate)? amount + difference : amount - difference;
+    return amount + difference;
   }
 
   public boolean contains(String world) {

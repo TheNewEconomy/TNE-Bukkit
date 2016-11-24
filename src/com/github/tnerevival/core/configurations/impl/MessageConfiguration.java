@@ -64,6 +64,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
     configurations.put("Messages.Money.NoPins", "<red>Pins are disabled in this world!");
     configurations.put("Messages.Money.NoCurrency", "<red>The currency \"$currency\" could not be found in \"$world\".");
+    configurations.put("Messages.Money.Converted", "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\".");
 
     configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
     configurations.put("Messages.Auction.Return", "<white>Your items have been returned.");

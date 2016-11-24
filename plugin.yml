@@ -64,6 +64,7 @@ permissions:
          tne.money.set: true
          tne.money.take: true
          tne.money.pay: true
+         tne.money.convert: true
          tne.package: true
          tne.package.list: true
          tne.package.buy: true
@@ -180,6 +181,7 @@ permissions:
          tne.money.set: true
          tne.money.take: true
          tne.money.pay: true
+         tne.money.convert: true
     
    tne.package.*:
       description: Gives access to all TNE Inventory Package Commands

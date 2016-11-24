@@ -31,8 +31,6 @@ import java.util.UUID;
  **/
 public class IDFinder {
 
-
-
   public static UUID ecoID(String username) {
     if(TNE.instance.manager.ecoIDs.containsKey(username)) {
       return TNE.instance.manager.ecoIDs.get(username);
