@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class TNE extends JavaPlugin {
 
@@ -40,6 +41,7 @@ public class TNE extends JavaPlugin {
   public TNEAPI api = null;
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
+  public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
   public static boolean debugMode = false;
 
   // Files & Custom Configuration Files
@@ -60,7 +62,7 @@ public class TNE extends JavaPlugin {
   public static ConfigurationManager configurations;
   public static UpdateChecker updater;
 
-  public String defaultWorld;
+  public String defaultWorld = "Default";
 
   /*
    * Instances of the main runnables.

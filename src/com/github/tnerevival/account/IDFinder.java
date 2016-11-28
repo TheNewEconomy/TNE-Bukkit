@@ -32,16 +32,20 @@ import java.util.UUID;
 public class IDFinder {
 
   public static UUID ecoID(String username) {
+    return ecoID(username, false);
+  }
+
+  public static UUID ecoID(String username, boolean skip) {
     if(TNE.instance.manager.ecoIDs.containsKey(username)) {
       return TNE.instance.manager.ecoIDs.get(username);
     }
-    UUID eco = genUUID(username);
+    UUID eco = (skip)? genUUID() : genUUID(username);
     TNE.instance.manager.ecoIDs.put(username, eco);
     return eco;
   }
 
   public static UUID genUUID(String name) {
-    UUID id = MojangAPI.getPlayerUUID(name);
+    UUID id = MojangAPI.getPlayerUUID3rd(name);
     if(id != null) return id;
 
     return genUUID();
@@ -105,7 +109,7 @@ public class IDFinder {
       return p.getUniqueId();
     }
 
-    UUID mojangID = MojangAPI.getPlayerUUID(identifier);
+    UUID mojangID = MojangAPI.getPlayerUUID3rd(identifier);
     if(mojangID == null) {
       return ecoID(identifier);
     }

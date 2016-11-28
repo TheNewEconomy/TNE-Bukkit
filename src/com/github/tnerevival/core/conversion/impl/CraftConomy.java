@@ -17,6 +17,8 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.db.H2;
@@ -24,18 +26,23 @@ import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class CraftConomy extends Converter {
+  private File tneConfigFile = new File(TNE.instance.getDataFolder(), "config.yml");
+  private FileConfiguration tneConfig = YamlConfiguration.loadConfiguration(tneConfigFile);
+
   private File configFile = new File(TNE.instance.getDataFolder(), "../Craftconomy3/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
@@ -71,6 +78,7 @@ public class CraftConomy extends Converter {
         TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", mysqlDB().results().getString("plural"));
         TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", mysqlDB().results().getString("minor"));
         TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", mysqlDB().results().getString("minorplural"));
+        TNE.instance.getConfig().save(tneConfigFile);
       }
 
       TNE.instance.manager.currencyManager.loadCurrencies();
@@ -78,7 +86,8 @@ public class CraftConomy extends Converter {
       Map<Integer, String> ids = new HashMap<>();
       mysqlDB().executeQuery("SELECT * FROM " + accountTable + ";");
       while(mysqlDB().results().next()) {
-        ids.put(mysqlDB().results().getInt("id"), mysqlDB().results().getString("uuid"));
+        String id = (mysqlDB().results().getString("uuid") == null || mysqlDB().results().getString("uuid").isEmpty())? IDFinder.ecoID(mysqlDB().results().getString("name")).toString() : mysqlDB().results().getString("uuid");
+        ids.put(mysqlDB().results().getInt("id"), id);
       }
 
       mysqlDB().executeQuery("SELECT * FROM " + balanceTable + ";");
@@ -91,16 +100,13 @@ public class CraftConomy extends Converter {
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.transaction(null,
-              ids.get(mysqlDB().results().getInt("username_id")),
-              amount,
-              currency,
-              TransactionType.MONEY_GIVE,
-              world
-          );
+          Account account = new Account(UUID.fromString(ids.get(mysqlDB().results().getInt("username_id"))));
+          account.setBalance(TNE.instance.defaultWorld, amount, currency.getName());
+          TNE.instance.manager.accounts.put(UUID.fromString(ids.get(mysqlDB().results().getInt("username_id"))), account);
         }
       }
     } catch(Exception e) {
+      MISCUtils.debug(e);
       TNE.instance.getLogger().log(Level.WARNING, "Unable to load CraftConomy Data.");
     }
   }
@@ -127,12 +133,16 @@ public class CraftConomy extends Converter {
         TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", h2DB().results().getString("plural"));
         TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", h2DB().results().getString("minor"));
         TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", h2DB().results().getString("minorplural"));
+        TNE.instance.getConfig().save(tneConfigFile);
       }
+
+      TNE.instance.manager.currencyManager.loadCurrencies();
 
       Map<Integer, String> ids = new HashMap<>();
       h2DB().executeQuery("SELECT * FROM " + accountTable + ";");
       while(h2DB().results().next()) {
-        ids.put(h2DB().results().getInt("id"), h2DB().results().getString("uuid"));
+        String id = (h2DB().results().getString("uuid") == null)? h2DB().results().getString("name") : h2DB().results().getString("uuid");
+        ids.put(h2DB().results().getInt("id"), IDFinder.getID(id).toString());
       }
 
       h2DB().executeQuery("SELECT * FROM " + balanceTable + ";");
@@ -149,7 +159,7 @@ public class CraftConomy extends Converter {
               ids.get(h2DB().results().getInt("username_id")),
               amount,
               currency,
-              TransactionType.MONEY_GIVE,
+              TransactionType.MONEY_SET,
               world
           );
         }

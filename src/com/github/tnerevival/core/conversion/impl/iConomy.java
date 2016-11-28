@@ -96,7 +96,7 @@ public class iConomy extends Converter {
             TNE.instance.manager.currencyManager.get(
                 TNE.instance.defaultWorld
             ),
-            TransactionType.MONEY_GIVE,
+            TransactionType.MONEY_SET,
             TNE.instance.defaultWorld
         );
       }

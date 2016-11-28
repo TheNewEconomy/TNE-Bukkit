@@ -36,6 +36,7 @@ public class Transaction {
   }
 
   public boolean perform() {
+    if(initiator == null && recipient == null) return false;
     boolean failed = (handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
     if(!failed) {
       result = TransactionResult.SUCCESS;

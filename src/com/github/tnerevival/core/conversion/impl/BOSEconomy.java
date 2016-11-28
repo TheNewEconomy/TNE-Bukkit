@@ -59,13 +59,13 @@ public class BOSEconomy extends Converter {
           } else {
             String eco = (acc.trim().equalsIgnoreCase(""))? id : acc;
             AccountUtils.transaction(null,
-                                     IDFinder.getID(eco).toString(),
-                                     money,
-                                     TNE.instance.manager.currencyManager.get(
-                                         TNE.instance.defaultWorld
-                                     ),
-                                     TransactionType.MONEY_GIVE,
-                                     TNE.instance.defaultWorld
+                IDFinder.getID(eco).toString(),
+                money,
+                TNE.instance.manager.currencyManager.get(
+                    TNE.instance.defaultWorld
+                ),
+                TransactionType.MONEY_GIVE,
+                TNE.instance.defaultWorld
             );
             inBlock = false;
             bank = false;

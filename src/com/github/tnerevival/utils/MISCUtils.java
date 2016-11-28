@@ -8,14 +8,13 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -242,6 +241,45 @@ public class MISCUtils {
     TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
   }
 
+  public static JSONObject[] sendPostRequest(String url, String payload) {
+    StringBuilder builder = new StringBuilder();
+    try {
+      HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+      connection.setConnectTimeout(5000);
+      connection.setReadTimeout(5000);
+      connection.setRequestMethod("POST");
+      connection.setDoOutput(true);
+      connection.setRequestProperty("Content-Type", "application/json");
+
+      OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+      out.write(payload);
+      out.flush();
+      out.close();
+
+      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String response;
+      while ((response = reader.readLine()) != null) {
+        builder.append(response);
+      }
+      connection.disconnect();
+      reader.close();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+
+    String toSplit = builder.toString().replace("[", "").replace("]", "");
+    MISCUtils.debug(toSplit);
+    String[] split = toSplit.split("},");
+    List<JSONObject> objects = new ArrayList<>();
+
+    for(String s : split) {
+      String sSuffix = (s.endsWith("}"))? s : s + "}";
+      objects.add((JSONObject)JSONValue.parse(sSuffix));
+    }
+
+    return objects.toArray(new JSONObject[objects.size()]);
+  }
+
   public static String sendGetRequest(String URL) {
     StringBuilder builder = new StringBuilder();
     try {
@@ -253,9 +291,7 @@ public class MISCUtils {
         builder.append(response);
       }
       reader.close();
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return builder.toString();
@@ -291,7 +327,9 @@ public class MISCUtils {
     return null;
   }
 
-  //ItemStack Utils
+  public static String dashUUID(String undashed) {
+    return undashed.replaceAll(TNE.uuidCreator.pattern(), "$1-$2-$3-$4-$5");
+  }
 
   public static Boolean isBoolean(String value) {
     return value.equalsIgnoreCase(String.valueOf(true)) || value.equalsIgnoreCase(String.valueOf(false));
