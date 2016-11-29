@@ -181,6 +181,10 @@ public class CurrencyManager {
     return values;
   }
 
+  public Map<String, Currency> getCurrencies() {
+    return currencies;
+  }
+
   public boolean contains(String world, String name) {
     return currencies.containsKey(world + ":" + name);
   }

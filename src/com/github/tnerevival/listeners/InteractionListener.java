@@ -97,8 +97,8 @@ public class InteractionListener implements Listener {
         if(acc.hasCredit(commandFirstArg)) {
           acc.removeCredit(commandFirstArg);
         } else {
-          if(TNE.instance.api.fundsHas(player, player.getWorld().getName(), cost)) {
-            TNE.instance.api.fundsRemove(player, player.getWorld().getName(), cost);
+          if(TNE.instance.api.fundsHas(player.getUniqueId().toString(), player.getWorld().getName(), cost)) {
+            TNE.instance.api.fundsRemove(player.getUniqueId().toString(), player.getWorld().getName(), cost);
             paid = true;
           }
         }

@@ -3,6 +3,7 @@ package com.github.tnerevival.account;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +30,10 @@ public class Bank implements Serializable {
     this.owner = owner;
     this.size = size;
     this.gold = gold;
+  }
+
+  public void addItem(int slot, ItemStack stack) {
+    items.add(new SerializableItemStack(slot, stack));
   }
 
   public SerializableItemStack getItem(int slot) {

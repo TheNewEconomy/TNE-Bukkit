@@ -69,7 +69,6 @@ public class BankUtils {
       world = MISCUtils.getWorld(id);
     }
     if(world == null) {
-      TNE.instance.getLogger().warning("***WORLD NAME IS NULL***");
       return false;
     }
     return hasBank(id, world);
@@ -109,7 +108,7 @@ public class BankUtils {
     return bank;
   }
 
-  private static Inventory getBankInventory(UUID owner, String world) {
+  public static Inventory getBankInventory(UUID owner, String world) {
 
     if(!hasBank(owner, world)) {
       return null;

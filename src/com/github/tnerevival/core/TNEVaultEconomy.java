@@ -74,7 +74,7 @@ public class TNEVaultEconomy implements Economy {
     if(hasAccount(player)) {
       return false;
     }
-    api.createAccount(player);
+    api.createAccount(player.getUniqueId().toString());
     return true;
   }
 
@@ -87,7 +87,7 @@ public class TNEVaultEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(player, amount);
+    api.fundsAdd(player.getUniqueId().toString(), amount);
     return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
   }
 
@@ -100,28 +100,28 @@ public class TNEVaultEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(player, world, amount);
+    api.fundsAdd(player.getUniqueId().toString(), world, amount);
     return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
   }
 
   @Override
   public double getBalance(OfflinePlayer player, String world) {
-    return api.getBalance(player, world);
+    return api.getBalance(player.getUniqueId().toString(), world);
   }
 
   @Override
   public double getBalance(OfflinePlayer player) {
-    return api.getBalance(player);
+    return api.getBalance(player.getUniqueId().toString());
   }
 
   @Override
   public boolean has(OfflinePlayer player, double amount) {
-    return api.fundsHas(player, amount);
+    return api.fundsHas(player.getUniqueId().toString(), amount);
   }
 
   @Override
   public boolean has(OfflinePlayer player, String world, double amount) {
-    return api.fundsHas(player, world, amount);
+    return api.fundsHas(player.getUniqueId().toString(), world, amount);
   }
 
   @Override
@@ -131,7 +131,7 @@ public class TNEVaultEconomy implements Economy {
 
   @Override
   public boolean hasAccount(OfflinePlayer player) {
-    return api.accountExists(player);
+    return api.accountExists(player.getUniqueId().toString());
   }
 
   @Override
@@ -163,7 +163,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(player, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(player, amount);
+    api.fundsRemove(player.getUniqueId().toString(), amount);
     return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
   }
 
@@ -180,7 +180,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(player, world, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(player, world, amount);
+    api.fundsRemove(player.getUniqueId().toString(), world, amount);
     return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
   }
 

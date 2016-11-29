@@ -6,14 +6,16 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
-import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
+import java.util.*;
 
 public class TNEAPI {
 
@@ -27,222 +29,201 @@ public class TNEAPI {
   /*
    * Account-related Methods
    */
-
-  @Deprecated
-  public Boolean accountExists(String username) {
-    return AccountUtils.getAccount(getPlayerID(username)) != null;
+  public UUID getID(String identifier) {
+    return IDFinder.getID(identifier);
   }
 
-  @Deprecated
-  public void createAccount(String username) {
-    AccountUtils.createAccount(getPlayerID(username));
+  public Boolean accountExists(String identifier) {
+    return AccountUtils.getAccount(IDFinder.getID(identifier)) != null;
   }
 
-  @Deprecated
+  public void createAccount(String identifier) {
+    AccountUtils.createAccount(IDFinder.getID(identifier));
+  }
+
+  public Account getAccount(String identifier) {
+    return AccountUtils.getAccount(IDFinder.getID(identifier));
+  }
+
+  public void fundsAdd(String identifier, Double amount) {
+    fundsAdd(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
+  }
+
+  public void fundsAdd(String identifier, String world, Double amount) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+  }
+
+  public void fundsAdd(String identifier, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
+  }
+
+  public Boolean fundsHas(String identifier, Double amount) {
+    return fundsHas(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
+  }
+
+  public Boolean fundsHas(String identifier, String world, Double amount) {
+    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
+  }
+
+  public Boolean fundsHas(String identifier, String world, Double amount, Currency currency) {
+    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_INQUIRY, world);
+  }
+
+  public void fundsRemove(String identifier, Double amount) {
+    fundsRemove(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
+  }
+
+  public void fundsRemove(String identifier, String world, Double amount) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
+  }
+
+  public void fundsRemove(String identifier, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_REMOVE, world);
+  }
+
+  public Double getBalance(String identifier) {
+    return AccountUtils.getFunds(IDFinder.getID(identifier));
+  }
+
+  public Double getBalance(String identifier, String world) {
+    return AccountUtils.getFunds(IDFinder.getID(identifier), world);
+  }
+
+  public Double getBalance(String identifier, String world, Currency currency) {
+    return AccountUtils.getFunds(IDFinder.getID(identifier), world, currency.getName());
+  }
+
+  public void setBalance(String identifier, Double amount) {
+    AccountUtils.setFunds(IDFinder.getID(identifier), plugin.defaultWorld, amount, getCurrency(plugin.defaultWorld).getName());
+  }
+
+  public void setBalance(String identifier, Double amount, String world) {
+    AccountUtils.setFunds(IDFinder.getID(identifier), world, amount, getCurrency(plugin.defaultWorld).getName());
+  }
+
+  public void setBalance(String identifier, Double amount, String world, Currency currency) {
+    AccountUtils.setFunds(IDFinder.getID(identifier), world, amount, currency.getName());
+  }
+
+  /*
+   * Bank-related Methods.
+   */
   public void createBank(String owner, String world) {
-    Bank b = new Bank(getPlayerID(owner), BankUtils.size(world, getPlayerID(owner).toString()));
-    Account acc = getAccount(owner);
-    acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
-  }
-
-  @Deprecated
-  public void addMember(String owner, String username, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    b.addMember(IDFinder.getID(username));
-    Account acc = getAccount(owner);
-    acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
-  }
-
-  @Deprecated
-  public void removeMember(String owner, String username, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    b.removeMember(IDFinder.getID(username));
-    Account acc = getAccount(owner);
-    acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
-  }
-
-  @Deprecated
-  public boolean bankExists(String owner, String world) {
-    return BankUtils.hasBank(getPlayerID(owner), world);
-  }
-
-  @Deprecated
-  public boolean bankMember(String owner, String username, String world) {
-    return BankUtils.bankMember(getPlayerID(owner), getPlayerID(username), world);
-  }
-
-  @Deprecated
-  public void fundsAdd(String username, Double amount) {
-    fundsAdd(username, MISCUtils.getWorld(getPlayerID(username)), amount);
-  }
-
-  @Deprecated
-  public void fundsAdd(String username, String world, Double amount) {
-    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
-  }
-
-  @Deprecated
-  public void fundsAdd(String username, String world, Double amount, Currency currency) {
-    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
-  }
-
-  @Deprecated
-  public Boolean fundsHas(String username, Double amount) {
-    return fundsHas(username, MISCUtils.getWorld(getPlayerID(username)), amount);
-  }
-
-  @Deprecated
-  public Boolean fundsHas(String username, String world, Double amount) {
-    return AccountUtils.transaction(getPlayerID(username).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
-  }
-
-  @Deprecated
-  public Boolean fundsHas(String username, String world, Double amount, Currency currency) {
-    return AccountUtils.transaction(getPlayerID(username).toString(), null, amount, currency, TransactionType.MONEY_INQUIRY, world);
-  }
-
-  @Deprecated
-  public void fundsRemove(String username, Double amount) {
-    fundsRemove(username, MISCUtils.getWorld(getPlayerID(username)), amount);
-  }
-
-  @Deprecated
-  public void fundsRemove(String username, String world, Double amount) {
-    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
-  }
-
-  @Deprecated
-  public void fundsRemove(String username, String world, Double amount, Currency currency) {
-    AccountUtils.transaction(getPlayerID(username).toString(), null, amount, currency, TransactionType.MONEY_REMOVE, world);
-  }
-
-  @Deprecated
-  public Account getAccount(String username) {
-    return AccountUtils.getAccount(getPlayerID(username));
-  }
-
-  @Deprecated
-  public Double getBalance(String username) {
-    return AccountUtils.getFunds(getPlayerID(username));
-  }
-
-  @Deprecated
-  public Double getBalance(String username, String world) {
-    return AccountUtils.getFunds(getPlayerID(username), world);
-  }
-
-  @Deprecated
-  public Double getBalance(String username, String world, Currency currency) {
-    return AccountUtils.getFunds(getPlayerID(username), world, currency.getName());
-  }
-
-  public Boolean accountExists(OfflinePlayer player) {
-    return getAccount(player) != null;
-  }
-
-  public void createAccount(OfflinePlayer player) {
-    AccountUtils.createAccount(IDFinder.getID(player));
-  }
-
-  public void createBank(OfflinePlayer owner, String world) {
     Bank b = new Bank(IDFinder.getID(owner), BankUtils.size(world, IDFinder.getID(owner).toString()));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
     TNE.instance.manager.accounts.put(acc.getUid(), acc);
   }
 
-  public void addMember(OfflinePlayer owner, OfflinePlayer username, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    b.addMember(IDFinder.getID(username));
-    Account acc = getAccount(owner);
-    acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  public boolean hasBank(String owner) {
+    return BankUtils.hasBank(IDFinder.getID(owner));
   }
-
-  public void removeMember(OfflinePlayer owner, OfflinePlayer username, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    b.removeMember(IDFinder.getID(username));
-    Account acc = getAccount(owner);
-    acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
-  }
-
-  public boolean bankExists(OfflinePlayer owner, String world) {
+  
+  public boolean hasBank(String owner, String world) {
     return BankUtils.hasBank(IDFinder.getID(owner), world);
   }
 
-  public boolean bankMember(OfflinePlayer owner, String username, String world) {
-    return BankUtils.bankMember(IDFinder.getID(owner), getPlayerID(username), world);
+  public void addMember(String owner, String identifier, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.addMember(IDFinder.getID(identifier));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
   }
 
-  public boolean transaction(OfflinePlayer player, OfflinePlayer recipient, String world, TransactionCost cost, TransactionType type) {
-    return !(player != null && IDFinder.getID(player) != null) &&
-    AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(recipient).toString(), cost, type, world);
+  public void removeMember(String owner, String identifier, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.removeMember(IDFinder.getID(identifier));
+    Account acc = getAccount(owner);
+    acc.setBank(world, b);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
   }
 
-  public void fundsAdd(OfflinePlayer player, Double amount) {
-    fundsAdd(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
+  public boolean bankMember(String owner, String identifier, String world) {
+    return BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(identifier), world);
   }
 
-  public void fundsAdd(OfflinePlayer player, String world, Double amount) {
-    if(player != null && IDFinder.getID(player) != null) {
-      AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+  public Double getBankBalance(String owner) {
+    return getBankBalance(owner, plugin.defaultWorld);
+  }
+
+  public Double getBankBalance(String owner, String world) {
+    return BankUtils.getBank(IDFinder.getID(owner), world).getGold();
+  }
+
+  public void setBankBalance(String owner, Double amount) {
+    setBankBalance(owner, plugin.defaultWorld, amount);
+  }
+
+  public void setBankBalance(String owner, String world, Double amount) {
+    BankUtils.getBank(IDFinder.getID(owner), world).setGold(amount);
+  }
+
+  public boolean bankHasItem(String owner, Integer slot) {
+    return bankHasItem(owner, plugin.defaultWorld, slot);
+  }
+
+  public boolean bankHasItem(String owner, String world, Integer slot) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+
+    return b.getItem(slot) != null && !b.getItem(slot).toItemStack().getType().equals(Material.AIR);
+  }
+
+  public ItemStack getBankItem(String owner, Integer slot) {
+    return getBankItem(owner, plugin.defaultWorld, slot);
+  }
+
+  public ItemStack getBankItem(String owner, String world, Integer slot) {
+    return BankUtils.getBank(IDFinder.getID(owner), world).getItem(slot).toItemStack();
+  }
+
+  public List<ItemStack> getBankItems(String owner) {
+    return getBankItems(owner, plugin.defaultWorld);
+  }
+
+  public List<ItemStack> getBankItems(String owner, String world) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    List<SerializableItemStack> serialized = b.getItems();
+    List<ItemStack> items = new ArrayList<>();
+    for(SerializableItemStack item : serialized) {
+      items.add(item.toItemStack());
     }
+    return items;
   }
 
-  public void fundsAdd(OfflinePlayer player, String world, Double amount, Currency currency) {
-    if(player != null && IDFinder.getID(player) != null) {
-      AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
+  public void addBankItem(String owner, Integer slot, ItemStack stack) {
+    addBankItem(owner, plugin.defaultWorld, slot, stack);
+  }
+
+  public void addBankItem(String owner, String world, Integer slot, ItemStack stack) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    b.addItem(slot, stack);
+  }
+
+  public void setBankItems(String owner, Collection<ItemStack> items) {
+    setBankItems(owner, plugin.defaultWorld, items);
+  }
+
+  public void setBankItems(String owner, String world, Collection<ItemStack> items) {
+    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    List<SerializableItemStack> serialized = b.getItems();
+    for(ItemStack item : items) {
+      serialized.add(new SerializableItemStack(serialized.size(), item));
     }
+    b.setItems(serialized);
   }
 
-  public Boolean fundsHas(OfflinePlayer player, Double amount) {
-    return fundsHas(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
+  public Inventory getBankInventory(String owner) {
+    return BankUtils.getBankInventory(IDFinder.getID(owner));
   }
 
-  public Boolean fundsHas(OfflinePlayer player, String world, Double amount) {
-    return AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount,  plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
-  }
-
-  public Boolean fundsHas(OfflinePlayer player, String world, Double amount, Currency currency) {
-    return AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount,  currency, TransactionType.MONEY_INQUIRY, world);
-  }
-
-  public void fundsRemove(OfflinePlayer player, Double amount) {
-    fundsRemove(player, MISCUtils.getWorld(getPlayerID(player.getName())), amount);
-  }
-
-  public void fundsRemove(OfflinePlayer player, String world, Double amount) {
-    AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
-  }
-
-  public void fundsRemove(OfflinePlayer player, String world, Double amount, Currency currency) {
-    AccountUtils.transaction(IDFinder.getID(player.getPlayer()).toString(), null, amount, currency, TransactionType.MONEY_REMOVE, world);
-  }
-
-  public Account getAccount(OfflinePlayer player) {
-    return AccountUtils.getAccount(IDFinder.getID(player));
-  }
-
-  public Double getBalance(OfflinePlayer player) {
-    return AccountUtils.getFunds(IDFinder.getID(player));
-  }
-
-  public Double getBalance(OfflinePlayer player, String world) {
-    return AccountUtils.getFunds(IDFinder.getID(player), world);
-  }
-
-  public Double getBalance(OfflinePlayer player, String world, Currency currency) {
-    return AccountUtils.getFunds(IDFinder.getID(player), world, currency.getName());
+  public Inventory getBankInventory(String owner, String world) {
+    return BankUtils.getBankInventory(IDFinder.getID(owner), world);
   }
 
   /*
    * Currency-related Methods.
    */
-
   public String format(Double amount) {
     return CurrencyFormatter.format(plugin.defaultWorld, amount);
   }
@@ -267,8 +248,24 @@ public class TNEAPI {
     return plugin.manager.currencyManager.get(world).shorten();
   }
 
-  public UUID getPlayerID(String username) {
-    return IDFinder.getID(username);
+  public boolean currencyExists(String world, String name) {
+    return plugin.manager.currencyManager.contains(world, name);
+  }
+
+  public Currency getCurrency(String world) {
+    return plugin.manager.currencyManager.get(world);
+  }
+
+  public Currency getCurrency(String world, String name) {
+    return plugin.manager.currencyManager.get(world, name);
+  }
+
+  public Map<String, Currency> getCurrencies() {
+    return plugin.manager.currencyManager.getCurrencies();
+  }
+
+  public List<Currency> getCurrencies(String world) {
+    return plugin.manager.currencyManager.getWorldCurrencies(world);
   }
 
   /*
