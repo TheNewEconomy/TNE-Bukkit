@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -280,6 +281,23 @@ public class MISCUtils {
     return objects.toArray(new JSONObject[objects.size()]);
   }
 
+  public static String sendSecureGetRequest(String url) {
+    StringBuilder builder = new StringBuilder();
+    try {
+      HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+      String response;
+      while ((response = reader.readLine()) != null) {
+        builder.append(response);
+      }
+      reader.close();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+    return builder.toString();
+  }
+
   public static String sendGetRequest(String URL) {
     StringBuilder builder = new StringBuilder();
     try {
@@ -292,8 +310,10 @@ public class MISCUtils {
       }
       reader.close();
     } catch (Exception e) {
-      e.printStackTrace();
+      MISCUtils.debug(e);
     }
+    MISCUtils.debug("GET VALUE");
+    MISCUtils.debug(builder.toString());
     return builder.toString();
   }
 

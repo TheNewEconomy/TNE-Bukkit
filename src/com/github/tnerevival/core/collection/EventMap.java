@@ -18,8 +18,10 @@ package com.github.tnerevival.core.collection;
 
 import com.github.tnerevival.utils.MISCUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by creatorfromhell on 11/2/2016.
@@ -27,6 +29,7 @@ import java.util.Map;
 public class EventMap<K, V> extends HashMap<K, V> {
 
   private MapListener<K, V> listener;
+  private Map<K, V> map = new HashMap<>();
 
   public EventMap() {
     super();
@@ -35,25 +38,65 @@ public class EventMap<K, V> extends HashMap<K, V> {
   @Override
   public V get(Object key) {
     MISCUtils.debug("Get called using key " + key.toString());
-    return super.get(key);
+    return map.get(key);
   }
 
   @Override
   public V put(K key, V value) {
     listener.add(key, value);
-    return super.put(key, value);
+    return map.put(key, value);
   }
 
   @Override
   public V remove(Object key) {
     listener.preRemove(key, get(key));
-    V removed = super.remove(key);
+    V removed = map.remove(key);
     listener.remove(key);
     return removed;
   }
 
+  @Override
+  public boolean containsKey(Object key) {
+    return map.containsKey(key);
+  }
+
   public EventMapIterator<Map.Entry<K, V>> getIterator() {
-    return new EventMapIterator<>(super.entrySet().iterator(), listener);
+    return new EventMapIterator<>(map.entrySet().iterator(), listener);
+  }
+
+  @Override
+  public int size() {
+    return map.size();
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return map.isEmpty();
+  }
+
+  @Override
+  public void putAll(Map<? extends K, ? extends V> m) {
+    map.putAll(m);
+  }
+
+  @Override
+  public boolean containsValue(Object value) {
+    return map.containsValue(value);
+  }
+
+  @Override
+  public Set<K> keySet() {
+    return map.keySet();
+  }
+
+  @Override
+  public Collection<V> values() {
+    return map.values();
+  }
+
+  @Override
+  public Set<Map.Entry<K, V>> entrySet() {
+    return map.entrySet();
   }
 
   public void setListener(MapListener<K, V> listener) {

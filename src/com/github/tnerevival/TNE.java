@@ -23,10 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class TNE extends JavaPlugin {
@@ -73,7 +70,7 @@ public class TNE extends JavaPlugin {
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
 
-  public static HashMap<String, UUID> uuidCache = new HashMap<>();
+  public static Map<String, UUID> uuidCache = new HashMap<>();
 
   public void onLoad() {
     instance = this;

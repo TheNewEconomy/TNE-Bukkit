@@ -45,7 +45,7 @@ public class IDFinder {
   }
 
   public static UUID genUUID(String name) {
-    UUID id = MojangAPI.getPlayerUUID3rd(name);
+    UUID id = MojangAPI.getPlayerUUID(name);
     if(id != null) return id;
 
     return genUUID();
@@ -85,6 +85,7 @@ public class IDFinder {
 
   public static UUID getID(String identifier) {
     identifier = ChatColor.stripColor(identifier);
+    MISCUtils.debug("GETID: " + identifier);
     if(isUUID(identifier)) {
       return UUID.fromString(identifier);
     }
@@ -102,15 +103,13 @@ public class IDFinder {
     }
 
     if(!TNE.instance.api.getBoolean("Core.UUID")) {
+      MISCUtils.debug("ECO ID RETURNED");
       return ecoID(identifier);
     }
-    Player p = Bukkit.getPlayer(identifier);
-    if(p != null) {
-      return p.getUniqueId();
-    }
 
-    UUID mojangID = MojangAPI.getPlayerUUID3rd(identifier);
+    UUID mojangID = MojangAPI.getPlayerUUID(identifier);
     if(mojangID == null) {
+      MISCUtils.debug("MOJANG API RETURNED NULL VALUE");
       return ecoID(identifier);
     }
     return mojangID;

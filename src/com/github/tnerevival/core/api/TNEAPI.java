@@ -134,6 +134,11 @@ public class TNEAPI {
     return AccountUtils.getFunds(getPlayerID(username), world);
   }
 
+  @Deprecated
+  public Double getBalance(String username, String world, Currency currency) {
+    return AccountUtils.getFunds(getPlayerID(username), world, currency.getName());
+  }
+
   public Boolean accountExists(OfflinePlayer player) {
     return getAccount(player) != null;
   }

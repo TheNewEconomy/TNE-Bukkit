@@ -140,7 +140,7 @@ public class Alpha5_0 extends Version {
                 acc.getUid().toString(),
                 entry.getKey(),
                 entry.getValue().toString(),
-                entry.getValue().toString(),
+                entry.getValue().toString()
             }
         );
       }
