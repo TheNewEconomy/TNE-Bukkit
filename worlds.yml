@@ -40,7 +40,7 @@ Worlds:
             #<minor.name> - The currency's minor name.
             #<major.amount> - The currency's major amount.
             #<minor.amount> - The currency's minor amount.
-            #<shorten.amount> - The currency's shortened amount.
+            #<short.amount> - The currency's shortened amount.
             #<shorten> - Added to make the outputted value shortened
             # If shortened, it will ignore the value of Format.
             #It's also possible to include all colour variables from messages.yml

@@ -84,7 +84,7 @@ public class IDFinder {
   }
 
   public static UUID getID(String identifier) {
-    identifier = ChatColor.stripColor(identifier);
+    identifier = ChatColor.stripColor(identifier.replaceAll("\\[.*?\\] ?", "")).trim();
     MISCUtils.debug("GETID: " + identifier);
     if(isUUID(identifier)) {
       return UUID.fromString(identifier);
