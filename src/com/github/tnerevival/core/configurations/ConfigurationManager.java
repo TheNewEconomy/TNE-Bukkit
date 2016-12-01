@@ -61,11 +61,11 @@ public class ConfigurationManager {
       case "messages":
         return TNE.instance.messageConfigurations;
       case "mob":
-        return TNE.instance.messageConfigurations;
+        return TNE.instance.mobConfigurations;
       case "objects":
-        return TNE.instance.messageConfigurations;
+        return TNE.instance.objectConfigurations;
       case "materials":
-        return TNE.instance.messageConfigurations;
+        return TNE.instance.materialConfigurations;
       default:
         return TNE.instance.getConfig();
     }

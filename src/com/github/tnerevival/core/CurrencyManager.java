@@ -106,7 +106,9 @@ public class CurrencyManager {
   public void add(String world, Currency currency) {
     MISCUtils.debug("[Add]Loading Currency: " + currency.getName() + " for world: " + world);
     currencies.put(world + ":" + currency.getName(), currency);
-    copyToWorlds(currency);
+    if(world.equals(TNE.instance.defaultWorld)) {
+      copyToWorlds(currency);
+    }
   }
 
   public void copyToWorlds(Currency currency) {
