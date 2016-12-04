@@ -1,6 +1,5 @@
 package com.github.tnerevival;
 
-import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.CommandManager;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.*;
@@ -139,7 +138,6 @@ public class TNE extends JavaPlugin {
     if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";
     if(updater.getRelease().equals(ReleaseType.OUTDATED)) updateMessage = "Outdated! The current build is " + updater.getLatestBuild();
     getLogger().info(updateMessage);
-    MISCUtils.debug(IDFinder.getID("[Membro]  skay_1994").toString());
   }
 
   public void onDisable() {

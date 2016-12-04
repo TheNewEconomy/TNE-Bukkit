@@ -12,10 +12,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,8 +23,20 @@ import java.util.UUID;
 public class MISCUtils {
 
   //Minecraft Version Utils
+  public static boolean isOneEight() {
+    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven();
+  }
+
+  public static boolean isOneNine() {
+    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven();
+  }
+
   public static boolean isOneTen() {
-    return Bukkit.getBukkitVersion().contains("1.10");
+    return Bukkit.getVersion().contains("1.10") || isOneEleven();
+  }
+
+  public static boolean isOneEleven() {
+    return Bukkit.getVersion().contains("1.11");
   }
 
   //True MISC Utils
@@ -332,6 +341,41 @@ public class MISCUtils {
     MISCUtils.debug("GET VALUE");
     MISCUtils.debug(builder.toString());
     return builder.toString();
+  }
+
+  public static void printMaterials() {
+    FileWriter writer = null;
+    BufferedWriter buffWriter = null;
+    try {
+      writer = new FileWriter(new File(TNE.instance.getDataFolder(), "Material.txt"));
+      buffWriter = new BufferedWriter(writer);
+    } catch(Exception e) {
+
+    }
+    for(Material mat : Material.values()) {
+      if(buffWriter != null && writer != null) {
+        try {
+          buffWriter.write("validNames.add(new MaterialNameHelper(Material." + mat.name() + ", new String[0]));" + System.lineSeparator());
+        } catch(Exception e) {
+
+        }
+      }
+    }
+    if(buffWriter != null) {
+      try {
+        buffWriter.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if(writer != null) {
+      try {
+        writer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public static UUID distringuishId(String identifier) {

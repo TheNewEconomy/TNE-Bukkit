@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.material;
 
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -186,49 +187,8 @@ public class MaterialHelper {
     validNames.add(new MaterialNameHelper(Material.COAL_BLOCK, new String[0]));
     validNames.add(new MaterialNameHelper(Material.PACKED_ICE, new String[0]));
     validNames.add(new MaterialNameHelper(Material.DOUBLE_PLANT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.STANDING_BANNER, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.WALL_BANNER, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DAYLIGHT_DETECTOR_INVERTED, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RED_SANDSTONE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RED_SANDSTONE_STAIRS, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DOUBLE_STONE_SLAB2, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.STONE_SLAB2, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SPRUCE_FENCE_GATE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BIRCH_FENCE_GATE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.JUNGLE_FENCE_GATE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DARK_OAK_FENCE_GATE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.ACACIA_FENCE_GATE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SPRUCE_FENCE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BIRCH_FENCE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.JUNGLE_FENCE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DARK_OAK_FENCE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.ACACIA_FENCE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SPRUCE_DOOR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BIRCH_DOOR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.JUNGLE_DOOR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.ACACIA_DOOR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DARK_OAK_DOOR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.END_ROD, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.CHORUS_PLANT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.CHORUS_FLOWER, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PURPUR_BLOCK, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PURPUR_PILLAR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PURPUR_STAIRS, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PURPUR_DOUBLE_SLAB, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PURPUR_SLAB, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.END_BRICKS, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BEETROOT_BLOCK, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.GRASS_PATH, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.END_GATEWAY, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.COMMAND_REPEATING, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.COMMAND_CHAIN, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.FROSTED_ICE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.MAGMA, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.NETHER_WART_BLOCK, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RED_NETHER_BRICK, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BONE_BLOCK, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.STRUCTURE_VOID, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.STRUCTURE_BLOCK, new String[0]));
+
+    //Items
     validNames.add(new MaterialNameHelper(Material.IRON_SPADE, new String[0]));
     validNames.add(new MaterialNameHelper(Material.IRON_PICKAXE, new String[0]));
     validNames.add(new MaterialNameHelper(Material.IRON_AXE, new String[0]));
@@ -382,46 +342,8 @@ public class MaterialHelper {
     validNames.add(new MaterialNameHelper(Material.QUARTZ, new String[0]));
     validNames.add(new MaterialNameHelper(Material.EXPLOSIVE_MINECART, new String[0]));
     validNames.add(new MaterialNameHelper(Material.HOPPER_MINECART, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PRISMARINE_SHARD, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PRISMARINE_CRYSTALS, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RABBIT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.COOKED_RABBIT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RABBIT_STEW, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RABBIT_FOOT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.RABBIT_HIDE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.ARMOR_STAND, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.IRON_BARDING, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.GOLD_BARDING, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DIAMOND_BARDING, new String[0]));
     validNames.add(new MaterialNameHelper(Material.LEASH, new String[0]));
     validNames.add(new MaterialNameHelper(Material.NAME_TAG, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.COMMAND_MINECART, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.MUTTON, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.COOKED_MUTTON, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BANNER, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.END_CRYSTAL, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SPRUCE_DOOR_ITEM, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BIRCH_DOOR_ITEM, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.JUNGLE_DOOR_ITEM, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.ACACIA_DOOR_ITEM, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DARK_OAK_DOOR_ITEM, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.CHORUS_FRUIT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.CHORUS_FRUIT_POPPED, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BEETROOT, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BEETROOT_SEEDS, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BEETROOT_SOUP, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.DRAGONS_BREATH, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SPLASH_POTION, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SPECTRAL_ARROW, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.TIPPED_ARROW, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.LINGERING_POTION, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SHIELD, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.ELYTRA, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BOAT_SPRUCE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BOAT_BIRCH, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BOAT_JUNGLE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BOAT_ACACIA, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BOAT_DARK_OAK, new String[0]));
     validNames.add(new MaterialNameHelper(Material.GOLD_RECORD, new String[0]));
     validNames.add(new MaterialNameHelper(Material.GREEN_RECORD, new String[0]));
     validNames.add(new MaterialNameHelper(Material.RECORD_3, new String[0]));
@@ -434,6 +356,127 @@ public class MaterialHelper {
     validNames.add(new MaterialNameHelper(Material.RECORD_10, new String[0]));
     validNames.add(new MaterialNameHelper(Material.RECORD_11, new String[0]));
     validNames.add(new MaterialNameHelper(Material.RECORD_12, new String[0]));
+
+    //1.8
+    if(MISCUtils.isOneEight()) {
+      validNames.add(new MaterialNameHelper(Material.STANDING_BANNER, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.WALL_BANNER, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DAYLIGHT_DETECTOR_INVERTED, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RED_SANDSTONE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RED_SANDSTONE_STAIRS, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DOUBLE_STONE_SLAB2, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.STONE_SLAB2, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SPRUCE_FENCE_GATE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BIRCH_FENCE_GATE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.JUNGLE_FENCE_GATE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DARK_OAK_FENCE_GATE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ACACIA_FENCE_GATE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SPRUCE_FENCE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BIRCH_FENCE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.JUNGLE_FENCE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DARK_OAK_FENCE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ACACIA_FENCE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SPRUCE_DOOR, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BIRCH_DOOR, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.JUNGLE_DOOR, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ACACIA_DOOR, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DARK_OAK_DOOR, new String[0]));
+      //Items
+      validNames.add(new MaterialNameHelper(Material.PRISMARINE_SHARD, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PRISMARINE_CRYSTALS, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RABBIT, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.COOKED_RABBIT, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RABBIT_STEW, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RABBIT_FOOT, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RABBIT_HIDE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ARMOR_STAND, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.IRON_BARDING, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.GOLD_BARDING, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DIAMOND_BARDING, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.COMMAND_MINECART, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.MUTTON, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.COOKED_MUTTON, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BANNER, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SPRUCE_DOOR_ITEM, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BIRCH_DOOR_ITEM, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.JUNGLE_DOOR_ITEM, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ACACIA_DOOR_ITEM, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DARK_OAK_DOOR_ITEM, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BOAT_SPRUCE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BOAT_BIRCH, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BOAT_JUNGLE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BOAT_ACACIA, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BOAT_DARK_OAK, new String[0]));
+    }
+
+    //1.9
+    if(MISCUtils.isOneNine()) {
+      validNames.add(new MaterialNameHelper(Material.GRASS_PATH, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.FROSTED_ICE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.CHORUS_PLANT, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.CHORUS_FLOWER, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PURPUR_BLOCK, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PURPUR_PILLAR, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PURPUR_STAIRS, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PURPUR_DOUBLE_SLAB, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PURPUR_SLAB, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.END_ROD, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.END_BRICKS, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.END_GATEWAY, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.STRUCTURE_BLOCK, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BEETROOT_BLOCK, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.COMMAND_REPEATING, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.COMMAND_CHAIN, new String[0]));
+
+      //Items
+      validNames.add(new MaterialNameHelper(Material.END_CRYSTAL, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.CHORUS_FRUIT, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.CHORUS_FRUIT_POPPED, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BEETROOT, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BEETROOT_SEEDS, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BEETROOT_SOUP, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.DRAGONS_BREATH, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SPLASH_POTION, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SPECTRAL_ARROW, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.TIPPED_ARROW, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.LINGERING_POTION, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SHIELD, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ELYTRA, new String[0]));
+    }
+
+    //1.10
+    if(MISCUtils.isOneTen()) {
+      validNames.add(new MaterialNameHelper(Material.STRUCTURE_VOID, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.MAGMA, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.NETHER_WART_BLOCK, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RED_NETHER_BRICK, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BONE_BLOCK, new String[0]));
+    }
+
+    //1.11
+    if(MISCUtils.isOneEleven()) {
+      validNames.add(new MaterialNameHelper(Material.OBSERVER, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.WHITE_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.ORANGE_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.MAGENTA_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.LIGHT_BLUE_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.YELLOW_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.LIME_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PINK_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.GRAY_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SILVER_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.CYAN_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PURPLE_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BLUE_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BROWN_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.GREEN_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.RED_SHULKER_BOX, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.BLACK_SHULKER_BOX, new String[0]));
+
+      //Items
+      validNames.add(new MaterialNameHelper(Material.TOTEM, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SHULKER_SHELL, new String[0]));
+    }
   }
 
 

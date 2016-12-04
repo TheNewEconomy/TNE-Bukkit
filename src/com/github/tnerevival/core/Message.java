@@ -23,12 +23,14 @@ public class Message {
     colours.put("<blue>", ChatColor.BLUE.toString());
     colours.put("<dark_aqua>", ChatColor.DARK_AQUA.toString());
     colours.put("<dark_blue>", ChatColor.DARK_BLUE.toString());
-    colours.put("<dark_gray>", ChatColor.GRAY.toString());
+    colours.put("<dark_gray>", ChatColor.DARK_GRAY.toString());
+    colours.put("<dark_grey>", ChatColor.DARK_GRAY.toString());
     colours.put("<dark_green>", ChatColor.DARK_GREEN.toString());
     colours.put("<dark_purple>", ChatColor.DARK_PURPLE.toString());
     colours.put("<dark_red>", ChatColor.DARK_RED.toString());
     colours.put("<gold>", ChatColor.GOLD.toString());
     colours.put("<gray>", ChatColor.GRAY.toString());
+    colours.put("<grey>", ChatColor.GRAY.toString());
     colours.put("<green>", ChatColor.GREEN.toString());
     colours.put("<purple>", ChatColor.LIGHT_PURPLE.toString());
     colours.put("<red>", ChatColor.RED.toString());
