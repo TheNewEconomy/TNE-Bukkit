@@ -232,7 +232,6 @@ public class SaveManager {
   public void load() {
     if(saveVersion < versionInstance.versionNumber() && saveVersion != 0) {
       versionInstance.update(saveVersion, type.toLowerCase());
-      return;
     }
     if(type.equalsIgnoreCase("flatfile")) {
       loadFlatFile();
