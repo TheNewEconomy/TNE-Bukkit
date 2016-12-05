@@ -60,7 +60,7 @@ public class MoneyGiveCommand extends TNECommand {
       if(IDFinder.getID(arguments[0]) != null) {
 
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
-        AccountUtils.transaction(IDFinder.getID(arguments[0]).toString(), id, value, currency, TransactionType.MONEY_GIVE, world);
+        AccountUtils.transaction(id, IDFinder.getID(arguments[0]).toString(), value, currency, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
         gave.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
         gave.addVariable("$player", arguments[0]);
