@@ -195,6 +195,6 @@ public class Bank implements Serializable {
   }
 
   public String toString() {
-    return owner.toString() + ":" + size + ":" + gold + ":" + itemsToString() + members.toString();
+    return owner.toString() + ":" + size + ":" + gold + ":" + itemsToString() + ":" + membersToString();
   }
 }

@@ -24,25 +24,50 @@ public abstract class Version {
 
   protected Database db;
 
+  protected void createDB() {
+    createDB(TNE.instance.saveManager.type.toLowerCase());
+  }
+
+  protected void createDB(String type) {
+    switch(type) {
+      case "mysql":
+        db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
+        break;
+      case "h2":
+        db = new H2(h2File, mysqlUser, mysqlPassword);
+        break;
+      case "sqlite":
+        db = new H2(h2File, mysqlUser, mysqlPassword);
+        break;
+      default:
+        db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
+    }
+  }
+
   //Helper methods to automatically cast db to proper database class
   public SQLDatabase sql() {
+    if(db == null) createDB();
     return (SQLDatabase)db;
   }
 
   public MySQL mysql() {
+    if(db == null) createDB();
     return (MySQL)db;
   }
 
   public SQLite sqlite() {
+    if(db == null) createDB();
     return (SQLite)db;
   }
 
   public H2 h2() {
+    if(db == null) createDB();
     return (H2)db;
   }
 
 
   public FlatFile flatfile() {
+    if(db == null) createDB();
     return (FlatFile)db;
   }
 

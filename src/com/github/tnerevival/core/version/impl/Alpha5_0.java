@@ -69,12 +69,14 @@ public class Alpha5_0 extends Version {
 
       table = prefix + "_ECOIDS";
       mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `username` VARCHAR(56)");
+      mysql().close();
     } else if(type.equalsIgnoreCase("h2")) {
       h2().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(id)");
       h2().executeUpdate("ALTER TABLE `" + table + "` ADD COLUMN `server_name` VARCHAR(250) AFTER `version`");
 
       table = prefix + "_ECOIDS";
       h2().executeUpdate("ALTER TABLE `" + table + "` MODIFY `username` VARCHAR(56)");
+      h2().close();
     }
   }
 
@@ -98,6 +100,7 @@ public class Alpha5_0 extends Version {
               record.getWorld()
           }
       );
+      sql().close();
     }
   }
 
@@ -105,6 +108,7 @@ public class Alpha5_0 extends Version {
   public void deleteTransaction(UUID id) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
+      sql().close();
     }
   }
 
@@ -144,6 +148,7 @@ public class Alpha5_0 extends Version {
             }
         );
       }
+      sql().close();
     }
   }
 
@@ -151,6 +156,7 @@ public class Alpha5_0 extends Version {
   public void deleteAccount(UUID id) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_USERS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().close();
     }
   }
 
@@ -179,6 +185,7 @@ public class Alpha5_0 extends Version {
               shop.sharesToString()
           }
       );
+      sql().close();
     }
   }
 
@@ -186,6 +193,7 @@ public class Alpha5_0 extends Version {
   public void deleteShop(Shop shop) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOPS WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      sql().close();
     }
   }
 
@@ -205,6 +213,7 @@ public class Alpha5_0 extends Version {
               sign.getMeta()
           }
       );
+      sql().close();
     }
   }
 
@@ -212,6 +221,7 @@ public class Alpha5_0 extends Version {
   public void deleteSign(TNESign sign) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?", new Object[] { sign.getLocation().toString() });
+      sql().close();
     }
   }
 
@@ -219,7 +229,7 @@ public class Alpha5_0 extends Version {
   public void saveAuction(Auction auction) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_AUCTIONS";
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (auction_lot, auction_added, auction_start, auction_owner, auction_world, auction_silent, auction_item, auction_cost, auction_increment, auction_global, auction_time, auction_node) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+      sql().executePreparedUpdate("INSERT INTO `" + table + "` (auction_lot, auction_added, auction_start, auction_owner, auction_world, auction_silent, auction_item, auction_cost, auction_increment, auction_global, auction_time, auction_node) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE auction_added = ?, auction_start = ?, auction_owner = ?, auction_world = ?, auction_silent = ?, auction_item = ?, auction_cost = ?, auction_increment = ?, auction_global = ?, auction_time = ?, auction_node = ?",
           new Object[] {
               auction.getLotNumber(),
@@ -247,6 +257,7 @@ public class Alpha5_0 extends Version {
               auction.getNode()
           }
       );
+      sql().close();
     }
   }
 
@@ -254,6 +265,7 @@ public class Alpha5_0 extends Version {
   public void deleteAuction(Auction auction) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_AUCTIONS WHERE auction_lot = ? ", new Object[] { auction.getLotNumber() });
+      sql().close();
     }
   }
 
@@ -261,7 +273,7 @@ public class Alpha5_0 extends Version {
   public void saveClaim(Claim claim) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_CLAIMS";
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (claim_player, claim_lot, claim_item, claim_paid, claim_cost) VALUES(?, ?, ?, ?, ?)" +
+      sql().executePreparedUpdate("INSERT INTO `" + table + "` (claim_player, claim_lot, claim_item, claim_paid, claim_cost) VALUES(?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE claim_item = ?, claim_paid = ?, claim_cost = ?",
           new Object[] {
               claim.getPlayer().toString(),
@@ -273,6 +285,7 @@ public class Alpha5_0 extends Version {
               SQLDatabase.boolToDB(claim.isPaid()),
               claim.getCost().getAmount()
           });
+      sql().close();
     }
   }
 
@@ -280,6 +293,7 @@ public class Alpha5_0 extends Version {
   public void deleteClaim(Claim claim) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_CLAIMS WHERE claim_player = ? AND claim_lot = ?", new Object[] { claim.getLot(), claim.getPlayer().toString() });
+      sql().close();
     }
   }
 
@@ -287,12 +301,13 @@ public class Alpha5_0 extends Version {
   public void saveID(String username, UUID id) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_ECOIDS";
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?",
+      sql().executePreparedUpdate("INSERT INTO `" + table + "` (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?",
           new Object[] {
               username,
               id.toString(),
               username
           });
+      sql().close();
     }
   }
 
@@ -300,6 +315,7 @@ public class Alpha5_0 extends Version {
   public void removeID(String username) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_ECOIDS WHERE username = ?", new Object[] { username });
+      sql().close();
     }
   }
 
@@ -307,6 +323,7 @@ public class Alpha5_0 extends Version {
   public void removeID(UUID id) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?", new Object[] { id.toString() });
+      sql().close();
     }
   }
 
