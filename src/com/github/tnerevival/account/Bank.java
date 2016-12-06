@@ -164,6 +164,7 @@ public class Bank implements Serializable {
 
   public void itemsFromString(String parse) {
     String[] parsed = parse.split("\\*");
+
     for (String s : parsed) {
       SerializableItemStack item = SerializableItemStack.fromString(s);
       if(!item.toItemStack().getType().equals(Material.AIR)) {
