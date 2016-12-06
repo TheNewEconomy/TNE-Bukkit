@@ -189,6 +189,7 @@ public class Transaction {
   }
 
   public void work() {
+    MISCUtils.debug("Working transaction.");
     UUID id = (recipient == null)? IDFinder.getID(initiator) : IDFinder.getID(recipient);
     if(type.equals(TransactionType.MONEY_INQUIRY)) {
       if(recipient == null) {
