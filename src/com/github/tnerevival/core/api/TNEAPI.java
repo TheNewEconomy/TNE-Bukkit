@@ -6,11 +6,17 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
+import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.signs.SignType;
+import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.SignUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -115,11 +121,11 @@ public class TNEAPI {
     TNE.instance.manager.accounts.put(acc.getUid(), acc);
   }
 
-  public boolean hasBank(String owner) {
+  public Boolean hasBank(String owner) {
     return BankUtils.hasBank(IDFinder.getID(owner));
   }
   
-  public boolean hasBank(String owner, String world) {
+  public Boolean hasBank(String owner, String world) {
     return BankUtils.hasBank(IDFinder.getID(owner), world);
   }
 
@@ -139,7 +145,7 @@ public class TNEAPI {
     TNE.instance.manager.accounts.put(acc.getUid(), acc);
   }
 
-  public boolean bankMember(String owner, String identifier, String world) {
+  public Boolean bankMember(String owner, String identifier, String world) {
     return BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(identifier), world);
   }
 
@@ -159,11 +165,11 @@ public class TNEAPI {
     BankUtils.getBank(IDFinder.getID(owner), world).setGold(amount);
   }
 
-  public boolean bankHasItem(String owner, Integer slot) {
+  public Boolean bankHasItem(String owner, Integer slot) {
     return bankHasItem(owner, plugin.defaultWorld, slot);
   }
 
-  public boolean bankHasItem(String owner, String world, Integer slot) {
+  public Boolean bankHasItem(String owner, String world, Integer slot) {
     Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
 
     return b.getItem(slot) != null && !b.getItem(slot).toItemStack().getType().equals(Material.AIR);
@@ -248,7 +254,7 @@ public class TNEAPI {
     return plugin.manager.currencyManager.get(world).shorten();
   }
 
-  public boolean currencyExists(String world, String name) {
+  public Boolean currencyExists(String world, String name) {
     return plugin.manager.currencyManager.contains(world, name);
   }
 
@@ -266,6 +272,50 @@ public class TNEAPI {
 
   public List<Currency> getCurrencies(String world) {
     return plugin.manager.currencyManager.getWorldCurrencies(world);
+  }
+
+  /*
+   * Shop-related Methods.
+   */
+  public Boolean shopExists(String name) {
+    return shopExists(name, plugin.defaultWorld);
+  }
+
+  public Boolean shopExists(String name, String world) {
+    return Shop.exists(name, world);
+  }
+
+  public Shop getShop(String name) {
+    return getShop(name, plugin.defaultWorld);
+  }
+
+  public Shop getShop(String name, String world) {
+    return Shop.getShop(name, world);
+  }
+
+  /*
+   * Sign-related Methods.
+   */
+  public Boolean validSign(Location location) {
+    return SignUtils.validSign(location);
+  }
+
+  public TNESign getSign(Location location) {
+    return SignUtils.getSign(new SerializableLocation(location));
+  }
+
+  public TNESign createInstance(SignType type, String owner) {
+    return createInstance(type, IDFinder.getID(owner));
+  }
+
+  public TNESign createInstance(SignType type, UUID owner) {
+    return SignUtils.instance(type.getName(), owner);
+  }
+
+  public Boolean removeSign(Location location) {
+    if(!validSign(location)) return false;
+    SignUtils.removeSign(new SerializableLocation(location));
+    return true;
   }
 
   /*
@@ -338,7 +388,7 @@ public class TNEAPI {
     return (Integer)getConfiguration(configuration, world, player);
   }
 
-  public boolean hasConfiguration(String configuration) {
+  public Boolean hasConfiguration(String configuration) {
     if(configuration.toLowerCase().contains("database")) return false;
     return TNE.configurations.hasConfiguration(configuration);
   }

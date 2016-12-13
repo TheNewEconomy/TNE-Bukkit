@@ -45,7 +45,9 @@ public abstract class Converter {
     return (SQLite)db;
   }
 
-  public H2 h2DB() { return (H2)db; }
+  public H2 h2DB() {
+    return (H2)db;
+  }
 
   public FlatFile flatfileDB() {
     return (FlatFile)db;
