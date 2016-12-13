@@ -17,8 +17,6 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.db.MySQL;
@@ -28,7 +26,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/13/2016.
@@ -68,11 +65,7 @@ public class MineConomy extends Converter {
         if(TNE.instance.manager.currencyManager.contains(TNE.instance.defaultWorld, currencyName)) {
           currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, currencyName);
         }
-
-        UUID id = IDFinder.getID(username);
-        Account account = new Account(IDFinder.getID(username));
-        account.setBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), balance), currency.getName());
-        TNE.instance.manager.accounts.put(id, account);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), balance));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -85,7 +78,6 @@ public class MineConomy extends Converter {
     String base = "Accounts";
     Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
     for(String username : accounts.getConfigurationSection(base).getKeys(false)) {
-      UUID id = IDFinder.getID(username);
 
       double amount = accounts.getDouble(base + "." + username + ".Balance");
       String currencyPath = "Currencies." + accounts.getString(base + "." + username + ".Currency") + ".Value";
@@ -96,18 +88,14 @@ public class MineConomy extends Converter {
       if(TNE.instance.manager.currencyManager.contains(TNE.instance.defaultWorld, accounts.getString(base + "." + username + ".Currency"))) {
         currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, accounts.getString(base + "." + username + ".Currency"));
       }
-
-      Account acc = new Account(id);
-      acc.setBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), amount), currency.getName());
-      TNE.instance.manager.accounts.put(id, acc);
+      AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), amount));
     }
 
     base = "Banks";
     for(String bank : banks.getConfigurationSection(base).getKeys(false)) {
       base = "Banks." + bank + ".Accounts";
       for(String username : banks.getConfigurationSection(base).getKeys(false)) {
-        UUID id = IDFinder.getID(username);
-        AccountUtils.transaction(null, id.toString(), banks.getDouble(base + "." + username + ".Balance"), com.github.tnerevival.core.transaction.TransactionType.MONEY_GIVE, TNE.instance.defaultWorld);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), banks.getDouble(base + "." + username + ".Balance"));
       }
     }
   }

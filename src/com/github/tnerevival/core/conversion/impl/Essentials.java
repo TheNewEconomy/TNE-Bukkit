@@ -17,7 +17,6 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
 import com.github.tnerevival.utils.AccountUtils;
@@ -47,7 +46,7 @@ public class Essentials extends Converter {
       Double money = acc.contains("money")? acc.getDouble("money") : 0.0;
       String currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName();
 
-      AccountUtils.setFunds(IDFinder.getID(acc.getString("lastAccountName")), TNE.instance.defaultWorld, money, currency);
+      AccountUtils.convertedAdd(acc.getString("lastAccountName"), TNE.instance.defaultWorld, currency, money);
     }
   }
 }

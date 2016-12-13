@@ -17,18 +17,16 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.db.SQLite;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
+import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/13/2016.
@@ -57,11 +55,7 @@ public class FeConomy extends Converter {
       while (mysqlDB().results().next()) {
         String username = mysqlDB().results().getString(nameColumn);
         Double balance = mysqlDB().results().getDouble(balanceColumn);
-
-        UUID id = IDFinder.getID(username);
-        Account account = new Account(IDFinder.getID(username));
-        account.setBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), balance), currency.getName());
-        TNE.instance.manager.accounts.put(id, account);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -77,11 +71,7 @@ public class FeConomy extends Converter {
       while (sqliteDB().results().next()) {
         String username = sqliteDB().results().getString(nameColumn);
         Double balance = sqliteDB().results().getDouble(balanceColumn);
-
-        UUID id = IDFinder.getID(username);
-        Account account = new Account(IDFinder.getID(username));
-        account.setBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), balance), currency.getName());
-        TNE.instance.manager.accounts.put(id, account);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
       }
     } catch(Exception e) {
       e.printStackTrace();

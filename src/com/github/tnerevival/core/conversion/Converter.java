@@ -19,7 +19,9 @@ package com.github.tnerevival.core.conversion;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.db.*;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
+import com.github.tnerevival.utils.MISCUtils;
 
+import java.io.File;
 import java.util.logging.Level;
 
 /**
@@ -52,6 +54,11 @@ public abstract class Converter {
   public abstract String name();
 
   public void convert() {
+    try {
+      new File(TNE.instance.getDataFolder(), "conversion.yml").createNewFile();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
     try {
       switch (type.toLowerCase()) {
         case "mysql":

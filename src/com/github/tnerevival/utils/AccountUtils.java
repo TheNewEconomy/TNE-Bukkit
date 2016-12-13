@@ -2,6 +2,7 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
 import com.github.tnerevival.core.event.transaction.TNETransactionEvent;
@@ -11,7 +12,11 @@ import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.util.Set;
 import java.util.UUID;
 
 public class AccountUtils {
@@ -28,6 +33,51 @@ public class AccountUtils {
     MISCUtils.debug(e.getId() + "");
     Bukkit.getServer().getPluginManager().callEvent(e);
     TNE.instance.manager.accounts.put(e.getId(), e.getAccount());
+
+    String identifier = (IDFinder.ecoToUsername(id) != null)? IDFinder.ecoToUsername(id) : id.toString();
+    convertAccount(identifier);
+  }
+
+  public static void convertAccount(String username) {
+    UUID id = IDFinder.getID(username);
+    Account a = getAccount(id);
+    if(new File(TNE.instance.getDataFolder(), "conversion.yml").exists()) {
+      File conversionFile = new File(TNE.instance.getDataFolder(), "conversion.yml");
+      FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
+
+      if (conversion.contains("Converted." + username) || conversion.contains("Converted." + id.toString())) {
+        String base = "Converted." + ((conversion.contains("Converted." + username)) ? username : id.toString());
+
+        Set<String> worlds = conversion.getConfigurationSection(base + ".Funds").getKeys(false);
+
+        for (String world : worlds) {
+          String section = base + ".Funds." + world;
+
+          Set<String> currencies = conversion.getConfigurationSection(section).getKeys(false);
+
+          for(String currency : currencies) {
+
+            Double amount = (conversion.contains(section + "." + currency + ".Amount")) ? conversion.getDouble(section + "." + currency + ".Amount") : 0.0;
+            a.setBalance(world, amount, currency);
+          }
+        }
+        conversion.set(base, null);
+      }
+      TNE.instance.manager.accounts.put(id, a);
+    }
+  }
+
+  public static void convertedAdd(String identifier, String world, String currency, Double amount) {
+    File conversionFile = new File(TNE.instance.getDataFolder(), "conversion.yml");
+    FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
+
+    Double starting = 0.0;
+
+    if(conversion.contains("Converted." + identifier + "." + world + "." + currency + ".Amount")) {
+      starting = conversion.getDouble("Converted." + identifier + "." + world + "." + currency + ".Amount");
+    }
+
+    conversion.set("Converted." + identifier + "." + world + "." + currency + ".Amount", (starting + amount));
   }
 
   public static Account getAccount(UUID id) {

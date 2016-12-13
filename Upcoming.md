@@ -8,5 +8,7 @@
     - API documentation
     
 - Version Unknown
+  - SQL Improvements
+    - Ability to allow caching for SQL-based formats
   - Administration command additions
     - Ability to modify configurations in-game

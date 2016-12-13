@@ -17,10 +17,8 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
-import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -58,15 +56,7 @@ public class BOSEconomy extends Converter {
             lowerID = "";
           } else {
             String eco = (acc.trim().equalsIgnoreCase(""))? id : acc;
-            AccountUtils.transaction(null,
-                IDFinder.getID(eco).toString(),
-                money,
-                TNE.instance.manager.currencyManager.get(
-                    TNE.instance.defaultWorld
-                ),
-                TransactionType.MONEY_GIVE,
-                TNE.instance.defaultWorld
-            );
+            AccountUtils.convertedAdd(eco, TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), money);
             inBlock = false;
             bank = false;
             money = 0.0;

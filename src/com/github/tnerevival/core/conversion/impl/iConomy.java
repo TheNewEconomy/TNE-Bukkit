@@ -17,13 +17,10 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
-import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,7 +28,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -57,11 +53,7 @@ public class iConomy extends Converter {
       while (mysqlDB().results().next()) {
         String username = mysqlDB().results().getString("username");
         Double balance = mysqlDB().results().getDouble("balance");
-
-        UUID id = IDFinder.getID(username);
-        Account account = new Account(IDFinder.getID(username));
-        account.setBalance(TNE.instance.defaultWorld, balance, currency.getName());
-        TNE.instance.manager.accounts.put(id, account);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -86,19 +78,8 @@ public class iConomy extends Converter {
       String line;
       while((line = reader.readLine()) != null) {
         String[] split = line.split(" ");
-        UUID id = IDFinder.getID(split[0].trim());
         Double money = Double.parseDouble(split[1].split(":")[1]);
-
-
-        AccountUtils.transaction(null,
-            id.toString(),
-            money,
-            TNE.instance.manager.currencyManager.get(
-                TNE.instance.defaultWorld
-            ),
-            TransactionType.MONEY_SET,
-            TNE.instance.defaultWorld
-        );
+        AccountUtils.convertedAdd(split[0].trim(), TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), money);
       }
     } catch(Exception e) {
       TNE.instance.getLogger().log(Level.WARNING, "Unable to load iConomy Data.");

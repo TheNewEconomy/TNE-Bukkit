@@ -333,21 +333,6 @@ Core:
             #The file to which all the data will be saved
             File: economy.tne
 
-        #All configurations relating to direct-SQL transactions for data
-        Transactions:
-
-            #Whether or not direct-SQL transactions are enabled.
-            Enabled: true
-
-            #All configurations relating to SQL-based Database data caching
-            Caching:
-
-                #Whether or not caching is enabled.
-                Enabled: true
-
-                #The rate(in seconds) at which data from the cache is stored in the database.
-                Update: 600
-
             
         #All configurations relating to the MySQL Database
         MySQL:

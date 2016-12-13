@@ -17,14 +17,12 @@
 package com.github.tnerevival.core.conversion.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.db.H2;
 import com.github.tnerevival.core.db.MySQL;
 import com.github.tnerevival.core.exception.InvalidDatabaseImport;
-import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,7 +31,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -100,9 +97,7 @@ public class CraftConomy extends Converter {
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          Account account = new Account(UUID.fromString(ids.get(mysqlDB().results().getInt("username_id"))));
-          account.setBalance(TNE.instance.defaultWorld, amount, currency.getName());
-          TNE.instance.manager.accounts.put(UUID.fromString(ids.get(mysqlDB().results().getInt("username_id"))), account);
+          AccountUtils.convertedAdd(ids.get(mysqlDB().results().getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
         }
       }
     } catch(Exception e) {
@@ -155,13 +150,7 @@ public class CraftConomy extends Converter {
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.transaction(null,
-              ids.get(h2DB().results().getInt("username_id")),
-              amount,
-              currency,
-              TransactionType.MONEY_SET,
-              world
-          );
+          AccountUtils.convertedAdd(ids.get(h2DB().results().getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
         }
       }
     } catch(Exception e) {
