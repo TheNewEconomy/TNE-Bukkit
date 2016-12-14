@@ -2,9 +2,11 @@ package com.github.tnerevival.core.transaction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.core.event.transaction.TNETransactionEvent;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
@@ -43,6 +45,10 @@ public class Transaction {
     }
     boolean failed = (handleInitiator() == TransactionResult.FAILED || handleRecipient() == TransactionResult.FAILED);
     if(!failed) {
+      TNETransactionEvent e = new TNETransactionEvent(this);
+      Bukkit.getServer().getPluginManager().callEvent(e);
+      if(e.isCancelled()) return false;
+
       result = TransactionResult.SUCCESS;
       work();
       MISCUtils.debug("ADDING TRANSACTION TO HISTORY.");

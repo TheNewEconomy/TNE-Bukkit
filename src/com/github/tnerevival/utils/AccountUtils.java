@@ -5,7 +5,6 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
-import com.github.tnerevival.core.event.transaction.TNETransactionEvent;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.transaction.Transaction;
 import com.github.tnerevival.core.transaction.TransactionCost;
@@ -157,10 +156,7 @@ public class AccountUtils {
   public static boolean transaction(String initiator, String recipient, TransactionCost cost, TransactionType type, String world) {
     Transaction t = new Transaction(initiator, recipient, cost, type, world);
 
-    TNETransactionEvent e = new TNETransactionEvent(t);
-    Bukkit.getServer().getPluginManager().callEvent(e);
-
-    return !e.isCancelled() && t.perform();
+    return t.perform();
   }
 
   public static Double getFunds(UUID id) {

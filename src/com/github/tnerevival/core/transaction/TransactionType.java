@@ -31,4 +31,8 @@ public enum TransactionType {
     }
     return MONEY_SET;
   }
+
+  public boolean isBank() {
+    return this.equals(BANK_INQUIRY) || this.equals(BANK_DEPOSIT) || this.equals(BANK_WITHDRAWAL);
+  }
 }
