@@ -22,6 +22,10 @@ package com.github.tnerevival.core.collection;
 public interface MapListener<K, V> {
 
   void add(K key, V value);
+  V get(Object key);
+  int size();
+  boolean isEmpty();
+  boolean containsKey(Object key);
   void preRemove(Object key, V value);
   void remove(Object key);
 }

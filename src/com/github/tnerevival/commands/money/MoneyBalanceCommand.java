@@ -41,7 +41,7 @@ public class MoneyBalanceCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     String world = (arguments.length >= 1)? getWorld(sender, arguments[0]) : getWorld(sender);
-    String currencyName = (arguments.length >= 2)? arguments[1] : "Default";
+    String currencyName = (arguments.length >= 2)? arguments[1] : TNE.instance.manager.currencyManager.get(world).getName();
     Currency currency = getCurrency(world, currencyName);
 
     MISCUtils.debug(AccountUtils.getAccount(IDFinder.getID(player)).getBalances().toString());

@@ -41,7 +41,7 @@ public class MoneyTakeCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String world = (arguments.length >= 3)? getWorld(sender, arguments[2]) : getWorld(sender);
-      String currencyName = (arguments.length >= 4)? arguments[3] : "Default";
+      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance.manager.currencyManager.get(world).getName();
       Currency currency = getCurrency(world, currencyName);
       Double value = CurrencyFormatter.translateDouble(arguments[1], world);
 

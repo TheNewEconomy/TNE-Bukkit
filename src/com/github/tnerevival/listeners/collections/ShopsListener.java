@@ -30,6 +30,26 @@ public class ShopsListener implements MapListener {
   }
 
   @Override
+  public Object get(Object key) {
+    return null;
+  }
+
+  @Override
+  public int size() {
+    return 0;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
+  }
+
+  @Override
+  public boolean containsKey(Object key) {
+    return false;
+  }
+
+  @Override
   public void preRemove(Object key, Object value) {
     TNE.instance.saveManager.versionInstance.deleteShop((Shop)value);
   }
