@@ -35,42 +35,101 @@ public class TNEAPI {
   /*
    * Account-related Methods
    */
+
+  /**
+   * Used to get a player's UUID from their username or string version of UUID.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @return The UUID for the identifier, or null if it doesn't exist.
+   */
   public UUID getID(String identifier) {
     return IDFinder.getID(identifier);
   }
 
+  /**
+   * Used to determine if a player has an economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @return True if the account exists, otherwise false.
+   */
   public Boolean accountExists(String identifier) {
     return AccountUtils.getAccount(IDFinder.getID(identifier)) != null;
   }
 
+  /**
+   * Create an economy account for the player using the specific identifier.
+   * @param identifier The player's username of stringified version of their UUID.
+   */
   public void createAccount(String identifier) {
     AccountUtils.createAccount(IDFinder.getID(identifier));
   }
 
+  /**
+   * Used to get a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @return The player's account if it exists, otherwise null.
+   */
   public Account getAccount(String identifier) {
     return AccountUtils.getAccount(IDFinder.getID(identifier));
   }
 
+  /**
+   * Add funds to a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The amount of funds to add to the player's account.
+   */
   public void fundsAdd(String identifier, Double amount) {
     fundsAdd(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
   }
 
+  /**
+   * Add funds to a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to add to the player's account.
+   */
   public void fundsAdd(String identifier, String world, Double amount) {
     AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
   }
 
+  /**
+   * Add funds to a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to add to the player's account.
+   * @param currency The currency of the funds.
+   */
   public void fundsAdd(String identifier, String world, Double amount, Currency currency) {
     AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
   }
 
+  /**
+   * Determines if the specified player has the specified amount of funds.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The amount of funds to add to the player's account.
+   * @return Whether or not this player has the specified funds.
+   */
   public Boolean fundsHas(String identifier, Double amount) {
     return fundsHas(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
   }
 
+  /**
+   * Determines if the specified player has the specified amount of funds.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to add to the player's account.
+   * @return Whether or not this player has the specified funds.
+   */
   public Boolean fundsHas(String identifier, String world, Double amount) {
     return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
   }
 
+  /**
+   * Determines if the specified player has the specified amount of funds.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to add to the player's account.
+   * @param currency The currency of the funds.
+   * @return Whether or not this player has the specified funds.
+   */
   public Boolean fundsHas(String identifier, String world, Double amount, Currency currency) {
     return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_INQUIRY, world);
   }
