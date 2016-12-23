@@ -33,7 +33,7 @@ every detail for each feature. Make sure to check out these pages to properly in
 * [Signs](Soon.md)
 
 If you're a developer these pages may interest you too:
-* [Events](Soon.md)
+* [Events](Events.md)
 * [API](API.md)
 
 ###Advanced Uses
