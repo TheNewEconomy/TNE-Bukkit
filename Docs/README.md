@@ -9,7 +9,7 @@
 So, you're ready to start working on your servers economy? Well, you've come to the right place! I'll presume
 you've already downloaded TNE, and have basic knowledge of configuration Bukkit plugins, which also includes
 configuring how your data is saved. If you need more information on configuring your database settings. Check
-out the [Database Page](Datbase.md), and if you need more information on installing TNE check out the Installation
+out the [Database Page](Database.md), and if you need more information on installing TNE check out the Installation
 section below.
 
 ###Installation
@@ -26,7 +26,8 @@ From here, you have an incredible amount of control over your server's new econo
 every detail for each feature. Make sure to check out these pages to properly interact with your new economy:
 * [Commands](Commands.md)
 * [Permissions](Permissions.md)
-* [Multi-Currency](Soon.md)
+* [Currency System](Currency.md)
+* [Auction](Soon.md)
 * [Banks](Soon.md)
 * [Shops](Soon.md)
 * [Signs](Soon.md)
@@ -36,7 +37,7 @@ If you're a developer these pages may interest you too:
 * [API](API.md)
 
 ###Advanced Uses
-For details about advanced configuration of your economy check out the [Advanced Page](Soon.md).
+For details about advanced configuration of your economy check out the [Advanced Page](Advanced.md).
 
 ###Extras
 Here's a few extra pages for your reference.
