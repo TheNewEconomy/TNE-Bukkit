@@ -24,69 +24,6 @@ public class MojangAPI {
     return id;
   }
 
-  /*public static UUID getPlayerUUID3rd(String name) {
-    if(TNE.uuidCache.containsKey(name)) {
-      MISCUtils.debug("RETURNING CACHE VALUE");
-      return TNE.uuidCache.get(name);
-    }
-    JSONObject object = send("http://mcapi.de/api/user/" + name);
-    MISCUtils.debug(object.toJSONString());
-    UUID id = (object != null && object.containsKey("uuid")) ? UUID.fromString(MISCUtils.dashUUID(object.get("uuid").toString())) : IDFinder.ecoID(name, true);
-
-    if(id != null) {
-      TNE.uuidCache.put(name, id);
-    }
-    return id;
-  }*/
-
-  /*public static Map<String, UUID> convertIDS(List<String> usernames) {
-    Map<String, UUID> ids = new HashMap<>();
-    int limit = 600;
-    List<String> query = new ArrayList<>();
-    for(int i = 0; i < usernames.size(); i++) {
-      query.add(usernames.get(i));
-      if(limit == 1) {
-        ids.putAll(MojangAPI.bulkUUID(query));
-        query = new ArrayList<>();
-        limit = 601;
-      }
-      limit--;
-    }
-
-    for(Map.Entry<String, UUID> entry : ids.entrySet()) {
-      if(entry.getValue() == null) {
-        UUID id = IDFinder.ecoID(entry.getKey(), true);
-        ids.put(entry.getKey(), id);
-        TNE.uuidCache.put(entry.getKey(), id);
-      }
-    }
-    return ids;
-  }
-
-  public static Map<String, UUID> bulkUUID(List<String> usernames) {
-    Map<String, UUID> toReturn = new HashMap<>();
-    for(String s : usernames) {
-      toReturn.put(s, null);
-    }
-
-    JSONArray jsonArray = new JSONArray();
-    jsonArray.addAll(usernames);
-    JSONObject[] array = MISCUtils.sendPostRequest("https://api.mojang.com/profiles/minecraft", jsonArray.toJSONString());
-
-    for(JSONObject object : array) {
-      if(object != null) {
-        String name = object.get("name").toString();
-        String id = MISCUtils.dashUUID(object.get("id").toString());
-        if(toReturn.containsKey(name)) {
-          toReturn.put(name, UUID.fromString(id));
-        }
-
-        TNE.uuidCache.put(name, UUID.fromString(id));
-      }
-    }
-    return toReturn;
-  }*/
-
   private static JSONObject send(String url) {
     return (JSONObject) JSONValue.parse(MISCUtils.sendGetRequest(url));
   }

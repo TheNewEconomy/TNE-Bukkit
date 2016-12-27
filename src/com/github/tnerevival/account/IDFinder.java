@@ -65,7 +65,7 @@ public class IDFinder {
   }
 
   public static UUID getID(Player player) {
-    return getID(player.getDisplayName());
+    return getID(player.getName());
   }
 
   public static UUID getID(OfflinePlayer player) {
