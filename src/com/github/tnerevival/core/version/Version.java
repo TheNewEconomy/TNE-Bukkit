@@ -84,8 +84,10 @@ public abstract class Version {
   public abstract void deleteSign(TNESign sign);
   public abstract void saveAuction(Auction auction);
   public abstract void deleteAuction(Auction auction);
+  public abstract void loadClaim(UUID owner, Integer lot);
   public abstract void saveClaim(Claim claim);
   public abstract void deleteClaim(Claim claim);
+  public abstract void loadID(String username);
   public abstract void saveID(String username, UUID id);
   public abstract void removeID(String username);
   public abstract void removeID(UUID id);
