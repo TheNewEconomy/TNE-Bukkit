@@ -64,14 +64,38 @@ public class Account implements Serializable {
   }
 
   public void balancesFromString(String from) {
-    String[] b = from.split("\\-");
+    String[] worlds = from.split("\\-");
 
-    for(String s : b) {
-      String[] balance = s.split("\\,");
+    List<Integer> combine = new ArrayList<>();
+    for(int i = 0; i < worlds.length; i++) {
+      String world = worlds[i];
+      if(combine.size() > 0 && world.contains(":")) {
+        combine.add(i);
+        world = combine(worlds, combine);
+        combine = new ArrayList<>();
+      }
+
+      if(!world.contains(":")) {
+        combine.add(i);
+        continue;
+      }
+      String[] balance = world.split("\\,");
       if(balance.length == 2) {
         balances.put(balance[0], Double.valueOf(balance[1]));
       }
     }
+  }
+
+  public String combine(String[] values, List<Integer> indexes) {
+    StringBuilder builder = new StringBuilder();
+
+    int i = 0;
+    for(Integer in : indexes) {
+      if(i > 0) builder.append("-");
+      builder.append(values[in]);
+      i++;
+    }
+    return builder.toString();
   }
 
   public void balancesFromStringOld(String from) {
