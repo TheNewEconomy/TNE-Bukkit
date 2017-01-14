@@ -270,6 +270,11 @@ public class Alpha5_0 extends Version {
   }
 
   @Override
+  public void loadClaim(UUID owner, Integer lot) {
+
+  }
+
+  @Override
   public void saveClaim(Claim claim) {
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_CLAIMS";
@@ -295,6 +300,11 @@ public class Alpha5_0 extends Version {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_CLAIMS WHERE claim_player = ? AND claim_lot = ?", new Object[] { claim.getLot(), claim.getPlayer().toString() });
       sql().close();
     }
+  }
+
+  @Override
+  public void loadID(String username) {
+
   }
 
   @Override
