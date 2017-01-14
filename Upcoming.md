@@ -13,6 +13,7 @@
   - Lotteries
   - Player Trading(depending on whether it is a wanted feature)
   - PHP class for converting TNE data to PHP class objects
+  - Separation of Banks into an Item Bank, and Money Vault
 - Alpha 6.1 "Stability"
   - Major stability improvements
   - Bug fixes galore
