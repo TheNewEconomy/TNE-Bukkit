@@ -28,12 +28,17 @@ Some basic information you might want to look over.
 Default Configurations
 ----------
 - [config.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/config.yml)
+- [materials.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/materials.yml)
+- [messages.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/messages.yml)
 - [mobs.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/mobs.yml)
+- [objects.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/objects.yml)
+- [players.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/players.yml)
 - [worlds.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/worlds.yml)
 
 Features
 ----------
-- [Features](https://creatorfromhell.com/wiki/TheNewEconomy/Features/) 
+- [Features](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Features.md) 
+- [Planned](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Upcoming.md) 
 
 Requirements
 ----------

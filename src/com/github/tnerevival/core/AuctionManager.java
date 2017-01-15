@@ -25,7 +25,7 @@ import java.util.*;
  * Created by Daniel on 10/17/2016.
  */
 public class AuctionManager {
-  private EventMap<Integer, Auction> auctionQueue = new EventMap<>();
+  public EventMap<Integer, Auction> auctionQueue = new EventMap<>();
   private EventMap<Integer, Auction> active = new EventMap<>();
   public EventList<Claim> unclaimed = new EventList<>();
 

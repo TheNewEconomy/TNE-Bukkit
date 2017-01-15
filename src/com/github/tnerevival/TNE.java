@@ -74,6 +74,7 @@ public class TNE extends JavaPlugin {
   private InterestWorker interestWorker;
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
+  private CacheWorker cacheWorker;
 
   public static Map<String, UUID> uuidCache = new HashMap<>();
 
@@ -103,6 +104,7 @@ public class TNE extends JavaPlugin {
 
     auctionWorker = new AuctionWorker(this);
     saveWorker = new SaveWorker(this);
+    cacheWorker = new CacheWorker(this);
     interestWorker = new InterestWorker(this);
     invWorker = new InventoryTimeWorker(this);
     if(configurations.getBoolean("Core.AutoSaver.Enabled")) {
@@ -111,6 +113,10 @@ public class TNE extends JavaPlugin {
 
     if(configurations.getBoolean("Core.Bank.Interest.Enabled")) {
       interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
+    }
+
+    if(!saveFormat.equalsIgnoreCase("flatfile") && cache) {
+      cacheWorker.runTaskTimer(this, update * 20, update * 20);
     }
 
     if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {

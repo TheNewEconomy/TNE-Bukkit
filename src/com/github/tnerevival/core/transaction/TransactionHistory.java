@@ -32,6 +32,10 @@ public class TransactionHistory {
     records.setListener(TransactionManager.transListener);
   }
 
+  public EventList<Record> raw() {
+    return records;
+  }
+
   public void add(Record record) {
     records.add(record);
   }
