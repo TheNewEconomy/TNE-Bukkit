@@ -10,6 +10,11 @@ About
 ----------
 The New Economy was originally a hMod Plugin made by Noobaholic. After reading multiple requests on the Bukkit Forums for the plugin, which Noobaholic replied that he was too busy at the moment to port it to Bukkit, I decided to port it to Bukkit. The New Economy is a feature-packed economy plugin that is currently still under heavy development. I hope to provide a visual data editor for TNE flat file saves soon.  
 
+
+Build Status
+--------------
+[![Build Status](https://travis-ci.org/TheNewEconomy/TNE-Bukkit.svg?branch=master)](https://travis-ci.org/TheNewEconomy/TNE-Bukkit)
+
 Basic Information
 ----------
 Some basic information you might want to look over.
