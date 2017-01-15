@@ -4,9 +4,6 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
-import com.github.tnerevival.core.version.impl.Alpha2_2;
-import com.github.tnerevival.core.version.impl.Alpha3_0;
-import com.github.tnerevival.core.version.impl.Alpha4_0;
 import com.github.tnerevival.core.version.impl.Alpha5_0;
 
 import java.io.*;
@@ -21,12 +18,6 @@ public class SaveManager {
 
   static {
     versions = new HashMap<>();
-    versions.put(2.2, new Alpha2_2());
-    versions.put(3.3, new Alpha3_0());
-    versions.put(4.0, new Alpha4_0());
-    versions.put(4.1, new Alpha4_0());
-    versions.put(4.2, new Alpha4_0());
-    versions.put(4.3, new Alpha4_0());
     versions.put(5.0, new Alpha5_0());
     versions.put(5.1, new Alpha5_0());
   }
@@ -46,6 +37,10 @@ public class SaveManager {
       initiate();
     } else {
       getVersion();
+      if(saveVersion < 5.0) {
+        TNE.instance.getLogger().info("Versions before Alpha 5.0 aren't supported by this version! Please run Alpha 5.0 before continuing to this version.");
+        return;
+      }
       TNE.instance.getLogger().info("Save file of version: " + saveVersion + " detected.");
       load();
     }

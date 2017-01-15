@@ -1,8 +1,8 @@
 package com.github.tnerevival.core.db;
 
-import java.io.File;
-
 import com.github.tnerevival.core.db.flat.FlatFileConnection;
+
+import java.io.File;
 
 /**
  * 
@@ -13,6 +13,10 @@ public class FlatFile extends Database {
 
   private String file;
   private FlatFileConnection connection;
+
+  public FlatFile(String directory, String file) {
+    this(directory + File.separator + file);
+  }
 
   public FlatFile(String file) {
     this.file = file;

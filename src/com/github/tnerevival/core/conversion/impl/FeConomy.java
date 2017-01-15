@@ -50,11 +50,11 @@ public class FeConomy extends Converter {
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
     try {
-      mysqlDB().executeQuery("SELECT * FROM " + table + ";");
+      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (mysqlDB().results().next()) {
-        String username = mysqlDB().results().getString(nameColumn);
-        Double balance = mysqlDB().results().getDouble(balanceColumn);
+      while (mysqlDB().results(index).next()) {
+        String username = mysqlDB().results(index).getString(nameColumn);
+        Double balance = mysqlDB().results(index).getDouble(balanceColumn);
         AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
       }
     } catch(Exception e) {
@@ -66,11 +66,11 @@ public class FeConomy extends Converter {
   public void sqlite() throws InvalidDatabaseImport {
     db = new SQLite(TNE.instance.getDataFolder() + "../Fe/database.db");
     try {
-      sqliteDB().executeQuery("SELECT * FROM " + table + ";");
+      int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (sqliteDB().results().next()) {
-        String username = sqliteDB().results().getString(nameColumn);
-        Double balance = sqliteDB().results().getDouble(balanceColumn);
+      while (sqliteDB().results(index).next()) {
+        String username = sqliteDB().results(index).getString(nameColumn);
+        Double balance = sqliteDB().results(index).getDouble(balanceColumn);
         AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
       }
     } catch(Exception e) {

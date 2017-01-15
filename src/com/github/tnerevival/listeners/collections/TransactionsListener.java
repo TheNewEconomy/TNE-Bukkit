@@ -20,6 +20,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.ListListener;
 import com.github.tnerevival.core.transaction.Record;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,8 +28,39 @@ import java.util.UUID;
  **/
 public class TransactionsListener implements ListListener {
   @Override
-  public void add(Object item) {
+  public void update() {
+
+  }
+
+  @Override
+  public List changed() {
+    return null;
+  }
+
+  @Override
+  public void clearChanged() {
+
+  }
+
+  @Override
+  public boolean add(Object item) {
     TNE.instance.saveManager.versionInstance.saveTransaction((Record)item);
+    return true;
+  }
+
+  @Override
+  public int size() {
+    return 0;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
+  }
+
+  @Override
+  public boolean contains(Object item) {
+    return false;
   }
 
   @Override
@@ -37,7 +69,8 @@ public class TransactionsListener implements ListListener {
   }
 
   @Override
-  public void remove(Object item) {
+  public boolean remove(Object item) {
     TNE.instance.saveManager.versionInstance.deleteTransaction(UUID.fromString(((Record) item).getId()));
+    return true;
   }
 }

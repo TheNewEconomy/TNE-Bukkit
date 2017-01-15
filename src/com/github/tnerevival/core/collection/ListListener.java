@@ -16,11 +16,19 @@
  */
 package com.github.tnerevival.core.collection;
 
+import java.util.List;
+
 /**
  * Created by creatorfromhell on 11/6/2016.
  **/
 public interface ListListener<E> {
-  void add(E item);
+  void update();
+  List<E> changed();
+  void clearChanged();
+  boolean add(E item);
+  int size();
+  boolean isEmpty();
+  boolean contains(Object item);
   void preRemove(Object item);
-  void remove(Object item);
+  boolean remove(Object item);
 }

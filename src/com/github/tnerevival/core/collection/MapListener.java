@@ -16,16 +16,26 @@
  */
 package com.github.tnerevival.core.collection;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by creatorfromhell on 11/6/2016.
  **/
 public interface MapListener<K, V> {
-
-  void add(K key, V value);
+  void update();
+  Map<K, V> changed();
+  void clearChanged();
+  void put(K key, V value);
   V get(Object key);
+  Collection<V> values();
   int size();
   boolean isEmpty();
   boolean containsKey(Object key);
+  boolean containsValue(Object value);
   void preRemove(Object key, V value);
+  Set<K> keySet();
+  Set<Map.Entry<K, V>> entrySet();
   void remove(Object key);
 }

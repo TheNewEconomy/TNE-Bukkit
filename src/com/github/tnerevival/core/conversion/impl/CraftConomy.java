@@ -58,46 +58,46 @@ public class CraftConomy extends Converter {
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
 
     try {
-      mysqlDB().executeQuery("SELECT * FROM " + currencyTable + ";");
-      while (mysqlDB().results().next()) {
-        String major = mysqlDB().results().getString("name");
+      int currencyIndex = mysqlDB().executeQuery("SELECT * FROM " + currencyTable + ";");
+      while (mysqlDB().results(currencyIndex).next()) {
+        String major = mysqlDB().results(currencyIndex).getString("name");
 
         TNE.instance.getConfig().set("Core.Currency." + major + ".Format", "<symbol><major><decimal><minor><shorten>");
         TNE.instance.getConfig().set("Core.Currency." + major + ".Balance", 100.00);
         TNE.instance.getConfig().set("Core.Currency." + major + ".Default", false);
         TNE.instance.getConfig().set("Core.Currency." + major + ".Conversion", 1.0);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Symbol", mysqlDB().results().getString("sign"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".Symbol", mysqlDB().results(currencyIndex).getString("sign"));
         TNE.instance.getConfig().set("Core.Currency." + major + ".Decimal", ".");
         TNE.instance.getConfig().set("Core.Currency." + major + ".ItemCurrency", false);
         TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMajor", "GOLD_INGOT");
         TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMinor", "IRON_INGOT");
         TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Single", major);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", mysqlDB().results().getString("plural"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", mysqlDB().results().getString("minor"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", mysqlDB().results().getString("minorplural"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", mysqlDB().results(currencyIndex).getString("plural"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", mysqlDB().results(currencyIndex).getString("minor"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", mysqlDB().results(currencyIndex).getString("minorplural"));
         TNE.instance.getConfig().save(tneConfigFile);
       }
 
       TNE.instance.manager.currencyManager.loadCurrencies();
 
       Map<Integer, String> ids = new HashMap<>();
-      mysqlDB().executeQuery("SELECT * FROM " + accountTable + ";");
-      while(mysqlDB().results().next()) {
-        String id = (mysqlDB().results().getString("uuid") == null || mysqlDB().results().getString("uuid").isEmpty())? IDFinder.ecoID(mysqlDB().results().getString("name")).toString() : mysqlDB().results().getString("uuid");
-        ids.put(mysqlDB().results().getInt("id"), id);
+      int accountIndex = mysqlDB().executeQuery("SELECT * FROM " + accountTable + ";");
+      while(mysqlDB().results(accountIndex).next()) {
+        String id = (mysqlDB().results(accountIndex).getString("uuid") == null || mysqlDB().results(accountIndex).getString("uuid").isEmpty())? IDFinder.ecoID(mysqlDB().results(accountIndex).getString("name")).toString() : mysqlDB().results(accountIndex).getString("uuid");
+        ids.put(mysqlDB().results(accountIndex).getInt("id"), id);
       }
 
-      mysqlDB().executeQuery("SELECT * FROM " + balanceTable + ";");
-      while (mysqlDB().results().next()) {
-        if(ids.containsKey(mysqlDB().results().getInt("username_id"))) {
-          String currencyName = mysqlDB().results().getString("currency_id");
-          Double amount = mysqlDB().results().getDouble("balance");
-          String world = (mysqlDB().results().getString("worldName").equalsIgnoreCase("default")) ? TNE.instance.defaultWorld : mysqlDB().results().getString("worldName");
+      int balanceIndex = mysqlDB().executeQuery("SELECT * FROM " + balanceTable + ";");
+      while (mysqlDB().results(balanceIndex).next()) {
+        if(ids.containsKey(mysqlDB().results(balanceIndex).getInt("username_id"))) {
+          String currencyName = mysqlDB().results(balanceIndex).getString("currency_id");
+          Double amount = mysqlDB().results(balanceIndex).getDouble("balance");
+          String world = (mysqlDB().results(balanceIndex).getString("worldName").equalsIgnoreCase("default")) ? TNE.instance.defaultWorld : mysqlDB().results(balanceIndex).getString("worldName");
           Currency currency = TNE.instance.manager.currencyManager.get(world);
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.convertedAdd(ids.get(mysqlDB().results().getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
+          AccountUtils.convertedAdd(ids.get(mysqlDB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
         }
       }
     } catch(Exception e) {
@@ -111,46 +111,46 @@ public class CraftConomy extends Converter {
     db = new H2(TNE.instance.getDataFolder() + "../CraftConomy3/database.h2.db", mysqlUser, mysqlPassword);
 
     try {
-      h2DB().executeQuery("SELECT * FROM " + currencyTable + ";");
-      while (h2DB().results().next()) {
-        String major = h2DB().results().getString("name");
+      int currencyIndex = h2DB().executeQuery("SELECT * FROM " + currencyTable + ";");
+      while (h2DB().results(currencyIndex).next()) {
+        String major = h2DB().results(currencyIndex).getString("name");
 
         TNE.instance.getConfig().set("Core.Currency." + major + ".Format", "<symbol><major><decimal><minor><shorten>");
         TNE.instance.getConfig().set("Core.Currency." + major + ".Balance", 100.00);
         TNE.instance.getConfig().set("Core.Currency." + major + ".Default", false);
         TNE.instance.getConfig().set("Core.Currency." + major + ".Conversion", 1.0);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Symbol", h2DB().results().getString("sign"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".Symbol", h2DB().results(currencyIndex).getString("sign"));
         TNE.instance.getConfig().set("Core.Currency." + major + ".Decimal", ".");
         TNE.instance.getConfig().set("Core.Currency." + major + ".ItemCurrency", false);
         TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMajor", "GOLD_INGOT");
         TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMinor", "IRON_INGOT");
         TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Single", major);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", h2DB().results().getString("plural"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", h2DB().results().getString("minor"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", h2DB().results().getString("minorplural"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", h2DB().results(currencyIndex).getString("plural"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", h2DB().results(currencyIndex).getString("minor"));
+        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", h2DB().results(currencyIndex).getString("minorplural"));
         TNE.instance.getConfig().save(tneConfigFile);
       }
 
       TNE.instance.manager.currencyManager.loadCurrencies();
 
       Map<Integer, String> ids = new HashMap<>();
-      h2DB().executeQuery("SELECT * FROM " + accountTable + ";");
-      while(h2DB().results().next()) {
-        String id = (h2DB().results().getString("uuid") == null)? h2DB().results().getString("name") : h2DB().results().getString("uuid");
-        ids.put(h2DB().results().getInt("id"), IDFinder.getID(id).toString());
+      int accountIndex = h2DB().executeQuery("SELECT * FROM " + accountTable + ";");
+      while(h2DB().results(accountIndex).next()) {
+        String id = (h2DB().results(accountIndex).getString("uuid") == null)? h2DB().results(accountIndex).getString("name") : h2DB().results(accountIndex).getString("uuid");
+        ids.put(h2DB().results(accountIndex).getInt("id"), IDFinder.getID(id).toString());
       }
 
-      h2DB().executeQuery("SELECT * FROM " + balanceTable + ";");
-      while (h2DB().results().next()) {
-        if(ids.containsKey(h2DB().results().getInt("username_id"))) {
-          String currencyName = h2DB().results().getString("currency_id");
-          Double amount = h2DB().results().getDouble("balance");
-          String world = (h2DB().results().getString("worldName").equalsIgnoreCase("default")) ? TNE.instance.defaultWorld : h2DB().results().getString("worldName");
+      int balanceIndex = h2DB().executeQuery("SELECT * FROM " + balanceTable + ";");
+      while (h2DB().results(balanceIndex).next()) {
+        if(ids.containsKey(h2DB().results(balanceIndex).getInt("username_id"))) {
+          String currencyName = h2DB().results(balanceIndex).getString("currency_id");
+          Double amount = h2DB().results(balanceIndex).getDouble("balance");
+          String world = (h2DB().results(balanceIndex).getString("worldName").equalsIgnoreCase("default")) ? TNE.instance.defaultWorld : h2DB().results(balanceIndex).getString("worldName");
           Currency currency = TNE.instance.manager.currencyManager.get(world);
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.convertedAdd(ids.get(h2DB().results().getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
+          AccountUtils.convertedAdd(ids.get(h2DB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
         }
       }
     } catch(Exception e) {

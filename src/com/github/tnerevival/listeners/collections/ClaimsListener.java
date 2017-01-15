@@ -20,13 +20,46 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.collection.ListListener;
 
+import java.util.List;
+
 /**
  * Created by creatorfromhell on 11/15/2016.
  **/
 public class ClaimsListener implements ListListener {
   @Override
-  public void add(Object item) {
+  public void update() {
+
+  }
+
+  @Override
+  public List changed() {
+    return null;
+  }
+
+  @Override
+  public void clearChanged() {
+
+  }
+
+  @Override
+  public boolean add(Object item) {
     TNE.instance.saveManager.versionInstance.saveClaim((Claim)item);
+    return true;
+  }
+
+  @Override
+  public int size() {
+    return 0;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
+  }
+
+  @Override
+  public boolean contains(Object item) {
+    return false;
   }
 
   @Override
@@ -35,7 +68,8 @@ public class ClaimsListener implements ListListener {
   }
 
   @Override
-  public void remove(Object item) {
+  public boolean remove(Object item) {
     TNE.instance.saveManager.versionInstance.deleteClaim((Claim)item);
+    return true;
   }
 }

@@ -41,6 +41,11 @@ public class TNE extends JavaPlugin {
   public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
   public static boolean debugMode = false;
 
+  public String saveFormat = "flatfile";
+  public boolean directSQL = true;
+  public boolean cache = true;
+  public long update = 600;
+
   // Files & Custom Configuration Files
   public File mobs;
   public File messages;

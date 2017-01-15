@@ -49,13 +49,13 @@ public class MineConomy extends Converter {
 
     String table = "mineconomy_accounts";
     try {
-      mysqlDB().executeQuery("SELECT * FROM " + table + ";");
+      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
       Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
-      while (mysqlDB().results().next()) {
-        String username = mysqlDB().results().getString("account");
-        Double balance = mysqlDB().results().getDouble("balance");
-        String currencyName = mysqlDB().results().getString("currency");
+      while (mysqlDB().results(index).next()) {
+        String username = mysqlDB().results(index).getString("account");
+        Double balance = mysqlDB().results(index).getDouble("balance");
+        String currencyName = mysqlDB().results(index).getString("currency");
 
         String currencyPath = "Currencies." + currencyName + ".Value";
         double rate = (currencies.contains(currencyPath))? currencies.getDouble(currencyPath) : 1.0;

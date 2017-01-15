@@ -14,39 +14,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.tnerevival.core.collection;
+package com.github.tnerevival.core.collection.paginate;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by creatorfromhell on 11/6/2016.
+ * Created by creatorfromhell on 1/8/2017.
  **/
-public class EventListIterator<E> {
+public class Page {
+  private int page;
+  List<Object> elements = new ArrayList<>();
 
-  Iterator<E> iterator;
-  ListListener<E> listener;
-  E last;
-
-  public EventListIterator(Iterator<E> iterator, ListListener<E> listener) {
-    this.iterator = iterator;
-    this.listener = listener;
+  public Page(int page) {
+    this.page = page;
   }
 
-  public void remove() {
-    remove(true);
+  public void addElement(Object o) {
+    elements.add(o);
   }
 
-  public void remove(boolean database) {
-    if(database) listener.remove(last);
-    iterator.remove();
+  public int getPage() {
+    return page;
   }
 
-  public boolean hasNext() {
-    return iterator.hasNext();
+  public void setPage(int page) {
+    this.page = page;
   }
 
-  public E next() {
-    last = iterator.next();
-    return last;
+  public List<Object> getElements() {
+    return elements;
   }
 }

@@ -16,12 +16,9 @@
  */
 package com.github.tnerevival.core.collection;
 
-import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.TNE;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 11/2/2016.
@@ -30,28 +27,69 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   private MapListener<K, V> listener;
   private Map<K, V> map = new HashMap<>();
+  private long lastRefresh = new Date().getTime();
 
   public EventMap() {
     super();
   }
 
+  public EventMap(MapListener listener) {
+    super();
+    this.listener = listener;
+  }
+
+  public void update() {
+    listener.update();
+    listener.clearChanged();
+    lastRefresh = new Date().getTime();
+  }
+
   @Override
   public V get(Object key) {
-    MISCUtils.debug("Get called using key " + key.toString());
+    if(TNE.instance.saveFormat.equalsIgnoreCase("flatfile") || TNE.instance.cache) {
+      return map.get(key);
+    }
+
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile")) {
+      if(!TNE.instance.cache || !map.containsKey(key)) {
+        return listener.get(key);
+      }
+    }
     return map.get(key);
   }
 
   @Override
   public V put(K key, V value) {
-    listener.add(key, value);
-    return map.put(key, value);
+    if(TNE.instance.saveFormat.equalsIgnoreCase("flatfile") || TNE.instance.cache) {
+      map.put(key, value);
+    }
+
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile")) {
+      if(!TNE.instance.cache || !map.containsKey(key)) {
+        listener.put(key, value);
+      }
+    }
+    return value;
   }
 
   @Override
   public V remove(Object key) {
-    listener.preRemove(key, get(key));
-    V removed = map.remove(key);
-    listener.remove(key);
+    return remove(key, true);
+  }
+
+  public V remove(Object key, boolean database) {
+    V removed = get(key);
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile") && database) {
+      listener.preRemove(key, removed);
+    }
+
+    if(TNE.instance.saveFormat.equalsIgnoreCase("flatfile") || TNE.instance.cache) {
+      removed = map.remove(key);
+    }
+
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile") && !TNE.instance.cache || database) {
+      listener.remove(key);
+    }
     return removed;
   }
 
@@ -61,41 +99,61 @@ public class EventMap<K, V> extends HashMap<K, V> {
   }
 
   public EventMapIterator<Map.Entry<K, V>> getIterator() {
-    return new EventMapIterator<>(map.entrySet().iterator(), listener);
+    return new EventMapIterator<>(entrySet().iterator(), listener);
   }
 
   @Override
   public int size() {
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile")) {
+      return listener.size();
+    }
     return map.size();
   }
 
   @Override
   public boolean isEmpty() {
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile")) {
+      return listener.isEmpty();
+    }
     return map.isEmpty();
   }
 
   @Override
   public void putAll(Map<? extends K, ? extends V> m) {
-    map.putAll(m);
+    for(Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
+      put(entry.getKey(), entry.getValue());
+    }
   }
 
   @Override
   public boolean containsValue(Object value) {
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile") && !TNE.instance.cache) {
+      return listener.containsValue(value);
+    }
     return map.containsValue(value);
   }
 
   @Override
   public Set<K> keySet() {
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile") && !TNE.instance.cache) {
+      return listener.keySet();
+    }
     return map.keySet();
   }
 
   @Override
   public Collection<V> values() {
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile") && !TNE.instance.cache) {
+      return listener.values();
+    }
     return map.values();
   }
 
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
+    if(!TNE.instance.saveFormat.equalsIgnoreCase("flatfile") && !TNE.instance.cache) {
+      return listener.entrySet();
+    }
     return map.entrySet();
   }
 

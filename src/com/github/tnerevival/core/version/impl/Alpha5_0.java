@@ -677,102 +677,102 @@ public class Alpha5_0 extends Version {
     String table = prefix + "_USERS";
 
     try {
-      mysql().executeQuery("SELECT * FROM " + table + ";");
+      int accountIndex = mysql().executeQuery("SELECT * FROM " + table + ";");
 
-      while(mysql().results().next()) {
-        Account account = new Account(UUID.fromString(mysql().results().getString("uuid")));
-        account.balancesFromString(mysql().results().getString("balances"));
-        account.setAccountNumber(mysql().results().getInt("accountnumber"));
-        account.setStatus(mysql().results().getString("accountstatus"));
-        account.setJoined(mysql().results().getString("joinedDate"));
-        account.creditsFromString(mysql().results().getString("inventory_credits"));
-        account.commandsFromString(mysql().results().getString("command_credits"));
-        account.setPin(mysql().results().getString("acc_pin"));
+      while(mysql().results(accountIndex).next()) {
+        Account account = new Account(UUID.fromString(mysql().results(accountIndex).getString("uuid")));
+        account.balancesFromString(mysql().results(accountIndex).getString("balances"));
+        account.setAccountNumber(mysql().results(accountIndex).getInt("accountnumber"));
+        account.setStatus(mysql().results(accountIndex).getString("accountstatus"));
+        account.setJoined(mysql().results(accountIndex).getString("joinedDate"));
+        account.creditsFromString(mysql().results(accountIndex).getString("inventory_credits"));
+        account.commandsFromString(mysql().results(accountIndex).getString("command_credits"));
+        account.setPin(mysql().results(accountIndex).getString("acc_pin"));
 
         String bankTable = prefix + "_BANKS";
-        mysql().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
+        int bankIndex = mysql().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
 
-        while(mysql().secondary().next()) {
-          account.getBanks().put(mysql().secondary().getString("world"), Bank.fromString(mysql().secondary().getString("bank")));
+        while(mysql().results(bankIndex).next()) {
+          account.getBanks().put(mysql().results(bankIndex).getString("world"), Bank.fromString(mysql().results(bankIndex).getString("bank")));
         }
         TNE.instance.manager.accounts.put(account.getUid(), account);
       }
 
       table = prefix + "_ECOIDS";
-      mysql().executeQuery("SELECT * FROM " + table + ";");
-      while(mysql().results().next()) {
-        TNE.instance.manager.ecoIDs.put(mysql().results().getString("username"), UUID.fromString(mysql().results().getString("uuid")));
+      int idIndex = mysql().executeQuery("SELECT * FROM " + table + ";");
+      while(mysql().results(idIndex).next()) {
+        TNE.instance.manager.ecoIDs.put(mysql().results(idIndex).getString("username"), UUID.fromString(mysql().results(idIndex).getString("uuid")));
       }
 
       table = prefix + "_SHOPS";
-      mysql().executeQuery("SELECT * FROM `" + table + "`;");
-      while(mysql().results().next()) {
-        Shop s = new Shop(mysql().results().getString("shop_name"), mysql().results().getString("shop_world"));
-        s.setOwner(UUID.fromString(mysql().results().getString("shop_owner")));
-        s.setHidden(SQLDatabase.boolFromDB(mysql().results().getInt("shop_hidden")));
-        s.setAdmin(SQLDatabase.boolFromDB(mysql().results().getInt("shop_admin")));
-        s.itemsFromString(mysql().results().getString("shop_items"));
-        s.listFromString(mysql().results().getString("shop_blacklist"), true);
-        s.listFromString(mysql().results().getString("shop_whitelist"), false);
-        s.sharesFromString(mysql().results().getString("shop_shares"));
+      int shopIndex = mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results(shopIndex).next()) {
+        Shop s = new Shop(mysql().results(shopIndex).getString("shop_name"), mysql().results(shopIndex).getString("shop_world"));
+        s.setOwner(UUID.fromString(mysql().results(shopIndex).getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(mysql().results(shopIndex).getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(mysql().results(shopIndex).getInt("shop_admin")));
+        s.itemsFromString(mysql().results(shopIndex).getString("shop_items"));
+        s.listFromString(mysql().results(shopIndex).getString("shop_blacklist"), true);
+        s.listFromString(mysql().results(shopIndex).getString("shop_whitelist"), false);
+        s.sharesFromString(mysql().results(shopIndex).getString("shop_shares"));
         TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
       }
 
       table = prefix + "_AUCTIONS";
-      mysql().executeQuery("SELECT * FROM `" + table + "`;");
-      while(mysql().results().next()) {
-        Auction auction = new Auction(mysql().results().getInt("auction_lot"));
-        auction.setAdded(mysql().results().getInt("auction_added"));
-        auction.setStartTime(mysql().results().getInt("auction_start"));
-        auction.setPlayer(UUID.fromString(mysql().results().getString("auction_owner")));
-        auction.setWorld(mysql().results().getString("auction_world"));
-        auction.setSilent(SQLDatabase.boolFromDB(mysql().results().getInt("auction_silent")));
-        auction.setItem(SerializableItemStack.fromString(mysql().results().getString("auction_item")));
-        auction.setCost(new TransactionCost(Double.valueOf(mysql().results().getString("auction_cost"))));
-        auction.setIncrement(mysql().results().getDouble("auction_increment"));
-        auction.setGlobal(SQLDatabase.boolFromDB(mysql().results().getInt("auction_global")));
-        auction.setTime(mysql().results().getInt("auction_time"));
-        auction.setNode(mysql().results().getString("auction_node"));
+      int auctionIndex = mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results(auctionIndex).next()) {
+        Auction auction = new Auction(mysql().results(auctionIndex).getInt("auction_lot"));
+        auction.setAdded(mysql().results(auctionIndex).getInt("auction_added"));
+        auction.setStartTime(mysql().results(auctionIndex).getInt("auction_start"));
+        auction.setPlayer(UUID.fromString(mysql().results(auctionIndex).getString("auction_owner")));
+        auction.setWorld(mysql().results(auctionIndex).getString("auction_world"));
+        auction.setSilent(SQLDatabase.boolFromDB(mysql().results(auctionIndex).getInt("auction_silent")));
+        auction.setItem(SerializableItemStack.fromString(mysql().results(auctionIndex).getString("auction_item")));
+        auction.setCost(new TransactionCost(Double.valueOf(mysql().results(auctionIndex).getString("auction_cost"))));
+        auction.setIncrement(mysql().results(auctionIndex).getDouble("auction_increment"));
+        auction.setGlobal(SQLDatabase.boolFromDB(mysql().results(auctionIndex).getInt("auction_global")));
+        auction.setTime(mysql().results(auctionIndex).getInt("auction_time"));
+        auction.setNode(mysql().results(auctionIndex).getString("auction_node"));
 
         TNE.instance.manager.auctionManager.add(auction);
       }
 
       table = prefix + "_CLAIMS";
-      mysql().executeQuery("SELECT * FROM `" + table + "`;");
-      while(mysql().results().next()) {
+      int claimIndex = mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results(claimIndex).next()) {
         Claim claim = new Claim(//uuid, lot, item, cost
-            UUID.fromString(mysql().results().getString("claim_player")),
-            mysql().results().getInt("claim_lot"),
-            SerializableItemStack.fromString(mysql().results().getString("claim_item")),
-            new TransactionCost(Double.valueOf(mysql().results().getString("claim_cost")))
+            UUID.fromString(mysql().results(claimIndex).getString("claim_player")),
+            mysql().results(claimIndex).getInt("claim_lot"),
+            SerializableItemStack.fromString(mysql().results(claimIndex).getString("claim_item")),
+            new TransactionCost(Double.valueOf(mysql().results(claimIndex).getString("claim_cost")))
         );
-        claim.setPaid(SQLDatabase.boolFromDB(mysql().results().getInt("claim_paid")));
+        claim.setPaid(SQLDatabase.boolFromDB(mysql().results(claimIndex).getInt("claim_paid")));
 
         TNE.instance.manager.auctionManager.unclaimed.add(claim);
       }
 
       table = prefix + "_SIGNS";
-      mysql().executeQuery("SELECT * FROM `" + table + "`;");
-      while(mysql().results().next()) {
-        TNESign sign = SignUtils.instance(mysql().results().getString("sign_type"), UUID.fromString(mysql().results().getString("sign_owner")));
-        sign.setLocation(SerializableLocation.fromString(mysql().results().getString("sign_location")));
-        sign.loadMeta(mysql().results().getString("sign_meta"));
+      int signIndex = mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results(signIndex).next()) {
+        TNESign sign = SignUtils.instance(mysql().results(signIndex).getString("sign_type"), UUID.fromString(mysql().results(signIndex).getString("sign_owner")));
+        sign.setLocation(SerializableLocation.fromString(mysql().results(signIndex).getString("sign_location")));
+        sign.loadMeta(mysql().results(signIndex).getString("sign_meta"));
         TNE.instance.manager.signs.put(sign.getLocation(), sign);
       }
 
       table = prefix + "_TRANSACTIONS";
-      mysql().executeQuery("SELECT * FROM `" + table + "`;");
-      while(mysql().results().next()) {
+      int transactionIndex = mysql().executeQuery("SELECT * FROM `" + table + "`;");
+      while(mysql().results(transactionIndex).next()) {
         TNE.instance.manager.transactions.add(
-            mysql().results().getString("trans_id"),
-            mysql().results().getString("trans_initiator"),
-            mysql().results().getString("trans_player"),
-            mysql().results().getString("trans_world"),
-            TransactionType.fromID(mysql().results().getString("trans_type")),
-            new TransactionCost(mysql().results().getDouble("trans_cost")),
-            mysql().results().getDouble("trans_oldBalance"),
-            mysql().results().getDouble("trans_balance"),
-            mysql().results().getLong("trans_time")
+            mysql().results(transactionIndex).getString("trans_id"),
+            mysql().results(transactionIndex).getString("trans_initiator"),
+            mysql().results(transactionIndex).getString("trans_player"),
+            mysql().results(transactionIndex).getString("trans_world"),
+            TransactionType.fromID(mysql().results(transactionIndex).getString("trans_type")),
+            new TransactionCost(mysql().results(transactionIndex).getDouble("trans_cost")),
+            mysql().results(transactionIndex).getDouble("trans_oldBalance"),
+            mysql().results(transactionIndex).getDouble("trans_balance"),
+            mysql().results(transactionIndex).getLong("trans_time")
         );
       }
       mysql().close();
@@ -837,103 +837,103 @@ public class Alpha5_0 extends Version {
     String table = prefix + "_USERS";
 
     try {
-      h2().executeQuery("SELECT * FROM " + table + ";");
+      int accountIndex = h2().executeQuery("SELECT * FROM " + table + ";");
 
-      while(h2().results().next()) {
-        Account account = new Account(UUID.fromString(h2().results().getString("uuid")));
-        account.balancesFromString(h2().results().getString("balances"));
-        account.setAccountNumber(h2().results().getInt("accountnumber"));
-        account.setStatus(h2().results().getString("accountstatus"));
-        account.setJoined(h2().results().getString("joinedDate"));
-        account.creditsFromString(h2().results().getString("inventory_credits"));
-        account.commandsFromString(h2().results().getString("command_credits"));
-        account.setPin(h2().results().getString("acc_pin"));
+      while(h2().results(accountIndex).next()) {
+        Account account = new Account(UUID.fromString(h2().results(accountIndex).getString("uuid")));
+        account.balancesFromString(h2().results(accountIndex).getString("balances"));
+        account.setAccountNumber(h2().results(accountIndex).getInt("accountnumber"));
+        account.setStatus(h2().results(accountIndex).getString("accountstatus"));
+        account.setJoined(h2().results(accountIndex).getString("joinedDate"));
+        account.creditsFromString(h2().results(accountIndex).getString("inventory_credits"));
+        account.commandsFromString(h2().results(accountIndex).getString("command_credits"));
+        account.setPin(h2().results(accountIndex).getString("acc_pin"));
 
         String bankTable = prefix + "_BANKS";
-        h2().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() }, false);
+        int bankIndex = h2().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
 
-        while(h2().secondary().next()) {
-          account.getBanks().put(h2().secondary().getString("world"), Bank.fromString(h2().secondary().getString("bank")));
+        while(h2().results(bankIndex).next()) {
+          account.getBanks().put(h2().results(bankIndex).getString("world"), Bank.fromString(h2().results(bankIndex).getString("bank")));
         }
         TNE.instance.manager.accounts.put(account.getUid(), account);
       }
 
       table = prefix + "_ECOIDS";
-      h2().executeQuery("SELECT * FROM " + table + ";");
-      while(h2().results().next()) {
-        TNE.instance.manager.ecoIDs.put(h2().results().getString("username"), UUID.fromString(h2().results().getString("uuid")));
+      int idIndex = h2().executeQuery("SELECT * FROM " + table + ";");
+      while(h2().results(idIndex).next()) {
+        TNE.instance.manager.ecoIDs.put(h2().results(idIndex).getString("username"), UUID.fromString(h2().results(idIndex).getString("uuid")));
       }
 
       table = prefix + "_SHOPS";
-      h2().executeQuery("SELECT * FROM `" + table + "`;");
-      while(h2().results().next()) {
-        Shop s = new Shop(h2().results().getString("shop_name"), h2().results().getString("shop_world"));
-        s.setOwner(UUID.fromString(h2().results().getString("shop_owner")));
-        s.setHidden(SQLDatabase.boolFromDB(h2().results().getInt("shop_hidden")));
-        s.setAdmin(SQLDatabase.boolFromDB(h2().results().getInt("shop_admin")));
-        s.itemsFromString(h2().results().getString("shop_items"));
-        s.listFromString(h2().results().getString("shop_blacklist"), true);
-        s.listFromString(h2().results().getString("shop_whitelist"), false);
-        s.sharesFromString(h2().results().getString("shop_shares"));
+      int shopIndex = h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results(shopIndex).next()) {
+        Shop s = new Shop(h2().results(shopIndex).getString("shop_name"), h2().results(shopIndex).getString("shop_world"));
+        s.setOwner(UUID.fromString(h2().results(shopIndex).getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(h2().results(shopIndex).getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(h2().results(shopIndex).getInt("shop_admin")));
+        s.itemsFromString(h2().results(shopIndex).getString("shop_items"));
+        s.listFromString(h2().results(shopIndex).getString("shop_blacklist"), true);
+        s.listFromString(h2().results(shopIndex).getString("shop_whitelist"), false);
+        s.sharesFromString(h2().results(shopIndex).getString("shop_shares"));
         TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
       }
 
       table = prefix + "_AUCTIONS";
-      h2().executeQuery("SELECT * FROM `" + table + "`;");
-      while(h2().results().next()) {
-        Auction auction = new Auction(h2().results().getInt("auction_lot"));
-        auction.setAdded(h2().results().getInt("auction_added"));
-        auction.setStartTime(h2().results().getInt("auction_start"));
-        auction.setPlayer(UUID.fromString(h2().results().getString("auction_owner")));
-        auction.setWorld(h2().results().getString("auction_world"));
-        auction.setSilent(SQLDatabase.boolFromDB(h2().results().getInt("auction_silent")));
-        auction.setItem(SerializableItemStack.fromString(h2().results().getString("auction_item")));
-        auction.setCost(new TransactionCost(Double.valueOf(h2().results().getString("auction_cost"))));
-        auction.setIncrement(h2().results().getDouble("auction_increment"));
-        auction.setGlobal(SQLDatabase.boolFromDB(h2().results().getInt("auction_global")));
-        auction.setTime(h2().results().getInt("auction_time"));
-        auction.setNode(h2().results().getString("auction_node"));
+      int auctionIndex = h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results(auctionIndex).next()) {
+        Auction auction = new Auction(h2().results(auctionIndex).getInt("auction_lot"));
+        auction.setAdded(h2().results(auctionIndex).getInt("auction_added"));
+        auction.setStartTime(h2().results(auctionIndex).getInt("auction_start"));
+        auction.setPlayer(UUID.fromString(h2().results(auctionIndex).getString("auction_owner")));
+        auction.setWorld(h2().results(auctionIndex).getString("auction_world"));
+        auction.setSilent(SQLDatabase.boolFromDB(h2().results(auctionIndex).getInt("auction_silent")));
+        auction.setItem(SerializableItemStack.fromString(h2().results(auctionIndex).getString("auction_item")));
+        auction.setCost(new TransactionCost(Double.valueOf(h2().results(auctionIndex).getString("auction_cost"))));
+        auction.setIncrement(h2().results(auctionIndex).getDouble("auction_increment"));
+        auction.setGlobal(SQLDatabase.boolFromDB(h2().results(auctionIndex).getInt("auction_global")));
+        auction.setTime(h2().results(auctionIndex).getInt("auction_time"));
+        auction.setNode(h2().results(auctionIndex).getString("auction_node"));
 
         TNE.instance.manager.auctionManager.add(auction);
       }
 
       table = prefix + "_CLAIMS";
-      h2().executeQuery("SELECT * FROM `" + table + "`;");
-      while(h2().results().next()) {
-        Claim claim = new Claim(//uuid, lot, item, cost
-            UUID.fromString(h2().results().getString("claim_player")),
-            h2().results().getInt("claim_lot"),
-            SerializableItemStack.fromString(h2().results().getString("claim_item")),
-            new TransactionCost(Double.valueOf(h2().results().getString("claim_cost")))
+      int claimsIndex = h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results(claimsIndex).next()) {
+        Claim claim = new Claim(
+            UUID.fromString(h2().results(claimsIndex).getString("claim_player")),
+            h2().results(claimsIndex).getInt("claim_lot"),
+            SerializableItemStack.fromString(h2().results(claimsIndex).getString("claim_item")),
+            new TransactionCost(Double.valueOf(h2().results(claimsIndex).getString("claim_cost")))
         );
-        claim.setPaid(SQLDatabase.boolFromDB(h2().results().getInt("claim_paid")));
+        claim.setPaid(SQLDatabase.boolFromDB(h2().results(claimsIndex).getInt("claim_paid")));
 
         TNE.instance.manager.auctionManager.unclaimed.add(claim);
       }
 
       table = prefix + "_SIGNS";
-      h2().executeQuery("SELECT * FROM `" + table + "`;");
-      while(h2().results().next()) {
-        TNESign sign = SignUtils.instance(h2().results().getString("sign_type"), UUID.fromString(h2().results().getString("sign_owner")));
-        sign.setLocation(SerializableLocation.fromString(h2().results().getString("sign_location")));
-        sign.loadMeta(h2().results().getString("sign_meta"));
+      int signIndex = h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results(signIndex).next()) {
+        TNESign sign = SignUtils.instance(h2().results(signIndex).getString("sign_type"), UUID.fromString(h2().results(signIndex).getString("sign_owner")));
+        sign.setLocation(SerializableLocation.fromString(h2().results(signIndex).getString("sign_location")));
+        sign.loadMeta(h2().results(signIndex).getString("sign_meta"));
 
         TNE.instance.manager.signs.put(sign.getLocation(), sign);
       }
 
       table = prefix + "_TRANSACTIONS";
-      h2().executeQuery("SELECT * FROM `" + table + "`;");
-      while(h2().results().next()) {
+      int transactionIndex = h2().executeQuery("SELECT * FROM `" + table + "`;");
+      while(h2().results(transactionIndex).next()) {
         TNE.instance.manager.transactions.add(
-            h2().results().getString("trans_id"),
-            h2().results().getString("trans_initiator"),
-            h2().results().getString("trans_player"),
-            h2().results().getString("trans_world"),
-            TransactionType.fromID(h2().results().getString("trans_type")),
-            new TransactionCost(h2().results().getDouble("trans_cost")),
-            h2().results().getDouble("trans_oldBalance"),
-            h2().results().getDouble("trans_balance"),
-            h2().results().getLong("trans_time")
+            h2().results(transactionIndex).getString("trans_id"),
+            h2().results(transactionIndex).getString("trans_initiator"),
+            h2().results(transactionIndex).getString("trans_player"),
+            h2().results(transactionIndex).getString("trans_world"),
+            TransactionType.fromID(h2().results(transactionIndex).getString("trans_type")),
+            new TransactionCost(h2().results(transactionIndex).getDouble("trans_cost")),
+            h2().results(transactionIndex).getDouble("trans_oldBalance"),
+            h2().results(transactionIndex).getDouble("trans_balance"),
+            h2().results(transactionIndex).getLong("trans_time")
         );
       }
       h2().close();

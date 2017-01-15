@@ -47,12 +47,12 @@ public class iConomy extends Converter {
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
     try {
-      mysqlDB().executeQuery("SELECT * FROM " + table + ";");
+      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
       Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
-      while (mysqlDB().results().next()) {
-        String username = mysqlDB().results().getString("username");
-        Double balance = mysqlDB().results().getDouble("balance");
+      while (mysqlDB().results(index).next()) {
+        String username = mysqlDB().results(index).getString("username");
+        Double balance = mysqlDB().results(index).getDouble("balance");
         AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
       }
     } catch(Exception e) {

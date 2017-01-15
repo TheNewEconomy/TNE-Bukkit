@@ -20,17 +20,41 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.MapListener;
 import com.github.tnerevival.core.shops.Shop;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class ShopsListener implements MapListener {
   @Override
-  public void add(Object key, Object value) {
+  public void update() {
+
+  }
+
+  @Override
+  public Map changed() {
+    return null;
+  }
+
+  @Override
+  public void clearChanged() {
+
+  }
+
+  @Override
+  public void put(Object key, Object value) {
     TNE.instance.saveManager.versionInstance.saveShop((Shop)value);
   }
 
   @Override
   public Object get(Object key) {
+    return null;
+  }
+
+  @Override
+  public Collection values() {
     return null;
   }
 
@@ -50,8 +74,23 @@ public class ShopsListener implements MapListener {
   }
 
   @Override
+  public boolean containsValue(Object value) {
+    return false;
+  }
+
+  @Override
   public void preRemove(Object key, Object value) {
     TNE.instance.saveManager.versionInstance.deleteShop((Shop)value);
+  }
+
+  @Override
+  public Set keySet() {
+    return null;
+  }
+
+  @Override
+  public Set<Map.Entry> entrySet() {
+    return null;
   }
 
   @Override
