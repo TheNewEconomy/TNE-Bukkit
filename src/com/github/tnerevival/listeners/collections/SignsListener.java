@@ -19,27 +19,31 @@ package com.github.tnerevival.listeners.collections;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.MapListener;
 import com.github.tnerevival.core.signs.TNESign;
+import com.github.tnerevival.serializable.SerializableLocation;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class SignsListener implements MapListener {
+  Map<SerializableLocation, TNESign> changed = new HashMap<>();
+
   @Override
   public void update() {
-
+    for(TNESign sign : changed.values()) {
+      TNE.instance.saveManager.versionInstance.saveSign(sign);
+    }
   }
 
   @Override
-  public Map changed() {
-    return null;
+  public Map<SerializableLocation, TNESign> changed() {
+    return changed;
   }
 
   @Override
   public void clearChanged() {
+    changed.clear();
   }
 
   @Override
@@ -49,17 +53,17 @@ public class SignsListener implements MapListener {
 
   @Override
   public Object get(Object key) {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadSign(((SerializableLocation)key).toString());
   }
 
   @Override
-  public Collection values() {
-    return null;
+  public Collection<TNESign> values() {
+    return TNE.instance.saveManager.versionInstance.loadSigns();
   }
 
   @Override
   public int size() {
-    return 0;
+    return values().size();
   }
 
   @Override
@@ -83,13 +87,25 @@ public class SignsListener implements MapListener {
   }
 
   @Override
-  public Set keySet() {
-    return null;
+  public Set<SerializableLocation> keySet() {
+    Set<SerializableLocation> keys = new HashSet<>();
+
+    for(TNESign sign : values()) {
+      keys.add(sign.getLocation());
+    }
+
+    return keys;
   }
 
   @Override
-  public Set<Map.Entry> entrySet() {
-    return null;
+  public Set<Map.Entry<SerializableLocation, TNESign>> entrySet() {
+    Map<SerializableLocation, TNESign> signMap = new HashMap<>();
+
+    for(TNESign sign : values()) {
+      signMap.put(sign.getLocation(), sign);
+    }
+
+    return signMap.entrySet();
   }
 
   @Override

@@ -17,9 +17,12 @@
 package com.github.tnerevival.listeners.collections;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.collection.ListListener;
 import com.github.tnerevival.core.transaction.Record;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,19 +30,23 @@ import java.util.UUID;
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class TransactionsListener implements ListListener {
+  List<Record> changed = new ArrayList<>();
+
   @Override
   public void update() {
-
+    for(Record r : changed) {
+      TNE.instance.saveManager.versionInstance.saveTransaction(r);
+    }
   }
 
   @Override
-  public List changed() {
-    return null;
+  public List<Record> changed() {
+    return changed;
   }
 
   @Override
   public void clearChanged() {
-
+    changed.clear();
   }
 
   @Override
@@ -49,13 +56,23 @@ public class TransactionsListener implements ListListener {
   }
 
   @Override
+  public Collection<Record> getAll() {
+    return new ArrayList<>();
+  }
+
+  @Override
+  public Collection<Record> getAll(Object identifier) {
+    return TNE.instance.saveManager.versionInstance.loadHistory(IDFinder.getID((String)identifier)).getRecords();
+  }
+
+  @Override
   public int size() {
-    return 0;
+    return TNE.instance.saveManager.versionInstance.loadTransactions().size();
   }
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return size() == 0;
   }
 
   @Override

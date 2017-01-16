@@ -98,9 +98,9 @@ public class AdminHistoryCommand extends TNECommand {
       TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
 
       if (history != null) {
-        List<Record> records = history.getRecords(world, type, page);
-        MISCUtils.debug(history.getMaxPages(world, type, 5) + "");
-        Integer max = history.getMaxPages(world, type, 5);
+        List<Record> records = history.getRecords(world, IDFinder.getID(player).toString(), type, page);
+        MISCUtils.debug(history.getMaxPages(world, IDFinder.getID(player).toString(), type, 5) + "");
+        Integer max = history.getMaxPages(world, IDFinder.getID(player).toString(), type, 5);
 
         player.sendMessage(ChatColor.WHITE + "Type | Player | World | Amount | BalanceAfter | Time - Page " + page + "/" + max);
         if (records.size() > 0) {

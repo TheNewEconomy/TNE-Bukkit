@@ -62,7 +62,7 @@ public class AccountsListener implements MapListener {
 
   @Override
   public int size() {
-    return 0;
+    return values().size();
   }
 
   @Override

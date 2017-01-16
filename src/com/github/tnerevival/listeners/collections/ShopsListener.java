@@ -20,27 +20,29 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.MapListener;
 import com.github.tnerevival.core.shops.Shop;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class ShopsListener implements MapListener {
+  Map<String, Shop> changed = new HashMap<>();
+
   @Override
   public void update() {
-
+    for(Shop s : changed.values()) {
+      TNE.instance.saveManager.versionInstance.saveShop(s);
+    }
   }
 
   @Override
-  public Map changed() {
-    return null;
+  public Map<String, Shop> changed() {
+    return changed;
   }
 
   @Override
   public void clearChanged() {
-
+    changed.clear();
   }
 
   @Override
@@ -50,17 +52,18 @@ public class ShopsListener implements MapListener {
 
   @Override
   public Object get(Object key) {
-    return null;
+    String[] values = ((String)key).split(":");
+    return TNE.instance.saveManager.versionInstance.loadShop(values[0], values[1]);
   }
 
   @Override
-  public Collection values() {
-    return null;
+  public Collection<Shop> values() {
+    return TNE.instance.saveManager.versionInstance.loadShops();
   }
 
   @Override
   public int size() {
-    return 0;
+    return values().size();
   }
 
   @Override
@@ -84,13 +87,25 @@ public class ShopsListener implements MapListener {
   }
 
   @Override
-  public Set keySet() {
-    return null;
+  public Set<String> keySet() {
+    Set<String> keys = new HashSet<>();
+
+    for(Shop shop : values()) {
+      keys.add(shop.getName() + ":" + shop.getWorld());
+    }
+
+    return keys;
   }
 
   @Override
-  public Set<Map.Entry> entrySet() {
-    return null;
+  public Set<Map.Entry<String, Shop>> entrySet() {
+    Map<String, Shop> shops = new HashMap<>();
+
+    for(Shop shop : values()) {
+      shops.put(shop.getName() + ":" + shop.getWorld(), shop);
+    }
+
+    return shops.entrySet();
   }
 
   @Override

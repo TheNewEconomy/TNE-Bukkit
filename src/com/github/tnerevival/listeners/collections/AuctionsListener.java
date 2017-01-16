@@ -20,28 +20,29 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.collection.MapListener;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class AuctionsListener implements MapListener {
+  Map<Integer, Auction> changed = new HashMap<>();
 
   @Override
   public void update() {
-
+    for(Auction auction : changed.values()) {
+      TNE.instance.saveManager.versionInstance.saveAuction(auction);
+    }
   }
 
   @Override
-  public Map changed() {
-    return null;
+  public Map<Integer, Auction> changed() {
+    return changed;
   }
 
   @Override
   public void clearChanged() {
-
+    changed.clear();
   }
 
   @Override
@@ -51,27 +52,27 @@ public class AuctionsListener implements MapListener {
 
   @Override
   public Object get(Object key) {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadAuction((Integer)key);
   }
 
   @Override
-  public Collection values() {
-    return null;
+  public Collection<Auction> values() {
+    return TNE.instance.saveManager.versionInstance.loadAuctions();
   }
 
   @Override
   public int size() {
-    return 0;
+    return values().size();
   }
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return size() == 0;
   }
 
   @Override
   public boolean containsKey(Object key) {
-    return false;
+    return get(key) != null;
   }
 
   @Override
@@ -81,21 +82,29 @@ public class AuctionsListener implements MapListener {
 
   @Override
   public void preRemove(Object key, Object value) {
-    Integer lot = (Integer)key;
+    TNE.instance.saveManager.versionInstance.deleteAuction((Auction)value);
+  }
 
-    if(!TNE.instance.manager.auctionManager.exists(lot)) {
-      TNE.instance.saveManager.versionInstance.deleteAuction((Auction)value);
+  @Override
+  public Set<Integer> keySet() {
+    Set<Integer> keys = new HashSet<>();
+
+    for(Auction auction : values()) {
+      keys.add(auction.getLotNumber());
     }
+
+    return keys;
   }
 
   @Override
-  public Set keySet() {
-    return null;
-  }
+  public Set<Map.Entry<Integer, Auction>> entrySet() {
+    Map<Integer, Auction> auctionMap = new HashMap<>();
 
-  @Override
-  public Set<Map.Entry> entrySet() {
-    return null;
+    for(Auction auction : values()) {
+      auctionMap.put(auction.getLotNumber(), auction);
+    }
+
+    return auctionMap.entrySet();
   }
 
   @Override

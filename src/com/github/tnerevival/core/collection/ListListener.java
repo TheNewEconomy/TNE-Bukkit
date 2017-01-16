@@ -16,6 +16,7 @@
  */
 package com.github.tnerevival.core.collection;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,6 +26,8 @@ public interface ListListener<E> {
   void update();
   List<E> changed();
   void clearChanged();
+  Collection<E> getAll();
+  Collection<E> getAll(Object identifier);
   boolean add(E item);
   int size();
   boolean isEmpty();

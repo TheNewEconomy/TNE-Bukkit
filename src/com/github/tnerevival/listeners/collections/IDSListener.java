@@ -19,28 +19,29 @@ package com.github.tnerevival.listeners.collections;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.collection.MapListener;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class IDSListener implements MapListener {
+  Map<String, UUID> changed = new HashMap<>();
+
   @Override
   public void update() {
-
+    for(Map.Entry<String, UUID> entry : changed.entrySet()) {
+      TNE.instance.saveManager.versionInstance.saveID(entry.getKey(), entry.getValue());
+    }
   }
 
   @Override
   public Map changed() {
-    return null;
+    return changed;
   }
 
   @Override
   public void clearChanged() {
-
+    changed.clear();
   }
 
   @Override
@@ -50,17 +51,17 @@ public class IDSListener implements MapListener {
 
   @Override
   public Object get(Object key) {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadID((String)key);
   }
 
   @Override
-  public Collection values() {
-    return null;
+  public Collection<UUID> values() {
+    return TNE.instance.saveManager.versionInstance.loadIDS().values();
   }
 
   @Override
   public int size() {
-    return 0;
+    return TNE.instance.saveManager.versionInstance.loadIDS().size();
   }
 
   @Override
@@ -84,12 +85,12 @@ public class IDSListener implements MapListener {
 
   @Override
   public Set<String> keySet() {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadIDS().keySet();
   }
 
   @Override
   public Set<Map.Entry<String, UUID>> entrySet() {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadIDS().entrySet();
   }
 
   @Override

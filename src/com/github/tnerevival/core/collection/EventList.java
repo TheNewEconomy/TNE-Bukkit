@@ -19,6 +19,7 @@ package com.github.tnerevival.core.collection;
 import com.github.tnerevival.TNE;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,20 @@ public class EventList<E> extends ArrayList<E> {
     listener.update();
     listener.clearChanged();
     lastRefresh = new Date().getTime();
+  }
+
+  public Collection<E> getAll() {
+    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+      return list;
+    }
+    return listener.getAll();
+  }
+
+  public Collection<E> getAll(Object identifier) {
+    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+      return getAll();
+    }
+    return listener.getAll(identifier);
   }
 
   @Override
@@ -85,7 +100,7 @@ public class EventList<E> extends ArrayList<E> {
 
   public boolean remove(Object item, boolean database) {
     boolean removed = true;
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && database) {
+    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       listener.preRemove(item);
     }
 

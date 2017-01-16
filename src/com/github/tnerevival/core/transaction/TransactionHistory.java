@@ -40,9 +40,9 @@ public class TransactionHistory {
     records.add(record);
   }
 
-  private void sort(String world, String type) {
+  private void sort(String world, String player, String type) {
     sorted = new ArrayList<>();
-    for(Record r : records) {
+    for(Record r : records.getAll(player)) {
       Boolean worldCheck = world.equalsIgnoreCase("all") || world.equalsIgnoreCase(r.getWorld());
       Boolean typeCheck = type.equalsIgnoreCase("all") || type.equalsIgnoreCase(r.getType());
 
@@ -56,16 +56,16 @@ public class TransactionHistory {
     return records;
   }
 
-  public List<Record> getRecords(String world, String type, int page) {
+  public List<Record> getRecords(String world, String player, String type, int page) {
     MISCUtils.debug(records.size() + "");
-    return getRecords(5, world, type, page);
+    return getRecords(5, world, player, type, page);
   }
 
-  private List<Record> getRecords(int limit, String world, String type, int page) {
-    sort(world, type);
+  private List<Record> getRecords(int limit, String world, String player, String type, int page) {
+    sort(world, player, type);
     List<Record> pageRecords = new ArrayList<>();
 
-    int max = getMaxPages(world, type, limit);
+    int max = getMaxPages(world, player, type, limit);
     int start = (page == 0)? page : (page - 1) * limit;
 
     for(int i = start; i < start + limit; i++) {
@@ -76,8 +76,8 @@ public class TransactionHistory {
     return pageRecords;
   }
 
-  public Integer getMaxPages(String world, String type, int perPage) {
-    sort(world, type);
+  public Integer getMaxPages(String world, String player, String type, int perPage) {
+    sort(world, player, type);
     int max = sorted.size() / perPage;
     if(sorted.size() % perPage > 0) max++;
     return max;
