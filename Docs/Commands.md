@@ -11,9 +11,14 @@ Anything with {} are required arguments, () are optional.
 | /tne backup                                                                   | tne.admin.backup    | Saves & back ups the TNE Database file.(currently only FlatFile and SQLITE)           |
 | /tne balance {player} (world)                                                 | tne.admin.balance   | Check the specified player's balance                                                  |
 | /tne bank {player} (world)                                                    | tne.admin.bank      | View the specified player's bank                                                      |
+| /tne config {set/get} {node} (value)                                          | tne.admin.config    | Gets or sets the specified configuration node.                                        |
 | /tne create {player} (balance)                                                | tne.admin.create    | Create an account with {player} as the username. Optional starting balance parameter. |
 | /tne delete {player}                                                          | tne.admin.delete    | Delete {player}'s account.                                                            |
 | /tne help                                                                     | tne.admin.help      | General TNE help                                                                      |
+| /tne history {player} (page:#) (world:name/all) (type:type/all)               | tne.admin.history   | See a detailed break down of your transaction history.                                |
+|                                                                               |                     | (page) - The page number you wish to view                                             |
+|                                                                               |                     | (world) - The world name you wish to filter, or all for every world. Defaults to current world |
+|                                                                               |                     | (type) - The transaction type you wish to filter, or all for every transaction.       |
 | /tne id {player}                                                              | tne.admin.id        | Get {player}'s id to be used for player configurations                                |
 | /tne pin {username} {new pin}                                                 | tne.admin.pin       | Reset {username}'s pin.                                                               |
 | /tne purge                                                                    | tne.admin.purge     | Remove all accounts that have the default balance                                     |
@@ -27,6 +32,12 @@ Anything with {} are required arguments, () are optional.
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
 | /auction                                                                      |                     | Base auction command                                                                  |
+| /auction bid {bid} (lot)                                                      | tne.auction.bid     | Place a bid on an auction.                                                            |
+| /auction cancel {lot}                                                         | tne.auction.cancel  | Cancel an auction. NOTE: Only administrators are allowed to cancel auctions with bids |
+| /auction claim {lot}                                                          | tne.auction.claim   | Claim an auction reward                                                               |
+| /auction end {winner} {lot}                                                   | tne.auction.end     | Force an end to any auction. {winner(true/false)} = Pick winner?                      |
+| /auction info {lot}                                                           | tne.auction.info    | View auction information                                                              |
+| /auction list {global/world} {page}                                           | tne.auction.list    | View a list of auctions. {global/world} - The scope to list, leave blank to show your auctions |
 | /auction start {configurations}                                               | tne.auction.start   | Start a new auction,                                                                  |
 |                                                                               |                     | {item:{data value}} - The name of the item to auction off, defaults to held item,     |
 |                                                                               |                     | {amount:#} - The amount of {item} to auction off,                                     |
@@ -36,12 +47,6 @@ Anything with {} are required arguments, () are optional.
 |                                                                               |                     | {silent:true/false} - Whether or not this auction is a silent auction,                |
 |                                                                               |                     | {global:true/false} - Whether or not this auction is global or world-based,           |
 |                                                                               |                     | {permission:node} - The permission needed to partake in this auction.                 |
-| /auction bid {bid} (lot)                                                      | tne.auction.bid     | Place a bid on an auction.                                                            |
-| /auction claim {lot}                                                          | tne.auction.claim   | Claim an auction reward                                                               |
-| /auction cancel {lot}                                                         | tne.auction.cancel  | Cancel an auction. NOTE: Only administrators are allowed to cancel auctions with bids |
-| /auction info {lot}                                                           | tne.auction.info    | View auction information                                                              |
-| /auction list {global/world} {page}                                           | tne.auction.list    | View a list of auctions. {global/world} - The scope to list, leave blank to show your auctions |
-| /auction end {winner} {lot}                                                   | tne.auction.end     | Force an end to any auction. {winner(true/false)} = Pick winner?                      |
 
 bid = Amount to bid
 lot = The auction's lot number.
@@ -57,7 +62,6 @@ lot = The auction's lot number.
 | /bank balance                                                                 | tne.bank.balance    | Find out how much gold is in your bank                                                |
 | /bank buy                                                                     | tne.bank.buy        | Buy yourself a bank                                                                   |
 | /bank deposit                                                                 | tne.bank.deposit    | Put the specified amount of money in your bank                                        |
-| /bank price                                                                   | tne.bank.price      | See how much a bank cost                                                              |
 | /bank remove {player}                                                         | tne.bank.remove     | Remove {player} from your bank                                                        |
 |                                                                               | tne.bank.use        |                                                                                       |
 | /bank view                                                                    | tne.bank.view       | View your bank                                                                        |
@@ -73,6 +77,12 @@ lot = The auction's lot number.
 | /credit commands                                                              | tne.credit.commands | View all command credits you have accumulated                                         |
 | /credit inventory {inventory}                                                 | tne.credit.inventory| View time credits for {inventory} in every world                                      |
 
+##Eco
+
+| Command                                                                       | Permission          | Description                                                                           |
+|-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
+| /eco clean                                                                    | tne.eco.clean       | Fixes all items in the inventory that contain Crafting Cost in the lore.              |
+
 
 ##Money
 
@@ -82,11 +92,12 @@ lot = The auction's lot number.
 |                                                                               | tne.money           |                                                                                       |
 | /money help                                                                   | tne.money.help      | General money help                                                                    |
 | /money balance                                                                | tne.money.balance   | Find out how much money you have on you                                               |
+| /money convert {amount} {to currency(:world)} (from currency(:world))         | tne.money.convert   | Convert some of your funds from one currency to another.                              |
 | /money give                                                                   | tne.money.give      | Summon money from air and give it to a player                                         |
 | /money history {page:#} {world:name/all} {type:type/all}                      | tne.money.history   | See a detailed break down of your transaction history.                                |
+| /money pay {player} {amount}                                                  | tne.money.pay       | Pay a player money from your balance                                                  |
 | /money set {player} {amount} (world)                                          | tne.money.set       | Set {player}'s balance to {amount}                                                    |
 | /money take {player} {amount}                                                 | tne.money.take      | Make some of {player}'s money vanish into thin air                                    |
-| /money pay {player} {amount}                                                  | tne.money.pay       | Pay a player money from your balance                                                  |
 
 
 ##Package
