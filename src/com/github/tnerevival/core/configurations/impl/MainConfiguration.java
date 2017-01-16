@@ -89,6 +89,8 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Database.Prefix", "TNE");
     configurations.put("Core.Database.Backup", true);
     configurations.put("Core.Database.FlatFile.File", "economy.tne");
+    configurations.put("Core.Database.Transactions.Cache", true);
+    configurations.put("Core.Database.Transactions.Update", 600);
     configurations.put("Core.Database.MySQL.Host", "localhost");
     configurations.put("Core.Database.MySQL.Port", 3306);
     configurations.put("Core.Database.MySQL.Database", "TheNewEconomy");

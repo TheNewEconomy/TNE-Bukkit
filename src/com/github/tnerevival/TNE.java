@@ -41,11 +41,6 @@ public class TNE extends JavaPlugin {
   public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
   public static boolean debugMode = false;
 
-  public String saveFormat = "flatfile";
-  public boolean directSQL = true;
-  public boolean cache = true;
-  public long update = 600;
-
   // Files & Custom Configuration Files
   public File mobs;
   public File messages;
@@ -102,21 +97,22 @@ public class TNE extends JavaPlugin {
     saveManager.initialize();
     commandManager = new CommandManager();
 
-    auctionWorker = new AuctionWorker(this);
-    saveWorker = new SaveWorker(this);
-    cacheWorker = new CacheWorker(this);
-    interestWorker = new InterestWorker(this);
     invWorker = new InventoryTimeWorker(this);
+    auctionWorker = new AuctionWorker(this);
+
     if(configurations.getBoolean("Core.AutoSaver.Enabled")) {
+      saveWorker = new SaveWorker(this);
       saveWorker.runTaskTimer(this, configurations.getLong("Core.AutoSaver.Interval") * 20, configurations.getLong("Core.AutoSaver.Interval") * 20);
     }
 
     if(configurations.getBoolean("Core.Bank.Interest.Enabled")) {
+      interestWorker = new InterestWorker(this);
       interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
     }
 
-    if(!saveFormat.equalsIgnoreCase("flatfile") && cache) {
-      cacheWorker.runTaskTimer(this, update * 20, update * 20);
+    if(!saveManager.type.equalsIgnoreCase("flatfile") && saveManager.cache) {
+      cacheWorker = new CacheWorker(this);
+      cacheWorker.runTaskTimer(this, saveManager.update * 20, saveManager.update * 20);
     }
 
     if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
@@ -128,11 +124,10 @@ public class TNE extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
     getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
     getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
-    getServer().getPluginManager().registerEvents(new TNEListener(this), this);
     getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 
-    statsWorker = new StatisticsWorker(this);
     if(configurations.getBoolean("Core.Metrics")) {
+      statsWorker = new StatisticsWorker(this);
       statsWorker.runTaskTimer(this, 24000, 24000);
       Statistics.send();
       try {
@@ -159,8 +154,12 @@ public class TNE extends JavaPlugin {
     configurations.save(materialConfigurations, "materials");
     saveConfigurations(true);
     try {
-      saveWorker.cancel();
-      interestWorker.cancel();
+      if(statsWorker != null) statsWorker.cancel();
+      if(cacheWorker != null) cacheWorker.cancel();
+      if(invWorker != null) invWorker.cancel();
+      if(auctionWorker != null) auctionWorker.cancel();
+      if(saveWorker != null) saveWorker.cancel();
+      if(interestWorker != null) interestWorker.cancel();
     } catch(IllegalStateException e) {
       //Task was not scheduled
     }

@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.objects;
 
-public class MaterialObject {
+public class
+MaterialObject {
 
   private String name;
   private Boolean item;

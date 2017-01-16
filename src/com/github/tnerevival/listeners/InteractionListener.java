@@ -139,7 +139,7 @@ public class InteractionListener implements Listener {
       }
     }
 
-    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), name, InteractionType.CRAFTING);
+    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), new ItemStack(event.getBlock().getType()), name, InteractionType.CRAFTING);
     Bukkit.getServer().getPluginManager().callEvent(e);
 
     if(e.isCancelled()) {
@@ -158,7 +158,7 @@ public class InteractionListener implements Listener {
       }
     }
 
-    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), name, InteractionType.PLACING);
+    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), new ItemStack(event.getBlock().getType()), name, InteractionType.PLACING);
     Bukkit.getServer().getPluginManager().callEvent(e);
 
     if(e.isCancelled()) {
@@ -168,48 +168,52 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onSmelt(FurnaceSmeltEvent event) {
-    if(event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
-      String name = event.getBlock().getType().name();
-      if(event.getBlock().getState() instanceof Furnace) {
-        Furnace f = (Furnace)event.getBlock().getState();
+    if (TNE.instance.api.getBoolean("Materials.Enabled", TNE.instance.defaultWorld, "")) {
+      if (event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
+        String name = event.getBlock().getType().name();
+        if (event.getBlock().getState() instanceof Furnace) {
+          Furnace f = (Furnace) event.getBlock().getState();
 
-        int amount = (f.getInventory().getResult() != null) ? f.getInventory().getResult().getAmount() : 1;
+          int amount = (f.getInventory().getResult() != null) ? f.getInventory().getResult().getAmount() : 1;
 
-        Double cost = InteractionType.SMELTING.getCost(name, event.getBlock().getWorld().toString(), "") * amount;
+          Double cost = InteractionType.SMELTING.getCost(name, event.getBlock().getWorld().toString(), "") * amount;
 
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.WHITE + "Smelting Cost: " + ChatColor.GOLD + cost);
+          List<String> lore = new ArrayList<>();
+          lore.add(ChatColor.WHITE + "Smelting Cost: " + ChatColor.GOLD + cost);
 
-        ItemStack result = event.getResult();
-        ItemMeta meta = result.getItemMeta();
-        meta.setLore(lore);
+          ItemStack result = event.getResult();
+          ItemMeta meta = result.getItemMeta();
+          meta.setLore(lore);
 
-        result.setItemMeta(meta);
-        event.setResult(result);
+          result.setItemMeta(meta);
+          event.setResult(result);
+        }
       }
     }
   }
 
   @EventHandler
   public void onEnchant(EnchantItemEvent event) {
-    if(event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
+    if (TNE.instance.api.getBoolean("Materials.Enabled", MISCUtils.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()))) {
+      if (event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
 
-      ItemStack result = event.getItem();
-      String name = result.getType().name();
-      Double cost = InteractionType.ENCHANT.getCost(name, MISCUtils.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()).toString());
+        ItemStack result = event.getItem();
+        String name = result.getType().name();
+        Double cost = InteractionType.ENCHANT.getCost(name, MISCUtils.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()).toString());
 
-      List<String> lore = new ArrayList<>();
-      lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
 
-      ItemMeta meta = result.getItemMeta();
-      meta.setLore(lore);
+        ItemMeta meta = result.getItemMeta();
+        meta.setLore(lore);
 
-      for(Enchantment e : event.getEnchantsToAdd().keySet()) {
-        meta.addEnchant(e, event.getEnchantsToAdd().get(e), false);
+        for (Enchantment e : event.getEnchantsToAdd().keySet()) {
+          meta.addEnchant(e, event.getEnchantsToAdd().get(e), false);
+        }
+
+        result.setItemMeta(meta);
+        event.getInventory().setItem(0, result);
       }
-
-      result.setItemMeta(meta);
-      event.getInventory().setItem(0, result);
     }
   }
 
@@ -253,7 +257,7 @@ public class InteractionListener implements Listener {
       meta.setLore(newLore);
       result.setItemMeta(meta);
 
-      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, result, name, InteractionType.CRAFTING);
       Bukkit.getServer().getPluginManager().callEvent(e);
 
       if (e.isCancelled()) {
@@ -419,7 +423,7 @@ public class InteractionListener implements Listener {
         }
       } else {
         String name = event.getMaterial().name();
-        TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, name, InteractionType.CRAFTING);
+        TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, event.getItem(), name, InteractionType.CRAFTING);
         Bukkit.getServer().getPluginManager().callEvent(e);
 
         if(e.isCancelled()) {
@@ -436,8 +440,10 @@ public class InteractionListener implements Listener {
 
     if(entity.getKiller() != null) {
       Player killer = entity.getKiller();
+      String world = MISCUtils.getWorld(killer);
+      String id = IDFinder.getID(killer).toString();
       String mob = entity.getCustomName();
-      Double reward = TNE.configurations.mobReward("Default");
+      Double reward = TNE.configurations.mobReward("Default", world, id);
       String messageNode = "Messages.Mob.Killed";
       Boolean player = false;
 
@@ -522,7 +528,7 @@ public class InteractionListener implements Listener {
             mob = "Player";
             Player p = (Player)entity;
             if(p.getUniqueId() != null) {
-              if (TNE.configurations.playerEnabled(p.getUniqueId())) {
+              if (TNE.configurations.playerEnabled(p.getUniqueId(), world, id)) {
                 mob = p.getUniqueId().toString();
                 player = true;
                 break;
@@ -607,7 +613,7 @@ public class InteractionListener implements Listener {
         }
         mob = (mob.equalsIgnoreCase("Default")) ? (entity.getCustomName() != null)? entity.getCustomName() : mob : mob;
 
-        if(TNE.configurations.mobAge()) {
+        if(TNE.configurations.mobAge(world, id)) {
           if (entity instanceof Ageable) {
             Ageable e = (Ageable) entity;
             if (!e.isAdult()) {
@@ -622,9 +628,9 @@ public class InteractionListener implements Listener {
         }
 
         Character firstChar = mob.charAt(0);
-        reward = (player)? TNE.configurations.playerReward(mob) : TNE.configurations.mobReward(mob);
+        reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
-        if(TNE.configurations.mobEnabled(mob)) {
+        if(TNE.configurations.mobEnabled(mob, world, id)) {
           AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, MISCUtils.getWorld(killer));
           if(TNE.instance.api.getBoolean("Mobs.Message")) {
             Message mobKilled = new Message(messageNode);

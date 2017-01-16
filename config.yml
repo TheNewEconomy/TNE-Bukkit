@@ -333,6 +333,15 @@ Core:
             #The file to which all the data will be saved
             File: economy.tne
 
+        #All configurations relating to direct SQL transactions
+        Transactions:
+
+            #Whether or not to cache data
+            Cache: true
+
+            #How long(in seconds) until the cached data should be stored
+            Update: 600
+
             
         #All configurations relating to the MySQL Database
         MySQL:

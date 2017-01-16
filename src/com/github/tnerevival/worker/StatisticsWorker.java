@@ -18,4 +18,10 @@ public class StatisticsWorker extends BukkitRunnable {
   public void run() {
     Statistics.send();
   }
+
+  @Override
+  public void cancel() {
+    Statistics.kill();
+    super.cancel();
+  }
 }

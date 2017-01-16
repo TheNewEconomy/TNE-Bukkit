@@ -36,24 +36,24 @@ public class ConfigurationManager {
     configurations.put("materials", materials);
   }
 
-  public Boolean playerEnabled(UUID id) {
-    return getBoolean("Mobs.Player.Individual." + id.toString() + ".Enabled", "mob");
+  public Boolean playerEnabled(UUID id, String world, String player) {
+    return TNE.instance.api.getBoolean("Mobs.Player.Individual." + id.toString() + ".Enabled", world, player);
   }
 
-  public Double playerReward(String id) {
-    return getDouble("Mobs.Player.Individual." + id + ".Reward", "mob");
+  public Double playerReward(String id, String world, String player) {
+    return TNE.instance.api.getDouble("Mobs.Player.Individual." + id + ".Reward", world, player);
   }
 
-  public Boolean mobAge() {
-    return getBoolean("Mobs.EnableAge");
+  public Boolean mobAge(String world, String player) {
+    return TNE.instance.api.getBoolean("Mobs.EnableAge", world, player);
   }
 
-  public Boolean mobEnabled(String mob) {
-    return getBoolean("Mobs." + mob + ".Enabled", "mob");
+  public Boolean mobEnabled(String mob, String world, String player) {
+    return TNE.instance.api.getBoolean("Mobs." + mob + ".Enabled", world, player);
   }
 
-  public Double mobReward(String mob) {
-    return getDouble("Mobs." + mob + ".Reward", "mob");
+  public Double mobReward(String mob, String world, String player) {
+    return TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player);
   }
 
   private FileConfiguration getFileConfiguration(String id) {

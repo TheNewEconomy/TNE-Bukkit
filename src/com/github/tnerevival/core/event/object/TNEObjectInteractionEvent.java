@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by Daniel on 10/12/2016.
@@ -13,16 +14,18 @@ public class TNEObjectInteractionEvent extends Event implements Cancellable {
   private boolean cancelled = false;
 
   private Player player;
+  private ItemStack stack;
   private String identifier;
   private InteractionType type;
   private int amount = 1;
 
-  public TNEObjectInteractionEvent(Player player, String identifier, InteractionType type) {
-    this(player, identifier, type, 1);
+  public TNEObjectInteractionEvent(Player player, ItemStack stack, String identifier, InteractionType type) {
+    this(player, stack, identifier, type, 1);
   }
 
-  public TNEObjectInteractionEvent(Player player, String identifier, InteractionType type, int amount) {
+  public TNEObjectInteractionEvent(Player player, ItemStack stack, String identifier, InteractionType type, int amount) {
     this.player = player;
+    this.stack = stack;
     this.identifier = identifier;
     this.type = type;
     this.amount = amount;
@@ -45,6 +48,10 @@ public class TNEObjectInteractionEvent extends Event implements Cancellable {
 
   public static HandlerList getHandlerList() {
     return handlers;
+  }
+
+  public ItemStack getStack() {
+    return stack;
   }
 
   public Player getPlayer() {

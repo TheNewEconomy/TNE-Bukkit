@@ -2,12 +2,18 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
+import com.github.tnerevival.core.event.object.InteractionType;
+import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -341,6 +347,83 @@ public class MISCUtils {
     MISCUtils.debug("GET VALUE");
     MISCUtils.debug(builder.toString());
     return builder.toString();
+  }
+
+  public static void handleObjectEvent(TNEObjectInteractionEvent event) {
+    if(event.isCancelled()) return;
+    MISCUtils.debug("TNEObjectInteractionEvent called");
+
+    String id = IDFinder.getID(event.getPlayer()).toString();
+    String world = MISCUtils.getWorld(event.getPlayer());
+    double cost = event.getType().getCost(event.getIdentifier(), MISCUtils.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+    String message = event.getType().getCharged();
+
+    if(cost != 0.0 && !event.isCancelled()) {
+      if(cost > 0.0) {
+        if(AccountUtils.transaction(id, null, cost, TransactionType.MONEY_INQUIRY, world)) {
+          MISCUtils.debug("Removing funds");
+          AccountUtils.transaction(id, null, cost, TransactionType.MONEY_REMOVE, world);
+        } else {
+          MISCUtils.debug("Insufficient funds!");
+          event.setCancelled(true);
+          Message insufficient = new Message("Messages.Money.Insufficient");
+          insufficient.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
+          insufficient.translate(world, event.getPlayer());
+          return;
+        }
+      } else {
+        AccountUtils.transaction(id, null, cost, TransactionType.MONEY_GIVE, world);
+        message = event.getType().getPaid();
+      }
+
+      String newName = event.getIdentifier() + ((event.getAmount() > 1 )? "\'s" : "");
+
+      Message m = new Message(message);
+      m.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
+      m.addVariable("$stack_size", event.getAmount() + "");
+      m.addVariable("$item", newName);
+      m.translate(world, event.getPlayer());
+    }
+
+    if(event.getType().equals(InteractionType.ENCHANT) || event.getType().equals(InteractionType.SMELTING)) {
+      MISCUtils.debug("Inside work around loop");
+      final Player p = event.getPlayer();
+      final ItemStack stack = event.getStack();
+      final String correctMat = event.getIdentifier();
+      final String loreSearch = (event.getType().equals(InteractionType.ENCHANT))? "Enchanting Cost" : "Smelting Cost";
+      MISCUtils.debug("LoreSearch: " + loreSearch);
+      TNE.instance.getServer().getScheduler().runTaskLater(TNE.instance, new Runnable() {
+        @Override
+        public void run() {
+          ItemStack[] contents = p.getInventory().getContents().clone();
+          MISCUtils.debug("Inventory Item Count: " + contents.length);
+          for (int i = 0; i < contents.length; i++) {
+            MISCUtils.debug("Looping contents..." + i + "");
+            if(contents[i] != null) MISCUtils.debug("Item Type: " + contents[i].getType().name());
+            MISCUtils.debug("Correct Material: " + stack.getType().name());
+            MISCUtils.debug("Correct Material: " + correctMat);
+            if (contents[i] != null && contents[i].getType().name().equalsIgnoreCase(correctMat)) {
+              ItemStack cloneStack = contents[i].clone();
+              ItemMeta meta = cloneStack.getItemMeta();
+              List<String> newLore = new ArrayList<>();
+              if (meta.getLore() != null) {
+                for (String s : meta.getLore()) {
+                  MISCUtils.debug("Contains Search: " + s.contains(loreSearch));
+                  if (!s.contains(loreSearch)) {
+                    newLore.add(s);
+                    MISCUtils.debug("Adding Lore: " + s);
+                  }
+                }
+              }
+              meta.setLore(newLore);
+              cloneStack.setItemMeta(meta);
+              contents[i] = cloneStack;
+            }
+          }
+          p.getInventory().setContents(contents);
+        }
+      }, 5L);
+    }
   }
 
   public static void printMaterials() {

@@ -25,6 +25,8 @@ public class SaveManager {
   public Version versionInstance;
   Double currentSaveVersion = 5.1;
   Double saveVersion = 0.0;
+  public boolean cache = TNE.configurations.getBoolean("Core.Database.Transactions.Cache");
+  public long update = TNE.configurations.getLong("Core.Database.Transactions.Update");
   public String type = TNE.configurations.getString("Core.Database.Type");
   File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
 

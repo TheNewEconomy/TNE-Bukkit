@@ -158,23 +158,27 @@ public abstract class TNEInventory {
 
   public boolean onClick(InventoryViewer viewer, ClickType type, int slot, ItemStack item) {
 
+    MISCUtils.debug("Inventory Click Event");
     if(item != null && getBlacklisted().contains(item.getType())) return false;
     if(getValidSlots().size() > 0 && !getValidSlots().contains(slot)) return false;
     if(getInvalidSlots().size() > 0 && getInvalidSlots().contains(slot)) return false;
 
-    InteractionType intType = InteractionType.SMELTING;
     if(inventory.getType().equals(InventoryType.ENCHANTING) || inventory.getType().equals(InventoryType.FURNACE)) {
-      if(inventory.getType().equals(InventoryType.ENCHANTING)) {
-        intType = InteractionType.ENCHANT;
-      }
-      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(MISCUtils.getPlayer(viewer.getUUID()), item.getType().name(), intType);
+      MISCUtils.debug("Inventory is enchanting OR smelting");
+      InteractionType intType = (inventory.getType().equals(InventoryType.ENCHANTING))? InteractionType.ENCHANT : InteractionType.SMELTING;
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(MISCUtils.getPlayer(viewer.getUUID()), item, item.getType().name(), intType);
       Bukkit.getServer().getPluginManager().callEvent(e);
 
+      MISCUtils.debug("Event called");
+      MISCUtils.handleObjectEvent(e);
+
+      MISCUtils.debug("Event handled internally");
       if(e.isCancelled()) {
+        MISCUtils.debug("Event Cancelled");
         return false;
       }
+      MISCUtils.debug("Exiting click event");
     }
-
     return true;
   }
 
