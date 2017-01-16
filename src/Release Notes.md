@@ -1,21 +1,32 @@
-Alpha 5.0 "Economic Reform"
+Alpha 5.1 "Extensibility Update"
 =============================
-   - Mob Reward Changes
-     - Ability to set specific rewards for baby versions of mobs.
-     - Added support for 1.11 mobs.
-     - Split horses into multiple categories depending on their variant.
-       - This is sorted into Llama, ZombieHorse, SkeletonHorse, Mule, Donkey,
-       and Horse.
-   - Major Currency Updates
-     - Ability to have multiple currencies per world.
-     - Ability to convert currencies between each other, and even worlds.
-   - Ability to import user data from other economy plugins.
-     - Currency supports iConomy, CraftConomy, MineConomy, BOSEconomy,
-       Essentials, and FeConomy.
-   - MySQL Improvements
-     - Automatically save changes to the dabase when using a 
-   SQL-based database.
-     - Added server_name field to INFO table for bungeecord server owners to access
-   - MISC Changes
-     - Removed /bank price, and instead added price to /bank buy.
-     - Added the ability to create, and modify membships for banks via the TNEAPI class.
+   - API
+     - Added proper documentation
+     - Fixed issues with API calls that caused NPEs and 90% of the bugs/issues server owners were having
+     - Added proper API support for banks, shops, and auctions
+   - Database
+     - Reworked database management classes to provide a more efficient experience for servers
+       - This has provided a 60% speed increase over Alpha 5.0
+       - This has fixed majority of the SQL-related issues server owners were having
+     - Added the ability to properly enable/disable data caching for SQL saving
+   - Conversion
+     - Reworked conversion to better adhere to the Mojang API call limit
+     - The new system also weeds out unused economy accounts
+   - Event Collections
+     - Reworked event collection classes to better support the new caching configurations
+   - Bug Fixes
+     - Fixed bug where enchant and smelting items added unwanted lore
+     - Fixed bug where mob rewards wouldn't get set per-world, or per-player
+     - Fixed SQL issue that reduced efficiency
+     - Fixed SQL SSL warning
+     - Fixed 90% of issues caused by the dated API class
+     - Fixed bug that disallowed the use of the dark_grey color in messages
+     - Fixed bug that caused TNE to not be compatible with MC 1.8
+     - Fixed an issue with transactions that had a minute chance of not properly give players money from a shop
+     - Fixed issue where players with prefixes weren't handled properly
+     - Fixed issue where Default currency kept appearing in the configuration files
+     - Fixed an issue where world names with dashes broke balances
+     - Fixed an issue where bank members weren't properly saved
+     
+   - Documentation
+     - Started work on the Official TNE Documentation to provide a friendly environment for server owners

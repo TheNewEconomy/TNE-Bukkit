@@ -386,7 +386,6 @@ public class InteractionListener implements Listener {
     Player player = event.getPlayer();
     String world = player.getWorld().getName();
     Block block = event.getClickedBlock();
-    MISCUtils.debug(TNE.instance.manager.signs.size() + "");
 
     if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
       if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
@@ -447,7 +446,7 @@ public class InteractionListener implements Listener {
       String messageNode = "Messages.Mob.Killed";
       Boolean player = false;
 
-      if((TNE.configurations.getBoolean("Mobs.Enabled", "mob"))) {
+      if(TNE.instance.api.getBoolean("Mobs.Enabled", world, id)) {
         switch(entity.getType()) {
           case BAT:
             mob = "Bat";

@@ -2,6 +2,7 @@ package com.github.tnerevival.core.configurations;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.configurations.impl.*;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -37,22 +38,27 @@ public class ConfigurationManager {
   }
 
   public Boolean playerEnabled(UUID id, String world, String player) {
+    MISCUtils.debug("ConfigurationManager.playerEnabled(" + id.toString() + ", " + world + "," + player + ")");
     return TNE.instance.api.getBoolean("Mobs.Player.Individual." + id.toString() + ".Enabled", world, player);
   }
 
   public Double playerReward(String id, String world, String player) {
+    MISCUtils.debug("ConfigurationManager.playerReward(" + id + ", " + world + "," + player + ")");
     return TNE.instance.api.getDouble("Mobs.Player.Individual." + id + ".Reward", world, player);
   }
 
   public Boolean mobAge(String world, String player) {
+    MISCUtils.debug("ConfigurationManager.mobAge(" + world + "," + player + ")");
     return TNE.instance.api.getBoolean("Mobs.EnableAge", world, player);
   }
 
   public Boolean mobEnabled(String mob, String world, String player) {
+    MISCUtils.debug("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
     return TNE.instance.api.getBoolean("Mobs." + mob + ".Enabled", world, player);
   }
 
   public Double mobReward(String mob, String world, String player) {
+    MISCUtils.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
     return TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player);
   }
 
@@ -92,6 +98,7 @@ public class ConfigurationManager {
   }
 
   public Object getValue(String node, String configuration) {
+    MISCUtils.debug("ConfigurationManager.getValue(" + node + ", " + configuration + ")");
     return getConfiguration(configuration).getValue(node);
   }
 
@@ -101,6 +108,7 @@ public class ConfigurationManager {
   }
 
   public Boolean hasNode(String node, String configuration) {
+    MISCUtils.debug("ConfigurationManager.hasNode(" + node + ", " + configuration + ")");
     return getConfiguration(configuration).hasNode(node);
   }
 
@@ -148,6 +156,7 @@ public class ConfigurationManager {
    * Helper methods for configurations.
    */
   public Object getConfiguration(String configuration, String world, String player) {
+    MISCUtils.debug("ConfigurationManager.getConfigurations(" + configuration + ", " + world + "," + player + ")");
     String[] exploded = configuration.split("\\.");
     String path = configuration;
     String prefix = "Core";
@@ -159,7 +168,7 @@ public class ConfigurationManager {
     }
 
     if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
-    if(getBoolean("Core.Multiworld") && worldEnabled(path, world)) return getWorldConfiguration(path, world);
+    if(worldEnabled(path, world)) return getWorldConfiguration(path, world);
     return getValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
   }
 
@@ -182,21 +191,25 @@ public class ConfigurationManager {
   }
 
   public boolean playerEnabled(String node, String player) {
+    MISCUtils.debug("ConfigurationManager.playerEnabled(" + node + ", " + player + ")");
     String path = ConfigurationType.PLAYERS.getPrefix() + "." + player + "." + node;
     return TNE.instance.playerConfigurations.contains(path);
   }
 
   public Object getPlayerConfiguration(String node, String player) {
+    MISCUtils.debug("ConfigurationManager.getPlayerConfiguration(" + node + ", " + player + ")");
     String path = ConfigurationType.PLAYERS.getPrefix() + "." + player + "." + node;
     return TNE.instance.playerConfigurations.get(path);
   }
 
   public boolean worldEnabled(String node, String world) {
+    MISCUtils.debug("ConfigurationManager.worldEnabled(" + node + ", " + world + ")");
     String path = ConfigurationType.WORLDS.getPrefix() + "." + world + "." + node;
     return TNE.instance.worldConfigurations.contains(path);
   }
 
   public Object getWorldConfiguration(String node, String world) {
+    MISCUtils.debug("ConfigurationManager.getWorldConfigurations(" + node + ", " + world + ")");
     String path = ConfigurationType.WORLDS.getPrefix() + "." + world + "." + node;
     return TNE.instance.worldConfigurations.get(path);
   }
