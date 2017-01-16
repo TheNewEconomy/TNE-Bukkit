@@ -6,32 +6,45 @@ Anything with {} are required arguments, () are optional.
 | tne.*               | Gives access to ALL The New Economy commands listed below | |
 | tne.admin.*         | Gives access to all The New Economy Admin Commands and bypasses.                      | /tne    |
 | tne.admin           | | |
-| tne.admin.backup    | Saves & back ups the TNE Database file.(currently only FlatFile and SQLITE)           | /tne backup
-| tne.admin.balance   | Check the specified player's balance                                                  | /tne balance {player} (world)
-| tne.admin.bank      | View the specified player's bank                                                      | /tne bank {player} (world)
-| tne.admin.create    | Create an account with {player} as the username. Optional starting balance parameter. | /tne create {player} (balance)
-| tne.admin.delete    | Delete {player}'s account.                                                            | /tne delete {player}
-| tne.admin.help      | General TNE help                                                                      | /tne help
-| tne.admin.id        | Get {player}'s id to be used for player configurations                                | /tne id {player}
-| tne.admin.pin       | Reset {username}'s pin.                                                               | /tne pin {username} {new pin}
-| tne.admin.purge     | Remove all accounts that have the default balance                                     | /tne purge
-| tne.admin.recreate  | Attempts to recreate database tables                                                  | /tne recreate
-| tne.admin.reload    | Reload the TNE configurations or reload the specified file                            | /tne reload {all/config/mobs/worlds}
-| tne.admin.save      | Force saves all TNE data                                                              | /tne save
-| tne.admin.status    | Set {username}'s account status. Valid options:Normal, Locked, BalanceLocked, and BankLocked. | /tne status {username} {status}
+| tne.admin.backup    | Saves & back ups the TNE Database file.(currently only FlatFile and SQLITE)           | /tne backup |
+| tne.admin.balance   | Check the specified player's balance                                                  | /tne balance {player} (world) |
+| tne.admin.bank      | View the specified player's bank                                                      | /tne bank {player} (world) |
+| tne.admin.create    | Create an account with {player} as the username. Optional starting balance parameter. | /tne create {player} (balance) |
+| tne.admin.config    | Gets or sets the specified configuration node.                                        | /tne config {set/get} {node} (value) |
+| tne.admin.delete    | Delete {player}'s account.                                                            | /tne delete {player} |
+| tne.admin.help      | General TNE help                                                                      | /tne help |
+| tne.admin.history   | See a detailed break down of your transaction history.                                | /tne history {player} (page:#) (world:name/all) (type:type/all) |
+|                     | (page) - The page number you wish to view                                             |
+|                     | (world) - The world name you wish to filter, or all for every world. Defaults to current world |
+|                     | (type) - The transaction type you wish to filter, or all for every transaction.       |
+| tne.admin.id        | Get {player}'s id to be used for player configurations                                | /tne id {player} |
+| tne.admin.pin       | Reset {username}'s pin.                                                               | /tne pin {username} {new pin} |
+| tne.admin.purge     | Remove all accounts that have the default balance                                     | /tne purge |
+| tne.admin.recreate  | Attempts to recreate database tables                                                  | /tne recreate |
+| tne.admin.reload    | Reload the TNE configurations or reload the specified file                            | /tne reload {all/config/mobs/worlds} |
+| tne.admin.save      | Force saves all TNE data                                                              | /tne save |
+| tne.admin.status    | Set {username}'s account status. Valid options:Normal, Locked, BalanceLocked, and BankLocked. | /tne status {username} {status} |
 
 ##Auction
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
-| tne.auction         |                                                                                       |
-| tne.auction.start   | Start a new auction                                                                   | /tne start {configuration}
-| tne.auction.bid     | Place a bid on an auction                                                             | /auction bid {bid} {lot}
-| tne.auction.claim   | Claim an auction reward                                                               | /auction claim {lot}
-| tne.auction.cancel  | Cancel an auction                                                                     | /auction cancel {lot}
-| tne.auction.info    | View auction information                                                              | /auction info {lot}
-| tne.auction.list    | View a list of auctions                                                               | /auction list {global/world} {page}
-| tne.auction.end     | Force an end to any auctions                                                          | /auction end {winner} {lot}
+| tne.auction         |                                                                                       |         |
+| tne.auction.bid     | Place a bid on an auction                                                             | /auction bid {bid} {lot} |
+| tne.auction.cancel  | Cancel an auction                                                                     | /auction cancel {lot} |
+| tne.auction.claim   | Claim an auction reward                                                               | /auction claim {lot} |
+| tne.auction.end     | Force an end to any auctions                                                          | /auction end {winner} {lot} |
+| tne.auction.info    | View auction information                                                              | /auction info {lot} |
+| tne.auction.list    | View a list of auctions                                                               | /auction list {global/world} {page} |
+| tne.auction.start   | Start a new auction,                                                                  | /tne start {configuration} |
+|                     | {item:{data value}} - The name of the item to auction off, defaults to held item,     |         |
+|                     | {amount:#} - The amount of {item} to auction off,                                     |         |
+|                     | {start:#} - The starting bid for this item,                                           |         |
+|                     | {increment:#} - The increment in which bids will be increased,                        |         |
+|                     | {time:#} - The length(in seconds) this auction will go on for,                        |         |
+|                     | {silent:true/false} - Whether or not this auction is a silent auction,                |         |
+|                     | {global:true/false} - Whether or not this auction is global or world-based,           |         |
+|                     | {permission:node} - The permission needed to partake in this auction.                 |         |
 
 ##Bank
 
@@ -72,7 +85,12 @@ Anything with {} are required arguments, () are optional.
 | tne.lottery.*       | Soon™ | |
 | tne.lottery.create  | Soon™ | |
 | tne.lottery.view    | Soon™ | |
-=======
+
+##Eco
+
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
+| tne.eco.clean       | Fixes all items in the inventory that contain Crafting Cost in the lore.              | /eco clean |
 
 ##Lottery
 
@@ -88,13 +106,14 @@ Anything with {} are required arguments, () are optional.
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.money.*         | Gives access to all Money commands | |
 | tne.money           | | |
-| tne.money.history   | See a detailed break down of your transaction history.                                | /money history {page:#} {world:name/all} {type:type/all}
-| tne.money.help      | General money help                                                                    | /money help
-| tne.money.balance   | Find out how much money you have on you                                               | /money balance
-| tne.money.give      | Summon money from air and give it to a player                                         | /money give
-| tne.money.set       | Set {player}'s balance to {amount}                                                    | /money set {player} {amount} (world)
-| tne.money.take      | Make some of {player}'s money vanish into thin air                                    | /money take {player} {amount}
-| tne.money.pay       | Pay a player money from your balance                                                  | /money pay {player} {amount}
+| tne.money.history   | See a detailed break down of your transaction history.                                | /money history {page:#} {world:name/all} {type:type/all} |
+| tne.money.help      | General money help                                                                    | /money help |
+| tne.money.balance   | Find out how much money you have on you                                               | /money balance |
+| tne.money.convert   | Convert some of your funds from one currency to another.                              | /money convert {amount} {to currency(:world)} (from currency(:world)) |
+| tne.money.give      | Summon money from air and give it to a player                                         | /money give |
+| tne.money.set       | Set {player}'s balance to {amount}                                                    | /money set {player} {amount} (world) |
+| tne.money.take      | Make some of {player}'s money vanish into thin air                                    | /money take {player} {amount} |
+| tne.money.pay       | Pay a player money from your balance                                                  | /money pay {player} {amount} |
 
 ##Package
 
@@ -102,8 +121,8 @@ Anything with {} are required arguments, () are optional.
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.package.*       | Give access to all Package commands | |
 | tne.package         | | |
-| tne.package.list    | List all packages for the specified inventory {type}                                  | /package list {type}
-| tne.package.buy     | Buy {package} for inventory {type}                                                    | /package buy {type} {package}
+| tne.package.list    | List all packages for the specified inventory {type}                                  | /package list {type} |
+| tne.package.buy     | Buy {package} for inventory {type}                                                    | /package buy {type} {package} |
 
 ##Pin
 
@@ -111,8 +130,8 @@ Anything with {} are required arguments, () are optional.
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.pin.*           | Gives access to all Pin commands | |
 | tne.pin             | | |
-| tne.pin.set         | Set your pin to {pin}'s value. Old pin is required if you have one set. Pins are case-sensitive   | /pin set {pin} {confirm pin} (old pin)
-| tne.pin.confirm     | Cofirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin}
+| tne.pin.set         | Set your pin to {pin}'s value. Old pin is required if you have one set. Pins are case-sensitive   | /pin set {pin} {confirm pin} (old pin) |
+| tne.pin.confirm     | Cofirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin} |
 
 ##Shop
 
@@ -121,16 +140,16 @@ Anything with {} are required arguments, () are optional.
 | tne.shop.*          | Gives access to all Shop commands | |
 | tne.shop            | | |
 | tne.shop.admin      | | |
-| tne.shop.add        | Add a new item to your shop for (cost) and/or (trade). Leave out item name to use currently held item.  | /shop add {shop} (amount:#) (item name) (stock:#) (gold:#) (trade:name:amount(default 1))
-| tne.shop.blacklist  | Add/remove the specified player to the shop's blacklist                                                 | /shop blacklist {name} {player}
-| tne.shop.browse     | Browse the spcified shop's inventory                                                                    | /shop browse {name}
-| tne.shop.close      | Close the specified shop                                                                                | /shop close {name}
-| tne.shop.create     | Create a new shop. (admin) yes/no, (hidden) yes/no                                                      | /shop create {name} (admin) (hidden)
-| tne.shop.remove     | Remove a specific item from your shop. Cost is required if multiple entries exist                       | /shop remove {name} {amount} (item) (cost(gold:amount or trade:name:amount))
-| tne.shop.share      | Allow/disallow profit sharing with another player                                                       | /shop share {name} {player} (percent or decimal)
-| tne.shop.stock      | Add/Remove stock of an item to your shop for (gold) and/or (trade). Leave out item name to use currently held item  | /shop stock {shop} {add/remove} (quantity:#) (amount:#) (item name(:damage)) (type:(sell/buy)) (gold:#)
-| tne.shop.toggle     | Toggle this shop's visibility. Only whitelisted players can buy from hidden shops                       | /shop toggle {name}
-| tne.shop.whitelist  | Add/remove the specified player to the shop's whitelist                                                 | /shop whitelist {name} {player}
+| tne.shop.add        | Add a new item to your shop for (cost) and/or (trade). Leave out item name to use currently held item.  | /shop add {shop} (amount:#) (item name) (stock:#) (gold:#) (trade:name:amount(default 1)) |
+| tne.shop.blacklist  | Add/remove the specified player to the shop's blacklist                                                 | /shop blacklist {name} {player} |
+| tne.shop.browse     | Browse the spcified shop's inventory                                                                    | /shop browse {name} |
+| tne.shop.close      | Close the specified shop                                                                                | /shop close {name} |
+| tne.shop.create     | Create a new shop. (admin) yes/no, (hidden) yes/no                                                      | /shop create {name} (admin) (hidden) |
+| tne.shop.remove     | Remove a specific item from your shop. Cost is required if multiple entries exist                       | /shop remove {name} {amount} (item) (cost(gold:amount or trade:name:amount)) |
+| tne.shop.share      | Allow/disallow profit sharing with another player                                                       | /shop share {name} {player} (percent or decimal) |
+| tne.shop.stock      | Add/Remove stock of an item to your shop for (gold) and/or (trade). Leave out item name to use currently held item  | /shop stock {shop} {add/remove} (quantity:#) (amount:#) (item name(:damage)) (type:(sell/buy)) (gold:#) |
+| tne.shop.toggle     | Toggle this shop's visibility. Only whitelisted players can buy from hidden shops                       | /shop toggle {name} |
+| tne.shop.whitelist  | Add/remove the specified player to the shop's whitelist                                                 | /shop whitelist {name} {player} |
 
 ##Placement and use of all signs
 
@@ -169,14 +188,24 @@ Use these in place of typing out each individual permission node.
 | | tne.admin.balance
 | | tne.admin.bank
 | | tne.admin.create
+| | tne.admin.config
 | | tne.admin.delete
 | | tne.admin.help
+| | tne.admin.history
 | | tne.admin.pin
 | | tne.admin.purge
 | | tne.admin.recreate
 | | tne.admin.reload
 | | tne.admin.save
 | | tne.admin.status
+| | tne.auction
+| | tne.auction.bid
+| | tne.auction.cancel
+| | tne.auction.claim
+| | tne.auction.end
+| | tne.auction.info
+| | tne.auction.list
+| | tne.auction.start
 | | tne.bank
 | | tne.bank.help
 | | tne.bank.add
@@ -195,10 +224,12 @@ Use these in place of typing out each individual permission node.
 | | tne.credit
 | | tne.credit.commands
 | | tne.credit.inventory
+| | tne.eco.claim
 | | tne.money
 | | tne.money.history
 | | tne.money.help
 | | tne.money.balance
+| | tne.money.convert
 | | tne.money.give
 | | tne.money.set
 | | tne.money.take
@@ -240,8 +271,10 @@ Use these in place of typing out each individual permission node.
 | | tne.admin.balance
 | | tne.admin.bank
 | | tne.admin.create
+| | tne.admin.config
 | | tne.admin.delete
 | | tne.admin.help
+| | tne.admin.history
 | | tne.admin.purge
 | | tne.admin.reload
 | | tne.admin.save
@@ -293,6 +326,7 @@ Use these in place of typing out each individual permission node.
 | | tne.money
 | | tne.money.help
 | | tne.money.balance
+| | tne.money.convert
 | | tne.money.give
 | | tne.money.set
 | | tne.money.take
