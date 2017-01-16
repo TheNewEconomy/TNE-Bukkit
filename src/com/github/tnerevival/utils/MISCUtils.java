@@ -1,22 +1,21 @@
 package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,18 +23,38 @@ import java.util.UUID;
 public class MISCUtils {
 
   //Minecraft Version Utils
-  public static boolean isOneTen() {
-    return Bukkit.getBukkitVersion().contains("1.10");
+  public static boolean isOneEight() {
+    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven();
   }
 
   public static boolean isOneNine() {
-    return Bukkit.getBukkitVersion().contains("1.9");
+    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven();
+  }
+
+  public static boolean isOneTen() {
+    return Bukkit.getVersion().contains("1.10") || isOneEleven();
+  }
+
+  public static boolean isOneEleven() {
+    return Bukkit.getVersion().contains("1.11");
   }
 
   //True MISC Utils
   public static void debug(String message) {
     if(TNE.debugMode) {
       TNE.instance.getLogger().info("[DEBUG MODE]" + message);
+    }
+  }
+
+  public static void debug(StackTraceElement[] stack) {
+    for(StackTraceElement element : stack) {
+      debug(element.toString());
+    }
+  }
+
+  public static void debug(Exception e) {
+    if(TNE.debugMode) {
+      e.printStackTrace();
     }
   }
   /**
@@ -48,9 +67,11 @@ public class MISCUtils {
         if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
           return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
         }
+        MISCUtils.debug("WORLD USING: " + actualWorld);
         return actualWorld;
       }
     }
+    MISCUtils.debug("WORLD USING: Default");
     return TNE.instance.defaultWorld;
   }
 
@@ -64,19 +85,7 @@ public class MISCUtils {
   }
 
   public static String getWorld(Player player) {
-    return MISCUtils.getWorld(MISCUtils.getID(player));
-  }
-
-  /**
-   * Returns the player's actual current world
-   */
-  public static String getActualWorld(UUID id) {
-    if(MISCUtils.multiWorld()) {
-      if(MISCUtils.getPlayer(id) != null) {
-        return MISCUtils.getPlayer(id).getWorld().getName();
-      }
-    }
-    return TNE.instance.defaultWorld;
+    return MISCUtils.getWorld(IDFinder.getID(player));
   }
 
   public static boolean hasItems(UUID id, List<SerializableItemStack> items) {
@@ -131,59 +140,6 @@ public class MISCUtils {
       }
     }
     return count;
-  }
-
-  public static void setItemCount(UUID id, ItemStack stack, Integer amount) {
-    Player p = MISCUtils.getPlayer(id);
-    Integer count = getItemCount(id, stack);
-    if(stack != null) {
-      if(count > amount) {
-        Integer remove = count - amount;
-        Integer slot = 0;
-        for(ItemStack i : p.getInventory().getContents()) {
-          if(i != null && i.getType() != null && i.equals(stack)) {
-            if(remove > i.getAmount()) {
-              remove -= i.getAmount();
-              i.setAmount(0);
-              p.getInventory().setItem(slot, null);
-            } else {
-              if(i.getAmount() - remove > 0) {
-                i.setAmount(i.getAmount() - remove);
-                p.getInventory().setItem(slot, i);
-                return;
-              }
-              p.getInventory().setItem(slot, null);
-              return;
-            }
-          }
-          slot++;
-        }
-      } else if(count < amount) {
-        Integer add = amount - count;
-
-        while(add > 0) {
-          if(add > stack.getMaxStackSize()) {
-            ItemStack temp = stack.clone();
-            temp.setAmount(stack.getMaxStackSize());
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(temp);
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), temp);
-            }
-            add -= stack.getMaxStackSize();
-          } else {
-            ItemStack temp = stack.clone();
-            temp.setAmount(add);
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(temp);
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), temp);
-            }
-            add = 0;
-          }
-        }
-      }
-    }
   }
 
   public static void setItemCount(UUID id, Material item, Integer amount) {
@@ -242,10 +198,14 @@ public class MISCUtils {
       reloadConfigsMessages();
       reloadConfigsMobs();
       reloadConfigsObjects();
+      reloadConfigPlayers();
       reloadConfigsWorlds();
+      TNE.instance.manager.currencyManager.loadCurrencies();
     } else if(type.equalsIgnoreCase("config")) {
       TNE.instance.reloadConfig();
       TNE.configurations.load(TNE.instance.getConfig(), "main");
+    } else if(type.equalsIgnoreCase("currencies")) {
+      TNE.instance.manager.currencyManager.loadCurrencies();
     } else if(type.equalsIgnoreCase("materials")) {
       reloadConfigsMaterials();
     } else if(type.equalsIgnoreCase("messages")) {
@@ -254,6 +214,8 @@ public class MISCUtils {
       reloadConfigsMobs();
     } else if(type.equalsIgnoreCase("objects")) {
       reloadConfigsObjects();
+    } else if(type.equalsIgnoreCase("players")) {
+      reloadConfigPlayers();
     } else if(type.equalsIgnoreCase("worlds")) {
       reloadConfigsWorlds();
     }
@@ -291,11 +253,75 @@ public class MISCUtils {
     TNE.configurations.load(TNE.instance.objectConfigurations, "objects");
   }
 
+  public static void reloadConfigPlayers() {
+    if(TNE.instance.players == null) {
+      TNE.instance.players = new File(TNE.instance.getDataFolder(), "players.yml");
+    }
+    TNE.instance.playerConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.players);
+    TNE.configurations.load(TNE.instance.playerConfigurations, "players");
+  }
+
   public static void reloadConfigsWorlds() {
     if(TNE.instance.worlds == null) {
       TNE.instance.worlds = new File(TNE.instance.getDataFolder(), "worlds.yml");
     }
     TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
+  }
+
+  public static JSONObject[] sendPostRequest(String url, String payload) {
+    StringBuilder builder = new StringBuilder();
+    try {
+      HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+      connection.setConnectTimeout(5000);
+      connection.setReadTimeout(5000);
+      connection.setRequestMethod("POST");
+      connection.setDoOutput(true);
+      connection.setRequestProperty("Content-Type", "application/json");
+
+      OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+      out.write(payload);
+      out.flush();
+      out.close();
+
+      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String response;
+      while ((response = reader.readLine()) != null) {
+        builder.append(response);
+      }
+      connection.disconnect();
+      reader.close();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+
+    String toSplit = builder.toString().replace("[", "").replace("]", "");
+    MISCUtils.debug(toSplit);
+    String[] split = toSplit.split("},");
+    List<JSONObject> objects = new ArrayList<>();
+
+    for(String s : split) {
+      String sSuffix = (s.endsWith("}"))? s : s + "}";
+      objects.add((JSONObject)JSONValue.parse(sSuffix));
+    }
+
+    return objects.toArray(new JSONObject[objects.size()]);
+  }
+
+  public static String sendSecureGetRequest(String url) {
+    StringBuilder builder = new StringBuilder();
+    try {
+      HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+      String response;
+      while ((response = reader.readLine()) != null) {
+        builder.append(response);
+      }
+      reader.close();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+    return builder.toString();
   }
 
   public static String sendGetRequest(String URL) {
@@ -309,107 +335,67 @@ public class MISCUtils {
         builder.append(response);
       }
       reader.close();
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      MISCUtils.debug(e);
     }
+    MISCUtils.debug("GET VALUE");
+    MISCUtils.debug(builder.toString());
     return builder.toString();
   }
 
-  public static UUID distringuishId(String identifier) {
-    Player player = (isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
+  public static void printMaterials() {
+    FileWriter writer = null;
+    BufferedWriter buffWriter = null;
+    try {
+      writer = new FileWriter(new File(TNE.instance.getDataFolder(), "Material.txt"));
+      buffWriter = new BufferedWriter(writer);
+    } catch(Exception e) {
 
-    return MISCUtils.getID(player);
+    }
+    for(Material mat : Material.values()) {
+      if(buffWriter != null && writer != null) {
+        try {
+          buffWriter.write("validNames.add(new MaterialNameHelper(Material." + mat.name() + ", new String[0]));" + System.lineSeparator());
+        } catch(Exception e) {
+
+        }
+      }
+    }
+    if(buffWriter != null) {
+      try {
+        buffWriter.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if(writer != null) {
+      try {
+        writer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
-  public static boolean isUUID(String value) {
-    try {
-      UUID.fromString(value);
-      return true;
-    } catch (Exception ex) {
-      return false;
+  public static UUID distringuishId(String identifier) {
+    if(IDFinder.isUUID(identifier)) {
+      return UUID.fromString(identifier);
     }
+    return IDFinder.getID(identifier);
   }
 
   @SuppressWarnings("deprecation")
   public static Player getPlayer(String username) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return Bukkit.getPlayer(username);
-    }
-    UUID id = getID(username);
-    return Bukkit.getPlayer(id);
+    return IDFinder.getPlayer(username);
   }
 
   @SuppressWarnings("deprecation")
   public static Player getPlayer(UUID id) {
     if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return Bukkit.getPlayer(ecoToUsername(id));
+      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
     return Bukkit.getPlayer(id);
-  }
-
-  public static UUID ecoID(String username) {
-    if(TNE.instance.manager.ecoIDs.containsKey(username)) {
-      return TNE.instance.manager.ecoIDs.get(username);
-    }
-    UUID eco = MISCUtils.genUUID();
-    TNE.instance.manager.ecoIDs.put(username, eco);
-    return eco;
-  }
-
-  public static UUID genUUID(String name) {
-    UUID id = MojangAPI.getPlayerUUID(name);
-    if(id != null) return id;
-
-    return genUUID();
-  }
-
-  public static UUID genUUID() {
-    UUID id = UUID.randomUUID();
-    while(TNE.instance.manager.accounts.containsKey(id) || TNE.instance.manager.ecoIDs.containsValue(id)) {
-      //This should never happen, but we'll play it safe
-      id = UUID.randomUUID();
-    }
-    return id;
-  }
-
-  public static String ecoToUsername(UUID id) {
-    return (String) getKey(TNE.instance.manager.ecoIDs, id);
-  }
-
-  public static UUID getID(String player) {
-    if(player.contains("town-")) {
-      return MISCUtils.ecoID(player);
-    }
-
-    if(player.contains("nation-")) {
-      return MISCUtils.ecoID(player);
-    }
-
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return ecoID(player);
-    }
-
-    UUID mojangID = MojangAPI.getPlayerUUID(player);
-    return (mojangID == null)? MISCUtils.ecoID(player) : mojangID;
-  }
-
-  public static UUID getID(Player player) {
-    if(player != null) {
-      if (!TNE.instance.api.getBoolean("Core.UUID")) {
-        return ecoID(player.getDisplayName());
-      }
-      return player.getUniqueId();
-    }
-    return genUUID();
-  }
-
-  public static UUID getID(OfflinePlayer player) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return ecoID(player.getName());
-    }
-    return player.getUniqueId();
   }
 
   @SuppressWarnings("rawtypes")
@@ -422,46 +408,8 @@ public class MISCUtils {
     return null;
   }
 
-  //ItemStack Utils
-  public static ItemStack getFurnaceSource(ItemStack result) {
-    List<Recipe> recipes = TNE.instance.getServer().getRecipesFor(result);
-    for(Recipe r : recipes) {
-      if(r instanceof FurnaceRecipe) {
-        return ((FurnaceRecipe) r).getInput();
-      }
-    }
-    return new ItemStack(Material.AIR, 1);
-  }
-
-  public static Boolean chargeClick(List<String> lore, String inv) {
-    if(lore != null) {
-      String search = "Enchanting Cost:";
-      switch(inv) {
-        case "smelt":
-          search = "Smelting Cost:";
-          break;
-        case "brew":
-          search = "Brewing Cost:";
-          break;
-      }
-
-      for(String s : lore) {
-        if(s.contains(search)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  public static Boolean useBankBalance(String world) {
-    if(multiWorld()) {
-      if(worldConfigExists("Bank.Connect", world)) {
-        return TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Bank.Connected");
-      }
-      return false;
-    }
-    return TNE.instance.api.getBoolean("Core.Bank.Connected", world);
+  public static String dashUUID(String undashed) {
+    return undashed.replaceAll(TNE.uuidCreator.pattern(), "$1-$2-$3-$4-$5");
   }
 
   public static Boolean isBoolean(String value) {
@@ -489,10 +437,6 @@ public class MISCUtils {
   //World Utils
   public static Boolean multiWorld() {
     return TNE.instance.api.getBoolean("Core.Multiworld");
-  }
-
-  public static Boolean worldConfigExists(String node, String world) {
-    return worldConfigExists("Worlds." + world + "." + node);
   }
 
   public static Boolean worldConfigExists(String node) {

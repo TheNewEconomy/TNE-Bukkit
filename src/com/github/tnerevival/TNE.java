@@ -23,10 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class TNE extends JavaPlugin {
 
@@ -40,7 +38,13 @@ public class TNE extends JavaPlugin {
   public TNEAPI api = null;
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
-  public static final boolean debugMode = true;
+  public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
+  public static boolean debugMode = false;
+
+  public String saveFormat = "flatfile";
+  public boolean directSQL = true;
+  public boolean cache = true;
+  public long update = 600;
 
   // Files & Custom Configuration Files
   public File mobs;
@@ -60,7 +64,7 @@ public class TNE extends JavaPlugin {
   public static ConfigurationManager configurations;
   public static UpdateChecker updater;
 
-  public String defaultWorld;
+  public String defaultWorld = "Default";
 
   /*
    * Instances of the main runnables.
@@ -70,8 +74,9 @@ public class TNE extends JavaPlugin {
   private InterestWorker interestWorker;
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
+  private CacheWorker cacheWorker;
 
-  public static HashMap<String, UUID> uuidCache = new HashMap<String, UUID>();
+  public static Map<String, UUID> uuidCache = new HashMap<>();
 
   public void onLoad() {
     instance = this;
@@ -87,15 +92,19 @@ public class TNE extends JavaPlugin {
     initializeConfigurations();
     loadConfigurations();
 
+    debugMode = getConfig().getBoolean("Core.Debug");
+
     configurations = new ConfigurationManager();
 
     manager = new EconomyManager();
     inventoryManager = new InventoryManager();
     saveManager = new SaveManager();
+    saveManager.initialize();
     commandManager = new CommandManager();
 
     auctionWorker = new AuctionWorker(this);
     saveWorker = new SaveWorker(this);
+    cacheWorker = new CacheWorker(this);
     interestWorker = new InterestWorker(this);
     invWorker = new InventoryTimeWorker(this);
     if(configurations.getBoolean("Core.AutoSaver.Enabled")) {
@@ -104,6 +113,10 @@ public class TNE extends JavaPlugin {
 
     if(configurations.getBoolean("Core.Bank.Interest.Enabled")) {
       interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
+    }
+
+    if(!saveFormat.equalsIgnoreCase("flatfile") && cache) {
+      cacheWorker.runTaskTimer(this, update * 20, update * 20);
     }
 
     if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
@@ -144,7 +157,7 @@ public class TNE extends JavaPlugin {
     configurations.save(messageConfigurations, "messages");
     configurations.save(objectConfigurations, "objects");
     configurations.save(materialConfigurations, "materials");
-    saveConfigurations();
+    saveConfigurations(true);
     try {
       saveWorker.cancel();
       interestWorker.cancel();
@@ -188,28 +201,40 @@ public class TNE extends JavaPlugin {
     }
   }
 
-  private void loadConfigurations() {
-       getConfig().options().copyDefaults(true);
-       mobConfigurations.options().copyDefaults(true);
-       messageConfigurations.options().copyDefaults(true);
-       objectConfigurations.options().copyDefaults(true);
-       materialConfigurations.options().copyDefaults(true);
-       playerConfigurations.options().copyDefaults(true);
-       worldConfigurations.options().copyDefaults(true);
-       saveConfigurations();
+  public void loadConfigurations() {
+    getConfig().options().copyDefaults(true);
+    mobConfigurations.options().copyDefaults(true);
+    messageConfigurations.options().copyDefaults(true);
+    objectConfigurations.options().copyDefaults(true);
+    materialConfigurations.options().copyDefaults(true);
+    playerConfigurations.options().copyDefaults(true);
+    worldConfigurations.options().copyDefaults(true);
+    saveConfigurations(false);
   }
 
-  private void saveConfigurations() {
-    if(!new File(getDataFolder(), "config.yml").exists() || modified.contains("config.yml")) {
+  private void saveConfigurations(boolean check) {
+    if(!check || !new File(getDataFolder(), "config.yml").exists() || modified.contains("config.yml")) {
       saveConfig();
     }
     try {
-      mobConfigurations.save(mobs);
-      messageConfigurations.save(messages);
-      objectConfigurations.save(objects);
-      materialConfigurations.save(materials);
-      playerConfigurations.save(players);
-      worldConfigurations.save(worlds);
+      if(!check || !mobs.exists() || modified.contains(mobConfigurations.getName())) {
+        mobConfigurations.save(mobs);
+      }
+      if(!check || !messages.exists() || modified.contains(messageConfigurations.getName())) {
+        messageConfigurations.save(messages);
+      }
+      if(!check || !objects.exists() || modified.contains(objectConfigurations.getName())) {
+        objectConfigurations.save(objects);
+      }
+      if(!check || !materials.exists() || modified.contains(materialConfigurations.getName())) {
+        materialConfigurations.save(materials);
+      }
+      if(!check || !players.exists() || modified.contains(playerConfigurations.getName())) {
+        playerConfigurations.save(players);
+      }
+      if(!check || !worlds.exists() || modified.contains(worldConfigurations.getName())) {
+        worldConfigurations.save(worlds);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }

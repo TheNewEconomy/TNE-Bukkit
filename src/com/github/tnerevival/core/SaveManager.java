@@ -1,63 +1,50 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.core.version.Alpha2_2;
-import com.github.tnerevival.core.version.Alpha3_0;
-import com.github.tnerevival.core.version.Alpha4_0;
+import com.github.tnerevival.core.conversion.Converter;
+import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
+import com.github.tnerevival.core.version.impl.Alpha5_0;
 
 import java.io.*;
 import java.sql.*;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class SaveManager {
 
   static HashMap<Double, Version> versions;
+
   static {
     versions = new HashMap<>();
-    versions.put(2.2, new Alpha2_2());
-    versions.put(3.3, new Alpha3_0());
-    versions.put(4.0, new Alpha4_0());
+    versions.put(5.0, new Alpha5_0());
+    versions.put(5.1, new Alpha5_0());
   }
 
-  Version versionInstance;
-  Double currentSaveVersion = 4.0;
+  public Version versionInstance;
+  Double currentSaveVersion = 5.1;
   Double saveVersion = 0.0;
   public String type = TNE.configurations.getString("Core.Database.Type");
   File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
 
   public SaveManager() {
     versionInstance = versions.get(currentSaveVersion);
+  }
+
+  public void initialize() {
     if(firstRun()) {
       initiate();
     } else {
       getVersion();
+      if(saveVersion < 5.0) {
+        TNE.instance.getLogger().info("Versions before Alpha 5.0 aren't supported by this version! Please run Alpha 5.0 before continuing to this version.");
+        return;
+      }
       TNE.instance.getLogger().info("Save file of version: " + saveVersion + " detected.");
       load();
-      convert();
     }
-  }
-
-  public void deleteAccount(UUID id) {
-    String table = versionInstance.prefix + "_USERS";
-    if(!type.equalsIgnoreCase("flatfile")) {
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE uuid = ?",
-          new Object[] { id.toString() });
-      table = versionInstance.prefix + "_ECOIDS";
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE uuid = ?",
-          new Object[] { id.toString() });
-    }
-  }
-
-  public void deleteShop(String name, String world) {
-    if(!type.equalsIgnoreCase("flatfile")) {
-      String table = versionInstance.prefix + "_SHOPS";
-      versionInstance.mysql().executePreparedUpdate("DELETE FROM " + table + " WHERE shop_name = ? AND shop_world = ?",
-          new Object[] { name, world });
-    }
+    convert();
   }
 
   public void recreate() {
@@ -206,12 +193,40 @@ public class SaveManager {
   }
 
   private void convert() {
+    if(TNE.instance.api.getBoolean("Core.Conversion.Convert")) {
+      Converter converter = getConverter();
+      if(converter != null) {
+        converter.convert();
+        TNE.instance.getConfig().set("Core.Conversion.Convert", false);
+        return;
+      }
+      System.out.println("Invalid conversion attempted!");
+    }
+  }
+
+  public Converter getConverter() {
+    String name = TNE.instance.api.getString("Core.Conversion.Name").toLowerCase();
+
+    switch(name) {
+      case "iconomy":
+        return new iConomy();
+      case "boseconomy":
+        return new BOSEconomy();
+      case "essentials":
+        return new Essentials();
+      case "craftconomy":
+        return new CraftConomy();
+      case "mineconomy":
+        return new MineConomy();
+      case "feconomy":
+        return new FeConomy();
+    }
+    return null;
   }
 
   public void load() {
     if(saveVersion < versionInstance.versionNumber() && saveVersion != 0) {
       versionInstance.update(saveVersion, type.toLowerCase());
-      return;
     }
     if(type.equalsIgnoreCase("flatfile")) {
       loadFlatFile();

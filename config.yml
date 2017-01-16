@@ -1,4 +1,4 @@
-# The New Economy v0.0.4.0
+# The New Economy v0.0.5.1
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
@@ -11,16 +11,11 @@ Core:
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
     
-    #The initial balance for accounts.
-    #Will be used if no world-specific configurations are found if multiworld is enabled
-    Balance: 200.0
-
-    #Whether or not to shorten money amounts
-    #Example: 2100 would be 2.1k
-    Shorten: true
-    
     #whether or not to enable plugin metrics for TNE
     Metrics: true
+
+    #Whether or not to run the server in debug mode. OCD WARNING: Causes console spam.
+    Debug: false
 
     #All configurations relating to account pins
     Pins:
@@ -72,63 +67,72 @@ Core:
     #All configurations relating to currency.
     Currency:
 
-        #The format to use when outputting this currency into chat.
-        #The variables you're able to use here.
-        #<symbol> - The currency's symbol
-        #<decimal> - The currency's decimal.
-        #<major> - A combination of the currency's major amount and name
-        #<minor> - A combination of the currency's minor amount and name
-        #<major.name> - The currency's major name.
-        #<minor.name> - The currency's minor name.
-        #<major.amount> - The currency's major amount.
-        #<minor.amount> - The currency's minor amount.
-        #<shorten.amount> - The currency's shortened amount.
-        #<shorten> - Added to make the outputted value shortened
-        # If shortened, it will ignore the value of Format.
-        #It's also possible to include all colour variables from messages.yml
-        #Example: <major> and <minor>
-        Format: <symbol><major><decimal><minor><shorten>
+        #Name of the currency
+        Default:
+            #The format to use when outputting this currency into chat.
+            #The variables you're able to use here.
+            #<symbol> - The currency's symbol
+            #<decimal> - The currency's decimal.
+            #<major> - A combination of the currency's major amount and name
+            #<minor> - A combination of the currency's minor amount and name
+            #<major.name> - The currency's major name.
+            #<minor.name> - The currency's minor name.
+            #<major.amount> - The currency's major amount.
+            #<minor.amount> - The currency's minor amount.
+            #<short.amount> - The currency's shortened amount.
+            #<shorten> - Added to make the outputted value shortened
+            # If shortened, it will ignore the value of Format.
+            #It's also possible to include all colour variables from messages.yml
+            #Example: <major> and <minor>
+            Format: <symbol><major><decimal><minor><shorten>
 
-        #The conversion power of this currency to other currencies.
-        #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
-        Conversion: 1.0
+            #The initial balance for accounts.
+            #Will be used if no world-specific configurations are found if multiworld is enabled
+            Balance: 200.0
 
-        #The character to use as the symbol for this currency.
-        Symbol: $
+            #Whether or not this currency is the world's default.
+            Default: true
 
-        #The character to use as the decimal place holder.
-        Decimal: .
+            #The conversion power of this currency to other currencies.
+            #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+            Conversion: 1.0
 
-        #Would you like to use an item as the currency?
-        ItemCurrency: false
-        
-        #If you want to use an item, which one?(Please use the name of the item)
-        #Example: GOLD_INGOT
-        ItemMajor: GOLD_INGOT
-        
-        #The minor item currency item.
-        #Example: for USD this might be quarters or dimes
-        ItemMinor: IRON_INGOT
+            #The character to use as the symbol for this currency.
+            Symbol: $
 
-        #The name of the major currency
-        #Example: Dollars
-        MajorName:
+            #The character to use as the decimal place holder.
+            Decimal: .
 
-            #The singular name. Example: Dollar
-            Single: Dollar
+            #Would you like to use an item as the currency?
+            ItemCurrency: false
 
-            #The plural name. Example: Dollars
-            Plural: Dollars
-            
-        #The name of the minor currency
-        #Example: Cents
-        MinorName:
+            #If you want to use an item, which one?(Please use the name of the item)
+            #Example: GOLD_INGOT
+            ItemMajor: GOLD_INGOT
 
-            #The singular name. Example: Cent
-            Single: Cent
+            #The minor item currency item.
+            #Example: for USD this might be quarters or dimes
+            ItemMinor: IRON_INGOT
 
-            #The plural name. Example: Cents
-            Plural: Cents
+            #The name of the major currency
+            #Example: Dollars
+            MajorName:
+
+                #The singular name. Example: Dollar
+                Single: Dollar
+
+                #The plural name. Example: Dollars
+                Plural: Dollars
+
+            #The name of the minor currency
+            #Example: Cents
+            MinorName:
+
+                #The singular name. Example: Cent
+                Single: Cent
+
+                #The plural name. Example: Cents
+                Plural: Cents
 
     #All configurations relating to the TNE Auctions System.
     Auctions:
@@ -328,6 +332,7 @@ Core:
 
             #The file to which all the data will be saved
             File: economy.tne
+
             
         #All configurations relating to the MySQL Database
         MySQL:
@@ -359,3 +364,38 @@ Core:
             
             #The SQLite Database File
             File: economy.db
+
+    #All configurations relating to converter from another economy plugin.
+    #Please make sure you have the plugin's directory in your plugin's folder as we
+    #require it for automatically gathering specific data.
+    Conversion:
+
+        #Whether or not to convert data from a previous economy plugin.
+        #Remember to backup all data before converting.
+        Convert: false
+
+        #The economy plugin you wish you convert data from.
+        #Valid options are CraftConomy, MineConomy, FeConomy, iConomy, Essentials, BOSEconomy
+        Name: iConomy
+
+        #The save format you wish to convert from.
+        #Valid options are  MySQL, H2, YAML, FlatFile
+        Format: MySQL
+
+        #All conversion options.
+        Options:
+
+            #The host for sql-related formats.
+            Host: localhost
+
+            #The port for sql-related formats.
+            Port: 3306
+
+            #The database for sql-related formats.
+            Database: sql_eco
+
+            #The username for sql-related formats.
+            User: root
+
+            #The password for sql-related formats.
+            Password: Password

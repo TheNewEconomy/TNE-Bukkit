@@ -1,17 +1,20 @@
 package com.github.tnerevival.commands.money;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.transaction.TransactionHistory;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -79,32 +82,46 @@ public class MoneyHistoryCommand extends TNECommand {
             type = split[1];
             break;
         }
+      } else {
+        if(MISCUtils.isInteger(s)) {
+          page = Integer.parseInt(s);
+        }
       }
     }
 
-    TransactionHistory history = TNE.instance.manager.transactions.getHistory(MISCUtils.getID(player).toString());
+    String id = IDFinder.getID(player).toString();
+    TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
 
-    List<Record> records = history.getRecords(world, type, page);
+    if(history != null) {
+      List<Record> records = history.getRecords(world, type, page);
+      MISCUtils.debug(history.getMaxPages(world, type, 5) + "");
+      Integer max = history.getMaxPages(world, type, 5);
 
-    player.sendMessage(ChatColor.WHITE + "Type | Player | World | Amount | BalanceAfter | Time - Page " + page + "/" + history.getMaxPages(world, type, 5));
-    if(records.size() > 0) {
-      for(Record r : records) {
-        Double difference = r.getOldBalance() - r.getBalance();
-        String amount = ((difference >= 0.0)? ChatColor.GREEN + "+" : ChatColor.RED + "-") + difference;
+      player.sendMessage(ChatColor.WHITE + "Type | Player | World | Amount | BalanceAfter | Time - Page " + page + "/" + max);
+      if (records.size() > 0) {
+        for (Record r : records) {
+          MISCUtils.debug((r == null) + "");
+          Double difference = AccountUtils.round(r.getBalance() - r.getOldBalance());
+          String amount = ((difference >= 0.0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
-        String time = r.convert(world, MISCUtils.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, MISCUtils.getID(player)));
+          String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(ChatColor.GREEN + r.getType() + ChatColor.WHITE + " | ");
-        builder.append(ChatColor.GREEN + r.getPlayer() + ChatColor.WHITE + " | ");
-        builder.append(ChatColor.GREEN + r.getWorld() + ChatColor.WHITE + " | ");
-        builder.append(ChatColor.GREEN + amount + ChatColor.WHITE + " | ");
-        builder.append(ChatColor.GREEN + CurrencyFormatter.format(r.getWorld(), r.getBalance()) + ChatColor.WHITE + " | ");
-        builder.append(ChatColor.GREEN + (r.getTime() + "") + ChatColor.WHITE);
+          Player p = null;
+          if(r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {
+            p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
+          }
+          StringBuilder builder = new StringBuilder();
+          builder.append(ChatColor.GREEN + r.getType() + ChatColor.WHITE + " | ");
+          builder.append(ChatColor.GREEN + ((p == null)? r.getPlayer() : p.getDisplayName()) + ChatColor.WHITE + " | ");
+          builder.append(ChatColor.GREEN + r.getWorld() + ChatColor.WHITE + " | ");
+          builder.append(ChatColor.GREEN + amount + ChatColor.WHITE + " | ");
+          builder.append(ChatColor.GREEN + CurrencyFormatter.format(r.getWorld(), r.getBalance()) + ChatColor.WHITE + " | ");
+          builder.append(ChatColor.GREEN + (time + "") + ChatColor.WHITE);
 
-        sender.sendMessage(builder.toString());
+          sender.sendMessage(builder.toString());
+        }
+        return true;
       }
-      return true;
     }
     new Message("Messages.Account.NoTransactions").translate(world, player);
     return true;

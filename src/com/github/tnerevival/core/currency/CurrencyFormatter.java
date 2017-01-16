@@ -2,6 +2,7 @@ package com.github.tnerevival.core.currency;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,10 @@ public class CurrencyFormatter {
   }
 
   public static String format(Currency currency, double amount) {
+
+    if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
+
+    MISCUtils.debug(currency.getName() + " World: " + currency.getFormat());
 
     String shortFormat = "<symbol> <short.amount>";
     String format = currency.getFormat();
@@ -71,6 +76,21 @@ public class CurrencyFormatter {
     }
     int exp = (int) (Math.log(dollars) / Math.log(1000));
     return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
+  }
+
+  public static Boolean isDouble(String value, String world) {
+    String major = TNE.instance.manager.currencyManager.get(world).getMajor();
+    return isDouble(value, major, world);
+  }
+
+  public static Boolean isDouble(String value, String currency, String world) {
+    String decimal = TNE.instance.manager.currencyManager.get(world, currency).getDecimal();
+    try {
+      Double.valueOf(value.replace(decimal, "."));
+      return true;
+    } catch(Exception e) {
+      return false;
+    }
   }
 
   public static Double translateDouble(String value, String world) {

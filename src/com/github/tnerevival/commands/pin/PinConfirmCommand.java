@@ -2,6 +2,7 @@ package com.github.tnerevival.commands.pin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
@@ -39,14 +40,14 @@ public class PinConfirmCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = (Player)sender;
 
-    if(TNE.instance.manager.confirmed(MISCUtils.getID(player), MISCUtils.getWorld(player))) {
+    if(TNE.instance.manager.confirmed(IDFinder.getID(player), MISCUtils.getWorld(player))) {
       Message message = new Message("Messages.Pin.Already");
       message.translate(MISCUtils.getWorld(player), player);
       return false;
     }
 
     if(arguments.length > 0 && arguments.length < 2) {
-      Account acc = AccountUtils.getAccount(MISCUtils.getID(player));
+      Account acc = AccountUtils.getAccount(IDFinder.getID(player));
       if(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
         Message message = new Message("Messages.Account.Set");
         message.translate(MISCUtils.getWorld(player), player);
@@ -58,7 +59,7 @@ public class PinConfirmCommand extends TNECommand {
         return false;
       }
 
-      TNE.instance.manager.confirmed.add(MISCUtils.getID(player));
+      TNE.instance.manager.confirmed.add(IDFinder.getID(player));
       Message message = new Message("Messages.Pin.Confirmed");
       message.translate(MISCUtils.getWorld(player), player);
       return true;

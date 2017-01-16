@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.auction.Auction;
@@ -80,10 +81,10 @@ public class AuctionStartCommand extends TNECommand {
     Boolean silent = command.equalsIgnoreCase("sauction");
     Integer slot = player.getInventory().getHeldItemSlot();
     Integer amount = 1;
-    Double start = TNE.instance.api.getDouble("Core.Auctions.MinStart", world, MISCUtils.getID(player).toString());
-    Double increment = TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, MISCUtils.getID(player).toString());
-    Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, MISCUtils.getID(player).toString());
-    Boolean global = !TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, MISCUtils.getID(player).toString());
+    Double start = TNE.instance.api.getDouble("Core.Auctions.MinStart", world, IDFinder.getID(player).toString());
+    Double increment = TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, IDFinder.getID(player).toString());
+    Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, IDFinder.getID(player).toString());
+    Boolean global = !TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, IDFinder.getID(player).toString());
     String permission = "";
     ItemStack stack = null;
 
@@ -160,16 +161,16 @@ public class AuctionStartCommand extends TNECommand {
 
     MISCUtils.debug((player == null) + "");
 
-    if(start > TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, MISCUtils.getID(player))) {
-      start = TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, MISCUtils.getID(player));
+    if(start > TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player))) {
+      start = TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player));
     }
 
-    if(increment > TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, MISCUtils.getID(player))) {
-      increment = TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, MISCUtils.getID(player));
+    if(increment > TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player))) {
+      increment = TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player));
     }
 
-    if(time > TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, MISCUtils.getID(player))) {
-      time = TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, MISCUtils.getID(player));
+    if(time > TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player))) {
+      time = TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player));
     }
 
     if(stack == null) {
@@ -182,7 +183,7 @@ public class AuctionStartCommand extends TNECommand {
     }
     stack.setAmount(amount);
 
-    if(MISCUtils.getItemCount(MISCUtils.getID(player), stack) < amount) {
+    if(MISCUtils.getItemCount(IDFinder.getID(player), stack) < amount) {
       Message insufficient = new Message("Messages.Auction.NoItem");
       insufficient.addVariable("$amount", amount + "");
       insufficient.addVariable("$item", stack.getType().name() + "");
@@ -190,7 +191,7 @@ public class AuctionStartCommand extends TNECommand {
     }
 
     MISCUtils.debug(stack.getAmount() + "");
-    Auction auction = new Auction(MISCUtils.getID(player), world);
+    Auction auction = new Auction(IDFinder.getID(player), world);
     auction.setSilent(silent);
     auction.setItem(new SerializableItemStack(0, stack));
     auction.setCost(new TransactionCost(start));

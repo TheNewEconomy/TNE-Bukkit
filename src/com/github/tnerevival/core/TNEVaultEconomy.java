@@ -2,6 +2,7 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -11,7 +12,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class TNEVaultEconomy implements Economy {
   public EconomyResponse createBank(String name, OfflinePlayer player) {
     String world = MISCUtils.getWorld(player.getPlayer());
 
-    if(!BankUtils.enabled(world, MISCUtils.getID(player).toString())) {
+    if(!BankUtils.enabled(world, IDFinder.getID(player).toString())) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Banks are not enabled in this world!");
     }
 
@@ -54,13 +54,13 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " already has a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world, MISCUtils.getID(player).toString()), TransactionType.MONEY_INQUIRY, world)) {
+    if(!AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world, IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " does not have enough funds for a bank in this world!");
     }
 
-    Bank b = new Bank(getBankAccount(name), BankUtils.size(world, MISCUtils.getID(player).toString()));
+    Bank b = new Bank(getBankAccount(name), BankUtils.size(world, IDFinder.getID(player).toString()));
     AccountUtils.getAccount(getBankAccount(name)).setBank(world, b);
-    AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world, MISCUtils.getID(player).toString()), TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(getBankAccount(name).toString(), null, BankUtils.cost(world, IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " now owns a bank in this world!");
   }
 
@@ -74,54 +74,54 @@ public class TNEVaultEconomy implements Economy {
     if(hasAccount(player)) {
       return false;
     }
-    api.createAccount(player);
+    api.createAccount(player.getUniqueId().toString());
     return true;
   }
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
     if(!hasAccount(player)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+      AccountUtils.createAccount(IDFinder.getID(player));
     }
 
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(player, amount);
+    api.fundsAdd(player.getUniqueId().toString(), amount);
     return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
   }
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer player, String world, double amount) {
     if(!hasAccount(player)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+      AccountUtils.createAccount(IDFinder.getID(player));
     }
 
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(player, world, amount);
+    api.fundsAdd(player.getUniqueId().toString(), world, amount);
     return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
   }
 
   @Override
   public double getBalance(OfflinePlayer player, String world) {
-    return api.getBalance(player, world);
+    return api.getBalance(player.getUniqueId().toString(), world);
   }
 
   @Override
   public double getBalance(OfflinePlayer player) {
-    return api.getBalance(player);
+    return api.getBalance(player.getUniqueId().toString());
   }
 
   @Override
   public boolean has(OfflinePlayer player, double amount) {
-    return api.fundsHas(player, amount);
+    return api.fundsHas(player.getUniqueId().toString(), amount);
   }
 
   @Override
   public boolean has(OfflinePlayer player, String world, double amount) {
-    return api.fundsHas(player, world, amount);
+    return api.fundsHas(player.getUniqueId().toString(), world, amount);
   }
 
   @Override
@@ -131,12 +131,12 @@ public class TNEVaultEconomy implements Economy {
 
   @Override
   public boolean hasAccount(OfflinePlayer player) {
-    return api.accountExists(player);
+    return api.accountExists(player.getUniqueId().toString());
   }
 
   @Override
   public EconomyResponse isBankMember(String name, OfflinePlayer player) {
-    if(BankUtils.bankMember(getBankAccount(name), MISCUtils.getID(player))) {
+    if(BankUtils.bankMember(getBankAccount(name), IDFinder.getID(player))) {
       return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " is a member of this bank!");
     }
     return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " is not a member of this bank!");
@@ -144,7 +144,7 @@ public class TNEVaultEconomy implements Economy {
 
   @Override
   public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
-    if(BankUtils.getBank(getBankAccount(name)).getOwner().equals(MISCUtils.getID(player))) {
+    if(BankUtils.getBank(getBankAccount(name)).getOwner().equals(IDFinder.getID(player))) {
       return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " is the owner of this bank!");
     }
     return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " is not the owner of this bank!");
@@ -163,7 +163,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(player, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(player, amount);
+    api.fundsRemove(player.getUniqueId().toString(), amount);
     return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
   }
 
@@ -180,7 +180,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(player, world, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(player, world, amount);
+    api.fundsRemove(player.getUniqueId().toString(), world, amount);
     return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
   }
 
@@ -254,7 +254,7 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(MISCUtils.getID(username).toString(), null, amount, TransactionType.MONEY_INQUIRY, world)) {
+    if(!AccountUtils.transaction(IDFinder.getID(username).toString(), null, amount, TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
     AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_DEPOSIT, world);
@@ -392,7 +392,7 @@ public class TNEVaultEconomy implements Economy {
   @Override
   @Deprecated
   public EconomyResponse isBankMember(String name, String username) {
-    if(BankUtils.bankMember(getBankAccount(name), MISCUtils.getID(username))) {
+    if(BankUtils.bankMember(getBankAccount(name), IDFinder.getID(username))) {
       return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " is a member of this bank!");
     }
     return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " is not a member of this bank!");
@@ -401,7 +401,7 @@ public class TNEVaultEconomy implements Economy {
   @Override
   @Deprecated
   public EconomyResponse isBankOwner(String name, String username) {
-    if(BankUtils.getBank(getBankAccount(name)).getOwner().equals(MISCUtils.getID(username))) {
+    if(BankUtils.getBank(getBankAccount(name)).getOwner().equals(IDFinder.getID(username))) {
       return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " is the owner of this bank!");
     }
     return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " is not the owner of this bank!");
@@ -429,7 +429,7 @@ public class TNEVaultEconomy implements Economy {
   @Deprecated
   public EconomyResponse withdrawPlayer(String username, String world, double amount) {
     if(!hasAccount(username)) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
+      return new EconomyResponse(0, 0, ResponseType.FAILURE, "That account does not exist!");
     }
 
     if(amount < 0) {
@@ -444,9 +444,7 @@ public class TNEVaultEconomy implements Economy {
   }
 
   public UUID getBankAccount(String identifier) {
-    Player player = (MISCUtils.isUUID(identifier))? MISCUtils.getPlayer(UUID.fromString(identifier)) : MISCUtils.getPlayer(identifier);
-
-    return MISCUtils.getID(player);
+    return IDFinder.getID(identifier);
   }
 
 }

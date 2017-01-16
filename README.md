@@ -10,6 +10,11 @@ About
 ----------
 The New Economy was originally a hMod Plugin made by Noobaholic. After reading multiple requests on the Bukkit Forums for the plugin, which Noobaholic replied that he was too busy at the moment to port it to Bukkit, I decided to port it to Bukkit. The New Economy is a feature-packed economy plugin that is currently still under heavy development. I hope to provide a visual data editor for TNE flat file saves soon.  
 
+
+Build Status
+--------------
+[![Build Status](https://travis-ci.org/TheNewEconomy/TNE-Bukkit.svg?branch=master)](https://travis-ci.org/TheNewEconomy/TNE-Bukkit)
+
 Basic Information
 ----------
 Some basic information you might want to look over.
@@ -23,12 +28,17 @@ Some basic information you might want to look over.
 Default Configurations
 ----------
 - [config.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/config.yml)
+- [materials.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/materials.yml)
+- [messages.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/messages.yml)
 - [mobs.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/mobs.yml)
+- [objects.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/objects.yml)
+- [players.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/players.yml)
 - [worlds.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/worlds.yml)
 
 Features
 ----------
-- [Features](https://creatorfromhell.com/wiki/TheNewEconomy/Features/) 
+- [Features](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Features.md) 
+- [Planned](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Upcoming.md) 
 
 Requirements
 ----------

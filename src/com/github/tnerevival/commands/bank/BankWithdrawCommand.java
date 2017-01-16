@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -10,6 +11,8 @@ import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class BankWithdrawCommand extends TNECommand {
 
@@ -40,34 +43,37 @@ public class BankWithdrawCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
-    Player owner = MISCUtils.getPlayer(ownerName);
-    Player player = MISCUtils.getPlayer(sender.getName());
+    UUID owner = IDFinder.getID(ownerName);
+    UUID id = IDFinder.getID(sender.getName());
+    String world = MISCUtils.getWorld((Player)sender);
 
 
     if(arguments.length == 1) {
-      if(BankUtils.hasBank(MISCUtils.getID(owner))) {
+      if(BankUtils.hasBank(owner)) {
         Double value = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
-        if (BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
-          if(AccountUtils.transaction(MISCUtils.getID(owner).toString(), MISCUtils.getID(player).toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(player))) {
+        if (BankUtils.bankMember(owner, IDFinder.getID(sender.getName()))) {
+          if(AccountUtils.transaction(owner.toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(id))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
-            withdrawn.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
+            withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, value));
             withdrawn.addVariable("$name",  ownerName);
-            withdrawn.translate(MISCUtils.getWorld(player), player);
+            withdrawn.translate(MISCUtils.getWorld(id), id);
             return true;
           } else {
             Message overdraw = new Message("Messages.Bank.Overdraw");
-            overdraw.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
+            overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));
             overdraw.addVariable("$name",  ownerName);
-            overdraw.translate(MISCUtils.getWorld(player), player);
+            overdraw.translate(MISCUtils.getWorld(id), id);
             return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");
         noAccess.addVariable("$name", ownerName);
-        noAccess.translate(MISCUtils.getWorld(player), player);
+        noAccess.translate(world, id);
         return false;
       }
-      new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+      Message none = new Message("Messages.Bank.None");
+      none.addVariable("$amount",  CurrencyFormatter.format(MISCUtils.getWorld(id), BankUtils.cost(MISCUtils.getWorld(id), id.toString())));
+      none.translate(MISCUtils.getWorld(id), id);
       return false;
     }
     help(sender);

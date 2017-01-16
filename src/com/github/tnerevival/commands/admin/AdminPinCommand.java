@@ -1,13 +1,16 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -55,11 +58,13 @@ public class AdminPinCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
-      if(AccountUtils.exists(MISCUtils.getID(arguments[0]))) {
-        Player target = MISCUtils.getPlayer(arguments[0]);
+      if(AccountUtils.exists(IDFinder.getID(arguments[0]))) {
+        UUID target = IDFinder.getID(arguments[0]);
 
-        AccountUtils.getAccount(MISCUtils.getID(target)).setPin(arguments[1]);
+        Account acc = AccountUtils.getAccount(target);
+        acc.setPin(arguments[1]);
 
+        TNE.instance.manager.accounts.put(acc.getUid(), acc);
         if(Bukkit.getOnlinePlayers().contains(target)) {
           String world = MISCUtils.getWorld(target);
           Message m = new Message("Messages.Account.Reset");

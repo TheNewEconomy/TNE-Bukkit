@@ -2,6 +2,7 @@ package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
@@ -42,10 +43,10 @@ public class AdminCreateCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
       String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
-      UUID id = MISCUtils.genUUID(arguments[0]);
+      UUID id = IDFinder.genUUID(arguments[0]);
       if(!AccountUtils.exists(id)) {
         Account acc = new Account(id);
-        Double balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld);
+        Double balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(world).getName());
         if(arguments.length > 1) {
           try {
             balance = Double.parseDouble(arguments[1]);
@@ -53,7 +54,7 @@ public class AdminCreateCommand extends TNECommand {
             //Do Nothing
           }
         }
-        acc.setBalance(TNE.instance.defaultWorld, balance);
+        acc.setBalance(TNE.instance.defaultWorld, balance, TNE.instance.manager.currencyManager.get(world).getName());
         TNE.instance.manager.accounts.put(acc.getUid(), acc);
 
         Message m = new Message("Messages.Admin.Created");

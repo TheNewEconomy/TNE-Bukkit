@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.credit;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
@@ -41,7 +42,7 @@ public class CreditInventoryCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length == 1) {
       Player player = (Player)sender;
-      Map<String, Long> credits = AccountUtils.getAccount(MISCUtils.getID(player)).getTimes(arguments[0]);
+      Map<String, Long> credits = AccountUtils.getAccount(IDFinder.getID(player)).getTimes(arguments[0]);
       sender.sendMessage(ChatColor.WHITE + "Time Credits for inventory \"" + arguments[0] +"\".");
       sender.sendMessage(ChatColor.WHITE + "World ~ Time Credits(in seconds)");
       sender.sendMessage(ChatColor.WHITE + "==============================");

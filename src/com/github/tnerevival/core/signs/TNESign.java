@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.sign.SignEventAction;
@@ -30,15 +31,15 @@ public abstract class TNESign {
    * @return Whether or not the action was performed successfully.
    */
   public boolean onCreate(Player player) {
-    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.CREATED);
+    TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.CREATED);
     if(!player.hasPermission(type.getPlacePermission())) {
       event.setCancelled(true);
     }
 
-    Double place = type.place(MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+    Double place = type.place(MISCUtils.getWorld(player), IDFinder.getID(player).toString());
 
     if(place != null && place > 0.0) {
-      if (!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+      if (!AccountUtils.transaction(IDFinder.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
         insufficient.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), place));
         event.setCancelled(true);
@@ -55,7 +56,7 @@ public abstract class TNESign {
    * @return Whether or not the action was performed successfully.
    */
   public boolean onDestroy(Player player) {
-    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.DESTROYED);
+    TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.DESTROYED);
     Bukkit.getServer().getPluginManager().callEvent(event);
     return (!event.isCancelled());
   }
@@ -66,7 +67,7 @@ public abstract class TNESign {
    * @return Whether or not the action was performed successfully
    */
   public boolean onClick(Player player) {
-    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.LEFT_CLICKED);
+    TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.LEFT_CLICKED);
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
     }
@@ -80,19 +81,19 @@ public abstract class TNESign {
    * @return Whether or not the action was performed successfully
    */
   public boolean onRightClick(Player player) {
-    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.RIGHT_CLICKED);
+    TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.RIGHT_CLICKED);
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
     }
 
-    Double use = type.use(MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+    Double use = type.use(MISCUtils.getWorld(player), IDFinder.getID(player).toString());
 
-    if(!type.enabled(MISCUtils.getWorld(player), MISCUtils.getID(player).toString())) {
+    if(!type.enabled(MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
       new Message("Messages.Objects.SignDisabled").translate(MISCUtils.getWorld(player), player);
       event.setCancelled(true);
     }
 
-    if(!AccountUtils.transaction(MISCUtils.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+    if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), use));
       insufficient.translate(MISCUtils.getWorld(player), player);
@@ -109,7 +110,7 @@ public abstract class TNESign {
    * @return Whether or not the action was performed successfully
    */
   public boolean onOpen(Player player) {
-    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.INVENTORY_OPENED);
+    TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.INVENTORY_OPENED);
     Bukkit.getServer().getPluginManager().callEvent(event);
     return (!event.isCancelled());
   }
@@ -120,7 +121,7 @@ public abstract class TNESign {
    * @return Whether or not the action was performed successfully
    */
   public boolean onClose(Player player) {
-    TNESignEvent event = new TNESignEvent(MISCUtils.getID(player), this, SignEventAction.INVENTORY_CLOSED);
+    TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.INVENTORY_CLOSED);
     Bukkit.getServer().getPluginManager().callEvent(event);
     return (!event.isCancelled());
   }

@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
@@ -48,8 +49,8 @@ public class ShopWhitelistCommand extends TNECommand {
       if(Shop.exists(arguments[0], MISCUtils.getWorld(player))) {
         if(Shop.canModify(arguments[0], player)) {
           Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(player));
-          UUID target = MISCUtils.getID(arguments[1]);
-          if(s.whitelisted(MISCUtils.getID(arguments[1]))) {
+          UUID target = IDFinder.getID(arguments[1]);
+          if(s.whitelisted(IDFinder.getID(arguments[1]))) {
             s.addWhitelist(target);
             new Message("Messages.Shop.WhitelistRemoved").translate(MISCUtils.getWorld(player), player);
           } else {

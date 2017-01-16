@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.packages;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -43,7 +44,7 @@ public class PackageBuyCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = (Player)sender;
 
-    if(!AccountUtils.getAccount(MISCUtils.getID(player)).getStatus().getBalance()) {
+    if(!AccountUtils.getAccount(IDFinder.getID(player)).getStatus().getBalance()) {
       Message locked = new Message("Messages.Account.Locked");
       locked.addVariable("$player", player.getDisplayName());
       locked.translate(MISCUtils.getWorld(player), player);
@@ -51,13 +52,13 @@ public class PackageBuyCommand extends TNECommand {
     }
 
     if(arguments.length == 2) {
-      List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0], MISCUtils.getWorld(player), MISCUtils.getID(player).toString());
+      List<TNEAccessPackage> packages = TNE.configurations.getObjectConfiguration().getInventoryPackages(arguments[0], MISCUtils.getWorld(player), IDFinder.getID(player).toString());
       if(packages.size() > 0) {
         for(TNEAccessPackage p : packages) {
           if(p.getName().equalsIgnoreCase(arguments[1])) {
-            if(AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-              AccountUtils.transaction(MISCUtils.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
-              AccountUtils.getAccount(MISCUtils.getID(player)).addTime(MISCUtils.getWorld(player), arguments[0], p.getTime());
+            if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+              AccountUtils.transaction(IDFinder.getID(player).toString(), null, p.getCost(), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
+              AccountUtils.getAccount(IDFinder.getID(player)).addTime(MISCUtils.getWorld(player), arguments[0], p.getTime());
               Message bought = new Message("Messages.Package.Bought");
               bought.addVariable("$amount",  CurrencyFormatter.format(MISCUtils.getWorld(player), p.getCost()));
               bought.addVariable("$name",  p.getName());

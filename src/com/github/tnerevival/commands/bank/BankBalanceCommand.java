@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -41,10 +42,10 @@ public class BankBalanceCommand extends TNECommand {
     Player owner = MISCUtils.getPlayer(ownerName);
     Player player = MISCUtils.getPlayer(sender.getName());
 
-    if(BankUtils.hasBank(MISCUtils.getID(owner))) {
-      if(BankUtils.bankMember(MISCUtils.getID(owner), MISCUtils.getID(sender.getName()))) {
+    if(BankUtils.hasBank(IDFinder.getID(owner))) {
+      if(BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName()))) {
         Message balance = new Message("Messages.Bank.Balance");
-        balance.addVariable("$amount",  CurrencyFormatter.format(owner.getWorld().getName(), BankUtils.getBankBalance(MISCUtils.getID(player))));
+        balance.addVariable("$amount",  CurrencyFormatter.format(owner.getWorld().getName(), BankUtils.getBankBalance(IDFinder.getID(player))));
         balance.addVariable("$name", ownerName);
         balance.translate(MISCUtils.getWorld(player), player);
         return true;
@@ -53,7 +54,9 @@ public class BankBalanceCommand extends TNECommand {
       noAccess.addVariable("$name", ownerName);
       noAccess.translate(MISCUtils.getWorld(player), player);
     }
-    new Message("Messages.Bank.None").translate(MISCUtils.getWorld(player), player);
+    Message none = new Message("Messages.Bank.None");
+    none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+    none.translate(MISCUtils.getWorld(player), player);
     return false;
   }
 

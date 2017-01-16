@@ -52,10 +52,6 @@ public class SignUtils {
         return new BankSign(owner);
       case "shop":
         return new ShopSign(owner);
-      case "sell":
-        return new SellSign(owner);
-      case "buy":
-        return new BuySign(owner);
       default:
         MISCUtils.debug("defaulting...");
         return new BankSign(owner);

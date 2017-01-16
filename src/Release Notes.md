@@ -1,45 +1,21 @@
-Alpha 4.0
-===========
-Auctions
-- Ability to allow players to create auctions
-  - Multiple auctions per world/global
-  - Ability to have silent auctions
-    - When an auction is silent bid and snipe time messages are not sent
-    - This gives a sense of mystery to auctions, and means players may be likely to be against their self.
-  - Lots of configuration options
-  
-Currency
-- Added in a new advanced currency system
-  - Ability to create a custom currency format for chat.
-  - Ability to configure custom symbols for currencies
-  - Ability to configure a conversion rating(not used at this time)
-  
-Transactions
-- Ability to track transaction history.
-
-Configurations
-- We now only save configurations on start/stop when they're modified.
-
-Commands
-- Additions
-  - /tneneweconomy recreate - Attempts to recreate the database tables.
-  - /theneweconomy pin <username> <new pin> - Reset <username>'s pin.
-  - /theneweconomy status
-    - /theneweconomy status <username> <status> - Set <username>'s account status.
-  - /money history
-    - /money history [page:#] [world:name/all] [type:type/all] - See a detailed break down of your transaction history.
-
-- Modifications
-  - No longer registered via plugin.yml
-    - This allows for dynamic registration, which allows us to properly disable features
-  - We now check permission nodes before building help messages
-  - Help messages are now limited based on lines rather than commands
-
-Messages
-- Now support multi-line messages via messages.yml
-  - Simply place <newline> where you wish to start your next line
-  
-MISC
-- Added the ability to make players drop items from their bank on death.
-  - Items chosen are completely random
-  - It's also possible to include empty bank slots in the drop.
+Alpha 5.0 "Economic Reform"
+=============================
+   - Mob Reward Changes
+     - Ability to set specific rewards for baby versions of mobs.
+     - Added support for 1.11 mobs.
+     - Split horses into multiple categories depending on their variant.
+       - This is sorted into Llama, ZombieHorse, SkeletonHorse, Mule, Donkey,
+       and Horse.
+   - Major Currency Updates
+     - Ability to have multiple currencies per world.
+     - Ability to convert currencies between each other, and even worlds.
+   - Ability to import user data from other economy plugins.
+     - Currency supports iConomy, CraftConomy, MineConomy, BOSEconomy,
+       Essentials, and FeConomy.
+   - MySQL Improvements
+     - Automatically save changes to the dabase when using a 
+   SQL-based database.
+     - Added server_name field to INFO table for bungeecord server owners to access
+   - MISC Changes
+     - Removed /bank price, and instead added price to /bank buy.
+     - Added the ability to create, and modify membships for banks via the TNEAPI class.

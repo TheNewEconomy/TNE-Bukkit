@@ -1,6 +1,7 @@
 package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.impl.BankInventory;
@@ -32,17 +33,17 @@ public class InventoryListener implements Listener {
   public void onInventoryOpen(InventoryOpenEvent event) {
     Player player = (Player)event.getPlayer();
     InventoryType type = event.getInventory().getType();
-    InventoryViewer viewer = new InventoryViewer(MISCUtils.getID(player), MISCUtils.getWorld(player));
+    InventoryViewer viewer = new InventoryViewer(IDFinder.getID(player), MISCUtils.getWorld(player));
     TNEInventory inventory = new GenericInventory();
 
     MISCUtils.debug(player.getDisplayName() + " opened an inventory!" + event.getInventory().getTitle());
 
-    if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
+    if(TNE.instance.inventoryManager.isViewing(IDFinder.getID(player))) {
 
-      UUID id = MISCUtils.getID(player);
+      UUID id = IDFinder.getID(player);
       MISCUtils.debug(id.toString());
-      TNE.instance.inventoryManager.getViewing(MISCUtils.getID(player)).onOpen(
-          TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player))
+      TNE.instance.inventoryManager.getViewing(IDFinder.getID(player)).onOpen(
+          TNE.instance.inventoryManager.getViewer(IDFinder.getID(player))
       );
       return;
     }
@@ -52,7 +53,7 @@ public class InventoryListener implements Listener {
 
       MISCUtils.debug(ChatColor.stripColor(ownerUser));
 
-      UUID owner = MISCUtils.getID(ChatColor.stripColor(ownerUser));
+      UUID owner = IDFinder.getID(ChatColor.stripColor(ownerUser));
       inventory = new BankInventory(owner);
     } else if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
       String name = event.getInventory().getTitle().split("]")[1].trim();
@@ -61,7 +62,7 @@ public class InventoryListener implements Listener {
       MISCUtils.debug(ChatColor.stripColor(name));
       MISCUtils.debug(player.getUniqueId().toString());
       inventory = new ShopInventory(s);
-      s.addShopper(MISCUtils.getID(player));
+      s.addShopper(IDFinder.getID(player));
     }
     inventory.addViewer(viewer);
     inventory.setInventory(event.getInventory());
@@ -79,9 +80,9 @@ public class InventoryListener implements Listener {
   @EventHandler
   public void onInventoryClose(InventoryCloseEvent event) {
     Player player = (Player) event.getPlayer();
-    if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
-      InventoryViewer viewer = TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player));
-      TNE.instance.inventoryManager.getViewing(MISCUtils.getID(player)).onClose(viewer);
+    if(TNE.instance.inventoryManager.isViewing(IDFinder.getID(player))) {
+      InventoryViewer viewer = TNE.instance.inventoryManager.getViewer(IDFinder.getID(player));
+      TNE.instance.inventoryManager.getViewing(IDFinder.getID(player)).onClose(viewer);
       TNE.instance.inventoryManager.removeViewer(viewer.getUUID());
     }
   }
@@ -93,9 +94,9 @@ public class InventoryListener implements Listener {
 
     MISCUtils.debug("" + slot);
 
-    if(TNE.instance.inventoryManager.isViewing(MISCUtils.getID(player))) {
-      InventoryViewer viewer = TNE.instance.inventoryManager.getViewer(MISCUtils.getID(player));
-      if(!TNE.instance.inventoryManager.getViewing(MISCUtils.getID(player)).onClick(viewer, event.getClick(), slot, event.getCurrentItem())) {
+    if(TNE.instance.inventoryManager.isViewing(IDFinder.getID(player))) {
+      InventoryViewer viewer = TNE.instance.inventoryManager.getViewer(IDFinder.getID(player));
+      if(!TNE.instance.inventoryManager.getViewing(IDFinder.getID(player)).onClick(viewer, event.getClick(), slot, event.getCurrentItem())) {
         event.setCancelled(true);
       }
     }

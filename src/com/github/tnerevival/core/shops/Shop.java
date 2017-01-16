@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.shops;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
@@ -366,7 +367,7 @@ public class Shop implements Serializable {
     String[] parsed = parse.split(",");
 
     for(String s : parsed) {
-      if(MISCUtils.isUUID(s)) {
+      if(IDFinder.isUUID(s)) {
         if (blacklist) {
           this.blacklist.add(UUID.fromString(s));
           continue;
@@ -456,7 +457,7 @@ public class Shop implements Serializable {
     if(exists(name, MISCUtils.getWorld(p))) {
       Shop s = getShop(name, MISCUtils.getWorld(p));
       return s.getOwner() == null && p.hasPermission("tne.shop.admin") ||
-           s.getOwner() != null && s.getOwner().equals(MISCUtils.getID(p)) ||
+           s.getOwner() != null && s.getOwner().equals(IDFinder.getID(p)) ||
            s.isAdmin() && p.hasPermission("tne.shop.admin");
     }
     return false;

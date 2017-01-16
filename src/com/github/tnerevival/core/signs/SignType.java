@@ -6,8 +6,6 @@ public enum SignType {
 
   UNKNOWN("unknown", "", "", ""),
   BANK("bank", "tne.place.bank", "tne.use.bank", "Core.Signs.Bank"),
-  BUY("buy", "tne.place.buy", "tne.use.buy", "Core.Signs.Buy"),
-  SELL("sell", "tne.place.sell", "tne.use.sell", "Core.Signs.Sell"),
   SHOP("shop", "tne.place.shop", "tne.use.shop", "Core.Signs.Shop");
 
   private String name;

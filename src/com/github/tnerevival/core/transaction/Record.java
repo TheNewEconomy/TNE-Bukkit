@@ -25,24 +25,34 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class Record {
-  public String id;
-  public String player;
-  public String world;
-  public String type;
-  public Double cost;
-  public Double oldBalance;
-  public Double balance;
-  public long time;
+  private String id = "";
+  private String initiator = "";
+  private String player = "N/A";
+  private String world = TNE.instance.defaultWorld;
+  private String type = TransactionType.MONEY_INQUIRY.id;
+  private Double cost = 0.0;
+  private Double oldBalance = 0.0;
+  private Double balance = 0.0;
+  private long time = new Date().getTime();
 
-  public Record(String id, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time) {
+  public Record(String id, String initiator, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time) {
     this.id = id;
+    this.initiator = initiator;
     this.player = player;
     this.world = world;
     this.type = type;
     this.cost = cost;
-    this.oldBalance = oldBalance;
-    this.balance = balance;
-    time = time;
+    if(oldBalance != null) {
+      this.oldBalance = oldBalance;
+    }
+
+    if(balance != null) {
+      this.balance = balance;
+    }
+
+    if(time != null) {
+      this.time = time;
+    }
   }
 
   public String convert(String world, UUID id, String timeZone) {
@@ -59,6 +69,14 @@ public class Record {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public String getInitiator() {
+    return initiator;
+  }
+
+  public void setInitiator(String initiator) {
+    this.initiator = initiator;
   }
 
   public String getPlayer() {

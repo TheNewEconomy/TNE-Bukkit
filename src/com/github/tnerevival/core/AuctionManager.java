@@ -1,12 +1,17 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Bid;
 import com.github.tnerevival.core.auction.Claim;
+import com.github.tnerevival.core.collection.EventList;
+import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.listeners.collections.AuctionsListener;
+import com.github.tnerevival.listeners.collections.ClaimsListener;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
@@ -20,14 +25,21 @@ import java.util.*;
  * Created by Daniel on 10/17/2016.
  */
 public class AuctionManager {
-  private Map<Integer, Auction> auctionQueue = new HashMap<>();
-  private Map<Integer, Auction> active = new HashMap<>();
-  public List<Claim> unclaimed = new ArrayList<>();
+  public EventMap<Integer, Auction> auctionQueue = new EventMap<>();
+  private EventMap<Integer, Auction> active = new EventMap<>();
+  public EventList<Claim> unclaimed = new EventList<>();
 
   private int lastLot = 0;
 
+  public AuctionManager() {
+    AuctionsListener listener = new AuctionsListener();
+    unclaimed.setListener(new ClaimsListener());
+    auctionQueue.setListener(listener);
+    active.setListener(listener);
+  }
+
   public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
-    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
 
     Message send = new Message(message);
@@ -141,6 +153,7 @@ public class AuctionManager {
       Claim claim = i.next();
 
       if(claim.getLot().equals(lot) && claim.getPlayer().equals(player)) {
+        TNE.instance.saveManager.versionInstance.deleteClaim(claim);
         claim.claim();
         i.remove();
       }
@@ -333,7 +346,7 @@ public class AuctionManager {
 
     Double cost = TNE.instance.api.getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer());
 
-    if(cost > 0.0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TransactionType.MONEY_INQUIRY, auction.getWorld())) {
+    if(cost > 0.0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), AccountUtils.round(cost)));
       insufficient.translate(auction.getWorld(), MISCUtils.getPlayer(auction.getPlayer()));
@@ -352,7 +365,7 @@ public class AuctionManager {
     }
     auction.setLotNumber(lastLot + 1);
     MISCUtils.getPlayer(auction.getPlayer()).getInventory().removeItem(auction.getItem().toItemStack());
-    AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TransactionType.MONEY_REMOVE, auction.getWorld());
+    AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_REMOVE, auction.getWorld());
     if(canStart(auction.getWorld(), auction.getPlayer().toString())) {
       MISCUtils.debug("Starting Auction");
       auction.setStartTime(System.nanoTime());

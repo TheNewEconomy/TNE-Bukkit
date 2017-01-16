@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -56,7 +57,7 @@ public class ShopCreateCommand extends TNECommand {
 
         UUID owner = null;
         if(sender instanceof Player) {
-          owner = MISCUtils.getID((Player)sender);
+          owner = IDFinder.getID((Player)sender);
         }
 
         if(arguments.length >= 2 && arguments[1].equalsIgnoreCase("true")) {

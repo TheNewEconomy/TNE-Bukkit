@@ -2,12 +2,10 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.transaction.*;
+import com.github.tnerevival.listeners.collections.TransactionsListener;
+import com.github.tnerevival.utils.MISCUtils;
 
-import java.util.*;
-import com.github.tnerevival.core.transaction.Transaction;
-import com.github.tnerevival.core.transaction.TransactionCost;
-import com.github.tnerevival.core.transaction.TransactionHistory;
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,18 +28,22 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionManager {
-  private Map<String, TransactionHistory> transactionHistory = new HashMap<>();
+  public static TransactionsListener transListener = new TransactionsListener();
+  public Map<String, TransactionHistory> transactionHistory = new HashMap<>();
 
   public void add(Transaction transaction) {
     if(transaction.getInitiator() != null) {
-      add(transaction.getInitiator(),
-          transaction.getRecipient(),
-          transaction.getWorld(),
-          transaction.getType(),
-          transaction.getCost(),
-          transaction.getInitiatorOldBalance(),
-          transaction.getInitiatorBalance()
-      );
+      if(transaction.getRecipient() == null ||
+         !transaction.getInitiator().equals(transaction.getRecipient())) {
+        add(transaction.getInitiator(),
+            transaction.getRecipient(),
+            transaction.getWorld(),
+            transaction.getType(),
+            transaction.getCost(),
+            transaction.getInitiatorOldBalance(),
+            transaction.getInitiatorBalance()
+        );
+      }
     }
 
     if(transaction.getRecipient() != null) {
@@ -56,30 +58,34 @@ public class TransactionManager {
     }
   }
 
-  public void add(String id, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
-    if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, id)) {
-      Date date = new Date();
+  public void add(String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
+    Date date = new Date();
+
+    add(UUID.randomUUID().toString(), initiator, player, world, type, cost, oldBalance, balance, date.getTime());
+  }
+
+  public void add(String id, String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance, Long time) {
+    if(type.equals(TransactionType.MONEY_INQUIRY)) return;
+    if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, initiator)) {
 
       String playerFrom = (player == null)? "N/A" : player;
 
-      Record r = new Record(id, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, date.getTime());
-      if(!transactionHistory.containsKey(id)) {
+      Record r = new Record(id, initiator, playerFrom, world, type.getID(), cost.getAmount(), oldBalance, balance, time);
+      if(!transactionHistory.containsKey(initiator)) {
         TransactionHistory history = new TransactionHistory();
         history.add(r);
-        transactionHistory.put(id, history);
+        transactionHistory.put(initiator, history);
       }
-      transactionHistory.get(id).add(r);
+      transactionHistory.get(initiator).add(r);
     }
   }
 
-  public boolean hasHistory(String id) {
-    return transactionHistory.containsKey(id);
+  public boolean hasHistory(String initiator) {
+    return transactionHistory.containsKey(initiator);
   }
 
-  public TransactionHistory getHistory(String id) {
-    if (hasHistory(id)) {
-      return transactionHistory.get(id);
-    }
-    return null;
+  public TransactionHistory getHistory(String initiator) {
+    MISCUtils.debug(initiator);
+    return transactionHistory.get(initiator);
   }
 }

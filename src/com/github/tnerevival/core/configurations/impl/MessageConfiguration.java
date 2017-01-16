@@ -28,6 +28,9 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Admin.NoBalance", "<red>$player has no balance data for the world \"$world\"!");
     configurations.put("Messages.Admin.Balance", "<white>$player currently has <gold>$amount <white>for world \"$world\"!");
     configurations.put("Messages.Admin.NoBank", "<red>$player has no bank data for the world \"$world\"!");
+    configurations.put("Messages.Admin.NoTransactions", "<white>$player has no transactions to display.");
+    configurations.put("Messages.Admin.Configuration", "<white>The value of $node is currently $value.");
+    configurations.put("Messages.Admin.SetConfiguration", "<white>The value of $node has been set to $value.");
     configurations.put("Messages.Admin.ID", "<white>The UUID for $player is $id.");
     configurations.put("Messages.Admin.Exists", "<red>A player with that name already exists.");
     configurations.put("Messages.Admin.Created", "<white>Successfully created account for $player.");
@@ -35,7 +38,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Admin.Purge", "<white>Successfully purged all economy accounts.");
     configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
     configurations.put("Messages.Admin.ResetPin", "<white>Successfully set pin for $player to $pin.");
-    configurations.put("Messages.Admin.StatusChange", "<white>Status for $player has been changed to <green>$status<white>.");
+    configurations.put("Messages.Admin.Status", "<white>Status for $player has been changed to <green>$status<white>.");
 
     configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
     configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
@@ -60,6 +63,8 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Money.Negative", "<red>Amount cannot be a negative value!");
     configurations.put("Messages.Money.SelfPay", "<red>You can't pay yourself!");
     configurations.put("Messages.Money.NoPins", "<red>Pins are disabled in this world!");
+    configurations.put("Messages.Money.NoCurrency", "<red>The currency \"$currency\" could not be found in \"$world\".");
+    configurations.put("Messages.Money.Converted", "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\".");
 
     configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
     configurations.put("Messages.Auction.Return", "<white>Your items have been returned.");
@@ -134,7 +139,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Bank.Bought", "<white>Congratulations! You have successfully purchased a bank!");
     configurations.put("Messages.Bank.Insufficient", "<red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.");
     configurations.put("Messages.Bank.Overdraw", "<red>I'm sorry, but the bank of $name does not have <gold>$amount<red>.");
-    configurations.put("Messages.Bank.None", "<red>I'm sorry, but you do not own a bank. Please try /bank buy to buy one.");
+    configurations.put("Messages.Bank.None", "<red>I'm sorry, but you do not own a bank. The current cost for a bank is <gold>$amount<red>. Use /bank buy to purchase one.");
     configurations.put("Messages.Bank.NoNPC", "<red>I'm sorry, but accessing banks via NPCs has been disabled in this world!");
     configurations.put("Messages.Bank.NoSign", "<red>I'm sorry, but accessing banks via signs has been disabled in this world!");
     configurations.put("Messages.Bank.NoCommand", "<red>I'm sorry, but accessing banks via /bank has been disabled in this world!");
@@ -142,7 +147,6 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Bank.Balance", "<white>There is currently <gold>$amount<white> in the bank of $name.");
     configurations.put("Messages.Bank.Deposit", "<white>You have deposited <gold>$amount<white> in the bank of $name.");
     configurations.put("Messages.Bank.Withdraw", "<white>You have withdrawn <gold>$amount<gold> from the bank of $name.");
-    configurations.put("Messages.Bank.Cost", "<white>A bank is currently <gold>$amount<white>.");
     configurations.put("Messages.Bank.Invalid", "<red>I'm sorry, but you don't have access to $owner's bank!");
 
     configurations.put("Messages.Objects.SignDisabled", "<red>This type of sign has been disabled for this world!");

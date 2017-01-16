@@ -1,5 +1,9 @@
 package com.github.tnerevival.core.transaction;
 
+import com.github.tnerevival.core.TransactionManager;
+import com.github.tnerevival.core.collection.EventList;
+import com.github.tnerevival.utils.MISCUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,29 +25,26 @@ import java.util.List;
  * Created by creatorfromhell on 10/20/2016.
  */
 public class TransactionHistory {
-  private List<Record> records = new ArrayList<>();
-  List<Record> sorted = new ArrayList<>();
+  private EventList<Record> records = new EventList<>();
+  private List<Record> sorted = new ArrayList<>();
+
+  public TransactionHistory() {
+    records.setListener(TransactionManager.transListener);
+  }
+
+  public EventList<Record> raw() {
+    return records;
+  }
 
   public void add(Record record) {
     records.add(record);
   }
 
-  public void sort(String world, String type) {
-
+  private void sort(String world, String type) {
+    sorted = new ArrayList<>();
     for(Record r : records) {
-      Boolean worldCheck = false;
-      Boolean typeCheck = false;
-      if(!world.equalsIgnoreCase("all")) {
-        if(world.equalsIgnoreCase(r.getWorld())) {
-          worldCheck = true;
-        }
-      }
-
-      if(!type.equalsIgnoreCase("all")) {
-        if(type.equalsIgnoreCase(r.getType())) {
-          typeCheck = true;
-        }
-      }
+      Boolean worldCheck = world.equalsIgnoreCase("all") || world.equalsIgnoreCase(r.getWorld());
+      Boolean typeCheck = type.equalsIgnoreCase("all") || type.equalsIgnoreCase(r.getType());
 
       if(worldCheck && typeCheck) {
         sorted.add(r);
@@ -56,6 +57,7 @@ public class TransactionHistory {
   }
 
   public List<Record> getRecords(String world, String type, int page) {
+    MISCUtils.debug(records.size() + "");
     return getRecords(5, world, type, page);
   }
 
@@ -64,7 +66,7 @@ public class TransactionHistory {
     List<Record> pageRecords = new ArrayList<>();
 
     int max = getMaxPages(world, type, limit);
-    int start = (page == 1)? 0 : ((page > max)? max : page);
+    int start = (page == 0)? page : (page - 1) * limit;
 
     for(int i = start; i < start + limit; i++) {
       if(i < sorted.size()) {

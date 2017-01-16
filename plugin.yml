@@ -1,6 +1,6 @@
 #General Data
 name: TheNewEconomy
-version: 0.0.4.0
+version: 0.0.5.1
 description: A feature-packed Bukkit Economy Plugin.
 author: creatorfromhell
 
@@ -20,6 +20,7 @@ permissions:
          tne.admin.bank: true
          tne.admin.create: true
          tne.admin.delete: true
+         tne.admin.history: true
          tne.admin.id: true
          tne.admin.help: true
          tne.admin.pin: true
@@ -63,6 +64,7 @@ permissions:
          tne.money.set: true
          tne.money.take: true
          tne.money.pay: true
+         tne.money.convert: true
          tne.package: true
          tne.package.list: true
          tne.package.buy: true
@@ -179,6 +181,7 @@ permissions:
          tne.money.set: true
          tne.money.take: true
          tne.money.pay: true
+         tne.money.convert: true
     
    tne.package.*:
       description: Gives access to all TNE Inventory Package Commands

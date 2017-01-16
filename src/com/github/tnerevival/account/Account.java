@@ -2,6 +2,7 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -48,32 +49,63 @@ public class Account implements Serializable {
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
-    setBalance(TNE.instance.defaultWorld, 0.0);
+    setBalance(TNE.instance.defaultWorld, 0.0, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
   }
 
   public String balancesToString() {
-    Iterator<Map.Entry<String, Double>> balanceIterator = balances.entrySet().iterator();
-
     int count = 0;
     String toReturn = "";
-    while(balanceIterator.hasNext()) {
-      Map.Entry<String, Double> balanceEntry = balanceIterator.next();
-      if(count > 0) {
-        toReturn += ":";
-      }
-      toReturn += balanceEntry.getKey() + "," + balanceEntry.getValue();
-      count++;
+    for(Map.Entry<String, Double> entry : balances.entrySet()) {
+        if(count > 0) toReturn += "-";
+        toReturn += entry.getKey() + "," + entry.getValue();
+        count++;
     }
     return toReturn;
   }
 
   public void balancesFromString(String from) {
-    String[] b = from.split("\\:");
+    String[] worlds = from.split("\\-");
+
+    List<Integer> combine = new ArrayList<>();
+    for(int i = 0; i < worlds.length; i++) {
+      String world = worlds[i];
+      if(combine.size() > 0 && world.contains(":")) {
+        combine.add(i);
+        world = combine(worlds, combine);
+        combine = new ArrayList<>();
+      }
+
+      if(!world.contains(":")) {
+        combine.add(i);
+        continue;
+      }
+      String[] balance = world.split("\\,");
+      if(balance.length == 2) {
+        balances.put(balance[0], Double.valueOf(balance[1]));
+      }
+    }
+  }
+
+  public String combine(String[] values, List<Integer> indexes) {
+    StringBuilder builder = new StringBuilder();
+
+    int i = 0;
+    for(Integer in : indexes) {
+      if(i > 0) builder.append("-");
+      builder.append(values[in]);
+      i++;
+    }
+    return builder.toString();
+  }
+
+  public void balancesFromStringOld(String from) {
+    String[] b = from.split("\\-");
 
     for(String s : b) {
       String[] balance = s.split("\\,");
       if(balance.length == 2) {
-        balances.put(balance[0], Double.valueOf(balance[1]));
+        String name = TNE.instance.manager.currencyManager.get(balance[0]).getName();
+        balances.put(balance[0] + ":" + name, Double.valueOf(balance[1]));
       }
     }
   }
@@ -246,12 +278,20 @@ public class Account implements Serializable {
     this.balances = balances;
   }
 
-  public Double getBalance(String world) {
-    return balances.get(world);
+  public void setBalancesOld(Map<String, Double> balances) {
+    for(Map.Entry<String, Double> entry : balances.entrySet()) {
+      setBalance(entry.getKey(), entry.getValue(), TNE.instance.manager.currencyManager.get(entry.getKey()).getName());
+    }
   }
 
-  public void setBalance(String world, Double balance) {
-    this.balances.put(world, AccountUtils.round(balance));
+  public Double getBalance(String world, String currency) {
+    MISCUtils.debug("Returning balance for " + world + ":" + currency);
+    return balances.get(world + ":" + currency);
+  }
+
+  public void setBalance(String world, Double balance, String currency) {
+    MISCUtils.debug("Setting balance for " + world + ":" + currency);
+    this.balances.put(world + ":" + currency, AccountUtils.round(balance));
   }
 
   public Map<String, Bank> getBanks() {

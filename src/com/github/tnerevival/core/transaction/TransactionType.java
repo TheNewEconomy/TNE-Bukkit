@@ -5,13 +5,13 @@ package com.github.tnerevival.core.transaction;
  */
 public enum TransactionType {
   MONEY_SET("MONEY_SET"),
-  MONEY_INQUIRY("MONEY_SET"),
-  MONEY_REMOVE("MONEY_SET"),
-  MONEY_GIVE("MONEY_SET"),
-  MONEY_PAY("MONEY_SET"),
-  BANK_INQUIRY("MONEY_SET"),
-  BANK_WITHDRAWAL("MONEY_SET"),
-  BANK_DEPOSIT("MONEY_SET");
+  MONEY_INQUIRY("MONEY_INQUIRY"),
+  MONEY_REMOVE("MONEY_REMOVE"),
+  MONEY_GIVE("MONEY_GIVE"),
+  MONEY_PAY("MONEY_PAY"),
+  BANK_INQUIRY("BANK_INQUIRY"),
+  BANK_WITHDRAWAL("BANK_WITHDRAWAL"),
+  BANK_DEPOSIT("BANK_DEPOSIT");
 
   String id;
 
@@ -21,5 +21,18 @@ public enum TransactionType {
 
   public String getID() {
     return id;
+  }
+
+  public static TransactionType fromID(String id) {
+    for(TransactionType type : values()) {
+      if(type.getID().equalsIgnoreCase(id)) {
+        return type;
+      }
+    }
+    return MONEY_SET;
+  }
+
+  public boolean isBank() {
+    return this.equals(BANK_INQUIRY) || this.equals(BANK_DEPOSIT) || this.equals(BANK_WITHDRAWAL);
   }
 }

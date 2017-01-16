@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.MISCUtils;
@@ -69,14 +70,14 @@ public class AuctionClaimCommand extends TNECommand {
     }
     Integer lot = Integer.valueOf(arguments[0]);
 
-    if(!plugin.manager.auctionManager.unclaimed(MISCUtils.getID(player)).contains(lot)) {
+    if(!plugin.manager.auctionManager.unclaimed(IDFinder.getID(player)).contains(lot)) {
       Message noClaim = new Message("Messages.Auction.NoClaim");
       noClaim.addVariable("$lot", lot + "");
       noClaim.translate(world, sender);
       return false;
     }
 
-    plugin.manager.auctionManager.claim(lot, MISCUtils.getID(player));
+    plugin.manager.auctionManager.claim(lot, IDFinder.getID(player));
     Message processed = new Message("Messages.Auction.Claimed");
     processed.addVariable("$lot", lot + "");
     processed.translate(world, sender);

@@ -1,6 +1,7 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -22,12 +23,14 @@ public class Message {
     colours.put("<blue>", ChatColor.BLUE.toString());
     colours.put("<dark_aqua>", ChatColor.DARK_AQUA.toString());
     colours.put("<dark_blue>", ChatColor.DARK_BLUE.toString());
-    colours.put("<dark_gray>", ChatColor.GRAY.toString());
+    colours.put("<dark_gray>", ChatColor.DARK_GRAY.toString());
+    colours.put("<dark_grey>", ChatColor.DARK_GRAY.toString());
     colours.put("<dark_green>", ChatColor.DARK_GREEN.toString());
     colours.put("<dark_purple>", ChatColor.DARK_PURPLE.toString());
     colours.put("<dark_red>", ChatColor.DARK_RED.toString());
     colours.put("<gold>", ChatColor.GOLD.toString());
     colours.put("<gray>", ChatColor.GRAY.toString());
+    colours.put("<grey>", ChatColor.GRAY.toString());
     colours.put("<green>", ChatColor.GREEN.toString());
     colours.put("<purple>", ChatColor.LIGHT_PURPLE.toString());
     colours.put("<red>", ChatColor.RED.toString());
@@ -74,7 +77,7 @@ public class Message {
   }
 
   public String grab(String world, CommandSender sender) {
-    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String found = TNE.instance.api.getString(this.node, world, id);
 
     String message = (found == null)? this.node : found;
@@ -88,7 +91,8 @@ public class Message {
   }
 
   public void translate(String world, CommandSender sender) {
-    String id = (sender instanceof Player)? MISCUtils.getID((Player)sender).toString() : "";
+    if(sender == null) return;
+    String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String found = TNE.instance.api.getString(this.node, world, id);
 
     String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");

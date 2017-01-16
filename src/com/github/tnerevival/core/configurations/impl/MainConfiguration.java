@@ -9,8 +9,6 @@ public class MainConfiguration extends Configuration {
   public void load(FileConfiguration configurationFile) {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
-    configurations.put("Core.Balance", 200.0);
-    configurations.put("Core.Shorten", true);
     configurations.put("Core.Metrics", true);
     configurations.put("Core.Pins.Enabled", true);
     configurations.put("Core.Pins.Force", true);
@@ -98,6 +96,15 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Database.MySQL.Password", "password");
     configurations.put("Core.Database.H2.File", "Economy");
     configurations.put("Core.Database.SQLite.File", "economy.db");
+
+    configurations.put("Core.Conversion.Convert", false);
+    configurations.put("Core.Conversion.Name", "iConomy");
+    configurations.put("Core.Conversion.Format", "MySQL");
+    configurations.put("Core.Conversion.Options.Host", "localhost");
+    configurations.put("Core.Conversion.Options.Port", 3306);
+    configurations.put("Core.Conversion.Options.Database", "sql_eco");
+    configurations.put("Core.Conversion.Options.User", "root");
+    configurations.put("Core.Conversion.Options.Password", "Password");
 
     super.load(configurationFile);
   }

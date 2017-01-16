@@ -51,31 +51,15 @@ public class TNEObjectInteractionEvent extends Event implements Cancellable {
     return player;
   }
 
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
   public String getIdentifier() {
     return identifier;
-  }
-
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
   }
 
   public InteractionType getType() {
     return type;
   }
 
-  public void setType(InteractionType type) {
-    this.type = type;
-  }
-
   public int getAmount() {
     return amount;
-  }
-
-  public void setAmount(int amount) {
-    this.amount = amount;
   }
 }

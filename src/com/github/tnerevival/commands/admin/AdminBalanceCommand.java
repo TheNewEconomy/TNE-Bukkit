@@ -2,8 +2,10 @@ package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -38,15 +40,24 @@ public class AdminBalanceCommand extends TNECommand {
   @SuppressWarnings("deprecation")
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    if(arguments.length == 1 || arguments.length == 2) {
-      String world = (arguments.length == 2) ? arguments[1] : TNE.instance.defaultWorld;
-      if(MISCUtils.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(MISCUtils.getID(arguments[0]))) {
-        Account acc = AccountUtils.getAccount(MISCUtils.getID(arguments[0]));
-        if(acc.getBalances().containsKey(world)) {
+    if(arguments.length >= 1 && arguments.length <= 3) {
+      String world = (arguments.length >= 2)? getWorld(sender, arguments[1]) : getWorld(sender);
+      String currencyName = (arguments.length >= 3)? arguments[2] : TNE.instance.manager.currencyManager.get(world).getName();
+      Currency currency = getCurrency(world, currencyName);
+      MISCUtils.debug(TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0])) + "");
+      MISCUtils.debug("RETURNED ID: " + IDFinder.getID(arguments[0]).toString() + " for User: " + arguments[0]);
+      if(IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
+        Account acc = AccountUtils.getAccount(IDFinder.getID(arguments[0]));
+        if(acc.getBalances().containsKey(world + ":" + currency.getName())) {
+          MISCUtils.debug("Has currency and balance.");
           Message balance = new Message("Messages.Admin.Balance");
+          MISCUtils.debug("Passed message check");
           balance.addVariable("$player", arguments[0]);
+          MISCUtils.debug("Passed player check");
           balance.addVariable("$world", world);
-          balance.addVariable("$amount", CurrencyFormatter.format(world, acc.getBalance(world)));
+          MISCUtils.debug("Passed world check");
+          balance.addVariable("$amount", CurrencyFormatter.format(world, plugin.api.getBalance(arguments[0], world, currency)));
+          MISCUtils.debug("Passed amount check");
           balance.translate(world, sender);
           return true;
         }
@@ -67,6 +78,6 @@ public class AdminBalanceCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/theneweconomy balance <player> [world] - Check the specified player's balance for [world]";
+    return "/theneweconomy balance <player> [world] [currency] - Check the specified player's balance for [world]";
   }
 }
