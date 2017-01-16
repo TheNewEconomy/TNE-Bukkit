@@ -28,7 +28,7 @@ public class MySQL extends SQLDatabase {
   public void connect() {
     try {
       Class.forName("com.mysql.jdbc.Driver");
-      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, password);
+      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/"  + database + "?useSSL=false", user, password);
     } catch (SQLException e) {
       System.out.println("Unable to connect to MySQL.");
       e.printStackTrace();

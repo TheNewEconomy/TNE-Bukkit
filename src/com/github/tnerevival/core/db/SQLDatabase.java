@@ -84,7 +84,8 @@ public abstract class SQLDatabase extends Database {
   }
 
   public int addResult(Statement statement, ResultSet resultSet) {
-    SQLResult result = new SQLResult(results.lastKey() + 1, statement, resultSet);
+    int key = (results.isEmpty())? 1 : results.lastKey() + 1;
+    SQLResult result = new SQLResult(key, statement, resultSet);
     results.put(result.getId(), result);
     return result.getId();
   }

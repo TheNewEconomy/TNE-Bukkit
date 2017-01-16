@@ -65,7 +65,7 @@ public class SaveManager {
       String table = versionInstance.prefix + "_INFO";
       try {
         Class.forName("com.mysql.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://" + versionInstance.mysqlHost + ":" + versionInstance.mysqlPort + "/" + versionInstance.mysqlDatabase, versionInstance.mysqlUser, versionInstance.mysqlPassword);
+        connection = DriverManager.getConnection("jdbc:mysql://" + versionInstance.mysqlHost + ":" + versionInstance.mysqlPort + "/" + versionInstance.mysqlDatabase + "?useSSL=false", versionInstance.mysqlUser, versionInstance.mysqlPassword);
 
 
         result = connection.getMetaData().getTables(null, null, table, null);
@@ -147,7 +147,7 @@ public class SaveManager {
       String table = versionInstance.prefix + "_INFO";
       try {
         Class.forName("com.mysql.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://" + versionInstance.mysqlHost + ":" + versionInstance.mysqlPort + "/" + versionInstance.mysqlDatabase, versionInstance.mysqlUser, versionInstance.mysqlPassword);
+        connection = DriverManager.getConnection("jdbc:mysql://" + versionInstance.mysqlHost + ":" + versionInstance.mysqlPort + "/" + versionInstance.mysqlDatabase + "?useSSL=false", versionInstance.mysqlUser, versionInstance.mysqlPassword);
         statement = connection.createStatement();
         result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1;");
         if(result.first()) {

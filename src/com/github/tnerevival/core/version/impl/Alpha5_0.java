@@ -96,7 +96,7 @@ public class Alpha5_0 extends Version {
             sql().results(transactionIndex).getLong("trans_time")
         );
         TransactionHistory history = (transactions.containsKey(r.getInitiator()))? transactions.get(r.getInitiator()) : new TransactionHistory();
-        history.add(r);
+        history.add(r, true);
         transactions.put(r.getInitiator(), history);
       }
       sql().close();
@@ -177,9 +177,8 @@ public class Alpha5_0 extends Version {
     try {
       int accountIndex = sql().executeQuery("SELECT * FROM " + table + ";");
       while (sql().results(accountIndex).next()) {
-        Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")));
+        Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")), sql().results(accountIndex).getInt("accountnumber"));
         account.balancesFromString(sql().results(accountIndex).getString("balances"));
-        account.setAccountNumber(sql().results(accountIndex).getInt("accountnumber"));
         account.setStatus(sql().results(accountIndex).getString("accountstatus"));
         account.setJoined(sql().results(accountIndex).getString("joinedDate"));
         account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));
@@ -198,7 +197,6 @@ public class Alpha5_0 extends Version {
     } catch(Exception e) {
       MISCUtils.debug(e);
     }
-
     return accounts;
   }
 
@@ -210,9 +208,8 @@ public class Alpha5_0 extends Version {
         id.toString()
       });
       if(sql().results(accountIndex).next()) {
-        Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")));
+        Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")), sql().results(accountIndex).getInt("accountnumber"));
         account.balancesFromString(sql().results(accountIndex).getString("balances"));
-        account.setAccountNumber(sql().results(accountIndex).getInt("accountnumber"));
         account.setStatus(sql().results(accountIndex).getString("accountstatus"));
         account.setJoined(sql().results(accountIndex).getString("joinedDate"));
         account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));
@@ -1027,24 +1024,24 @@ public class Alpha5_0 extends Version {
       Collection<TNESign> signs = loadSigns();
 
       for(Account account : accounts) {
-        TNE.instance.manager.accounts.put(account.getUid(), account);
+        TNE.instance.manager.accounts.put(account.getUid(), account, true);
       }
 
       for(Shop s : shops) {
-        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
+        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s, true);
       }
 
       for(Auction auction : auctions) {
-        TNE.instance.manager.auctionManager.add(auction);
+        TNE.instance.manager.auctionManager.auctionQueue.put(auction.getLotNumber(), auction, true);
       }
 
       for(TNESign sign : signs) {
-        TNE.instance.manager.signs.put(sign.getLocation(), sign);
+        TNE.instance.manager.signs.put(sign.getLocation(), sign, true);
       }
 
-      TNE.instance.manager.ecoIDs.putAll(loadIDS());
+      TNE.instance.manager.ecoIDs.putAll(loadIDS(), true);
       TNE.instance.manager.transactions.transactionHistory = loadTransactions();
-      TNE.instance.manager.auctionManager.unclaimed.addAll(loadClaims());
+      TNE.instance.manager.auctionManager.unclaimed.addAll(loadClaims(), true);
     }
   }
 
@@ -1055,33 +1052,39 @@ public class Alpha5_0 extends Version {
     db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
     mysql().executePreparedUpdate("Update " + table + " SET version = ?, server_name = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()), TNE.instance.getServer().getServerName() });
 
-    for(Account acc : TNE.instance.manager.accounts.values()) {
-      saveAccount(acc);
-    }
+    if(TNE.instance.saveManager.cache) {
+      if(TNE.instance.cacheWorker != null) {
+        TNE.instance.cacheWorker.run();
+      } else {
+        for (Account acc : TNE.instance.manager.accounts.values()) {
+          saveAccount(acc);
+        }
 
-    for(Map.Entry<String, UUID> entry : TNE.instance.manager.ecoIDs.entrySet()) {
-      saveID(entry.getKey(), entry.getValue());
-    }
+        for (Map.Entry<String, UUID> entry : TNE.instance.manager.ecoIDs.entrySet()) {
+          saveID(entry.getKey(), entry.getValue());
+        }
 
-    for(Shop s : TNE.instance.manager.shops.values()) {
-      saveShop(s);
-    }
+        for (Shop s : TNE.instance.manager.shops.values()) {
+          saveShop(s);
+        }
 
-    for(Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
-      saveAuction(auction);
-    }
+        for (Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
+          saveAuction(auction);
+        }
 
-    for(Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
-      saveClaim(claim);
-    }
+        for (Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
+          saveClaim(claim);
+        }
 
-    for(TNESign sign : TNE.instance.manager.signs.values()) {
-      saveSign(sign);
-    }
+        for (TNESign sign : TNE.instance.manager.signs.values()) {
+          saveSign(sign);
+        }
 
-    for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
-      for(Record r : entry.getValue().getRecords()) {
-        saveTransaction(r);
+        for (Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
+          for (Record r : entry.getValue().getRecords()) {
+            saveTransaction(r);
+          }
+        }
       }
     }
     mysql().close();
@@ -1106,24 +1109,24 @@ public class Alpha5_0 extends Version {
       Collection<TNESign> signs = loadSigns();
 
       for(Account account : accounts) {
-        TNE.instance.manager.accounts.put(account.getUid(), account);
+        TNE.instance.manager.accounts.put(account.getUid(), account, true);
       }
 
       for(Shop s : shops) {
-        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s);
+        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s, true);
       }
 
       for(Auction auction : auctions) {
-        TNE.instance.manager.auctionManager.add(auction);
+        TNE.instance.manager.auctionManager.auctionQueue.put(auction.getLotNumber(), auction, true);
       }
 
       for(TNESign sign : signs) {
-        TNE.instance.manager.signs.put(sign.getLocation(), sign);
+        TNE.instance.manager.signs.put(sign.getLocation(), sign, true);
       }
 
-      TNE.instance.manager.ecoIDs.putAll(loadIDS());
+      TNE.instance.manager.ecoIDs.putAll(loadIDS(), true);
       TNE.instance.manager.transactions.transactionHistory = loadTransactions();
-      TNE.instance.manager.auctionManager.unclaimed.addAll(loadClaims());
+      TNE.instance.manager.auctionManager.unclaimed.addAll(loadClaims(), true);
     }
   }
 
@@ -1132,36 +1135,41 @@ public class Alpha5_0 extends Version {
     createTables("h2");
     String table = prefix + "_INFO";
     db = new H2(h2File, mysqlUser, mysqlPassword);
-
     h2().executePreparedUpdate("Update " + table + " SET version = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()) });
 
-    for(Account acc : TNE.instance.manager.accounts.values()) {
-      saveAccount(acc);
-    }
+    if(TNE.instance.saveManager.cache) {
+      if (TNE.instance.cacheWorker != null) {
+        TNE.instance.cacheWorker.run();
+      } else {
+        for (Account acc : TNE.instance.manager.accounts.values()) {
+          saveAccount(acc);
+        }
 
-    for(Map.Entry<String, UUID> entry : TNE.instance.manager.ecoIDs.entrySet()) {
-      saveID(entry.getKey(), entry.getValue());
-    }
+        for (Map.Entry<String, UUID> entry : TNE.instance.manager.ecoIDs.entrySet()) {
+          saveID(entry.getKey(), entry.getValue());
+        }
 
-    for(Shop s : TNE.instance.manager.shops.values()) {
-      saveShop(s);
-    }
+        for (Shop s : TNE.instance.manager.shops.values()) {
+          saveShop(s);
+        }
 
-    for(Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
-      saveAuction(auction);
-    }
+        for (Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
+          saveAuction(auction);
+        }
 
-    for(Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
-      saveClaim(claim);
-    }
+        for (Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
+          saveClaim(claim);
+        }
 
-    for(TNESign sign : TNE.instance.manager.signs.values()) {
-      saveSign(sign);
-    }
+        for (TNESign sign : TNE.instance.manager.signs.values()) {
+          saveSign(sign);
+        }
 
-    for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
-      for(Record r : entry.getValue().getRecords()) {
-        saveTransaction(r);
+        for (Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
+          for (Record r : entry.getValue().getRecords()) {
+            saveTransaction(r);
+          }
+        }
       }
     }
 

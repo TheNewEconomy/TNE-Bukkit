@@ -77,13 +77,34 @@ public class EventList<E> extends ArrayList<E> {
 
   @Override
   public boolean add(E item) {
+    return add(item, false);
+  }
+
+  public boolean add(E item, boolean skip) {
+
     if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
-      if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && TNE.instance.saveManager.cache && !contains(item)) {
+      if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && TNE.instance.saveManager.cache && !contains(item) && !skip) {
         listener.add(item);
+      }
+
+      if(TNE.instance.saveManager.cache && contains(item)) {
+        listener.changed().add(item);
       }
       return list.add(item);
     }
     return listener.add(item);
+  }
+
+  @Override
+  public boolean addAll(Collection<? extends E> c) {
+    return addAll(c, false);
+  }
+
+  public boolean addAll(Collection<? extends E> c, boolean skip) {
+    for(E element : c) {
+      add(element, skip);
+    }
+    return true;
   }
 
   @Override

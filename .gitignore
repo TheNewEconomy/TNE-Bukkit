@@ -1,5 +1,7 @@
 *.class
 bin/
+*.ipr
+*.iws
 *.iml
 *.project
 *.classpath

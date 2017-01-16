@@ -69,7 +69,7 @@ public class TNE extends JavaPlugin {
   private InterestWorker interestWorker;
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
-  private CacheWorker cacheWorker;
+  public CacheWorker cacheWorker;
 
   public static Map<String, UUID> uuidCache = new HashMap<>();
 
@@ -93,9 +93,9 @@ public class TNE extends JavaPlugin {
 
     manager = new EconomyManager();
     inventoryManager = new InventoryManager();
+    commandManager = new CommandManager();
     saveManager = new SaveManager();
     saveManager.initialize();
-    commandManager = new CommandManager();
 
     invWorker = new InventoryTimeWorker(this);
     auctionWorker = new AuctionWorker(this);
@@ -153,6 +153,7 @@ public class TNE extends JavaPlugin {
     configurations.save(objectConfigurations, "objects");
     configurations.save(materialConfigurations, "materials");
     saveConfigurations(true);
+    saveManager.save();
     try {
       if(statsWorker != null) statsWorker.cancel();
       if(cacheWorker != null) cacheWorker.cancel();
@@ -163,7 +164,6 @@ public class TNE extends JavaPlugin {
     } catch(IllegalStateException e) {
       //Task was not scheduled
     }
-    saveManager.save();
     getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been disabled!");
   }
 

@@ -17,6 +17,7 @@
 package com.github.tnerevival.core.collection;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.*;
 
@@ -46,6 +47,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public V get(Object key) {
+    MISCUtils.debug("EventMap.get");
     if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
       return map.get(key);
     }
@@ -60,13 +62,25 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public V put(K key, V value) {
+    MISCUtils.debug("EventMap.put");
+    return put(key, value, false);
+  }
+
+  public V put(K key, V value, boolean skip) {
+    MISCUtils.debug("EventMap.put(skip)");
     if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
       map.put(key, value);
     }
 
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
-      if(!TNE.instance.saveManager.cache || !map.containsKey(key)) {
-        listener.put(key, value);
+    if(!skip) {
+      if (!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+        if (!TNE.instance.saveManager.cache || !map.containsKey(key)) {
+          listener.put(key, value);
+        }
+
+        if(TNE.instance.saveManager.cache && map.containsKey(key)) {
+          listener.changed().put(key, value);
+        }
       }
     }
     return value;
@@ -74,10 +88,12 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public V remove(Object key) {
+    MISCUtils.debug("EventMap.remove");
     return remove(key, true);
   }
 
   public V remove(Object key, boolean database) {
+    MISCUtils.debug("EventMap.remove(database)");
     V removed = get(key);
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && database) {
       listener.preRemove(key, removed);
@@ -95,7 +111,8 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public boolean containsKey(Object key) {
-    return map.containsKey(key);
+    MISCUtils.debug("EventMap.containsKey");
+    return get(key) != null;
   }
 
   public EventMapIterator<Map.Entry<K, V>> getIterator() {
@@ -104,6 +121,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public int size() {
+    MISCUtils.debug("EventMap.size");
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       return listener.size();
     }
@@ -112,6 +130,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public boolean isEmpty() {
+    MISCUtils.debug("EventMap.isEmpty");
     if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
       return listener.isEmpty();
     }
@@ -120,8 +139,12 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public void putAll(Map<? extends K, ? extends V> m) {
+    putAll(m, false);
+  }
+
+  public void putAll(Map<? extends K, ? extends V> m, boolean skip) {
     for(Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-      put(entry.getKey(), entry.getValue());
+      put(entry.getKey(), entry.getValue(), skip);
     }
   }
 

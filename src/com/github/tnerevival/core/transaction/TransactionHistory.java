@@ -37,7 +37,11 @@ public class TransactionHistory {
   }
 
   public void add(Record record) {
-    records.add(record);
+    add(record, false);
+  }
+
+  public void add(Record record, boolean skip) {
+    records.add(record, skip);
   }
 
   private void sort(String world, String player, String type) {
