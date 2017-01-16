@@ -8,8 +8,11 @@ import com.github.tnerevival.core.db.*;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.Record;
+import com.github.tnerevival.core.transaction.TransactionHistory;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class Version {
@@ -74,20 +77,32 @@ public abstract class Version {
   //abstract methods to be implemented by each child class
   public abstract double versionNumber();
   public abstract void update(double version, String type);
+  public abstract Map<String, TransactionHistory> loadTransactions();
+  public abstract TransactionHistory loadHistory(UUID id);
   public abstract void saveTransaction(Record record);
   public abstract void deleteTransaction(UUID id);
+  public abstract Collection<Account> loadAccounts();
+  public abstract Account loadAccount(UUID id);
   public abstract void saveAccount(Account acc);
   public abstract void deleteAccount(UUID id);
+  public abstract Collection<Shop> loadShops();
+  public abstract Shop loadShop(String name, String world);
   public abstract void saveShop(Shop shop);
   public abstract void deleteShop(Shop shop);
+  public abstract Collection<TNESign> loadSigns();
+  public abstract TNESign loadSign(String location);
   public abstract void saveSign(TNESign sign);
   public abstract void deleteSign(TNESign sign);
+  public abstract Collection<Auction> loadAuctions();
+  public abstract Auction loadAuction(Integer lot);
   public abstract void saveAuction(Auction auction);
   public abstract void deleteAuction(Auction auction);
-  public abstract void loadClaim(UUID owner, Integer lot);
+  public abstract Collection<Claim> loadClaims();
+  public abstract Claim loadClaim(UUID owner, Integer lot);
   public abstract void saveClaim(Claim claim);
   public abstract void deleteClaim(Claim claim);
-  public abstract void loadID(String username);
+  public abstract Map<String, UUID> loadIDS();
+  public abstract UUID loadID(String username);
   public abstract void saveID(String username, UUID id);
   public abstract void removeID(String username);
   public abstract void removeID(UUID id);

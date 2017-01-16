@@ -40,7 +40,6 @@ public class SignsListener implements MapListener {
 
   @Override
   public void clearChanged() {
-
   }
 
   @Override
@@ -65,12 +64,12 @@ public class SignsListener implements MapListener {
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return size() == 0;
   }
 
   @Override
   public boolean containsKey(Object key) {
-    return false;
+    return get(key) != null;
   }
 
   @Override

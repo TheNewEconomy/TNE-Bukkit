@@ -65,12 +65,12 @@ public class IDSListener implements MapListener {
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return size() == 0;
   }
 
   @Override
   public boolean containsKey(Object key) {
-    return false;
+    return get(key) != null;
   }
 
   @Override
@@ -83,12 +83,12 @@ public class IDSListener implements MapListener {
   }
 
   @Override
-  public Set keySet() {
+  public Set<String> keySet() {
     return null;
   }
 
   @Override
-  public Set<Map.Entry> entrySet() {
+  public Set<Map.Entry<String, UUID>> entrySet() {
     return null;
   }
 

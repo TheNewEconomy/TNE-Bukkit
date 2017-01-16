@@ -20,28 +20,29 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.core.collection.MapListener;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class AccountsListener implements MapListener {
+  Map<UUID, Account> changed = new HashMap<>();
+
   @Override
   public void update() {
-
+    for(Account acc : changed.values()) {
+      TNE.instance.saveManager.versionInstance.saveAccount(acc);
+    }
   }
 
   @Override
   public Map changed() {
-    return null;
+    return changed;
   }
 
   @Override
   public void clearChanged() {
-
+    changed.clear();
   }
 
   @Override
@@ -51,12 +52,12 @@ public class AccountsListener implements MapListener {
 
   @Override
   public Object get(Object key) {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadAccount((UUID)key);
   }
 
   @Override
   public Collection values() {
-    return null;
+    return TNE.instance.saveManager.versionInstance.loadAccounts();
   }
 
   @Override
@@ -66,12 +67,12 @@ public class AccountsListener implements MapListener {
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return size() == 0;
   }
 
   @Override
   public boolean containsKey(Object key) {
-    return false;
+    return get(key) != null;
   }
 
   @Override
@@ -85,13 +86,23 @@ public class AccountsListener implements MapListener {
   }
 
   @Override
-  public Set keySet() {
-    return null;
+  public Set<UUID> keySet() {
+    Set<UUID> keys = new HashSet<>();
+    Collection<Account> accounts = TNE.instance.saveManager.versionInstance.loadAccounts();
+    for(Account account : accounts) {
+      keys.add(account.getUid());
+    }
+    return keys;
   }
 
   @Override
-  public Set<Map.Entry> entrySet() {
-    return null;
+  public Set<Map.Entry<UUID, Account>> entrySet() {
+    Map<UUID, Account> accountMap = new HashMap<>();
+    Collection<Account> accounts = TNE.instance.saveManager.versionInstance.loadAccounts();
+    for(Account account : accounts) {
+      accountMap.put(account.getUid(), account);
+    }
+    return accountMap.entrySet();
   }
 
   @Override
