@@ -282,6 +282,24 @@ Core:
           #Whether or not player's should drop items only when killed by a player.
           PlayerOnly: true
 
+    #All configurations relating to vaults
+    Vault:
+
+        #Whether or not vaults are enabled
+        Enabled: true
+
+        #Whether or not players can use a command to access their vaults.
+        Command: true
+
+        #Whether or not testificates named "VaultKeeper" allow access to player vaults.
+        NPC: false
+
+        #The cost to open a vault.
+        Cost: 20.0
+
+        #The number of rows a vault has(minimum is 1, maximum is 6)
+        Rows: 3
+
     #All configurations relating to banks.
     Bank:
 
@@ -291,18 +309,11 @@ Core:
         #Whether or not players can use a command to access their banks.
         Command: true
         
-        #Whether or not testificates named "Banker" allow access to player banks.
-        NPC: false
-        
         #Whether or not players can use bank balances to pay dues when personal balance is short.
         Connected: false
 
         #How much is costs to open a bank account.
         Cost: 20.0
-
-        #The number of rows a bank has.( minimum is 1, maximum is 6)
-        #1 row = 9 slots
-        Rows: 3
 
         #All configurations relating to bank gold interest.
         Interest:

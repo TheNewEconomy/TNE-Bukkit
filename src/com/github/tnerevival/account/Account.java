@@ -21,6 +21,8 @@ public class Account implements Serializable {
    */
   private Map<String, Bank> banks = new HashMap<>();
 
+  private Map<String, Vault> vaults = new HashMap<>();
+
   private Map<String, CreditsEntry> credits = new HashMap<>();
 
   private Map<String, Integer> commands = new HashMap<>();
@@ -308,5 +310,21 @@ public class Account implements Serializable {
 
   public Bank getBank(String world) {
     return this.banks.get(world);
+  }
+
+  public Map<String, Vault> getVaults() {
+    return vaults;
+  }
+
+  public void setVault(Map<String, Vault> vaults) {
+    this.vaults = vaults;
+  }
+
+  public void setVault(String world, Vault vault) {
+    this.vaults.put(world, vault);
+  }
+
+  public Vault getVault(String world) {
+    return this.vaults.get(world);
   }
 }
