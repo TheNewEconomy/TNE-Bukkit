@@ -240,6 +240,18 @@ Core:
             #The cost to use a bank sign, if the player has valid permissions.
             Use: 20.0
 
+        #All configurations relating to item buy/sell signs.
+        Item:
+
+            #Whether or not item signs are enabled.
+            Enabled: false
+
+            #The cost to make a item sign, if the player has valid permissions.
+            Place: 20.0
+
+            #The cost to use a item sign, if the player has valid permissions.
+            Use: 20.0
+
         #All configurations relating to shop signs.
         Shop:
 
