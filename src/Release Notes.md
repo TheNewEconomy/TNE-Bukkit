@@ -27,6 +27,7 @@ Alpha 5.1 "Extensibility Update"
      - Fixed issue where Default currency kept appearing in the configuration files
      - Fixed an issue where world names with dashes broke balances
      - Fixed an issue where bank members weren't properly saved
-     
+   - Configuration
+     - Added the ability to add player usernames in players.yml
    - Documentation
      - Started work on the Official TNE Documentation to provide a friendly environment for server owners

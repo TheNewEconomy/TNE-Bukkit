@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.configurations;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.configurations.impl.*;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -168,6 +169,7 @@ public class ConfigurationManager {
     }
 
     if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
+    if(!player.trim().equals("") && playerEnabled(path, IDFinder.getPlayer(player).getName())) return getPlayerConfiguration(path, IDFinder.getPlayer(player).getName());
     if(worldEnabled(path, world)) return getWorldConfiguration(path, world);
     return getValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
   }
