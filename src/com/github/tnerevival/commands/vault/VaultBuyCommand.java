@@ -31,7 +31,7 @@ public class VaultBuyCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.bank.buy";
+    return "tne.vault.buy";
   }
 
   @Override
@@ -51,6 +51,7 @@ public class VaultBuyCommand extends TNECommand {
     }
 
 
+    MISCUtils.debug("Has bypass? " + player.hasPermission("tne.vault.bypass"));
     if(!player.hasPermission("tne.vault.bypass")) {
       if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, Vault.cost(getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, getWorld(player))) {
         AccountUtils.transaction(IDFinder.getID(player).toString(), null, Vault.cost(getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, getWorld(player));

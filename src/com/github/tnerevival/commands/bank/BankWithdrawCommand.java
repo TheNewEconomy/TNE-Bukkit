@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
@@ -42,46 +43,53 @@ public class BankWithdrawCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
-    UUID owner = IDFinder.getID(ownerName);
-    UUID id = IDFinder.getID(sender.getName());
-    String world = IDFinder.getWorld((Player)sender);
+    Player player = getPlayer(sender);
+    String world = (arguments.length >= 2)? arguments[1] : getWorld(sender);
+    String owner = (arguments.length >= 3)? arguments[2] : player.getName();
+    Account account = AccountUtils.getAccount(IDFinder.getID(owner));
+    UUID id = IDFinder.getID(player);
 
-
-    if(arguments.length == 1) {
-      if(AccountUtils.getAccount(owner).hasBank(getWorld(sender))) {
-        Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
-        if (BankUtils.bankMember(owner, IDFinder.getID(sender.getName()))) {
-          if(AccountUtils.transaction(owner.toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
-            Message withdrawn = new Message("Messages.Bank.Withdraw");
-            withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, value));
-            withdrawn.addVariable("$name",  ownerName);
-            withdrawn.translate(IDFinder.getWorld(id), id);
-            return true;
-          } else {
-            Message overdraw = new Message("Messages.Bank.Overdraw");
-            overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));
-            overdraw.addVariable("$name",  ownerName);
-            overdraw.translate(IDFinder.getWorld(id), id);
-            return false;
-          }
-        }
-        Message noAccess = new Message("Messages.Bank.Invalid");
-        noAccess.addVariable("$name", ownerName);
-        noAccess.translate(world, id);
-        return false;
-      }
-      Message none = new Message("Messages.Bank.None");
-      none.addVariable("$amount",  CurrencyFormatter.format(IDFinder.getWorld(id), Bank.cost(IDFinder.getWorld(id), id.toString())));
-      none.translate(IDFinder.getWorld(id), id);
+    if(arguments.length < 1) {
+      help(sender);
       return false;
     }
-    help(sender);
-    return false;
+
+    if(IDFinder.getPlayer(owner) == null) {
+      Message notFound = new Message("Messages.General.NoPlayer");
+      notFound.addVariable("$player", owner);
+      notFound.translate(IDFinder.getWorld(player), player);
+      return false;
+    }
+
+    if(!account.hasBank(world)) {
+      Message none = new Message("Messages.Bank.None");
+      none.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), Bank.cost(getWorld(sender), IDFinder.getID(player).toString())));
+      none.translate(getWorld(sender), player);
+      return false;
+    }
+
+    if(!BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName())) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
+      new Message("Messages.General.NoPerm").translate(getWorld(player), player);
+      return false;
+    }
+
+    Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
+    if(AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
+      Message overdraw = new Message("Messages.Bank.Overdraw");
+      overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));
+      overdraw.addVariable("$name",  owner);
+      overdraw.translate(IDFinder.getWorld(id), id);
+      return false;
+    }
+    Message withdrawn = new Message("Messages.Bank.Withdraw");
+    withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, value));
+    withdrawn.addVariable("$name",  owner);
+    withdrawn.translate(IDFinder.getWorld(id), id);
+    return true;
   }
 
   @Override
   public String getHelp() {
-    return "/bank withdraw <amount> [owner] - Withdraw <amount> from [owner]'s bank. Defaults to your bank.";
+    return "/bank withdraw <amount> [world] [owner] - Withdraw <amount> from [owner]'s bank for world [world]. Defaults to your bank.";
   }
 }

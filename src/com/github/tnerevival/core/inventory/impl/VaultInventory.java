@@ -1,5 +1,7 @@
 package com.github.tnerevival.core.inventory.impl;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.serializable.SerializableItemStack;
@@ -45,8 +47,9 @@ public class VaultInventory extends GenericInventory {
 
   @Override
   public void onClose(InventoryViewer viewer) {
+    Account account = AccountUtils.getAccount(owner);
 
-    Vault vault = AccountUtils.getAccount(owner).getVault(world);
+    Vault vault = account.getVault(world);
 
     List<SerializableItemStack> items = new ArrayList<>();
 
@@ -55,6 +58,9 @@ public class VaultInventory extends GenericInventory {
       items.add(new SerializableItemStack(i, inventory.getItem(i)));
     }
     vault.setItems(items);
+    account.getVaults().put(world, vault);
+    TNE.instance.manager.accounts.put(owner, account);
+
     super.onClose(viewer);
   }
 }

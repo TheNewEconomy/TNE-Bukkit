@@ -5,6 +5,7 @@ import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.core.version.impl.Alpha5_0;
+import com.github.tnerevival.core.version.impl.Alpha6_0;
 
 import java.io.*;
 import java.sql.*;
@@ -20,10 +21,11 @@ public class SaveManager {
     versions = new HashMap<>();
     versions.put(5.0, new Alpha5_0());
     versions.put(5.1, new Alpha5_0());
+    versions.put(6.0, new Alpha6_0());
   }
 
   public Version versionInstance;
-  Double currentSaveVersion = 5.1;
+  Double currentSaveVersion = 6.0;
   Double saveVersion = 0.0;
   public boolean cache = TNE.configurations.getBoolean("Core.Database.Transactions.Cache");
   public long update = TNE.configurations.getLong("Core.Database.Transactions.Update");
@@ -195,7 +197,7 @@ public class SaveManager {
   }
 
   private void convert() {
-    if(TNE.instance.api.getBoolean("Core.Conversion.Convert")) {
+    if(TNE.configurations.getBoolean("Core.Conversion.Convert")) {
       Converter converter = getConverter();
       if(converter != null) {
         converter.convert();
@@ -207,7 +209,7 @@ public class SaveManager {
   }
 
   public Converter getConverter() {
-    String name = TNE.instance.api.getString("Core.Conversion.Name").toLowerCase();
+    String name = TNE.configurations.getString("Core.Conversion.Name").toLowerCase();
 
     switch(name) {
       case "iconomy":

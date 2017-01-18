@@ -215,7 +215,7 @@ public class Vault {
     }
     MISCUtils.debug("OWNER UUID: " + owner.toString());
     MISCUtils.debug((IDFinder.getPlayer(owner.toString()) == null) + "");
-    String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Vault" + ChatColor.GOLD + "]" + ChatColor.WHITE + IDFinder.getPlayer(owner.toString()).getDisplayName();
+    String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Vault" + ChatColor.GOLD + "]" + ChatColor.WHITE + IDFinder.getPlayer(owner.toString()).getName();
     Inventory inventory = Bukkit.createInventory(null, size, title);
     if(items.size() > 0) {
       for(SerializableItemStack stack : items) {

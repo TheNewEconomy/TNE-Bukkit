@@ -205,7 +205,7 @@ public abstract class TNEInventory {
         m.translate(IDFinder.getWorld(player), player);
       }
     } else if(this instanceof VaultInventory) {
-      if(!AccountUtils.getAccount(owner).getBank(viewer.getWorld()).getMembers().contains(viewer.getUUID())) {
+      if(!owner.equals(viewer.getUUID()) && !AccountUtils.getAccount(owner).getVault(viewer.getWorld()).getMembers().contains(viewer.getUUID())) {
         return false;
       }
     }

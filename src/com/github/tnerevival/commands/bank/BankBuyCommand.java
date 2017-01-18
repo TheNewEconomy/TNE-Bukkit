@@ -46,6 +46,7 @@ public class BankBuyCommand extends TNECommand {
       return false;
     }
 
+    MISCUtils.debug("Has bypass? " + player.hasPermission("tne.bank.bypass"));
     if(!player.hasPermission("tne.bank.bypass")) {
       if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, Bank.cost(IDFinder.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         AccountUtils.transaction(IDFinder.getID(player).toString(), null, Bank.cost(IDFinder.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));

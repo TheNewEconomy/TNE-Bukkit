@@ -333,6 +333,8 @@ public class Account implements Serializable {
   }
 
   public boolean hasVault(String world) {
+    MISCUtils.debug("Account.hasVault(" + world + ")");
+    MISCUtils.debug("Outcome: " + vaults.containsKey(world));
     return vaults.containsKey(world);
   }
 }

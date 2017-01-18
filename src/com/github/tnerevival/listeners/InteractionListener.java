@@ -58,7 +58,7 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onCommand(PlayerCommandPreprocessEvent event) {
-    if(TNE.configurations.getBoolean("Objects.Commands.Enabled", "objects")) {
+    if(TNE.instance.api.getBoolean("Objects.Commands.Enabled", "objects")) {
 
       ObjectConfiguration configuration = TNE.configurations.getObjectConfiguration();
 

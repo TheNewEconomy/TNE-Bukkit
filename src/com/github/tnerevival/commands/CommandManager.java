@@ -11,6 +11,7 @@ import com.github.tnerevival.commands.money.MoneyCommand;
 import com.github.tnerevival.commands.packages.PackageCommand;
 import com.github.tnerevival.commands.pin.PinCommand;
 import com.github.tnerevival.commands.shop.ShopCommand;
+import com.github.tnerevival.commands.vault.VaultCommand;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -41,6 +42,7 @@ public class CommandManager {
     commands.put(new String[] { "package" }, new PackageCommand(TNE.instance));
     commands.put(new String[] { "pin" }, new PinCommand(TNE.instance));
     commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance));
+    commands.put(new String[] { "vault" }, new VaultCommand(TNE.instance));
     registerCommands();
   }
 

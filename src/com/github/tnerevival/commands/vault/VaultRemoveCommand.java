@@ -8,7 +8,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,7 +44,7 @@ public class VaultRemoveCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     Account account = AccountUtils.getAccount(IDFinder.getID(player));
-    String world = (arguments.length >= 1)? arguments[0] : getWorld(sender);
+    String world = (arguments.length >= 2)? arguments[1] : getWorld(sender);
 
     if(arguments.length < 1) {
       help(sender);
@@ -79,7 +78,7 @@ public class VaultRemoveCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/vault remove <player> [world] - Remove <player> from your vault for world [world].";
+    return "/vault remove <player> [world] - Removes <player> from your vault for world [world].";
   }
 
 }

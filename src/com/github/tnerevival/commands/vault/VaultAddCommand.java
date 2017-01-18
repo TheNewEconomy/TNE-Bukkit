@@ -8,7 +8,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,7 +44,7 @@ public class VaultAddCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     Account account = AccountUtils.getAccount(IDFinder.getID(player));
-    String world = (arguments.length >= 1)? arguments[0] : getWorld(sender);
+    String world = (arguments.length >= 2)? arguments[1] : getWorld(sender);
 
     if(arguments.length < 1) {
       help(sender);
@@ -66,7 +65,7 @@ public class VaultAddCommand extends TNECommand {
       return false;
     }
 
-    if(!account.getVault(world).getOwner().equals(IDFinder.getID(player))|| !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Vault.MultiManage")) {
+    if(!account.getVault(world).getOwner().equals(IDFinder.getID(player)) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Vault.MultiManage")) {
       new Message("Messages.General.NoPerm").translate(getWorld(player), player);
       return false;
     }

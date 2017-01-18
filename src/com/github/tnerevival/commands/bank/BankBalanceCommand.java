@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
@@ -8,9 +9,10 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class BankBalanceCommand extends TNECommand {
 
@@ -40,30 +42,39 @@ public class BankBalanceCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String ownerName = (arguments.length >= 1)? arguments[0] : sender.getName();
-    Player owner = MISCUtils.getPlayer(ownerName);
-    Player player = MISCUtils.getPlayer(sender.getName());
+    Player player = getPlayer(sender);
+    String world = (arguments.length >= 1)? arguments[0] : getWorld(sender);
+    String owner = (arguments.length >= 2)? arguments[1] : player.getName();
+    Account account = AccountUtils.getAccount(IDFinder.getID(owner));
+    UUID id = IDFinder.getID(player);
 
-    if(AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(getWorld(sender))) {
-      if(BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName()))) {
-        Message balance = new Message("Messages.Bank.Balance");
-        balance.addVariable("$amount",  CurrencyFormatter.format(owner.getWorld().getName(), BankUtils.getBankBalance(IDFinder.getID(player))));
-        balance.addVariable("$name", ownerName);
-        balance.translate(IDFinder.getWorld(player), player);
-        return true;
-      }
-      Message noAccess = new Message("Messages.Bank.Invalid");
-      noAccess.addVariable("$name", ownerName);
-      noAccess.translate(IDFinder.getWorld(player), player);
+    if(IDFinder.getPlayer(owner) == null) {
+      Message notFound = new Message("Messages.General.NoPlayer");
+      notFound.addVariable("$player", owner);
+      notFound.translate(IDFinder.getWorld(player), player);
+      return false;
     }
-    Message none = new Message("Messages.Bank.None");
-    none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), Bank.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
-    none.translate(IDFinder.getWorld(player), player);
-    return false;
+
+    if(!account.hasBank(world)) {
+      Message none = new Message("Messages.Bank.None");
+      none.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), Bank.cost(getWorld(sender), IDFinder.getID(player).toString())));
+      none.translate(getWorld(sender), player);
+      return false;
+    }
+
+    if(!BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName())) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
+      new Message("Messages.General.NoPerm").translate(getWorld(player), player);
+      return false;
+    }
+    Message balance = new Message("Messages.Bank.Balance");
+    balance.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), BankUtils.getBankBalance(IDFinder.getID(owner))));
+    balance.addVariable("$name", owner);
+    balance.translate(IDFinder.getWorld(player), player);
+    return true;
   }
 
   @Override
   public String getHelp() {
-    return "/bank balance [owner] - Find out how much gold is in a specific bank. Defaults to your personal bank.";
+    return "/bank balance [world] [owner] - Find out how much gold is in a specific bank. Defaults to your personal bank.";
   }
 }
