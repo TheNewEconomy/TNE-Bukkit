@@ -160,7 +160,7 @@ public class AccountUtils {
   }
 
   public static Double getFunds(UUID id) {
-    return getFunds(id, MISCUtils.getWorld(id));
+    return getFunds(id, IDFinder.getWorld(id));
   }
 
   public static Double getFunds(UUID id, String world) {
@@ -191,7 +191,7 @@ public class AccountUtils {
 
   public static void initializeWorldData(UUID id) {
     Account account = getAccount(id);
-    String world = MISCUtils.getWorld(id);
+    String world = IDFinder.getWorld(id);
     for(Currency c : TNE.instance.manager.currencyManager.getWorldCurrencies(world)) {
       if (!account.getBalances().containsKey(world + ":" + c.getName())) {
         account.setBalance(world, getInitialBalance(world, c.getName()), c.getName());

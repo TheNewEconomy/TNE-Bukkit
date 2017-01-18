@@ -1,11 +1,12 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
-import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,24 +46,24 @@ public class BankRemoveCommand extends TNECommand {
 
     if(arguments.length >= 1) {
       if(MISCUtils.getPlayer(arguments[0]) != null) {
-        if (BankUtils.hasBank(IDFinder.getID(player))) {
-          if (BankUtils.getBank(IDFinder.getID(player)).getOwner().equals(player.getUniqueId())) {
-            BankUtils.getBank(IDFinder.getID(player)).removeMember(IDFinder.getID(MISCUtils.getPlayer(arguments[0])));
+        if (AccountUtils.getAccount(IDFinder.getID(player)).hasBank(getWorld(sender))) {
+          if (AccountUtils.getAccount(IDFinder.getID(player)).getBank(getWorld(sender)).getOwner().equals(player.getUniqueId())) {
+            AccountUtils.getAccount(IDFinder.getID(player)).getBank(getWorld(sender)).removeMember(IDFinder.getID(MISCUtils.getPlayer(arguments[0])));
             Message added = new Message("Messages.Bank.Removed");
             added.addVariable("$player", arguments[0]);
-            added.translate(MISCUtils.getWorld(player), player);
+            added.translate(IDFinder.getWorld(player), player);
           }
-          new Message("Messages.General.NoPerm").translate(MISCUtils.getWorld(player), player);
+          new Message("Messages.General.NoPerm").translate(IDFinder.getWorld(player), player);
           return false;
         }
         Message none = new Message("Messages.Bank.None");
-        none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
-        none.translate(MISCUtils.getWorld(player), player);
+        none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), Bank.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+        none.translate(IDFinder.getWorld(player), player);
         return false;
       }
       Message notFound = new Message("Messages.General.NoPlayer");
       notFound.addVariable("$player", arguments[0]);
-      notFound.translate(MISCUtils.getWorld(player), player);
+      notFound.translate(IDFinder.getWorld(player), player);
       return false;
     }
     help(sender);

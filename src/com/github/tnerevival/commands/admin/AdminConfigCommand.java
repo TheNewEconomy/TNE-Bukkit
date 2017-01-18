@@ -57,7 +57,7 @@ public class AdminConfigCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : "";
-      String world = (sender instanceof Player)? MISCUtils.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+      String world = (sender instanceof Player)? IDFinder.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
       String action = (arguments[0].equalsIgnoreCase("set"))? "set" : "get";
       if(TNE.instance.api.hasConfiguration(arguments[1])) {
         Message m = null;

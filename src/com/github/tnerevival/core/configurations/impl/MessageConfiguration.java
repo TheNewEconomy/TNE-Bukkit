@@ -133,6 +133,22 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Shop.InvalidTrade", "<white>The trade item name \"$item\" is invalid.");
     configurations.put("Messages.Shop.InvalidCost", "<white>Invalid cost format entered.");
 
+    configurations.put("Messages.Vault.Added", "<white>$player has been added to your vault!");
+    configurations.put("Messages.Vault.Removed", "<white>$player has been removed from your vault!");
+    configurations.put("Messages.Vault.Already", "<red>You already own a vault!");
+    configurations.put("Messages.Vault.Bought", "<white>Congratulations! You have successfully purchased a vault!");
+    configurations.put("Messages.Vault.Insufficient", "<red>I'm sorry, but you need at least <gold>$amount<red> to create a vault.");
+    configurations.put("Messages.Vault.Overdraw", "<red>I'm sorry, but the vault of $name does not have <gold>$amount<red>.");
+    configurations.put("Messages.Vault.None", "<red>I'm sorry, but you do not own a vault. The current cost for a vault is <gold>$amount<red>. Use /vault buy to purchase one.");
+    configurations.put("Messages.Vault.NoNPC", "<red>I'm sorry, but accessing vaults via NPCs has been disabled in this world!");
+    configurations.put("Messages.Vault.NoSign", "<red>I'm sorry, but accessing vaults via signs has been disabled in this world!");
+    configurations.put("Messages.Vault.NoCommand", "<red>I'm sorry, but accessing vaults via /vault has been disabled in this world!");
+    configurations.put("Messages.Vault.Disabled", "<red>I'm sorry, but vaults are disabled in this world.");
+    configurations.put("Messages.Vault.Balance", "<white>There is currently <gold>$amount<white> in the vault of $name.");
+    configurations.put("Messages.Vault.Deposit", "<white>You have deposited <gold>$amount<white> in the vault of $name.");
+    configurations.put("Messages.Vault.Withdraw", "<white>You have withdrawn <gold>$amount<gold> from the vault of $name.");
+    configurations.put("Messages.Vault.Invalid", "<red>I'm sorry, but you don't have access to $owner's vault!");
+
     configurations.put("Messages.Bank.Added", "<white>$player has been added to your bank!");
     configurations.put("Messages.Bank.Removed", "<white>$player has been removed from your bank!");
     configurations.put("Messages.Bank.Already", "<red>You already own a bank!");
@@ -140,9 +156,6 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Bank.Insufficient", "<red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.");
     configurations.put("Messages.Bank.Overdraw", "<red>I'm sorry, but the bank of $name does not have <gold>$amount<red>.");
     configurations.put("Messages.Bank.None", "<red>I'm sorry, but you do not own a bank. The current cost for a bank is <gold>$amount<red>. Use /bank buy to purchase one.");
-    configurations.put("Messages.Bank.NoNPC", "<red>I'm sorry, but accessing banks via NPCs has been disabled in this world!");
-    configurations.put("Messages.Bank.NoSign", "<red>I'm sorry, but accessing banks via signs has been disabled in this world!");
-    configurations.put("Messages.Bank.NoCommand", "<red>I'm sorry, but accessing banks via /bank has been disabled in this world!");
     configurations.put("Messages.Bank.Disabled", "<red>I'm sorry, but banks are disabled in this world.");
     configurations.put("Messages.Bank.Balance", "<white>There is currently <gold>$amount<white> in the bank of $name.");
     configurations.put("Messages.Bank.Deposit", "<white>You have deposited <gold>$amount<white> in the bank of $name.");

@@ -300,20 +300,26 @@ Core:
         #The number of rows a vault has(minimum is 1, maximum is 6)
         Rows: 3
 
+        #Whether or not players can manage vaults from other worlds.
+        MultiManage: false
+
+        #Whether or not player can view vaults from other worlds.
+        MultiView: false
+
     #All configurations relating to banks.
     Bank:
 
         #Whether or not banks are enabled.
         Enabled: true
-
-        #Whether or not players can use a command to access their banks.
-        Command: true
         
         #Whether or not players can use bank balances to pay dues when personal balance is short.
         Connected: false
 
         #How much is costs to open a bank account.
         Cost: 20.0
+
+        #Whether or not players can manage banks from other worlds.
+        MultiManage: false
 
         #All configurations relating to bank gold interest.
         Interest:

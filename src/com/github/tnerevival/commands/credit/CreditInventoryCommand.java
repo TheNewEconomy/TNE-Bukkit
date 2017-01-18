@@ -54,7 +54,7 @@ public class CreditInventoryCommand extends TNECommand {
       } else {
         Message insufficient = new Message("Messages.Credit.Empty");
         insufficient.addVariable("$type",  arguments[0]);
-        insufficient.translate(MISCUtils.getWorld(player), player);
+        insufficient.translate(IDFinder.getWorld(player), player);
         return false;
       }
     }

@@ -36,29 +36,29 @@ public class InventoryTimeWorker extends BukkitRunnable {
       InventoryType invType = plugin.inventoryManager.getViewing(entry.getKey()).getInventory().getType();
       String type = TNE.configurations.getObjectConfiguration().inventoryType(invType);
 
-      if(TNE.configurations.getObjectConfiguration().isTimed(invType, MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
-        long timeRemaining = (int) (acc.getTimeLeft(MISCUtils.getWorld(MISCUtils.getPlayer(entry.getKey())), type) - TimeUnit.SECONDS.convert(System.nanoTime() - plugin.inventoryManager.getViewer(entry.getKey()).getOpened(), TimeUnit.NANOSECONDS));
+      if(TNE.configurations.getObjectConfiguration().isTimed(invType, IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
+        long timeRemaining = (int) (acc.getTimeLeft(IDFinder.getWorld(MISCUtils.getPlayer(entry.getKey())), type) - TimeUnit.SECONDS.convert(System.nanoTime() - plugin.inventoryManager.getViewer(entry.getKey()).getOpened(), TimeUnit.NANOSECONDS));
 
         String message = "Messages.Inventory.NoTime";
 
         if (timeRemaining <= 0) {
-          acc.setTime(MISCUtils.getWorld(MISCUtils.getPlayer(entry.getKey())), type, 0);
+          acc.setTime(IDFinder.getWorld(MISCUtils.getPlayer(entry.getKey())), type, 0);
           it.remove();
           MISCUtils.getPlayer(entry.getKey()).closeInventory();
           Message m = new Message(message);
           m.addVariable("$type", type);
-          m.translate(MISCUtils.getWorld(player), player);
+          m.translate(IDFinder.getWorld(player), player);
           continue;
         }
 
         if (plugin.inventoryManager.getViewer(entry.getKey()).willClose()) {
-          long timeUsed = acc.getTimeLeft(MISCUtils.getWorld(MISCUtils.getPlayer(entry.getKey())), type) - timeRemaining;
+          long timeUsed = acc.getTimeLeft(IDFinder.getWorld(MISCUtils.getPlayer(entry.getKey())), type) - timeRemaining;
           message = "Messages.Inventory.TimeRemoved";
           Message m = new Message(message);
           m.addVariable("$type", type);
           m.addVariable("$amount", timeUsed + ((timeUsed == 1) ? " second" : " seconds"));
-          m.translate(MISCUtils.getWorld(player), player);
-          acc.setTime(MISCUtils.getWorld(MISCUtils.getPlayer(entry.getKey())), type, timeRemaining);
+          m.translate(IDFinder.getWorld(player), player);
+          acc.setTime(IDFinder.getWorld(MISCUtils.getPlayer(entry.getKey())), type, timeRemaining);
           it.remove();
         }
       }

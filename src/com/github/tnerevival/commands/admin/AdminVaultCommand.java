@@ -6,19 +6,18 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class AdminBankCommand extends TNECommand {
+public class AdminVaultCommand extends TNECommand {
 
-  public AdminBankCommand(TNE plugin) {
+  public AdminVaultCommand(TNE plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "bank";
+    return "vault";
   }
 
   @Override
@@ -28,7 +27,7 @@ public class AdminBankCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.admin.bank";
+    return "tne.admin.vault";
   }
 
   @Override
@@ -44,9 +43,7 @@ public class AdminBankCommand extends TNECommand {
       if(IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
         Account acc = AccountUtils.getAccount(IDFinder.getID(arguments[0]));
         if(acc.getBanks().containsKey(world)) {
-          //Access access = new Access(IDFinder.getID(arguments[0]), world, false);
-          //TNE.instance.manager.accessing.put(IDFinder.getID(player), access);
-          player.openInventory(BankUtils.getBankInventory(IDFinder.getID(arguments[0])));
+          player.openInventory(AccountUtils.getAccount(IDFinder.getID(arguments[0])).getVault(world).getInventory());
           return true;
         }
         Message noBalance = new Message("Messages.Admin.NoBank");

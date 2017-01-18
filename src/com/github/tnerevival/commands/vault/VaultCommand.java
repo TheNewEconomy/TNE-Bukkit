@@ -17,9 +17,8 @@
 package com.github.tnerevival.commands.vault;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.commands.bank.*;
-import com.github.tnerevival.utils.BankUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -67,7 +66,7 @@ public class VaultCommand extends TNECommand {
 
   @Override
   public Boolean activated(String world, String player) {
-    return BankUtils.command(world, player);
+    return Vault.command(world, player);
   }
 
   @Override

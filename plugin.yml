@@ -51,6 +51,7 @@ permissions:
          tne.bypass.bank: true
          tne.bypass.inventory: true
          tne.bypass.nametag: true
+         tne.bypass.vault: true
          tne.bypass.world: true
          tne.credit: true
          tne.credit.commands: true
@@ -93,6 +94,13 @@ permissions:
          tne.use.buy: true
          tne.use.sell: true
          tne.use.shop: true
+         tne.vault: true
+         tne.vault.help: true
+         tne.vault.add: true
+         tne.vault.buy: true
+         tne.vault.remove: true
+         tne.vault.use: true
+         tne.vault.view: true
 
    tne.admin.*:
       description: Gives access to all TNE Admin Commands and bypasses.
@@ -137,9 +145,7 @@ permissions:
          tne.bank.balance: true
          tne.bank.buy: true
          tne.bank.deposit: true
-         tne.bank.price: true
          tne.bank.remove: true
-         tne.bank.use: true
          tne.bank.withdraw: true
          
    tne.bypass.*:
@@ -149,6 +155,7 @@ permissions:
          tne.bypass.bank: true
          tne.bypass.inventory: true
          tne.bypass.nametag: true
+         tne.bypass.vault: true
          tne.bypass.world: true
          
    tne.credit.*:
@@ -226,6 +233,17 @@ permissions:
       children:
          tne.use: true
          tne.use.bank: true
-         tne.use.buy: true
-         tne.use.sell: true
+         tne.use.item: true
          tne.use.shop: true
+         tne.use.vault: true
+
+   tne.vault.*:
+      description: Gives access to all TNE Bank Commands
+      children:
+         tne.vault: true
+         tne.vault.help: true
+         tne.vault.add: true
+         tne.vault.buy: true
+         tne.vault.remove: true
+         tne.vault.use: true
+         tne.vault.view: true

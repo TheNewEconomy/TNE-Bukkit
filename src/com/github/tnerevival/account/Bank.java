@@ -1,74 +1,57 @@
+/*
+ * The New Economy Minecraft Server Plugin
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.serializable.SerializableItemStack;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import com.github.tnerevival.utils.AccountUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class Bank implements Serializable {
+/**
+ * Created by creatorfromhell on 1/17/2017.
+ **/
+public class Bank {
 
-  private static final long serialVersionUID = 1L;
-
-  private List<SerializableItemStack> items = new ArrayList<>();
   private List<UUID> members = new ArrayList<>();
   private UUID owner;
-  private Integer size;
+  private String world;
   private Double gold;
 
-  public Bank(UUID owner, Integer size) {
-    this(owner, size, 0.0);
+  public Bank(UUID owner, String world) {
+    this(owner, world, 0.0);
   }
 
-  public Bank(UUID owner, Integer size, Double gold) {
+  public Bank(UUID owner, String world, double gold) {
     this.owner = owner;
-    this.size = size;
     this.gold = gold;
-  }
-
-  public void addItem(int slot, ItemStack stack) {
-    items.add(new SerializableItemStack(slot, stack));
-  }
-
-  public SerializableItemStack getItem(int slot) {
-    for(SerializableItemStack item : items) {
-      if(item.getSlot().equals(slot)) {
-        return item;
-      }
-    }
-    return null;
-  }
-
-  public void removeItem(int slot) {
-    Iterator<SerializableItemStack> i = items.iterator();
-
-    while(i.hasNext()) {
-      SerializableItemStack item = i.next();
-
-      if(item.getSlot().equals(slot)) {
-        i.remove();
-      }
-    }
+    this.world = world;
   }
 
   /**
-   * @return the items
+   * @return the gold
    */
-  public List<SerializableItemStack> getItems() {
-    return items;
+  public Double getGold() {
+    return gold;
   }
 
-  /**
-   * @param items the items to set
-   */
-  public void setItems(List<SerializableItemStack> items) {
-    this.items = items;
+  public UUID getOwner() {
+    return owner;
   }
 
   public List<UUID> getMembers() {
@@ -83,29 +66,12 @@ public class Bank implements Serializable {
     members.remove(player);
   }
 
-  /**
-   * @return the size
-   */
-  public Integer getSize() {
-    return size;
+  public String getWorld() {
+    return world;
   }
 
-  /**
-   * @param size the size to set
-   */
-  public void setSize(Integer size) {
-    this.size = size;
-  }
-
-  /**
-   * @return the gold
-   */
-  public Double getGold() {
-    return gold;
-  }
-
-  public UUID getOwner() {
-    return owner;
+  public void setWorld(String world) {
+    this.world = world;
   }
 
   /**
@@ -113,44 +79,6 @@ public class Bank implements Serializable {
    */
   public void setGold(Double gold) {
     this.gold = gold;
-  }
-
-  private List<Integer> validSlots(String world) {
-    List<Integer> valid = new ArrayList<>();
-
-    for(int i = 0; i < size; i++) {
-      if(getItem(i) != null || TNE.instance.api.getBoolean("Core.Death.Bank.IncludeEmpty", world, owner)) {
-        valid.add(i);
-      }
-    }
-    return valid;
-  }
-
-  public List<Integer> generateSlots(String world) {
-    List<Integer> valid = validSlots(world);
-    List<Integer> generated = new ArrayList<>();
-    int remaining = TNE.instance.api.getInteger("Core.Death.Bank.Drop", world, owner);
-
-    if(valid.size() <= remaining) return valid;
-
-    for(int i = 0; i < remaining; i++) {
-      int gen = valid.get(ThreadLocalRandom.current().nextInt(0, valid.size()));
-      generated.add(gen);
-      valid.remove(gen);
-    }
-    return generated;
-  }
-
-  private String itemsToString() {
-    StringBuilder builder = new StringBuilder();
-
-    for(SerializableItemStack item : items) {
-      if(item != null) {
-        if(builder.length() > 0) builder.append("*");
-        builder.append(item.toString());
-      }
-    }
-    return builder.toString();
   }
 
   private String membersToString() {
@@ -162,17 +90,6 @@ public class Bank implements Serializable {
     return builder.toString();
   }
 
-  public void itemsFromString(String parse) {
-    String[] parsed = parse.split("\\*");
-
-    for (String s : parsed) {
-      SerializableItemStack item = SerializableItemStack.fromString(s);
-      if(!item.toItemStack().getType().equals(Material.AIR)) {
-        items.add(SerializableItemStack.fromString(s));
-      }
-    }
-  }
-
   public void membersFromString(String parse) {
     String[] parsed = parse.split("\\*");
 
@@ -181,21 +98,34 @@ public class Bank implements Serializable {
     }
   }
 
-  public static Bank fromString(String parse) {
+  public static Bank fromString(String parse, String world) {
     String[] parsed = parse.split(":");
-    Bank b = new Bank(UUID.fromString(parsed[0]), Integer.valueOf(parsed[1]));
-    b.setGold(Double.valueOf(parsed[2]));
-    if(parsed.length >= 4) {
-      b.itemsFromString(parsed[3]);
-    }
-    if(parsed.length >= 5) {
-      b.membersFromString(parsed[4]);
+    Bank b = new Bank(UUID.fromString(parsed[0]), world);
+    b.setGold(Double.valueOf(parsed[1]));
+    if(parsed.length >= 3) {
+      b.membersFromString(parsed[2]);
     }
 
     return b;
   }
 
   public String toString() {
-    return owner.toString() + ":" + size + ":" + gold + ":" + itemsToString() + ":" + membersToString();
+    return owner.toString() + ":" + gold + ":" + membersToString();
+  }
+
+  public static Boolean enabled(String world, String player) {
+    return TNE.instance.api.getBoolean("Core.Bank.Enabled", world, player);
+  }
+
+  public static Double cost(String world, String player) {
+    return AccountUtils.round(TNE.instance.api.getDouble("Core.Bank.Cost", world, player));
+  }
+
+  public static Boolean interestEnabled(String world, String player) {
+    return TNE.instance.api.getBoolean("Core.Bank.Interest.Enabled", world, player);
+  }
+
+  public static Double interestRate(String world, String player) {
+    return TNE.instance.api.getDouble("Core.Bank.Interest.Rate", world, player);
   }
 }

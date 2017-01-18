@@ -27,16 +27,16 @@ public class WorldListener implements Listener {
 
     if(TNE.instance.api.getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
-        if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-          AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
+        if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
+          AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
           AccountUtils.initializeWorldData(IDFinder.getID(player));
           Message change = new Message("Messages.World.Change");
-          change.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
+          change.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), AccountUtils.getWorldCost(world)));
           change.translate(world, player);
         } else {
           player.teleport(event.getFrom().getSpawnLocation());
           Message changeFailed = new Message("Messages.World.ChangeFailed");
-          changeFailed.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), AccountUtils.getWorldCost(world)));
+          changeFailed.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), AccountUtils.getWorldCost(world)));
           changeFailed.translate(world, player);
         }
       } else {

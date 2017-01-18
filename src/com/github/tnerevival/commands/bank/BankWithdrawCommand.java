@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
@@ -8,7 +9,6 @@ import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,24 +45,24 @@ public class BankWithdrawCommand extends TNECommand {
     String ownerName = (arguments.length >= 2)? arguments[1] : sender.getName();
     UUID owner = IDFinder.getID(ownerName);
     UUID id = IDFinder.getID(sender.getName());
-    String world = MISCUtils.getWorld((Player)sender);
+    String world = IDFinder.getWorld((Player)sender);
 
 
     if(arguments.length == 1) {
-      if(BankUtils.hasBank(owner)) {
-        Double value = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+      if(AccountUtils.getAccount(owner).hasBank(getWorld(sender))) {
+        Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
         if (BankUtils.bankMember(owner, IDFinder.getID(sender.getName()))) {
-          if(AccountUtils.transaction(owner.toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, MISCUtils.getWorld(id))) {
+          if(AccountUtils.transaction(owner.toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
             Message withdrawn = new Message("Messages.Bank.Withdraw");
             withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, value));
             withdrawn.addVariable("$name",  ownerName);
-            withdrawn.translate(MISCUtils.getWorld(id), id);
+            withdrawn.translate(IDFinder.getWorld(id), id);
             return true;
           } else {
             Message overdraw = new Message("Messages.Bank.Overdraw");
             overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));
             overdraw.addVariable("$name",  ownerName);
-            overdraw.translate(MISCUtils.getWorld(id), id);
+            overdraw.translate(IDFinder.getWorld(id), id);
             return false;
           }
         }
@@ -72,8 +72,8 @@ public class BankWithdrawCommand extends TNECommand {
         return false;
       }
       Message none = new Message("Messages.Bank.None");
-      none.addVariable("$amount",  CurrencyFormatter.format(MISCUtils.getWorld(id), BankUtils.cost(MISCUtils.getWorld(id), id.toString())));
-      none.translate(MISCUtils.getWorld(id), id);
+      none.addVariable("$amount",  CurrencyFormatter.format(IDFinder.getWorld(id), Bank.cost(IDFinder.getWorld(id), id.toString())));
+      none.translate(IDFinder.getWorld(id), id);
       return false;
     }
     help(sender);

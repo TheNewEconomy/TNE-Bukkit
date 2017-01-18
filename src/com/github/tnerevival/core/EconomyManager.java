@@ -2,6 +2,7 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.signs.TNESign;
@@ -95,7 +96,7 @@ public class EconomyManager {
 
     if(!enabled) {
       Player p = MISCUtils.getPlayer(id);
-      new Message("Messages.Money.NoPins").translate(MISCUtils.getWorld(p), p);
+      new Message("Messages.Money.NoPins").translate(IDFinder.getActualWorld(p), p);
       return true;
     }
     return !force || confirmed.contains(id);

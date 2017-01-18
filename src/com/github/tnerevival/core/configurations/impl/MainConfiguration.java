@@ -71,13 +71,20 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Death.Bank.IncludeEmpty", true);
     configurations.put("Core.Death.Bank.PlayerOnly", true);
 
+    configurations.put("Core.Vault.Enabled", false);
+    configurations.put("Core.Vault.Sign", false);
+    configurations.put("Core.Vault.Command", true);
+    configurations.put("Core.Vault.NPC", false);
+    configurations.put("Core.Vault.Connected", false);
+    configurations.put("Core.Vault.Cost", 20.0);
+    configurations.put("Core.Vault.Rows", 3);
+    configurations.put("Core.Vault.MultiManage", false);
+    configurations.put("Core.Vault.MultiView", false);
+
     configurations.put("Core.Bank.Enabled", false);
-    configurations.put("Core.Bank.Sign", false);
-    configurations.put("Core.Bank.Command", true);
-    configurations.put("Core.Bank.NPC", false);
     configurations.put("Core.Bank.Connected", false);
     configurations.put("Core.Bank.Cost", 20.0);
-    configurations.put("Core.Bank.Rows", 3);
+    configurations.put("Core.Bank.MultiManage", false);
     configurations.put("Core.Bank.Interest.Enabled", false);
     configurations.put("Core.Bank.Interest.Rate", 0.2);
     configurations.put("Core.Bank.Interest.Interval", 1800);

@@ -9,7 +9,7 @@ public class AdminCommand extends TNECommand {
     super(plugin);
     subCommands.add(new AdminBackupCommand(plugin));
     subCommands.add(new AdminBalanceCommand(plugin));
-    subCommands.add(new AdminBankCommand(plugin));
+    subCommands.add(new AdminVaultCommand(plugin));
     subCommands.add(new AdminCreateCommand(plugin));
     subCommands.add(new AdminDeleteCommand(plugin));
     subCommands.add(new AdminHistoryCommand(plugin));

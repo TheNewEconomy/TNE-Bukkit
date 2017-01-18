@@ -1,10 +1,10 @@
 package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -57,7 +57,7 @@ public class ShopSign extends TNESign {
 
 
         if(shop.getShoppers() != null && shop.getShoppers().size() >= TNE.instance.api.getInteger("Core.Shops.Shoppers", shop.getWorld(), shop.getOwner())) {
-          new Message("Messages.Shop.Shoppers").translate(MISCUtils.getWorld(player), player);
+          new Message("Messages.Shop.Shoppers").translate(IDFinder.getWorld(player), player);
           return false;
         }
 

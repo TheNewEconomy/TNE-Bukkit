@@ -47,18 +47,18 @@ public class ShopShareCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(sender instanceof Player && arguments.length >= 1) {
       Player player = getPlayer(sender);
-      if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+      if(Shop.exists(arguments[0], IDFinder.getWorld(getPlayer(sender)))) {
         if(Shop.canModify(arguments[0], getPlayer(sender))) {
-          Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+          Shop s = Shop.getShop(arguments[0], IDFinder.getWorld(getPlayer(sender)));
           UUID target = IDFinder.getID(arguments[1]);
           if(!s.isAdmin()) {
             if(!TNE.instance.api.getBoolean("Core.Shops.Shares.Enabled", s.getWorld(), s.getOwner())) {
-              new Message("Messages.Shop.ShareNone").translate(MISCUtils.getWorld(player), player);
+              new Message("Messages.Shop.ShareNone").translate(IDFinder.getWorld(player), player);
               return false;
             }
 
             if(s.getShares().size() >= TNE.instance.api.getInteger("Core.Shops.Shares.Max", s.getWorld(), s.getOwner())) {
-              new Message("Messages.Shop.ShareMax").translate(MISCUtils.getWorld(player), player);
+              new Message("Messages.Shop.ShareMax").translate(IDFinder.getWorld(player), player);
               return false;
             }
 
@@ -67,7 +67,7 @@ public class ShopShareCommand extends TNECommand {
 
               Message hidden = new Message("Messages.Shop.ShareRemoved");
               hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
-              hidden.translate(MISCUtils.getWorld(player), player);
+              hidden.translate(IDFinder.getWorld(player), player);
               return true;
             } else {
               double percent = (arguments.length >= 3)? Double.parseDouble(arguments[2]) : 0.1;
@@ -78,22 +78,22 @@ public class ShopShareCommand extends TNECommand {
                 s.addShares(entry);
                 Message hidden = new Message("Messages.Shop.ShareAdded");
                 hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
-                hidden.translate(MISCUtils.getWorld(player), player);
+                hidden.translate(IDFinder.getWorld(player), player);
                 return true;
               } else {
-                new Message("Messages.Shop.ShareGreater").translate(MISCUtils.getWorld(player), player);
+                new Message("Messages.Shop.ShareGreater").translate(IDFinder.getWorld(player), player);
                 return false;
               }
             }
           }
 
-          new Message("Messages.Shop.ShareAdmin").translate(MISCUtils.getWorld(player), player);
+          new Message("Messages.Shop.ShareAdmin").translate(IDFinder.getWorld(player), player);
           return false;
         }
-        new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
+        new Message("Messages.Shop.Permission").translate(IDFinder.getWorld(player), player);
         return false;
       }
-      new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
+      new Message("Messages.Shop.None").translate(IDFinder.getWorld(player), player);
       return false;
     } else {
       help(sender);

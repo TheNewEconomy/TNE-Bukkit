@@ -61,7 +61,7 @@ public class MoneyConvertCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     if(arguments.length >= 2) {
-      Double value = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+      Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
       if(value < 0) {
         help(sender);
         return false;
@@ -95,24 +95,24 @@ public class MoneyConvertCommand extends TNECommand {
         from = TNE.instance.manager.currencyManager.get(worldFrom, currencyFrom);
       }
 
-      if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(value), from, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+      if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(value), from, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
         insufficient.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
-        insufficient.translate(MISCUtils.getWorld(player), player);
+        insufficient.translate(IDFinder.getWorld(player), player);
         return false;
       }
 
-      AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(value), from, TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
+      AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(value), from, TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
 
       double converted = TNE.instance.manager.currencyManager.convert(from, to, value);
-      AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(converted), to, TransactionType.MONEY_GIVE, MISCUtils.getWorld(player));
+      AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(converted), to, TransactionType.MONEY_GIVE, IDFinder.getWorld(player));
 
       Message success = new Message("Messages.Money.Converted");
       success.addVariable("$from_amount", CurrencyFormatter.format(from, AccountUtils.round(value)));
       success.addVariable("$amount", CurrencyFormatter.format(to, AccountUtils.round(converted)));
       success.addVariable("$from_currency", from.toString());
       success.addVariable("$currency", to.toString());
-      success.translate(MISCUtils.getWorld(player), player);
+      success.translate(IDFinder.getWorld(player), player);
       return false;
     }
     help(sender);

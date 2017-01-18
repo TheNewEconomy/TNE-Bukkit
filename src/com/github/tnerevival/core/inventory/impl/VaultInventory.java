@@ -1,9 +1,9 @@
 package com.github.tnerevival.core.inventory.impl;
 
-import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import java.util.UUID;
 /**
  * Created by Daniel on 9/13/2016.
  */
-public class BankInventory extends GenericInventory {
+public class VaultInventory extends GenericInventory {
 
-  public BankInventory(UUID owner) {
+  public VaultInventory(UUID owner) {
     this.owner = owner;
   }
 
@@ -46,15 +46,15 @@ public class BankInventory extends GenericInventory {
   @Override
   public void onClose(InventoryViewer viewer) {
 
-    Bank b = BankUtils.getBank(owner, world);
+    Vault vault = AccountUtils.getAccount(owner).getVault(world);
 
     List<SerializableItemStack> items = new ArrayList<>();
 
-    for(int i = 0; i < b.getSize(); i++) {
+    for(int i = 0; i < vault.getSize(); i++) {
       if(inventory.getItem(i) != null && !inventory.getItem(i).getType().equals(Material.AIR))
       items.add(new SerializableItemStack(i, inventory.getItem(i)));
     }
-    b.setItems(items);
+    vault.setItems(items);
     super.onClose(viewer);
   }
 }

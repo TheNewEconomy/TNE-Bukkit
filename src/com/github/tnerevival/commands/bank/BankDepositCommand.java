@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
@@ -45,31 +46,31 @@ public class BankDepositCommand extends TNECommand {
     Player player = MISCUtils.getPlayer(sender.getName());
 
     if(arguments.length == 1) {
-      if(BankUtils.hasBank(IDFinder.getID(owner))) {
-        Double value = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+      if(AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(getWorld(sender))) {
+        Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
         if (BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName()))) {
-          if(AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, MISCUtils.getWorld(player))) {
+          if(AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, IDFinder.getWorld(player))) {
             Message deposit = new Message("Messages.Bank.Deposit");
             deposit.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             deposit.addVariable("$name",  ownerName);
-            deposit.translate(MISCUtils.getWorld(player), player);
+            deposit.translate(IDFinder.getWorld(player), player);
             return true;
           } else {
             Message insufficient = new Message("Messages.Money.Insufficient");
             insufficient.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
             insufficient.addVariable("$name",  ownerName);
-            insufficient.translate(MISCUtils.getWorld(player), player);
+            insufficient.translate(IDFinder.getWorld(player), player);
             return false;
           }
         }
         Message noAccess = new Message("Messages.Bank.Invalid");
         noAccess.addVariable("$name", ownerName);
-        noAccess.translate(MISCUtils.getWorld(player), player);
+        noAccess.translate(IDFinder.getWorld(player), player);
         return false;
       }
       Message none = new Message("Messages.Bank.None");
-      none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
-      none.translate(MISCUtils.getWorld(player), player);
+      none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), Bank.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+      none.translate(IDFinder.getWorld(player), player);
       return false;
     }
     help(sender);

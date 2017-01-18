@@ -42,7 +42,7 @@ public class AdminCreateCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
+      String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance.defaultWorld;
       UUID id = IDFinder.genUUID(arguments[0]);
       if(!AccountUtils.exists(id)) {
         Account acc = new Account(id);

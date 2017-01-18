@@ -40,7 +40,7 @@ public class AuctionManager {
 
   public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
-    String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
+    String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance.defaultWorld;
 
     Message send = new Message(message);
     send.addVariable("$start", CurrencyFormatter.format(auction.getWorld(), auction.getCost().getAmount()));
@@ -355,12 +355,12 @@ public class AuctionManager {
     MISCUtils.debug("Cost: " + cost);
 
     if(getQueued(auction.getPlayer()) >= TNE.instance.api.getInteger("Core.Auctions.PersonalQueue", auction.getWorld(), auction.getPlayer())) {
-      new Message("Messages.Auction.PersonalQueue").translate(MISCUtils.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
+      new Message("Messages.Auction.PersonalQueue").translate(IDFinder.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
       return false;
     }
 
     if(getQueued(auction.getWorld()) >= TNE.instance.api.getInteger("Core.Auctions.MaxQueue", auction.getWorld(), auction.getPlayer())) {
-      new Message("Messages.Auction.MaxQueue").translate(MISCUtils.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
+      new Message("Messages.Auction.MaxQueue").translate(IDFinder.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
       return false;
     }
     auction.setLotNumber(lastLot + 1);
@@ -379,7 +379,7 @@ public class AuctionManager {
     auctionQueue.put(auction.getLotNumber(), auction);
     Message queued = new Message("Messages.Auction.Queued");
     queued.addVariable("$lot", auction.getLotNumber() + "");
-    queued.translate(MISCUtils.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
+    queued.translate(IDFinder.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
     return true;
   }
 

@@ -2,19 +2,22 @@ package com.github.tnerevival.account;
 
 public enum AccountStatus {
 
-  NORMAL("Normal", true, true),
-  LOCKED("Locked", false, false),
-  BANK_LOCKED("BankLocked", true, false),
-  BALANCE_LOCKED("BalanceLocked", false, true);
+  NORMAL("Normal", true, true, true),
+  LOCKED("Locked", false, false, false),
+  VAULT_LOCKED("VaultLocked", true, true, false),
+  BANK_LOCKED("BankLocked", true, false, true),
+  BALANCE_LOCKED("BalanceLocked", false, false, true);
 
   private String name;
   private Boolean balance;
   private Boolean bank;
+  private Boolean vault;
 
-  AccountStatus(String name, Boolean balance, Boolean bank) {
+  AccountStatus(String name, Boolean balance, Boolean bank, Boolean vault) {
     this.name = name;
     this.balance = balance;
     this.bank = bank;
+    this.vault = vault;
   }
 
   public static AccountStatus fromName(String name) {
@@ -36,5 +39,9 @@ public enum AccountStatus {
 
   public Boolean getBank() {
     return bank;
+  }
+
+  public Boolean getVault() {
+    return vault;
   }
 }

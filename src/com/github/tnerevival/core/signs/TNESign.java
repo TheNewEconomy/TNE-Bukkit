@@ -36,12 +36,12 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    Double place = type.place(MISCUtils.getWorld(player), IDFinder.getID(player).toString());
+    Double place = type.place(IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
     if(place != null && place > 0.0) {
-      if (!AccountUtils.transaction(IDFinder.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+      if (!AccountUtils.transaction(IDFinder.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), place));
+        insufficient.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), place));
         event.setCancelled(true);
       }
     }
@@ -86,17 +86,17 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    Double use = type.use(MISCUtils.getWorld(player), IDFinder.getID(player).toString());
+    Double use = type.use(IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
-    if(!type.enabled(MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
-      new Message("Messages.Objects.SignDisabled").translate(MISCUtils.getWorld(player), player);
+    if(!type.enabled(IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
+      new Message("Messages.Objects.SignDisabled").translate(IDFinder.getWorld(player), player);
       event.setCancelled(true);
     }
 
-    if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
+    if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, use, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(player), use));
-      insufficient.translate(MISCUtils.getWorld(player), player);
+      insufficient.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), use));
+      insufficient.translate(IDFinder.getWorld(player), player);
       event.setCancelled(true);
     }
 

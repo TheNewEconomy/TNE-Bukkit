@@ -48,13 +48,15 @@ public class SignUtils {
 
   public static TNESign instance(String type, UUID owner) {
     switch(type.toLowerCase()) {
-      case "bank":
-        return new BankSign(owner);
+      case "item":
+        return new ItemSign(owner);
       case "shop":
         return new ShopSign(owner);
+      case "vault":
+        return new VaultSign(owner);
       default:
         MISCUtils.debug("defaulting...");
-        return new BankSign(owner);
+        return new VaultSign(owner);
     }
   }
 }

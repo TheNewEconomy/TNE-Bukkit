@@ -57,7 +57,7 @@ public class DeveloperBalanceCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
+      String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance.defaultWorld;
 
       if(AccountUtils.exists(IDFinder.getID(arguments[0]))) {
         sender.sendMessage(AccountUtils.getAccount(IDFinder.getID(arguments[0])).getBalances().toString());

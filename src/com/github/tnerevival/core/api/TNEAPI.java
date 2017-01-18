@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.shops.Shop;
@@ -14,7 +15,6 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.SignUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -77,7 +77,7 @@ public class TNEAPI {
    * @param amount The amount of funds to add to the player's account.
    */
   public void fundsAdd(String identifier, Double amount) {
-    fundsAdd(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
+    fundsAdd(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
   }
 
   /**
@@ -108,7 +108,7 @@ public class TNEAPI {
    * @return Whether or not this player has the specified funds.
    */
   public Boolean fundsHas(String identifier, Double amount) {
-    return fundsHas(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
+    return fundsHas(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
   }
 
   /**
@@ -141,7 +141,7 @@ public class TNEAPI {
    * @param amount The amount of funds to remove to the player's account.
    */
   public void fundsRemove(String identifier, Double amount) {
-    fundsRemove(identifier, MISCUtils.getWorld(IDFinder.getID(identifier)), amount);
+    fundsRemove(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
   }
 
 
@@ -236,7 +236,7 @@ public class TNEAPI {
    * @param world The name of the world to use.
    */
   public void createBank(String owner, String world) {
-    Bank b = new Bank(IDFinder.getID(owner), BankUtils.size(world, IDFinder.getID(owner).toString()));
+    Bank b = new Bank(IDFinder.getID(owner), world);
     Account acc = getAccount(owner);
     acc.setBank(world, b);
     TNE.instance.manager.accounts.put(acc.getUid(), acc);
@@ -248,7 +248,7 @@ public class TNEAPI {
    * @return True if the owner has a bank, otherwise false.
    */
   public Boolean hasBank(String owner) {
-    return BankUtils.hasBank(IDFinder.getID(owner));
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(TNE.instance.defaultWorld);
   }
 
   /**
@@ -258,7 +258,7 @@ public class TNEAPI {
    * @return True if the owner has a bank, otherwise false.
    */
   public Boolean hasBank(String owner, String world) {
-    return BankUtils.hasBank(IDFinder.getID(owner), world);
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(world);
   }
 
   /**
@@ -267,7 +267,7 @@ public class TNEAPI {
    * @param identifier The identifier of the player to add as a member.
    * @param world The name of the world to use.
    */
-  public void addMember(String owner, String identifier, String world) {
+  public void addBankMember(String owner, String identifier, String world) {
     Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
     b.addMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
@@ -281,7 +281,7 @@ public class TNEAPI {
    * @param identifier The identifier of the player to remove from the bank.
    * @param world The name of the world to use.
    */
-  public void removeMember(String owner, String identifier, String world) {
+  public void removeBankMember(String owner, String identifier, String world) {
     Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
     b.removeMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
@@ -337,28 +337,100 @@ public class TNEAPI {
   public void setBankBalance(String owner, String world, Double amount) {
     BankUtils.getBank(IDFinder.getID(owner), world).setGold(amount);
   }
-
-  /**
-   * Determine whether or not a bank slot is occupied.
-   * @param owner The identifier of the bank owner.
-   * @param slot The slot to check.
-   * @return True if the slot is occupied, otherwise false.
+  
+  /*
+   * Vault-related methods
    */
-  public Boolean bankHasItem(String owner, Integer slot) {
-    return bankHasItem(owner, plugin.defaultWorld, slot);
+  /**
+   * Create a vault for the specified owner in a specific world.
+   * @param owner The identifier of the vault owner.
+   * @param world The name of the world to use.
+   */
+  public void createVault(String owner, String world) {
+    Vault vault = new Vault(IDFinder.getID(owner), world, Vault.size(world, owner));
+    Account acc = getAccount(owner);
+    acc.setVault(world, vault);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
-   * Determine whether or not a bank slot is occupied.
-   * @param owner The identifier of the bank owner.
+   * Determiner whether or not the specified owner has a vault.
+   * @param owner The identifier of the vault owner.
+   * @return True if the owner has a vault, otherwise false.
+   */
+  public Boolean hasVault(String owner) {
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasVault(TNE.instance.defaultWorld);
+  }
+
+  /**
+   * Determiner whether or not the specified owner has a vault in a world.
+   * @param owner The identifier of the vault owner.
+   * @param world The name of the world to use.
+   * @return True if the owner has a vault, otherwise false.
+   */
+  public Boolean hasVault(String owner, String world) {
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasVault(world);
+  }
+
+  /**
+   * Add a member to the specific owner's vault.
+   * @param owner The identifier of the vault owner.
+   * @param identifier The identifier of the player to add as a member.
+   * @param world The name of the world to use.
+   */
+  public void addVaultMember(String owner, String identifier, String world) {
+    Vault vault = AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world);
+    vault.addMember(IDFinder.getID(identifier));
+    Account acc = getAccount(owner);
+    acc.setVault(world, vault);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  /**
+   * Remove a member from the specific owner's vault.
+   * @param owner The identifier of the vault owner.
+   * @param identifier The identifier of the player to remove from the vault.
+   * @param world The name of the world to use.
+   */
+  public void removeVaultMember(String owner, String identifier, String world) {
+    Vault vault = AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world);
+    vault.removeMember(IDFinder.getID(identifier));
+    Account acc = getAccount(owner);
+    acc.setVault(world, vault);
+    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+  }
+
+  /**
+   * Determine whether or not a player is a member of a vault.
+   * @param owner The identifier of the vault owner.
+   * @param identifier The identifier of the player.
+   * @param world The name of the world to use.
+   * @return True if the player is a member, otherwise false.
+   */
+  public Boolean vaultMember(String owner, String identifier, String world) {
+    return AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world).getMembers().contains(IDFinder.getID(identifier));
+  }
+
+  /**
+   * Determine whether or not a vault slot is occupied.
+   * @param owner The identifier of the vault owner.
+   * @param slot The slot to check.
+   * @return True if the slot is occupied, otherwise false.
+   */
+  public Boolean vaultHasItem(String owner, Integer slot) {
+    return vaultHasItem(owner, plugin.defaultWorld, slot);
+  }
+
+  /**
+   * Determine whether or not a vault slot is occupied.
+   * @param owner The identifier of the vault owner.
    * @param world The name of the world to use.
    * @param slot The slot to check.
    * @return True if the slot is occupied, otherwise false.
    */
-  public Boolean bankHasItem(String owner, String world, Integer slot) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-
-    return b.getItem(slot) != null && !b.getItem(slot).toItemStack().getType().equals(Material.AIR);
+  public Boolean vaultHasItem(String owner, String world, Integer slot) {
+    Vault vault = AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world);
+    return vault.getItem(slot) != null && !vault.getItem(slot).toItemStack().getType().equals(Material.AIR);
   }
 
   /**
@@ -367,39 +439,39 @@ public class TNEAPI {
    * @param slot The slot to use.
    * @return An ItemStack instance if the slot is occupied, otherwise null.
    */
-  public ItemStack getBankItem(String owner, Integer slot) {
-    return getBankItem(owner, plugin.defaultWorld, slot);
+  public ItemStack getVaultItem(String owner, Integer slot) {
+    return getVaultItem(owner, plugin.defaultWorld, slot);
   }
 
   /**
-   * Get the itemstack in a slot of a bank.
-   * @param owner The identifier of the bank owner.
+   * Get the itemstack in a slot of a vault.
+   * @param owner The identifier of the vault owner.
    * @param world The name of the world to use.
    * @param slot The slot to use.
    * @return An ItemStack instance if the slot is occupied, otherwise null.
    */
-  public ItemStack getBankItem(String owner, String world, Integer slot) {
-    return BankUtils.getBank(IDFinder.getID(owner), world).getItem(slot).toItemStack();
+  public ItemStack getVaultItem(String owner, String world, Integer slot) {
+    return AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world).getItem(slot).toItemStack();
   }
 
   /**
-   * Get a list of items in a bank.
-   * @param owner The identifier of the bank owner.
+   * Get a list of items in a vault.
+   * @param owner The identifier of the vault owner.
    * @return A list of ItemStack instances.
    */
-  public List<ItemStack> getBankItems(String owner) {
-    return getBankItems(owner, plugin.defaultWorld);
+  public List<ItemStack> getVaultItems(String owner) {
+    return getVaultItems(owner, plugin.defaultWorld);
   }
 
   /**
-   * Get a list of items in a bank.
-   * @param owner The identifier of the bank owner.
+   * Get a list of items in a vault.
+   * @param owner The identifier of the vault owner.
    * @param world The name of the world to use.
    * @return A list of ItemStack instances.
    */
-  public List<ItemStack> getBankItems(String owner, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    List<SerializableItemStack> serialized = b.getItems();
+  public List<ItemStack> getVaultItems(String owner, String world) {
+    Vault vault = AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world);
+    List<SerializableItemStack> serialized = vault.getItems();
     List<ItemStack> items = new ArrayList<>();
     for(SerializableItemStack item : serialized) {
       items.add(item.toItemStack());
@@ -408,68 +480,70 @@ public class TNEAPI {
   }
 
   /**
-   * Add an item to a bank.
-   * @param owner The identifier of the bank owner.
+   * Add an item to a vault.
+   * @param owner The identifier of the vault owner.
    * @param slot The slot to use.
    * @param stack The item to add.
    */
-  public void addBankItem(String owner, Integer slot, ItemStack stack) {
-    addBankItem(owner, plugin.defaultWorld, slot, stack);
+  public void addVaultItem(String owner, Integer slot, ItemStack stack) {
+    addVaultItem(owner, plugin.defaultWorld, slot, stack);
   }
 
   /**
-   * Add an item to a bank.
-   * @param owner The identifier of the bank owner.
+   * Add an item to a vault.
+   * @param owner The identifier of the vault owner.
    * @param world The name of the world to use.
    * @param slot The slot to use.
    * @param stack The item to add.
    */
-  public void addBankItem(String owner, String world, Integer slot, ItemStack stack) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    b.addItem(slot, stack);
+  public void addVaultItem(String owner, String world, Integer slot, ItemStack stack) {
+    Vault vault = AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world);
+    vault.addItem(slot, stack);
+    AccountUtils.getAccount(IDFinder.getID(owner)).setVault(world, vault);
   }
 
   /**
-   * Set a bank's items.
-   * @param owner The identifier of the bank owner.
+   * Set a vault's items.
+   * @param owner The identifier of the vault owner.
    * @param items The new list of items.
    */
-  public void setBankItems(String owner, Collection<ItemStack> items) {
-    setBankItems(owner, plugin.defaultWorld, items);
+  public void setVaultItems(String owner, Collection<ItemStack> items) {
+    setVaultItems(owner, plugin.defaultWorld, items);
   }
 
   /**
-   * Set a bank's items.
-   * @param owner The identifier of the bank owner.
+   * Set a vault's items.
+   * @param owner The identifier of the vault owner.
    * @param world The name of the world to use.
    * @param items The new list of items.
    */
-  public void setBankItems(String owner, String world, Collection<ItemStack> items) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
-    List<SerializableItemStack> serialized = b.getItems();
+  public void setVaultItems(String owner, String world, Collection<ItemStack> items) {
+    Vault vault = AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world);
+    List<SerializableItemStack> serialized = vault.getItems();
     for(ItemStack item : items) {
       serialized.add(new SerializableItemStack(serialized.size(), item));
     }
-    b.setItems(serialized);
+    vault.setItems(serialized);
+    AccountUtils.getAccount(IDFinder.getID(owner)).setVault(world, vault);
   }
 
   /**
-   * Get the inventory instance of a player's bank.
-   * @param owner The identifier of the bank's owner.
-   * @return The inventory instance of the bank.
+   * Get the inventory instance of a player's vault.
+   * @param owner The identifier of the vault's owner.
+   * @return The inventory instance of the vault.
    */
-  public Inventory getBankInventory(String owner) {
-    return BankUtils.getBankInventory(IDFinder.getID(owner));
+  public Inventory getVaultInventory(String owner) {
+    return getVaultInventory(owner, TNE.instance.defaultWorld);
   }
 
   /**
-   * Get the inventory instance of a player's bank.
-   * @param owner The identifier of the bank's owner.
+   * Get the inventory instance of a player's vault.
+   * @param owner The identifier of the vault's owner.
    * @param world The name of the world to use.
-   * @return The inventory instance of the bank.
+   * @return The inventory instance of the vault.
    */
-  public Inventory getBankInventory(String owner, String world) {
-    return BankUtils.getBankInventory(IDFinder.getID(owner), world);
+  public Inventory getVaultInventory(String owner, String world) {
+    return AccountUtils.getAccount(IDFinder.getID(owner)).getVault(world).getInventory();
   }
 
   /*

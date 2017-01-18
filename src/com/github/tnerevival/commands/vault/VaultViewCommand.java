@@ -1,11 +1,13 @@
 package com.github.tnerevival.commands.vault;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
-import com.github.tnerevival.utils.BankUtils;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +31,7 @@ public class VaultViewCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.bank.view";
+    return "tne.vault.view";
   }
 
   @Override
@@ -41,25 +43,34 @@ public class VaultViewCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
     Player player = getPlayer(sender);
-    if(BankUtils.command(player.getWorld().getName(), IDFinder.getID(player).toString())) {
-      if(BankUtils.hasBank(IDFinder.getID(player))) {
+    String world = (arguments.length >= 1)? arguments[0] : getWorld(sender);
+    String owner = (arguments.length >= 2)? arguments[1] : player.getName();
+
+    Account account = AccountUtils.getAccount(IDFinder.getID(owner));
+    if(Vault.command(getWorld(sender), IDFinder.getID(player).toString())) {
+      if(account.hasVault(world)) {
+        if(account.getVault(world).getMembers().contains(IDFinder.getID(player)) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Vault.MultiView")) {
+          new Message("Messages.General.NoPerm").translate(IDFinder.getWorld(player), player);
+          return false;
+        }
+
         MISCUtils.debug(IDFinder.getID(player).toString());
-        Inventory bankInventory = BankUtils.getBankInventory(IDFinder.getID(player));
-        player.openInventory(bankInventory);
+        Inventory inventory = account.getVault(world).getInventory();
+        player.openInventory(inventory);
       } else {
-        Message none = new Message("Messages.Bank.None");
-        none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
-        none.translate(MISCUtils.getWorld(player), player);
+        Message none = new Message("Messages.Vault.None");
+        none.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), Vault.cost(getWorld(sender), IDFinder.getID(player).toString())));
+        none.translate(getWorld(sender), player);
       }
     } else {
-      new Message("Messages.Bank.NoCommand").translate(MISCUtils.getWorld(player), player);
+      new Message("Messages.Vault.NoCommand").translate(getWorld(sender), player);
     }
     return false;
   }
 
   @Override
   public String getHelp() {
-    return "/bank view - view your bank";
+    return "/vault view [world] [owner's name] - View a vault you're a member/owner of";
   }
 
 }

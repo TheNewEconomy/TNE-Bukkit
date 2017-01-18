@@ -46,23 +46,23 @@ public class ShopWhitelistCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(sender instanceof Player && arguments.length >= 1) {
       Player player = getPlayer(sender);
-      if(Shop.exists(arguments[0], MISCUtils.getWorld(player))) {
+      if(Shop.exists(arguments[0], IDFinder.getWorld(player))) {
         if(Shop.canModify(arguments[0], player)) {
-          Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(player));
+          Shop s = Shop.getShop(arguments[0], IDFinder.getWorld(player));
           UUID target = IDFinder.getID(arguments[1]);
           if(s.whitelisted(IDFinder.getID(arguments[1]))) {
             s.addWhitelist(target);
-            new Message("Messages.Shop.WhitelistRemoved").translate(MISCUtils.getWorld(player), player);
+            new Message("Messages.Shop.WhitelistRemoved").translate(IDFinder.getWorld(player), player);
           } else {
             s.removeWhitelist(target);
-            new Message("Messages.Shop.WhitelistAdded").translate(MISCUtils.getWorld(player), player);
+            new Message("Messages.Shop.WhitelistAdded").translate(IDFinder.getWorld(player), player);
           }
           return true;
         }
-        new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
+        new Message("Messages.Shop.Permission").translate(IDFinder.getWorld(player), player);
         return false;
       }
-      new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
+      new Message("Messages.Shop.None").translate(IDFinder.getWorld(player), player);
       return false;
     } else {
       help(sender);

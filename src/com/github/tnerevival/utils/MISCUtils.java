@@ -63,36 +63,6 @@ public class MISCUtils {
       e.printStackTrace();
     }
   }
-  /**
-   * Returns the player's account world(or the world it's meant to share accounts with if configured to do so)
-   */
-  public static String getWorld(UUID id) {
-    if(MISCUtils.multiWorld()) {
-      if(MISCUtils.getPlayer(id) != null) {
-        String actualWorld = MISCUtils.getPlayer(id).getWorld().getName();
-        if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
-          return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
-        }
-        MISCUtils.debug("WORLD USING: " + actualWorld);
-        return actualWorld;
-      }
-    }
-    MISCUtils.debug("WORLD USING: Default");
-    return TNE.instance.defaultWorld;
-  }
-
-  public static String getWorld(String world) {
-    if(MISCUtils.multiWorld()) {
-      if(MISCUtils.worldConfigExists("Worlds." + world + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".ShareAccounts")) {
-        return TNE.instance.worldConfigurations.getString("Worlds." + world + ".ShareWorld");
-      }
-    }
-    return world;
-  }
-
-  public static String getWorld(Player player) {
-    return MISCUtils.getWorld(IDFinder.getID(player));
-  }
 
   public static boolean hasItems(UUID id, List<SerializableItemStack> items) {
     for(SerializableItemStack item : items) {
@@ -354,8 +324,8 @@ public class MISCUtils {
     MISCUtils.debug("TNEObjectInteractionEvent called");
 
     String id = IDFinder.getID(event.getPlayer()).toString();
-    String world = MISCUtils.getWorld(event.getPlayer());
-    double cost = event.getType().getCost(event.getIdentifier(), MISCUtils.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+    String world = IDFinder.getWorld(event.getPlayer());
+    double cost = event.getType().getCost(event.getIdentifier(), IDFinder.getActualWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
     if(cost != 0.0 && !event.isCancelled()) {

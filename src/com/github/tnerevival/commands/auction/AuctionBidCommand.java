@@ -1,6 +1,7 @@
 package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -63,11 +64,11 @@ public class AuctionBidCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = getWorld(sender);
-    if(arguments.length < 1 || !CurrencyFormatter.isDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+    if(arguments.length < 1 || !CurrencyFormatter.isDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)))) {
       new Message("Messages.Auction.BidRequire").translate(world, sender);
       return false;
     }
-    Double bid = CurrencyFormatter.translateDouble(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+    Double bid = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
     Integer lot = (arguments.length >= 2 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : -1;
     if(lot == -1) {
       if(plugin.manager.auctionManager.requireLot(world)) {

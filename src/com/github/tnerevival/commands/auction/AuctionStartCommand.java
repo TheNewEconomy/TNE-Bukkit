@@ -129,7 +129,7 @@ public class AuctionStartCommand extends TNECommand {
             if(mat.equals(Material.AIR)) {
               Message invalidItem = new Message("Messages.Auction.InvalidItem");
               invalidItem.addVariable("$item", split[1]);
-              invalidItem.translate(MISCUtils.getWorld(player), player);
+              invalidItem.translate(IDFinder.getWorld(player), player);
               return false;
             }
             stack = new ItemStack(mat);
@@ -145,7 +145,7 @@ public class AuctionStartCommand extends TNECommand {
             try {
               amount = Integer.parseInt(split[1]);
             } catch(NumberFormatException e) {
-              new Message("Messages.Item.InvalidAmount").translate(MISCUtils.getWorld(player), player);
+              new Message("Messages.Item.InvalidAmount").translate(IDFinder.getWorld(player), player);
               return false;
             }
             break;

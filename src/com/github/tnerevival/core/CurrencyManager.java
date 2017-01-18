@@ -1,6 +1,7 @@
 package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.Tier;
 import com.github.tnerevival.utils.MISCUtils;
@@ -34,10 +35,10 @@ public class CurrencyManager {
   }
 
   public void loadCurrencies() {
-    loadCurrency(TNE.instance.getConfig(), false, MISCUtils.getWorld(TNE.instance.defaultWorld));
+    loadCurrency(TNE.instance.getConfig(), false, IDFinder.getWorld(TNE.instance.defaultWorld));
 
     for(String s : worlds) {
-      loadCurrency(TNE.instance.worldConfigurations, true, MISCUtils.getWorld(s));
+      loadCurrency(TNE.instance.worldConfigurations, true, IDFinder.getWorld(s));
     }
 
     for(String s : currencies.keySet()) {

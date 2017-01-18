@@ -23,11 +23,11 @@ public class Transaction {
   private Double recipientBalance;
 
   public Transaction(String initiator, String recipient, TransactionCost cost) {
-    this(initiator, recipient, cost, TransactionType.MONEY_GIVE, TNE.instance.defaultWorld);
+    this(initiator, recipient, cost, TransactionType.MONEY_GIVE, IDFinder.getWorld(IDFinder.getID(initiator)));
   }
 
   public Transaction(String initiator, String recipient, TransactionCost cost, TransactionType type) {
-    this(initiator, recipient, cost, type, TNE.instance.defaultWorld);
+    this(initiator, recipient, cost, type, IDFinder.getWorld(IDFinder.getID(initiator)));
   }
 
   public Transaction(String initiator, String recipient, TransactionCost cost, TransactionType type, String world) {
@@ -119,7 +119,7 @@ public class Transaction {
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = IDFinder.getID(initiator);
-      if(!BankUtils.hasBank(IDFinder.getID(recipient), world)) return TransactionResult.FAILED;
+      if(!AccountUtils.getAccount(IDFinder.getID(recipient)).hasBank(world)) return TransactionResult.FAILED;
       if(cost.getAmount() > 0 && AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName()) < cost.getAmount()) return TransactionResult.FAILED;
       if(!BankUtils.bankMember(IDFinder.getID(recipient), id, world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;
@@ -181,12 +181,12 @@ public class Transaction {
     } else if(type.equals(TransactionType.BANK_WITHDRAWAL)) {
       UUID id = IDFinder.getID(recipient);
       UUID initID = IDFinder.getID(initiator);
-      if(!BankUtils.hasBank(initID, world)) return TransactionResult.FAILED;
+      if(!AccountUtils.getAccount(initID).hasBank(world)) return TransactionResult.FAILED;
       if(recipient != null && !BankUtils.bankMember(initID, id, world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = IDFinder.getID(recipient);
-      if(!BankUtils.hasBank(id, world)) return TransactionResult.FAILED;
+      if(!AccountUtils.getAccount(id).hasBank(world)) return TransactionResult.FAILED;
       if(cost.getAmount() > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, TNE.instance.manager.currencyManager.get(world).getName()) < cost.getAmount()) return TransactionResult.FAILED;
       if(recipient != null && !BankUtils.bankMember(id, IDFinder.getID(initiator), world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;

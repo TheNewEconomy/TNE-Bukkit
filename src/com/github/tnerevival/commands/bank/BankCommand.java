@@ -2,7 +2,6 @@ package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.utils.BankUtils;
 import org.bukkit.command.CommandSender;
 
 public class BankCommand extends TNECommand {
@@ -14,7 +13,6 @@ public class BankCommand extends TNECommand {
     subCommands.add(new BankBuyCommand(plugin));
     subCommands.add(new BankDepositCommand(plugin));
     subCommands.add(new BankRemoveCommand(plugin));
-    subCommands.add(new BankViewCommand(plugin));
     subCommands.add(new BankWithdrawCommand(plugin));
   }
 
@@ -46,11 +44,6 @@ public class BankCommand extends TNECommand {
   @Override
   public Boolean confirm() {
     return true;
-  }
-
-  @Override
-  public Boolean activated(String world, String player) {
-    return BankUtils.command(world, player);
   }
 
   @Override

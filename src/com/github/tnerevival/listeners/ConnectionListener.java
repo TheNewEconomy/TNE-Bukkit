@@ -2,12 +2,11 @@ package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
-import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -47,15 +46,15 @@ public class ConnectionListener implements Listener {
 
     Account account = AccountUtils.getAccount(IDFinder.getID(player));
 
-    if(TNE.instance.manager.enabled(IDFinder.getID(player), MISCUtils.getWorld(player))) {
-      if(!TNE.instance.manager.confirmed(IDFinder.getID(player), MISCUtils.getWorld(player))) {
+    if(TNE.instance.manager.enabled(IDFinder.getID(player), IDFinder.getWorld(player))) {
+      if(!TNE.instance.manager.confirmed(IDFinder.getID(player), IDFinder.getWorld(player))) {
         String node = "Messages.Account.Confirm";
         if (account.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
           node = "Messages.Account.Set";
         }
 
         Message message = new Message(node);
-        message.translate(MISCUtils.getWorld(player), player);
+        message.translate(IDFinder.getWorld(player), player);
       }
     }
   }
@@ -70,22 +69,22 @@ public class ConnectionListener implements Listener {
   @EventHandler
   public void onDeath(PlayerDeathEvent event) {
     Player killed = event.getEntity();
-    String world = MISCUtils.getWorld(killed);
+    String world = IDFinder.getWorld(killed);
     UUID id = IDFinder.getID(killed);
     if(TNE.instance.api.getBoolean("Core.Death.Lose", world, id)) {
       AccountUtils.setFunds(id, world, 0.0, TNE.instance.manager.currencyManager.get(world).getName());
     }
 
-    if(TNE.instance.api.getInteger("Core.Death.Bank.Drop", world, id) > 0) {
-      if(!TNE.instance.api.getBoolean("Core.Death.Bank.PlayerOnly", world, id) || killed.getKiller() != null) {
-        if(BankUtils.hasBank(id, world)) {
-          Bank bank = BankUtils.getBank(id, world);
-          List<Integer> toDrop = bank.generateSlots(world);
+    if(TNE.instance.api.getInteger("Core.Death.Vault.Drop", world, id) > 0) {
+      if(!TNE.instance.api.getBoolean("Core.Death.Vault.PlayerOnly", world, id) || killed.getKiller() != null) {
+        if(AccountUtils.getAccount(id).hasVault(world)) {
+          Vault vault = AccountUtils.getAccount(id).getVault(world);
+          List<Integer> toDrop = vault.generateSlots(world);
           for (Integer i : toDrop) {
-            if (bank.getItem(i) != null || !bank.getItem(i).toItemStack().getType().equals(Material.AIR)) {
-              ItemStack drop = bank.getItem(i).toItemStack();
+            if (vault.getItem(i) != null || !vault.getItem(i).toItemStack().getType().equals(Material.AIR)) {
+              ItemStack drop = vault.getItem(i).toItemStack();
               event.getDrops().add(drop);
-              bank.removeItem(i);
+              vault.removeItem(i);
             }
           }
         }

@@ -1,12 +1,12 @@
 package com.github.tnerevival.commands.shop;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,9 +47,9 @@ public class ShopRemoveCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(sender instanceof Player && arguments.length >= 1) {
       Player player = (Player)sender;
-      if(Shop.exists(arguments[0], MISCUtils.getWorld(getPlayer(sender)))) {
+      if(Shop.exists(arguments[0], IDFinder.getWorld(getPlayer(sender)))) {
         if(Shop.canModify(arguments[0], player)) {
-          Shop s = Shop.getShop(arguments[0], MISCUtils.getWorld(getPlayer(sender)));
+          Shop s = Shop.getShop(arguments[0], IDFinder.getWorld(getPlayer(sender)));
 
           ItemStack item = player.getInventory().getItemInMainHand().clone();
           int amount = 1;
@@ -67,7 +67,7 @@ public class ShopRemoveCommand extends TNECommand {
                     try {
                       cost = Double.parseDouble(split[1]);
                     } catch(NumberFormatException e) {
-                      new Message("Messages.Shop.InvalidCost").translate(MISCUtils.getWorld(player), player);
+                      new Message("Messages.Shop.InvalidCost").translate(IDFinder.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -76,7 +76,7 @@ public class ShopRemoveCommand extends TNECommand {
                     if(mat.equals(Material.AIR)) {
                       Message invalidItem = new Message("Messages.Shop.InvalidTrade");
                       invalidItem.addVariable("$item", split[1]);
-                      invalidItem.translate(MISCUtils.getWorld(player), player);
+                      invalidItem.translate(IDFinder.getWorld(player), player);
                       return false;
                     }
                     trade = new ItemStack(mat);
@@ -84,7 +84,7 @@ public class ShopRemoveCommand extends TNECommand {
                       Integer tradeAmount = (split.length == 3)? Integer.parseInt(split[2]) : 1;
                       trade.setAmount(tradeAmount);
                     } catch(NumberFormatException e) {
-                      new Message("Messages.Shop.InvalidTradeAmount").translate(MISCUtils.getWorld(player), player);
+                      new Message("Messages.Shop.InvalidTradeAmount").translate(IDFinder.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -95,7 +95,7 @@ public class ShopRemoveCommand extends TNECommand {
                     try {
                       amount = Integer.parseInt(split[1]);
                     } catch(NumberFormatException e) {
-                      new Message("Messages.Shop.InvalidAmount").translate(MISCUtils.getWorld(player), player);
+                      new Message("Messages.Shop.InvalidAmount").translate(IDFinder.getWorld(player), player);
                       return false;
                     }
                     break;
@@ -104,7 +104,7 @@ public class ShopRemoveCommand extends TNECommand {
                     if(mat == null || mat.equals(Material.AIR)) {
                       Message invalidItem = new Message("Messages.Shop.ItemInvalid");
                       invalidItem.addVariable("$item", arguments[i]);
-                      invalidItem.translate(MISCUtils.getWorld(player), player);
+                      invalidItem.translate(IDFinder.getWorld(player), player);
                       return false;
                     }
                     item = new ItemStack(mat);
@@ -122,7 +122,7 @@ public class ShopRemoveCommand extends TNECommand {
               if(mat == null || mat.equals(Material.AIR)) {
                 Message invalidItem = new Message("Messages.Shop.ItemInvalid");
                 invalidItem.addVariable("$item", arguments[i]);
-                invalidItem.translate(MISCUtils.getWorld(player), player);
+                invalidItem.translate(IDFinder.getWorld(player), player);
                 return false;
               }
               item = new ItemStack(mat);
@@ -142,19 +142,19 @@ public class ShopRemoveCommand extends TNECommand {
             Message removed = new Message("Messages.Shop.ItemRemoved");
             removed.addVariable("$shop", s.getName());
             removed.addVariable("$item", item.getType().name());
-            removed.translate(MISCUtils.getWorld(player), player);
+            removed.translate(IDFinder.getWorld(player), player);
             return true;
           }
           Message wrong = new Message("Messages.Shop.ItemWrong");
           wrong.addVariable("$shop", s.getName());
           wrong.addVariable("$item", item.getType().name());
-          wrong.translate(MISCUtils.getWorld(player), player);
+          wrong.translate(IDFinder.getWorld(player), player);
           return false;
         }
-        new Message("Messages.Shop.Permission").translate(MISCUtils.getWorld(player), player);
+        new Message("Messages.Shop.Permission").translate(IDFinder.getWorld(player), player);
         return false;
       }
-      new Message("Messages.Shop.None").translate(MISCUtils.getWorld(player), player);
+      new Message("Messages.Shop.None").translate(IDFinder.getWorld(player), player);
       return false;
     } else {
       help(sender);

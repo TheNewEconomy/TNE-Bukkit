@@ -1,9 +1,9 @@
 package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public class AdminPurgeCommand extends TNECommand {
   
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (sender instanceof Player)? MISCUtils.getWorld((Player)sender) : TNE.instance.defaultWorld;
+    String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance.defaultWorld;
     boolean isWorld = arguments.length >= 1;
     if(isWorld) {
       if(Bukkit.getWorld(arguments[0]) == null)

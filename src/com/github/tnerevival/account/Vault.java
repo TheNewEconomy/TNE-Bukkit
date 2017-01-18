@@ -18,7 +18,12 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.serializable.SerializableItemStack;
+import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -35,10 +40,12 @@ public class Vault {
   private List<SerializableItemStack> items = new ArrayList<>();
   private List<UUID> members = new ArrayList<>();
   private UUID owner;
+  private String world;
   private Integer size;
 
-  public Vault(UUID owner, Integer size) {
+  public Vault(UUID owner, String world, Integer size) {
     this.owner = owner;
+    this.world = world;
     this.size = size;
   }
 
@@ -111,11 +118,19 @@ public class Vault {
     return owner;
   }
 
+  public String getWorld() {
+    return world;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
+  }
+
   private List<Integer> validSlots(String world) {
     List<Integer> valid = new ArrayList<>();
 
     for(int i = 0; i < size; i++) {
-      if(getItem(i) != null || TNE.instance.api.getBoolean("Core.Death.Bank.IncludeEmpty", world, owner)) {
+      if(getItem(i) != null || TNE.instance.api.getBoolean("Core.Death.Vault.IncludeEmpty", world, owner)) {
         valid.add(i);
       }
     }
@@ -125,7 +140,7 @@ public class Vault {
   public List<Integer> generateSlots(String world) {
     List<Integer> valid = validSlots(world);
     List<Integer> generated = new ArrayList<>();
-    int remaining = TNE.instance.api.getInteger("Core.Death.Bank.Drop", world, owner);
+    int remaining = TNE.instance.api.getInteger("Core.Death.Vault.Drop", world, owner);
 
     if(valid.size() <= remaining) return valid;
 
@@ -177,20 +192,64 @@ public class Vault {
     }
   }
 
-  public static Bank fromString(String parse) {
+  public static Vault fromString(String parse) {
     String[] parsed = parse.split(":");
-    Bank b = new Bank(UUID.fromString(parsed[0]), Integer.valueOf(parsed[1]));
-    if(parsed.length >= 3) {
-      b.itemsFromString(parsed[2]);
-    }
+    Vault vault = new Vault(UUID.fromString(parsed[0]), parsed[1], Integer.valueOf(parsed[2]));
     if(parsed.length >= 4) {
-      b.membersFromString(parsed[3]);
+      vault.itemsFromString(parsed[3]);
+    }
+    if(parsed.length >= 5) {
+      vault.membersFromString(parsed[4]);
     }
 
-    return b;
+    return vault;
   }
 
   public String toString() {
-    return owner.toString() + ":" + size + ":" + itemsToString() + ":" + membersToString();
+    return owner.toString() + ":" + world + ":" + size + ":" + itemsToString() + ":" + membersToString();
+  }
+
+  public Inventory getInventory() {
+    if(!AccountUtils.getAccount(owner).getStatus().getVault()) {
+      return null;
+    }
+    MISCUtils.debug("OWNER UUID: " + owner.toString());
+    MISCUtils.debug((IDFinder.getPlayer(owner.toString()) == null) + "");
+    String title = ChatColor.GOLD + "[" + ChatColor.WHITE + "Vault" + ChatColor.GOLD + "]" + ChatColor.WHITE + IDFinder.getPlayer(owner.toString()).getDisplayName();
+    Inventory inventory = Bukkit.createInventory(null, size, title);
+    if(items.size() > 0) {
+      for(SerializableItemStack stack : items) {
+        inventory.setItem(stack.getSlot(), stack.toItemStack());
+      }
+    }
+    return inventory;
+  }
+
+  /*
+   * Static helper methods
+   */
+  public static Integer size(String world, String player) {
+    Integer rows = TNE.instance.api.getInteger("Core.Vault.Rows", world, player);
+    return (rows >= 1 && rows <= 6) ? (rows * 9) : 27;
+  }
+
+  public static Boolean enabled(String world, String player) {
+    return TNE.instance.api.getBoolean("Core.Vault.Enabled", world, player);
+  }
+
+  public static Boolean command(String world, String player) {
+    return TNE.instance.api.getBoolean("Core.Vault.Command", world, player);
+  }
+
+  public static Double cost(String world, String player) {
+    return AccountUtils.round(TNE.instance.api.getDouble("Core.Vault.Cost", world, player));
+  }
+
+  public static Boolean sign(String world, String player) {
+    return TNE.instance.api.getBoolean("Core.Signs.Vault.Enabled", world, player);
+  }
+
+  public static Boolean npc(String world) {
+    return TNE.instance.api.getBoolean("Core.Vault.NPC", world);
   }
 }

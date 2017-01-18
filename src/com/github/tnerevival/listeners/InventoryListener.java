@@ -4,7 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.inventory.InventoryViewer;
 import com.github.tnerevival.core.inventory.TNEInventory;
-import com.github.tnerevival.core.inventory.impl.BankInventory;
+import com.github.tnerevival.core.inventory.impl.VaultInventory;
 import com.github.tnerevival.core.inventory.impl.GenericInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.shops.Shop;
@@ -33,7 +33,7 @@ public class InventoryListener implements Listener {
   public void onInventoryOpen(InventoryOpenEvent event) {
     Player player = (Player)event.getPlayer();
     InventoryType type = event.getInventory().getType();
-    InventoryViewer viewer = new InventoryViewer(IDFinder.getID(player), MISCUtils.getWorld(player));
+    InventoryViewer viewer = new InventoryViewer(IDFinder.getID(player), IDFinder.getWorld(player));
     TNEInventory inventory = new GenericInventory();
 
     MISCUtils.debug(player.getDisplayName() + " opened an inventory!" + event.getInventory().getTitle());
@@ -48,13 +48,13 @@ public class InventoryListener implements Listener {
       return;
     }
 
-    if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("bank")) {
+    if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("vault")) {
       String ownerUser = event.getInventory().getTitle().split("]")[1].trim();
 
       MISCUtils.debug(ChatColor.stripColor(ownerUser));
 
       UUID owner = IDFinder.getID(ChatColor.stripColor(ownerUser));
-      inventory = new BankInventory(owner);
+      inventory = new VaultInventory(owner);
     } else if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("shop")) {
       String name = event.getInventory().getTitle().split("]")[1].trim();
       Shop s = TNE.instance.manager.shops.get(ChatColor.stripColor(name) + ":" + player.getWorld().getName());
@@ -66,9 +66,9 @@ public class InventoryListener implements Listener {
     }
     inventory.addViewer(viewer);
     inventory.setInventory(event.getInventory());
-    inventory.setWorld(MISCUtils.getWorld(player));
+    inventory.setWorld(IDFinder.getWorld(player));
     for(HumanEntity entity : event.getViewers()) {
-      inventory.addViewer(new InventoryViewer(entity.getUniqueId(), MISCUtils.getWorld(entity.getUniqueId())));
+      inventory.addViewer(new InventoryViewer(entity.getUniqueId(), IDFinder.getWorld(entity.getUniqueId())));
     }
     if(!inventory.onOpen(viewer)) {
       event.setCancelled(true);

@@ -31,6 +31,42 @@ import java.util.UUID;
  **/
 public class IDFinder {
 
+  public static String getWorld(String actualWorld) {
+    if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
+      MISCUtils.debug("WORLD USING: " + TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld"));
+      return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
+    }
+    return actualWorld;
+  }
+
+  public static String getWorld(Player player) {
+    return getWorld(getID(player));
+  }
+
+  public static String getWorld(UUID id) {
+    if(MISCUtils.multiWorld()) {
+      if(getPlayer(id.toString()) != null) {
+        String actualWorld = getActualWorld(id);
+        if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
+          MISCUtils.debug("WORLD USING: " + TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld"));
+          return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
+        }
+        MISCUtils.debug("WORLD USING: " + actualWorld);
+        return actualWorld;
+      }
+    }
+    MISCUtils.debug("WORLD USING: Default");
+    return TNE.instance.defaultWorld;
+  }
+
+  public static String getActualWorld(Player player) {
+    return player.getWorld().getName();
+  }
+
+  public static String getActualWorld(UUID id) {
+    return getActualWorld(getPlayer(id.toString()));
+  }
+
   public static UUID ecoID(String username) {
     return ecoID(username, false);
   }

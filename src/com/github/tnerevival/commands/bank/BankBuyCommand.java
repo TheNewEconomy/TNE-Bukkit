@@ -8,7 +8,6 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,25 +41,25 @@ public class BankBuyCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
-    if(BankUtils.hasBank(IDFinder.getID(player))) {
-      new Message("Messages.Bank.Already").translate(MISCUtils.getWorld(player), player);
+    if(AccountUtils.getAccount(IDFinder.getID(player)).hasBank(getWorld(sender))) {
+      new Message("Messages.Bank.Already").translate(IDFinder.getWorld(player), player);
       return false;
     }
 
     if(!player.hasPermission("tne.bank.bypass")) {
-      if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, BankUtils.cost(MISCUtils.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(player))) {
-        AccountUtils.transaction(IDFinder.getID(player).toString(), null, BankUtils.cost(MISCUtils.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(player));
+      if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, Bank.cost(IDFinder.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
+        AccountUtils.transaction(IDFinder.getID(player).toString(), null, Bank.cost(IDFinder.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
       } else {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount",  CurrencyFormatter.format(MISCUtils.getWorld(player), BankUtils.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
-        insufficient.translate(MISCUtils.getWorld(player), player);
+        insufficient.addVariable("$amount",  CurrencyFormatter.format(IDFinder.getWorld(player), Bank.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
+        insufficient.translate(IDFinder.getWorld(player), player);
         return false;
       }
     }
     MISCUtils.debug(IDFinder.getID(player).toString());
-    Bank bank = new Bank(IDFinder.getID(player), BankUtils.size(player.getWorld().getName(), IDFinder.getID(player).toString()));
-    AccountUtils.getAccount(IDFinder.getID(player)).getBanks().put(MISCUtils.getWorld(player), bank);
-    new Message("Messages.Bank.Bought").translate(MISCUtils.getWorld(player), player);
+    Bank bank = new Bank(IDFinder.getID(player), IDFinder.getWorld(player));
+    AccountUtils.getAccount(IDFinder.getID(player)).getBanks().put(IDFinder.getWorld(player), bank);
+    new Message("Messages.Bank.Bought").translate(IDFinder.getWorld(player), player);
     return true;
   }
 

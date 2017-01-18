@@ -47,7 +47,7 @@ public class Account implements Serializable {
 
   public Account(UUID uid, int accountNumber) {
     this.uid = uid;
-    this.joined = new String(TNE.instance.dateFormat.format(new Date()));
+    this.joined = TNE.instance.dateFormat.format(new Date());
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
@@ -312,6 +312,10 @@ public class Account implements Serializable {
     return this.banks.get(world);
   }
 
+  public boolean hasBank(String world) {
+    return this.banks.containsKey(world);
+  }
+
   public Map<String, Vault> getVaults() {
     return vaults;
   }
@@ -326,5 +330,9 @@ public class Account implements Serializable {
 
   public Vault getVault(String world) {
     return this.vaults.get(world);
+  }
+
+  public boolean hasVault(String world) {
+    return vaults.containsKey(world);
   }
 }

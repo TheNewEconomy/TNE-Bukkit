@@ -9,13 +9,12 @@ import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.inventory.impl.AuctionItemInventory;
-import com.github.tnerevival.core.inventory.impl.BankInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.inventory.impl.ShopItemInventory;
+import com.github.tnerevival.core.inventory.impl.VaultInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -128,8 +127,8 @@ public abstract class TNEInventory {
     if(!acc.getStatus().getBalance())
       return "Messages.Account.Locked";
 
-    if(TNE.instance.manager.enabled(viewer.getUUID(), MISCUtils.getWorld(viewer.getUUID()))) {
-      if (!TNE.instance.manager.confirmed(viewer.getUUID(), MISCUtils.getWorld(viewer.getUUID()))) {
+    if(TNE.instance.manager.enabled(viewer.getUUID(), IDFinder.getWorld(viewer.getUUID()))) {
+      if (!TNE.instance.manager.confirmed(viewer.getUUID(), IDFinder.getWorld(viewer.getUUID()))) {
         if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
           return "Messages.Account.Set";
         else if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
@@ -138,17 +137,17 @@ public abstract class TNEInventory {
     }
 
     Player player = MISCUtils.getPlayer(viewer.getUUID());
-    MISCUtils.debug(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()) + "");
-    if(config.inventoryEnabled(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
-      if(config.isTimed(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString())) {
-        if(acc.getTimeLeft(MISCUtils.getWorld(viewer.getUUID()), TNE.configurations.getObjectConfiguration().inventoryType(inventory.getType())) <= 0) {
+    MISCUtils.debug(config.inventoryEnabled(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString()) + "");
+    if(config.inventoryEnabled(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
+      if(config.isTimed(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
+        if(acc.getTimeLeft(IDFinder.getWorld(viewer.getUUID()), TNE.configurations.getObjectConfiguration().inventoryType(inventory.getType())) <= 0) {
           return "Messages.Package.Unable";
         }
       } else {
-        if(!AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, MISCUtils.getWorld(viewer.getUUID()))) {
+        if(!AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(viewer.getUUID()))) {
           return "Messages.Money.Insufficient";
         } else {
-          AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, MISCUtils.getWorld(viewer.getUUID()));
+          AccountUtils.transaction(viewer.getUUID().toString(), null, config.getInventoryCost(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString()), TransactionType.MONEY_REMOVE, IDFinder.getWorld(viewer.getUUID()));
           return "Messages.Inventory.Charge";
         }
       }
@@ -186,27 +185,27 @@ public abstract class TNEInventory {
     ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
     Player player = MISCUtils.getPlayer(viewer.getUUID());
 
-    if(!(this instanceof BankInventory) && !(this instanceof ShopInventory) && !(this instanceof ShopItemInventory)
+    if(!(this instanceof VaultInventory) && !(this instanceof ShopInventory) && !(this instanceof ShopItemInventory)
        && !(this instanceof AuctionItemInventory)) {
       String charge = charge(viewer);
       MISCUtils.debug(charge);
       if(!charge.equalsIgnoreCase("successful") && !charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
-        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()))));
+        m.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
-        m.translate(MISCUtils.getWorld(player), player);
+        m.translate(IDFinder.getWorld(player), player);
 
         return false;
       }
 
       if(charge.equalsIgnoreCase("Messages.Inventory.Charge")) {
         Message m = new Message(charge);
-        m.addVariable("$amount", CurrencyFormatter.format(MISCUtils.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), MISCUtils.getWorld(player), IDFinder.getID(player).toString()))));
+        m.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(viewer.getUUID()), AccountUtils.round(config.getInventoryCost(inventory.getType(), IDFinder.getWorld(player), IDFinder.getID(player).toString()))));
         m.addVariable("$type", config.inventoryType(inventory.getType()));
-        m.translate(MISCUtils.getWorld(player), player);
+        m.translate(IDFinder.getWorld(player), player);
       }
-    } else if(this instanceof BankInventory) {
-      if(!BankUtils.bankMember(owner, viewer.getUUID(), viewer.getWorld())) {
+    } else if(this instanceof VaultInventory) {
+      if(!AccountUtils.getAccount(owner).getBank(viewer.getWorld()).getMembers().contains(viewer.getUUID())) {
         return false;
       }
     }
