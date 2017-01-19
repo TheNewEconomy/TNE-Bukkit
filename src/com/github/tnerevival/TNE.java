@@ -6,7 +6,6 @@ import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
-import com.github.tnerevival.core.inventory.InventoryManager;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.*;
 import com.github.tnerevival.utils.MISCUtils;
