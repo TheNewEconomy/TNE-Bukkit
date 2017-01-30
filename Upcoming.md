@@ -7,13 +7,18 @@
     - API documentation
   - SQL Improvements
     - Ability to allow caching for SQL-based formats
-- Alpha 6.0 "Final Stages"
+    
+- Alpha 5.2 "Redirection"
   - Shop sign support
+  - Separation of Banks into an Item Bank, and Money Vault
+  - PHP class for converting TNE data to PHP class objects
+  - Rewrite inventory system to be more efficient.
+  
+- Alpha 6.0 "Final Stages"
   - Rework shops to be more user-friendly. I want a shop system that isn't all command based such as the one we have now. More or less a more chest "friendly" version.
   - Lotteries
   - Player Trading(depending on whether it is a wanted feature)
-  - PHP class for converting TNE data to PHP class objects
-  - Separation of Banks into an Item Bank, and Money Vault
+  
 - Alpha 6.1 "Stability"
   - Major stability improvements
   - Bug fixes galore
