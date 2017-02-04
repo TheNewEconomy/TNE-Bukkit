@@ -27,7 +27,7 @@ public class MoneyCommand extends TNECommand {
   @Override
   public String[] getAliases() {
     if(TNE.instance.api.getBoolean("Core.Commands.BalanceShort")) {
-      return new String[] { "bal", "balance" };
+      return new String[] { "bal", "balance", "pay" };
     }
     return new String[0];
   }

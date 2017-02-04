@@ -38,7 +38,7 @@ public class CommandManager {
     commands.put(new String[] { "auction", "sauction" }, new AuctionCommand(TNE.instance));
     commands.put(new String[] { "bank" }, new BankCommand(TNE.instance));
     commands.put(new String[] { "credit" }, new CreditCommand(TNE.instance));
-    commands.put(new String[] { "money", "bal", "balance" }, new MoneyCommand(TNE.instance));
+    commands.put(new String[] { "money", "bal", "balance", "pay" }, new MoneyCommand(TNE.instance));
     commands.put(new String[] { "package" }, new PackageCommand(TNE.instance));
     commands.put(new String[] { "pin" }, new PinCommand(TNE.instance));
     commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance));

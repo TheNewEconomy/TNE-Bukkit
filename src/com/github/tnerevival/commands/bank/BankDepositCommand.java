@@ -51,20 +51,20 @@ public class BankDepositCommand extends TNECommand {
       return false;
     }
 
-    if(IDFinder.getPlayer(owner) == null) {
+    if(IDFinder.getID(owner) == null) {
       Message notFound = new Message("Messages.General.NoPlayer");
       notFound.addVariable("$player", owner);
       notFound.translate(IDFinder.getWorld(player), player);
       return false;
     }
 
-    if(!account.hasBank(world)) {
+    if(!account.hasBank(world) && !owner.equals(player.getName())) {
       Message none = new Message("Messages.Bank.None");
       none.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), Bank.cost(getWorld(sender), IDFinder.getID(player).toString())));
       none.translate(getWorld(sender), player);
       return false;
     }
-    if(!BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName())) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
+    if(!AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(world) || !BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName())) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
       new Message("Messages.General.NoPerm").translate(getWorld(player), player);
       return false;
     }

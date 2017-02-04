@@ -51,7 +51,7 @@ public class VaultAddCommand extends TNECommand {
       return false;
     }
 
-    if(IDFinder.getPlayer(arguments[0]) == null) {
+    if(IDFinder.getID(arguments[0]) == null) {
       Message notFound = new Message("Messages.General.NoPlayer");
       notFound.addVariable("$player", arguments[0]);
       notFound.translate(IDFinder.getWorld(player), player);
