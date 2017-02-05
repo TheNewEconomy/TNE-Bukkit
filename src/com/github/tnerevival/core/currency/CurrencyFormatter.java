@@ -2,6 +2,7 @@ package com.github.tnerevival.core.currency;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
 import java.math.BigDecimal;
@@ -28,18 +29,19 @@ import java.util.Map;
 public class CurrencyFormatter {
 
   public static String format(String world, BigDecimal amount) {
-    return format(TNE.instance.manager.currencyManager.get(world), amount);
+    return format(TNE.instance.manager.currencyManager.get(world), world, amount);
   }
 
   public static String format(String world, String name, BigDecimal amount) {
-    return format(TNE.instance.manager.currencyManager.get(world, name), amount);
+    return format(TNE.instance.manager.currencyManager.get(world, name), world, amount);
   }
 
-  public static String format(Currency currency, BigDecimal amount) {
+  public static String format(Currency currency, String world, BigDecimal amount) {
 
     if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
 
-    MISCUtils.debug(currency.getName() + " World: " + currency.getFormat());
+    amount = AccountUtils.round(currency.getName(), world, amount);
+    MISCUtils.debug(currency.getName() + " World: " + currency);
 
     String shortFormat = "<symbol> <short.amount>";
     String format = currency.getFormat();

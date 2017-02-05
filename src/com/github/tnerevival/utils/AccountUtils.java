@@ -132,7 +132,7 @@ public class AccountUtils {
     }
   }
 
-  /*public static BigDecimal round(BigDecimal amount) {
+  public static BigDecimal round(BigDecimal amount) {
     return round(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), amount);
   }
 
@@ -149,7 +149,7 @@ public class AccountUtils {
       return amount.setScale(TNE.instance.manager.currencyManager.get(world).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
     }
     return amount.setScale(TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
-  }*/
+  }
 
   public static boolean transaction(String initiator, String recipient, BigDecimal amount, TransactionType type, String world) {
     return transaction(initiator, recipient, new TransactionCost(amount), type, world);

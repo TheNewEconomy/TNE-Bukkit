@@ -109,8 +109,8 @@ public class MoneyConvertCommand extends TNECommand {
       AccountUtils.transaction(IDFinder.getID(player).toString(), null, converted, to, TransactionType.MONEY_GIVE, IDFinder.getWorld(player));
 
       Message success = new Message("Messages.Money.Converted");
-      success.addVariable("$from_amount", CurrencyFormatter.format(from, value));
-      success.addVariable("$amount", CurrencyFormatter.format(to, converted));
+      success.addVariable("$from_amount", CurrencyFormatter.format(from, getWorld(sender), value));
+      success.addVariable("$amount", CurrencyFormatter.format(to, worldTo, converted));
       success.addVariable("$from_currency", from.toString());
       success.addVariable("$currency", to.toString());
       success.translate(IDFinder.getWorld(player), player);
