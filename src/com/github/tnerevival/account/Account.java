@@ -2,6 +2,7 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Location;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,6 +11,8 @@ import java.util.*;
 public class Account implements Serializable {
 
   private static final long serialVersionUID = 1L;
+
+  private Map<Location, TrackedItems> trackedItems = new HashMap<>();
 
   /**
    * A HashMap of this account's balances from every world that the player has visited.
@@ -258,6 +261,14 @@ public class Account implements Serializable {
 
   public void setPin(String pin) {
     this.pin = pin;
+  }
+
+  public Map<Location, TrackedItems> getTrackedItems() {
+    return trackedItems;
+  }
+
+  public void setTrackedItems(Map<Location, TrackedItems> trackedItems) {
+    this.trackedItems = trackedItems;
   }
 
   public Map<String, BigDecimal> getBalances() {

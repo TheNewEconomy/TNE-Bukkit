@@ -109,6 +109,9 @@ Core:
             #Would you like to use an item as the currency?
             ItemCurrency: false
 
+            #Would you like to track when a player puts ItemCurrency into a chest for balance usage later? May impact performance.
+            TrackChest: false
+
             #If you want to use an item, which one?(Please use the name of the item)
             #Example: GOLD_INGOT
             ItemMajor: GOLD_INGOT
@@ -308,6 +311,9 @@ Core:
 
         #Whether or not player can view vaults from other worlds.
         MultiView: false
+
+        #How many players can view a vault at the same time. Anything more than one may impact performance.
+        MaxViewers: 1
 
     #All configurations relating to banks.
     Bank:

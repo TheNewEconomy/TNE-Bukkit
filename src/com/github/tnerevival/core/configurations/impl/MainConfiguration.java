@@ -80,6 +80,7 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Vault.Rows", 3);
     configurations.put("Core.Vault.MultiManage", false);
     configurations.put("Core.Vault.MultiView", false);
+    configurations.put("Core.Vault.MaxViewers", 1);
 
     configurations.put("Core.Bank.Enabled", false);
     configurations.put("Core.Bank.Connected", false);
