@@ -1,10 +1,10 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Account implements Serializable {
@@ -14,7 +14,7 @@ public class Account implements Serializable {
   /**
    * A HashMap of this account's balances from every world that the player has visited.
    */
-  private Map<String, Double> balances = new HashMap<>();
+  private Map<String, BigDecimal> balances = new HashMap<>();
 
   /**
    * A HashMap of this account's banks from every world that the player has visited.
@@ -51,22 +51,22 @@ public class Account implements Serializable {
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
-    setBalance(TNE.instance.defaultWorld, 0.0, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
+    setBalance(TNE.instance.defaultWorld, BigDecimal.ZERO, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
   }
 
   public String balancesToString() {
     int count = 0;
     String toReturn = "";
-    for(Map.Entry<String, Double> entry : balances.entrySet()) {
+    for(Map.Entry<String, BigDecimal> entry : balances.entrySet()) {
         if(count > 0) toReturn += "-";
-        toReturn += entry.getKey() + "," + entry.getValue();
+        toReturn += entry.getKey() + "," + entry.getValue().doubleValue();
         count++;
     }
     return toReturn;
   }
 
   public void balancesFromString(String from) {
-    String[] worlds = from.split("\\-");
+    String[] worlds = from.split("-");
 
     List<Integer> combine = new ArrayList<>();
     for(int i = 0; i < worlds.length; i++) {
@@ -81,14 +81,14 @@ public class Account implements Serializable {
         combine.add(i);
         continue;
       }
-      String[] balance = world.split("\\,");
+      String[] balance = world.split(",");
       if(balance.length == 2) {
-        balances.put(balance[0], Double.valueOf(balance[1]));
+        balances.put(balance[0], new BigDecimal(balance[1]));
       }
     }
   }
 
-  public String combine(String[] values, List<Integer> indexes) {
+  private String combine(String[] values, List<Integer> indexes) {
     StringBuilder builder = new StringBuilder();
 
     int i = 0;
@@ -98,18 +98,6 @@ public class Account implements Serializable {
       i++;
     }
     return builder.toString();
-  }
-
-  public void balancesFromStringOld(String from) {
-    String[] b = from.split("\\-");
-
-    for(String s : b) {
-      String[] balance = s.split("\\,");
-      if(balance.length == 2) {
-        String name = TNE.instance.manager.currencyManager.get(balance[0]).getName();
-        balances.put(balance[0] + ":" + name, Double.valueOf(balance[1]));
-      }
-    }
   }
 
   public String commandsToString() {
@@ -171,7 +159,7 @@ public class Account implements Serializable {
     if(credits.get(inventory) != null) {
       return credits.get(inventory).getCredits();
     }
-    return new HashMap<String, Long>();
+    return new HashMap<>();
   }
 
   public void addTime(String world, String inventory, Long time) {
@@ -272,28 +260,22 @@ public class Account implements Serializable {
     this.pin = pin;
   }
 
-  public Map<String, Double> getBalances() {
+  public Map<String, BigDecimal> getBalances() {
     return balances;
   }
 
-  public void setBalances(Map<String, Double> balances) {
+  public void setBalances(Map<String, BigDecimal> balances) {
     this.balances = balances;
   }
 
-  public void setBalancesOld(Map<String, Double> balances) {
-    for(Map.Entry<String, Double> entry : balances.entrySet()) {
-      setBalance(entry.getKey(), entry.getValue(), TNE.instance.manager.currencyManager.get(entry.getKey()).getName());
-    }
-  }
-
-  public Double getBalance(String world, String currency) {
+  public BigDecimal getBalance(String world, String currency) {
     MISCUtils.debug("Returning balance for " + world + ":" + currency);
     return balances.get(world + ":" + currency);
   }
 
-  public void setBalance(String world, Double balance, String currency) {
+  public void setBalance(String world, BigDecimal balance, String currency) {
     MISCUtils.debug("Setting balance for " + world + ":" + currency);
-    this.balances.put(world + ":" + currency, AccountUtils.round(balance));
+    this.balances.put(world + ":" + currency, balance);
   }
 
   public Map<String, Bank> getBanks() {

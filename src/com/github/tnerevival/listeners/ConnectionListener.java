@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,7 +73,7 @@ public class ConnectionListener implements Listener {
     String world = IDFinder.getWorld(killed);
     UUID id = IDFinder.getID(killed);
     if(TNE.instance.api.getBoolean("Core.Death.Lose", world, id)) {
-      AccountUtils.setFunds(id, world, 0.0, TNE.instance.manager.currencyManager.get(world).getName());
+      AccountUtils.setFunds(id, world, BigDecimal.ZERO, TNE.instance.manager.currencyManager.get(world).getName());
     }
 
     if(TNE.instance.api.getInteger("Core.Death.Vault.Drop", world, id) > 0) {

@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -285,8 +286,8 @@ public class Vault {
     return TNE.instance.api.getBoolean("Core.Vault.Command", world, player);
   }
 
-  public static Double cost(String world, String player) {
-    return AccountUtils.round(TNE.instance.api.getDouble("Core.Vault.Cost", world, player));
+  public static BigDecimal cost(String world, String player) {
+    return new BigDecimal(TNE.instance.api.getDouble("Core.Vault.Cost", world, player));
   }
 
   public static Boolean sign(String world, String player) {

@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,28 +14,28 @@ import java.util.List;
 public class TransactionCost {
 
   private List<SerializableItemStack> items;
-  private double amount;
+  private BigDecimal amount;
   private Currency currency;
 
-  public TransactionCost(double amount) {
+  public TransactionCost(BigDecimal amount) {
     this(amount, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld));
   }
 
-  public TransactionCost(double amount, Currency currency) {
+  public TransactionCost(BigDecimal amount, Currency currency) {
     this(amount, currency, new ArrayList<SerializableItemStack>());
   }
 
-  public TransactionCost(double amount, Currency currency, List<SerializableItemStack> items) {
+  public TransactionCost(BigDecimal amount, Currency currency, List<SerializableItemStack> items) {
     this.amount = amount;
     this.currency = currency;
     this.items = items;
   }
 
-  public double getAmount() {
+  public BigDecimal getAmount() {
     return amount;
   }
 
-  public void setAmount(double amount) {
+  public void setAmount(BigDecimal amount) {
     this.amount = amount;
   }
 

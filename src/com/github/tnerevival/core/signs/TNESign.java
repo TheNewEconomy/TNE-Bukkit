@@ -8,11 +8,11 @@ import com.github.tnerevival.core.event.sign.TNESignEvent;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public abstract class TNESign {
@@ -36,9 +36,9 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    Double place = type.place(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+    BigDecimal place = type.place(IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
-    if(place != null && place > 0.0) {
+    if(place != null && place.compareTo(BigDecimal.ZERO) > 0) {
       if (!AccountUtils.transaction(IDFinder.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
         insufficient.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), place));
@@ -86,7 +86,7 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    Double use = type.use(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+    BigDecimal use = type.use(IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
     if(!type.enabled(IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
       new Message("Messages.Objects.SignDisabled").translate(IDFinder.getWorld(player), player);

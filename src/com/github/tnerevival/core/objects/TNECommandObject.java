@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.objects;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class TNECommandObject {
@@ -7,9 +8,9 @@ public class TNECommandObject {
   private HashMap<String, TNECommandObject> subCommands = new HashMap<String, TNECommandObject>();
 
   private String name;
-  private double cost;
+  private BigDecimal cost;
 
-  public TNECommandObject(String name, double cost) {
+  public TNECommandObject(String name, BigDecimal cost) {
     this.name = name;
     this.cost = cost;
   }
@@ -18,7 +19,7 @@ public class TNECommandObject {
     return name;
   }
 
-  public double getCost() {
+  public BigDecimal getCost() {
     return cost;
   }
 
@@ -26,11 +27,11 @@ public class TNECommandObject {
     return subCommands.get(name);
   }
 
-  public double subCost(String name) {
+  public BigDecimal subCost(String name) {
     if(findSub(name) != null) {
       return subCommands.get(name).getCost();
     }
-    return 0.0;
+    return BigDecimal.ZERO;
   }
 
   public void addSub(TNECommandObject sub) {

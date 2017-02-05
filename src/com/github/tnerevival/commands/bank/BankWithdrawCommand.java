@@ -13,6 +13,7 @@ import com.github.tnerevival.utils.BankUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class BankWithdrawCommand extends TNECommand {
@@ -73,7 +74,7 @@ public class BankWithdrawCommand extends TNECommand {
       return false;
     }
 
-    Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
+    BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
     if(AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
       Message overdraw = new Message("Messages.Bank.Overdraw");
       overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));

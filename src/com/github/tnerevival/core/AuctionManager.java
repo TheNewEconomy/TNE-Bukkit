@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -237,19 +238,19 @@ public class AuctionManager {
     Integer snipeTime = TNE.instance.api.getInteger("Core.Auctions.SnipeTime", world, player.toString());
     Integer snipePeriod = TNE.instance.api.getInteger("Core.Auctions.SnipePeriod",world, player.toString());
 
-    Double minimum = auction.getCost().getAmount();
+    BigDecimal minimum = auction.getCost().getAmount();
     if(auction.getHighestBid() != null) {
-      minimum = auction.getHighestBid().getBid().getAmount() + auction.getIncrement();
+      minimum = auction.getHighestBid().getBid().getAmount().add(auction.getIncrement());
     }
 
     if(!AccountUtils.transaction(player.toString(), null, bid, TransactionType.MONEY_INQUIRY, world)) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(bid.getAmount())));
+      insufficient.addVariable("$amount", CurrencyFormatter.format(world, bid.getAmount()));
       insufficient.translate(world, MISCUtils.getPlayer(player));
       return false;
     }
 
-    if(bid.getAmount() < minimum) {
+    if(bid.getAmount().compareTo(minimum) < 0) {
       if(!auction.getSilent()) {
         Message under = new Message("Messages.Auction.Under");
         under.addVariable("$amount", CurrencyFormatter.format(world, minimum));
@@ -344,11 +345,11 @@ public class AuctionManager {
       return false;
     }
 
-    Double cost = TNE.instance.api.getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer());
+    BigDecimal cost = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer()));
 
-    if(cost > 0.0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
+    if(cost.compareTo(BigDecimal.ZERO) > 0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), AccountUtils.round(cost)));
+      insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), cost));
       insufficient.translate(auction.getWorld(), MISCUtils.getPlayer(auction.getPlayer()));
       return false;
     }

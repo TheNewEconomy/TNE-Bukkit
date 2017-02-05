@@ -19,6 +19,7 @@ import org.json.simple.JSONValue;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -325,11 +326,11 @@ public class MISCUtils {
 
     String id = IDFinder.getID(event.getPlayer()).toString();
     String world = IDFinder.getWorld(event.getPlayer());
-    double cost = event.getType().getCost(event.getIdentifier(), IDFinder.getActualWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+    BigDecimal cost = event.getType().getCost(event.getIdentifier(), IDFinder.getActualWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
-    if(cost != 0.0 && !event.isCancelled()) {
-      if(cost > 0.0) {
+    if(cost.compareTo(BigDecimal.ZERO) != 0 && !event.isCancelled()) {
+      if(cost.compareTo(BigDecimal.ZERO) > 0) {
         if(AccountUtils.transaction(id, null, cost, TransactionType.MONEY_INQUIRY, world)) {
           MISCUtils.debug("Removing funds");
           AccountUtils.transaction(id, null, cost, TransactionType.MONEY_REMOVE, world);
@@ -337,7 +338,7 @@ public class MISCUtils {
           MISCUtils.debug("Insufficient funds!");
           event.setCancelled(true);
           Message insufficient = new Message("Messages.Money.Insufficient");
-          insufficient.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
+          insufficient.addVariable("$amount", CurrencyFormatter.format(world, cost));
           insufficient.translate(world, event.getPlayer());
           return;
         }
@@ -349,7 +350,7 @@ public class MISCUtils {
       String newName = event.getIdentifier() + ((event.getAmount() > 1 )? "\'s" : "");
 
       Message m = new Message(message);
-      m.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
+      m.addVariable("$amount", CurrencyFormatter.format(world, cost));
       m.addVariable("$stack_size", event.getAmount() + "");
       m.addVariable("$item", newName);
       m.translate(world, event.getPlayer());

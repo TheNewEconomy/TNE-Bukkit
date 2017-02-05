@@ -2,6 +2,8 @@ package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.TNE;
 
+import java.math.BigDecimal;
+
 public enum SignType {
 
   UNKNOWN("unknown", "", "", ""),
@@ -59,11 +61,11 @@ public enum SignType {
     return TNE.instance.api.getBoolean(configuration + ".Enabled", world, player);
   }
 
-  public Double place(String world, String player) {
-    return TNE.instance.api.getDouble(configuration + ".Place", world, player);
+  public BigDecimal place(String world, String player) {
+    return new BigDecimal(TNE.instance.api.getDouble(configuration + ".Place", world, player));
   }
 
-  public Double use(String world, String player) {
-    return TNE.instance.api.getDouble(configuration + ".Use", world, player);
+  public BigDecimal use(String world, String player) {
+    return new BigDecimal(TNE.instance.api.getDouble(configuration + ".Use", world, player));
   }
 }

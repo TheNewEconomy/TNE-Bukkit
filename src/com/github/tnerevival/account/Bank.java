@@ -17,8 +17,8 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.utils.AccountUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,13 +31,13 @@ public class Bank {
   private List<UUID> members = new ArrayList<>();
   private UUID owner;
   private String world;
-  private Double gold;
+  private BigDecimal gold;
 
   public Bank(UUID owner, String world) {
-    this(owner, world, 0.0);
+    this(owner, world, BigDecimal.ZERO);
   }
 
-  public Bank(UUID owner, String world, double gold) {
+  public Bank(UUID owner, String world, BigDecimal gold) {
     this.owner = owner;
     this.gold = gold;
     this.world = world;
@@ -46,7 +46,7 @@ public class Bank {
   /**
    * @return the gold
    */
-  public Double getGold() {
+  public BigDecimal getGold() {
     return gold;
   }
 
@@ -77,7 +77,7 @@ public class Bank {
   /**
    * @param gold the gold to set
    */
-  public void setGold(Double gold) {
+  public void setGold(BigDecimal gold) {
     this.gold = gold;
   }
 
@@ -101,7 +101,7 @@ public class Bank {
   public static Bank fromString(String parse, String world) {
     String[] parsed = parse.split(":");
     Bank b = new Bank(UUID.fromString(parsed[0]), world);
-    b.setGold(Double.valueOf(parsed[1]));
+    b.setGold(new BigDecimal(parsed[1]));
     if(parsed.length >= 3) {
       b.membersFromString(parsed[2]);
     }
@@ -110,22 +110,22 @@ public class Bank {
   }
 
   public String toString() {
-    return owner.toString() + ":" + gold + ":" + membersToString();
+    return owner.toString() + ":" + gold.doubleValue() + ":" + membersToString();
   }
 
   public static Boolean enabled(String world, String player) {
     return TNE.instance.api.getBoolean("Core.Bank.Enabled", world, player);
   }
 
-  public static Double cost(String world, String player) {
-    return AccountUtils.round(TNE.instance.api.getDouble("Core.Bank.Cost", world, player));
+  public static BigDecimal cost(String world, String player) {
+    return new BigDecimal(TNE.instance.api.getDouble("Core.Bank.Cost", world, player));
   }
 
   public static Boolean interestEnabled(String world, String player) {
     return TNE.instance.api.getBoolean("Core.Bank.Interest.Enabled", world, player);
   }
 
-  public static Double interestRate(String world, String player) {
-    return TNE.instance.api.getDouble("Core.Bank.Interest.Rate", world, player);
+  public static BigDecimal interestRate(String world, String player) {
+    return new BigDecimal(TNE.instance.api.getDouble("Core.Bank.Interest.Rate", world, player));
   }
 }

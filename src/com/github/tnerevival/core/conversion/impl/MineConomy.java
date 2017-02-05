@@ -26,6 +26,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 /**
  * Created by creatorfromhell on 11/13/2016.
@@ -65,7 +66,7 @@ public class MineConomy extends Converter {
         if(TNE.instance.manager.currencyManager.contains(TNE.instance.defaultWorld, currencyName)) {
           currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, currencyName);
         }
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), balance));
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), new BigDecimal(balance)));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -88,14 +89,14 @@ public class MineConomy extends Converter {
       if(TNE.instance.manager.currencyManager.contains(TNE.instance.defaultWorld, accounts.getString(base + "." + username + ".Currency"))) {
         currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, accounts.getString(base + "." + username + ".Currency"));
       }
-      AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), amount));
+      AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), new BigDecimal(amount)));
     }
 
     base = "Banks";
     for(String bank : banks.getConfigurationSection(base).getKeys(false)) {
       base = "Banks." + bank + ".Accounts";
       for(String username : banks.getConfigurationSection(base).getKeys(false)) {
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), banks.getDouble(base + "." + username + ".Balance"));
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(banks.getDouble(base + "." + username + ".Balance")));
       }
     }
   }

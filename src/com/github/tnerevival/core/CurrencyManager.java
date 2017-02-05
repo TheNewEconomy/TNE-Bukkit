@@ -7,6 +7,7 @@ import com.github.tnerevival.core.currency.Tier;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -61,8 +62,9 @@ public class CurrencyManager {
 
         MISCUtils.debug("[Loop]Loading Currency: " + cur + " for world: " + name);
         String base = curBase + "." + cur;
-        Double balance = configuration.contains(base + ".Balance")?  configuration.getDouble(base + ".Balance") : 200.00;
+        BigDecimal balance = configuration.contains(base + ".Balance")?  BigDecimal.valueOf(configuration.getDouble(base + ".Balance")) : new BigDecimal(200.00);
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
+        Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? configuration.getInt(base + ".DecimalPlace") : 2;
         String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten>";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
@@ -91,6 +93,7 @@ public class CurrencyManager {
         Currency currency = new Currency();
         currency.setBalance(balance);
         currency.setDecimal(decimal);
+        currency.setDecimalPlaces(decimalPlaces);
         currency.setFormat(format);
         currency.setName(cur);
         currency.setWorldDefault(worldDefault);
@@ -147,18 +150,18 @@ public class CurrencyManager {
     return get(world);
   }
 
-  public double convert(Currency from, Currency to, double amount) {
+  public BigDecimal convert(Currency from, Currency to, BigDecimal amount) {
     double fromRate = from.getRate();
     double toRate = to.getRate();
 
     return convert(fromRate, toRate, amount);
   }
 
-  public double convert(double fromRate, double toRate, double amount) {
+  public BigDecimal convert(double fromRate, double toRate, BigDecimal amount) {
     double rate = fromRate - toRate;
-    double difference = amount * rate;
+    BigDecimal difference = amount.multiply(new BigDecimal(rate));
 
-    return amount + difference;
+    return amount.add(difference);
   }
 
   public boolean contains(String world) {

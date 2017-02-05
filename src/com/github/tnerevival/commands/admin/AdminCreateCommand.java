@@ -5,11 +5,12 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
@@ -46,10 +47,10 @@ public class AdminCreateCommand extends TNECommand {
       UUID id = IDFinder.genUUID(arguments[0]);
       if(!AccountUtils.exists(id)) {
         Account acc = new Account(id);
-        Double balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(world).getName());
+        BigDecimal balance = AccountUtils.getInitialBalance(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(world).getName());
         if(arguments.length > 1) {
           try {
-            balance = Double.parseDouble(arguments[1]);
+            balance = CurrencyFormatter.translateBigDecimal(arguments[1], world);
           } catch(Exception e) {
             //Do Nothing
           }

@@ -12,6 +12,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import org.bukkit.OfflinePlayer;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -253,10 +254,10 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(IDFinder.getID(username).toString(), null, amount, TransactionType.MONEY_INQUIRY, world)) {
+    if(!AccountUtils.transaction(IDFinder.getID(username).toString(), null, new BigDecimal(amount), TransactionType.MONEY_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
-    AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_DEPOSIT, world);
+    AccountUtils.transaction(getBankAccount(username).toString(), null, new BigDecimal(amount), TransactionType.BANK_DEPOSIT, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Deposited money into bank!");
   }
 
@@ -272,7 +273,7 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_INQUIRY, world)) {
+    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, new BigDecimal(amount), TransactionType.BANK_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has sufficient funds!");
@@ -290,10 +291,10 @@ public class TNEVaultEconomy implements Economy {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
 
-    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_INQUIRY, world)) {
+    if(!AccountUtils.transaction(getBankAccount(username).toString(), null, new BigDecimal(amount), TransactionType.BANK_INQUIRY, world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds in bank account!");
     }
-    AccountUtils.transaction(getBankAccount(username).toString(), null, amount, TransactionType.BANK_WITHDRAWAL, world);
+    AccountUtils.transaction(getBankAccount(username).toString(), null, new BigDecimal(amount), TransactionType.BANK_WITHDRAWAL, world);
     return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Withdrew money from bank!");
   }
 

@@ -5,6 +5,7 @@ import com.github.tnerevival.core.transaction.*;
 import com.github.tnerevival.listeners.collections.TransactionsListener;
 import com.github.tnerevival.utils.MISCUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,13 +59,13 @@ public class TransactionManager {
     }
   }
 
-  public void add(String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance) {
+  public void add(String initiator, String player, String world, TransactionType type, TransactionCost cost, BigDecimal oldBalance, BigDecimal balance) {
     Date date = new Date();
 
     add(UUID.randomUUID().toString(), initiator, player, world, type, cost, oldBalance, balance, date.getTime());
   }
 
-  public void add(String id, String initiator, String player, String world, TransactionType type, TransactionCost cost, Double oldBalance, Double balance, Long time) {
+  public void add(String id, String initiator, String player, String world, TransactionType type, TransactionCost cost, BigDecimal oldBalance, BigDecimal balance, Long time) {
     if(type.equals(TransactionType.MONEY_INQUIRY)) return;
     if(TNE.instance.api.getBoolean("Core.Transactions.Track", world, initiator)) {
 

@@ -13,6 +13,8 @@ import com.github.tnerevival.utils.BankUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 public class BankDepositCommand extends TNECommand {
 
   public BankDepositCommand(TNE plugin) {
@@ -68,7 +70,7 @@ public class BankDepositCommand extends TNECommand {
       new Message("Messages.General.NoPerm").translate(getWorld(player), player);
       return false;
     }
-    Double value = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
+    BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
     if(!AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, IDFinder.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));

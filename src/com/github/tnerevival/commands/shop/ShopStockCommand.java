@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.utils.MISCUtils;
@@ -11,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.math.BigDecimal;
 
 /**
  * Created by Daniel on 10/4/2016.
@@ -57,7 +60,7 @@ public class ShopStockCommand extends TNECommand {
           boolean add = (arguments[1].equalsIgnoreCase("add"));
           short damage = 0;
           int amount = 1;
-          double cost = 50.00;
+          BigDecimal cost = new BigDecimal(50.0);
           int quantity = 1;
           boolean buy = true;
           ItemStack trade = new ItemStack(Material.AIR);
@@ -70,7 +73,7 @@ public class ShopStockCommand extends TNECommand {
                 switch(split[0]) {
                   case "gold":
                     try {
-                      cost = Double.parseDouble(split[1]);
+                      cost = CurrencyFormatter.translateBigDecimal(split[1], getWorld(sender));
                     } catch(NumberFormatException e) {
                       new Message("Messages.Shop.InvalidCost").translate(IDFinder.getWorld(player), player);
                       return false;

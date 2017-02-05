@@ -9,6 +9,8 @@ import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
+import java.math.BigDecimal;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -68,7 +70,7 @@ public class AuctionBidCommand extends TNECommand {
       new Message("Messages.Auction.BidRequire").translate(world, sender);
       return false;
     }
-    Double bid = CurrencyFormatter.translateDouble(arguments[0], IDFinder.getWorld(getPlayer(sender)));
+    BigDecimal bid = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
     Integer lot = (arguments.length >= 2 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : -1;
     if(lot == -1) {
       if(plugin.manager.auctionManager.requireLot(world)) {

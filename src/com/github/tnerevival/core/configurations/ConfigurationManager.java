@@ -6,6 +6,7 @@ import com.github.tnerevival.core.configurations.impl.*;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -43,9 +44,9 @@ public class ConfigurationManager {
     return TNE.instance.api.getBoolean("Mobs.Player.Individual." + id.toString() + ".Enabled", world, player);
   }
 
-  public Double playerReward(String id, String world, String player) {
+  public BigDecimal playerReward(String id, String world, String player) {
     MISCUtils.debug("ConfigurationManager.playerReward(" + id + ", " + world + "," + player + ")");
-    return TNE.instance.api.getDouble("Mobs.Player.Individual." + id + ".Reward", world, player);
+    return new BigDecimal(TNE.instance.api.getDouble("Mobs.Player.Individual." + id + ".Reward", world, player));
   }
 
   public Boolean mobAge(String world, String player) {
@@ -58,9 +59,9 @@ public class ConfigurationManager {
     return TNE.instance.api.getBoolean("Mobs." + mob + ".Enabled", world, player);
   }
 
-  public Double mobReward(String mob, String world, String player) {
+  public BigDecimal mobReward(String mob, String world, String player) {
     MISCUtils.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
-    return TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player);
+    return new BigDecimal(TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player));
   }
 
   private FileConfiguration getFileConfiguration(String id) {

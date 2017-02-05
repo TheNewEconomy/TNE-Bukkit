@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.currency;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,12 +25,13 @@ public class Currency {
   private Map<String, Tier> tiers = new HashMap<>();
 
   private boolean worldDefault = true;
-  private double balance;
+  private BigDecimal balance;
   private boolean item;
   private String name;
   private String format;
   private double rate;
   private String decimal;
+  private int decimalPlaces;
 
   public void addTier(Tier tier) {
     addTier(tier.getSingle(), tier);
@@ -51,11 +53,11 @@ public class Currency {
     this.worldDefault = worldDefault;
   }
 
-  public double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 
@@ -97,6 +99,14 @@ public class Currency {
 
   public void setDecimal(String decimal) {
     this.decimal = decimal;
+  }
+
+  public int getDecimalPlaces() {
+    return decimalPlaces;
+  }
+
+  public void setDecimalPlaces(int decimalPlaces) {
+    this.decimalPlaces = decimalPlaces;
   }
 
   public String getMajor() {

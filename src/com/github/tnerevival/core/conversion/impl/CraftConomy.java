@@ -29,6 +29,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -97,7 +98,7 @@ public class CraftConomy extends Converter {
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.convertedAdd(ids.get(mysqlDB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
+          AccountUtils.convertedAdd(ids.get(mysqlDB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), new BigDecimal(amount));
         }
       }
     } catch(Exception e) {
@@ -150,7 +151,7 @@ public class CraftConomy extends Converter {
           if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
             currency = TNE.instance.manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.convertedAdd(ids.get(h2DB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
+          AccountUtils.convertedAdd(ids.get(h2DB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), new BigDecimal(amount));
         }
       }
     } catch(Exception e) {

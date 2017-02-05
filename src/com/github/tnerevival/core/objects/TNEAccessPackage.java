@@ -1,12 +1,14 @@
 package com.github.tnerevival.core.objects;
 
+import java.math.BigDecimal;
+
 public class TNEAccessPackage {
 
   private String name;
   private long time;
-  private double cost;
+  private BigDecimal cost;
 
-  public TNEAccessPackage(String name, long time, double cost) {
+  public TNEAccessPackage(String name, long time, BigDecimal cost) {
     this.name = name;
     this.time = time;
     this.cost = cost;
@@ -20,7 +22,7 @@ public class TNEAccessPackage {
     return time;
   }
 
-  public double getCost() {
+  public BigDecimal getCost() {
     return cost;
   }
 }

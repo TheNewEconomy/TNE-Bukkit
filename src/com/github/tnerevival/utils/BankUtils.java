@@ -5,6 +5,7 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class BankUtils {
@@ -13,9 +14,9 @@ public class BankUtils {
 
     for(Bank b : account.getBanks().values()) {
       if(Bank.interestEnabled(b.getWorld(), id.toString())) {
-        Double gold = b.getGold();
-        Double interestEarned = gold * Bank.interestRate(b.getWorld(), id.toString());
-        b.setGold(gold + AccountUtils.round(interestEarned));
+        BigDecimal gold = b.getGold();
+        BigDecimal interestEarned = gold.multiply(Bank.interestRate(b.getWorld(), id.toString()));
+        b.setGold(gold.add(interestEarned));
       }
       account.setBank(b.getWorld(), b);
     }
@@ -45,25 +46,25 @@ public class BankUtils {
     return AccountUtils.getAccount(owner).getBank(world);
   }
 
-  public static Double getBankBalance(UUID owner, String world) {
+  public static BigDecimal getBankBalance(UUID owner, String world) {
     if(AccountUtils.getAccount(owner).hasBank(world)) {
       if(AccountUtils.getAccount(owner).getStatus().getBank()) {
         Bank b = getBank(owner, world);
-        return AccountUtils.round(b.getGold());
+        return b.getGold();
       }
     }
-    return 0.0;
+    return BigDecimal.ZERO;
   }
 
-  public static Double getBankBalance(UUID owner) {
+  public static BigDecimal getBankBalance(UUID owner) {
     return getBankBalance(owner, TNE.instance.defaultWorld);
   }
 
-  public static void setBankBalance(UUID owner, String world, Double amount) {
+  public static void setBankBalance(UUID owner, String world, BigDecimal amount) {
     if(AccountUtils.getAccount(owner).getStatus().getBank()) {
       if(AccountUtils.getAccount(owner).hasBank(world)) {
         Bank bank = getBank(owner, world);
-        bank.setGold(AccountUtils.round(amount));
+        bank.setGold(amount);
       }
     }
   }

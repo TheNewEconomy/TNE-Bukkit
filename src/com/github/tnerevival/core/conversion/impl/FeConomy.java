@@ -27,6 +27,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 /**
  * Created by creatorfromhell on 11/13/2016.
@@ -55,7 +56,7 @@ public class FeConomy extends Converter {
       while (mysqlDB().results(index).next()) {
         String username = mysqlDB().results(index).getString(nameColumn);
         Double balance = mysqlDB().results(index).getDouble(balanceColumn);
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -71,7 +72,7 @@ public class FeConomy extends Converter {
       while (sqliteDB().results(index).next()) {
         String username = sqliteDB().results(index).getString(nameColumn);
         Double balance = sqliteDB().results(index).getDouble(balanceColumn);
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {
       e.printStackTrace();

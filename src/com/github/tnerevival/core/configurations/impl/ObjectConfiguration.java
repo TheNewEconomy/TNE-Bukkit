@@ -8,6 +8,7 @@ import com.github.tnerevival.core.objects.TNEInventoryObject;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryType;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class ObjectConfiguration extends Configuration {
@@ -49,13 +50,13 @@ public class ObjectConfiguration extends Configuration {
       for(String commandName : commandNames) {
 
         String id = (identifier != null)? identifier + ":" + commandName : commandName;
-        TNECommandObject command = new TNECommandObject(commandName.toLowerCase(), configuration.getDouble(base + "." + commandName + ".Cost"));
+        TNECommandObject command = new TNECommandObject(commandName.toLowerCase(), new BigDecimal(configuration.getDouble(base + "." + commandName + ".Cost")));
 
         if(configuration.contains(base + "." + commandName + ".SubCommands")) {
           Set<String> subCommands = configuration.getConfigurationSection(base + "." + commandName + ".SubCommands").getKeys(false);
 
           for(String subCommand : subCommands) {
-            TNECommandObject sub = new TNECommandObject(subCommand.toLowerCase(), configuration.getDouble(base + "." + commandName + ".SubCommands." + subCommand + ".Cost"));
+            TNECommandObject sub = new TNECommandObject(subCommand.toLowerCase(), new BigDecimal(configuration.getDouble(base + "." + commandName + ".SubCommands." + subCommand + ".Cost")));
             command.addSub(sub);
           }
         }
@@ -81,7 +82,7 @@ public class ObjectConfiguration extends Configuration {
         String id = (identifier != null)? identifier + ":" + inventoryName : inventoryName;
         boolean enabled = configuration.getBoolean(base + "." + inventoryName + ".Enabled");
         boolean timed = configuration.getBoolean(base + "." + inventoryName + ".Timed");
-        double cost = configuration.getDouble(base + "." + inventoryName + ".Cost");
+        BigDecimal cost = new BigDecimal(configuration.getDouble(base + "." + inventoryName + ".Cost"));
 
         TNEInventoryObject inventory = new TNEInventoryObject(inventoryName, enabled, timed, cost);
 
@@ -91,7 +92,7 @@ public class ObjectConfiguration extends Configuration {
           for(String packageName : packageNames) {
 
             long packageTime = configuration.getLong(base + "." + inventoryName + ".Packages" + "." + packageName + ".Time");
-            double packageCost = configuration.getDouble(base + "." + inventoryName + ".Packages" + "." + packageName + ".Cost");
+            BigDecimal packageCost = new BigDecimal(configuration.getDouble(base + "." + inventoryName + ".Packages" + "." + packageName + ".Cost"));
 
             inventory.addPackage(new TNEAccessPackage(packageName, packageTime, packageCost));
           }
@@ -180,17 +181,17 @@ public class ObjectConfiguration extends Configuration {
     return containsInventory(invType) && inventories.get(invType).isEnabled();
   }
 
-  public double getInventoryCost(InventoryType type, String world, String player) {
+  public BigDecimal getInventoryCost(InventoryType type, String world, String player) {
     if(inventoryEnabled(type, world, player)) {
       String invType = inventoryType(type);
       if(containsInventory(player + ":" + invType)) return inventories.get(player + ":" + invType).getCost();
       if(containsInventory(world + ":" + invType)) return inventories.get(world + ":" + invType).getCost();
-      return (containsInventory(invType))? inventories.get(invType).getCost() : 0.0;
+      return (containsInventory(invType))? inventories.get(invType).getCost() : BigDecimal.ZERO;
     }
-    return 0.0;
+    return BigDecimal.ZERO;
   }
 
-  public double getCommandCost(String command, String[] arguments, String world, String player) {
+  public BigDecimal getCommandCost(String command, String[] arguments, String world, String player) {
     TNECommandObject commandObject = commands.get(command);
     if(commands.containsKey(world + ":" + command)) {
       commandObject = commands.get(world + ":" + command);
@@ -209,6 +210,6 @@ public class ObjectConfiguration extends Configuration {
       }
       return commandObject.getCost();
     }
-    return 0;
+    return BigDecimal.ZERO;
   }
 }

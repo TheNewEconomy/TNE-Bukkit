@@ -7,12 +7,12 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.transaction.TransactionHistory;
-import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -101,8 +101,8 @@ public class MoneyHistoryCommand extends TNECommand {
       if (records.size() > 0) {
         for (Record r : records) {
           MISCUtils.debug((r == null) + "");
-          Double difference = AccountUtils.round(r.getBalance() - r.getOldBalance());
-          String amount = ((difference >= 0.0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
+          BigDecimal difference = r.getBalance().subtract(r.getOldBalance());
+          String amount = ((difference.compareTo(BigDecimal.ZERO) >= 0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
           String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -169,15 +170,15 @@ public class Shop implements Serializable {
     return null;
   }
 
-  public int getItem(ItemStack stack, double cost) {
+  public int getItem(ItemStack stack, BigDecimal cost) {
     return getItem(stack, cost, true);
   }
 
-  public int getItem(ItemStack stack, double cost, boolean buy) {
+  public int getItem(ItemStack stack, BigDecimal cost, boolean buy) {
     return getItem(stack, cost, buy, null);
   }
 
-  public int getItem(ItemStack stack, double cost, boolean buy, ItemStack trade) {
+  public int getItem(ItemStack stack, BigDecimal cost, boolean buy, ItemStack trade) {
     for(ShopEntry entry : items) {
       final ShopEntry temp = new ShopEntry(new SerializableItemStack(0, stack), cost, 0, buy, false, new SerializableItemStack(0, trade));
       if(entry.equals(temp)) {
@@ -191,7 +192,7 @@ public class Shop implements Serializable {
     if(items.size() >= 27) { return false; }
     Material mat = Material.getMaterial(entry.getItem().getName());
     if(hasItem(entry.getItem().toItemStack(), entry.getCost(), entry.isBuy())) {
-      if(getCost(mat) < 0.0 && entry.getTrade() != null && getTrade(mat) != null && entry.getTrade().getName().equals(getTrade(mat)) || getCost(mat) == entry.getCost()) {
+      if(getCost(mat).compareTo(BigDecimal.ZERO) < 0 && entry.getTrade() != null && getTrade(mat) != null && entry.getTrade().getName().equals(getTrade(mat)) || getCost(mat).compareTo(entry.getCost()) == 0) {
         return false;
       }
     }
@@ -199,15 +200,15 @@ public class Shop implements Serializable {
     return true;
   }
 
-  public boolean removeItem(ItemStack stack, double cost) {
+  public boolean removeItem(ItemStack stack, BigDecimal cost) {
     return removeItem(stack, cost, true);
   }
 
-  public boolean removeItem(ItemStack stack, double cost, boolean buy) {
+  public boolean removeItem(ItemStack stack, BigDecimal cost, boolean buy) {
     return removeItem(stack, cost, buy, null);
   }
 
-  public boolean removeItem(ItemStack stack, double cost, boolean buy, ItemStack trade) {
+  public boolean removeItem(ItemStack stack, BigDecimal cost, boolean buy, ItemStack trade) {
     Iterator<ShopEntry> i = items.iterator();
     final ShopEntry temp = new ShopEntry(new SerializableItemStack(0, stack), cost, 0, buy, false, new SerializableItemStack(0, trade));
     while(i.hasNext()) {
@@ -220,18 +221,18 @@ public class Shop implements Serializable {
     return false;
   }
 
-  public boolean hasItem(ItemStack stack, double cost) {
+  public boolean hasItem(ItemStack stack, BigDecimal cost) {
     return hasItem(stack, cost, true);
   }
 
-  public boolean hasItem(ItemStack stack, double cost, boolean buy) {
+  public boolean hasItem(ItemStack stack, BigDecimal cost, boolean buy) {
     return hasItem(stack, cost, buy, null);
   }
 
-  public boolean hasItem(ItemStack stack, double cost, boolean buy, ItemStack trade) {
+  public boolean hasItem(ItemStack stack, BigDecimal cost, boolean buy, ItemStack trade) {
     for(ShopEntry entry : items) {
       if(entry.getItem().toItemStack().getType().equals(stack.getType())
-          && entry.isBuy() == buy && entry.getCost() == cost) {
+          && entry.isBuy() == buy && entry.getCost().compareTo(cost) == 0) {
         if(trade != null && !trade.getType().equals(Material.AIR) && !entry.getTrade().toItemStack().equals(trade)) {
           return false;
         }
@@ -265,8 +266,8 @@ public class Shop implements Serializable {
       String stock = (entry.isUnlimited())? "---" : "" + ((entry.isBuy())? entry.getStock() : (entry.getMaxstock() - entry.getStock()));
       lore.add(ChatColor.WHITE + message + ChatColor.GOLD + stock);
 
-      if(entry.getCost() > 0.0 || entry.getCost() <= 0.0 && entry.getTrade() == null ||
-         entry.getCost() <= 0.0 && entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
+      if(entry.getCost().compareTo(BigDecimal.ZERO) > 0 || entry.getCost().compareTo(BigDecimal.ZERO) <= 0 && entry.getTrade() == null ||
+         entry.getCost().compareTo(BigDecimal.ZERO) <= 0 && entry.getTrade().toItemStack().getType().equals(Material.AIR)) {
         String cost = ChatColor.WHITE + ((entry.isBuy()) ? "Cost:" : "Receive:");
         lore.add(cost + " " + ChatColor.GOLD + entry.getCost());
       }
@@ -287,13 +288,13 @@ public class Shop implements Serializable {
     return inventory;
   }
 
-  public double getCost(Material mat) {
+  public BigDecimal getCost(Material mat) {
     for(ShopEntry entry : items) {
       if(Material.getMaterial(entry.getItem().getName()).equals(mat)) {
         return entry.getCost();
       }
     }
-    return 0.0;
+    return BigDecimal.ZERO;
   }
 
   public String getTrade(Material mat) {
@@ -309,17 +310,17 @@ public class Shop implements Serializable {
     return owner.equals(player);
   }
 
-  public void handlePayment(double amount) {
-    double split = amount;
+  public void handlePayment(BigDecimal amount) {
+    BigDecimal split = amount;
     for(ShareEntry entry : shares) {
-      double pay = Math.round((amount * entry.getPercent()) * 100.0) / 100.0;
-      split -= pay;
+      BigDecimal pay = amount.multiply(new BigDecimal(entry.getPercent())).multiply(new BigDecimal(100.0)).divide(new BigDecimal(100.0));
+      split = split.subtract(pay);
       AccountUtils.transaction(entry.getShareOwner().toString(), null, pay, TransactionType.MONEY_GIVE, getWorld());
     }
     AccountUtils.transaction(owner.toString(), null, split, TransactionType.MONEY_GIVE, getWorld());
   }
 
-  public double totalSharePercent() {
+  private double totalSharePercent() {
     double total = 0.00;
     for(ShareEntry entry : shares) {
       total += entry.getPercent();

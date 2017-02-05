@@ -15,6 +15,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -81,8 +83,8 @@ public class AuctionStartCommand extends TNECommand {
     Boolean silent = command.equalsIgnoreCase("sauction");
     Integer slot = player.getInventory().getHeldItemSlot();
     Integer amount = 1;
-    Double start = TNE.instance.api.getDouble("Core.Auctions.MinStart", world, IDFinder.getID(player).toString());
-    Double increment = TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, IDFinder.getID(player).toString());
+    BigDecimal start = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MinStart", world, IDFinder.getID(player).toString()));
+    BigDecimal increment = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, IDFinder.getID(player).toString()));
     Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, IDFinder.getID(player).toString());
     Boolean global = !TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, IDFinder.getID(player).toString());
     String permission = "";
@@ -93,8 +95,8 @@ public class AuctionStartCommand extends TNECommand {
         String[] split = arguments[i].toLowerCase().split(":");
         switch(split[0]) {
           case "start":
-            if(MISCUtils.isDouble(split[1], world) && CurrencyFormatter.translateDouble(split[1], world) > start) {
-              start = CurrencyFormatter.translateDouble(split[1], world);
+            if(MISCUtils.isDouble(split[1], world) && CurrencyFormatter.translateBigDecimal(split[1], world).compareTo(start) > 0) {
+              start = CurrencyFormatter.translateBigDecimal(split[1], world);
             } else {
               new Message("Messages.Auction.InvalidStart").translate(world, player);
               return false;
@@ -102,8 +104,8 @@ public class AuctionStartCommand extends TNECommand {
             break;
           case "increment":
             if(MISCUtils.isDouble(split[1], world)) {
-              Double value = CurrencyFormatter.translateDouble(split[1], world);
-              if(value > increment) {
+              BigDecimal value = CurrencyFormatter.translateBigDecimal(split[1], world);
+              if(value.compareTo(increment) > 0) {
                 increment = value;
               }
             }
@@ -161,12 +163,12 @@ public class AuctionStartCommand extends TNECommand {
 
     MISCUtils.debug((player == null) + "");
 
-    if(start > TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player))) {
-      start = TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player));
+    if(start.compareTo(new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player)))) > 0) {
+      start = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player)));
     }
 
-    if(increment > TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player))) {
-      increment = TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player));
+    if(increment.compareTo(new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player)))) > 0) {
+      increment = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player)));
     }
 
     if(time > TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player))) {

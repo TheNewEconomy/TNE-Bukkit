@@ -11,6 +11,8 @@ import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 public class MoneyPayCommand extends TNECommand {
 
   public MoneyPayCommand(TNE plugin) {
@@ -41,8 +43,8 @@ public class MoneyPayCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     if(arguments.length >= 2) {
-      Double value = CurrencyFormatter.translateDouble(arguments[1], IDFinder.getWorld(getPlayer(sender)));
-      if(value < 0) {
+      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], IDFinder.getWorld(getPlayer(sender)));
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
         new Message("Messages.Money.Negative").translate(IDFinder.getWorld(player), player);
         return false;
       }
@@ -51,16 +53,16 @@ public class MoneyPayCommand extends TNECommand {
         return false;
       }
 
-      if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.round(value), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
+      if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, value, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         MISCUtils.debug("Player has funds");
         if(getPlayer(sender, arguments[0]) != null) {
           MISCUtils.debug("Player not null");
-          boolean transaction = AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(getPlayer(sender, arguments[0])).toString(), AccountUtils.round(value), TransactionType.MONEY_PAY, IDFinder.getWorld(player));
+          boolean transaction = AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(getPlayer(sender, arguments[0])).toString(), value, TransactionType.MONEY_PAY, IDFinder.getWorld(player));
           MISCUtils.debug("" + transaction);
           if(transaction) {
             MISCUtils.debug("Paid player");
             Message paid = new Message("Messages.Money.Paid");
-            paid.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), AccountUtils.round(value)));
+            paid.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), value));
             paid.addVariable("$player", arguments[0]);
             paid.translate(IDFinder.getWorld(player), player);
             return true;
@@ -68,7 +70,7 @@ public class MoneyPayCommand extends TNECommand {
         }
       } else {
         Message insufficient = new Message("Messages.Money.Insufficient");
-        insufficient.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), AccountUtils.round(Double.valueOf(arguments[1]))));
+        insufficient.addVariable("$amount", CurrencyFormatter.format(player.getWorld().getName(), CurrencyFormatter.translateBigDecimal(arguments[1], getWorld(sender))));
         insufficient.translate(IDFinder.getWorld(player), player);
         return false;
       }

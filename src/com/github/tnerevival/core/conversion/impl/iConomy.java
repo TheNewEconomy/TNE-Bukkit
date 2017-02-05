@@ -28,6 +28,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 
 /**
@@ -53,7 +54,7 @@ public class iConomy extends Converter {
       while (mysqlDB().results(index).next()) {
         String username = mysqlDB().results(index).getString("username");
         Double balance = mysqlDB().results(index).getDouble("balance");
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), balance);
+        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -79,7 +80,7 @@ public class iConomy extends Converter {
       while((line = reader.readLine()) != null) {
         String[] split = line.split(" ");
         Double money = Double.parseDouble(split[1].split(":")[1]);
-        AccountUtils.convertedAdd(split[0].trim(), TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), money);
+        AccountUtils.convertedAdd(split[0].trim(), TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), new BigDecimal(money));
       }
     } catch(Exception e) {
       TNE.instance.getLogger().log(Level.WARNING, "Unable to load iConomy Data.");

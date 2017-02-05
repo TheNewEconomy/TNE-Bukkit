@@ -103,6 +103,9 @@ Core:
             #The character to use as the decimal place holder.
             Decimal: .
 
+            #The amount of digits to display after the decimal character.
+            DecimalPlaces: 2
+
             #Would you like to use an item as the currency?
             ItemCurrency: false
 

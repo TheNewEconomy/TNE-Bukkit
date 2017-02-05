@@ -5,6 +5,7 @@ import com.github.tnerevival.core.configurations.Configuration;
 import com.github.tnerevival.core.objects.MaterialObject;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -47,14 +48,14 @@ public class MaterialsConfiguration extends Configuration {
 
         MaterialObject material = new MaterialObject(materialName);
 
-        double buyCost = (configuration.contains(node + ".Buy"))? configuration.getDouble(node + ".Buy") : 0.0;
-        double sellCost = (configuration.contains(node + ".Sell"))? configuration.getDouble(node + ".Sell") : 0.0;
-        double useCost = (configuration.contains(node + ".Use"))? configuration.getDouble(node + ".Use") : 0.0;
-        double craftingCost = (configuration.contains(node + ".Crafting"))? configuration.getDouble(node + ".Crafting") : 0.0;
-        double enchantCost = (configuration.contains(node + ".Enchant"))? configuration.getDouble(node + ".Enchant") : 0.0;
-        double placeCost = (configuration.contains(node + ".Place"))? configuration.getDouble(node + ".Place") : 0.0;
-        double mineCost = (configuration.contains(node + ".Mine"))? configuration.getDouble(node + ".Mine") : 0.0;
-        double smeltCost = (configuration.contains(node + ".Smelt"))? configuration.getDouble(node + ".Smelt") : 0.0;
+        BigDecimal buyCost = (configuration.contains(node + ".Buy"))? new BigDecimal(configuration.getDouble(node + ".Buy")) : BigDecimal.ZERO;
+        BigDecimal sellCost = (configuration.contains(node + ".Sell"))? new BigDecimal(configuration.getDouble(node + ".Sell")) : BigDecimal.ZERO;
+        BigDecimal useCost = (configuration.contains(node + ".Use"))? new BigDecimal(configuration.getDouble(node + ".Use")) : BigDecimal.ZERO;
+        BigDecimal craftingCost = (configuration.contains(node + ".Crafting"))? new BigDecimal(configuration.getDouble(node + ".Crafting")) : BigDecimal.ZERO;
+        BigDecimal enchantCost = (configuration.contains(node + ".Enchant"))? new BigDecimal(configuration.getDouble(node + ".Enchant")) : BigDecimal.ZERO;
+        BigDecimal placeCost = (configuration.contains(node + ".Place"))? new BigDecimal(configuration.getDouble(node + ".Place")) : BigDecimal.ZERO;
+        BigDecimal mineCost = (configuration.contains(node + ".Mine"))? new BigDecimal(configuration.getDouble(node + ".Mine")) : BigDecimal.ZERO;
+        BigDecimal smeltCost = (configuration.contains(node + ".Smelt"))? new BigDecimal(configuration.getDouble(node + ".Smelt")) : BigDecimal.ZERO;
 
         material.setItem(item);
         material.setCost(buyCost);

@@ -21,6 +21,7 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Claim;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.H2;
 import com.github.tnerevival.core.db.MySQL;
@@ -43,6 +44,7 @@ import com.github.tnerevival.utils.SignUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -90,9 +92,9 @@ public class Alpha5_0 extends Version {
             sql().results(transactionIndex).getString("trans_player"),
             sql().results(transactionIndex).getString("trans_world"),
             sql().results(transactionIndex).getString("trans_type"),
-            sql().results(transactionIndex).getDouble("trans_cost"),
-            sql().results(transactionIndex).getDouble("trans_oldBalance"),
-            sql().results(transactionIndex).getDouble("trans_balance"),
+            new BigDecimal(sql().results(transactionIndex).getDouble("trans_cost")),
+            new BigDecimal(sql().results(transactionIndex).getDouble("trans_oldBalance")),
+            new BigDecimal(sql().results(transactionIndex).getDouble("trans_balance")),
             sql().results(transactionIndex).getLong("trans_time")
         );
         TransactionHistory history = (transactions.containsKey(r.getInitiator()))? transactions.get(r.getInitiator()) : new TransactionHistory();
@@ -122,9 +124,9 @@ public class Alpha5_0 extends Version {
             sql().results(transactionIndex).getString("trans_player"),
             sql().results(transactionIndex).getString("trans_world"),
             sql().results(transactionIndex).getString("trans_type"),
-            sql().results(transactionIndex).getDouble("trans_cost"),
-            sql().results(transactionIndex).getDouble("trans_oldBalance"),
-            sql().results(transactionIndex).getDouble("trans_balance"),
+            new BigDecimal(sql().results(transactionIndex).getDouble("trans_cost")),
+            new BigDecimal(sql().results(transactionIndex).getDouble("trans_oldBalance")),
+            new BigDecimal(sql().results(transactionIndex).getDouble("trans_balance")),
             sql().results(transactionIndex).getLong("trans_time")
         );
         history.add(r);
@@ -454,8 +456,8 @@ public class Alpha5_0 extends Version {
         auction.setWorld(sql().results(auctionIndex).getString("auction_world"));
         auction.setSilent(SQLDatabase.boolFromDB(sql().results(auctionIndex).getInt("auction_silent")));
         auction.setItem(SerializableItemStack.fromString(sql().results(auctionIndex).getString("auction_item")));
-        auction.setCost(new TransactionCost(Double.valueOf(sql().results(auctionIndex).getString("auction_cost"))));
-        auction.setIncrement(sql().results(auctionIndex).getDouble("auction_increment"));
+        auction.setCost(new TransactionCost(CurrencyFormatter.translateBigDecimal(sql().results(auctionIndex).getString("auction_cost"), auction.getWorld())));
+        auction.setIncrement(new BigDecimal(sql().results(auctionIndex).getDouble("auction_increment")));
         auction.setGlobal(SQLDatabase.boolFromDB(sql().results(auctionIndex).getInt("auction_global")));
         auction.setTime(sql().results(auctionIndex).getInt("auction_time"));
         auction.setNode(sql().results(auctionIndex).getString("auction_node"));
@@ -484,8 +486,8 @@ public class Alpha5_0 extends Version {
         auction.setWorld(sql().results(auctionIndex).getString("auction_world"));
         auction.setSilent(SQLDatabase.boolFromDB(sql().results(auctionIndex).getInt("auction_silent")));
         auction.setItem(SerializableItemStack.fromString(sql().results(auctionIndex).getString("auction_item")));
-        auction.setCost(new TransactionCost(Double.valueOf(sql().results(auctionIndex).getString("auction_cost"))));
-        auction.setIncrement(sql().results(auctionIndex).getDouble("auction_increment"));
+        auction.setCost(new TransactionCost(CurrencyFormatter.translateBigDecimal(sql().results(auctionIndex).getString("auction_cost"), auction.getWorld())));
+        auction.setIncrement(new BigDecimal(sql().results(auctionIndex).getDouble("auction_increment")));
         auction.setGlobal(SQLDatabase.boolFromDB(sql().results(auctionIndex).getInt("auction_global")));
         auction.setTime(sql().results(auctionIndex).getInt("auction_time"));
         auction.setNode(sql().results(auctionIndex).getString("auction_node"));
@@ -554,7 +556,7 @@ public class Alpha5_0 extends Version {
             UUID.fromString(sql().results(claimIndex).getString("claim_player")),
             sql().results(claimIndex).getInt("claim_lot"),
             SerializableItemStack.fromString(sql().results(claimIndex).getString("claim_item")),
-            new TransactionCost(Double.valueOf(sql().results(claimIndex).getString("claim_cost")))
+            new TransactionCost(new BigDecimal(Double.valueOf(sql().results(claimIndex).getString("claim_cost"))))
         );
         claim.setPaid(SQLDatabase.boolFromDB(sql().results(claimIndex).getInt("claim_paid")));
 
@@ -580,7 +582,7 @@ public class Alpha5_0 extends Version {
             UUID.fromString(sql().results(claimIndex).getString("claim_player")),
             sql().results(claimIndex).getInt("claim_lot"),
             SerializableItemStack.fromString(sql().results(claimIndex).getString("claim_item")),
-            new TransactionCost(Double.valueOf(sql().results(claimIndex).getString("claim_cost")))
+            new TransactionCost(new BigDecimal(Double.valueOf(sql().results(claimIndex).getString("claim_cost"))))
         );
         claim.setPaid(SQLDatabase.boolFromDB(sql().results(claimIndex).getInt("claim_paid")));
         sql().close();
@@ -720,7 +722,7 @@ public class Alpha5_0 extends Version {
       Entry banks = entry.getValue().getEntry("banks");
 
       Account account = new Account(uid, (Integer) info.getData("accountnumber"));
-      Map<String, Double> balanceMap = new HashMap<>();
+      Map<String, BigDecimal> balanceMap = new HashMap<>();
       Map<String, Bank> bankMap = new HashMap<>();
 
       account.setAccountNumber((Integer) info.getData("accountnumber"));
@@ -734,7 +736,7 @@ public class Alpha5_0 extends Version {
       while(balanceIterator.hasNext()) {
         java.util.Map.Entry<String, Object> balanceEntry = balanceIterator.next();
 
-        balanceMap.put(balanceEntry.getKey(), (Double)balanceEntry.getValue());
+        balanceMap.put(balanceEntry.getKey(), new BigDecimal((Double)balanceEntry.getValue()));
       }
       account.setBalances(balanceMap);
 
@@ -744,7 +746,7 @@ public class Alpha5_0 extends Version {
         java.util.Map.Entry<String, Object> bankEntry = bankIterator.next();
 
         //TODO: Convert old banks to new banks and vaults
-        //bankMap.put(bankEntry.getKey(), Bank.fromString((String)bankEntry.getValue()));
+        bankMap.put(bankEntry.getKey(), Bank.fromString((String)bankEntry.getValue(), bankEntry.getKey()));
       }
       account.setBanks(bankMap);
 
@@ -792,8 +794,8 @@ public class Alpha5_0 extends Version {
       auction.setWorld((String)info.getData("world"));
       auction.setSilent((boolean)info.getData("silent"));
       auction.setItem(SerializableItemStack.fromString((String)info.getData("item")));
-      auction.setCost(new TransactionCost((double)info.getData("cost")));
-      auction.setIncrement((double)info.getData("increment"));
+      auction.setCost(new TransactionCost(new BigDecimal((double)info.getData("cost"))));
+      auction.setIncrement(new BigDecimal((double)info.getData("increment")));
       auction.setGlobal((boolean)info.getData("global"));
       auction.setTime((int)info.getData("time"));
       auction.setNode((String)info.getData("node"));
@@ -808,7 +810,7 @@ public class Alpha5_0 extends Version {
           UUID.fromString((String)info.getData("player")),
           (int)info.getData("lot"),
           SerializableItemStack.fromString((String)info.getData("item")),
-          new TransactionCost((double)info.getData("cost"))
+          new TransactionCost(new BigDecimal((double)info.getData("cost")))
       );
       claim.setPaid((boolean)info.getData("paid"));
 
@@ -837,9 +839,9 @@ public class Alpha5_0 extends Version {
             (String) info.getData("player"),
             (String) info.getData("world"),
             TransactionType.fromID((String) info.getData("type")),
-            new TransactionCost((Double) info.getData("cost")),
-            (Double) info.getData("oldBalance"),
-            (Double) info.getData("balance"),
+            new TransactionCost(new BigDecimal((double) info.getData("cost"))),
+            new BigDecimal((Double) info.getData("oldBalance")),
+                new BigDecimal((Double) info.getData("balance")),
             (Long) info.getData("time")
         );
       }
@@ -848,174 +850,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveFlat(File file) {
-    Iterator<java.util.Map.Entry<UUID, Account>> accIT = TNE.instance.manager.accounts.entrySet().iterator();
-
-    Section accounts = new Section("accounts");
-
-    while(accIT.hasNext()) {
-      java.util.Map.Entry<UUID, Account> entry = accIT.next();
-
-      Account acc = entry.getValue();
-      Article account = new Article(entry.getKey().toString());
-      //Info
-      Entry info = new Entry("info");
-      info.addData("accountnumber", acc.getAccountNumber());
-      info.addData("uuid", acc.getUid());
-      info.addData("status", acc.getStatus().getName());
-      info.addData("inventory_credits", acc.creditsToString());
-      info.addData("command_credits", acc.commandsToString());
-      info.addData("pin", acc.getPin());
-      account.addEntry(info);
-      //Balances
-      Entry balances = new Entry("balances");
-      Iterator<java.util.Map.Entry<String, Double>> balIT = acc.getBalances().entrySet().iterator();
-
-      while(balIT.hasNext()) {
-        java.util.Map.Entry<String, Double> balanceEntry = balIT.next();
-        balances.addData(balanceEntry.getKey(), balanceEntry.getValue());
-      }
-      account.addEntry(balances);
-
-      Entry banks = new Entry("banks");
-
-      Iterator<java.util.Map.Entry<String, Bank>> bankIT = acc.getBanks().entrySet().iterator();
-
-      while(bankIT.hasNext()) {
-        java.util.Map.Entry<String, Bank> bankEntry = bankIT.next();
-        banks.addData(bankEntry.getKey(), bankEntry.getValue().toString());
-      }
-      account.addEntry(banks);
-
-      accounts.addArticle(entry.getKey().toString(), account);
-    }
-
-    Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance.manager.ecoIDs.entrySet().iterator();
-
-    Section ids = new Section("IDS");
-
-    while(idsIT.hasNext()) {
-      Map.Entry<String, UUID> idEntry = idsIT.next();
-
-      Article a = new Article(idEntry.getKey());
-      Entry e = new Entry("info");
-
-      e.addData("username", idEntry.getKey());
-      e.addData("uuid", idEntry.getValue().toString());
-      a.addEntry(e);
-
-      ids.addArticle(idEntry.getKey(), a);
-    }
-
-    Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance.manager.shops.entrySet().iterator();
-    Section shops = new Section("SHOPS");
-
-    while(shopIT.hasNext()) {
-      Map.Entry<String, Shop> shopEntry = shopIT.next();
-      Shop s = shopEntry.getValue();
-
-      Article a = new Article(s.getName());
-      Entry info = new Entry("info");
-
-      info.addData("owner", s.getOwner().toString());
-      info.addData("world", s.getWorld());
-      info.addData("hidden", s.isHidden());
-      info.addData("admin", s.isAdmin());
-      MISCUtils.debug("Items:" + s.itemsToString());
-      info.addData("items", s.itemsToString());
-      info.addData("blacklist", s.listToString(true));
-      info.addData("whitelist", s.listToString(false));
-      info.addData("shares", s.sharesToString());
-      a.addEntry(info);
-
-      shops.addArticle(s.getName(), a);
-    }
-
-    Section auctions = new Section("AUCTIONS");
-    for(Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
-      Article a = new Article(auction.getLotNumber() + "");
-      Entry info = new Entry("info");
-      info.addData("lot", auction.getLotNumber());
-      info.addData("added", auction.getAdded());
-      info.addData("start", auction.getStartTime());
-      info.addData("player", auction.getPlayer().toString());
-      info.addData("world", auction.getWorld());
-      info.addData("silent", auction.getSilent());
-      info.addData("item", auction.getItem().toString());
-      info.addData("cost", auction.getCost().getAmount());
-      info.addData("increment", auction.getIncrement());
-      info.addData("global", auction.getGlobal());
-      info.addData("time", auction.getTime());
-      info.addData("node", auction.getNode());
-      a.addEntry(info);
-      auctions.addArticle(auction.getLotNumber() + "", a);
-    }
-
-    Section claims = new Section("CLAIMS");
-    for(Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
-      Article a = new Article(claim.getLot() + "");
-      Entry info = new Entry("info");
-      info.addData("player", claim.getPlayer().toString());
-      info.addData("lot", claim.getLot());
-      info.addData("item", claim.getItem().toString());
-      info.addData("paid", claim.isPaid());
-      info.addData("cost", claim.getCost().getAmount());
-      a.addEntry(info);
-      claims.addArticle(claim.getLot() + "", a);
-    }
-
-    Iterator<Map.Entry<SerializableLocation, TNESign>> signIT = TNE.instance.manager.signs.entrySet().iterator();
-    Section signs = new Section("SIGNS");
-
-    while(signIT.hasNext()) {
-      Map.Entry<SerializableLocation, TNESign> signEntry = signIT.next();
-      TNESign sign = signEntry.getValue();
-
-      Article a = new Article(sign.getLocation().toString());
-      Entry info = new Entry("info");
-
-      info.addData("owner", sign.getOwner().toString());
-      info.addData("type", sign.getType().getName());
-      info.addData("extra", sign.getMeta());
-      info.addData("location", sign.getLocation().toString());
-      a.addEntry(info);
-
-      signs.addArticle(sign.getLocation().toString(), a);
-    }
-
-    Section transactions = new Section("TRANSACTIONS");
-    for(Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
-      for(Record r : entry.getValue().getRecords()) {
-        Article a = new Article(r.getId());
-        Entry info = new Entry("info");
-        info.addData("id", r.getId());
-        info.addData("initiator", r.getInitiator());
-        info.addData("player", r.getPlayer());
-        info.addData("world", r.getWorld());
-        info.addData("type", r.getType());
-        info.addData("cost", r.getCost());
-        info.addData("oldBalance", r.getOldBalance());
-        info.addData("balance", r.getBalance());
-        info.addData("time", r.getTime());
-        a.addEntry(info);
-        transactions.addArticle(r.getId(), a);
-      }
-    }
-
-    try {
-      db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
-      FlatFileConnection connection = (FlatFileConnection)db.connection();
-      connection.getOOS().writeDouble(versionNumber());
-      connection.getOOS().writeObject(accounts);
-      connection.getOOS().writeObject(ids);
-      connection.getOOS().writeObject(shops);
-      connection.getOOS().writeObject(auctions);
-      connection.getOOS().writeObject(claims);
-      connection.getOOS().writeObject(signs);
-      connection.getOOS().writeObject(transactions);
-      connection.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    //We no longer need to save 5.0 in 5.2 :3
   }
 
   @Override
@@ -1050,47 +885,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveMySQL() {
-    createTables("mysql");
-    String table = prefix + "_INFO";
-    db = new MySQL(mysqlHost, mysqlPort, mysqlDatabase, mysqlUser, mysqlPassword);
-    mysql().executePreparedUpdate("Update " + table + " SET version = ?, server_name = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()), TNE.instance.getServer().getServerName() });
-
-    if(TNE.instance.saveManager.cache) {
-      if(TNE.instance.cacheWorker != null) {
-        TNE.instance.cacheWorker.run();
-      } else {
-        for (Account acc : TNE.instance.manager.accounts.values()) {
-          saveAccount(acc);
-        }
-
-        for (Map.Entry<String, UUID> entry : TNE.instance.manager.ecoIDs.entrySet()) {
-          saveID(entry.getKey(), entry.getValue());
-        }
-
-        for (Shop s : TNE.instance.manager.shops.values()) {
-          saveShop(s);
-        }
-
-        for (Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
-          saveAuction(auction);
-        }
-
-        for (Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
-          saveClaim(claim);
-        }
-
-        for (TNESign sign : TNE.instance.manager.signs.values()) {
-          saveSign(sign);
-        }
-
-        for (Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
-          for (Record r : entry.getValue().getRecords()) {
-            saveTransaction(r);
-          }
-        }
-      }
-    }
-    mysql().close();
+    //We no longer need to save 5.0 in 5.2 :3
   }
 
   @Override
@@ -1135,48 +930,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveH2() {
-    createTables("h2");
-    String table = prefix + "_INFO";
-    db = new H2(h2File, mysqlUser, mysqlPassword);
-    h2().executePreparedUpdate("Update " + table + " SET version = ? WHERE id = 1;", new Object[] { String.valueOf(versionNumber()) });
-
-    if(TNE.instance.saveManager.cache) {
-      if (TNE.instance.cacheWorker != null) {
-        TNE.instance.cacheWorker.run();
-      } else {
-        for (Account acc : TNE.instance.manager.accounts.values()) {
-          saveAccount(acc);
-        }
-
-        for (Map.Entry<String, UUID> entry : TNE.instance.manager.ecoIDs.entrySet()) {
-          saveID(entry.getKey(), entry.getValue());
-        }
-
-        for (Shop s : TNE.instance.manager.shops.values()) {
-          saveShop(s);
-        }
-
-        for (Auction auction : TNE.instance.manager.auctionManager.getJoined()) {
-          saveAuction(auction);
-        }
-
-        for (Claim claim : TNE.instance.manager.auctionManager.unclaimed) {
-          saveClaim(claim);
-        }
-
-        for (TNESign sign : TNE.instance.manager.signs.values()) {
-          saveSign(sign);
-        }
-
-        for (Map.Entry<String, TransactionHistory> entry : TNE.instance.manager.transactions.transactionHistory.entrySet()) {
-          for (Record r : entry.getValue().getRecords()) {
-            saveTransaction(r);
-          }
-        }
-      }
-    }
-
-    h2().close();
+    //We no longer need to save 5.0 in 5.2 :3
   }
 
   @Override

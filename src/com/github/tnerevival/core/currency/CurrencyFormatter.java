@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.MISCUtils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,15 +27,15 @@ import java.util.Map;
  */
 public class CurrencyFormatter {
 
-  public static String format(String world, double amount) {
+  public static String format(String world, BigDecimal amount) {
     return format(TNE.instance.manager.currencyManager.get(world), amount);
   }
 
-  public static String format(String world, String name, double amount) {
+  public static String format(String world, String name, BigDecimal amount) {
     return format(TNE.instance.manager.currencyManager.get(world, name), amount);
   }
 
-  public static String format(Currency currency, double amount) {
+  public static String format(Currency currency, BigDecimal amount) {
 
     if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
 
@@ -69,8 +70,14 @@ public class CurrencyFormatter {
     return formatted;
   }
 
-  private static String shorten(double balance, String decimal) {
-    Long dollars = (long) Math.floor(balance);
+  private static int getWhole(BigDecimal number) {
+    BigDecimal bigDecimal = new BigDecimal("-1.30").setScale(2, BigDecimal.ROUND_HALF_UP);
+    BigDecimal fractionValue =  bigDecimal.remainder(BigDecimal.ONE);
+    return bigDecimal.subtract(fractionValue).setScale(0).intValue();
+  }
+
+  private static String shorten(BigDecimal balance, String decimal) {
+    Integer dollars = getWhole(balance);
     if (dollars < 1000) {
       return "" + dollars;
     }
@@ -101,5 +108,14 @@ public class CurrencyFormatter {
   public static Double translateDouble(String value, String currency, String world) {
     String decimal = TNE.instance.manager.currencyManager.get(world, currency).getDecimal();
     return Double.valueOf(value.replace(decimal, "."));
+  }
+
+  public static BigDecimal translateBigDecimal(String value, String world) {
+    String major = TNE.instance.manager.currencyManager.get(world).getMajor();
+    return translateBigDecimal(value, major, world);
+  }
+
+  public static BigDecimal translateBigDecimal(String value, String currency, String world) {
+    return new BigDecimal(translateDouble(value, currency, world));
   }
 }
