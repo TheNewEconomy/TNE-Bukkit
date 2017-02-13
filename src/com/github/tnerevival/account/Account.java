@@ -1,6 +1,7 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.credits.CreditsEntry;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Location;
 

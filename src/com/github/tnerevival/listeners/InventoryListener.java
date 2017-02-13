@@ -18,8 +18,8 @@ package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
-import com.github.tnerevival.account.InventoryTimeTracking;
 import com.github.tnerevival.account.Vault;
+import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.InventoryManager;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
@@ -141,6 +141,21 @@ public class InventoryListener implements Listener {
       MISCUtils.debug("Exiting click event");
     }
 
+    boolean tracked = inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault");
+    /*if(tracked) {
+      if(event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
+        if(slot < inventory.getSize()) {
+          sendSlotChange(id, world, slot, inventory.getItem(slot));
+        } else {
+          sendMoveOther(id, world, event.getCurrentItem());
+        }
+      } else if(event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) {
+        sendCollectCursor(id, world, slot, event.getCursor(), event.getView().getTopInventory());
+      } else if(!event.getAction().equals(InventoryAction.NOTHING) && slot < inventory.getSize()) {
+        sendSlotChange(id, world, slot, event.getCurrentItem());
+      }
+    }*/
+
     if(inventory.getTitle() != null) {
       if(inventory.getTitle().toLowerCase().contains("vault")) {
         UUID owner = Vault.parseTitle(inventory.getTitle());
@@ -161,10 +176,11 @@ public class InventoryListener implements Listener {
           final UUID uid = id;
           final Material material = event.getView().getItem(slot).getType();
           final String fworld = world;
+          final Inventory inv = inventory;
           Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
-              InventoryManager.handleAllCursor(uid, fworld, material);
+              InventoryManager.handleAllCursor(uid, fworld, material, inv);
             }
           }, 1L);
         }

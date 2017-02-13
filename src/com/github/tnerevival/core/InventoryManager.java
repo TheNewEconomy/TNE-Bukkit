@@ -18,8 +18,8 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
-import com.github.tnerevival.account.InventoryTimeTracking;
 import com.github.tnerevival.account.Vault;
+import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -46,7 +46,7 @@ public class InventoryManager {
     }
   }
 
-  public static void handleAllCursor(UUID player, String world, Material material) {
+  public static void handleAllCursor(UUID player, String world, Material material, Inventory previous) {
     Inventory inventory = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
       UUID owner = Vault.parseTitle(inventory.getTitle());
@@ -54,8 +54,10 @@ public class InventoryManager {
 
       vault.removeAll(material);
       for(int i = 0; i < inventory.getSize(); i++) {
-        if(inventory.getItem(i) != null && inventory.getItem(i).getType().equals(material)) {
-          vault.setItem(i, inventory.getItem(i));
+        if(previous.getItem(i) != null && previous.getItem(i).equals(material)) {
+          if(inventory.getItem(i) == null || inventory.getItem(i) != null && !compareItems(previous.getItem(i), inventory.getItem(i))) {
+            vault.setItem(i, inventory.getItem(i));
+          }
         }
       }
 
@@ -71,12 +73,13 @@ public class InventoryManager {
       UUID owner = Vault.parseTitle(inventory.getTitle());
       ItemStack current = inventory.getItem(slot);
       boolean change = false;
+      if(current == null && previous == null) return;
       if(current != null && previous == null) {
         change = true;
-      } else if(current == null && previous != null) {
+      } else if(current == null) {
         change = true;
-      } else if(current != null && previous != null){
-        if(!previous.equals(current)) {
+      } else {
+        if(!compareItems(previous, current)) {
           change = true;
         }
       }
@@ -92,4 +95,12 @@ public class InventoryManager {
     }
   }
 
+  private static boolean compareItems(ItemStack previous, ItemStack current) {
+    if(!previous.getType().equals(current.getType())) return false;
+    if(previous.getAmount() != current.getAmount()) return false;
+    if(previous.getDurability() != current.getDurability()) return false;
+    if(!previous.getItemMeta().equals(current.getItemMeta())) return false;
+    if(!previous.getEnchantments().equals(current.getEnchantments())) return false;
+    return true;
+  }
 }

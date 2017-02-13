@@ -1,4 +1,4 @@
-package com.github.tnerevival.account;
+package com.github.tnerevival.account.credits;
 
 import java.util.HashMap;
 

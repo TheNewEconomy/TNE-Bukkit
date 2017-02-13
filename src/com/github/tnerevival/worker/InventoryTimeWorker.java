@@ -3,7 +3,7 @@ package com.github.tnerevival.worker;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
-import com.github.tnerevival.account.InventoryTimeTracking;
+import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.entity.Player;

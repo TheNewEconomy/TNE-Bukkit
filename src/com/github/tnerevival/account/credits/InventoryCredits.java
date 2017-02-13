@@ -1,4 +1,4 @@
-package com.github.tnerevival.account;
+package com.github.tnerevival.account.credits;
 
 import com.github.tnerevival.TNE;
 import org.bukkit.entity.Player;
