@@ -27,6 +27,7 @@ public class Currency {
   private boolean worldDefault = true;
   private BigDecimal balance;
   private boolean item;
+  private boolean trackChest;
   private String name;
   private String format;
   private double rate;
@@ -67,6 +68,14 @@ public class Currency {
 
   public void setItem(boolean item) {
     this.item = item;
+  }
+
+  public boolean canTrackChest() {
+    return trackChest;
+  }
+
+  public void setTrackChest(boolean trackChest) {
+    this.trackChest = trackChest;
   }
 
   public String getName() {
