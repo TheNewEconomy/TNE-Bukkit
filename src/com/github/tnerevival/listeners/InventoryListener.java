@@ -155,7 +155,6 @@ public class InventoryListener implements Listener {
         sendSlotChange(id, world, slot, event.getCurrentItem());
       }
     }*/
-
     if(inventory.getTitle() != null) {
       if(inventory.getTitle().toLowerCase().contains("vault")) {
         UUID owner = Vault.parseTitle(inventory.getTitle());
@@ -176,11 +175,10 @@ public class InventoryListener implements Listener {
           final UUID uid = id;
           final Material material = event.getView().getItem(slot).getType();
           final String fworld = world;
-          final Inventory inv = inventory;
           Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
-              InventoryManager.handleAllCursor(uid, fworld, material, inv);
+              InventoryManager.handleAllCursor(uid, fworld, material);
             }
           }, 1L);
         }

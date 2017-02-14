@@ -20,12 +20,15 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -46,20 +49,51 @@ public class InventoryManager {
     }
   }
 
-  public static void handleAllCursor(UUID player, String world, Material material, Inventory previous) {
+  public static void handleAllCursor(UUID player, String world, Material material) {
     Inventory inventory = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
       UUID owner = Vault.parseTitle(inventory.getTitle());
       Vault vault = TNE.instance.manager.accounts.get(owner).getVault(world);
 
-      vault.removeAll(material);
-      for(int i = 0; i < inventory.getSize(); i++) {
-        if(previous.getItem(i) != null && previous.getItem(i).equals(material)) {
-          if(inventory.getItem(i) == null || inventory.getItem(i) != null && !compareItems(previous.getItem(i), inventory.getItem(i))) {
+      Iterator<SerializableItemStack> i = vault.getItems().iterator();
+
+      while(i.hasNext()) {
+        SerializableItemStack item = i.next();
+
+        if(item.toItemStack().getType().equals(material) && inventory.getItem(item.getSlot()) == null) {
+          MISCUtils.debug(ChatColor.RED + "REMOVING ITEM FROM SLOT " + item.getSlot());
+          i.remove();
+        } else if(item.toItemStack().getType().equals(material) && inventory.getItem(item.getSlot()) != null && inventory.getItem(item.getSlot()).getAmount() != item.getAmount()) {
+          item.setAmount(inventory.getItem(item.getSlot()).getAmount());
+          vault.setItem(item.getSlot(), item.toItemStack());
+        }
+      }
+
+      /*for(int i = 0; i < inventory.getSize(); i++) {
+        MISCUtils.debug("Slot " + i);
+        if(vault.getItem(i) != null) MISCUtils.debug(vault.getItem(i).toItemStack().getType().name());
+        else MISCUtils.debug("vault item is null");
+        if(inventory.getItem(i) != null) MISCUtils.debug(inventory.getItem(i).getType().name());
+        else MISCUtils.debug("item is null");
+
+        if(vault.getItem(i) != null && inventory.getItem(i) == null) {
+          if(inventory.getItem(i) == null) {
+            vault.removeItem(i);
+          } else {
             vault.setItem(i, inventory.getItem(i));
           }
         }
-      }
+
+        /*if(vault.getItem(i) != null && vault.getItem(i).toItemStack().getType().equals(material)) {
+          if(vault.getItem(i) != null && inventory.getItem(i) == null || inventory.getItem(i) != null && vault.getItem(i) != null && !compareItems(vault.getItem(i).toItemStack(), inventory.getItem(i))) {
+            if(inventory.getItem(i) == null) {
+              vault.removeItem(i);
+            } else {
+              vault.setItem(i, inventory.getItem(i));
+            }
+          }
+        }
+      }*/
 
       vault.update(player);
       TNE.instance.manager.accounts.get(owner).setVault(world, vault);
