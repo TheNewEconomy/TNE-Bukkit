@@ -18,18 +18,17 @@ package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
-import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.InventoryManager;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
+import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -95,20 +94,13 @@ public class InventoryListener implements Listener {
       }
     }
 
+
     if(inventory.getTitle() != null) {
-      if(inventory.getTitle().toLowerCase().contains("shop")) {
+      boolean open = TNE.instance.inventoryManager.getInventory(player) == null;
+      TNEInventory tneInventory = (TNE.instance.inventoryManager.getInventory(inventory) != null)? TNE.instance.inventoryManager.getInventory(inventory) : TNE.instance.inventoryManager.generateInventory(inventory, (Player)event.getPlayer(), world);
 
-      } else if(inventory.getTitle().toLowerCase().contains("vault")) {
-        MISCUtils.debug("Vault has been opened!");
-        UUID owner = Vault.parseTitle(inventory.getTitle());
-        Vault vault = TNE.instance.manager.accounts.get(owner).getVault(world);
-        if(!vault.viewers.contains(player)) {
-          vault.viewers.add(player);
-          TNE.instance.manager.accounts.get(owner).setVault(world, vault);
-          MISCUtils.debug("ADDING VAULT VIEWER!!!!!!!!!!!!");
-        }
-      } else if(inventory.getTitle().toLowerCase().contains("auction")) {
-
+      if(tneInventory != null && open) {
+        event.setCancelled(!tneInventory.onOpen(player));
       }
     }
   }
@@ -140,50 +132,6 @@ public class InventoryListener implements Listener {
       }
       MISCUtils.debug("Exiting click event");
     }
-
-    boolean tracked = inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault");
-    /*if(tracked) {
-      if(event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
-        if(slot < inventory.getSize()) {
-          sendSlotChange(id, world, slot, inventory.getItem(slot));
-        } else {
-          sendMoveOther(id, world, event.getCurrentItem());
-        }
-      } else if(event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) {
-        sendCollectCursor(id, world, slot, event.getCursor(), event.getView().getTopInventory());
-      } else if(!event.getAction().equals(InventoryAction.NOTHING) && slot < inventory.getSize()) {
-        sendSlotChange(id, world, slot, event.getCurrentItem());
-      }
-    }*/
-    if(inventory.getTitle() != null) {
-      if(inventory.getTitle().toLowerCase().contains("vault")) {
-        UUID owner = Vault.parseTitle(inventory.getTitle());
-        Vault vault = TNE.instance.manager.accounts.get(owner).getVault(world);
-
-        if(!event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR) && slot < inventory.getSize()) {
-          final UUID uid = id;
-          final int fslot = slot;
-          final ItemStack stack = inventory.getItem(slot);
-          final String fworld = world;
-          Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-              InventoryManager.handleSlotChange(uid, fworld, fslot, stack);
-            }
-          }, 1L);
-        } else if(event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) {
-          final UUID uid = id;
-          final Material material = event.getView().getItem(slot).getType();
-          final String fworld = world;
-          Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-              InventoryManager.handleAllCursor(uid, fworld, material);
-            }
-          }, 1L);
-        }
-      }
-    }
   }
 
   @EventHandler
@@ -209,6 +157,10 @@ public class InventoryListener implements Listener {
       tracking.setClosed(true);
       tracking.setCloseTime(new Date().getTime());
     }
-  }
 
+    if(TNE.instance.inventoryManager.getInventory(player) != null) {
+      TNE.instance.inventoryManager.getInventory(player).onClose(player);
+      TNE.instance.inventoryManager.removePlayer(player);
+    }
+  }
 }

@@ -16,8 +16,10 @@
  */
 package com.github.tnerevival.core.inventory;
 
+import com.github.tnerevival.account.IDFinder;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -27,29 +29,83 @@ import java.util.*;
  **/
 public class TNEInventory {
 
-  public List<TNEInventoryAction> actionList = new ArrayList<>();
+  public static List<String> watchList = new ArrayList<> (Arrays.asList("vault", "auction", "shop"));
+
   public List<UUID> viewers = new ArrayList<>();
   public Map<String, Object> data = new HashMap<>();
 
-  public boolean done = false;
-  private String title = null;
-  protected Material[] bannedItems = new Material[] {};
+  protected UUID inventoryID;
+  protected Inventory inventory;
+  protected String world;
+
+  protected Material[] bannedItems = new Material[] {
+      Material.ENCHANTED_BOOK,
+      Material.WRITTEN_BOOK,
+      Material.SPLASH_POTION,
+      Material.POTION,
+      Material.SPLASH_POTION,
+      Material.LINGERING_POTION,
+      Material.WHITE_SHULKER_BOX,
+      Material.ORANGE_SHULKER_BOX,
+      Material.MAGENTA_SHULKER_BOX,
+      Material.LIGHT_BLUE_SHULKER_BOX,
+      Material.YELLOW_SHULKER_BOX,
+      Material.LIME_SHULKER_BOX,
+      Material.PINK_SHULKER_BOX,
+      Material.GRAY_SHULKER_BOX,
+      Material.SILVER_SHULKER_BOX,
+      Material.CYAN_SHULKER_BOX,
+      Material.PURPLE_SHULKER_BOX,
+      Material.BLUE_SHULKER_BOX,
+      Material.BROWN_SHULKER_BOX,
+      Material.GREEN_SHULKER_BOX,
+      Material.RED_SHULKER_BOX,
+      Material.BLACK_SHULKER_BOX,
+  };
   protected int[] bannedSlots = new int[] {};
   protected int[] acceptableSlots = new int[] {};
 
+  public TNEInventory(UUID inventoryID, Inventory inventory, String world) {
+    this.inventoryID = inventoryID;
+    this.inventory = inventory;
+    this.world = world;
+  }
+
   public boolean onOpen(UUID id) {
-    return true;
+    if(InventoryType.fromTitle(inventory.getTitle()) != null && InventoryType.fromTitle(inventory.getTitle()).canOpen(IDFinder.getPlayer(id.toString()))) {
+      viewers.add(id);
+      return true;
+    }
+    return false;
   }
 
   public boolean onClick(UUID player, ClickType type, int slot, ItemStack item) {
+    if(bannedSlots.length > 0 && Arrays.asList(bannedSlots).contains(slot) ||
+       acceptableSlots.length > 0 && !Arrays.asList(acceptableSlots).contains(slot)) return false;
+    return Arrays.asList(bannedItems).contains(item.getType());
+  }
+
+  public boolean onMove(UUID player) {
     return true;
   }
 
-  public boolean onClose(UUID id) {
+  public void onClose(UUID id) {
     viewers.remove(id);
-    if(viewers.size() == 0) {
-      done = true;
-    }
-    return true;
+  }
+
+  public UUID getInventoryID() {
+    return inventoryID;
+  }
+
+  public void setInventoryID(UUID inventoryID) {
+    this.inventoryID = inventoryID;
+  }
+
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+  public void setInventory(Inventory inventory) {
+    this.inventory = inventory;
   }
 }

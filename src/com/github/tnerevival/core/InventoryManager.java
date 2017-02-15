@@ -20,15 +20,15 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
-import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.MISCUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.github.tnerevival.core.inventory.InventoryType;
+import com.github.tnerevival.core.inventory.TNEInventory;
+import com.github.tnerevival.core.inventory.impl.VaultInventory;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,6 +37,72 @@ import java.util.UUID;
  **/
 public class InventoryManager {
   public Map<UUID, InventoryTimeTracking> inventoryTime = new HashMap<>();
+  public Map<UUID, UUID> inventoryIDs = new HashMap<>();
+  public Map<UUID, TNEInventory> inventories = new HashMap<>();
+
+  public TNEInventory generateInventory(Inventory inventory, Player player, String world) {
+    InventoryType type = InventoryType.fromTitle(inventory.getTitle());
+    TNEInventory tneInventory = null;
+    UUID inventoryID = null;
+
+    if(type != null) {
+      inventoryID = UUID.randomUUID();
+      switch(type) {
+        case AUCTION:
+          tneInventory = new TNEInventory(inventoryID, inventory, world);
+          break;
+        case SHOP:
+          tneInventory = new TNEInventory(inventoryID, inventory, world);
+          break;
+        case VAULT:
+          tneInventory = new VaultInventory(inventoryID, inventory, world);
+          break;
+      }
+    }
+    if(tneInventory != null) {
+      tneInventory.viewers.add(IDFinder.getID(player));
+      inventoryIDs.put(IDFinder.getID(player), inventoryID);
+      inventories.put(inventoryID, tneInventory);
+    }
+    return tneInventory;
+  }
+
+  public TNEInventory getInventory(Inventory inventory) {
+    UUID inventoryID = getInventoryID(inventory);
+
+    if(inventoryID != null) return inventories.get(inventoryID);
+    return null;
+  }
+
+  public TNEInventory getInventory(UUID player) {
+    return inventories.get(getInventoryID(player));
+  }
+
+  public UUID getInventoryID(Inventory inventory) {
+    for(HumanEntity entity : inventory.getViewers()) {
+      if(entity instanceof Player) {
+        if(inventoryIDs.containsKey(IDFinder.getID((Player)entity))) return inventoryIDs.get(IDFinder.getID((Player)entity));
+      }
+    }
+    return null;
+  }
+
+  public UUID getInventoryID(UUID player) {
+    return inventoryIDs.get(player);
+  }
+
+  public void removePlayer(UUID player) {
+    TNEInventory inventory = getInventory(player);
+    if(inventory != null) {
+      inventoryIDs.remove(player);
+      if (inventory.viewers.size() == 1) {
+        inventories.remove(inventory.getInventoryID());
+        return;
+      }
+      inventory.viewers.remove(player);
+      inventories.put(inventory.getInventoryID(), inventory);
+    }
+  }
 
   public static void handleInventoryDrag(UUID player, Map<Integer, ItemStack> changed, String world) {
     Inventory inventory = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
@@ -47,94 +113,5 @@ public class InventoryManager {
       vault.update(player);
       TNE.instance.manager.accounts.get(owner).setVault(world, vault);
     }
-  }
-
-  public static void handleAllCursor(UUID player, String world, Material material) {
-    Inventory inventory = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
-    if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
-      UUID owner = Vault.parseTitle(inventory.getTitle());
-      Vault vault = TNE.instance.manager.accounts.get(owner).getVault(world);
-
-      Iterator<SerializableItemStack> i = vault.getItems().iterator();
-
-      while(i.hasNext()) {
-        SerializableItemStack item = i.next();
-
-        if(item.toItemStack().getType().equals(material) && inventory.getItem(item.getSlot()) == null) {
-          MISCUtils.debug(ChatColor.RED + "REMOVING ITEM FROM SLOT " + item.getSlot());
-          i.remove();
-        } else if(item.toItemStack().getType().equals(material) && inventory.getItem(item.getSlot()) != null && inventory.getItem(item.getSlot()).getAmount() != item.getAmount()) {
-          item.setAmount(inventory.getItem(item.getSlot()).getAmount());
-          vault.setItem(item.getSlot(), item.toItemStack());
-        }
-      }
-
-      /*for(int i = 0; i < inventory.getSize(); i++) {
-        MISCUtils.debug("Slot " + i);
-        if(vault.getItem(i) != null) MISCUtils.debug(vault.getItem(i).toItemStack().getType().name());
-        else MISCUtils.debug("vault item is null");
-        if(inventory.getItem(i) != null) MISCUtils.debug(inventory.getItem(i).getType().name());
-        else MISCUtils.debug("item is null");
-
-        if(vault.getItem(i) != null && inventory.getItem(i) == null) {
-          if(inventory.getItem(i) == null) {
-            vault.removeItem(i);
-          } else {
-            vault.setItem(i, inventory.getItem(i));
-          }
-        }
-
-        /*if(vault.getItem(i) != null && vault.getItem(i).toItemStack().getType().equals(material)) {
-          if(vault.getItem(i) != null && inventory.getItem(i) == null || inventory.getItem(i) != null && vault.getItem(i) != null && !compareItems(vault.getItem(i).toItemStack(), inventory.getItem(i))) {
-            if(inventory.getItem(i) == null) {
-              vault.removeItem(i);
-            } else {
-              vault.setItem(i, inventory.getItem(i));
-            }
-          }
-        }
-      }*/
-
-      vault.update(player);
-      TNE.instance.manager.accounts.get(owner).setVault(world, vault);
-    }
-  }
-
-  public static void handleSlotChange(UUID player, String world, int slot, ItemStack previous) {
-    Inventory inventory = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
-    if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
-      if(slot >= inventory.getSize()) return;
-      UUID owner = Vault.parseTitle(inventory.getTitle());
-      ItemStack current = inventory.getItem(slot);
-      boolean change = false;
-      if(current == null && previous == null) return;
-      if(current != null && previous == null) {
-        change = true;
-      } else if(current == null) {
-        change = true;
-      } else {
-        if(!compareItems(previous, current)) {
-          change = true;
-        }
-      }
-
-      if(change) {
-        MISCUtils.debug("INVENTORY CHANGED!!!!!!!!!!!!!!!!!");
-        Vault vault = TNE.instance.manager.accounts.get(owner).getVault(world);
-        MISCUtils.debug("VAULT VIEWERS: " + vault.viewers.size());
-        vault.setItem(slot, current);
-        vault.update(player);
-        TNE.instance.manager.accounts.get(owner).setVault(world, vault);
-      }
-    }
-  }
-
-  private static boolean compareItems(ItemStack previous, ItemStack current) {
-    if(!previous.getType().equals(current.getType())) return false;
-    if(previous.getAmount() != current.getAmount()) return false;
-    if(previous.getDurability() != current.getDurability()) return false;
-    if(!previous.getItemMeta().equals(current.getItemMeta())) return false;
-    if(!previous.getEnchantments().equals(current.getEnchantments())) return false;
-    return true;
   }
 }
