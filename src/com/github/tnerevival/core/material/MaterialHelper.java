@@ -176,11 +176,6 @@ public class MaterialHelper {
     validNames.add(new MaterialNameHelper(Material.LOG_2, new String[0]));
     validNames.add(new MaterialNameHelper(Material.ACACIA_STAIRS, new String[0]));
     validNames.add(new MaterialNameHelper(Material.DARK_OAK_STAIRS, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SLIME_BLOCK, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.BARRIER, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.IRON_TRAPDOOR, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.PRISMARINE, new String[0]));
-    validNames.add(new MaterialNameHelper(Material.SEA_LANTERN, new String[0]));
     validNames.add(new MaterialNameHelper(Material.HAY_BLOCK, new String[0]));
     validNames.add(new MaterialNameHelper(Material.CARPET, new String[0]));
     validNames.add(new MaterialNameHelper(Material.HARD_CLAY, new String[0]));
@@ -359,6 +354,11 @@ public class MaterialHelper {
 
     //1.8
     if(MISCUtils.isOneEight()) {
+      validNames.add(new MaterialNameHelper(Material.BARRIER, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SLIME_BLOCK, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.PRISMARINE, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.SEA_LANTERN, new String[0]));
+      validNames.add(new MaterialNameHelper(Material.IRON_TRAPDOOR, new String[0]));
       validNames.add(new MaterialNameHelper(Material.STANDING_BANNER, new String[0]));
       validNames.add(new MaterialNameHelper(Material.WALL_BANNER, new String[0]));
       validNames.add(new MaterialNameHelper(Material.DAYLIGHT_DETECTOR_INVERTED, new String[0]));

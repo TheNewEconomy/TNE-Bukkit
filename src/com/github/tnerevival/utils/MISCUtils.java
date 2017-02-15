@@ -171,6 +171,7 @@ public class MISCUtils {
   public static void reloadConfigurations(String type) {
     if(type.equalsIgnoreCase("all")) {
       TNE.instance.reloadConfig();
+      TNE.instance.manager.currencyManager.loadCurrencies();
       reloadConfigsMaterials();
       reloadConfigsMessages();
       reloadConfigsMobs();
@@ -235,7 +236,6 @@ public class MISCUtils {
       TNE.instance.players = new File(TNE.instance.getDataFolder(), "players.yml");
     }
     TNE.instance.playerConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.players);
-    TNE.configurations.load(TNE.instance.playerConfigurations, "players");
   }
 
   public static void reloadConfigsWorlds() {
