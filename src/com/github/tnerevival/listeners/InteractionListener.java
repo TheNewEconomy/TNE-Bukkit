@@ -611,7 +611,7 @@ public class InteractionListener implements Listener {
             mob = "Default";
             break;
         }
-        mob = (mob.equalsIgnoreCase("Default")) ? (entity.getCustomName() != null)? entity.getCustomName() : mob : mob;
+        mob = (mob.equalsIgnoreCase("Default"))? (entity.getCustomName() != null)? "Custom.Entries." + entity.getCustomName() : mob : mob;
 
         if(TNE.configurations.mobAge(world, id)) {
           if (entity instanceof Ageable) {

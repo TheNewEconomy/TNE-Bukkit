@@ -30,6 +30,8 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Cow.Baby.Reward", 5.00);
     configurations.put("Mobs.Creeper.Enabled", true);
     configurations.put("Mobs.Creeper.Reward", 10.00);
+    configurations.put("Mobs.Custom.Enabled", true);
+    configurations.put("Mobs.Custom.Reward", 10.00);
     configurations.put("Mobs.Donkey.Enabled", true);
     configurations.put("Mobs.Donkey.Reward", 10.00);
     configurations.put("Mobs.Donkey.Baby.Enabled", true);
@@ -167,6 +169,24 @@ public class MobConfiguration extends Configuration {
       Double reward = (!configurationFile.contains(base + ".Reward"))? 10.0 : configurationFile.getDouble(base + ".Reward");
       configurations.put(base + ".Enabled", enabled);
       configurations.put(base + ".Reward", reward);
+    }
+
+    base = "Mobs.Custom.Entries";
+    identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+
+    for(String s : identifiers) {
+      base = base + "." + s;
+      Boolean enabled = !configurationFile.contains(base + ".Enabled") || configurationFile.getBoolean(base + ".Enabled");
+      Double reward = (!configurationFile.contains(base + ".Reward"))? 10.0 : configurationFile.getDouble(base + ".Reward");
+      configurations.put(base + ".Enabled", enabled);
+      configurations.put(base + ".Reward", reward);
+
+      if(configurationFile.contains(base + ".Baby")) {
+        Boolean babeEnabled = !configurationFile.contains(base + ".Baby.Enabled") || configurationFile.getBoolean(base + ".Baby.Enabled");
+        Double babyReward = (!configurationFile.contains(base + ".Baby.Reward"))? 10.0 : configurationFile.getDouble(base + ".Baby.Reward");
+        configurations.put(base + ".Baby.Enabled", enabled);
+        configurations.put(base + ".Baby.Reward", reward);
+      }
     }
   }
 }

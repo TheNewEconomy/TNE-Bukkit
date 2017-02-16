@@ -53,6 +53,10 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    Custom:
+        Enabled: true
+        Reward: 10.00
+
     Donkey:
         Enabled: true
         Reward: 10.00
