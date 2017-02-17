@@ -47,6 +47,7 @@ public class BankWithdrawCommand extends TNECommand {
     Player player = getPlayer(sender);
     String world = (arguments.length >= 2)? arguments[1] : getWorld(sender);
     String owner = (arguments.length >= 3)? arguments[2] : player.getName();
+    String currency = (arguments.length >= 4)? getCurrency(world, arguments[3]).getName() : plugin.manager.currencyManager.get(world).getName();
     Account account = AccountUtils.getAccount(IDFinder.getID(owner));
     UUID id = IDFinder.getID(player);
 
@@ -75,15 +76,15 @@ public class BankWithdrawCommand extends TNECommand {
     }
 
     BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
-    if(AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
+    if(!AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, plugin.manager.currencyManager.get(world, currency), TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
       Message overdraw = new Message("Messages.Bank.Overdraw");
-      overdraw.addVariable("$amount",  CurrencyFormatter.format(world, value));
+      overdraw.addVariable("$amount",  CurrencyFormatter.format(world, currency, value));
       overdraw.addVariable("$name",  owner);
       overdraw.translate(IDFinder.getWorld(id), id);
       return false;
     }
     Message withdrawn = new Message("Messages.Bank.Withdraw");
-    withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, value));
+    withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, currency, value));
     withdrawn.addVariable("$name",  owner);
     withdrawn.translate(IDFinder.getWorld(id), id);
     return true;
@@ -91,6 +92,6 @@ public class BankWithdrawCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/bank withdraw <amount> [world] [owner] - Withdraw <amount> from [owner]'s bank for world [world]. Defaults to your bank.";
+    return "/bank withdraw <amount> [world] [owner] [currency] - Withdraw <amount> from [owner]'s bank for world [world]. Defaults to your bank.";
   }
 }

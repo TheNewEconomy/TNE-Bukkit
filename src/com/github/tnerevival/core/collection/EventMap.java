@@ -166,7 +166,12 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public Collection<V> values() {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache) {
+    return values(true);
+  }
+
+  public Collection<V> values(boolean useCache) {
+    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache ||
+       !TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && TNE.instance.saveManager.cache && !useCache) {
       return listener.values();
     }
     return map.values();

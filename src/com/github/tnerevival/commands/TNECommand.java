@@ -250,7 +250,7 @@ public abstract class TNECommand {
         parsed.put(broken[0], broken[1]);
         continue;
       }
-      parsed.put(i + "", arguments[i]);
+      parsed.put(arguments[i], arguments[i]);
     }
     return parsed;
   }

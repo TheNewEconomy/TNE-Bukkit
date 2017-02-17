@@ -19,9 +19,7 @@ package com.github.tnerevival.account;
 import com.github.tnerevival.TNE;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 1/17/2017.
@@ -31,23 +29,11 @@ public class Bank {
   private List<UUID> members = new ArrayList<>();
   private UUID owner;
   private String world;
-  private BigDecimal gold;
+  private Map<String, BankBalance> balances = new HashMap<>();
 
   public Bank(UUID owner, String world) {
-    this(owner, world, BigDecimal.ZERO);
-  }
-
-  public Bank(UUID owner, String world, BigDecimal gold) {
     this.owner = owner;
-    this.gold = gold;
     this.world = world;
-  }
-
-  /**
-   * @return the gold
-   */
-  public BigDecimal getGold() {
-    return gold;
   }
 
   public UUID getOwner() {
@@ -74,11 +60,12 @@ public class Bank {
     this.world = world;
   }
 
-  /**
-   * @param gold the gold to set
-   */
-  public void setGold(BigDecimal gold) {
-    this.gold = gold;
+  public BigDecimal getGold(String currency) {
+    return (balances.containsKey(currency))? balances.get(currency).getBalance() : BigDecimal.ZERO;
+  }
+
+  public void setGold(String currency, BigDecimal gold) {
+    balances.put(currency, new BankBalance(currency, gold));
   }
 
   private String membersToString() {
@@ -101,7 +88,7 @@ public class Bank {
   public static Bank fromString(String parse, String world) {
     String[] parsed = parse.split(":");
     Bank b = new Bank(UUID.fromString(parsed[0]), world);
-    b.setGold(new BigDecimal(parsed[1]));
+    //TODO: Balances to String.
     if(parsed.length >= 3) {
       b.membersFromString(parsed[2]);
     }
@@ -110,7 +97,26 @@ public class Bank {
   }
 
   public String toString() {
-    return owner.toString() + ":" + gold.doubleValue() + ":" + membersToString();
+    //TODO: Balances to String.
+    return owner.toString() + ":" + "<INSERT BALANCES STRING HERE>" + ":" + membersToString();
+  }
+
+  public void applyInterest() {
+    Iterator<Map.Entry<String, BankBalance>> i = balances.entrySet().iterator();
+    while(i.hasNext()) {
+      Map.Entry<String, BankBalance> entry = i.next();
+      if(TNE.instance.manager.currencyManager.contains(world, entry.getKey())) {
+        com.github.tnerevival.core.currency.Currency currency = TNE.instance.manager.currencyManager.get(world, entry.getKey());
+        BankBalance balance = entry.getValue();
+        if(currency.isInterestEnabled() && (new Date().getTime() - balance.getLastInterest()) >= currency.getInterestInterval()) {
+          BigDecimal gold = balance.getBalance();
+          BigDecimal interestEarned = gold.multiply(new BigDecimal(currency.getInterestRate()));
+          balance.setBalance(gold.add(interestEarned));
+          balance.setLastInterest(new Date().getTime());
+          balances.put(entry.getKey(), balance);
+        }
+      }
+    }
   }
 
   public static Boolean enabled(String world, String player) {

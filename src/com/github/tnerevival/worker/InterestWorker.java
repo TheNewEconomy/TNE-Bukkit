@@ -1,14 +1,12 @@
 package com.github.tnerevival.worker;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Account;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.UUID;
-
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
-import com.github.tnerevival.utils.BankUtils;
 
 public class InterestWorker extends BukkitRunnable {
 
@@ -30,7 +28,7 @@ public class InterestWorker extends BukkitRunnable {
       Entry<UUID, Account> entry = it.next();
 
       if(entry.getValue().getStatus().getBank()) {
-        BankUtils.applyInterest(entry.getValue().getUid());
+        entry.getValue().applyInterest();
       }
     }
   }

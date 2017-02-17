@@ -46,6 +46,7 @@ public class BankDepositCommand extends TNECommand {
     Player player = getPlayer(sender);
     String world = (arguments.length >= 2)? arguments[1] : getWorld(sender);
     String owner = (arguments.length >= 3)? arguments[2] : player.getName();
+    String currency = (arguments.length >= 4)? getCurrency(world, arguments[3]).getName() : plugin.manager.currencyManager.get(world).getName();
     Account account = AccountUtils.getAccount(IDFinder.getID(owner));
 
     if(arguments.length < 1) {
@@ -62,7 +63,7 @@ public class BankDepositCommand extends TNECommand {
 
     if(!account.hasBank(world) && !owner.equals(player.getName())) {
       Message none = new Message("Messages.Bank.None");
-      none.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), Bank.cost(getWorld(sender), IDFinder.getID(player).toString())));
+      none.addVariable("$amount",  CurrencyFormatter.format(world, Bank.cost(getWorld(sender), IDFinder.getID(player).toString())));
       none.translate(getWorld(sender), player);
       return false;
     }
@@ -71,15 +72,15 @@ public class BankDepositCommand extends TNECommand {
       return false;
     }
     BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
-    if(!AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, TransactionType.BANK_DEPOSIT, IDFinder.getWorld(player))) {
+    if(!AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, plugin.manager.currencyManager.get(world, currency), TransactionType.BANK_DEPOSIT, IDFinder.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
-      insufficient.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
+      insufficient.addVariable("$amount",  CurrencyFormatter.format(world, currency, value));
       insufficient.addVariable("$name",  owner);
       insufficient.translate(IDFinder.getWorld(player), player);
       return false;
     }
     Message deposit = new Message("Messages.Bank.Deposit");
-    deposit.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), value));
+    deposit.addVariable("$amount",  CurrencyFormatter.format(world, currency, value));
     deposit.addVariable("$name",  owner);
     deposit.translate(IDFinder.getWorld(player), player);
     return true;
@@ -87,6 +88,6 @@ public class BankDepositCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/bank deposit <amount> [world] [owner] - Put <amount> into [owner]'s bank for world [world]. Defaults to your personal bank.";
+    return "/bank deposit <amount> [world] [owner] [currency] - Put <amount> into [owner]'s bank for world [world]. Defaults to your personal bank.";
   }
 }

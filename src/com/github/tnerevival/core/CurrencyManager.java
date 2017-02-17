@@ -78,6 +78,11 @@ public class CurrencyManager {
         String majorItem = configuration.contains(base + ".ItemMajor")? configuration.getString(base + ".ItemMajor") : "GOLD_INGOT";
         String minorItem = configuration.contains(base + ".ItemMinor")? configuration.getString(base + ".ItemMinor") : "IRON_INGOT";
 
+        //Interest-related configurations
+        Boolean interestEnabled = !configuration.contains(base + ".Interest.Enabled") || configuration.getBoolean(base + ".Interest.Enabled");
+        Double interestRate = configuration.contains(base + ".Interest.Rate")? configuration.getDouble(base + ".Interest.Rate") : 0.2;
+        Long interestInterval = configuration.contains(base + ".Interest.Interval")? configuration.getLong(base + ".Interest.Interval") : 1800;
+
 
         Tier majorTier = new Tier();
         majorTier.setSymbol(symbol);
@@ -103,6 +108,11 @@ public class CurrencyManager {
         currency.setTrackChest(track);
         currency.addTier("Major", majorTier);
         currency.addTier("Minor", minorTier);
+
+        //Interest-related configurations
+        currency.setInterestEnabled(interestEnabled);
+        currency.setInterestRate(interestRate);
+        currency.setInterestInterval(interestInterval);
 
         add(name, currency);
       }

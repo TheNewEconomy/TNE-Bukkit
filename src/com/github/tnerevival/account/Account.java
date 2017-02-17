@@ -156,6 +156,12 @@ public class Account implements Serializable {
     }
   }
 
+  public void applyInterest() {
+    for(Bank b : banks.values()) {
+      b.applyInterest();
+    }
+  }
+
   /*
    * Inventory Time Credits
    */

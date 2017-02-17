@@ -140,6 +140,18 @@ Core:
                 #The plural name. Example: Cents
                 Plural: Cents
 
+            #All configurations relating to bank gold interest.
+            Interest:
+
+                #Whether or not interest is enabled.
+                Enabled: false
+
+                #The interest rate in decimal form.
+                Rate: 0.2
+
+                #The interval at which interest is gained(in seconds)
+                Interval: 1800
+
     #All configurations relating to the TNE Auctions System.
     Auctions:
 
@@ -329,18 +341,6 @@ Core:
 
         #Whether or not players can manage banks from other worlds.
         MultiManage: false
-
-        #All configurations relating to bank gold interest.
-        Interest:
-
-            #Whether or not interest is enabled.
-            Enabled: false
-
-            #The interest rate in decimal form.
-            Rate: 0.2
-
-            #The interval at which interest is gained(in seconds)
-            Interval: 1800
             
             
     #All configurations relating to worlds

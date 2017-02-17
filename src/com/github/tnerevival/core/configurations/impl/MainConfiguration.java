@@ -86,9 +86,6 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Bank.Connected", false);
     configurations.put("Core.Bank.Cost", 20.0);
     configurations.put("Core.Bank.MultiManage", false);
-    configurations.put("Core.Bank.Interest.Enabled", false);
-    configurations.put("Core.Bank.Interest.Rate", 0.2);
-    configurations.put("Core.Bank.Interest.Interval", 1800);
 
     configurations.put("Core.World.EnableChangeFee", false);
     configurations.put("Core.World.ChangeFee", 5.0);

@@ -1,7 +1,6 @@
 package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 
@@ -9,18 +8,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class BankUtils {
-  public static void applyInterest(UUID id) {
-    Account account = AccountUtils.getAccount(id);
-
-    for(Bank b : account.getBanks().values()) {
-      if(Bank.interestEnabled(b.getWorld(), id.toString())) {
-        BigDecimal gold = b.getGold();
-        BigDecimal interestEarned = gold.multiply(Bank.interestRate(b.getWorld(), id.toString()));
-        b.setGold(gold.add(interestEarned));
-      }
-      account.setBank(b.getWorld(), b);
-    }
-  }
 
   public static boolean bankMember(UUID owner, UUID id) {
     String world = TNE.instance.defaultWorld;
@@ -46,25 +33,25 @@ public class BankUtils {
     return AccountUtils.getAccount(owner).getBank(world);
   }
 
-  public static BigDecimal getBankBalance(UUID owner, String world) {
+  public static BigDecimal getBankBalance(UUID owner, String world, String currency) {
     if(AccountUtils.getAccount(owner).hasBank(world)) {
       if(AccountUtils.getAccount(owner).getStatus().getBank()) {
         Bank b = getBank(owner, world);
-        return b.getGold();
+        return b.getGold(currency);
       }
     }
     return BigDecimal.ZERO;
   }
 
   public static BigDecimal getBankBalance(UUID owner) {
-    return getBankBalance(owner, TNE.instance.defaultWorld);
+    return getBankBalance(owner, TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
   }
 
-  public static void setBankBalance(UUID owner, String world, BigDecimal amount) {
+  public static void setBankBalance(UUID owner, String world, String currency, BigDecimal amount) {
     if(AccountUtils.getAccount(owner).getStatus().getBank()) {
       if(AccountUtils.getAccount(owner).hasBank(world)) {
         Bank bank = getBank(owner, world);
-        bank.setGold(amount);
+        bank.setGold(currency, amount);
       }
     }
   }

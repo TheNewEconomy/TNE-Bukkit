@@ -176,7 +176,7 @@ public class AccountUtils {
   public static BigDecimal getFunds(UUID id, String world, String currency) {
     BigDecimal funds = getBalance(id, world, currency);
     if(TNE.instance.api.getBoolean("Core.Bank.Connected", world)) {
-      funds = funds.add(BankUtils.getBankBalance(id, world));
+      funds = funds.add(BankUtils.getBankBalance(id, world, currency));
     }
     return funds;
   }
@@ -188,7 +188,7 @@ public class AccountUtils {
   public static void removeFunds(UUID id, String world, BigDecimal amount, String currency) {
     BigDecimal difference = amount.subtract(getBalance(id, world, currency));
     if(difference.doubleValue() > 0) {
-      BankUtils.setBankBalance(id, world, BankUtils.getBankBalance(id, world).subtract(difference));
+      BankUtils.setBankBalance(id, world, currency, BankUtils.getBankBalance(id, world, currency).subtract(difference));
       setBalance(id, world, currency, BigDecimal.ZERO);
       return;
     }

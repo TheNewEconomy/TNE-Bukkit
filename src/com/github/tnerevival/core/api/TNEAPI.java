@@ -469,7 +469,19 @@ public class TNEAPI {
    * @return The balance of the bank.
    */
   public Double getBankBalance(String owner, String world) {
-    return BankUtils.getBank(IDFinder.getID(owner), world).getGold().doubleValue();
+    return getBankBalance(owner, world, plugin.manager.currencyManager.get(world).getName());
+  }
+
+  /**
+   * Get the balance of a bank.
+   * @param owner The identifier of the bank owner.
+   * @param world The name of the world to use.
+   * @param currency The name of the currency to use.
+   * @return The balance of the bank.
+   */
+  public Double getBankBalance(String owner, String world, String currency) {
+    currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
+    return BankUtils.getBank(IDFinder.getID(owner), world).getGold(currency).doubleValue();
   }
 
   /**
@@ -488,7 +500,19 @@ public class TNEAPI {
    * @param amount The new amount for the bank balance.
    */
   public void setBankBalance(String owner, String world, Double amount) {
-    BankUtils.getBank(IDFinder.getID(owner), world).setGold(new BigDecimal(amount));
+    setBankBalance(owner, world, plugin.manager.currencyManager.get(world).getName(), amount);
+  }
+
+  /**
+   * Set the balance of a bank to a new amount.
+   * @param owner The identifier of the bank owner.
+   * @param world The name of the world to use.
+   * @param currency The name of the currency to store.
+   * @param amount The new amount for the bank balance.
+   */
+  public void setBankBalance(String owner, String world, String currency, Double amount) {
+    currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
+    BankUtils.getBank(IDFinder.getID(owner), world).setGold(currency, new BigDecimal(amount));
   }
   
   /*

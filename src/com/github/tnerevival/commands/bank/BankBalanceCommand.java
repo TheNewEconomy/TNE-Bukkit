@@ -45,6 +45,7 @@ public class BankBalanceCommand extends TNECommand {
     Player player = getPlayer(sender);
     String world = (arguments.length >= 1)? arguments[0] : getWorld(sender);
     String owner = (arguments.length >= 2)? arguments[1] : player.getName();
+    String currency = (arguments.length >= 3)? getCurrency(world, arguments[2]).getName() : plugin.manager.currencyManager.get(world).getName();
     Account account = AccountUtils.getAccount(IDFinder.getID(owner));
     UUID id = IDFinder.getID(player);
 
@@ -67,7 +68,7 @@ public class BankBalanceCommand extends TNECommand {
       return false;
     }
     Message balance = new Message("Messages.Bank.Balance");
-    balance.addVariable("$amount",  CurrencyFormatter.format(getWorld(sender), BankUtils.getBankBalance(IDFinder.getID(owner))));
+    balance.addVariable("$amount",  CurrencyFormatter.format(world, currency, BankUtils.getBankBalance(IDFinder.getID(owner), world, currency)));
     balance.addVariable("$name", owner);
     balance.translate(IDFinder.getWorld(player), player);
     return true;
@@ -75,6 +76,6 @@ public class BankBalanceCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/bank balance [world] [owner] - Find out how much gold is in a specific bank. Defaults to your personal bank.";
+    return "/bank balance [world] [owner] [currency] - Find out how much gold is in a specific bank. Defaults to your personal bank.";
   }
 }

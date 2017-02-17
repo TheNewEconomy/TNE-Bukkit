@@ -34,6 +34,11 @@ public class Currency {
   private String decimal;
   private int decimalPlaces;
 
+  //Interest-related configurations
+  private boolean interestEnabled = false;
+  private double interestRate = 0.2;
+  private long interestInterval = 1800;
+
   public void addTier(Tier tier) {
     addTier(tier.getSingle(), tier);
   }
@@ -160,5 +165,29 @@ public class Currency {
 
   public Tier getTier(String id) {
     return tiers.get(id);
+  }
+
+  public boolean isInterestEnabled() {
+    return interestEnabled;
+  }
+
+  public void setInterestEnabled(boolean interestEnabled) {
+    this.interestEnabled = interestEnabled;
+  }
+
+  public double getInterestRate() {
+    return interestRate;
+  }
+
+  public void setInterestRate(double interestRate) {
+    this.interestRate = interestRate;
+  }
+
+  public long getInterestInterval() {
+    return interestInterval;
+  }
+
+  public void setInterestInterval(long interestInterval) {
+    this.interestInterval = interestInterval;
   }
 }

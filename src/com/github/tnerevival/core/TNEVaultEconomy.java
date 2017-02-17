@@ -239,7 +239,7 @@ public class TNEVaultEconomy implements Economy {
     if(!AccountUtils.getAccount(getBankAccount(username)).hasBank(world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
-    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has " + BankUtils.getBankBalance(getBankAccount(username), world));
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has " + BankUtils.getBankBalance(getBankAccount(username), world, plugin.manager.currencyManager.get(world).getName()));
   }
 
   @Override

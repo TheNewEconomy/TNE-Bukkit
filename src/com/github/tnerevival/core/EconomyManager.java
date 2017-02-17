@@ -15,6 +15,7 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class EconomyManager {
@@ -42,6 +43,12 @@ public class EconomyManager {
     ecoIDs.setListener(new IDSListener());
     shops.setListener(new ShopsListener());
     signs.setListener(new SignsListener());
+  }
+
+  public List<Map.Entry<String, BigDecimal>> parseTop(String currency, String world, Boolean bank, Integer limit) {
+    List<Map.Entry<String, BigDecimal>> top = new ArrayList<>();
+
+    return top;
   }
 
   public void purge(String world) {
