@@ -230,6 +230,13 @@ Messages:
        Killed: <white>You received $reward <white>for killing a <green>$mob<white>.
        KilledVowel: <white>You received $reward <white>for killing an <green>$mob<white>.
        NPCTag: <red>I'm sorry, but you cannot use a name tag on a villager.
+
+       #This is used to rename mobs for the mob reward messages.
+       Custom:
+
+           #The name of the mob, followed by the new name.
+           example-mob: New Name
+           MOCREATURES_TURKEY: Turkey
     
     World:
        Change: <red>You have been charged <gold> $amount<red> for changing worlds.

@@ -172,20 +172,22 @@ public class MobConfiguration extends Configuration {
     }
 
     base = "Mobs.Custom.Entries";
-    identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+    if(configurationFile.contains(base)) {
+      identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
 
-    for(String s : identifiers) {
-      base = base + "." + s;
-      Boolean enabled = !configurationFile.contains(base + ".Enabled") || configurationFile.getBoolean(base + ".Enabled");
-      Double reward = (!configurationFile.contains(base + ".Reward"))? 10.0 : configurationFile.getDouble(base + ".Reward");
-      configurations.put(base + ".Enabled", enabled);
-      configurations.put(base + ".Reward", reward);
+      for (String s : identifiers) {
+        base = base + "." + s;
+        Boolean enabled = !configurationFile.contains(base + ".Enabled") || configurationFile.getBoolean(base + ".Enabled");
+        Double reward = (!configurationFile.contains(base + ".Reward")) ? 10.0 : configurationFile.getDouble(base + ".Reward");
+        configurations.put(base + ".Enabled", enabled);
+        configurations.put(base + ".Reward", reward);
 
-      if(configurationFile.contains(base + ".Baby")) {
-        Boolean babeEnabled = !configurationFile.contains(base + ".Baby.Enabled") || configurationFile.getBoolean(base + ".Baby.Enabled");
-        Double babyReward = (!configurationFile.contains(base + ".Baby.Reward"))? 10.0 : configurationFile.getDouble(base + ".Baby.Reward");
-        configurations.put(base + ".Baby.Enabled", enabled);
-        configurations.put(base + ".Baby.Reward", reward);
+        if (configurationFile.contains(base + ".Baby")) {
+          Boolean babeEnabled = !configurationFile.contains(base + ".Baby.Enabled") || configurationFile.getBoolean(base + ".Baby.Enabled");
+          Double babyReward = (!configurationFile.contains(base + ".Baby.Reward")) ? 10.0 : configurationFile.getDouble(base + ".Baby.Reward");
+          configurations.put(base + ".Baby.Enabled", enabled);
+          configurations.put(base + ".Baby.Reward", reward);
+        }
       }
     }
   }

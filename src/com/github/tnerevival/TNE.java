@@ -7,7 +7,10 @@ import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.version.ReleaseType;
-import com.github.tnerevival.listeners.*;
+import com.github.tnerevival.listeners.ConnectionListener;
+import com.github.tnerevival.listeners.InteractionListener;
+import com.github.tnerevival.listeners.InventoryListener;
+import com.github.tnerevival.listeners.WorldListener;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.worker.*;
 import net.milkbowl.vault.economy.Economy;
@@ -104,10 +107,8 @@ public class TNE extends JavaPlugin {
       saveWorker.runTaskTimer(this, configurations.getLong("Core.AutoSaver.Interval") * 20, configurations.getLong("Core.AutoSaver.Interval") * 20);
     }
 
-    if(configurations.getBoolean("Core.Bank.Interest.Enabled")) {
-      interestWorker = new InterestWorker(this);
-      interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
-    }
+    interestWorker = new InterestWorker(this);
+    interestWorker.runTaskTimer(this, 20, 20);
 
     if(!saveManager.type.equalsIgnoreCase("flatfile") && saveManager.cache) {
       cacheWorker = new CacheWorker(this);

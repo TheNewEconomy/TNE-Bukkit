@@ -611,7 +611,7 @@ public class InteractionListener implements Listener {
             mob = "Default";
             break;
         }
-        mob = (mob.equalsIgnoreCase("Default"))? (entity.getCustomName() != null)? "Custom.Entries." + entity.getCustomName() : mob : mob;
+        mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? "Custom.Entries." + event.getEntityType().toString() : mob;
 
         if(TNE.configurations.mobAge(world, id)) {
           if (entity instanceof Ageable) {
@@ -627,14 +627,18 @@ public class InteractionListener implements Listener {
           }
         }
 
-        Character firstChar = mob.charAt(0);
+        if(!TNE.instance.mobConfigurations.contains("Mobs." + mob)) mob = "Default";
         reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
+        String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? event.getEntityType().toString() : mob;
+        formatted = (TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
+        MISCUtils.debug(formatted);
+        Character firstChar = formatted.charAt(0);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
         if(TNE.configurations.mobEnabled(mob, world, id)) {
           AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
           if(TNE.instance.api.getBoolean("Mobs.Message")) {
             Message mobKilled = new Message(messageNode);
-            mobKilled.addVariable("$mob", mob.replace(".", " "));
+            mobKilled.addVariable("$mob", formatted.replace(".", " "));
             mobKilled.addVariable("$reward", CurrencyFormatter.format(IDFinder.getWorld(killer), reward));
             mobKilled.translate(IDFinder.getWorld(killer), killer);
           }
