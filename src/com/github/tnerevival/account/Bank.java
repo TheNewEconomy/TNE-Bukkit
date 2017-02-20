@@ -68,6 +68,15 @@ public class Bank {
     balances.put(currency, new BankBalance(currency, gold));
   }
 
+  public Map<String, BigDecimal> getBalances(String currency) {
+    Map<String, BigDecimal> sorted = new HashMap<>();
+    for(BankBalance balance : balances.values()) {
+      if(!currency.equalsIgnoreCase("all") && !balance.getCurrency().equals(currency)) continue;
+      sorted.put(balance.getCurrency(), TNE.instance.manager.currencyManager.convert(TNE.instance.manager.currencyManager.get(world, balance.getCurrency()), 1.0, balance.getBalance()));
+    }
+    return sorted;
+  }
+
   private String membersToString() {
     StringBuilder builder = new StringBuilder();
     for(UUID id : members) {

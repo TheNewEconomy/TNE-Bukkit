@@ -169,6 +169,10 @@ public class CurrencyManager {
     return convert(fromRate, toRate, amount);
   }
 
+  public BigDecimal convert(Currency from, double toRate, BigDecimal amount) {
+    return convert(from.getRate(), toRate, amount);
+  }
+
   public BigDecimal convert(double fromRate, double toRate, BigDecimal amount) {
     double rate = fromRate - toRate;
     BigDecimal difference = amount.multiply(new BigDecimal(rate));

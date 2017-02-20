@@ -108,7 +108,7 @@ Messages:
        NoPins: <red>Pins are disabled in this world!
        NoCurrency: <red>The currency "$currency" could not be found in "$world".
        Converted: <white>Successfully exchanged "<gold>$from_amount<white>" to "<gold>$amount<white>".
-       Top: <white>=========[<gold>Economy Top<white>]=========
+       Top: <white>=========[<gold>Economy Top<white>]========= $page/$page_top
 
     Auction:
        Start: <white>Auction has started for $item. Starting bid is <gold>$start<white>.

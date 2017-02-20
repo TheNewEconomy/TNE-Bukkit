@@ -80,6 +80,19 @@ public class IDFinder {
     return eco;
   }
 
+  public static String getUsername(String identifier) {
+    if(isUUID(identifier)) {
+      if(getPlayer(identifier) == null) {
+        if(getOffline(identifier) != null) {
+          return getOffline(identifier).getName();
+        }
+        return MojangAPI.getPlayerUsername(getID(identifier));
+      }
+      return getPlayer(identifier).getName();
+    }
+    return identifier;
+  }
+
   public static UUID genUUID(String name) {
     UUID id = MojangAPI.getPlayerUUID(name);
     if(id != null) return id;
@@ -97,7 +110,7 @@ public class IDFinder {
   }
 
   public static String ecoToUsername(UUID id) {
-    return (String) MISCUtils.getKey(TNE.instance.manager.ecoIDs, id);
+    return (MISCUtils.getKey(TNE.instance.manager.ecoIDs, id) != null)? (String)MISCUtils.getKey(TNE.instance.manager.ecoIDs, id) : getUsername(id.toString());
   }
 
   public static UUID getID(Player player) {
@@ -117,6 +130,12 @@ public class IDFinder {
       return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
     return Bukkit.getPlayer(id);
+  }
+
+  public static OfflinePlayer getOffline(String identifier) {
+    UUID id = getID(identifier);
+
+    return Bukkit.getOfflinePlayer(id);
   }
 
   public static UUID getID(String identifier) {

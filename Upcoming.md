@@ -9,6 +9,10 @@
     - Ability to allow caching for SQL-based formats
     
 - Alpha 5.2 "Quality of Life"
+  - Commands
+    - money top
+      - Shows the players with the highest balances
+        - This may be sorted by bank balances, all currencies, and all worlds.
   - Mob Rewards
     - Added ability to specify the currency for mob rewards
     - Added ability to add rewards for forge mods

@@ -101,8 +101,15 @@ CREATE TABLE IF NOT EXISTS `claims` (
 CREATE TABLE IF NOT EXISTS `banks` (
   `uuid` VARCHAR(36) NOT NULL,
   `world` VARCHAR(50) NOT NULL,
-  `gold` DOUBLE,
   PRIMARY KEY(uuid, world)
+);
+
+CREATE TABLE IF NOT EXISTS `bank_balances` (
+  `uuid` VARCHAR(36) NOT NULL,
+  `world` VARCHAR(50) NOT NULL,
+  `currency` VARCHAR(250) NOT NULL,
+  `balance` DOUBLE,
+  PRIMARY KEY(uuid, world, currency)
 );
 
 CREATE TABLE IF NOT EXISTS `bank_members` (

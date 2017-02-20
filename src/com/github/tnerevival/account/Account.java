@@ -337,4 +337,42 @@ public class Account implements Serializable {
     MISCUtils.debug("Outcome: " + vaults.containsKey(world));
     return vaults.containsKey(world);
   }
+
+  public BigDecimal addAll(String world, String currency) {
+    BigDecimal total = BigDecimal.ZERO;
+
+    for(Map.Entry<String, BigDecimal> entry : balances.entrySet()) {
+      if(world.equalsIgnoreCase("all") || entry.getKey().contains(world)) {
+        if(currency.equalsIgnoreCase("all") || entry.getKey().contains(currency)) {
+          String w = entry.getKey().split(":")[0];
+          String cur = entry.getKey().split(":")[1];
+          total = total.add(TNE.instance.manager.currencyManager.convert(TNE.instance.manager.currencyManager.get(w, cur), 1.0, entry.getValue()));
+        }
+      }
+    }
+    return total;
+  }
+
+  public BigDecimal addAllBank(String world, String currency) {
+    BigDecimal total = BigDecimal.ZERO;
+    Map<String, BigDecimal> balances = new HashMap<>();
+    if(world.equalsIgnoreCase("all")) {
+      for (Bank b : banks.values()) {
+        for(Map.Entry<String, BigDecimal> balance : b.getBalances(currency).entrySet()) {
+          BigDecimal bal = (balances.containsKey(balance.getKey()))? balances.get(balance.getKey()).add(balance.getValue()) : balance.getValue();
+          balances.put(balance.getKey(), bal);
+        }
+      }
+    } else {
+      if(banks.containsKey(world)) {
+        balances = banks.get(world).getBalances(currency);
+      }
+    }
+
+    for(BigDecimal value : balances.values()) {
+      total = total.add(value);
+    }
+
+    return total;
+  }
 }

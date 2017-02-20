@@ -13,9 +13,9 @@ import com.github.tnerevival.listeners.collections.SignsListener;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.utils.TopBalance;
 import org.bukkit.entity.Player;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class EconomyManager {
@@ -45,10 +45,26 @@ public class EconomyManager {
     signs.setListener(new SignsListener());
   }
 
-  public List<Map.Entry<String, BigDecimal>> parseTop(String currency, String world, Boolean bank, Integer limit) {
-    List<Map.Entry<String, BigDecimal>> top = new ArrayList<>();
+  public LinkedHashSet<Object> parseTop(String currency, String world, Boolean bank, Integer limit) {
+    LinkedHashSet<Object> finalBalances = new LinkedHashSet<>();
+    TreeMap<Double, List<UUID>> ordered = new TreeMap<>(Collections.reverseOrder());
 
-    return top;
+    for(Account account : accounts.values()) {
+      Double balance = (bank)? account.addAllBank(world, currency).doubleValue() : account.addAll(world, currency).doubleValue();
+      List<UUID> ids = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<UUID>();
+      ids.add(account.getUid());
+      ordered.put(balance, ids);
+    }
+
+    parse:
+    for(Map.Entry<Double, List<UUID>> entry : ordered.entrySet()) {
+      if(finalBalances.size() >= limit) break;
+      for(UUID id : entry.getValue()) {
+        if(finalBalances.size() >= limit) break parse;
+        finalBalances.add(new TopBalance(id, entry.getKey()));
+      }
+    }
+    return finalBalances;
   }
 
   public void purge(String world) {
