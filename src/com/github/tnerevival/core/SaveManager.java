@@ -5,7 +5,7 @@ import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.core.version.impl.Alpha5_0;
-import com.github.tnerevival.core.version.impl.Alpha6_0;
+import com.github.tnerevival.core.version.impl.Alpha5_2;
 
 import java.io.*;
 import java.sql.*;
@@ -21,11 +21,11 @@ public class SaveManager {
     versions = new HashMap<>();
     versions.put(5.0, new Alpha5_0());
     versions.put(5.1, new Alpha5_0());
-    versions.put(6.0, new Alpha6_0());
+    versions.put(5.2, new Alpha5_2());
   }
 
   public Version versionInstance;
-  Double currentSaveVersion = 6.0;
+  Double currentSaveVersion = 5.2;
   Double saveVersion = 0.0;
   public boolean cache = TNE.configurations.getBoolean("Core.Database.Transactions.Cache");
   public long update = TNE.configurations.getLong("Core.Database.Transactions.Update");

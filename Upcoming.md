@@ -8,11 +8,23 @@
   - SQL Improvements
     - Ability to allow caching for SQL-based formats
     
-- Alpha 5.2 "Redirection"
-  - Shop sign support
-  - Separation of Banks into an Item Bank, and Money Vault
-  - PHP class for converting TNE data to PHP class objects
-  - Rewrite inventory system to be more efficient.
+- Alpha 5.2 "Quality of Life"
+  - Mob Rewards
+    - Added ability to specify the currency for mob rewards
+    - Added ability to add rewards for forge mods
+  - Messages
+    - Added ability to specify different names for various mobs for mob reward messages
+  - Banks
+    - Separated into two systems; banks, which hold money, and vaults, which hold items
+    - Banks may now hold multiple currencies
+    - Interest configurations are now set on a per-currency level
+  - Currencies
+    - Added configurations to specify the number of decimal places displayed for balances 
+  - Technical
+    - API
+      - All balance-related methods that involve the data-type will be deprecated for methods using the BigDecimal class
+    - SQL
+      - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
   
 - Alpha 6.0 "Final Stages"
   - Rework shops to be more user-friendly. I want a shop system that isn't all command based such as the one we have now. More or less a more chest "friendly" version.

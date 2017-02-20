@@ -31,14 +31,19 @@
 - Banks
   - Ability to enable/disable
   - Ability to have multiple players per bank.
+  - Ability to deposit and withdraw money
+    - Ability to store multiple currencies
+  - Ability to have bank balances gain interest
+    - Ability to enable/disable interest gaining, per currency
+    - Ability to set custom interest rates, per currency
+    - Ability to set a custom interval for interest, per currency
+- Vaults
+  - Ability to enable/disable
+  - Ability to have multiple players per vault.
   - Ability to access via signs or a command
   - Ability to deposit and withdraw blocks and items
-  - Ability to deposit and withdraw money
-  - Saves bank item locations
-  - Ability to have bank balances gain interest
-  - Ability to enable/disable interest gaining
-  - Ability to set custom interest rates
-  - Ability to set a custom interval for interest
+    - Saves item locations
+    - Supports Custom names, lore, and enchantments
 - Currency System
   - Singular and Plural Name Support
   - Ability to check your balance
@@ -55,6 +60,9 @@
 - Mob Rewards
   - Ability to reward the player money for killing a certain mob
   - Ability to enable/disable mob rewards for individual mobs
+  - Ability to specify the currency for the reward
+  - Ability to  specify custom name for messages in messages.yml
+  - Supports mobs from Minecraft Forge mods
 - Multiple Database Support
   - MySQL
   - H2

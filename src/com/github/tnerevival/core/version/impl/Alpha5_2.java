@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by creatorfromhell on 1/17/2017.
  **/
-public class Alpha6_0 extends Version {
+public class Alpha5_2 extends Version {
   @Override
   public double versionNumber() {
     return 5.1;
