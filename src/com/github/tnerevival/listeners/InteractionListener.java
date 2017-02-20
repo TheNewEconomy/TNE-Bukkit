@@ -628,6 +628,7 @@ public class InteractionListener implements Listener {
         }
 
         if(!TNE.instance.mobConfigurations.contains("Mobs." + mob)) mob = "Default";
+        String currency = (TNE.instance.mobConfigurations.contains("Mobs." + mob + ".Currency"))? TNE.instance.mobConfigurations.getString("Mobs." + mob + ".Currency") : TNE.instance.manager.currencyManager.get(world).getName();
         reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
         String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? event.getEntityType().toString() : mob;
         formatted = (TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
@@ -635,11 +636,11 @@ public class InteractionListener implements Listener {
         Character firstChar = formatted.charAt(0);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
         if(TNE.configurations.mobEnabled(mob, world, id)) {
-          AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
+          AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TNE.instance.manager.currencyManager.get(world, currency), TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
           if(TNE.instance.api.getBoolean("Mobs.Message")) {
             Message mobKilled = new Message(messageNode);
             mobKilled.addVariable("$mob", formatted.replace(".", " "));
-            mobKilled.addVariable("$reward", CurrencyFormatter.format(IDFinder.getWorld(killer), reward));
+            mobKilled.addVariable("$reward", CurrencyFormatter.format(IDFinder.getWorld(killer), currency, reward));
             mobKilled.translate(IDFinder.getWorld(killer), killer);
           }
         }
