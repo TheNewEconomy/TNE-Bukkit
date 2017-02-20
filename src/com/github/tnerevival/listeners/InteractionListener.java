@@ -628,7 +628,7 @@ public class InteractionListener implements Listener {
         }
 
         if(!TNE.instance.mobConfigurations.contains("Mobs." + mob)) mob = "Default";
-        String currency = (TNE.instance.mobConfigurations.contains("Mobs." + mob + ".Currency"))? TNE.instance.mobConfigurations.getString("Mobs." + mob + ".Currency") : TNE.instance.manager.currencyManager.get(world).getName();
+        String currency = TNE.configurations.mobCurrency(mob, world, id);
         reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
         String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? event.getEntityType().toString() : mob;
         formatted = (TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;

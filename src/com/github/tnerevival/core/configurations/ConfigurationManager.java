@@ -64,6 +64,11 @@ public class ConfigurationManager {
     return new BigDecimal(TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player));
   }
 
+  public String mobCurrency(String mob, String world, String player) {
+    String currency = TNE.instance.api.getString("Mobs." + mob + ".Currency", world, player);
+    return (currency != null)? currency : TNE.instance.manager.currencyManager.get(world).getName();
+  }
+
   private FileConfiguration getFileConfiguration(String id) {
     switch(id) {
       case "messages":
@@ -169,7 +174,7 @@ public class ConfigurationManager {
       }
     }
 
-    if(!player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
+    if(!player.trim().equals("") && playerEnabled(path, IDFinder.getID(player).toString())) return getPlayerConfiguration(path, IDFinder.getID(player).toString());
     if(!player.trim().equals("") && playerEnabled(path, IDFinder.getPlayer(player).getName())) return getPlayerConfiguration(path, IDFinder.getPlayer(player).getName());
     if(worldEnabled(path, world)) return getWorldConfiguration(path, world);
     return getValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
