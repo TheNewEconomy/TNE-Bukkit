@@ -91,15 +91,16 @@ public class AccountUtils {
     Account account = getAccount(id);
     Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
 
+    if(!account.getBalances().containsKey(world + ":" + currencyName)) {
+      initializeWorldData(id);
+    }
+
     if(!account.getStatus().getBalance()) return BigDecimal.ZERO;
 
     if(MISCUtils.multiWorld()) {
-      if(!account.getBalances().containsKey(world + ":" + currencyName)) {
-        initializeWorldData(id);
-      }
-
       return account.getBalance(world, currencyName);
     }
+
     if(currency.isItem()) {
       Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
       Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
@@ -161,7 +162,6 @@ public class AccountUtils {
 
   public static boolean transaction(String initiator, String recipient, TransactionCost cost, TransactionType type, String world) {
     Transaction t = new Transaction(initiator, recipient, cost, type, world);
-
     return t.perform();
   }
 

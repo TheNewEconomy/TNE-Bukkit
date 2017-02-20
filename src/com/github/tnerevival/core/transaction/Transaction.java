@@ -121,7 +121,7 @@ public class Transaction {
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = IDFinder.getID(initiator);
       if(!AccountUtils.getAccount(IDFinder.getID(recipient)).hasBank(world)) return TransactionResult.FAILED;
-      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
+      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
       if(!BankUtils.bankMember(IDFinder.getID(recipient), id, world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;
     }
@@ -188,7 +188,7 @@ public class Transaction {
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = IDFinder.getID(recipient);
       if(!AccountUtils.getAccount(id).hasBank(world)) return TransactionResult.FAILED;
-      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, TNE.instance.manager.currencyManager.get(world).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
+      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, TNE.instance.manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
       if(recipient != null && !BankUtils.bankMember(id, IDFinder.getID(initiator), world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;
     }
@@ -249,7 +249,7 @@ public class Transaction {
         return;
       }
       recipientOldBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
-      AccountUtils.setFunds(id, world, (AccountUtils.getFunds(id, world, cost.getCurrency().getName()).add(cost.getAmount())), cost.getCurrency().getName());
+      AccountUtils.setFunds(id, world, AccountUtils.getFunds(id, world, cost.getCurrency().getName()).add(cost.getAmount()), cost.getCurrency().getName());
       MISCUtils.setItems(id, cost.getItems(), true);
       recipientBalance = AccountUtils.getFunds(id, world, cost.getCurrency().getName());
     } else if(type.equals(TransactionType.MONEY_PAY)) {

@@ -29,14 +29,17 @@ import java.util.Map;
 public class CurrencyFormatter {
 
   public static String format(String world, BigDecimal amount) {
+    MISCUtils.debug("CurrencyFormatter.format(" + world + ", " + amount.doubleValue() + ")");
     return format(TNE.instance.manager.currencyManager.get(world), world, amount);
   }
 
   public static String format(String world, String name, BigDecimal amount) {
+    MISCUtils.debug("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
     return format(TNE.instance.manager.currencyManager.get(world, name), world, amount);
   }
 
   public static String format(Currency currency, String world, BigDecimal amount) {
+    MISCUtils.debug("CurrencyFormatter.format(" + currency.getName() + ", " + world + ", " + amount.doubleValue() + ")");
 
     if(currency == null) currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
 
@@ -73,7 +76,7 @@ public class CurrencyFormatter {
   }
 
   private static int getWhole(BigDecimal number) {
-    BigDecimal bigDecimal = new BigDecimal("-1.30").setScale(2, BigDecimal.ROUND_HALF_UP);
+    BigDecimal bigDecimal = number.setScale(2, BigDecimal.ROUND_HALF_UP);
     BigDecimal fractionValue =  bigDecimal.remainder(BigDecimal.ONE);
     return bigDecimal.subtract(fractionValue).setScale(0).intValue();
   }
