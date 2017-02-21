@@ -210,6 +210,23 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+        #Here you'll find the various configurations for the various slime sizes.
+        #We support the natural ones with Small, Medium, and Large, and also custom ones with simply the size.
+        #Natural sizes.
+        Small:
+            Enabled: true
+            Reward: 5.00
+        Medium:
+            Enabled: true
+            Reward: 10.00
+        Large:
+            Enabled: true
+            Reward: 15.00
+        #Custom one for a slime size of 10
+        10:
+            Enabled: true
+            Reward: 20.00
+
     SnowGolem:
         Enabled: true
         Reward: 10.00

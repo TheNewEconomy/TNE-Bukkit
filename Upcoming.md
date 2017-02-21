@@ -19,10 +19,11 @@
         - This may be sorted by bank balances, all currencies, and all worlds.
   - World Sharing
     - Removed the need for the ShareAccounts configuration
-    - Added the ability to share configurations, balances, or both.
+    - Added the ability to share configurations, balances, or both with different worlds.
   - Mob Rewards
     - Added ability to specify the currency for mob rewards
     - Added ability to add rewards for forge mods
+    - Added ability to specify various rewards for slimes based on size.
   - Messages
     - Added ability to specify different names for various mobs for mob reward messages
   - Banks
@@ -36,6 +37,10 @@
       - All balance-related methods that involve the data-type will be deprecated for methods using the BigDecimal class
     - SQL
       - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
+  - Bug Fixes
+    - tne reload all fix
+    - fixed support issues for servers running on Minecraft 1.7
+    - fixed incompatibility issues with the essentials invsee command
   
 - Alpha 6.0 "Final Stages"
   - Rework shops to be more user-friendly. I want a shop system that isn't all command based such as the one we have now. More or less a more chest "friendly" version.

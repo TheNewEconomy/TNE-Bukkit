@@ -58,11 +58,19 @@ public class ConfigurationManager {
 
   public Boolean mobEnabled(String mob, String world, String player) {
     MISCUtils.debug("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
+    MISCUtils.debug(getConfiguration("Mobs." + mob + ".Enabled", world, player) + "");
+    if(getConfiguration("Mobs." + mob + ".Enabled", world, player) == null) {
+      return false;
+    }
     return TNE.instance.api.getBoolean("Mobs." + mob + ".Enabled", world, player);
   }
 
   public BigDecimal mobReward(String mob, String world, String player) {
     MISCUtils.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
+    MISCUtils.debug(getConfiguration("Mobs." + mob + ".Reward", world, player) + "");
+    if(getConfiguration("Mobs." + mob + ".Reward", world, player) == null) {
+      return BigDecimal.ZERO;
+    }
     return new BigDecimal(TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player));
   }
 

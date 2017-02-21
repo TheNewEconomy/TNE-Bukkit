@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.configurations.impl;
 
 import com.github.tnerevival.core.configurations.Configuration;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Set;
@@ -155,20 +156,21 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.ZombieVillager.Baby.Enabled", true);
     configurations.put("Mobs.ZombieVillager.Baby.Reward", 5.00);
 
-    loadPlayers(configurationFile);
+    loadExtras(configurationFile);
     super.load(configurationFile);
   }
 
-  public void loadPlayers(FileConfiguration configurationFile) {
+  private void loadExtras(FileConfiguration configurationFile) {
     String base = "Mobs.Player.Individual";
     Set<String> identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
 
     for(String s : identifiers) {
-      base = base + "." + s;
-      Boolean enabled = !configurationFile.contains(base + ".Enabled") || configurationFile.getBoolean(base + ".Enabled");
-      Double reward = (!configurationFile.contains(base + ".Reward"))? 10.0 : configurationFile.getDouble(base + ".Reward");
-      configurations.put(base + ".Enabled", enabled);
-      configurations.put(base + ".Reward", reward);
+      String temp = base + "." + s;
+      MISCUtils.debug(temp);
+      Boolean enabled = !configurationFile.contains(temp + ".Enabled") || configurationFile.getBoolean(temp + ".Enabled");
+      Double reward = (!configurationFile.contains(temp + ".Reward"))? 10.0 : configurationFile.getDouble(temp + ".Reward");
+      configurations.put(temp + ".Enabled", enabled);
+      configurations.put(temp + ".Reward", reward);
     }
 
     base = "Mobs.Custom.Entries";
@@ -176,19 +178,35 @@ public class MobConfiguration extends Configuration {
       identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
 
       for (String s : identifiers) {
-        base = base + "." + s;
-        Boolean enabled = !configurationFile.contains(base + ".Enabled") || configurationFile.getBoolean(base + ".Enabled");
-        Double reward = (!configurationFile.contains(base + ".Reward")) ? 10.0 : configurationFile.getDouble(base + ".Reward");
-        configurations.put(base + ".Enabled", enabled);
-        configurations.put(base + ".Reward", reward);
+        String temp = base + "." + s;
+        MISCUtils.debug(temp);
+        Boolean enabled = !configurationFile.contains(temp + ".Enabled") || configurationFile.getBoolean(temp + ".Enabled");
+        Double reward = (!configurationFile.contains(temp + ".Reward")) ? 10.0 : configurationFile.getDouble(temp + ".Reward");
+        configurations.put(temp + ".Enabled", enabled);
+        configurations.put(temp + ".Reward", reward);
 
-        if (configurationFile.contains(base + ".Baby")) {
-          Boolean babeEnabled = !configurationFile.contains(base + ".Baby.Enabled") || configurationFile.getBoolean(base + ".Baby.Enabled");
-          Double babyReward = (!configurationFile.contains(base + ".Baby.Reward")) ? 10.0 : configurationFile.getDouble(base + ".Baby.Reward");
-          configurations.put(base + ".Baby.Enabled", enabled);
-          configurations.put(base + ".Baby.Reward", reward);
+        if (configurationFile.contains(temp + ".Baby")) {
+          Boolean babyEnabled = !configurationFile.contains(temp + ".Baby.Enabled") || configurationFile.getBoolean(temp + ".Baby.Enabled");
+          Double babyReward = (!configurationFile.contains(temp + ".Baby.Reward")) ? 10.0 : configurationFile.getDouble(temp + ".Baby.Reward");
+          configurations.put(temp + ".Baby.Enabled", babyEnabled);
+          configurations.put(temp + ".Baby.Reward", babyReward);
         }
       }
+    }
+
+    base = "Mobs.Slime";
+    identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+
+    for(String s : identifiers) {
+      if(s.equalsIgnoreCase("Enabled") || s.equalsIgnoreCase("Reward")) continue;
+      String temp = base + "." + s;
+      MISCUtils.debug(temp);
+      Boolean enabled = !configurationFile.contains(temp + ".Enabled") || configurationFile.getBoolean(temp + ".Enabled");
+      Double reward = (!configurationFile.contains(temp + ".Reward"))? 10.0 : configurationFile.getDouble(temp + ".Reward");
+      MISCUtils.debug("configurations.put(" + temp + ".Enabled, " + enabled + ")");
+      MISCUtils.debug("configurations.put(" + temp + ".Reward, " + reward + ")");
+      configurations.put(temp + ".Enabled", enabled);
+      configurations.put(temp + ".Reward", reward);
     }
   }
 }

@@ -625,6 +625,26 @@ public class InteractionListener implements Listener {
             }
           }
         }
+        if(entity.getType().equals(EntityType.SLIME)) {
+          String tier = "Small";
+
+          switch(((Slime)entity).getSize()) {
+            case 1:
+              break;
+            case 2:
+              tier = "Medium";
+              break;
+            case 4:
+              tier = "Large";
+              break;
+            default:
+              tier = ((Slime)entity).getSize() + "";
+              break;
+          }
+          if(TNE.configurations.mobEnabled(mob + "." + tier, world, id)) {
+            mob = mob + "." + tier;
+          }
+        }
 
         if(!TNE.instance.mobConfigurations.contains("Mobs." + mob)) mob = "Default";
         String currency = TNE.configurations.mobCurrency(mob, world, id);
