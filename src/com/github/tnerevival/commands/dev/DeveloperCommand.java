@@ -49,4 +49,9 @@ public class DeveloperCommand extends TNECommand {
   public boolean console() {
     return false;
   }
+
+  @Override
+  public boolean developer() {
+    return true;
+  };
 }

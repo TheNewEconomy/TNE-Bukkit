@@ -23,14 +23,15 @@ import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.inventory.InventoryType;
 import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.impl.VaultInventory;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 1/19/2017.
@@ -102,6 +103,39 @@ public class InventoryManager {
       inventory.viewers.remove(player);
       inventories.put(inventory.getInventoryID(), inventory);
     }
+  }
+
+  public static List<Integer> parseSlots(InventoryAction action, InventoryView view, int slot) {
+    List<Integer> slots = new ArrayList<>();
+    if(action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) && slot >= view.getTopInventory().getSize()) {
+      for(int i = 0; i < view.getTopInventory().getSize(); i++) {
+        if(view.getTopInventory().getItem(i) == null || view.getTopInventory().getItem(i).getType().equals(Material.AIR)) slots.add(i);
+      }
+    } else if(action.equals(InventoryAction.COLLECT_TO_CURSOR)) {
+      if(view.getTopInventory().getItem(slot) != null && !view.getTopInventory().getItem(slot).getType().equals(Material.AIR)) {
+        Material mat = view.getTopInventory().getItem(slot).getType();
+        for(int i = 0; i < view.getTopInventory().getSize(); i++) {
+          if(view.getTopInventory().getItem(i) != null && view.getTopInventory().getItem(i).getType().equals(mat)) slots.add(i);
+        }
+      }
+    } else {
+      slots.add(slot);
+    }
+    return slots;
+  }
+
+  public static Map<Integer, ItemStack> getChanges(List<Integer> slots, Inventory old, Inventory current) {
+    Map<Integer, ItemStack> changes = new HashMap<>();
+    for(int i : slots) {
+      if(old.getItem(i) != null && current.getItem(i) == null) {
+        changes.put(i, null);
+      } else if(old.getItem(i) == null && current.getItem(i) != null) {
+        changes.put(i, current.getItem(i));
+      } else if(old.getItem(i).equals(current.getItem(i))) {
+        changes.put(i, current.getItem(i));
+      }
+    }
+    return changes;
   }
 
   public static void handleInventoryDrag(UUID player, Map<Integer, ItemStack> changed, String world) {

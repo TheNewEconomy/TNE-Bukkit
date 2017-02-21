@@ -132,6 +132,12 @@ public class InventoryListener implements Listener {
       }
       MISCUtils.debug("Exiting click event");
     }
+
+    if(inventory.getTitle() != null) {
+      if(inventory.getTitle().toLowerCase().contains("vault")) {
+
+      }
+    }
   }
 
   @EventHandler

@@ -161,7 +161,7 @@ public abstract class TNECommand {
         }
       }
     } else {
-      if(!((Player)sender).getUniqueId().equals("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {
+      if(!(sender instanceof Player) || !IDFinder.getID(getPlayer(sender)).toString().equalsIgnoreCase("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")){
         sender.sendMessage(ChatColor.RED + "You must be a TNE developer to use this command.");
         return false;
       }
