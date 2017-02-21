@@ -10,14 +10,10 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -44,6 +40,10 @@ public class MISCUtils {
 
   public static boolean isOneEleven() {
     return Bukkit.getVersion().contains("1.11");
+  }
+
+  public static boolean isOneTwelve() {
+    return Bukkit.getVersion().contains("1.12");
   }
 
   //True MISC Utils
@@ -96,7 +96,7 @@ public class MISCUtils {
   }
 
   public static Integer getItemCount(UUID id, ItemStack stack) {
-    Player p = MISCUtils.getPlayer(id);
+    Player p = IDFinder.getPlayer(id.toString());
     int count = 0;
     for(ItemStack i : p.getInventory().getContents()) {
       if(i != null && i.getType() != null && i.getType().equals(stack.getType()) && i.getDurability() == stack.getDurability()) {
@@ -106,8 +106,8 @@ public class MISCUtils {
     return count;
   }
 
-  public static Integer getItemCount(UUID id, Material item) {
-    Player p = MISCUtils.getPlayer(id);
+  static Integer getItemCount(UUID id, Material item) {
+    Player p = IDFinder.getPlayer(id.toString());
     int count = 0;
     if(item != null) {
       for(ItemStack i : p.getInventory().getContents()) {
@@ -119,8 +119,8 @@ public class MISCUtils {
     return count;
   }
 
-  public static void setItemCount(UUID id, Material item, Integer amount) {
-    Player p = MISCUtils.getPlayer(id);
+  static void setItemCount(UUID id, Material item, Integer amount) {
+    Player p = IDFinder.getPlayer(id.toString());
     Integer count = getItemCount(id, item);
     if(item != null) {
       if(count > amount) {
@@ -168,139 +168,6 @@ public class MISCUtils {
     }
   }
 
-  public static void reloadConfigurations(String type) {
-    if(type.equalsIgnoreCase("all")) {
-      TNE.instance.reloadConfig();
-      TNE.instance.manager.currencyManager.loadCurrencies();
-      reloadConfigsMaterials();
-      reloadConfigsMessages();
-      reloadConfigsMobs();
-      reloadConfigsObjects();
-      reloadConfigPlayers();
-      reloadConfigsWorlds();
-      TNE.instance.manager.currencyManager.loadCurrencies();
-    } else if(type.equalsIgnoreCase("config")) {
-      TNE.instance.reloadConfig();
-      TNE.configurations.load(TNE.instance.getConfig(), "main");
-    } else if(type.equalsIgnoreCase("currencies")) {
-      TNE.instance.manager.currencyManager.loadCurrencies();
-    } else if(type.equalsIgnoreCase("materials")) {
-      reloadConfigsMaterials();
-    } else if(type.equalsIgnoreCase("messages")) {
-      reloadConfigsMessages();
-    } else if(type.equalsIgnoreCase("mobs")) {
-      reloadConfigsMobs();
-    } else if(type.equalsIgnoreCase("objects")) {
-      reloadConfigsObjects();
-    } else if(type.equalsIgnoreCase("players")) {
-      reloadConfigPlayers();
-    } else if(type.equalsIgnoreCase("worlds")) {
-      reloadConfigsWorlds();
-    }
-  }
-
-  public static void reloadConfigsMaterials() {
-    if(TNE.instance.materials == null) {
-      TNE.instance.materials = new File(TNE.instance.getDataFolder(), "materials.yml");
-    }
-    TNE.instance.materialConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.materials);
-    TNE.configurations.load(TNE.instance.materialConfigurations, "materials");
-  }
-
-  public static void reloadConfigsMobs() {
-    if(TNE.instance.mobs == null) {
-      TNE.instance.mobs = new File(TNE.instance.getDataFolder(), "mobs.yml");
-    }
-    TNE.instance.mobConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.mobs);
-    TNE.configurations.load(TNE.instance.mobConfigurations, "mob");
-  }
-
-  public static void reloadConfigsMessages() {
-    if(TNE.instance.messages == null) {
-      TNE.instance.messages = new File(TNE.instance.getDataFolder(), "messages.yml");
-    }
-    TNE.instance.messageConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.messages);
-    TNE.configurations.load(TNE.instance.messageConfigurations, "messages");
-  }
-
-  public static void reloadConfigsObjects() {
-    if(TNE.instance.objects == null) {
-      TNE.instance.objects = new File(TNE.instance.getDataFolder(), "objects.yml");
-    }
-    TNE.instance.objectConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.objects);
-    TNE.configurations.load(TNE.instance.objectConfigurations, "objects");
-  }
-
-  public static void reloadConfigPlayers() {
-    if(TNE.instance.players == null) {
-      TNE.instance.players = new File(TNE.instance.getDataFolder(), "players.yml");
-    }
-    TNE.instance.playerConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.players);
-  }
-
-  public static void reloadConfigsWorlds() {
-    if(TNE.instance.worlds == null) {
-      TNE.instance.worlds = new File(TNE.instance.getDataFolder(), "worlds.yml");
-    }
-    TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
-  }
-
-  public static JSONObject[] sendPostRequest(String url, String payload) {
-    StringBuilder builder = new StringBuilder();
-    try {
-      HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-      connection.setConnectTimeout(5000);
-      connection.setReadTimeout(5000);
-      connection.setRequestMethod("POST");
-      connection.setDoOutput(true);
-      connection.setRequestProperty("Content-Type", "application/json");
-
-      OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-      out.write(payload);
-      out.flush();
-      out.close();
-
-      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-      String response;
-      while ((response = reader.readLine()) != null) {
-        builder.append(response);
-      }
-      connection.disconnect();
-      reader.close();
-    } catch(Exception e) {
-      MISCUtils.debug(e);
-    }
-
-    String toSplit = builder.toString().replace("[", "").replace("]", "");
-    MISCUtils.debug(toSplit);
-    String[] split = toSplit.split("},");
-    List<JSONObject> objects = new ArrayList<>();
-
-    for(String s : split) {
-      String sSuffix = (s.endsWith("}"))? s : s + "}";
-      objects.add((JSONObject)JSONValue.parse(sSuffix));
-    }
-
-    return objects.toArray(new JSONObject[objects.size()]);
-  }
-
-  public static String sendSecureGetRequest(String url) {
-    StringBuilder builder = new StringBuilder();
-    try {
-      HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-      String response;
-      while ((response = reader.readLine()) != null) {
-        builder.append(response);
-      }
-      reader.close();
-    } catch(Exception e) {
-      MISCUtils.debug(e);
-    }
-    return builder.toString();
-  }
-
   public static String sendGetRequest(String URL) {
     StringBuilder builder = new StringBuilder();
     try {
@@ -326,7 +193,7 @@ public class MISCUtils {
 
     String id = IDFinder.getID(event.getPlayer()).toString();
     String world = IDFinder.getWorld(event.getPlayer());
-    BigDecimal cost = event.getType().getCost(event.getIdentifier(), IDFinder.getActualWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+    BigDecimal cost = event.getType().getCost(event.getIdentifier(), IDFinder.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
     if(cost.compareTo(BigDecimal.ZERO) != 0 && !event.isCancelled()) {
@@ -404,14 +271,14 @@ public class MISCUtils {
       writer = new FileWriter(new File(TNE.instance.getDataFolder(), "Material.txt"));
       buffWriter = new BufferedWriter(writer);
     } catch(Exception e) {
-
+      MISCUtils.debug(e);
     }
     for(Material mat : Material.values()) {
-      if(buffWriter != null && writer != null) {
+      if(buffWriter != null) {
         try {
           buffWriter.write("validNames.add(new MaterialNameHelper(Material." + mat.name() + ", new String[0]));" + System.lineSeparator());
         } catch(Exception e) {
-
+          MISCUtils.debug(e);
         }
       }
     }
@@ -430,26 +297,6 @@ public class MISCUtils {
         e.printStackTrace();
       }
     }
-  }
-
-  public static UUID distringuishId(String identifier) {
-    if(IDFinder.isUUID(identifier)) {
-      return UUID.fromString(identifier);
-    }
-    return IDFinder.getID(identifier);
-  }
-
-  @SuppressWarnings("deprecation")
-  public static Player getPlayer(String username) {
-    return IDFinder.getPlayer(username);
-  }
-
-  @SuppressWarnings("deprecation")
-  public static Player getPlayer(UUID id) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
-    }
-    return Bukkit.getPlayer(id);
   }
 
   @SuppressWarnings("rawtypes")

@@ -84,7 +84,7 @@ Core:
             # If shortened, it will ignore the value of Format.
             #It's also possible to include all colour variables from messages.yml
             #Example: <major> and <minor>
-            Format: <symbol><major><decimal><minor><shorten>
+            Format: <symbol><major.amount><decimal><minor.amount><shorten>
 
             #The initial balance for accounts.
             #Will be used if no world-specific configurations are found if multiworld is enabled

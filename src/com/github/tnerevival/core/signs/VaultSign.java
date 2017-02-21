@@ -29,12 +29,12 @@ public class VaultSign extends TNESign {
         if (!AccountUtils.getAccount(IDFinder.getID(player)).hasBank(IDFinder.getWorld(player))) {
           Message none = new Message("Messages.Vault.None");
           none.addVariable("$amount",  CurrencyFormatter.format(player.getWorld().getName(), Vault.cost(player.getWorld().getName(), IDFinder.getID(player).toString())));
-          none.translate(IDFinder.getActualWorld(player), player);
+          none.translate(IDFinder.getWorld(player), player);
           return false;
         }
 
-        if (!Vault.sign(IDFinder.getActualWorld(player), IDFinder.getID(player).toString())) {
-          new Message("Messages.Vault.NoSign").translate(IDFinder.getActualWorld(player), player);
+        if (!Vault.sign(IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
+          new Message("Messages.Vault.NoSign").translate(IDFinder.getWorld(player), player);
           return false;
         }
 

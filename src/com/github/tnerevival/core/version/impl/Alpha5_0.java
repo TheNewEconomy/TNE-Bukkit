@@ -40,7 +40,6 @@ import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
-import com.github.tnerevival.utils.SignUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -380,7 +379,7 @@ public class Alpha5_0 extends Version {
     try {
       int signIndex = sql().executeQuery("SELECT * FROM `" + table + "`;");
       while (sql().results(signIndex).next()) {
-        TNESign sign = SignUtils.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")));
+        TNESign sign = TNESign.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")));
         sign.setLocation(SerializableLocation.fromString(sql().results(signIndex).getString("sign_location")));
         sign.loadMeta(sql().results(signIndex).getString("sign_meta"));
         signs.add(sign);
@@ -401,7 +400,7 @@ public class Alpha5_0 extends Version {
       });
       
       if(sql().results(signIndex).next()) {
-        TNESign sign = SignUtils.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")));
+        TNESign sign = TNESign.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")));
         sign.setLocation(SerializableLocation.fromString(sql().results(signIndex).getString("sign_location")));
         sign.loadMeta(sql().results(signIndex).getString("sign_meta"));
         sql().close();
@@ -822,7 +821,7 @@ public class Alpha5_0 extends Version {
       Map.Entry<String, Article> signEntry = signsIterator.next();
       Entry info = signEntry.getValue().getEntry("info");
 
-      TNESign sign = SignUtils.instance((String)info.getData("type"), UUID.fromString((String)info.getData("owner")));
+      TNESign sign = TNESign.instance((String)info.getData("type"), UUID.fromString((String)info.getData("owner")));
       sign.setLocation(SerializableLocation.fromString((String)info.getData("location")));
       sign.loadMeta((String)info.getData("meta"));
 

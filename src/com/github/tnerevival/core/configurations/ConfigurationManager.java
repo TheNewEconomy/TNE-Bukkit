@@ -5,7 +5,9 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.configurations.impl.*;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
@@ -174,8 +176,7 @@ public class ConfigurationManager {
       }
     }
 
-    if(!player.trim().equals("") && playerEnabled(path, IDFinder.getID(player).toString())) return getPlayerConfiguration(path, IDFinder.getID(player).toString());
-    if(!player.trim().equals("") && playerEnabled(path, IDFinder.getPlayer(player).getName())) return getPlayerConfiguration(path, IDFinder.getPlayer(player).getName());
+    if(player != null && !player.trim().equals("") && playerEnabled(path, player)) return getPlayerConfiguration(path, player);
     if(worldEnabled(path, world)) return getWorldConfiguration(path, world);
     return getValue(configuration, ConfigurationType.fromPrefix(prefix).getIdentifier());
   }
@@ -211,14 +212,96 @@ public class ConfigurationManager {
   }
 
   private boolean worldEnabled(String node, String world) {
-    MISCUtils.debug("ConfigurationManager.worldEnabled(" + node + ", " + world + ")");
-    String path = ConfigurationType.WORLDS.getPrefix() + "." + world + "." + node;
+    MISCUtils.debug("ConfigurationManager.worldEnabled(" + node + ", " + IDFinder.getConfigurationShare(world) + ")");
+    String path = ConfigurationType.WORLDS.getPrefix() + "." + IDFinder.getConfigurationShare(world) + "." + node;
     return TNE.instance.worldConfigurations.contains(path);
   }
 
   private Object getWorldConfiguration(String node, String world) {
-    MISCUtils.debug("ConfigurationManager.getWorldConfigurations(" + node + ", " + world + ")");
-    String path = ConfigurationType.WORLDS.getPrefix() + "." + world + "." + node;
+    MISCUtils.debug("ConfigurationManager.getWorldConfigurations(" + node + ", " + IDFinder.getConfigurationShare(world) + ")");
+    String path = ConfigurationType.WORLDS.getPrefix() + "." + IDFinder.getConfigurationShare(world) + "." + node;
     return TNE.instance.worldConfigurations.get(path);
+  }
+
+  /*
+   * Reload methods
+   */
+
+
+  public static void reloadConfigurations(String type) {
+    if(type.equalsIgnoreCase("all")) {
+      TNE.instance.reloadConfig();
+      TNE.instance.manager.currencyManager.loadCurrencies();
+      reloadConfigsMaterials();
+      reloadConfigsMessages();
+      reloadConfigsMobs();
+      reloadConfigsObjects();
+      reloadConfigPlayers();
+      reloadConfigsWorlds();
+      TNE.instance.manager.currencyManager.loadCurrencies();
+    } else if(type.equalsIgnoreCase("config")) {
+      TNE.instance.reloadConfig();
+      TNE.configurations.load(TNE.instance.getConfig(), "main");
+    } else if(type.equalsIgnoreCase("currencies")) {
+      TNE.instance.manager.currencyManager.loadCurrencies();
+    } else if(type.equalsIgnoreCase("materials")) {
+      reloadConfigsMaterials();
+    } else if(type.equalsIgnoreCase("messages")) {
+      reloadConfigsMessages();
+    } else if(type.equalsIgnoreCase("mobs")) {
+      reloadConfigsMobs();
+    } else if(type.equalsIgnoreCase("objects")) {
+      reloadConfigsObjects();
+    } else if(type.equalsIgnoreCase("players")) {
+      reloadConfigPlayers();
+    } else if(type.equalsIgnoreCase("worlds")) {
+      reloadConfigsWorlds();
+    }
+  }
+
+  private static void reloadConfigsMaterials() {
+    if(TNE.instance.materials == null) {
+      TNE.instance.materials = new File(TNE.instance.getDataFolder(), "materials.yml");
+    }
+    TNE.instance.materialConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.materials);
+    TNE.configurations.load(TNE.instance.materialConfigurations, "materials");
+  }
+
+  private static void reloadConfigsMobs() {
+    if(TNE.instance.mobs == null) {
+      TNE.instance.mobs = new File(TNE.instance.getDataFolder(), "mobs.yml");
+    }
+    TNE.instance.mobConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.mobs);
+    TNE.configurations.load(TNE.instance.mobConfigurations, "mob");
+  }
+
+  private static void reloadConfigsMessages() {
+    if(TNE.instance.messages == null) {
+      TNE.instance.messages = new File(TNE.instance.getDataFolder(), "messages.yml");
+    }
+    TNE.instance.messageConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.messages);
+    TNE.configurations.load(TNE.instance.messageConfigurations, "messages");
+  }
+
+  private static void reloadConfigsObjects() {
+    if(TNE.instance.objects == null) {
+      TNE.instance.objects = new File(TNE.instance.getDataFolder(), "objects.yml");
+    }
+    TNE.instance.objectConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.objects);
+    TNE.configurations.load(TNE.instance.objectConfigurations, "objects");
+  }
+
+  private static void reloadConfigPlayers() {
+    if(TNE.instance.players == null) {
+      TNE.instance.players = new File(TNE.instance.getDataFolder(), "players.yml");
+    }
+    TNE.instance.playerConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.players);
+  }
+
+  private static void reloadConfigsWorlds() {
+    if(TNE.instance.worlds == null) {
+      TNE.instance.worlds = new File(TNE.instance.getDataFolder(), "worlds.yml");
+    }
+    TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
   }
 }

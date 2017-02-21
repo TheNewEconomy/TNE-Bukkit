@@ -10,9 +10,16 @@
     
 - Alpha 5.2 "Quality of Life"
   - Commands
+    - bank withdraw/deposit
+      - Added currency name argument
+    - vault commands
+      - Added commands for the new vault system
     - money top
       - Shows the players with the highest balances
         - This may be sorted by bank balances, all currencies, and all worlds.
+  - World Sharing
+    - Removed the need for the ShareAccounts configuration
+    - Added the ability to share configurations, balances, or both.
   - Mob Rewards
     - Added ability to specify the currency for mob rewards
     - Added ability to add rewards for forge mods
@@ -43,3 +50,10 @@
 - Version Unknown
   - Administration command additions
     - Ability to modify configurations in-game
+  - Inventory System
+    - Complete rewrite of the old system to no longer run our internal events on every inventory for credit purposes, this
+    was one of the few places still causing errors for server owners.
+    - This new system allows us to track when items are moved/removed in/from inventories such as vaults to help prevent
+    duplicated inventories.
+    - This also fixes a weird issue caused when using Essential's invsee command with TNE running
+    - This new system will also allow me to implement my new inventory-based shop system correctly

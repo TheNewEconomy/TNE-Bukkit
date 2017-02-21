@@ -6,7 +6,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.ShareEntry;
 import com.github.tnerevival.core.shops.Shop;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,7 +65,7 @@ public class ShopShareCommand extends TNECommand {
               s.removeShares(target);
 
               Message hidden = new Message("Messages.Shop.ShareRemoved");
-              hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
+              hidden.addVariable("$player", IDFinder.getPlayer(target.toString()).getName());
               hidden.translate(IDFinder.getWorld(player), player);
               return true;
             } else {
@@ -77,7 +76,7 @@ public class ShopShareCommand extends TNECommand {
 
                 s.addShares(entry);
                 Message hidden = new Message("Messages.Shop.ShareAdded");
-                hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
+                hidden.addVariable("$player", IDFinder.getPlayer(target.toString()).getName());
                 hidden.translate(IDFinder.getWorld(player), player);
                 return true;
               } else {

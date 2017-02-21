@@ -36,14 +36,10 @@ public class CurrencyManager {
   }
 
   public void loadCurrencies() {
-    loadCurrency(TNE.instance.getConfig(), false, IDFinder.getWorld(TNE.instance.defaultWorld));
+    loadCurrency(TNE.instance.getConfig(), false, TNE.instance.defaultWorld);
 
     for(String s : worlds) {
-      loadCurrency(TNE.instance.worldConfigurations, true, IDFinder.getWorld(s));
-    }
-
-    for(String s : currencies.keySet()) {
-      MISCUtils.debug(s);
+      loadCurrency(TNE.instance.worldConfigurations, true, s);
     }
   }
 
@@ -119,15 +115,34 @@ public class CurrencyManager {
     }
   }
 
+  public void initializeWorld(String world) {
+    loadCurrency(TNE.instance.worldConfigurations, true, world);
+
+    Map<String, Currency> toAdd = new HashMap<>();
+    Iterator<Map.Entry<String, Currency>> iterator = currencies.entrySet().iterator();
+    while(iterator.hasNext()) {
+      Map.Entry<String, Currency> entry = iterator.next();
+      if(entry.getKey().contains(TNE.instance.defaultWorld + ":") || !IDFinder.getBalanceShareWorld(world).equals(world) && entry.getKey().contains(IDFinder.getBalanceShareWorld(world) + ":")) {
+        if (!TNE.instance.worldConfigurations.contains("Worlds." + world + ".Currency." + entry.getValue().getName() + ".Disabled") ||
+            !TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Currency." + entry.getValue().getName() + ".Disabled")) {
+          toAdd.put(world + ":" + entry.getValue().getName(), entry.getValue());
+        }
+      }
+    }
+    currencies.putAll(toAdd);
+  }
+
   public void add(String world, Currency currency) {
     MISCUtils.debug("[Add]Loading Currency: " + currency.getName() + " for world: " + world);
     currencies.put(world + ":" + currency.getName(), currency);
     if(world.equals(TNE.instance.defaultWorld)) {
       copyToWorlds(currency);
+    } else if(!IDFinder.getBalanceShareWorld(world).equals(world)) {
+      copyToWorld(currency, IDFinder.getBalanceShareWorld(world));
     }
   }
 
-  public void copyToWorlds(Currency currency) {
+  private void copyToWorlds(Currency currency) {
     if(!currencies.containsKey(TNE.instance.defaultWorld + ":" + currency.getName())) {
       if (!TNE.instance.getConfig().contains("Core.Currency." + currency.getName() + ".Disabled") ||
           !TNE.instance.getConfig().getBoolean("Core.Currency." + currency.getName() + ".Disabled")) {
@@ -136,12 +151,20 @@ public class CurrencyManager {
     }
 
     for(String s : worlds) {
-
       if(!currencies.containsKey(s + ":" + currency.getName())) {
         if (!TNE.instance.worldConfigurations.contains("Worlds." + s + ".Currency." + currency.getName() + ".Disabled") ||
             !TNE.instance.worldConfigurations.getBoolean("Worlds." + s + ".Currency." + currency.getName() + ".Disabled")) {
             currencies.put(s + ":" + currency.getName(), currency);
         }
+      }
+    }
+  }
+
+  public void copyToWorld(Currency currency, String world) {
+    if(!currencies.containsKey(world + ":" + currency.getName())) {
+      if (!TNE.instance.worldConfigurations.contains("Worlds." + world + ".Currency." + currency.getName() + ".Disabled") ||
+          !TNE.instance.worldConfigurations.getBoolean("Worlds." + world + ".Currency." + currency.getName() + ".Disabled")) {
+        currencies.put(world + ":" + currency.getName(), currency);
       }
     }
   }
@@ -158,6 +181,8 @@ public class CurrencyManager {
   public Currency get(String world, String name) {
     if(contains(world, name)) {
       return currencies.get(world + ":" + name);
+    } else if(contains(IDFinder.getBalanceShareWorld(world), name)) {
+      return currencies.get(IDFinder.getBalanceShareWorld(world) + ":" + name);
     }
     return get(world);
   }
@@ -193,7 +218,7 @@ public class CurrencyManager {
     List<Currency> values = new ArrayList<>();
 
     for(String s : currencies.keySet()) {
-      if(s.contains(world + ":")) {
+      if(s.contains(world + ":") || s.contains(IDFinder.getBalanceShareWorld(world) + ":")) {
         values.add(currencies.get(s));
       }
     }

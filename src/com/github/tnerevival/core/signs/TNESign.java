@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -8,11 +9,15 @@ import com.github.tnerevival.core.event.sign.TNESignEvent;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class TNESign {
@@ -165,5 +170,55 @@ public abstract class TNESign {
   public String getMeta() {
     //TODO: Implement as needed in child classes.
     return "";
+  }
+
+  /**
+   * Utility Methods
+   */
+
+
+  public static Boolean validSign(Location location) {
+    SerializableLocation cerealLoc = new SerializableLocation(location);
+    for(SerializableLocation loc : TNE.instance.manager.signs.keySet()) {
+      if(loc.equals(cerealLoc)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static void removeSign(SerializableLocation location) {
+    Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance.manager.signs.entrySet().iterator();
+
+    while(i.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> e = i.next();
+
+      if(e.getKey().equals(location)) {
+        i.remove();
+      }
+    }
+  }
+
+  public static TNESign getSign(SerializableLocation location) {
+    for(Map.Entry<SerializableLocation, TNESign> entry : TNE.instance.manager.signs.entrySet()) {
+      if(entry.getKey().equals(location)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  public static TNESign instance(String type, UUID owner) {
+    switch(type.toLowerCase()) {
+      case "item":
+        return new ItemSign(owner);
+      case "shop":
+        return new ShopSign(owner);
+      case "vault":
+        return new VaultSign(owner);
+      default:
+        MISCUtils.debug("defaulting...");
+        return new VaultSign(owner);
+    }
   }
 }

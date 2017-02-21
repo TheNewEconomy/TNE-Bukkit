@@ -6,7 +6,6 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
@@ -136,7 +135,7 @@ public class TNEVaultEconomy implements Economy {
 
   @Override
   public EconomyResponse isBankMember(String name, OfflinePlayer player) {
-    if(BankUtils.bankMember(getBankAccount(name), IDFinder.getID(player))) {
+    if(Bank.bankMember(getBankAccount(name), IDFinder.getID(player))) {
       return new EconomyResponse(0, 0, ResponseType.SUCCESS, player.getName() + " is a member of this bank!");
     }
     return new EconomyResponse(0, 0, ResponseType.FAILURE, player.getName() + " is not a member of this bank!");
@@ -239,7 +238,7 @@ public class TNEVaultEconomy implements Economy {
     if(!AccountUtils.getAccount(getBankAccount(username)).hasBank(world)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " does not own a bank in this world!");
     }
-    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has " + BankUtils.getBankBalance(getBankAccount(username), world, plugin.manager.currencyManager.get(world).getName()));
+    return new EconomyResponse(0, 0, ResponseType.SUCCESS, "Bank has " + Bank.getBankBalance(getBankAccount(username), world, plugin.manager.currencyManager.get(world).getName()));
   }
 
   @Override
@@ -392,7 +391,7 @@ public class TNEVaultEconomy implements Economy {
   @Override
   @Deprecated
   public EconomyResponse isBankMember(String name, String username) {
-    if(BankUtils.bankMember(getBankAccount(name), IDFinder.getID(username))) {
+    if(Bank.bankMember(getBankAccount(name), IDFinder.getID(username))) {
       return new EconomyResponse(0, 0, ResponseType.SUCCESS, username + " is a member of this bank!");
     }
     return new EconomyResponse(0, 0, ResponseType.FAILURE, username + " is not a member of this bank!");

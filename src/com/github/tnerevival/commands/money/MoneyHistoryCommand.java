@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -108,7 +107,7 @@ public class MoneyHistoryCommand extends TNECommand {
 
           Player p = null;
           if(r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {
-            p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
+            p = IDFinder.getPlayer(r.getPlayer());
           }
           StringBuilder builder = new StringBuilder();
           builder.append(ChatColor.GREEN + r.getType() + ChatColor.WHITE + " | ");

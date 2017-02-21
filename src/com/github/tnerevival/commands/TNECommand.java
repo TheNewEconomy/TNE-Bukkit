@@ -121,7 +121,7 @@ public abstract class TNECommand {
     String world = (!player.equals(""))? IDFinder.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
 
     if(!developer()) {
-      if (!activated(IDFinder.getActualWorld(IDFinder.getID(player)), player)) {
+      if (!activated(IDFinder.getWorld(IDFinder.getID(player)), player)) {
         return false;
       }
 
@@ -132,7 +132,7 @@ public abstract class TNECommand {
         if (!acc.getStatus().getBalance()) {
           Message locked = new Message("Messages.Account.Locked");
           locked.addVariable("$player", p.getDisplayName());
-          locked.translate(IDFinder.getActualWorld(p), p);
+          locked.translate(IDFinder.getWorld(p), p);
           return false;
         }
       }
@@ -140,21 +140,21 @@ public abstract class TNECommand {
       if (confirm() && sender instanceof Player) {
         Player p = (Player) sender;
         Account acc = AccountUtils.getAccount(IDFinder.getID(p));
-        if (TNE.instance.manager.enabled(IDFinder.getID(p), IDFinder.getActualWorld(p))) {
-          MISCUtils.debug(TNE.instance.manager.enabled(IDFinder.getID(p), IDFinder.getActualWorld(p)) + "");
-          if (!TNE.instance.manager.confirmed(IDFinder.getID(p), IDFinder.getActualWorld(p))) {
-            MISCUtils.debug(TNE.instance.manager.confirmed(IDFinder.getID(p), IDFinder.getActualWorld(p)) + "");
+        if (TNE.instance.manager.enabled(IDFinder.getID(p), IDFinder.getWorld(p))) {
+          MISCUtils.debug(TNE.instance.manager.enabled(IDFinder.getID(p), IDFinder.getWorld(p)) + "");
+          if (!TNE.instance.manager.confirmed(IDFinder.getID(p), IDFinder.getWorld(p))) {
+            MISCUtils.debug(TNE.instance.manager.confirmed(IDFinder.getID(p), IDFinder.getWorld(p)) + "");
             if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
               MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
               Message set = new Message("Messages.Account.Set");
-              set.translate(IDFinder.getActualWorld(p), p);
+              set.translate(IDFinder.getWorld(p), p);
               return false;
             }
 
             if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
               MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
               Message confirm = new Message("Messages.Account.Confirm");
-              confirm.translate(IDFinder.getActualWorld(p), p);
+              confirm.translate(IDFinder.getWorld(p), p);
               return false;
             }
           }

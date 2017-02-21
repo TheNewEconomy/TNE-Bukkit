@@ -12,7 +12,6 @@ import com.github.tnerevival.listeners.collections.ShopsListener;
 import com.github.tnerevival.listeners.collections.SignsListener;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.utils.TopBalance;
 import org.bukkit.entity.Player;
 
@@ -83,7 +82,7 @@ public class EconomyManager {
         TNE.instance.saveManager.versionInstance.deleteAccount(acc.getUid());
         TNE.instance.saveManager.versionInstance.removeID(acc.getUid());
         it.remove();
-        ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
+        ecoIDs.remove(IDFinder.getPlayer(acc.getUid().toString()).getDisplayName());
       }
     }
   }
@@ -104,7 +103,7 @@ public class EconomyManager {
         TNE.instance.saveManager.versionInstance.deleteAccount(acc.getUid());
         TNE.instance.saveManager.versionInstance.removeID(acc.getUid());
         it.remove();
-        ecoIDs.remove(MISCUtils.getPlayer(acc.getUid()).getDisplayName());
+        ecoIDs.remove(IDFinder.getPlayer(acc.getUid().toString()).getDisplayName());
       }
     }
   }
@@ -118,8 +117,8 @@ public class EconomyManager {
     Boolean force = TNE.instance.api.getBoolean("Core.Pins.Force", world, id);
 
     if(!enabled) {
-      Player p = MISCUtils.getPlayer(id);
-      new Message("Messages.Money.NoPins").translate(IDFinder.getActualWorld(p), p);
+      Player p = IDFinder.getPlayer(id.toString());
+      new Message("Messages.Money.NoPins").translate(IDFinder.getWorld(p), p);
       return true;
     }
     return !force || confirmed.contains(id);

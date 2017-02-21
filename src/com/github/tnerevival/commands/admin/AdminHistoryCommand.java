@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/1/2016.
@@ -69,7 +68,7 @@ public class AdminHistoryCommand extends TNECommand {
     int page = 1;
 
     if(arguments.length > 1 && IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
-      Player target = MISCUtils.getPlayer(IDFinder.getID(arguments[0]));
+      Player target = IDFinder.getPlayer(arguments[0]);
       for (int i = 1; i < arguments.length; i++) {
         String s = arguments[i];
         if (s.contains(":")) {
@@ -113,7 +112,7 @@ public class AdminHistoryCommand extends TNECommand {
 
             Player p = null;
             if (r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {
-              p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
+              p = IDFinder.getPlayer(r.getPlayer());
             }
             StringBuilder builder = new StringBuilder();
             builder.append(ChatColor.GREEN + r.getType() + ChatColor.WHITE + " | ");

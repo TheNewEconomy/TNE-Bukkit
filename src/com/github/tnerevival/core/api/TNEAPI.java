@@ -14,8 +14,6 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.SignUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -421,7 +419,7 @@ public class TNEAPI {
    * @param world The name of the world to use.
    */
   public void addBankMember(String owner, String identifier, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    Bank b = Bank.getBank(IDFinder.getID(owner), world);
     b.addMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
@@ -435,7 +433,7 @@ public class TNEAPI {
    * @param world The name of the world to use.
    */
   public void removeBankMember(String owner, String identifier, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    Bank b = Bank.getBank(IDFinder.getID(owner), world);
     b.removeMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
@@ -450,7 +448,7 @@ public class TNEAPI {
    * @return True if the player is a member, otherwise false.
    */
   public Boolean bankMember(String owner, String identifier, String world) {
-    return BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(identifier), world);
+    return Bank.bankMember(IDFinder.getID(owner), IDFinder.getID(identifier), world);
   }
 
   /**
@@ -481,7 +479,7 @@ public class TNEAPI {
    */
   public Double getBankBalance(String owner, String world, String currency) {
     currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
-    return BankUtils.getBank(IDFinder.getID(owner), world).getGold(currency).doubleValue();
+    return Bank.getBank(IDFinder.getID(owner), world).getGold(currency).doubleValue();
   }
 
   /**
@@ -512,7 +510,7 @@ public class TNEAPI {
    */
   public void setBankBalance(String owner, String world, String currency, Double amount) {
     currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
-    BankUtils.getBank(IDFinder.getID(owner), world).setGold(currency, new BigDecimal(amount));
+    Bank.getBank(IDFinder.getID(owner), world).setGold(currency, new BigDecimal(amount));
   }
   
   /*
@@ -915,7 +913,7 @@ public class TNEAPI {
    * @return True if there is a TNESign, otherwise false.
    */
   public Boolean validSign(Location location) {
-    return SignUtils.validSign(location);
+    return TNESign.validSign(location);
   }
 
   /**
@@ -924,7 +922,7 @@ public class TNEAPI {
    * @return The instance of the sign at the location if it exists, otherwise null.
    */
   public TNESign getSign(Location location) {
-    return SignUtils.getSign(new SerializableLocation(location));
+    return TNESign.getSign(new SerializableLocation(location));
   }
 
   /**
@@ -945,7 +943,7 @@ public class TNEAPI {
    * @return The sign instance based on the type, and owner.
    */
   public TNESign createInstance(SignType type, UUID owner) {
-    return SignUtils.instance(type.getName(), owner);
+    return TNESign.instance(type.getName(), owner);
   }
 
   /**
@@ -955,7 +953,7 @@ public class TNEAPI {
    */
   public Boolean removeSign(Location location) {
     if(!validSign(location)) return false;
-    SignUtils.removeSign(new SerializableLocation(location));
+    TNESign.removeSign(new SerializableLocation(location));
     return true;
   }
 

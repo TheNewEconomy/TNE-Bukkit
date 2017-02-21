@@ -2,6 +2,7 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
@@ -88,6 +89,9 @@ public class AccountUtils {
   }
 
   private static BigDecimal getBalance(UUID id, String world, String currencyName) {
+    MISCUtils.debug("getBalance(" + id.toString() + ", " + world + ", " + currencyName);
+    world = IDFinder.getBalanceShareWorld(world);
+    MISCUtils.debug("getBalance(" + id.toString() + ", " + world + ", " + currencyName);
     Account account = getAccount(id);
     Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
 
@@ -113,6 +117,7 @@ public class AccountUtils {
   }
 
   private static void setBalance(UUID id, String world, String currencyName, BigDecimal balance) {
+    world = IDFinder.getBalanceShareWorld(world);
     Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
     Account account = getAccount(id);
 
@@ -126,19 +131,14 @@ public class AccountUtils {
       Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
       MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
-    } else {
-      account.setBalance(world, balance, currencyName);
-      TNE.instance.manager.accounts.put(id, account);
-
+      return;
     }
-  }
-
-  public static BigDecimal round(BigDecimal amount) {
-    return round(TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), amount);
-  }
-
-  public static BigDecimal round(String world, BigDecimal amount) {
-    return round(world, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), amount);
+    if(MISCUtils.multiWorld()) {
+      account.setBalance(world, balance, currencyName);
+    } else {
+      account.setBalance(TNE.instance.defaultWorld, balance, currencyName);
+    }
+    TNE.instance.manager.accounts.put(id, account);
   }
 
   public static BigDecimal round(String world, String currency, BigDecimal amount) {
@@ -174,9 +174,10 @@ public class AccountUtils {
   }
 
   public static BigDecimal getFunds(UUID id, String world, String currency) {
+    MISCUtils.debug("AccountUtils.getFunds(" + id.toString() + ", " + world + ", " + currency + ")");
     BigDecimal funds = getBalance(id, world, currency);
     if(TNE.instance.api.getBoolean("Core.Bank.Connected", world)) {
-      funds = funds.add(BankUtils.getBankBalance(id, world, currency));
+      funds = funds.add(Bank.getBankBalance(id, world, currency));
     }
     return funds;
   }
@@ -188,7 +189,7 @@ public class AccountUtils {
   public static void removeFunds(UUID id, String world, BigDecimal amount, String currency) {
     BigDecimal difference = amount.subtract(getBalance(id, world, currency));
     if(difference.doubleValue() > 0) {
-      BankUtils.setBankBalance(id, world, currency, BankUtils.getBankBalance(id, world, currency).subtract(difference));
+      Bank.setBankBalance(id, world, currency, Bank.getBankBalance(id, world, currency).subtract(difference));
       setBalance(id, world, currency, BigDecimal.ZERO);
       return;
     }

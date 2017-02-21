@@ -6,11 +6,11 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 public class WorldListener implements Listener {
 
@@ -45,5 +45,11 @@ public class WorldListener implements Listener {
     } else {
       AccountUtils.initializeWorldData(IDFinder.getID(player));
     }
+  }
+
+  @EventHandler
+  public void onWorldLoad(WorldLoadEvent event) {
+    String world = event.getWorld().getName();
+    TNE.instance.manager.currencyManager.initializeWorld(world);
   }
 }

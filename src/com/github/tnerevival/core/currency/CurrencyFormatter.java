@@ -46,7 +46,7 @@ public class CurrencyFormatter {
     amount = AccountUtils.round(currency.getName(), world, amount);
     MISCUtils.debug(currency.getName() + " World: " + currency);
 
-    String shortFormat = "<symbol> <short.amount>";
+    String shortFormat = "<symbol><short.amount>";
     String format = currency.getFormat();
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");

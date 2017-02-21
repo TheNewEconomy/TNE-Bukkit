@@ -6,7 +6,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
 import com.github.tnerevival.core.shops.ShopEntry;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,7 +60,7 @@ public class ShopCloseCommand extends TNECommand {
           }
 
           for(UUID shopper : s.getShoppers()) {
-            Player p = MISCUtils.getPlayer(shopper);
+            Player p = IDFinder.getPlayer(shopper.toString());
             p.closeInventory();
             new Message("Messages.Shop.ClosedBrowse").translate(IDFinder.getWorld(player), player);
           }

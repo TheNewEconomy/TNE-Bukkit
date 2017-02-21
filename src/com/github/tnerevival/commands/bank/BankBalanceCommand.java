@@ -8,7 +8,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -63,12 +62,12 @@ public class BankBalanceCommand extends TNECommand {
       return false;
     }
 
-    if(!AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(world) || !BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName())) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
+    if(!AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(world) || !Bank.bankMember(IDFinder.getID(owner), IDFinder.getID(sender.getName())) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
       new Message("Messages.General.NoPerm").translate(getWorld(player), player);
       return false;
     }
     Message balance = new Message("Messages.Bank.Balance");
-    balance.addVariable("$amount",  CurrencyFormatter.format(world, currency, BankUtils.getBankBalance(IDFinder.getID(owner), world, currency)));
+    balance.addVariable("$amount",  CurrencyFormatter.format(world, currency, Bank.getBankBalance(IDFinder.getID(owner), world, currency)));
     balance.addVariable("$name", owner);
     balance.translate(IDFinder.getWorld(player), player);
     return true;

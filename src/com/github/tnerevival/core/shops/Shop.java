@@ -244,8 +244,8 @@ public class Shop implements Serializable {
 
   public void update() {
     for(UUID id : shoppers) {
-      Inventory inv = getInventory(Shop.canModify(name, MISCUtils.getPlayer(id)));
-      MISCUtils.getPlayer(id).openInventory(inv);
+      Inventory inv = getInventory(Shop.canModify(name, IDFinder.getPlayer(id.toString())));
+      IDFinder.getPlayer(id.toString()).openInventory(inv);
     }
   }
 

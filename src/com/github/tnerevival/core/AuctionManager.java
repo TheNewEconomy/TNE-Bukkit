@@ -49,7 +49,7 @@ public class AuctionManager {
     send.addVariable("$lot", auction.getLotNumber() + "");
     if(auction.getHighestBid() != null) {
       send.addVariable("$amount", CurrencyFormatter.format(world, auction.getHighestBid().getBid().getAmount()));
-      send.addVariable("$player", MISCUtils.getPlayer(auction.getHighestBid().getBidder()).getDisplayName());
+      send.addVariable("$player", IDFinder.getPlayer(auction.getHighestBid().getBidder().toString()).getDisplayName());
     }
 
     MISCUtils.debug("Auction Message");
@@ -94,11 +94,11 @@ public class AuctionManager {
 
       if (AccountUtils.transaction(winner.toString(), null, bid, TransactionType.MONEY_INQUIRY, world)) {
         AccountUtils.transaction(winner.toString(), a.getPlayer().toString(), bid, TransactionType.MONEY_PAY, world);
-        if(Bukkit.getOnlinePlayers().contains(MISCUtils.getPlayer(winner))) {
-          MISCUtils.getPlayer(winner).getInventory().addItem(a.getItem().toItemStack());
+        if(Bukkit.getOnlinePlayers().contains(IDFinder.getPlayer(winner.toString()))) {
+          IDFinder.getPlayer(winner.toString()).getInventory().addItem(a.getItem().toItemStack());
           Message win = new Message("Messages.Auction.Won");
           win.addVariable("$item", a.getItem().getName());
-          win.translate(world, MISCUtils.getPlayer(winner));
+          win.translate(world, IDFinder.getPlayer(winner.toString()));
         } else {
           Claim claim = new Claim(winner, a.getLotNumber(), a.getItem(), a.getCost());
           unclaimed.add(claim);
@@ -108,26 +108,26 @@ public class AuctionManager {
 
         Message paid = new Message("Messages.Auction.Paid");
         paid.addVariable("$amount", CurrencyFormatter.format(world, bid.getAmount()));
-        paid.translate(world, MISCUtils.getPlayer(a.getPlayer()));
+        paid.translate(world, IDFinder.getPlayer(a.getPlayer().toString()));
         active.remove(lot);
 
         String w = (a.getGlobal())? "Global" : a.getWorld();
         startNext(w);
         return;
       }
-      MISCUtils.getPlayer(a.getPlayer()).getInventory().addItem(a.getItem().toItemStack());
-      new Message("Messages.Auction.FailedReturn").translate(world, MISCUtils.getPlayer(a.getPlayer()));
+      IDFinder.getPlayer(a.getPlayer().toString()).getInventory().addItem(a.getItem().toItemStack());
+      new Message("Messages.Auction.FailedReturn").translate(world, IDFinder.getPlayer(a.getPlayer().toString()));
       return;
     }
     notifyPlayers(world, lot, "Messages.Auction.NoWinner", true);
-    MISCUtils.getPlayer(a.getPlayer()).getInventory().addItem(a.getItem().toItemStack());
-    new Message("Messages.Auction.Return").translate(world, MISCUtils.getPlayer(a.getPlayer()));
+    IDFinder.getPlayer(a.getPlayer().toString()).getInventory().addItem(a.getItem().toItemStack());
+    new Message("Messages.Auction.Return").translate(world, IDFinder.getPlayer(a.getPlayer().toString()));
     active.remove(lot);
   }
 
   public Boolean cancel(Integer lot, UUID id, String world) {
     Auction a = getAuction(lot);
-    Player player =  MISCUtils.getPlayer(id);
+    Player player =  IDFinder.getPlayer(id.toString());
 
     boolean requiresAdmin = (isActive(lot) && a.getHighestBid() != null  || !a.getPlayer().equals(id));
 
@@ -143,7 +143,7 @@ public class AuctionManager {
     end(world, lot, false);
     Message cancelled = new Message("Messages.Auction.Cancelled");
     cancelled.addVariable("$lot", lot + "");
-    cancelled.translate(world, MISCUtils.getPlayer(id));
+    cancelled.translate(world, IDFinder.getPlayer(id.toString()));
     return true;
   }
 
@@ -246,7 +246,7 @@ public class AuctionManager {
     if(!AccountUtils.transaction(player.toString(), null, bid, TransactionType.MONEY_INQUIRY, world)) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", CurrencyFormatter.format(world, bid.getAmount()));
-      insufficient.translate(world, MISCUtils.getPlayer(player));
+      insufficient.translate(world, IDFinder.getPlayer(player.toString()));
       return false;
     }
 
@@ -254,7 +254,7 @@ public class AuctionManager {
       if(!auction.getSilent()) {
         Message under = new Message("Messages.Auction.Under");
         under.addVariable("$amount", CurrencyFormatter.format(world, minimum));
-        under.translate(world, MISCUtils.getPlayer(player));
+        under.translate(world, IDFinder.getPlayer(player.toString()));
       }
       return false;
     }
@@ -263,14 +263,14 @@ public class AuctionManager {
       active.get(lot).setTime(auction.getTime() + snipeTime);
       Message snipe = new Message("Messages.Auction.AntiSnipe");
       snipe.addVariable("$time", snipeTime + "");
-      notifyPlayers(world, lot, snipe.grab(world, MISCUtils.getPlayer(player)), false);
+      notifyPlayers(world, lot, snipe.grab(world, IDFinder.getPlayer(player.toString())), false);
     }
     active.get(lot).setHighestBid(new Bid(player, bid));
 
     Message submitted = new Message("Messages.Auction.Submitted");
     submitted.addVariable("$amount", CurrencyFormatter.format(world, bid.getAmount()));
     submitted.addVariable("$lot", lot + "");
-    submitted.translate(world, MISCUtils.getPlayer(player));
+    submitted.translate(world, IDFinder.getPlayer(player.toString()));
 
     notifyPlayers(world, lot, "Messages.Auction.Bid", false);
     return true;
@@ -340,7 +340,7 @@ public class AuctionManager {
 
   public Boolean add(Auction auction) {
     MISCUtils.debug("Auction Add");
-    if(auction.getSilent() && !MISCUtils.getPlayer(auction.getPlayer()).hasPermission("tne.auction.sauction")) {
+    if(auction.getSilent() && !IDFinder.getPlayer(auction.getPlayer().toString()).hasPermission("tne.auction.sauction")) {
       new Message("Messages.General.NoPerm").translate(auction.getWorld(), auction.getPlayer());
       return false;
     }
@@ -350,22 +350,22 @@ public class AuctionManager {
     if(cost.compareTo(BigDecimal.ZERO) > 0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), cost));
-      insufficient.translate(auction.getWorld(), MISCUtils.getPlayer(auction.getPlayer()));
+      insufficient.translate(auction.getWorld(), IDFinder.getPlayer(auction.getPlayer().toString()));
       return false;
     }
     MISCUtils.debug("Cost: " + cost);
 
     if(getQueued(auction.getPlayer()) >= TNE.instance.api.getInteger("Core.Auctions.PersonalQueue", auction.getWorld(), auction.getPlayer())) {
-      new Message("Messages.Auction.PersonalQueue").translate(IDFinder.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
+      new Message("Messages.Auction.PersonalQueue").translate(IDFinder.getWorld(auction.getPlayer()), IDFinder.getPlayer(auction.getPlayer().toString()));
       return false;
     }
 
     if(getQueued(auction.getWorld()) >= TNE.instance.api.getInteger("Core.Auctions.MaxQueue", auction.getWorld(), auction.getPlayer())) {
-      new Message("Messages.Auction.MaxQueue").translate(IDFinder.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
+      new Message("Messages.Auction.MaxQueue").translate(IDFinder.getWorld(auction.getPlayer()), IDFinder.getPlayer(auction.getPlayer().toString()));
       return false;
     }
     auction.setLotNumber(lastLot + 1);
-    MISCUtils.getPlayer(auction.getPlayer()).getInventory().removeItem(auction.getItem().toItemStack());
+    IDFinder.getPlayer(auction.getPlayer().toString()).getInventory().removeItem(auction.getItem().toItemStack());
     AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_REMOVE, auction.getWorld());
     if(canStart(auction.getWorld(), auction.getPlayer().toString())) {
       MISCUtils.debug("Starting Auction");
@@ -380,7 +380,7 @@ public class AuctionManager {
     auctionQueue.put(auction.getLotNumber(), auction);
     Message queued = new Message("Messages.Auction.Queued");
     queued.addVariable("$lot", auction.getLotNumber() + "");
-    queued.translate(IDFinder.getWorld(auction.getPlayer()), MISCUtils.getPlayer(auction.getPlayer()));
+    queued.translate(IDFinder.getWorld(auction.getPlayer()), IDFinder.getPlayer(auction.getPlayer().toString()));
     return true;
   }
 

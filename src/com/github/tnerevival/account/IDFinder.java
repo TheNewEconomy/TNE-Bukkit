@@ -31,40 +31,26 @@ import java.util.UUID;
  **/
 public class IDFinder {
 
-  public static String getWorld(String actualWorld) {
-    if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
-      MISCUtils.debug("WORLD USING: " + TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld"));
-      return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
-    }
-    return actualWorld;
-  }
-
   public static String getWorld(Player player) {
-    return getWorld(getID(player));
-  }
-
-  public static String getWorld(UUID id) {
-    if(MISCUtils.multiWorld()) {
-      if(getPlayer(id.toString()) != null) {
-        String actualWorld = getActualWorld(id);
-        if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
-          MISCUtils.debug("WORLD USING: " + TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld"));
-          return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
-        }
-        MISCUtils.debug("WORLD USING: " + actualWorld);
-        return actualWorld;
-      }
-    }
-    MISCUtils.debug("WORLD USING: Default");
-    return TNE.instance.defaultWorld;
-  }
-
-  public static String getActualWorld(Player player) {
     return player.getWorld().getName();
   }
 
-  public static String getActualWorld(UUID id) {
-    return getActualWorld(getPlayer(id.toString()));
+  public static String getWorld(UUID id) {
+    return getWorld(getPlayer(id.toString()));
+  }
+
+  public static String getBalanceShareWorld(String world) {
+    if(MISCUtils.worldConfigExists("Worlds." + world + ".Share.Balances")) {
+      return TNE.instance.worldConfigurations.getString("Worlds." + world + ".Share.Balances");
+    }
+    return world;
+  }
+
+  public static String getConfigurationShare(String world) {
+    if(MISCUtils.worldConfigExists("Worlds." + world + ".Share.Configurations")) {
+      return TNE.instance.worldConfigurations.getString("Worlds." + world + ".Share.Configurations");
+    }
+    return world;
   }
 
   public static UUID ecoID(String username) {

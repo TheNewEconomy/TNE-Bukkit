@@ -1,8 +1,12 @@
 package com.github.tnerevival.commands.bank;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class BankCommand extends TNECommand {
 
@@ -48,6 +52,11 @@ public class BankCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    Player player = getPlayer(sender);
+    if(!Bank.enabled(getWorld(sender), IDFinder.getID(player).toString())) {
+      new Message("Messages.Bank.Disabled").translate(IDFinder.getWorld(player), player);
+      return false;
+    }
     return super.execute(sender, command, arguments);
   }
 }
