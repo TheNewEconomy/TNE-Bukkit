@@ -24,8 +24,12 @@
     - Added ability to specify the currency for mob rewards
     - Added ability to add rewards for forge mods
     - Added ability to specify various rewards for slimes based on size.
+    - Added ability to have a chance reward, which gives a random reward between a set of two amounts
+    - Added ability to give a custom reward for mobs with a custom name, this could be use for boss mobs
+    - Added ability to have a Multiplier per mob, player, world, or just a general multiplier, which will multiple a mob's reward by a given amount.
   - Messages
     - Added ability to specify different names for various mobs for mob reward messages
+    - Added ability to change the reward message for every mob, based on the Vanilla name, or a custom name.
   - Banks
     - Separated into two systems; banks, which hold money, and vaults, which hold items
     - Banks may now hold multiple currencies
