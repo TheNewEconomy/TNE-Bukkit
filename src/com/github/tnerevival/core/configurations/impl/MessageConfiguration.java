@@ -3,6 +3,8 @@ package com.github.tnerevival.core.configurations.impl;
 import com.github.tnerevival.core.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Set;
+
 public class MessageConfiguration extends Configuration {
 
   @Override
@@ -185,6 +187,12 @@ public class MessageConfiguration extends Configuration {
 
     configurations.put("Messages.World.Change", "<white>You have been charged <gold> $amount<white> for changing worlds.");
     configurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
+
+    String base = "Messages.Mob.Custom";
+    Set<String> keys = configurationFile.getConfigurationSection(base).getKeys(false);
+    for(String s : keys) {
+      configurations.put(base + "." + s, configurationFile.getString(base + "." + s));
+    }
 
     super.load(configurationFile);
   }

@@ -17,6 +17,7 @@
 package com.github.tnerevival.core.inventory;
 
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -41,27 +42,9 @@ public class TNEInventory {
   protected Material[] bannedItems = new Material[] {
       Material.ENCHANTED_BOOK,
       Material.WRITTEN_BOOK,
-      Material.SPLASH_POTION,
       Material.POTION,
-      Material.SPLASH_POTION,
-      Material.LINGERING_POTION,
-      Material.WHITE_SHULKER_BOX,
-      Material.ORANGE_SHULKER_BOX,
-      Material.MAGENTA_SHULKER_BOX,
-      Material.LIGHT_BLUE_SHULKER_BOX,
-      Material.YELLOW_SHULKER_BOX,
-      Material.LIME_SHULKER_BOX,
-      Material.PINK_SHULKER_BOX,
-      Material.GRAY_SHULKER_BOX,
-      Material.SILVER_SHULKER_BOX,
-      Material.CYAN_SHULKER_BOX,
-      Material.PURPLE_SHULKER_BOX,
-      Material.BLUE_SHULKER_BOX,
-      Material.BROWN_SHULKER_BOX,
-      Material.GREEN_SHULKER_BOX,
-      Material.RED_SHULKER_BOX,
-      Material.BLACK_SHULKER_BOX,
   };
+
   protected int[] bannedSlots = new int[] {};
   protected int[] acceptableSlots = new int[] {};
 
@@ -69,6 +52,44 @@ public class TNEInventory {
     this.inventoryID = inventoryID;
     this.inventory = inventory;
     this.world = world;
+
+    if(MISCUtils.isOneEleven()) {
+      bannedItems = new Material[] {
+          Material.ENCHANTED_BOOK,
+          Material.WRITTEN_BOOK,
+          Material.POTION,
+          Material.SPLASH_POTION,
+          Material.LINGERING_POTION,
+          Material.TIPPED_ARROW,
+          Material.SPECTRAL_ARROW,
+          Material.WHITE_SHULKER_BOX,
+          Material.ORANGE_SHULKER_BOX,
+          Material.MAGENTA_SHULKER_BOX,
+          Material.LIGHT_BLUE_SHULKER_BOX,
+          Material.YELLOW_SHULKER_BOX,
+          Material.LIME_SHULKER_BOX,
+          Material.PINK_SHULKER_BOX,
+          Material.GRAY_SHULKER_BOX,
+          Material.SILVER_SHULKER_BOX,
+          Material.CYAN_SHULKER_BOX,
+          Material.PURPLE_SHULKER_BOX,
+          Material.BLUE_SHULKER_BOX,
+          Material.BROWN_SHULKER_BOX,
+          Material.GREEN_SHULKER_BOX,
+          Material.RED_SHULKER_BOX,
+          Material.BLACK_SHULKER_BOX,
+      };
+    } else if(MISCUtils.isOneNine()) {
+      bannedItems = new Material[] {
+          Material.ENCHANTED_BOOK,
+          Material.WRITTEN_BOOK,
+          Material.POTION,
+          Material.SPLASH_POTION,
+          Material.LINGERING_POTION,
+          Material.TIPPED_ARROW,
+          Material.SPECTRAL_ARROW,
+      };
+    }
   }
 
   public boolean onOpen(UUID id) {
@@ -85,8 +106,11 @@ public class TNEInventory {
     return Arrays.asList(bannedItems).contains(item.getType());
   }
 
-  public boolean onMove(UUID player) {
-    return true;
+  public void onUpdate(Map<Integer, ItemStack> changed, UUID player) {
+    for(Map.Entry<Integer, ItemStack> entry : changed.entrySet()) {
+      if(entry.getKey() >= inventory.getSize()) continue;
+      inventory.setItem(entry.getKey(), entry.getValue());
+    }
   }
 
   public void onClose(UUID id) {

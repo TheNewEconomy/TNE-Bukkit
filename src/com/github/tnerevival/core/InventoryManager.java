@@ -18,7 +18,6 @@ package com.github.tnerevival.core;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
-import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.inventory.InventoryType;
 import com.github.tnerevival.core.inventory.TNEInventory;
@@ -127,6 +126,7 @@ public class InventoryManager {
   public static Map<Integer, ItemStack> getChanges(List<Integer> slots, Inventory old, Inventory current) {
     Map<Integer, ItemStack> changes = new HashMap<>();
     for(int i : slots) {
+      if(i >= old.getSize() || old.getItem(i) == null && current.getItem(i) == null) continue;
       if(old.getItem(i) != null && current.getItem(i) == null) {
         changes.put(i, null);
       } else if(old.getItem(i) == null && current.getItem(i) != null) {
@@ -138,14 +138,32 @@ public class InventoryManager {
     return changes;
   }
 
-  public static void handleInventoryDrag(UUID player, Map<Integer, ItemStack> changed, String world) {
-    Inventory inventory = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
-    if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
-      UUID owner = Vault.parseTitle(inventory.getTitle());
-      Vault vault = TNE.instance.manager.accounts.get(owner).getVault(world);
-      vault.setItems(changed);
-      vault.update(player);
-      TNE.instance.manager.accounts.get(owner).setVault(world, vault);
+  public static void handleInventoryChanges(UUID player) {
+    Inventory current = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
+    TNEInventory tneInventory = TNE.instance.inventoryManager.getInventory(player);
+    Inventory old = tneInventory.getInventory();
+
+    if(old != null) {
+      Map<Integer, ItemStack> changes = new HashMap<>();
+      for(int i = 0; i < old.getSize(); i++) {
+        if(i >= old.getSize() || old.getItem(i) == null && current.getItem(i) == null) continue;
+        if(old.getItem(i) != null && current.getItem(i) == null) {
+          changes.put(i, null);
+        } else if(old.getItem(i) == null && current.getItem(i) != null) {
+          changes.put(i, current.getItem(i));
+        } else if(old.getItem(i).equals(current.getItem(i))) {
+          changes.put(i, current.getItem(i));
+        }
+      }
+      handleInventoryChanges(player, changes);
+    }
+  }
+
+  public static void handleInventoryChanges(UUID player, Map<Integer, ItemStack> changed) {
+    TNEInventory old = TNE.instance.inventoryManager.getInventory(player);
+
+    if(old != null) {
+      if(changed.size() > 0) old.onUpdate(changed, player);
     }
   }
 }

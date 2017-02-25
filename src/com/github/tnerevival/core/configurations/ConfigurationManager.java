@@ -11,6 +11,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ConfigurationManager {
 
@@ -65,12 +66,26 @@ public class ConfigurationManager {
     return TNE.instance.api.getBoolean("Mobs." + mob + ".Enabled", world, player);
   }
 
+  public BigDecimal getRewardMultiplier(String mob, String world, String player) {
+    if(getConfiguration("Mobs." + mob + ".Multiplier", world, player) != null) {
+      return new BigDecimal(TNE.instance.api.getDouble("Mobs." + mob + ".Multiplier", world, player));
+    }
+    return new BigDecimal(TNE.instance.api.getDouble("Mobs.Multiplier", world, player));
+  }
+
   public BigDecimal mobReward(String mob, String world, String player) {
     MISCUtils.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
     MISCUtils.debug(getConfiguration("Mobs." + mob + ".Reward", world, player) + "");
     if(getConfiguration("Mobs." + mob + ".Reward", world, player) == null) {
       return BigDecimal.ZERO;
     }
+    if(getConfiguration("Mobs." + mob + ".Chance.Min", world, player) != null || getConfiguration("Mobs." + mob + ".Chance.Max", world, player) != null) {
+      double min = TNE.instance.api.getDouble("Mobs." + mob + ".Chance.Min", world, player);
+      double max = TNE.instance.api.getDouble("Mobs." + mob + ".Chance.Max", world, player);
+      double random = ThreadLocalRandom.current().nextDouble(min, max);
+      return new BigDecimal(random);
+    }
+
     return new BigDecimal(TNE.instance.api.getDouble("Mobs." + mob + ".Reward", world, player));
   }
 

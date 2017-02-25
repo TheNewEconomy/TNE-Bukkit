@@ -27,19 +27,19 @@ public class MISCUtils {
 
   //Minecraft Version Utils
   public static boolean isOneEight() {
-    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven();
+    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven() || isOneTwelve();
   }
 
   public static boolean isOneNine() {
-    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven();
+    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven() || isOneTwelve();
   }
 
   public static boolean isOneTen() {
-    return Bukkit.getVersion().contains("1.10") || isOneEleven();
+    return Bukkit.getVersion().contains("1.10") || isOneEleven() || isOneTwelve();
   }
 
   public static boolean isOneEleven() {
-    return Bukkit.getVersion().contains("1.11");
+    return Bukkit.getVersion().contains("1.11") || isOneTwelve();
   }
 
   public static boolean isOneTwelve() {

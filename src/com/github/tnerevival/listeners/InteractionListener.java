@@ -612,6 +612,8 @@ public class InteractionListener implements Listener {
         }
         mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? "Custom.Entries." + event.getEntityType().toString() : mob;
 
+        if(entity.getCustomName() != null && TNE.configurations.mobEnabled(entity.getCustomName(), world, id)) mob = "Custom.Entries." + entity.getCustomName();
+
         if(TNE.configurations.mobAge(world, id)) {
           if (entity instanceof Ageable) {
             Ageable e = (Ageable) entity;
@@ -647,13 +649,17 @@ public class InteractionListener implements Listener {
         }
 
         if(!TNE.instance.mobConfigurations.contains("Mobs." + mob)) mob = "Default";
+        if(entity.getCustomName() != null && TNE.instance.mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) mob = "Custom.Entries." + entity.getCustomName();
         String currency = TNE.configurations.mobCurrency(mob, world, id);
         reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
+        reward = AccountUtils.round(world, currency, reward.multiply(TNE.configurations.getRewardMultiplier(mob, world, id)));
         String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? event.getEntityType().toString() : mob;
+        if(entity.getCustomName() != null && TNE.instance.mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) formatted = entity.getCustomName();
         formatted = (TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
         MISCUtils.debug(formatted);
         Character firstChar = formatted.charAt(0);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
+        if(TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted.replaceAll(" ", ""))) messageNode = TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted.replaceAll(" ", ""));
         if(TNE.configurations.mobEnabled(mob, world, id)) {
           AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TNE.instance.manager.currencyManager.get(world, currency), TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
           if(TNE.instance.api.getBoolean("Mobs.Message")) {

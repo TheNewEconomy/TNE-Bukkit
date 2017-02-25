@@ -9,6 +9,17 @@
 Mobs:
 
     #Whether or not mobs drop money on death.
+# The New Economy v0.0.5.2
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+
+
+#All configurations relating to mobs.
+Mobs:
+
+    #Whether or not mobs drop money on death.
     Enabled: true
 
     #Whether or not a mob is a baby affects the reward.
@@ -16,12 +27,24 @@ Mobs:
 
     #Whether or not to send a message stating how much money a player got for killing a mob
     Message: true
-    
+
+    #If you want to have a special multipliar, you may specify so here.
+    Multiplier: 1.0
+
     #Reward configurations for individual mobs
     #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
     Default:
-        Enabled: true
-        Reward: 10.00
+       Enabled: true
+        #IF you want to specify a multiplier for a mob specifically, it goes here.
+       Multiplier: 1.0
+       Reward: 10.00
+        #If you want to allow a random value between two numbers use this configuration.
+       #Note: This overwards the value of Reward
+       Chance:
+         #The minimum value that may be granted
+         Min: 5.0
+         #The maximum value that may be granted
+         Max: 15.0
     
     Bat:
         Enabled: true
@@ -54,8 +77,7 @@ Mobs:
         Reward: 10.00
 
     Custom:
-        Enabled: true
-        Reward: 10.00
+      Entries:
 
     Donkey:
         Enabled: true

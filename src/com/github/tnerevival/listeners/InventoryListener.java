@@ -95,7 +95,7 @@ public class InventoryListener implements Listener {
     }
 
 
-    if(inventory.getTitle() != null) {
+    if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
       boolean open = TNE.instance.inventoryManager.getInventory(player) == null;
       TNEInventory tneInventory = (TNE.instance.inventoryManager.getInventory(inventory) != null)? TNE.instance.inventoryManager.getInventory(inventory) : TNE.instance.inventoryManager.generateInventory(inventory, (Player)event.getPlayer(), world);
 
@@ -109,7 +109,7 @@ public class InventoryListener implements Listener {
   public void onClick(InventoryClickEvent event) {
     final Inventory inventory = event.getInventory();
     Player player = (Player)event.getWhoClicked();
-    UUID id = IDFinder.getID(player);
+    final UUID id = IDFinder.getID(player);
     String world = IDFinder.getWorld(id);
     int slot = event.getRawSlot();
     boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
@@ -135,7 +135,12 @@ public class InventoryListener implements Listener {
 
     if(inventory.getTitle() != null) {
       if(inventory.getTitle().toLowerCase().contains("vault")) {
-
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+          @Override
+          public void run() {
+            InventoryManager.handleInventoryChanges(id);
+          }
+        }, 1L);
       }
     }
   }
@@ -148,7 +153,7 @@ public class InventoryListener implements Listener {
     Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
       @Override
       public void run() {
-        InventoryManager.handleInventoryDrag(id, changed, world);
+        InventoryManager.handleInventoryChanges(id, changed);
       }
     }, 1L);
   }
