@@ -155,7 +155,7 @@ public class Vault {
     List<Integer> valid = new ArrayList<>();
 
     for(int i = 0; i < size; i++) {
-      if(getItem(i) != null || TNE.instance.api.getBoolean("Core.Death.Vault.IncludeEmpty", world, owner)) {
+      if(getItem(i) != null || TNE.instance().api().getBoolean("Core.Death.Vault.IncludeEmpty", world, owner)) {
         valid.add(i);
       }
     }
@@ -165,7 +165,7 @@ public class Vault {
   public List<Integer> generateSlots(String world) {
     List<Integer> valid = validSlots(world);
     List<Integer> generated = new ArrayList<>();
-    int remaining = TNE.instance.api.getInteger("Core.Death.Vault.Drop", world, owner);
+    int remaining = TNE.instance().api().getInteger("Core.Death.Vault.Drop", world, owner);
 
     if(valid.size() <= remaining) return valid;
 
@@ -274,27 +274,27 @@ public class Vault {
   }
 
   public static Integer size(String world, String player) {
-    Integer rows = TNE.instance.api.getInteger("Core.Vault.Rows", world, player);
+    Integer rows = TNE.instance().api().getInteger("Core.Vault.Rows", world, player);
     return (rows >= 1 && rows <= 6) ? (rows * 9) : 27;
   }
 
   public static Boolean enabled(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Vault.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Vault.Enabled", world, player);
   }
 
   public static Boolean command(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Vault.Command", world, player);
+    return TNE.instance().api().getBoolean("Core.Vault.Command", world, player);
   }
 
   public static BigDecimal cost(String world, String player) {
-    return new BigDecimal(TNE.instance.api.getDouble("Core.Vault.Cost", world, player));
+    return new BigDecimal(TNE.instance().api().getDouble("Core.Vault.Cost", world, player));
   }
 
   public static Boolean sign(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Signs.Vault.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Signs.Vault.Enabled", world, player);
   }
 
   public static Boolean npc(String world) {
-    return TNE.instance.api.getBoolean("Core.Vault.NPC", world);
+    return TNE.instance().api().getBoolean("Core.Vault.NPC", world);
   }
 }

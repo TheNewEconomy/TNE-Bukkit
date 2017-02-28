@@ -33,13 +33,13 @@ import java.math.BigDecimal;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class FeConomy extends Converter {
-  private File configFile = new File(TNE.instance.getDataFolder(), "../Fe/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Fe/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String table = config.getString("mysql.tables.accounts");
   private String nameColumn = config.getString("mysql.columns.accounts.username");
   private String balanceColumn = config.getString("mysql.columns.accounts.money");
-  private Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
+  private Currency currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld);
   private double rate = 1.0;
 
   @Override
@@ -56,7 +56,7 @@ public class FeConomy extends Converter {
       while (mysqlDB().results(index).next()) {
         String username = mysqlDB().results(index).getString(nameColumn);
         Double balance = mysqlDB().results(index).getDouble(balanceColumn);
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(balance));
+        AccountUtils.convertedAdd(username, TNE.instance().defaultWorld, currency.getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -65,14 +65,14 @@ public class FeConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(TNE.instance.getDataFolder() + "../Fe/database.db");
+    db = new SQLite(TNE.instance().getDataFolder() + "../Fe/database.db");
     try {
       int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 
       while (sqliteDB().results(index).next()) {
         String username = sqliteDB().results(index).getString(nameColumn);
         Double balance = sqliteDB().results(index).getDouble(balanceColumn);
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(balance));
+        AccountUtils.convertedAdd(username, TNE.instance().defaultWorld, currency.getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {
       e.printStackTrace();

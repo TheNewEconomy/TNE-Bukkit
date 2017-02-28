@@ -23,17 +23,17 @@ import java.util.UUID;
 public class AccountUtils {
 
   public static Boolean exists(UUID id) {
-    return TNE.instance.manager.accounts.containsKey(id);
+    return TNE.instance().manager.accounts.containsKey(id);
   }
 
   public static void createAccount(UUID id) {
     Account a = new Account(id);
-    String defaultCurrency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName();
-    a.setBalance(TNE.instance.defaultWorld, AccountUtils.getInitialBalance(TNE.instance.defaultWorld, defaultCurrency), defaultCurrency);
+    String defaultCurrency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName();
+    a.setBalance(TNE.instance().defaultWorld, AccountUtils.getInitialBalance(TNE.instance().defaultWorld, defaultCurrency), defaultCurrency);
     TNEAccountCreationEvent e = new TNEAccountCreationEvent(id, a);
     MISCUtils.debug(e.getId() + "");
     Bukkit.getServer().getPluginManager().callEvent(e);
-    TNE.instance.manager.accounts.put(e.getId(), e.getAccount());
+    TNE.instance().manager.accounts.put(e.getId(), e.getAccount());
 
     String identifier = (IDFinder.ecoToUsername(id) != null)? IDFinder.ecoToUsername(id) : id.toString();
     convertAccount(identifier);
@@ -42,8 +42,8 @@ public class AccountUtils {
   private static void convertAccount(String username) {
     UUID id = IDFinder.getID(username);
     Account a = getAccount(id);
-    if(new File(TNE.instance.getDataFolder(), "conversion.yml").exists()) {
-      File conversionFile = new File(TNE.instance.getDataFolder(), "conversion.yml");
+    if(new File(TNE.instance().getDataFolder(), "conversion.yml").exists()) {
+      File conversionFile = new File(TNE.instance().getDataFolder(), "conversion.yml");
       FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
 
       if (conversion.contains("Converted." + username) || conversion.contains("Converted." + id.toString())) {
@@ -64,12 +64,12 @@ public class AccountUtils {
         }
         conversion.set(base, null);
       }
-      TNE.instance.manager.accounts.put(id, a);
+      TNE.instance().manager.accounts.put(id, a);
     }
   }
 
   public static void convertedAdd(String identifier, String world, String currency, BigDecimal amount) {
-    File conversionFile = new File(TNE.instance.getDataFolder(), "conversion.yml");
+    File conversionFile = new File(TNE.instance().getDataFolder(), "conversion.yml");
     FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
 
     BigDecimal starting = BigDecimal.ZERO;
@@ -85,7 +85,7 @@ public class AccountUtils {
     if(!exists(id)) {
       createAccount(id);
     }
-    return TNE.instance.manager.accounts.get(id);
+    return TNE.instance().manager.accounts.get(id);
   }
 
   private static BigDecimal getBalance(UUID id, String world, String currencyName) {
@@ -93,7 +93,7 @@ public class AccountUtils {
     world = IDFinder.getBalanceShareWorld(world);
     MISCUtils.debug("getBalance(" + id.toString() + ", " + world + ", " + currencyName);
     Account account = getAccount(id);
-    Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
+    Currency currency = TNE.instance().manager.currencyManager.get(world, currencyName);
 
     if(!account.getBalances().containsKey(world + ":" + currencyName)) {
       initializeWorldData(id);
@@ -113,12 +113,12 @@ public class AccountUtils {
       String balance = major + "." + minor;
       return new BigDecimal(balance);
     }
-    return account.getBalance(TNE.instance.defaultWorld, currencyName);
+    return account.getBalance(TNE.instance().defaultWorld, currencyName);
   }
 
   private static void setBalance(UUID id, String world, String currencyName, BigDecimal balance) {
     world = IDFinder.getBalanceShareWorld(world);
-    Currency currency = TNE.instance.manager.currencyManager.get(world, currencyName);
+    Currency currency = TNE.instance().manager.currencyManager.get(world, currencyName);
     Account account = getAccount(id);
 
     if(!account.getStatus().getBalance()) return;
@@ -136,20 +136,20 @@ public class AccountUtils {
     if(MISCUtils.multiWorld()) {
       account.setBalance(world, balance, currencyName);
     } else {
-      account.setBalance(TNE.instance.defaultWorld, balance, currencyName);
+      account.setBalance(TNE.instance().defaultWorld, balance, currencyName);
     }
-    TNE.instance.manager.accounts.put(id, account);
+    TNE.instance().manager.accounts.put(id, account);
   }
 
   public static BigDecimal round(String world, String currency, BigDecimal amount) {
-    if(TNE.instance.manager.currencyManager.contains(world, currency)) {
-      return amount.setScale(TNE.instance.manager.currencyManager.get(world, currency).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
+    if(TNE.instance().manager.currencyManager.contains(world, currency)) {
+      return amount.setScale(TNE.instance().manager.currencyManager.get(world, currency).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
     }
 
-    if(TNE.instance.manager.currencyManager.contains(world)) {
-      return amount.setScale(TNE.instance.manager.currencyManager.get(world).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
+    if(TNE.instance().manager.currencyManager.contains(world)) {
+      return amount.setScale(TNE.instance().manager.currencyManager.get(world).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
     }
-    return amount.setScale(TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
+    return amount.setScale(TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getDecimalPlaces(), BigDecimal.ROUND_CEILING);
   }
 
   public static boolean transaction(String initiator, String recipient, BigDecimal amount, TransactionType type, String world) {
@@ -170,13 +170,13 @@ public class AccountUtils {
   }
 
   public static BigDecimal getFunds(UUID id, String world) {
-    return getFunds(id, world, TNE.instance.manager.currencyManager.get(world).getName());
+    return getFunds(id, world, TNE.instance().manager.currencyManager.get(world).getName());
   }
 
   public static BigDecimal getFunds(UUID id, String world, String currency) {
     MISCUtils.debug("AccountUtils.getFunds(" + id.toString() + ", " + world + ", " + currency + ")");
     BigDecimal funds = getBalance(id, world, currency);
-    if(TNE.instance.api.getBoolean("Core.Bank.Connected", world)) {
+    if(TNE.instance().api().getBoolean("Core.Bank.Connected", world)) {
       funds = funds.add(Bank.getBankBalance(id, world, currency));
     }
     return funds;
@@ -199,7 +199,7 @@ public class AccountUtils {
   public static void initializeWorldData(UUID id) {
     Account account = getAccount(id);
     String world = IDFinder.getWorld(id);
-    for(Currency c : TNE.instance.manager.currencyManager.getWorldCurrencies(world)) {
+    for(Currency c : TNE.instance().manager.currencyManager.getWorldCurrencies(world)) {
       if (!account.getBalances().containsKey(world + ":" + c.getName())) {
         account.setBalance(world, getInitialBalance(world, c.getName()), c.getName());
       }
@@ -207,15 +207,15 @@ public class AccountUtils {
   }
 
   public static BigDecimal getInitialBalance(String world, String currency) {
-    return TNE.instance.manager.currencyManager.get(world, currency).getBalance();
+    return TNE.instance().manager.currencyManager.get(world, currency).getBalance();
   }
 
   public static BigDecimal getWorldCost(String world) {
     if(MISCUtils.multiWorld()) {
       if(MISCUtils.worldConfigExists("Worlds." + world + ".ChangeFee")) {
-        return new BigDecimal(TNE.instance.worldConfigurations.getDouble("Worlds." + world + ".ChangeFee"));
+        return new BigDecimal(TNE.instance().worldConfigurations.getDouble("Worlds." + world + ".ChangeFee"));
       }
     }
-    return new BigDecimal(TNE.instance.api.getDouble("Core.World.ChangeFee", world));
+    return new BigDecimal(TNE.instance().api().getDouble("Core.World.ChangeFee", world));
   }
 }

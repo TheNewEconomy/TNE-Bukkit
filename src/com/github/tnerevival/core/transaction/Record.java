@@ -29,7 +29,7 @@ public class Record {
   private String id = "";
   private String initiator = "";
   private String player = "N/A";
-  private String world = TNE.instance.defaultWorld;
+  private String world = TNE.instance().defaultWorld;
   private String type = TransactionType.MONEY_INQUIRY.id;
   private BigDecimal cost = BigDecimal.ZERO;
   private BigDecimal oldBalance = BigDecimal.ZERO;
@@ -58,7 +58,7 @@ public class Record {
 
   public String convert(String world, UUID id, String timeZone) {
     final Date date = new Date(time);
-    final SimpleDateFormat dateFormat = new SimpleDateFormat(TNE.instance.api.getString("Core.Transactions.Format", world, id));
+    final SimpleDateFormat dateFormat = new SimpleDateFormat(TNE.instance().api().getString("Core.Transactions.Format", world, id));
     dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
 
     return dateFormat.format(date);

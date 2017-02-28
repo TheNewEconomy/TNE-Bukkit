@@ -36,7 +36,7 @@ public class PinCommand extends TNECommand {
 
   @Override
   public Boolean activated(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Pins.Enabled", world, player);
   }
 
   @Override

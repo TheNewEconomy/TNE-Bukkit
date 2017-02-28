@@ -22,13 +22,13 @@ public abstract class Version {
   public String mysqlUser = TNE.configurations.getString("Core.Database.MySQL.User");
   public String mysqlPassword = TNE.configurations.getString("Core.Database.MySQL.Password");
   public String prefix = TNE.configurations.getString("Core.Database.Prefix");
-  public String h2File = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.H2.File");
-  public String sqliteFile = TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.SQLite.File");
+  public String h2File = TNE.instance().getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.H2.File");
+  public String sqliteFile = TNE.instance().getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.SQLite.File");
 
   protected Database db;
 
   protected void createDB() {
-    createDB(TNE.instance.saveManager.type.toLowerCase());
+    createDB(TNE.instance().saveManager.type.toLowerCase());
   }
 
   protected void createDB(String type) {
@@ -43,7 +43,7 @@ public abstract class Version {
         db = new H2(h2File, mysqlUser, mysqlPassword);
         break;
       default:
-        db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
+        db = new FlatFile(TNE.instance().getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
     }
   }
 

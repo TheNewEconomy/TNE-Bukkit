@@ -65,7 +65,7 @@ public class VaultRemoveCommand extends TNECommand {
       return false;
     }
 
-    if(!account.getVault(world).getOwner().equals(IDFinder.getID(player))|| !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Vault.MultiManage")) {
+    if(!account.getVault(world).getOwner().equals(IDFinder.getID(player))|| !world.equals(getWorld(sender)) && !TNE.instance().api().getBoolean("Core.Vault.MultiManage")) {
       new Message("Messages.General.NoPerm").translate(getWorld(player), player);
       return false;
     }

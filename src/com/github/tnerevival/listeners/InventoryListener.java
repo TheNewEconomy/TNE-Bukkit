@@ -96,8 +96,8 @@ public class InventoryListener implements Listener {
 
 
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
-      boolean open = TNE.instance.inventoryManager.getInventory(player) == null;
-      TNEInventory tneInventory = (TNE.instance.inventoryManager.getInventory(inventory) != null)? TNE.instance.inventoryManager.getInventory(inventory) : TNE.instance.inventoryManager.generateInventory(inventory, (Player)event.getPlayer(), world);
+      boolean open = TNE.instance().inventoryManager.getInventory(player) == null;
+      TNEInventory tneInventory = (TNE.instance().inventoryManager.getInventory(inventory) != null)? TNE.instance().inventoryManager.getInventory(inventory) : TNE.instance().inventoryManager.generateInventory(inventory, (Player)event.getPlayer(), world);
 
       if(tneInventory != null && open) {
         event.setCancelled(!tneInventory.onOpen(player));
@@ -169,9 +169,9 @@ public class InventoryListener implements Listener {
       tracking.setCloseTime(new Date().getTime());
     }
 
-    if(TNE.instance.inventoryManager.getInventory(player) != null) {
-      TNE.instance.inventoryManager.getInventory(player).onClose(player);
-      TNE.instance.inventoryManager.removePlayer(player);
+    if(TNE.instance().inventoryManager.getInventory(player) != null) {
+      TNE.instance().inventoryManager.getInventory(player).onClose(player);
+      TNE.instance().inventoryManager.removePlayer(player);
     }
   }
 }

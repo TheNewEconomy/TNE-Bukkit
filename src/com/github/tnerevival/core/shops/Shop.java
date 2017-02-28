@@ -425,12 +425,12 @@ public class Shop implements Serializable {
    * Static methods
    */
   public static boolean exists(String name, String world) {
-    return TNE.instance.manager.shops.containsKey(name + ":" + world);
+    return TNE.instance().manager.shops.containsKey(name + ":" + world);
   }
 
   public static Shop getShop(String name, String world) {
     if(exists(name, world)) {
-      return TNE.instance.manager.shops.get(name + ":" + world);
+      return TNE.instance().manager.shops.get(name + ":" + world);
     }
     return null;
   }
@@ -443,7 +443,7 @@ public class Shop implements Serializable {
   }
 
   public static boolean canView(String name, UUID id) {
-    if(!TNE.instance.api.getBoolean("Core.Shops.Enabled", IDFinder.getWorld(id), id)) return false;
+    if(!TNE.instance().api().getBoolean("Core.Shops.Enabled", IDFinder.getWorld(id), id)) return false;
     if(exists(name, IDFinder.getWorld(id))) {
       Shop s = getShop(name, IDFinder.getWorld(id));
       if(s.isHidden() && !s.whitelisted(id)) return false;
@@ -478,7 +478,7 @@ public class Shop implements Serializable {
     String name = (owner != null)? owner.toString() : "";
 
     int amount = 6;
-    int config = TNE.instance.api.getInteger("Core.Shops.Rows", world, name);
+    int config = TNE.instance().api().getInteger("Core.Shops.Rows", world, name);
     if(config >= 1 && config <= 6) amount = config;
 
     return amount * 9;
@@ -486,7 +486,7 @@ public class Shop implements Serializable {
 
   public static int amount(UUID id) {
     int amount = 1;
-    for(Shop s : TNE.instance.manager.shops.values()) {
+    for(Shop s : TNE.instance().manager.shops.values()) {
       if(!s.isAdmin() && s.getOwner().equals(id)) {
         amount++;
       }

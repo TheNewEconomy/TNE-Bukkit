@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 public enum SignType {
 
   UNKNOWN("unknown", "", "", ""),
-  BANK("bank", "tne.place.bank", "tne.use.bank", "Core.Signs.Bank"),
   VAULT("vault", "tne.place.vault", "tne.use.vault", "Core.Signs.Vault"),
   ITEM("item", "tne.place.item", "tne.use.item", "Core.Signs.Item"),
   SHOP("shop", "tne.place.shop", "tne.use.shop", "Core.Signs.Shop");
@@ -26,7 +25,7 @@ public enum SignType {
 
   public static SignType fromName(String name) {
     for(SignType type : values()) {
-      if(type.getName().equalsIgnoreCase(name)) {
+      if(type.getName().equalsIgnoreCase(name.trim())) {
         return type;
       }
     }
@@ -58,14 +57,14 @@ public enum SignType {
   }
 
   public Boolean enabled(String world, String player) {
-    return TNE.instance.api.getBoolean(configuration + ".Enabled", world, player);
+    return TNE.instance().api().getBoolean(configuration + ".Enabled", world, player);
   }
 
   public BigDecimal place(String world, String player) {
-    return new BigDecimal(TNE.instance.api.getDouble(configuration + ".Place", world, player));
+    return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Place", world, player));
   }
 
   public BigDecimal use(String world, String player) {
-    return new BigDecimal(TNE.instance.api.getDouble(configuration + ".Use", world, player));
+    return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Use", world, player));
   }
 }

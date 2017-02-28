@@ -46,16 +46,16 @@ public class Account implements Serializable {
   private String pin;
 
   public Account(UUID uid) {
-    this(uid, TNE.instance.manager.accounts.size() + 1);
+    this(uid, TNE.instance().manager.accounts.size() + 1);
   }
 
   public Account(UUID uid, int accountNumber) {
     this.uid = uid;
-    this.joined = TNE.instance.dateFormat.format(new Date());
+    this.joined = TNE.instance().dateFormat.format(new Date());
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
-    setBalance(TNE.instance.defaultWorld, BigDecimal.ZERO, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
+    setBalance(TNE.instance().defaultWorld, BigDecimal.ZERO, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName());
   }
 
   public String balancesToString() {
@@ -346,7 +346,7 @@ public class Account implements Serializable {
         if(currency.equalsIgnoreCase("all") || entry.getKey().contains(currency)) {
           String w = entry.getKey().split(":")[0];
           String cur = entry.getKey().split(":")[1];
-          total = total.add(TNE.instance.manager.currencyManager.convert(TNE.instance.manager.currencyManager.get(w, cur), 1.0, entry.getValue()));
+          total = total.add(TNE.instance().manager.currencyManager.convert(TNE.instance().manager.currencyManager.get(w, cur), 1.0, entry.getValue()));
         }
       }
     }

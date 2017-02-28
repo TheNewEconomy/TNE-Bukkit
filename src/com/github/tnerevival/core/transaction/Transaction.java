@@ -53,7 +53,7 @@ public class Transaction {
       result = TransactionResult.SUCCESS;
       work();
       MISCUtils.debug("ADDING TRANSACTION TO HISTORY.");
-      TNE.instance.manager.transactions.add(this);
+      TNE.instance().manager.transactions.add(this);
     }
     return !failed;
   }
@@ -121,7 +121,7 @@ public class Transaction {
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = IDFinder.getID(initiator);
       if(!AccountUtils.getAccount(IDFinder.getID(recipient)).hasBank(world)) return TransactionResult.FAILED;
-      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(id, world, TNE.instance.manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
+      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(id, world, TNE.instance().manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
       if(!Bank.bankMember(IDFinder.getID(recipient), id, world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;
     }
@@ -188,7 +188,7 @@ public class Transaction {
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       UUID id = IDFinder.getID(recipient);
       if(!AccountUtils.getAccount(id).hasBank(world)) return TransactionResult.FAILED;
-      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, TNE.instance.manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
+      if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, TNE.instance().manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
       if(recipient != null && !Bank.bankMember(id, IDFinder.getID(initiator), world)) return TransactionResult.FAILED;
       return TransactionResult.SUCCESS;
     }
@@ -268,14 +268,14 @@ public class Transaction {
       initiatorOldBalance = Bank.getBankBalance(IDFinder.getID(initiator), world, cost.getCurrency().getName());
       Bank.setBankBalance(IDFinder.getID(initiator), world, cost.getCurrency().getName(), (Bank.getBankBalance(IDFinder.getID(initiator), world, cost.getCurrency().getName()).subtract(cost.getAmount())));
       initiatorBalance = Bank.getBankBalance(IDFinder.getID(initiator), world, cost.getCurrency().getName());
-      recipientOldBalance = AccountUtils.getFunds(IDFinder.getID(recipient), world, TNE.instance.manager.currencyManager.get(world).getName());
-      AccountUtils.setFunds(IDFinder.getID(recipient), world, (AccountUtils.getFunds(IDFinder.getID(recipient), world, TNE.instance.manager.currencyManager.get(world).getName()).add(cost.getAmount())), TNE.instance.manager.currencyManager.get(world).getName());
-      recipientBalance = AccountUtils.getFunds(IDFinder.getID(recipient), world, TNE.instance.manager.currencyManager.get(world).getName());
+      recipientOldBalance = AccountUtils.getFunds(IDFinder.getID(recipient), world, TNE.instance().manager.currencyManager.get(world).getName());
+      AccountUtils.setFunds(IDFinder.getID(recipient), world, (AccountUtils.getFunds(IDFinder.getID(recipient), world, TNE.instance().manager.currencyManager.get(world).getName()).add(cost.getAmount())), TNE.instance().manager.currencyManager.get(world).getName());
+      recipientBalance = AccountUtils.getFunds(IDFinder.getID(recipient), world, TNE.instance().manager.currencyManager.get(world).getName());
     } else if(type.equals(TransactionType.BANK_DEPOSIT)) {
       AccountUtils.setFunds(IDFinder.getID(initiator), world,
           (AccountUtils.getFunds(IDFinder.getID(initiator), world,
-          TNE.instance.manager.currencyManager.get(world).getName()).subtract(cost.getAmount())),
-          TNE.instance.manager.currencyManager.get(world).getName()
+          TNE.instance().manager.currencyManager.get(world).getName()).subtract(cost.getAmount())),
+          TNE.instance().manager.currencyManager.get(world).getName()
       );
       recipientOldBalance = Bank.getBankBalance(IDFinder.getID(recipient), world, cost.getCurrency().getName());
       Bank.setBankBalance(IDFinder.getID(recipient), world, cost.getCurrency().getName(), (Bank.getBankBalance(IDFinder.getID(recipient), world, cost.getCurrency().getName()).add(cost.getAmount())));

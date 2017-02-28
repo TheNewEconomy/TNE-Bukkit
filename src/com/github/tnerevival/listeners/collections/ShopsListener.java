@@ -31,7 +31,7 @@ public class ShopsListener implements MapListener {
   @Override
   public void update() {
     for(Shop s : changed.values()) {
-      TNE.instance.saveManager.versionInstance.saveShop(s);
+      TNE.instance().saveManager.versionInstance.saveShop(s);
     }
   }
 
@@ -47,18 +47,18 @@ public class ShopsListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.saveShop((Shop)value);
+    TNE.instance().saveManager.versionInstance.saveShop((Shop)value);
   }
 
   @Override
   public Object get(Object key) {
     String[] values = ((String)key).split(":");
-    return TNE.instance.saveManager.versionInstance.loadShop(values[0], values[1]);
+    return TNE.instance().saveManager.versionInstance.loadShop(values[0], values[1]);
   }
 
   @Override
   public Collection<Shop> values() {
-    return TNE.instance.saveManager.versionInstance.loadShops();
+    return TNE.instance().saveManager.versionInstance.loadShops();
   }
 
   @Override
@@ -83,7 +83,7 @@ public class ShopsListener implements MapListener {
 
   @Override
   public void preRemove(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.deleteShop((Shop)value);
+    TNE.instance().saveManager.versionInstance.deleteShop((Shop)value);
   }
 
   @Override

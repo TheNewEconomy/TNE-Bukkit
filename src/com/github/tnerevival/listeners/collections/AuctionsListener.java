@@ -31,7 +31,7 @@ public class AuctionsListener implements MapListener {
   @Override
   public void update() {
     for(Auction auction : changed.values()) {
-      TNE.instance.saveManager.versionInstance.saveAuction(auction);
+      TNE.instance().saveManager.versionInstance.saveAuction(auction);
     }
   }
 
@@ -47,17 +47,17 @@ public class AuctionsListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.saveAuction((Auction)value);
+    TNE.instance().saveManager.versionInstance.saveAuction((Auction)value);
   }
 
   @Override
   public Object get(Object key) {
-    return TNE.instance.saveManager.versionInstance.loadAuction((Integer)key);
+    return TNE.instance().saveManager.versionInstance.loadAuction((Integer)key);
   }
 
   @Override
   public Collection<Auction> values() {
-    return TNE.instance.saveManager.versionInstance.loadAuctions();
+    return TNE.instance().saveManager.versionInstance.loadAuctions();
   }
 
   @Override
@@ -82,7 +82,7 @@ public class AuctionsListener implements MapListener {
 
   @Override
   public void preRemove(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.deleteAuction((Auction)value);
+    TNE.instance().saveManager.versionInstance.deleteAuction((Auction)value);
   }
 
   @Override

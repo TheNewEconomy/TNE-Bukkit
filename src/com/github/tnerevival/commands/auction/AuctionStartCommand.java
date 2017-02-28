@@ -83,10 +83,10 @@ public class AuctionStartCommand extends TNECommand {
     Boolean silent = command.equalsIgnoreCase("sauction");
     Integer slot = player.getInventory().getHeldItemSlot();
     Integer amount = 1;
-    BigDecimal start = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MinStart", world, IDFinder.getID(player).toString()));
-    BigDecimal increment = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MinIncrement", world, IDFinder.getID(player).toString()));
-    Integer time =  TNE.instance.api.getInteger("Core.Auctions.MinTime", world, IDFinder.getID(player).toString());
-    Boolean global = !TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, IDFinder.getID(player).toString());
+    BigDecimal start = new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.MinStart", world, IDFinder.getID(player).toString()));
+    BigDecimal increment = new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.MinIncrement", world, IDFinder.getID(player).toString()));
+    Integer time =  TNE.instance().api().getInteger("Core.Auctions.MinTime", world, IDFinder.getID(player).toString());
+    Boolean global = !TNE.instance().api().getBoolean("Core.Auctions.AllowWorld", world, IDFinder.getID(player).toString());
     String permission = "";
     ItemStack stack = null;
 
@@ -163,16 +163,16 @@ public class AuctionStartCommand extends TNECommand {
 
     MISCUtils.debug((player == null) + "");
 
-    if(start.compareTo(new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player)))) > 0) {
-      start = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player)));
+    if(start.compareTo(new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player)))) > 0) {
+      start = new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.MaxStart", world, IDFinder.getID(player)));
     }
 
-    if(increment.compareTo(new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player)))) > 0) {
-      increment = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player)));
+    if(increment.compareTo(new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player)))) > 0) {
+      increment = new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.MaxIncrement", world, IDFinder.getID(player)));
     }
 
-    if(time > TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player))) {
-      time = TNE.instance.api.getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player));
+    if(time > TNE.instance().api().getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player))) {
+      time = TNE.instance().api().getInteger("Core.Auctions.MaxTime", world, IDFinder.getID(player));
     }
 
     if(stack == null) {

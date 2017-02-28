@@ -51,12 +51,12 @@ public class ShopShareCommand extends TNECommand {
           Shop s = Shop.getShop(arguments[0], IDFinder.getWorld(getPlayer(sender)));
           UUID target = IDFinder.getID(arguments[1]);
           if(!s.isAdmin()) {
-            if(!TNE.instance.api.getBoolean("Core.Shops.Shares.Enabled", s.getWorld(), s.getOwner())) {
+            if(!TNE.instance().api().getBoolean("Core.Shops.Shares.Enabled", s.getWorld(), s.getOwner())) {
               new Message("Messages.Shop.ShareNone").translate(IDFinder.getWorld(player), player);
               return false;
             }
 
-            if(s.getShares().size() >= TNE.instance.api.getInteger("Core.Shops.Shares.Max", s.getWorld(), s.getOwner())) {
+            if(s.getShares().size() >= TNE.instance().api().getInteger("Core.Shops.Shares.Max", s.getWorld(), s.getOwner())) {
               new Message("Messages.Shop.ShareMax").translate(IDFinder.getWorld(player), player);
               return false;
             }

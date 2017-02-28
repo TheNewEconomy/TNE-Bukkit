@@ -390,7 +390,7 @@ public class TNEAPI {
     Bank b = new Bank(IDFinder.getID(owner), world);
     Account acc = getAccount(owner);
     acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -399,7 +399,7 @@ public class TNEAPI {
    * @return True if the owner has a bank, otherwise false.
    */
   public Boolean hasBank(String owner) {
-    return AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(TNE.instance.defaultWorld);
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(TNE.instance().defaultWorld);
   }
 
   /**
@@ -423,7 +423,7 @@ public class TNEAPI {
     b.addMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -437,7 +437,7 @@ public class TNEAPI {
     b.removeMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -525,7 +525,7 @@ public class TNEAPI {
     Vault vault = new Vault(IDFinder.getID(owner), world, Vault.size(world, owner));
     Account acc = getAccount(owner);
     acc.setVault(world, vault);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -534,7 +534,7 @@ public class TNEAPI {
    * @return True if the owner has a vault, otherwise false.
    */
   public Boolean hasVault(String owner) {
-    return AccountUtils.getAccount(IDFinder.getID(owner)).hasVault(TNE.instance.defaultWorld);
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasVault(TNE.instance().defaultWorld);
   }
 
   /**
@@ -558,7 +558,7 @@ public class TNEAPI {
     vault.addMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setVault(world, vault);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -572,7 +572,7 @@ public class TNEAPI {
     vault.removeMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setVault(world, vault);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -708,7 +708,7 @@ public class TNEAPI {
    * @return The inventory instance of the vault.
    */
   public Inventory getVaultInventory(String owner) {
-    return getVaultInventory(owner, TNE.instance.defaultWorld);
+    return getVaultInventory(owner, TNE.instance().defaultWorld);
   }
 
   /**
@@ -812,7 +812,7 @@ public class TNEAPI {
    * @return True if the currency exists, otherwise false.
    */
   public Boolean currencyExists(String name) {
-    return plugin.manager.currencyManager.contains(TNE.instance.defaultWorld, name);
+    return plugin.manager.currencyManager.contains(TNE.instance().defaultWorld, name);
   }
 
   /**
@@ -931,8 +931,8 @@ public class TNEAPI {
    * @param owner The string identifier of the owner for this sign.
    * @return The sign instance based on the type, and owner.
    */
-  public TNESign createInstance(SignType type, String owner) {
-    return createInstance(type, IDFinder.getID(owner));
+  public TNESign createInstance(SignType type, String owner, Location location) {
+    return createInstance(type, IDFinder.getID(owner), location);
   }
 
 
@@ -942,8 +942,8 @@ public class TNEAPI {
    * @param owner The UUID of the owner for this sign.
    * @return The sign instance based on the type, and owner.
    */
-  public TNESign createInstance(SignType type, UUID owner) {
-    return TNESign.instance(type.getName(), owner);
+  public TNESign createInstance(SignType type, UUID owner, Location location) {
+    return TNESign.instance(type.getName(), owner, new SerializableLocation(location));
   }
 
   /**
@@ -966,7 +966,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public String getString(String configuration) {
-    return (String)getConfiguration(configuration, TNE.instance.defaultWorld);
+    return (String)getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -1007,7 +1007,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Boolean getBoolean(String configuration) {
-    return (Boolean)getConfiguration(configuration, TNE.instance.defaultWorld);
+    return (Boolean)getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -1048,7 +1048,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Double getDouble(String configuration) {
-    return getDouble(configuration, TNE.instance.defaultWorld);
+    return getDouble(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -1092,7 +1092,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Integer getInteger(String configuration) {
-    return (Integer)getConfiguration(configuration, TNE.instance.defaultWorld);
+    return (Integer)getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -1143,7 +1143,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Object getConfiguration(String configuration) {
-    return getConfiguration(configuration, TNE.instance.defaultWorld);
+    return getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**

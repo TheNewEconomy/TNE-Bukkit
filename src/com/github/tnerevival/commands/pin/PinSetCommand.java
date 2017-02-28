@@ -6,7 +6,6 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -58,8 +57,8 @@ public class PinSetCommand extends TNECommand {
       }
 
       acc.setPin(arguments[0]);
-      TNE.instance.manager.accounts.put(acc.getUid(), acc);
-      TNE.instance.manager.confirmed.add(IDFinder.getID(player));
+      TNE.instance().manager.accounts.put(acc.getUid(), acc);
+      TNE.instance().manager.confirmed.add(IDFinder.getID(player));
       Message message = new Message("Messages.Pin.Set");
       message.translate(IDFinder.getWorld(player), player);
       return true;

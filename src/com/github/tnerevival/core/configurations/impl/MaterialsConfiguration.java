@@ -15,21 +15,21 @@ public class MaterialsConfiguration extends Configuration {
 
   @Override
   public void load(FileConfiguration configurationFile) {
-    Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+    Set<String> identifiers = TNE.instance().worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
     //Load Materials
     configurations.put("Materials.Enabled", false);
     loadMaterials(configurationFile, "", null, true);
     loadMaterials(configurationFile, "", null, false);
     for(String identifier : identifiers) {
-      loadMaterials(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier, true);
-      loadMaterials(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier, false);
+      loadMaterials(TNE.instance().worldConfigurations, "Worlds." + identifier + ".", identifier, true);
+      loadMaterials(TNE.instance().worldConfigurations, "Worlds." + identifier + ".", identifier, false);
     }
 
-    identifiers = TNE.instance.playerConfigurations.getConfigurationSection("Players").getKeys(false);
+    identifiers = TNE.instance().playerConfigurations.getConfigurationSection("Players").getKeys(false);
     for(String identifier : identifiers) {
-      loadMaterials(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier, true);
-      loadMaterials(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier, false);
+      loadMaterials(TNE.instance().playerConfigurations, "Players." + identifier + ".", identifier, true);
+      loadMaterials(TNE.instance().playerConfigurations, "Players." + identifier + ".", identifier, false);
     }
     super.load(configurationFile);
   }
@@ -37,7 +37,7 @@ public class MaterialsConfiguration extends Configuration {
   private void loadMaterials(FileConfiguration configuration, String baseNode, String identifier, boolean item) {
     String base = baseNode + ((item)? "Materials.Items" : "Materials.Blocks");
     if(configuration.contains(base)) {
-      Boolean zero = (configuration.contains(base + ".ZeroMessage"))? configuration.getBoolean(base + ".ZeroMessage") : true;
+      Boolean zero = !configuration.contains(base + ".ZeroMessage") || configuration.getBoolean(base + ".ZeroMessage");
       configurations.put(base + ".ZeroMessage", zero);
 
       Set<String> materialNames = configuration.getConfigurationSection(base).getKeys(false);

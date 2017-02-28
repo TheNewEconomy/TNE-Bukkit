@@ -74,7 +74,7 @@ public class Bank {
     Map<String, BigDecimal> sorted = new HashMap<>();
     for(BankBalance balance : balances.values()) {
       if(!currency.equalsIgnoreCase("all") && !balance.getCurrency().equals(currency)) continue;
-      sorted.put(balance.getCurrency(), TNE.instance.manager.currencyManager.convert(TNE.instance.manager.currencyManager.get(world, balance.getCurrency()), 1.0, balance.getBalance()));
+      sorted.put(balance.getCurrency(), TNE.instance().manager.currencyManager.convert(TNE.instance().manager.currencyManager.get(world, balance.getCurrency()), 1.0, balance.getBalance()));
     }
     return sorted;
   }
@@ -116,8 +116,8 @@ public class Bank {
     Iterator<Map.Entry<String, BankBalance>> i = balances.entrySet().iterator();
     while(i.hasNext()) {
       Map.Entry<String, BankBalance> entry = i.next();
-      if(TNE.instance.manager.currencyManager.contains(world, entry.getKey())) {
-        com.github.tnerevival.core.currency.Currency currency = TNE.instance.manager.currencyManager.get(world, entry.getKey());
+      if(TNE.instance().manager.currencyManager.contains(world, entry.getKey())) {
+        com.github.tnerevival.core.currency.Currency currency = TNE.instance().manager.currencyManager.get(world, entry.getKey());
         BankBalance balance = entry.getValue();
         if(currency.isInterestEnabled() && (new Date().getTime() - balance.getLastInterest()) >= currency.getInterestInterval()) {
           BigDecimal gold = balance.getBalance();
@@ -131,20 +131,20 @@ public class Bank {
   }
 
   public static Boolean enabled(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Bank.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Bank.Enabled", world, player);
   }
 
   public static BigDecimal cost(String world, String player) {
-    return new BigDecimal(TNE.instance.api.getDouble("Core.Bank.Cost", world, player));
+    return new BigDecimal(TNE.instance().api().getDouble("Core.Bank.Cost", world, player));
   }
 
   public static boolean bankMember(UUID owner, UUID id) {
-    String world = TNE.instance.defaultWorld;
+    String world = TNE.instance().defaultWorld;
     if(MISCUtils.multiWorld()) {
       world = IDFinder.getWorld(id);
     }
     if(world == null) {
-      TNE.instance.getLogger().warning("***WORLD NAME IS NULL***");
+      TNE.instance().getLogger().warning("***WORLD NAME IS NULL***");
       return false;
     }
 
@@ -173,7 +173,7 @@ public class Bank {
   }
 
   public static BigDecimal getBankBalance(UUID owner) {
-    return getBankBalance(owner, TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
+    return getBankBalance(owner, TNE.instance().defaultWorld, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName());
   }
 
   public static void setBankBalance(UUID owner, String world, String currency, BigDecimal amount) {

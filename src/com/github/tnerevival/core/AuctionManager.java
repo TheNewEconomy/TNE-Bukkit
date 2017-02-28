@@ -41,7 +41,7 @@ public class AuctionManager {
 
   public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
-    String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance.defaultWorld;
+    String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance().defaultWorld;
 
     Message send = new Message(message);
     send.addVariable("$start", CurrencyFormatter.format(auction.getWorld(), auction.getCost().getAmount()));
@@ -54,7 +54,7 @@ public class AuctionManager {
 
     MISCUtils.debug("Auction Message");
     MISCUtils.debug(message);
-    if(!check || TNE.instance.api.getBoolean("Core.Auctions.Announce", auction.getWorld(), id)) {
+    if(!check || TNE.instance().api().getBoolean("Core.Auctions.Announce", auction.getWorld(), id)) {
       if (auction.getNode().equalsIgnoreCase("") || sender.hasPermission(auction.getNode())) {
         send.translate(world, sender);
       }
@@ -154,7 +154,7 @@ public class AuctionManager {
       Claim claim = i.next();
 
       if(claim.getLot().equals(lot) && claim.getPlayer().equals(player)) {
-        TNE.instance.saveManager.versionInstance.deleteClaim(claim);
+        TNE.instance().saveManager.versionInstance.deleteClaim(claim);
         claim.claim();
         i.remove();
       }
@@ -205,8 +205,8 @@ public class AuctionManager {
 
   public Integer getMaxActive(String world, String player) {
     Integer max = 1;
-    if(TNE.instance.api.getBoolean("Core.Auctions.Multiple", world, player)) {
-      max = TNE.instance.api.getInteger("Core.Auctions.MaxMultiple", world, player);
+    if(TNE.instance().api().getBoolean("Core.Auctions.Multiple", world, player)) {
+      max = TNE.instance().api().getInteger("Core.Auctions.MaxMultiple", world, player);
     }
     return max;
   }
@@ -234,9 +234,9 @@ public class AuctionManager {
   public Boolean bid(String world, Integer lot, UUID player, TransactionCost bid) {
     Auction auction = getActive(world, lot);
 
-    Boolean snipeProtection = TNE.instance.api.getBoolean("Core.Auctions.AntiSnipe", world, player.toString());
-    Integer snipeTime = TNE.instance.api.getInteger("Core.Auctions.SnipeTime", world, player.toString());
-    Integer snipePeriod = TNE.instance.api.getInteger("Core.Auctions.SnipePeriod",world, player.toString());
+    Boolean snipeProtection = TNE.instance().api().getBoolean("Core.Auctions.AntiSnipe", world, player.toString());
+    Integer snipeTime = TNE.instance().api().getInteger("Core.Auctions.SnipeTime", world, player.toString());
+    Integer snipePeriod = TNE.instance().api().getInteger("Core.Auctions.SnipePeriod",world, player.toString());
 
     BigDecimal minimum = auction.getCost().getAmount();
     if(auction.getHighestBid() != null) {
@@ -345,9 +345,9 @@ public class AuctionManager {
       return false;
     }
 
-    BigDecimal cost = new BigDecimal(TNE.instance.api.getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer()));
+    BigDecimal cost = new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer()));
 
-    if(cost.compareTo(BigDecimal.ZERO) > 0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
+    if(cost.compareTo(BigDecimal.ZERO) > 0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance().manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount", CurrencyFormatter.format(auction.getWorld(), cost));
       insufficient.translate(auction.getWorld(), IDFinder.getPlayer(auction.getPlayer().toString()));
@@ -355,18 +355,18 @@ public class AuctionManager {
     }
     MISCUtils.debug("Cost: " + cost);
 
-    if(getQueued(auction.getPlayer()) >= TNE.instance.api.getInteger("Core.Auctions.PersonalQueue", auction.getWorld(), auction.getPlayer())) {
+    if(getQueued(auction.getPlayer()) >= TNE.instance().api().getInteger("Core.Auctions.PersonalQueue", auction.getWorld(), auction.getPlayer())) {
       new Message("Messages.Auction.PersonalQueue").translate(IDFinder.getWorld(auction.getPlayer()), IDFinder.getPlayer(auction.getPlayer().toString()));
       return false;
     }
 
-    if(getQueued(auction.getWorld()) >= TNE.instance.api.getInteger("Core.Auctions.MaxQueue", auction.getWorld(), auction.getPlayer())) {
+    if(getQueued(auction.getWorld()) >= TNE.instance().api().getInteger("Core.Auctions.MaxQueue", auction.getWorld(), auction.getPlayer())) {
       new Message("Messages.Auction.MaxQueue").translate(IDFinder.getWorld(auction.getPlayer()), IDFinder.getPlayer(auction.getPlayer().toString()));
       return false;
     }
     auction.setLotNumber(lastLot + 1);
     IDFinder.getPlayer(auction.getPlayer().toString()).getInventory().removeItem(auction.getItem().toItemStack());
-    AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance.manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_REMOVE, auction.getWorld());
+    AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance().manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_REMOVE, auction.getWorld());
     if(canStart(auction.getWorld(), auction.getPlayer().toString())) {
       MISCUtils.debug("Starting Auction");
       auction.setStartTime(System.nanoTime());
@@ -385,19 +385,19 @@ public class AuctionManager {
   }
 
   public Boolean canStart(String world, String player) {
-    Boolean canWorld = TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, player);
+    Boolean canWorld = TNE.instance().api().getBoolean("Core.Auctions.AllowWorld", world, player);
     Integer activeCount = (canWorld)? activeCount(world) : active.size();
     Integer maxCount = getMaxActive(world, player);
     return activeCount < maxCount;
   }
 
   public Boolean requireLot(String world) {
-    return TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, "")
-        || TNE.instance.api.getBoolean("Core.Auctions.Multiple", world, "");
+    return TNE.instance().api().getBoolean("Core.Auctions.AllowWorld", world, "")
+        || TNE.instance().api().getBoolean("Core.Auctions.Multiple", world, "");
   }
 
   public Integer getLot(String world) {
-    Boolean canWorld = TNE.instance.api.getBoolean("Core.Auctions.AllowWorld", world, "");
+    Boolean canWorld = TNE.instance().api().getBoolean("Core.Auctions.AllowWorld", world, "");
 
     for(Auction a : active.values()) {
       if(!canWorld || a.getWorld().equalsIgnoreCase(world)) {

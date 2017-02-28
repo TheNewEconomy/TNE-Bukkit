@@ -52,11 +52,11 @@ public class MoneyTopCommand extends TNECommand {
     boolean bank = (parsed.containsKey("bank") && MISCUtils.isBoolean(parsed.get("bank")))? Boolean.valueOf(parsed.get("bank")) : false;
     String world = (parsed.containsKey("world"))? getWorld(sender, parsed.get("world")) : getWorld(sender);
     String currency = (parsed.containsKey("currency") &&
-                       TNE.instance.manager.currencyManager.contains(world, parsed.get("currency")) ||
+                       TNE.instance().manager.currencyManager.contains(world, parsed.get("currency")) ||
                        parsed.containsKey("currency") && parsed.get("currency").equalsIgnoreCase("overall")
-                      )? parsed.get("currency") : TNE.instance.manager.currencyManager.get(world).getName();
+                      )? parsed.get("currency") : TNE.instance().manager.currencyManager.get(world).getName();
 
-    Paginator paginator = new Paginator(Arrays.asList(TNE.instance.manager.parseTop(currency, world, bank, limit).toArray()), 10);
+    Paginator paginator = new Paginator(Arrays.asList(TNE.instance().manager.parseTop(currency, world, bank, limit).toArray()), 10);
 
     if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0))) {
       if(MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {

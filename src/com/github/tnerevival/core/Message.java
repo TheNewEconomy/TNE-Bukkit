@@ -78,7 +78,7 @@ public class Message {
 
   public String grab(String world, CommandSender sender) {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
-    String found = TNE.instance.api.getString(this.node, world, id);
+    String found = TNE.instance().api().getString(this.node, world, id);
 
     String message = (found == null)? this.node : found;
     Iterator<java.util.Map.Entry<String, String>> it = variables.entrySet().iterator();
@@ -93,7 +93,7 @@ public class Message {
   public void translate(String world, CommandSender sender) {
     if(sender == null) return;
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
-    String found = TNE.instance.api.getString(this.node, world, id);
+    String found = TNE.instance().api().getString(this.node, world, id);
 
     String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");
     for(String s : message) {

@@ -140,7 +140,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveTransaction(Record record) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_TRANSACTIONS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_player, trans_world, trans_type, trans_cost, trans_oldBalance, trans_balance, trans_time) " +
               "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE trans_player = ?, trans_world = ?",
@@ -164,7 +164,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void deleteTransaction(UUID id) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
       sql().close();
     }
@@ -236,7 +236,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveAccount(Account acc) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_USERS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, balances, acc_pin, inventory_credits, command_credits, joinedDate, accountnumber, accountstatus) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE balances = ?, acc_pin = ?, inventory_credits = ?, command_credits = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?",
@@ -276,7 +276,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void deleteAccount(UUID id) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_USERS WHERE uuid = ? ", new Object[] { id.toString() });
       sql().close();
     }
@@ -336,7 +336,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveShop(Shop shop) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_SHOPS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_world, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
@@ -365,7 +365,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void deleteShop(Shop shop) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOPS WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
       sql().close();
     }
@@ -379,8 +379,7 @@ public class Alpha5_0 extends Version {
     try {
       int signIndex = sql().executeQuery("SELECT * FROM `" + table + "`;");
       while (sql().results(signIndex).next()) {
-        TNESign sign = TNESign.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")));
-        sign.setLocation(SerializableLocation.fromString(sql().results(signIndex).getString("sign_location")));
+        TNESign sign = TNESign.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")), SerializableLocation.fromString(sql().results(signIndex).getString("sign_location")));
         sign.loadMeta(sql().results(signIndex).getString("sign_meta"));
         signs.add(sign);
       }
@@ -400,8 +399,7 @@ public class Alpha5_0 extends Version {
       });
       
       if(sql().results(signIndex).next()) {
-        TNESign sign = TNESign.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")));
-        sign.setLocation(SerializableLocation.fromString(sql().results(signIndex).getString("sign_location")));
+        TNESign sign = TNESign.instance(sql().results(signIndex).getString("sign_type"), UUID.fromString(sql().results(signIndex).getString("sign_owner")), SerializableLocation.fromString(sql().results(signIndex).getString("sign_location")));
         sign.loadMeta(sql().results(signIndex).getString("sign_meta"));
         sql().close();
         return sign;
@@ -414,7 +412,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveSign(TNESign sign) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_SIGNS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (sign_owner, sign_type, sign_location, sign_meta) VALUES(?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE sign_owner = ?, sign_type = ?, sign_meta = ?",
@@ -434,7 +432,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void deleteSign(TNESign sign) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?", new Object[] { sign.getLocation().toString() });
       sql().close();
     }
@@ -501,7 +499,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveAuction(Auction auction) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_AUCTIONS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (auction_lot, auction_added, auction_start, auction_owner, auction_world, auction_silent, auction_item, auction_cost, auction_increment, auction_global, auction_time, auction_node) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE auction_added = ?, auction_start = ?, auction_owner = ?, auction_world = ?, auction_silent = ?, auction_item = ?, auction_cost = ?, auction_increment = ?, auction_global = ?, auction_time = ?, auction_node = ?",
@@ -537,7 +535,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void deleteAuction(Auction auction) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_AUCTIONS WHERE auction_lot = ? ", new Object[] { auction.getLotNumber() });
       sql().close();
     }
@@ -595,7 +593,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveClaim(Claim claim) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_CLAIMS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (claim_player, claim_lot, claim_item, claim_paid, claim_cost) VALUES(?, ?, ?, ?, ?)" +
               " ON DUPLICATE KEY UPDATE claim_item = ?, claim_paid = ?, claim_cost = ?",
@@ -615,7 +613,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void deleteClaim(Claim claim) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_CLAIMS WHERE claim_player = ? AND claim_lot = ?", new Object[] { claim.getLot(), claim.getPlayer().toString() });
       sql().close();
     }
@@ -658,7 +656,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveID(String username, UUID id) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       String table = prefix + "_ECOIDS";
       sql().executePreparedUpdate("INSERT INTO `" + table + "` (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?",
           new Object[] {
@@ -672,7 +670,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void removeID(String username) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_ECOIDS WHERE username = ?", new Object[] { username });
       sql().close();
     }
@@ -680,7 +678,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void removeID(UUID id) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       sql().executePreparedUpdate("DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?", new Object[] { id.toString() });
       sql().close();
     }
@@ -688,7 +686,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void loadFlat(File file) {
-    db = new FlatFile(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
+    db = new FlatFile(TNE.instance().getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
     FlatFileConnection connection = (FlatFileConnection)db.connection();
     Section accounts = null;
     Section ids = null;
@@ -749,7 +747,7 @@ public class Alpha5_0 extends Version {
       }
       account.setBanks(bankMap);
 
-      TNE.instance.manager.accounts.put(uid, account);
+      TNE.instance().manager.accounts.put(uid, account);
     }
 
     Iterator<Map.Entry<String, Article>> idsIterator = ids.getArticle().entrySet().iterator();
@@ -759,7 +757,7 @@ public class Alpha5_0 extends Version {
 
       Entry info = idEntry.getValue().getEntry("info");
 
-      TNE.instance.manager.ecoIDs.put((String)info.getData("username"), UUID.fromString((String)info.getData("uuid")));
+      TNE.instance().manager.ecoIDs.put((String)info.getData("username"), UUID.fromString((String)info.getData("uuid")));
     }
 
     Iterator<Map.Entry<String, Article>> shopsIterator = shops.getArticle().entrySet().iterator();
@@ -781,7 +779,7 @@ public class Alpha5_0 extends Version {
         s.itemsFromString((String) info.getData("items"));
       }
 
-      TNE.instance.manager.shops.put(shopEntry.getKey() + ":" + s.getWorld(), s);
+      TNE.instance().manager.shops.put(shopEntry.getKey() + ":" + s.getWorld(), s);
     }
 
     for(Article a : auctions.getArticle().values()) {
@@ -799,7 +797,7 @@ public class Alpha5_0 extends Version {
       auction.setTime((int)info.getData("time"));
       auction.setNode((String)info.getData("node"));
 
-      TNE.instance.manager.auctionManager.add(auction);
+      TNE.instance().manager.auctionManager.add(auction);
     }
 
     for(Article a : claims.getArticle().values()) {
@@ -813,7 +811,7 @@ public class Alpha5_0 extends Version {
       );
       claim.setPaid((boolean)info.getData("paid"));
 
-      TNE.instance.manager.auctionManager.unclaimed.add(claim);
+      TNE.instance().manager.auctionManager.unclaimed.add(claim);
     }
 
     Iterator<Map.Entry<String, Article>> signsIterator = signs.getArticle().entrySet().iterator();
@@ -821,18 +819,17 @@ public class Alpha5_0 extends Version {
       Map.Entry<String, Article> signEntry = signsIterator.next();
       Entry info = signEntry.getValue().getEntry("info");
 
-      TNESign sign = TNESign.instance((String)info.getData("type"), UUID.fromString((String)info.getData("owner")));
-      sign.setLocation(SerializableLocation.fromString((String)info.getData("location")));
+      TNESign sign = TNESign.instance((String)info.getData("type"), UUID.fromString((String)info.getData("owner")), SerializableLocation.fromString((String)info.getData("location")));
       sign.loadMeta((String)info.getData("meta"));
 
-      TNE.instance.manager.signs.put(sign.getLocation(), sign);
+      TNE.instance().manager.signs.put(sign.getLocation(), sign);
     }
 
     if(transactions != null) {
       for (Article a : transactions.getArticle().values()) {
         Entry info = a.getEntry("info");
 
-        TNE.instance.manager.transactions.add(
+        TNE.instance().manager.transactions.add(
             (String) info.getData("id"),
             (String) info.getData("initiator"),
             (String) info.getData("player"),
@@ -854,31 +851,31 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void loadMySQL() {
-    if(TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.cache) {
       Collection<Account> accounts = loadAccounts();
       Collection<Shop> shops = loadShops();
       Collection<Auction> auctions = loadAuctions();
       Collection<TNESign> signs = loadSigns();
 
       for(Account account : accounts) {
-        TNE.instance.manager.accounts.put(account.getUid(), account, true);
+        TNE.instance().manager.accounts.put(account.getUid(), account, true);
       }
 
       for(Shop s : shops) {
-        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s, true);
+        TNE.instance().manager.shops.put(s.getName() + ":" + s.getWorld(), s, true);
       }
 
       for(Auction auction : auctions) {
-        TNE.instance.manager.auctionManager.auctionQueue.put(auction.getLotNumber(), auction, true);
+        TNE.instance().manager.auctionManager.auctionQueue.put(auction.getLotNumber(), auction, true);
       }
 
       for(TNESign sign : signs) {
-        TNE.instance.manager.signs.put(sign.getLocation(), sign, true);
+        TNE.instance().manager.signs.put(sign.getLocation(), sign, true);
       }
 
-      TNE.instance.manager.ecoIDs.putAll(loadIDS(), true);
-      TNE.instance.manager.transactions.transactionHistory = loadTransactions();
-      TNE.instance.manager.auctionManager.unclaimed.addAll(loadClaims(), true);
+      TNE.instance().manager.ecoIDs.putAll(loadIDS(), true);
+      TNE.instance().manager.transactions.transactionHistory = loadTransactions();
+      TNE.instance().manager.auctionManager.unclaimed.addAll(loadClaims(), true);
     }
   }
 
@@ -899,31 +896,31 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void loadH2() {
-    if(TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.cache) {
       Collection<Account> accounts = loadAccounts();
       Collection<Shop> shops = loadShops();
       Collection<Auction> auctions = loadAuctions();
       Collection<TNESign> signs = loadSigns();
 
       for(Account account : accounts) {
-        TNE.instance.manager.accounts.put(account.getUid(), account, true);
+        TNE.instance().manager.accounts.put(account.getUid(), account, true);
       }
 
       for(Shop s : shops) {
-        TNE.instance.manager.shops.put(s.getName() + ":" + s.getWorld(), s, true);
+        TNE.instance().manager.shops.put(s.getName() + ":" + s.getWorld(), s, true);
       }
 
       for(Auction auction : auctions) {
-        TNE.instance.manager.auctionManager.auctionQueue.put(auction.getLotNumber(), auction, true);
+        TNE.instance().manager.auctionManager.auctionQueue.put(auction.getLotNumber(), auction, true);
       }
 
       for(TNESign sign : signs) {
-        TNE.instance.manager.signs.put(sign.getLocation(), sign, true);
+        TNE.instance().manager.signs.put(sign.getLocation(), sign, true);
       }
 
-      TNE.instance.manager.ecoIDs.putAll(loadIDS(), true);
-      TNE.instance.manager.transactions.transactionHistory = loadTransactions();
-      TNE.instance.manager.auctionManager.unclaimed.addAll(loadClaims(), true);
+      TNE.instance().manager.ecoIDs.putAll(loadIDS(), true);
+      TNE.instance().manager.transactions.transactionHistory = loadTransactions();
+      TNE.instance().manager.auctionManager.unclaimed.addAll(loadClaims(), true);
     }
   }
 
@@ -947,9 +944,9 @@ public class Alpha5_0 extends Version {
       mysql().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getServerName(),
+              TNE.instance().getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getServerName()
+              TNE.instance().getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";
@@ -1061,9 +1058,9 @@ public class Alpha5_0 extends Version {
       h2().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getServerName(),
+              TNE.instance().getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getServerName()
+              TNE.instance().getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";

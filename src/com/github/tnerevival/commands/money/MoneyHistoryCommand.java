@@ -89,7 +89,7 @@ public class MoneyHistoryCommand extends TNECommand {
     }
 
     String id = IDFinder.getID(player).toString();
-    TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
+    TransactionHistory history = TNE.instance().manager.transactions.getHistory(id);
 
     if(history != null) {
       List<Record> records = history.getRecords(world, IDFinder.getID(player).toString(), type, page);
@@ -103,7 +103,7 @@ public class MoneyHistoryCommand extends TNECommand {
           BigDecimal difference = r.getBalance().subtract(r.getOldBalance());
           String amount = ((difference.compareTo(BigDecimal.ZERO) >= 0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
-          String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
+          String time = r.convert(world, IDFinder.getID(player), TNE.instance().api().getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 
           Player p = null;
           if(r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {

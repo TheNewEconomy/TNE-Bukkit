@@ -66,7 +66,7 @@ public class ShopCloseCommand extends TNECommand {
           }
           s.getShoppers().clear();
 
-          TNE.instance.saveManager.versionInstance.deleteShop(s);
+          TNE.instance().saveManager.versionInstance.deleteShop(s);
           Message hidden = new Message("Messages.Shop.Closed");
           hidden.addVariable("$shop", s.getName());
           hidden.translate(IDFinder.getWorld(player), player);

@@ -249,9 +249,9 @@ public class Alpha5_2 extends Version {
       mysql().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getServerName(),
+              TNE.instance().getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getServerName()
+              TNE.instance().getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";
@@ -370,9 +370,9 @@ public class Alpha5_2 extends Version {
       h2().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getServerName(),
+              TNE.instance().getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getServerName()
+              TNE.instance().getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";

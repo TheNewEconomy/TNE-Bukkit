@@ -71,7 +71,7 @@ public class MoneyConvertCommand extends TNECommand {
       String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : getWorld(sender);
       String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
 
-      if(!TNE.instance.manager.currencyManager.contains(worldTo, currencyTo)) {
+      if(!TNE.instance().manager.currencyManager.contains(worldTo, currencyTo)) {
         Message paid = new Message("Messages.Money.NoCurrency");
         paid.addVariable("$currency", currencyTo);
         paid.addVariable("$world", worldTo);
@@ -79,21 +79,21 @@ public class MoneyConvertCommand extends TNECommand {
         return false;
       }
 
-      Currency to = TNE.instance.manager.currencyManager.get(worldTo, currencyTo);
-      Currency from = TNE.instance.manager.currencyManager.get(getWorld(sender));
+      Currency to = TNE.instance().manager.currencyManager.get(worldTo, currencyTo);
+      Currency from = TNE.instance().manager.currencyManager.get(getWorld(sender));
 
       if(arguments.length >= 3) {
         String worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : getWorld(sender);
         String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
 
-        if(!TNE.instance.manager.currencyManager.contains(worldFrom, currencyFrom)) {
+        if(!TNE.instance().manager.currencyManager.contains(worldFrom, currencyFrom)) {
           Message paid = new Message("Messages.Money.NoCurrency");
           paid.addVariable("$currency", currencyFrom);
           paid.addVariable("$world", worldFrom);
           paid.translate(getWorld(sender), player);
           return false;
         }
-        from = TNE.instance.manager.currencyManager.get(worldFrom, currencyFrom);
+        from = TNE.instance().manager.currencyManager.get(worldFrom, currencyFrom);
       }
 
       if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, value, from, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
@@ -105,7 +105,7 @@ public class MoneyConvertCommand extends TNECommand {
 
       AccountUtils.transaction(IDFinder.getID(player).toString(), null, value, from, TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
 
-      BigDecimal converted = TNE.instance.manager.currencyManager.convert(from, to, value);
+      BigDecimal converted = TNE.instance().manager.currencyManager.convert(from, to, value);
       AccountUtils.transaction(IDFinder.getID(player).toString(), null, converted, to, TransactionType.MONEY_GIVE, IDFinder.getWorld(player));
 
       Message success = new Message("Messages.Money.Converted");

@@ -18,20 +18,20 @@ public class ObjectConfiguration extends Configuration {
 
   @Override
   public void load(FileConfiguration configurationFile) {
-    Set<String> identifiers = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+    Set<String> identifiers = TNE.instance().worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
     //Load Objects
     loadCommands(configurationFile, "", null);
     loadInventories(configurationFile, "", null);
     for(String identifier : identifiers) {
-      loadCommands(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier);
-      loadInventories(TNE.instance.worldConfigurations, "Worlds." + identifier + ".", identifier);
+      loadCommands(TNE.instance().worldConfigurations, "Worlds." + identifier + ".", identifier);
+      loadInventories(TNE.instance().worldConfigurations, "Worlds." + identifier + ".", identifier);
     }
 
-    identifiers = TNE.instance.playerConfigurations.getConfigurationSection("Players").getKeys(false);
+    identifiers = TNE.instance().playerConfigurations.getConfigurationSection("Players").getKeys(false);
     for(String identifier : identifiers) {
-      loadCommands(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier);
-      loadInventories(TNE.instance.playerConfigurations, "Players." + identifier + ".", identifier);
+      loadCommands(TNE.instance().playerConfigurations, "Players." + identifier + ".", identifier);
+      loadInventories(TNE.instance().playerConfigurations, "Players." + identifier + ".", identifier);
     }
     super.load(configurationFile);
   }

@@ -67,7 +67,7 @@ public class AdminHistoryCommand extends TNECommand {
     String type = "all";
     int page = 1;
 
-    if(arguments.length > 1 && IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
+    if(arguments.length > 1 && IDFinder.getID(arguments[0]) != null && TNE.instance().manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
       Player target = IDFinder.getPlayer(arguments[0]);
       for (int i = 1; i < arguments.length; i++) {
         String s = arguments[i];
@@ -94,7 +94,7 @@ public class AdminHistoryCommand extends TNECommand {
       }
 
       String id = IDFinder.getID(target).toString();
-      TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
+      TransactionHistory history = TNE.instance().manager.transactions.getHistory(id);
 
       if (history != null) {
         List<Record> records = history.getRecords(world, IDFinder.getID(player).toString(), type, page);
@@ -108,7 +108,7 @@ public class AdminHistoryCommand extends TNECommand {
             BigDecimal difference = r.getBalance().subtract(r.getOldBalance());
             String amount = ((difference.compareTo(BigDecimal.ZERO) >= 0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
-            String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
+            String time = r.convert(world, IDFinder.getID(player), TNE.instance().api().getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 
             Player p = null;
             if (r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {

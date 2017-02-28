@@ -10,12 +10,12 @@ public class InventoryCredits {
   private HashMap<String, HashMap<String, Long>> credits = new HashMap<String, HashMap<String, Long>>();
 
   public Long getTimeLeft(Player player, String inventory) {
-    String world = (TNE.configurations.getBoolean("Objects.Inventories.PerWorld", "objects")) ? player.getWorld().getName() : TNE.instance.defaultWorld;
+    String world = (TNE.configurations.getBoolean("Objects.Inventories.PerWorld", "objects")) ? player.getWorld().getName() : TNE.instance().defaultWorld;
     return getTimeLeft(world, inventory);
   }
 
   public void setTime(Player player, String inventory, long time) {
-    String world = (TNE.configurations.getBoolean("Objects.Inventories.PerWorld", "objects")) ? player.getWorld().getName() : TNE.instance.defaultWorld;
+    String world = (TNE.configurations.getBoolean("Objects.Inventories.PerWorld", "objects")) ? player.getWorld().getName() : TNE.instance().defaultWorld;
     setTime(world, inventory, time);
   }
 

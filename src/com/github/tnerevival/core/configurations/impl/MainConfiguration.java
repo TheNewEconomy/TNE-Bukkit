@@ -51,20 +51,16 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Shops.Shares.Enabled", true);
     configurations.put("Core.Shops.Shares.Max", 3);
 
-    configurations.put("Core.Signs.Bank.Enabled", false);
-    configurations.put("Core.Signs.Bank.Place", 20.0);
-    configurations.put("Core.Signs.Bank.Use", 20.0);
+    configurations.put("Core.Signs.Vault.Enabled", false);
+    configurations.put("Core.Signs.Vault.Place", 20.0);
+    configurations.put("Core.Signs.Vault.Use", 20.0);
     configurations.put("Core.Signs.Shop.Enabled", false);
     configurations.put("Core.Signs.Shop.Place", 20.0);
     configurations.put("Core.Signs.Shop.Use", 20.0);
-    configurations.put("Core.Signs.Sell.Enabled", false);
-    configurations.put("Core.Signs.Sell.Place", 20.0);
-    configurations.put("Core.Signs.Sell.Use", 20.0);
-    configurations.put("Core.Signs.Sell.Max", 10);
-    configurations.put("Core.Signs.Buy.Enabled", false);
-    configurations.put("Core.Signs.Buy.Place", 20.0);
-    configurations.put("Core.Signs.Buy.Use", 20.0);
-    configurations.put("Core.Signs.Buy.Max", 10);
+    configurations.put("Core.Signs.Item.Enabled", false);
+    configurations.put("Core.Signs.Item.Place", 20.0);
+    configurations.put("Core.Signs.Item.Use", 20.0);
+    configurations.put("Core.Signs.Item.Max", 10);
 
     configurations.put("Core.Death.Lose", false);
     configurations.put("Core.Death.Bank.Drop", 0);

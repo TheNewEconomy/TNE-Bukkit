@@ -26,8 +26,9 @@ public abstract class TNESign {
   protected SerializableLocation location;
   protected Inventory inventory = null;
 
-  public TNESign(UUID owner) {
+  public TNESign(UUID owner, SerializableLocation location) {
     this.owner = owner;
+    this.location = location;
   }
 
   /**
@@ -71,7 +72,7 @@ public abstract class TNESign {
    * @param player
    * @return Whether or not the action was performed successfully
    */
-  public boolean onClick(Player player) {
+  public boolean onClick(Player player, boolean shift) {
     TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.LEFT_CLICKED);
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
@@ -85,7 +86,7 @@ public abstract class TNESign {
    * @param player
    * @return Whether or not the action was performed successfully
    */
-  public boolean onRightClick(Player player) {
+  public boolean onRightClick(Player player, boolean shift) {
     TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.RIGHT_CLICKED);
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
@@ -179,7 +180,7 @@ public abstract class TNESign {
 
   public static Boolean validSign(Location location) {
     SerializableLocation cerealLoc = new SerializableLocation(location);
-    for(SerializableLocation loc : TNE.instance.manager.signs.keySet()) {
+    for(SerializableLocation loc : TNE.instance().manager.signs.keySet()) {
       if(loc.equals(cerealLoc)) {
         return true;
       }
@@ -188,7 +189,7 @@ public abstract class TNESign {
   }
 
   public static void removeSign(SerializableLocation location) {
-    Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance.manager.signs.entrySet().iterator();
+    Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance().manager.signs.entrySet().iterator();
 
     while(i.hasNext()) {
       Map.Entry<SerializableLocation, TNESign> e = i.next();
@@ -200,7 +201,7 @@ public abstract class TNESign {
   }
 
   public static TNESign getSign(SerializableLocation location) {
-    for(Map.Entry<SerializableLocation, TNESign> entry : TNE.instance.manager.signs.entrySet()) {
+    for(Map.Entry<SerializableLocation, TNESign> entry : TNE.instance().manager.signs.entrySet()) {
       if(entry.getKey().equals(location)) {
         return entry.getValue();
       }
@@ -208,17 +209,17 @@ public abstract class TNESign {
     return null;
   }
 
-  public static TNESign instance(String type, UUID owner) {
+  public static TNESign instance(String type, UUID owner, SerializableLocation location) {
     switch(type.toLowerCase()) {
       case "item":
-        return new ItemSign(owner);
+        return new ItemSign(owner, location);
       case "shop":
-        return new ShopSign(owner);
+        return new ShopSign(owner, location);
       case "vault":
-        return new VaultSign(owner);
+        return new VaultSign(owner, location);
       default:
         MISCUtils.debug("defaulting...");
-        return new VaultSign(owner);
+        return new VaultSign(owner, location);
     }
   }
 }

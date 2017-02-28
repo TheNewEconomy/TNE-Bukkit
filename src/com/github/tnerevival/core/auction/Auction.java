@@ -17,10 +17,10 @@ public class Auction {
   private long added = System.nanoTime();
   private long startTime = System.nanoTime();
   private UUID player;
-  private String world = TNE.instance.defaultWorld;
+  private String world = TNE.instance().defaultWorld;
   private Boolean silent = false;
   private SerializableItemStack item;
-  private TransactionCost cost = new TransactionCost(new BigDecimal(50.00), TNE.instance.manager.currencyManager.get(world));
+  private TransactionCost cost = new TransactionCost(new BigDecimal(50.00), TNE.instance().manager.currencyManager.get(world));
   private Bid highestBid = null;
   private BigDecimal increment = BigDecimal.TEN;
   private Boolean global = true;

@@ -21,8 +21,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -40,12 +40,16 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Sign;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class InteractionListener implements Listener {
@@ -58,7 +62,7 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onCommand(PlayerCommandPreprocessEvent event) {
-    if(TNE.instance.api.getBoolean("Objects.Commands.Enabled", "objects")) {
+    if(TNE.instance().api().getBoolean("Objects.Commands.Enabled", "objects")) {
 
       ObjectConfiguration configuration = TNE.configurations.getObjectConfiguration();
 
@@ -76,8 +80,8 @@ public class InteractionListener implements Listener {
       if(cost.compareTo(BigDecimal.ZERO) > 0) {
         String message = "";
         Account acc = AccountUtils.getAccount(IDFinder.getID(player));
-        if(TNE.instance.manager.enabled(IDFinder.getID(player), IDFinder.getWorld(player))) {
-          if(!TNE.instance.manager.confirmed(IDFinder.getID(player), IDFinder.getWorld(player))) {
+        if(TNE.instance().manager.enabled(IDFinder.getID(player), IDFinder.getWorld(player))) {
+          if(!TNE.instance().manager.confirmed(IDFinder.getID(player), IDFinder.getWorld(player))) {
             if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
               message = "Messages.Account.Set";
             else if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE"))
@@ -97,8 +101,8 @@ public class InteractionListener implements Listener {
         if(acc.hasCredit(commandFirstArg)) {
           acc.removeCredit(commandFirstArg);
         } else {
-          if(TNE.instance.api.fundsHas(player.getUniqueId().toString(), player.getWorld().getName(), cost)) {
-            TNE.instance.api.fundsRemove(player.getUniqueId().toString(), player.getWorld().getName(), cost);
+          if(TNE.instance().api().fundsHas(player.getUniqueId().toString(), player.getWorld().getName(), cost)) {
+            TNE.instance().api().fundsRemove(player.getUniqueId().toString(), player.getWorld().getName(), cost);
             paid = true;
           }
         }
@@ -168,7 +172,7 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onSmelt(FurnaceSmeltEvent event) {
-    if (TNE.instance.api.getBoolean("Materials.Enabled", TNE.instance.defaultWorld, "")) {
+    if (TNE.instance().api().getBoolean("Materials.Enabled", TNE.instance().defaultWorld, "")) {
       if (event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
         String name = event.getBlock().getType().name();
         if (event.getBlock().getState() instanceof Furnace) {
@@ -194,7 +198,7 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onEnchant(EnchantItemEvent event) {
-    if (TNE.instance.api.getBoolean("Materials.Enabled", IDFinder.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()))) {
+    if (TNE.instance().api().getBoolean("Materials.Enabled", IDFinder.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()))) {
       if (event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
 
         ItemStack result = event.getItem();
@@ -222,7 +226,7 @@ public class InteractionListener implements Listener {
     if(event.getInventory().getResult() != null) {
       Player player = (Player)event.getView().getPlayer();
 
-      if (TNE.instance.api.getBoolean("Materials.Enabled", IDFinder.getWorld(player), IDFinder.getID(player))) {
+      if (TNE.instance().api().getBoolean("Materials.Enabled", IDFinder.getWorld(player), IDFinder.getID(player))) {
         String name = event.getInventory().getResult().getType().name();
         BigDecimal cost = InteractionType.CRAFTING.getCost(name, IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
@@ -243,7 +247,7 @@ public class InteractionListener implements Listener {
 
     Player player = (Player) event.getWhoClicked();
 
-    if (TNE.instance.api.getBoolean("Materials.Enabled", IDFinder.getWorld(player), IDFinder.getID(player))) {
+    if (TNE.instance().api().getBoolean("Materials.Enabled", IDFinder.getWorld(player), IDFinder.getID(player))) {
 
       String name = event.getInventory().getResult().getType().name();
       ItemStack result = event.getCurrentItem().clone();
@@ -299,19 +303,20 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onChange(SignChangeEvent event) {
-    if(event.getLine(0).contains("tne:")) {
-      String[] match = event.getLine(0).substring(1, event.getLine(0).length() - 1).split(":");
+    if(event.getLine(0).contains("[tne:") && event.getLine(0).contains("]")) {
       Player player = event.getPlayer();
+      String line = event.getLine(0);
+      String stripped = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+      String[] match = stripped.split(":");
+      SignType type = SignType.fromName(match[1]);
 
-      if (match.length > 1) {
+      if (!type.equals(SignType.UNKNOWN)) {
         MISCUtils.debug(match[0] + " type: " + match[1]);
-        SignType type = SignType.fromName(match[1]);
+        MISCUtils.debug(type.toString());
+        TNESign sign = TNESign.instance(type.getName(), IDFinder.getID(event.getPlayer()), new SerializableLocation(event.getBlock().getLocation()));
 
-        TNESign sign = TNESign.instance(type.getName(), IDFinder.getID(event.getPlayer()));
-        sign.setLocation(new SerializableLocation(event.getBlock().getLocation()));
-
-        if(sign instanceof ShopSign) {
-          if(!Shop.exists(event.getLine(1), event.getBlock().getWorld().getName())) {
+        if (sign instanceof ShopSign) {
+          if (!Shop.exists(event.getLine(1), event.getBlock().getWorld().getName())) {
             event.setCancelled(true);
             return;
           }
@@ -324,13 +329,22 @@ public class InteractionListener implements Listener {
           BigDecimal place = sign.getType().place(IDFinder.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
           MISCUtils.debug("Interaction " + place);
           MISCUtils.debug("Interaction " + sign.getType().name());
-          if(place != null && place.compareTo(BigDecimal.ZERO) > 0) {
+          if (place != null && place.compareTo(BigDecimal.ZERO) > 0) {
             AccountUtils.transaction(IDFinder.getID(event.getPlayer()).toString(), null, place, TransactionType.MONEY_REMOVE, IDFinder.getWorld(event.getPlayer()));
             Message charged = new Message("Messages.Objects.SignPlace");
             charged.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(event.getPlayer()), place));
             charged.translate(IDFinder.getWorld(player), player);
           }
-          TNE.instance.manager.signs.put(sign.getLocation(), sign);
+
+          if(type.equals(SignType.ITEM)) {
+            event.setLine(3, player.getName());
+            Sign s = (Sign)event.getBlock().getState().getData();
+            BlockFace face = (s.isWallSign())? s.getAttachedFace() : s.getFacing().getOppositeFace();
+            Block b = event.getBlock().getRelative(face);
+            MISCUtils.debug("Placed on: " + b.getType().toString());
+          }
+          event.setLine(0, ChatColor.BLUE + event.getLine(0));
+          TNE.instance().manager.signs.put(sign.getLocation(), sign);
         }
       }
     }
@@ -340,7 +354,7 @@ public class InteractionListener implements Listener {
   public void onInteractWithEntity(PlayerInteractEntityEvent event) {
     Entity entity = event.getRightClicked();
     Player player = event.getPlayer();
-    String world = TNE.instance.defaultWorld;
+    String world = TNE.instance().defaultWorld;
 
     if(MISCUtils.multiWorld()) {
       world = player.getWorld().getName();
@@ -390,11 +404,12 @@ public class InteractionListener implements Listener {
     if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
       if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
         if(TNESign.validSign(block.getLocation())) {
+          if(player.isSneaking()) return;
           SerializableLocation location = new SerializableLocation(block.getLocation());
-          Sign b = (Sign)block.getState();
+          org.bukkit.block.Sign b = (org.bukkit.block.Sign)block.getState();
           TNESign sign = TNESign.getSign(location);
 
-          for(TNESign s : TNE.instance.manager.signs.values()) {
+          for(TNESign s : TNE.instance().manager.signs.values()) {
             MISCUtils.debug(s.getLocation().toString() + ";" + s.getType() + ";" + s.getOwner());
           }
           MISCUtils.debug(TNESign.validSign(block.getLocation()) + "");
@@ -408,7 +423,7 @@ public class InteractionListener implements Listener {
               event.setCancelled(true);
             }
           } else{
-            if (!sign.onRightClick(player)) {
+            if (!sign.onRightClick(player, player.isSneaking())) {
               event.setCancelled(true);
             }
           }
@@ -433,6 +448,20 @@ public class InteractionListener implements Listener {
     }
   }
 
+  @EventHandler
+  public void onItemChange(PlayerItemHeldEvent event) {
+    Block b = event.getPlayer().getTargetBlock(new HashSet<>(Arrays.asList(new Material[] { Material.AIR })), 5);
+
+    if(b != null) {
+      if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+        SerializableLocation location = new SerializableLocation(b.getLocation());
+        org.bukkit.block.Sign sign = (org.bukkit.block.Sign) b.getState();
+        sign.setLine(0, "Slot: " + event.getNewSlot());
+        sign.update(true);
+      }
+    }
+  }
+
   @EventHandler(priority = EventPriority.HIGH)
   public void onEntityDeath(EntityDeathEvent event) {
     LivingEntity entity = event.getEntity();
@@ -446,7 +475,7 @@ public class InteractionListener implements Listener {
       String messageNode = "Messages.Mob.Killed";
       Boolean player = false;
 
-      if(TNE.instance.api.getBoolean("Mobs.Enabled", world, id)) {
+      if(TNE.instance().api().getBoolean("Mobs.Enabled", world, id)) {
         switch(entity.getType()) {
           case BAT:
             mob = "Bat";
@@ -648,21 +677,21 @@ public class InteractionListener implements Listener {
           }
         }
 
-        if(!TNE.instance.mobConfigurations.contains("Mobs." + mob)) mob = "Default";
-        if(entity.getCustomName() != null && TNE.instance.mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) mob = "Custom.Entries." + entity.getCustomName();
+        if(!TNE.instance().mobConfigurations.contains("Mobs." + mob)) mob = "Default";
+        if(entity.getCustomName() != null && TNE.instance().mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) mob = "Custom.Entries." + entity.getCustomName();
         String currency = TNE.configurations.mobCurrency(mob, world, id);
         reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
         reward = AccountUtils.round(world, currency, reward.multiply(TNE.configurations.getRewardMultiplier(mob, world, id)));
         String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? event.getEntityType().toString() : mob;
-        if(entity.getCustomName() != null && TNE.instance.mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) formatted = entity.getCustomName();
-        formatted = (TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
+        if(entity.getCustomName() != null && TNE.instance().mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) formatted = entity.getCustomName();
+        formatted = (TNE.instance().messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance().messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
         MISCUtils.debug(formatted);
         Character firstChar = formatted.charAt(0);
         messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
-        if(TNE.instance.messageConfigurations.contains("Messages.Mob.Custom." + formatted.replaceAll(" ", ""))) messageNode = TNE.instance.messageConfigurations.getString("Messages.Mob.Custom." + formatted.replaceAll(" ", ""));
+        if(TNE.instance().messageConfigurations.contains("Messages.Mob.Custom." + formatted.replaceAll(" ", ""))) messageNode = TNE.instance().messageConfigurations.getString("Messages.Mob.Custom." + formatted.replaceAll(" ", ""));
         if(TNE.configurations.mobEnabled(mob, world, id)) {
-          AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TNE.instance.manager.currencyManager.get(world, currency), TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
-          if(TNE.instance.api.getBoolean("Mobs.Message")) {
+          AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TNE.instance().manager.currencyManager.get(world, currency), TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
+          if(TNE.instance().api().getBoolean("Mobs.Message")) {
             Message mobKilled = new Message(messageNode);
             mobKilled.addVariable("$mob", formatted.replace(".", " "));
             mobKilled.addVariable("$reward", CurrencyFormatter.format(IDFinder.getWorld(killer), currency, reward));

@@ -32,9 +32,9 @@ import java.math.BigDecimal;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class MineConomy extends Converter {
-  private File accountsFile = new File(TNE.instance.getDataFolder(), "../MineConomy/accounts.yml");
-  private File banksFile = new File(TNE.instance.getDataFolder(), "../MineConomy/banks.yml");
-  private File currencyFile = new File(TNE.instance.getDataFolder(), "../MineConomy/currencies.yml");
+  private File accountsFile = new File(TNE.instance().getDataFolder(), "../MineConomy/accounts.yml");
+  private File banksFile = new File(TNE.instance().getDataFolder(), "../MineConomy/banks.yml");
+  private File currencyFile = new File(TNE.instance().getDataFolder(), "../MineConomy/currencies.yml");
   private FileConfiguration accounts = YamlConfiguration.loadConfiguration(accountsFile);
   private FileConfiguration banks = YamlConfiguration.loadConfiguration(banksFile);
   private FileConfiguration currencies = YamlConfiguration.loadConfiguration(currencyFile);
@@ -52,7 +52,7 @@ public class MineConomy extends Converter {
     try {
       int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
-      Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
+      Currency currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld);
       while (mysqlDB().results(index).next()) {
         String username = mysqlDB().results(index).getString("account");
         Double balance = mysqlDB().results(index).getDouble("balance");
@@ -63,10 +63,10 @@ public class MineConomy extends Converter {
         if(rate > 1.0) rate = 1.0;
         else if(rate < 0.1) rate = 0.1;
 
-        if(TNE.instance.manager.currencyManager.contains(TNE.instance.defaultWorld, currencyName)) {
-          currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, currencyName);
+        if(TNE.instance().manager.currencyManager.contains(TNE.instance().defaultWorld, currencyName)) {
+          currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld, currencyName);
         }
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), new BigDecimal(balance)));
+        AccountUtils.convertedAdd(username, TNE.instance().defaultWorld, currency.getName(), TNE.instance().manager.currencyManager.convert(rate, currency.getRate(), new BigDecimal(balance)));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -77,7 +77,7 @@ public class MineConomy extends Converter {
   public void yaml() throws InvalidDatabaseImport {
 
     String base = "Accounts";
-    Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
+    Currency currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld);
     for(String username : accounts.getConfigurationSection(base).getKeys(false)) {
 
       double amount = accounts.getDouble(base + "." + username + ".Balance");
@@ -86,17 +86,17 @@ public class MineConomy extends Converter {
       if(rate > 1.0) rate = 1.0;
       else if(rate < 0.1) rate = 0.1;
 
-      if(TNE.instance.manager.currencyManager.contains(TNE.instance.defaultWorld, accounts.getString(base + "." + username + ".Currency"))) {
-        currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld, accounts.getString(base + "." + username + ".Currency"));
+      if(TNE.instance().manager.currencyManager.contains(TNE.instance().defaultWorld, accounts.getString(base + "." + username + ".Currency"))) {
+        currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld, accounts.getString(base + "." + username + ".Currency"));
       }
-      AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), TNE.instance.manager.currencyManager.convert(rate, currency.getRate(), new BigDecimal(amount)));
+      AccountUtils.convertedAdd(username, TNE.instance().defaultWorld, currency.getName(), TNE.instance().manager.currencyManager.convert(rate, currency.getRate(), new BigDecimal(amount)));
     }
 
     base = "Banks";
     for(String bank : banks.getConfigurationSection(base).getKeys(false)) {
       base = "Banks." + bank + ".Accounts";
       for(String username : banks.getConfigurationSection(base).getKeys(false)) {
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(banks.getDouble(base + "." + username + ".Balance")));
+        AccountUtils.convertedAdd(username, TNE.instance().defaultWorld, currency.getName(), new BigDecimal(banks.getDouble(base + "." + username + ".Balance")));
       }
     }
   }

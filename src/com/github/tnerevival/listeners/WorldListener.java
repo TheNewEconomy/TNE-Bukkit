@@ -25,7 +25,7 @@ public class WorldListener implements Listener {
     Player player = event.getPlayer();
     String world = player.getWorld().getName();
 
-    if(TNE.instance.api.getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
+    if(TNE.instance().api().getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
           AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
@@ -50,6 +50,6 @@ public class WorldListener implements Listener {
   @EventHandler
   public void onWorldLoad(WorldLoadEvent event) {
     String world = event.getWorld().getName();
-    TNE.instance.manager.currencyManager.initializeWorld(world);
+    TNE.instance().manager.currencyManager.initializeWorld(world);
   }
 }

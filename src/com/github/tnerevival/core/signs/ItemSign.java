@@ -16,8 +16,11 @@
  */
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.core.signs.item.ItemEntry;
+import com.github.tnerevival.serializable.SerializableLocation;
 import org.bukkit.entity.Player;
 
+import java.util.TreeMap;
 import java.util.UUID;
 
 /**
@@ -25,36 +28,26 @@ import java.util.UUID;
  **/
 public class ItemSign extends TNESign {
 
-  private int buyQuantity;
-  private int buy;
-  private int sellQuantity;
-  private int sell;
-  private String material;
+  public TreeMap<Integer, ItemEntry> offers = new TreeMap<>();
 
-  public ItemSign(UUID owner) {
-    super(owner);
+  public ItemSign(UUID owner, SerializableLocation location) {
+    super(owner, location);
     setType(SignType.ITEM);
   }
 
   @Override
-  public boolean onClick(Player player) {
-    if(super.onClick(player)) {
-      if (player.hasPermission(SignType.BANK.getUsePermission())) {
-        if(sellQuantity > 0) {
-          //TODO: Handle selling.
-        }
+  public boolean onClick(Player player, boolean shift) {
+    if(super.onClick(player, shift)) {
+      if (player.hasPermission(SignType.ITEM.getUsePermission())) {
       }
     }
     return false;
   }
 
   @Override
-  public boolean onRightClick(Player player) {
-    if(super.onRightClick(player)) {
-      if (player.hasPermission(SignType.BANK.getUsePermission())) {
-        if(buyQuantity > 0) {
-          //TODO: Handle buying.
-        }
+  public boolean onRightClick(Player player, boolean shift) {
+    if(super.onRightClick(player, shift)) {
+      if (player.hasPermission(SignType.ITEM.getUsePermission())) {
       }
     }
     return false;

@@ -7,7 +7,6 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -67,7 +66,7 @@ public class AdminStatusCommand extends TNECommand {
         Account acc = AccountUtils.getAccount(target);
         acc.setStatus(status);
 
-        TNE.instance.manager.accounts.put(acc.getUid(), acc);
+        TNE.instance().manager.accounts.put(acc.getUid(), acc);
         if(Bukkit.getOnlinePlayers().contains(target)) {
           String world = IDFinder.getWorld(target);
           Message m = new Message("Messages.Account.StatusChange");

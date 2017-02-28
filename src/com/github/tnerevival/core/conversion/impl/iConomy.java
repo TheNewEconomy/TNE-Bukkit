@@ -35,7 +35,7 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class iConomy extends Converter {
-  private File configFile = new File(TNE.instance.getDataFolder(), "../iConomy/Config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../iConomy/Config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   private String table = config.getString("System.Database.Table");
 
@@ -50,11 +50,11 @@ public class iConomy extends Converter {
     try {
       int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
-      Currency currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld);
+      Currency currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld);
       while (mysqlDB().results(index).next()) {
         String username = mysqlDB().results(index).getString("username");
         Double balance = mysqlDB().results(index).getDouble("balance");
-        AccountUtils.convertedAdd(username, TNE.instance.defaultWorld, currency.getName(), new BigDecimal(balance));
+        AccountUtils.convertedAdd(username, TNE.instance().defaultWorld, currency.getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -74,16 +74,16 @@ public class iConomy extends Converter {
   @Override
   public void flatfile() throws InvalidDatabaseImport {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder(), "../iConomy/accounts.mini")));
+      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(), "../iConomy/accounts.mini")));
 
       String line;
       while((line = reader.readLine()) != null) {
         String[] split = line.split(" ");
         Double money = Double.parseDouble(split[1].split(":")[1]);
-        AccountUtils.convertedAdd(split[0].trim(), TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), new BigDecimal(money));
+        AccountUtils.convertedAdd(split[0].trim(), TNE.instance().defaultWorld, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName(), new BigDecimal(money));
       }
     } catch(Exception e) {
-      TNE.instance.getLogger().log(Level.WARNING, "Unable to load iConomy Data.");
+      TNE.instance().getLogger().log(Level.WARNING, "Unable to load iConomy Data.");
     }
   }
 

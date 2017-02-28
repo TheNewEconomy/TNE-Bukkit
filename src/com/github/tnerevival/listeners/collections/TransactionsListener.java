@@ -35,7 +35,7 @@ public class TransactionsListener implements ListListener {
   @Override
   public void update() {
     for(Record r : changed) {
-      TNE.instance.saveManager.versionInstance.saveTransaction(r);
+      TNE.instance().saveManager.versionInstance.saveTransaction(r);
     }
   }
 
@@ -51,7 +51,7 @@ public class TransactionsListener implements ListListener {
 
   @Override
   public boolean add(Object item) {
-    TNE.instance.saveManager.versionInstance.saveTransaction((Record)item);
+    TNE.instance().saveManager.versionInstance.saveTransaction((Record)item);
     return true;
   }
 
@@ -62,12 +62,12 @@ public class TransactionsListener implements ListListener {
 
   @Override
   public Collection<Record> getAll(Object identifier) {
-    return TNE.instance.saveManager.versionInstance.loadHistory(IDFinder.getID((String)identifier)).getRecords();
+    return TNE.instance().saveManager.versionInstance.loadHistory(IDFinder.getID((String)identifier)).getRecords();
   }
 
   @Override
   public int size() {
-    return TNE.instance.saveManager.versionInstance.loadTransactions().size();
+    return TNE.instance().saveManager.versionInstance.loadTransactions().size();
   }
 
   @Override
@@ -87,7 +87,7 @@ public class TransactionsListener implements ListListener {
 
   @Override
   public boolean remove(Object item) {
-    TNE.instance.saveManager.versionInstance.deleteTransaction(UUID.fromString(((Record) item).getId()));
+    TNE.instance().saveManager.versionInstance.deleteTransaction(UUID.fromString(((Record) item).getId()));
     return true;
   }
 }

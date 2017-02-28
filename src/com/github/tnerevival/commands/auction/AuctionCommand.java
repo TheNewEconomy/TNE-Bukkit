@@ -57,7 +57,7 @@ public class AuctionCommand extends TNECommand {
 
   @Override
   public Boolean activated(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Auctions.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Auctions.Enabled", world, player);
   }
 
   @Override

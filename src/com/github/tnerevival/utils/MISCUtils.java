@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -49,7 +50,7 @@ public class MISCUtils {
   //True MISC Utils
   public static void debug(String message) {
     if(TNE.debugMode) {
-      TNE.instance.getLogger().info("[DEBUG MODE]" + message);
+      TNE.instance().getLogger().info("[DEBUG MODE]" + message);
     }
   }
 
@@ -230,7 +231,7 @@ public class MISCUtils {
       final String correctMat = event.getIdentifier();
       final String loreSearch = (event.getType().equals(InteractionType.ENCHANT))? "Enchanting Cost" : "Smelting Cost";
       MISCUtils.debug("LoreSearch: " + loreSearch);
-      TNE.instance.getServer().getScheduler().runTaskLater(TNE.instance, new Runnable() {
+      TNE.instance().getServer().getScheduler().runTaskLater(TNE.instance(), new Runnable() {
         @Override
         public void run() {
           ItemStack[] contents = p.getInventory().getContents().clone();
@@ -268,7 +269,7 @@ public class MISCUtils {
     FileWriter writer = null;
     BufferedWriter buffWriter = null;
     try {
-      writer = new FileWriter(new File(TNE.instance.getDataFolder(), "Material.txt"));
+      writer = new FileWriter(new File(TNE.instance().getDataFolder(), "Material.txt"));
       buffWriter = new BufferedWriter(writer);
     } catch(Exception e) {
       MISCUtils.debug(e);
@@ -277,6 +278,69 @@ public class MISCUtils {
       if(buffWriter != null) {
         try {
           buffWriter.write("validNames.add(new MaterialNameHelper(Material." + mat.name() + ", new String[0]));" + System.lineSeparator());
+        } catch(Exception e) {
+          MISCUtils.debug(e);
+        }
+      }
+    }
+    if(buffWriter != null) {
+      try {
+        buffWriter.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if(writer != null) {
+      try {
+        writer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static void materialsYAML() {
+    FileWriter writer = null;
+    BufferedWriter buffWriter = null;
+    try {
+      writer = new FileWriter(new File(TNE.instance().getDataFolder(), "items.yml"));
+      buffWriter = new BufferedWriter(writer);
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+    if(buffWriter != null) {
+      try {
+        buffWriter.write("Items:" + System.lineSeparator());
+      } catch(Exception e) {
+        MISCUtils.debug(e);
+      }
+    }
+    for(Material mat : Material.values()) {
+      if(buffWriter != null) {
+        try {
+          buffWriter.write("  " + mat.name() + ":" + System.lineSeparator());
+          buffWriter.write("    #The permission node required to create a shop sign with this item" + System.lineSeparator());
+          buffWriter.write("    Sign: " + "tne.item." + mat.name().toLowerCase() + ".sign" + System.lineSeparator());
+          buffWriter.write("    #The permission node required to buy this item" + System.lineSeparator());
+          buffWriter.write("    Buy: " + "tne.item." + mat.name().toLowerCase() + ".buy" + System.lineSeparator());
+          buffWriter.write("    #The permission node required to sell this item" + System.lineSeparator());
+          buffWriter.write("    Sell: " + "tne.item." + mat.name().toLowerCase() + ".sell" + System.lineSeparator());
+          buffWriter.write("    #The names supported by shop signs" + System.lineSeparator());
+          buffWriter.write("    Names:" + System.lineSeparator());
+          buffWriter.write("      - " + mat.name() + System.lineSeparator());
+          for(MaterialData data : mat.getData().getEnumConstants()) {
+            buffWriter.write("  " + mat.name() + ":" + System.lineSeparator());
+            buffWriter.write("    #The permission node required to create a shop sign with this item" + System.lineSeparator());
+            buffWriter.write("    Sign: " + "tne.item." + mat.name().toLowerCase() + ".sign" + System.lineSeparator());
+            buffWriter.write("    #The permission node required to buy this item" + System.lineSeparator());
+            buffWriter.write("    Buy: " + "tne.item." + mat.name().toLowerCase() + ".buy" + System.lineSeparator());
+            buffWriter.write("    #The permission node required to sell this item" + System.lineSeparator());
+            buffWriter.write("    Sell: " + "tne.item." + mat.name().toLowerCase() + ".sell" + System.lineSeparator());
+            buffWriter.write("    #The names supported by shop signs" + System.lineSeparator());
+            buffWriter.write("    Names:" + System.lineSeparator());
+            buffWriter.write("      - " + mat.name() + System.lineSeparator());
+          }
         } catch(Exception e) {
           MISCUtils.debug(e);
         }
@@ -319,7 +383,7 @@ public class MISCUtils {
 
   public static Boolean isDouble(String value, String world) {
     try {
-      Double.valueOf(value.replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+      Double.valueOf(value.replace(TNE.instance().api().getString("Core.Currency.Decimal", world), "."));
       return true;
     } catch(Exception e) {
       return false;
@@ -337,10 +401,10 @@ public class MISCUtils {
 
   //World Utils
   public static Boolean multiWorld() {
-    return TNE.instance.api.getBoolean("Core.Multiworld");
+    return TNE.instance().api().getBoolean("Core.Multiworld");
   }
 
   public static Boolean worldConfigExists(String node) {
-    return (TNE.instance.worldConfigurations.get(node) != null);
+    return (TNE.instance().worldConfigurations.get(node) != null);
   }
 }

@@ -37,17 +37,17 @@ public class AdminPurgeCommand extends TNECommand {
   
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance.defaultWorld;
+    String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance().defaultWorld;
     boolean isWorld = arguments.length >= 1;
     if(isWorld) {
       if(Bukkit.getWorld(arguments[0]) == null)
         new Message("Messages.General.NoWorld").translate(world, sender);
-      TNE.instance.manager.purge(arguments[0]);
+      TNE.instance().manager.purge(arguments[0]);
       Message m = new Message("Messages.Admin.PurgeWorld");
       m.addVariable("$world", arguments[0]);
       return true;
     }
-    TNE.instance.manager.purgeAll();
+    TNE.instance().manager.purgeAll();
     new Message("Messages.Admin.Purge").translate(world, sender);
     return true;
   }

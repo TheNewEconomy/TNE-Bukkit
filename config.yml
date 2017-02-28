@@ -247,7 +247,7 @@ Core:
     Signs:
 
         #All configurations relating to bank signs.
-        Bank:
+        Vault:
 
             #Whether or not players can use bank signs to view their banks
             Enabled: false
@@ -269,6 +269,9 @@ Core:
 
             #The cost to use a item sign, if the player has valid permissions.
             Use: 20.0
+
+            #Whether or not item signs may have multiple offers
+            Multiple: true
 
         #All configurations relating to shop signs.
         Shop:

@@ -71,7 +71,7 @@ public class EconomyManager {
     while(it.hasNext()) {
       Account acc = it.next();
 
-      List<com.github.tnerevival.core.currency.Currency> worldCurrencies = TNE.instance.manager.currencyManager.getWorldCurrencies(world);
+      List<com.github.tnerevival.core.currency.Currency> worldCurrencies = TNE.instance().manager.currencyManager.getWorldCurrencies(world);
       Boolean remove = true;
       for(com.github.tnerevival.core.currency.Currency c : worldCurrencies) {
         if(acc.getBalances().containsKey(world + ":" + c.getName()) && !acc.getBalance(world, c.getName()).equals(AccountUtils.getInitialBalance(world, c.getName()))) {
@@ -79,8 +79,8 @@ public class EconomyManager {
         }
       }
       if(remove) {
-        TNE.instance.saveManager.versionInstance.deleteAccount(acc.getUid());
-        TNE.instance.saveManager.versionInstance.removeID(acc.getUid());
+        TNE.instance().saveManager.versionInstance.deleteAccount(acc.getUid());
+        TNE.instance().saveManager.versionInstance.removeID(acc.getUid());
         it.remove();
         ecoIDs.remove(IDFinder.getPlayer(acc.getUid().toString()).getDisplayName());
       }
@@ -100,8 +100,8 @@ public class EconomyManager {
       }
 
       if(remove) {
-        TNE.instance.saveManager.versionInstance.deleteAccount(acc.getUid());
-        TNE.instance.saveManager.versionInstance.removeID(acc.getUid());
+        TNE.instance().saveManager.versionInstance.deleteAccount(acc.getUid());
+        TNE.instance().saveManager.versionInstance.removeID(acc.getUid());
         it.remove();
         ecoIDs.remove(IDFinder.getPlayer(acc.getUid().toString()).getDisplayName());
       }
@@ -109,12 +109,12 @@ public class EconomyManager {
   }
 
   public boolean enabled(UUID id, String world) {
-    return TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
+    return TNE.instance().api().getBoolean("Core.Pins.Enabled", world, id);
   }
 
   public boolean confirmed(UUID id, String world) {
-    Boolean enabled = TNE.instance.api.getBoolean("Core.Pins.Enabled", world, id);
-    Boolean force = TNE.instance.api.getBoolean("Core.Pins.Force", world, id);
+    Boolean enabled = TNE.instance().api().getBoolean("Core.Pins.Enabled", world, id);
+    Boolean force = TNE.instance().api().getBoolean("Core.Pins.Force", world, id);
 
     if(!enabled) {
       Player p = IDFinder.getPlayer(id.toString());

@@ -140,7 +140,7 @@ public class InventoryManager {
 
   public static void handleInventoryChanges(UUID player) {
     Inventory current = IDFinder.getPlayer(player.toString()).getOpenInventory().getTopInventory();
-    TNEInventory tneInventory = TNE.instance.inventoryManager.getInventory(player);
+    TNEInventory tneInventory = TNE.instance().inventoryManager.getInventory(player);
     Inventory old = tneInventory.getInventory();
 
     if(old != null) {
@@ -160,7 +160,7 @@ public class InventoryManager {
   }
 
   public static void handleInventoryChanges(UUID player, Map<Integer, ItemStack> changed) {
-    TNEInventory old = TNE.instance.inventoryManager.getInventory(player);
+    TNEInventory old = TNE.instance().inventoryManager.getInventory(player);
 
     if(old != null) {
       if(changed.size() > 0) old.onUpdate(changed, player);
