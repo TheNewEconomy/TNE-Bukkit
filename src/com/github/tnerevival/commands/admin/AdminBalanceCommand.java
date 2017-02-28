@@ -56,7 +56,7 @@ public class AdminBalanceCommand extends TNECommand {
           MISCUtils.debug("Passed player check");
           balance.addVariable("$world", world);
           MISCUtils.debug("Passed world check");
-          balance.addVariable("$amount", CurrencyFormatter.format(world, plugin.api.getBalanceDecimal(arguments[0], world, currency)));
+          balance.addVariable("$amount", CurrencyFormatter.format(world, plugin.api().getBalanceDecimal(arguments[0], world, currency)));
           MISCUtils.debug("Passed amount check");
           balance.translate(world, sender);
           return true;

@@ -23,10 +23,14 @@ import org.mockito.Mockito;
  */
 public class TNETest {
 
-  public static TNE instance = Mockito.mock(TNE.class);
+  private static TNE instance = Mockito.mock(TNE.class);
 
   @Test
   public void enabled() {
     System.out.println(instance != null);
+  }
+
+  public static TNE instance() {
+    return instance;
   }
 }

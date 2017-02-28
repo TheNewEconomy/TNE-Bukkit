@@ -23,7 +23,7 @@ public class TNEVaultEconomy implements Economy {
 
   public TNEVaultEconomy(TNE plugin) {
     this.plugin = plugin;
-    this.api = plugin.api;
+    this.api = plugin.api();
   }
 
   @Override
