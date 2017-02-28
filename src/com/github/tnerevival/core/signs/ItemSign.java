@@ -29,6 +29,7 @@ import java.util.UUID;
 public class ItemSign extends TNESign {
 
   public TreeMap<Integer, ItemEntry> offers = new TreeMap<>();
+  public boolean admin = false;
 
   public ItemSign(UUID owner, SerializableLocation location) {
     super(owner, location);

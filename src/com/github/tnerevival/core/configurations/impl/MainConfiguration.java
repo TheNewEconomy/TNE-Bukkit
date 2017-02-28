@@ -10,7 +10,7 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
     configurations.put("Core.Metrics", true);
-    configurations.put("Core.Pins.Enabled", true);
+    configurations.put("Core.Pins.Enabled", false);
     configurations.put("Core.Pins.Force", true);
     configurations.put("Core.Commands.PayShort", true);
     configurations.put("Core.Commands.BalanceShort", true);
@@ -51,16 +51,17 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Shops.Shares.Enabled", true);
     configurations.put("Core.Shops.Shares.Max", 3);
 
-    configurations.put("Core.Signs.Vault.Enabled", false);
+    configurations.put("Core.Signs.Vault.Enabled", true);
     configurations.put("Core.Signs.Vault.Place", 20.0);
     configurations.put("Core.Signs.Vault.Use", 20.0);
-    configurations.put("Core.Signs.Shop.Enabled", false);
+    configurations.put("Core.Signs.Shop.Enabled", true);
     configurations.put("Core.Signs.Shop.Place", 20.0);
     configurations.put("Core.Signs.Shop.Use", 20.0);
-    configurations.put("Core.Signs.Item.Enabled", false);
+    configurations.put("Core.Signs.Item.Enabled", true);
     configurations.put("Core.Signs.Item.Place", 20.0);
     configurations.put("Core.Signs.Item.Use", 20.0);
     configurations.put("Core.Signs.Item.Max", 10);
+    configurations.put("Core.Signs.Item.Multiple", true);
 
     configurations.put("Core.Death.Lose", false);
     configurations.put("Core.Death.Bank.Drop", 0);

@@ -17,7 +17,7 @@ public class ShopSign extends TNESign {
   private String title;
   private Shop shop = null;
 
-  public ShopSign(UUID owner, SerializableLocation location) {
+  ShopSign(UUID owner, SerializableLocation location) {
     super(owner, location);
     setType(SignType.SHOP);
   }

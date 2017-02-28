@@ -21,7 +21,7 @@ Core:
     Pins:
 
         #Whether or not account pins should be enabled
-        Enabled: true
+        Enabled: false
 
         #Whether or not players must set their pin before using money-related functions
         Force: true
@@ -250,7 +250,7 @@ Core:
         Vault:
 
             #Whether or not players can use bank signs to view their banks
-            Enabled: false
+            Enabled: true
 
             #The cost to make a bank sign, if the player has valid permissions.
             Place: 20.0
@@ -262,13 +262,16 @@ Core:
         Item:
 
             #Whether or not item signs are enabled.
-            Enabled: false
+            Enabled: true
 
             #The cost to make a item sign, if the player has valid permissions.
             Place: 20.0
 
             #The cost to use a item sign, if the player has valid permissions.
             Use: 20.0
+
+            #The max number of item shops a single player may own
+            Max: 10
 
             #Whether or not item signs may have multiple offers
             Multiple: true
@@ -277,7 +280,7 @@ Core:
         Shop:
 
             #Whether or not shop signs are enabled.
-            Enabled: false
+            Enabled: true
 
             #The cost to make a shop sign, if the player has valid permissions.
             Place: 20.0
