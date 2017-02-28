@@ -8,7 +8,7 @@ Items:
     Sell: tne.item.stone.sell
     #The names supported by shop signs
     Names:
-      - STONE
+      - Stone
   GRASS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.grass.sign
@@ -18,7 +18,7 @@ Items:
     Sell: tne.item.grass.sell
     #The names supported by shop signs
     Names:
-      - GRASS
+      - Grass
   DIRT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dirt.sign
@@ -28,7 +28,7 @@ Items:
     Sell: tne.item.dirt.sell
     #The names supported by shop signs
     Names:
-      - DIRT
+      - Dirt
   COBBLESTONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cobblestone.sign
@@ -38,7 +38,7 @@ Items:
     Sell: tne.item.cobblestone.sell
     #The names supported by shop signs
     Names:
-      - COBBLESTONE
+      - Cobblestone
   WOOD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood.sign
@@ -48,7 +48,7 @@ Items:
     Sell: tne.item.wood.sell
     #The names supported by shop signs
     Names:
-      - WOOD
+      - Wood
   SAPLING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sapling.sign
@@ -58,7 +58,7 @@ Items:
     Sell: tne.item.sapling.sell
     #The names supported by shop signs
     Names:
-      - SAPLING
+      - Sapling
   BEDROCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bedrock.sign
@@ -68,7 +68,7 @@ Items:
     Sell: tne.item.bedrock.sell
     #The names supported by shop signs
     Names:
-      - BEDROCK
+      - Bedrock
   WATER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.water.sign
@@ -78,7 +78,7 @@ Items:
     Sell: tne.item.water.sell
     #The names supported by shop signs
     Names:
-      - WATER
+      - Water
   STATIONARY_WATER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stationary_water.sign
@@ -88,7 +88,8 @@ Items:
     Sell: tne.item.stationary_water.sell
     #The names supported by shop signs
     Names:
-      - STATIONARY_WATER
+      - StationaryWater
+      - Stationary Water
   LAVA:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lava.sign
@@ -98,7 +99,7 @@ Items:
     Sell: tne.item.lava.sell
     #The names supported by shop signs
     Names:
-      - LAVA
+      - Lava
   STATIONARY_LAVA:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stationary_lava.sign
@@ -108,7 +109,8 @@ Items:
     Sell: tne.item.stationary_lava.sell
     #The names supported by shop signs
     Names:
-      - STATIONARY_LAVA
+      - StationaryLava
+      - Stationary Lava
   SAND:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sand.sign
@@ -118,7 +120,7 @@ Items:
     Sell: tne.item.sand.sell
     #The names supported by shop signs
     Names:
-      - SAND
+      - Sand
   GRAVEL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gravel.sign
@@ -128,7 +130,7 @@ Items:
     Sell: tne.item.gravel.sell
     #The names supported by shop signs
     Names:
-      - GRAVEL
+      - Gravel
   GOLD_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_ore.sign
@@ -138,7 +140,8 @@ Items:
     Sell: tne.item.gold_ore.sell
     #The names supported by shop signs
     Names:
-      - GOLD_ORE
+      - GoldOre
+      - Gold Ore
   IRON_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_ore.sign
@@ -148,7 +151,8 @@ Items:
     Sell: tne.item.iron_ore.sell
     #The names supported by shop signs
     Names:
-      - IRON_ORE
+      - IronOre
+      - Iron Ore
   COAL_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.coal_ore.sign
@@ -158,7 +162,8 @@ Items:
     Sell: tne.item.coal_ore.sell
     #The names supported by shop signs
     Names:
-      - COAL_ORE
+      - CoalOre
+      - Coal Ore
   LOG:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.log.sign
@@ -168,7 +173,7 @@ Items:
     Sell: tne.item.log.sell
     #The names supported by shop signs
     Names:
-      - LOG
+      - Log
   LEAVES:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leaves.sign
@@ -178,7 +183,7 @@ Items:
     Sell: tne.item.leaves.sell
     #The names supported by shop signs
     Names:
-      - LEAVES
+      - Leaves
   SPONGE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sponge.sign
@@ -188,7 +193,7 @@ Items:
     Sell: tne.item.sponge.sell
     #The names supported by shop signs
     Names:
-      - SPONGE
+      - Sponge
   GLASS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.glass.sign
@@ -198,7 +203,7 @@ Items:
     Sell: tne.item.glass.sell
     #The names supported by shop signs
     Names:
-      - GLASS
+      - Glass
   LAPIS_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lapis_ore.sign
@@ -208,7 +213,8 @@ Items:
     Sell: tne.item.lapis_ore.sell
     #The names supported by shop signs
     Names:
-      - LAPIS_ORE
+      - LapisOre
+      - Lapis Ore
   LAPIS_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lapis_block.sign
@@ -218,7 +224,8 @@ Items:
     Sell: tne.item.lapis_block.sell
     #The names supported by shop signs
     Names:
-      - LAPIS_BLOCK
+      - LapisBlock
+      - Lapis Block
   DISPENSER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dispenser.sign
@@ -228,7 +235,7 @@ Items:
     Sell: tne.item.dispenser.sell
     #The names supported by shop signs
     Names:
-      - DISPENSER
+      - Dispenser
   SANDSTONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sandstone.sign
@@ -238,7 +245,7 @@ Items:
     Sell: tne.item.sandstone.sell
     #The names supported by shop signs
     Names:
-      - SANDSTONE
+      - Sandstone
   NOTE_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.note_block.sign
@@ -248,7 +255,8 @@ Items:
     Sell: tne.item.note_block.sell
     #The names supported by shop signs
     Names:
-      - NOTE_BLOCK
+      - NoteBlock
+      - Note Block
   BED_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bed_block.sign
@@ -258,7 +266,8 @@ Items:
     Sell: tne.item.bed_block.sell
     #The names supported by shop signs
     Names:
-      - BED_BLOCK
+      - BedBlock
+      - Bed Block
   POWERED_RAIL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.powered_rail.sign
@@ -268,7 +277,8 @@ Items:
     Sell: tne.item.powered_rail.sell
     #The names supported by shop signs
     Names:
-      - POWERED_RAIL
+      - PoweredRail
+      - Powered Rail
   DETECTOR_RAIL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.detector_rail.sign
@@ -278,7 +288,8 @@ Items:
     Sell: tne.item.detector_rail.sell
     #The names supported by shop signs
     Names:
-      - DETECTOR_RAIL
+      - DetectorRail
+      - Detector Rail
   PISTON_STICKY_BASE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.piston_sticky_base.sign
@@ -288,7 +299,8 @@ Items:
     Sell: tne.item.piston_sticky_base.sell
     #The names supported by shop signs
     Names:
-      - PISTON_STICKY_BASE
+      - PistonStickyBase
+      - Piston Sticky Base
   WEB:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.web.sign
@@ -298,7 +310,7 @@ Items:
     Sell: tne.item.web.sell
     #The names supported by shop signs
     Names:
-      - WEB
+      - Web
   LONG_GRASS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.long_grass.sign
@@ -308,7 +320,8 @@ Items:
     Sell: tne.item.long_grass.sell
     #The names supported by shop signs
     Names:
-      - LONG_GRASS
+      - LongGrass
+      - Long Grass
   DEAD_BUSH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dead_bush.sign
@@ -318,7 +331,8 @@ Items:
     Sell: tne.item.dead_bush.sell
     #The names supported by shop signs
     Names:
-      - DEAD_BUSH
+      - DeadBush
+      - Dead Bush
   PISTON_BASE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.piston_base.sign
@@ -328,7 +342,8 @@ Items:
     Sell: tne.item.piston_base.sell
     #The names supported by shop signs
     Names:
-      - PISTON_BASE
+      - PistonBase
+      - Piston Base
   PISTON_EXTENSION:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.piston_extension.sign
@@ -338,7 +353,8 @@ Items:
     Sell: tne.item.piston_extension.sell
     #The names supported by shop signs
     Names:
-      - PISTON_EXTENSION
+      - PistonExtension
+      - Piston Extension
   WOOL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wool.sign
@@ -348,7 +364,7 @@ Items:
     Sell: tne.item.wool.sell
     #The names supported by shop signs
     Names:
-      - WOOL
+      - Wool
   PISTON_MOVING_PIECE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.piston_moving_piece.sign
@@ -358,7 +374,8 @@ Items:
     Sell: tne.item.piston_moving_piece.sell
     #The names supported by shop signs
     Names:
-      - PISTON_MOVING_PIECE
+      - PistonMovingPiece
+      - Piston Moving Piece
   YELLOW_FLOWER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.yellow_flower.sign
@@ -368,7 +385,8 @@ Items:
     Sell: tne.item.yellow_flower.sell
     #The names supported by shop signs
     Names:
-      - YELLOW_FLOWER
+      - YellowFlower
+      - Yellow Flower
   RED_ROSE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.red_rose.sign
@@ -378,7 +396,8 @@ Items:
     Sell: tne.item.red_rose.sell
     #The names supported by shop signs
     Names:
-      - RED_ROSE
+      - RedRose
+      - Red Rose
   BROWN_MUSHROOM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.brown_mushroom.sign
@@ -388,7 +407,8 @@ Items:
     Sell: tne.item.brown_mushroom.sell
     #The names supported by shop signs
     Names:
-      - BROWN_MUSHROOM
+      - BrownMushroom
+      - Brown Mushroom
   RED_MUSHROOM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.red_mushroom.sign
@@ -398,7 +418,8 @@ Items:
     Sell: tne.item.red_mushroom.sell
     #The names supported by shop signs
     Names:
-      - RED_MUSHROOM
+      - RedMushroom
+      - Red Mushroom
   GOLD_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_block.sign
@@ -408,7 +429,8 @@ Items:
     Sell: tne.item.gold_block.sell
     #The names supported by shop signs
     Names:
-      - GOLD_BLOCK
+      - GoldBlock
+      - Gold Block
   IRON_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_block.sign
@@ -418,7 +440,8 @@ Items:
     Sell: tne.item.iron_block.sell
     #The names supported by shop signs
     Names:
-      - IRON_BLOCK
+      - IronBlock
+      - Iron Block
   DOUBLE_STEP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.double_step.sign
@@ -428,7 +451,8 @@ Items:
     Sell: tne.item.double_step.sell
     #The names supported by shop signs
     Names:
-      - DOUBLE_STEP
+      - DoubleStep
+      - Double Step
   STEP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.step.sign
@@ -438,7 +462,7 @@ Items:
     Sell: tne.item.step.sell
     #The names supported by shop signs
     Names:
-      - STEP
+      - Step
   BRICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.brick.sign
@@ -448,7 +472,7 @@ Items:
     Sell: tne.item.brick.sell
     #The names supported by shop signs
     Names:
-      - BRICK
+      - Brick
   TNT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.tnt.sign
@@ -458,7 +482,7 @@ Items:
     Sell: tne.item.tnt.sell
     #The names supported by shop signs
     Names:
-      - TNT
+      - Tnt
   BOOKSHELF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bookshelf.sign
@@ -468,7 +492,7 @@ Items:
     Sell: tne.item.bookshelf.sell
     #The names supported by shop signs
     Names:
-      - BOOKSHELF
+      - Bookshelf
   MOSSY_COBBLESTONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.mossy_cobblestone.sign
@@ -478,7 +502,8 @@ Items:
     Sell: tne.item.mossy_cobblestone.sell
     #The names supported by shop signs
     Names:
-      - MOSSY_COBBLESTONE
+      - MossyCobblestone
+      - Mossy Cobblestone
   OBSIDIAN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.obsidian.sign
@@ -488,7 +513,7 @@ Items:
     Sell: tne.item.obsidian.sell
     #The names supported by shop signs
     Names:
-      - OBSIDIAN
+      - Obsidian
   TORCH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.torch.sign
@@ -498,7 +523,7 @@ Items:
     Sell: tne.item.torch.sell
     #The names supported by shop signs
     Names:
-      - TORCH
+      - Torch
   FIRE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.fire.sign
@@ -508,7 +533,7 @@ Items:
     Sell: tne.item.fire.sell
     #The names supported by shop signs
     Names:
-      - FIRE
+      - Fire
   MOB_SPAWNER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.mob_spawner.sign
@@ -518,7 +543,8 @@ Items:
     Sell: tne.item.mob_spawner.sell
     #The names supported by shop signs
     Names:
-      - MOB_SPAWNER
+      - MobSpawner
+      - Mob Spawner
   WOOD_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_stairs.sign
@@ -528,7 +554,8 @@ Items:
     Sell: tne.item.wood_stairs.sell
     #The names supported by shop signs
     Names:
-      - WOOD_STAIRS
+      - WoodStairs
+      - Wood Stairs
   CHEST:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chest.sign
@@ -538,7 +565,7 @@ Items:
     Sell: tne.item.chest.sell
     #The names supported by shop signs
     Names:
-      - CHEST
+      - Chest
   REDSTONE_WIRE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_wire.sign
@@ -548,7 +575,8 @@ Items:
     Sell: tne.item.redstone_wire.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_WIRE
+      - RedstoneWire
+      - Redstone Wire
   DIAMOND_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_ore.sign
@@ -558,7 +586,8 @@ Items:
     Sell: tne.item.diamond_ore.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_ORE
+      - DiamondOre
+      - Diamond Ore
   DIAMOND_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_block.sign
@@ -568,7 +597,8 @@ Items:
     Sell: tne.item.diamond_block.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_BLOCK
+      - DiamondBlock
+      - Diamond Block
   WORKBENCH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.workbench.sign
@@ -578,7 +608,7 @@ Items:
     Sell: tne.item.workbench.sell
     #The names supported by shop signs
     Names:
-      - WORKBENCH
+      - Workbench
   CROPS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.crops.sign
@@ -588,7 +618,7 @@ Items:
     Sell: tne.item.crops.sell
     #The names supported by shop signs
     Names:
-      - CROPS
+      - Crops
   SOIL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.soil.sign
@@ -598,7 +628,7 @@ Items:
     Sell: tne.item.soil.sell
     #The names supported by shop signs
     Names:
-      - SOIL
+      - Soil
   FURNACE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.furnace.sign
@@ -608,7 +638,7 @@ Items:
     Sell: tne.item.furnace.sell
     #The names supported by shop signs
     Names:
-      - FURNACE
+      - Furnace
   BURNING_FURNACE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.burning_furnace.sign
@@ -618,7 +648,8 @@ Items:
     Sell: tne.item.burning_furnace.sell
     #The names supported by shop signs
     Names:
-      - BURNING_FURNACE
+      - BurningFurnace
+      - Burning Furnace
   SIGN_POST:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sign_post.sign
@@ -628,7 +659,8 @@ Items:
     Sell: tne.item.sign_post.sell
     #The names supported by shop signs
     Names:
-      - SIGN_POST
+      - SignPost
+      - Sign Post
   WOODEN_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wooden_door.sign
@@ -638,7 +670,8 @@ Items:
     Sell: tne.item.wooden_door.sell
     #The names supported by shop signs
     Names:
-      - WOODEN_DOOR
+      - WoodenDoor
+      - Wooden Door
   LADDER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ladder.sign
@@ -648,7 +681,7 @@ Items:
     Sell: tne.item.ladder.sell
     #The names supported by shop signs
     Names:
-      - LADDER
+      - Ladder
   RAILS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.rails.sign
@@ -658,7 +691,7 @@ Items:
     Sell: tne.item.rails.sell
     #The names supported by shop signs
     Names:
-      - RAILS
+      - Rails
   COBBLESTONE_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cobblestone_stairs.sign
@@ -668,7 +701,8 @@ Items:
     Sell: tne.item.cobblestone_stairs.sell
     #The names supported by shop signs
     Names:
-      - COBBLESTONE_STAIRS
+      - CobblestoneStairs
+      - Cobblestone Stairs
   WALL_SIGN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wall_sign.sign
@@ -678,7 +712,8 @@ Items:
     Sell: tne.item.wall_sign.sell
     #The names supported by shop signs
     Names:
-      - WALL_SIGN
+      - WallSign
+      - Wall Sign
   LEVER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lever.sign
@@ -688,7 +723,7 @@ Items:
     Sell: tne.item.lever.sell
     #The names supported by shop signs
     Names:
-      - LEVER
+      - Lever
   STONE_PLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_plate.sign
@@ -698,7 +733,8 @@ Items:
     Sell: tne.item.stone_plate.sell
     #The names supported by shop signs
     Names:
-      - STONE_PLATE
+      - StonePlate
+      - Stone Plate
   IRON_DOOR_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_door_block.sign
@@ -708,7 +744,8 @@ Items:
     Sell: tne.item.iron_door_block.sell
     #The names supported by shop signs
     Names:
-      - IRON_DOOR_BLOCK
+      - IronDoorBlock
+      - Iron Door Block
   WOOD_PLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_plate.sign
@@ -718,7 +755,8 @@ Items:
     Sell: tne.item.wood_plate.sell
     #The names supported by shop signs
     Names:
-      - WOOD_PLATE
+      - WoodPlate
+      - Wood Plate
   REDSTONE_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_ore.sign
@@ -728,7 +766,8 @@ Items:
     Sell: tne.item.redstone_ore.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_ORE
+      - RedstoneOre
+      - Redstone Ore
   GLOWING_REDSTONE_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.glowing_redstone_ore.sign
@@ -738,7 +777,8 @@ Items:
     Sell: tne.item.glowing_redstone_ore.sell
     #The names supported by shop signs
     Names:
-      - GLOWING_REDSTONE_ORE
+      - GlowingRedstoneOre
+      - Glowing Redstone Ore
   REDSTONE_TORCH_OFF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_torch_off.sign
@@ -748,7 +788,8 @@ Items:
     Sell: tne.item.redstone_torch_off.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_TORCH_OFF
+      - RedstoneTorchOff
+      - Redstone Torch Off
   REDSTONE_TORCH_ON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_torch_on.sign
@@ -758,7 +799,8 @@ Items:
     Sell: tne.item.redstone_torch_on.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_TORCH_ON
+      - RedstoneTorchOn
+      - Redstone Torch On
   STONE_BUTTON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_button.sign
@@ -768,7 +810,8 @@ Items:
     Sell: tne.item.stone_button.sell
     #The names supported by shop signs
     Names:
-      - STONE_BUTTON
+      - StoneButton
+      - Stone Button
   SNOW:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.snow.sign
@@ -778,7 +821,7 @@ Items:
     Sell: tne.item.snow.sell
     #The names supported by shop signs
     Names:
-      - SNOW
+      - Snow
   ICE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ice.sign
@@ -788,7 +831,7 @@ Items:
     Sell: tne.item.ice.sell
     #The names supported by shop signs
     Names:
-      - ICE
+      - Ice
   SNOW_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.snow_block.sign
@@ -798,7 +841,8 @@ Items:
     Sell: tne.item.snow_block.sell
     #The names supported by shop signs
     Names:
-      - SNOW_BLOCK
+      - SnowBlock
+      - Snow Block
   CACTUS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cactus.sign
@@ -808,7 +852,7 @@ Items:
     Sell: tne.item.cactus.sell
     #The names supported by shop signs
     Names:
-      - CACTUS
+      - Cactus
   CLAY:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.clay.sign
@@ -818,7 +862,7 @@ Items:
     Sell: tne.item.clay.sell
     #The names supported by shop signs
     Names:
-      - CLAY
+      - Clay
   SUGAR_CANE_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sugar_cane_block.sign
@@ -828,7 +872,8 @@ Items:
     Sell: tne.item.sugar_cane_block.sell
     #The names supported by shop signs
     Names:
-      - SUGAR_CANE_BLOCK
+      - SugarCaneBlock
+      - Sugar Cane Block
   JUKEBOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jukebox.sign
@@ -838,7 +883,7 @@ Items:
     Sell: tne.item.jukebox.sell
     #The names supported by shop signs
     Names:
-      - JUKEBOX
+      - Jukebox
   FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.fence.sign
@@ -848,7 +893,7 @@ Items:
     Sell: tne.item.fence.sell
     #The names supported by shop signs
     Names:
-      - FENCE
+      - Fence
   PUMPKIN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.pumpkin.sign
@@ -858,7 +903,7 @@ Items:
     Sell: tne.item.pumpkin.sell
     #The names supported by shop signs
     Names:
-      - PUMPKIN
+      - Pumpkin
   NETHERRACK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.netherrack.sign
@@ -868,7 +913,7 @@ Items:
     Sell: tne.item.netherrack.sell
     #The names supported by shop signs
     Names:
-      - NETHERRACK
+      - Netherrack
   SOUL_SAND:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.soul_sand.sign
@@ -878,7 +923,8 @@ Items:
     Sell: tne.item.soul_sand.sell
     #The names supported by shop signs
     Names:
-      - SOUL_SAND
+      - SoulSand
+      - Soul Sand
   GLOWSTONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.glowstone.sign
@@ -888,7 +934,7 @@ Items:
     Sell: tne.item.glowstone.sell
     #The names supported by shop signs
     Names:
-      - GLOWSTONE
+      - Glowstone
   PORTAL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.portal.sign
@@ -898,7 +944,7 @@ Items:
     Sell: tne.item.portal.sell
     #The names supported by shop signs
     Names:
-      - PORTAL
+      - Portal
   JACK_O_LANTERN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jack_o_lantern.sign
@@ -908,7 +954,8 @@ Items:
     Sell: tne.item.jack_o_lantern.sell
     #The names supported by shop signs
     Names:
-      - JACK_O_LANTERN
+      - JackOLantern
+      - Jack O Lantern
   CAKE_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cake_block.sign
@@ -918,7 +965,8 @@ Items:
     Sell: tne.item.cake_block.sell
     #The names supported by shop signs
     Names:
-      - CAKE_BLOCK
+      - CakeBlock
+      - Cake Block
   DIODE_BLOCK_OFF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diode_block_off.sign
@@ -928,7 +976,8 @@ Items:
     Sell: tne.item.diode_block_off.sell
     #The names supported by shop signs
     Names:
-      - DIODE_BLOCK_OFF
+      - DiodeBlockOff
+      - Diode Block Off
   DIODE_BLOCK_ON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diode_block_on.sign
@@ -938,7 +987,8 @@ Items:
     Sell: tne.item.diode_block_on.sell
     #The names supported by shop signs
     Names:
-      - DIODE_BLOCK_ON
+      - DiodeBlockOn
+      - Diode Block On
   STAINED_GLASS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stained_glass.sign
@@ -948,7 +998,8 @@ Items:
     Sell: tne.item.stained_glass.sell
     #The names supported by shop signs
     Names:
-      - STAINED_GLASS
+      - StainedGlass
+      - Stained Glass
   TRAP_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.trap_door.sign
@@ -958,7 +1009,8 @@ Items:
     Sell: tne.item.trap_door.sell
     #The names supported by shop signs
     Names:
-      - TRAP_DOOR
+      - TrapDoor
+      - Trap Door
   MONSTER_EGGS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.monster_eggs.sign
@@ -968,7 +1020,8 @@ Items:
     Sell: tne.item.monster_eggs.sell
     #The names supported by shop signs
     Names:
-      - MONSTER_EGGS
+      - MonsterEggs
+      - Monster Eggs
   SMOOTH_BRICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.smooth_brick.sign
@@ -978,7 +1031,8 @@ Items:
     Sell: tne.item.smooth_brick.sell
     #The names supported by shop signs
     Names:
-      - SMOOTH_BRICK
+      - SmoothBrick
+      - Smooth Brick
   HUGE_MUSHROOM_1:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.huge_mushroom_1.sign
@@ -988,7 +1042,8 @@ Items:
     Sell: tne.item.huge_mushroom_1.sell
     #The names supported by shop signs
     Names:
-      - HUGE_MUSHROOM_1
+      - HugeMushroom1
+      - Huge Mushroom 1
   HUGE_MUSHROOM_2:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.huge_mushroom_2.sign
@@ -998,7 +1053,8 @@ Items:
     Sell: tne.item.huge_mushroom_2.sell
     #The names supported by shop signs
     Names:
-      - HUGE_MUSHROOM_2
+      - HugeMushroom2
+      - Huge Mushroom 2
   IRON_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_fence.sign
@@ -1008,7 +1064,8 @@ Items:
     Sell: tne.item.iron_fence.sell
     #The names supported by shop signs
     Names:
-      - IRON_FENCE
+      - IronFence
+      - Iron Fence
   THIN_GLASS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.thin_glass.sign
@@ -1018,7 +1075,8 @@ Items:
     Sell: tne.item.thin_glass.sell
     #The names supported by shop signs
     Names:
-      - THIN_GLASS
+      - ThinGlass
+      - Thin Glass
   MELON_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.melon_block.sign
@@ -1028,7 +1086,8 @@ Items:
     Sell: tne.item.melon_block.sell
     #The names supported by shop signs
     Names:
-      - MELON_BLOCK
+      - MelonBlock
+      - Melon Block
   PUMPKIN_STEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.pumpkin_stem.sign
@@ -1038,7 +1097,8 @@ Items:
     Sell: tne.item.pumpkin_stem.sell
     #The names supported by shop signs
     Names:
-      - PUMPKIN_STEM
+      - PumpkinStem
+      - Pumpkin Stem
   MELON_STEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.melon_stem.sign
@@ -1048,7 +1108,8 @@ Items:
     Sell: tne.item.melon_stem.sell
     #The names supported by shop signs
     Names:
-      - MELON_STEM
+      - MelonStem
+      - Melon Stem
   VINE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.vine.sign
@@ -1058,7 +1119,7 @@ Items:
     Sell: tne.item.vine.sell
     #The names supported by shop signs
     Names:
-      - VINE
+      - Vine
   FENCE_GATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.fence_gate.sign
@@ -1068,7 +1129,8 @@ Items:
     Sell: tne.item.fence_gate.sell
     #The names supported by shop signs
     Names:
-      - FENCE_GATE
+      - FenceGate
+      - Fence Gate
   BRICK_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.brick_stairs.sign
@@ -1078,7 +1140,8 @@ Items:
     Sell: tne.item.brick_stairs.sell
     #The names supported by shop signs
     Names:
-      - BRICK_STAIRS
+      - BrickStairs
+      - Brick Stairs
   SMOOTH_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.smooth_stairs.sign
@@ -1088,7 +1151,8 @@ Items:
     Sell: tne.item.smooth_stairs.sell
     #The names supported by shop signs
     Names:
-      - SMOOTH_STAIRS
+      - SmoothStairs
+      - Smooth Stairs
   MYCEL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.mycel.sign
@@ -1098,7 +1162,7 @@ Items:
     Sell: tne.item.mycel.sell
     #The names supported by shop signs
     Names:
-      - MYCEL
+      - Mycel
   WATER_LILY:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.water_lily.sign
@@ -1108,7 +1172,8 @@ Items:
     Sell: tne.item.water_lily.sell
     #The names supported by shop signs
     Names:
-      - WATER_LILY
+      - WaterLily
+      - Water Lily
   NETHER_BRICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_brick.sign
@@ -1118,7 +1183,8 @@ Items:
     Sell: tne.item.nether_brick.sell
     #The names supported by shop signs
     Names:
-      - NETHER_BRICK
+      - NetherBrick
+      - Nether Brick
   NETHER_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_fence.sign
@@ -1128,7 +1194,8 @@ Items:
     Sell: tne.item.nether_fence.sell
     #The names supported by shop signs
     Names:
-      - NETHER_FENCE
+      - NetherFence
+      - Nether Fence
   NETHER_BRICK_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_brick_stairs.sign
@@ -1138,7 +1205,8 @@ Items:
     Sell: tne.item.nether_brick_stairs.sell
     #The names supported by shop signs
     Names:
-      - NETHER_BRICK_STAIRS
+      - NetherBrickStairs
+      - Nether Brick Stairs
   NETHER_WARTS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_warts.sign
@@ -1148,7 +1216,8 @@ Items:
     Sell: tne.item.nether_warts.sell
     #The names supported by shop signs
     Names:
-      - NETHER_WARTS
+      - NetherWarts
+      - Nether Warts
   ENCHANTMENT_TABLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.enchantment_table.sign
@@ -1158,7 +1227,8 @@ Items:
     Sell: tne.item.enchantment_table.sell
     #The names supported by shop signs
     Names:
-      - ENCHANTMENT_TABLE
+      - EnchantmentTable
+      - Enchantment Table
   BREWING_STAND:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.brewing_stand.sign
@@ -1168,7 +1238,8 @@ Items:
     Sell: tne.item.brewing_stand.sell
     #The names supported by shop signs
     Names:
-      - BREWING_STAND
+      - BrewingStand
+      - Brewing Stand
   CAULDRON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cauldron.sign
@@ -1178,7 +1249,7 @@ Items:
     Sell: tne.item.cauldron.sell
     #The names supported by shop signs
     Names:
-      - CAULDRON
+      - Cauldron
   ENDER_PORTAL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ender_portal.sign
@@ -1188,7 +1259,8 @@ Items:
     Sell: tne.item.ender_portal.sell
     #The names supported by shop signs
     Names:
-      - ENDER_PORTAL
+      - EnderPortal
+      - Ender Portal
   ENDER_PORTAL_FRAME:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ender_portal_frame.sign
@@ -1198,7 +1270,8 @@ Items:
     Sell: tne.item.ender_portal_frame.sell
     #The names supported by shop signs
     Names:
-      - ENDER_PORTAL_FRAME
+      - EnderPortalFrame
+      - Ender Portal Frame
   ENDER_STONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ender_stone.sign
@@ -1208,7 +1281,8 @@ Items:
     Sell: tne.item.ender_stone.sell
     #The names supported by shop signs
     Names:
-      - ENDER_STONE
+      - EnderStone
+      - Ender Stone
   DRAGON_EGG:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dragon_egg.sign
@@ -1218,7 +1292,8 @@ Items:
     Sell: tne.item.dragon_egg.sell
     #The names supported by shop signs
     Names:
-      - DRAGON_EGG
+      - DragonEgg
+      - Dragon Egg
   REDSTONE_LAMP_OFF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_lamp_off.sign
@@ -1228,7 +1303,8 @@ Items:
     Sell: tne.item.redstone_lamp_off.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_LAMP_OFF
+      - RedstoneLampOff
+      - Redstone Lamp Off
   REDSTONE_LAMP_ON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_lamp_on.sign
@@ -1238,7 +1314,8 @@ Items:
     Sell: tne.item.redstone_lamp_on.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_LAMP_ON
+      - RedstoneLampOn
+      - Redstone Lamp On
   WOOD_DOUBLE_STEP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_double_step.sign
@@ -1248,7 +1325,8 @@ Items:
     Sell: tne.item.wood_double_step.sell
     #The names supported by shop signs
     Names:
-      - WOOD_DOUBLE_STEP
+      - WoodDoubleStep
+      - Wood Double Step
   WOOD_STEP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_step.sign
@@ -1258,7 +1336,8 @@ Items:
     Sell: tne.item.wood_step.sell
     #The names supported by shop signs
     Names:
-      - WOOD_STEP
+      - WoodStep
+      - Wood Step
   COCOA:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cocoa.sign
@@ -1268,7 +1347,7 @@ Items:
     Sell: tne.item.cocoa.sell
     #The names supported by shop signs
     Names:
-      - COCOA
+      - Cocoa
   SANDSTONE_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sandstone_stairs.sign
@@ -1278,7 +1357,8 @@ Items:
     Sell: tne.item.sandstone_stairs.sell
     #The names supported by shop signs
     Names:
-      - SANDSTONE_STAIRS
+      - SandstoneStairs
+      - Sandstone Stairs
   EMERALD_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.emerald_ore.sign
@@ -1288,7 +1368,8 @@ Items:
     Sell: tne.item.emerald_ore.sell
     #The names supported by shop signs
     Names:
-      - EMERALD_ORE
+      - EmeraldOre
+      - Emerald Ore
   ENDER_CHEST:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ender_chest.sign
@@ -1298,7 +1379,8 @@ Items:
     Sell: tne.item.ender_chest.sell
     #The names supported by shop signs
     Names:
-      - ENDER_CHEST
+      - EnderChest
+      - Ender Chest
   TRIPWIRE_HOOK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.tripwire_hook.sign
@@ -1308,7 +1390,8 @@ Items:
     Sell: tne.item.tripwire_hook.sell
     #The names supported by shop signs
     Names:
-      - TRIPWIRE_HOOK
+      - TripwireHook
+      - Tripwire Hook
   TRIPWIRE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.tripwire.sign
@@ -1318,7 +1401,7 @@ Items:
     Sell: tne.item.tripwire.sell
     #The names supported by shop signs
     Names:
-      - TRIPWIRE
+      - Tripwire
   EMERALD_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.emerald_block.sign
@@ -1328,7 +1411,8 @@ Items:
     Sell: tne.item.emerald_block.sell
     #The names supported by shop signs
     Names:
-      - EMERALD_BLOCK
+      - EmeraldBlock
+      - Emerald Block
   SPRUCE_WOOD_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spruce_wood_stairs.sign
@@ -1338,7 +1422,8 @@ Items:
     Sell: tne.item.spruce_wood_stairs.sell
     #The names supported by shop signs
     Names:
-      - SPRUCE_WOOD_STAIRS
+      - SpruceWoodStairs
+      - Spruce Wood Stairs
   BIRCH_WOOD_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.birch_wood_stairs.sign
@@ -1348,7 +1433,8 @@ Items:
     Sell: tne.item.birch_wood_stairs.sell
     #The names supported by shop signs
     Names:
-      - BIRCH_WOOD_STAIRS
+      - BirchWoodStairs
+      - Birch Wood Stairs
   JUNGLE_WOOD_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jungle_wood_stairs.sign
@@ -1358,7 +1444,8 @@ Items:
     Sell: tne.item.jungle_wood_stairs.sell
     #The names supported by shop signs
     Names:
-      - JUNGLE_WOOD_STAIRS
+      - JungleWoodStairs
+      - Jungle Wood Stairs
   COMMAND:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.command.sign
@@ -1368,7 +1455,7 @@ Items:
     Sell: tne.item.command.sell
     #The names supported by shop signs
     Names:
-      - COMMAND
+      - Command
   BEACON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.beacon.sign
@@ -1378,7 +1465,7 @@ Items:
     Sell: tne.item.beacon.sell
     #The names supported by shop signs
     Names:
-      - BEACON
+      - Beacon
   COBBLE_WALL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cobble_wall.sign
@@ -1388,7 +1475,8 @@ Items:
     Sell: tne.item.cobble_wall.sell
     #The names supported by shop signs
     Names:
-      - COBBLE_WALL
+      - CobbleWall
+      - Cobble Wall
   FLOWER_POT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.flower_pot.sign
@@ -1398,7 +1486,8 @@ Items:
     Sell: tne.item.flower_pot.sell
     #The names supported by shop signs
     Names:
-      - FLOWER_POT
+      - FlowerPot
+      - Flower Pot
   CARROT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.carrot.sign
@@ -1408,7 +1497,7 @@ Items:
     Sell: tne.item.carrot.sell
     #The names supported by shop signs
     Names:
-      - CARROT
+      - Carrot
   POTATO:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.potato.sign
@@ -1418,7 +1507,7 @@ Items:
     Sell: tne.item.potato.sell
     #The names supported by shop signs
     Names:
-      - POTATO
+      - Potato
   WOOD_BUTTON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_button.sign
@@ -1428,7 +1517,8 @@ Items:
     Sell: tne.item.wood_button.sell
     #The names supported by shop signs
     Names:
-      - WOOD_BUTTON
+      - WoodButton
+      - Wood Button
   SKULL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.skull.sign
@@ -1438,7 +1528,7 @@ Items:
     Sell: tne.item.skull.sell
     #The names supported by shop signs
     Names:
-      - SKULL
+      - Skull
   ANVIL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.anvil.sign
@@ -1448,7 +1538,7 @@ Items:
     Sell: tne.item.anvil.sell
     #The names supported by shop signs
     Names:
-      - ANVIL
+      - Anvil
   TRAPPED_CHEST:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.trapped_chest.sign
@@ -1458,7 +1548,8 @@ Items:
     Sell: tne.item.trapped_chest.sell
     #The names supported by shop signs
     Names:
-      - TRAPPED_CHEST
+      - TrappedChest
+      - Trapped Chest
   GOLD_PLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_plate.sign
@@ -1468,7 +1559,8 @@ Items:
     Sell: tne.item.gold_plate.sell
     #The names supported by shop signs
     Names:
-      - GOLD_PLATE
+      - GoldPlate
+      - Gold Plate
   IRON_PLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_plate.sign
@@ -1478,7 +1570,8 @@ Items:
     Sell: tne.item.iron_plate.sell
     #The names supported by shop signs
     Names:
-      - IRON_PLATE
+      - IronPlate
+      - Iron Plate
   REDSTONE_COMPARATOR_OFF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_comparator_off.sign
@@ -1488,7 +1581,8 @@ Items:
     Sell: tne.item.redstone_comparator_off.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_COMPARATOR_OFF
+      - RedstoneComparatorOff
+      - Redstone Comparator Off
   REDSTONE_COMPARATOR_ON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_comparator_on.sign
@@ -1498,7 +1592,8 @@ Items:
     Sell: tne.item.redstone_comparator_on.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_COMPARATOR_ON
+      - RedstoneComparatorOn
+      - Redstone Comparator On
   DAYLIGHT_DETECTOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.daylight_detector.sign
@@ -1508,7 +1603,8 @@ Items:
     Sell: tne.item.daylight_detector.sell
     #The names supported by shop signs
     Names:
-      - DAYLIGHT_DETECTOR
+      - DaylightDetector
+      - Daylight Detector
   REDSTONE_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_block.sign
@@ -1518,7 +1614,8 @@ Items:
     Sell: tne.item.redstone_block.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_BLOCK
+      - RedstoneBlock
+      - Redstone Block
   QUARTZ_ORE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.quartz_ore.sign
@@ -1528,7 +1625,8 @@ Items:
     Sell: tne.item.quartz_ore.sell
     #The names supported by shop signs
     Names:
-      - QUARTZ_ORE
+      - QuartzOre
+      - Quartz Ore
   HOPPER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.hopper.sign
@@ -1538,7 +1636,7 @@ Items:
     Sell: tne.item.hopper.sell
     #The names supported by shop signs
     Names:
-      - HOPPER
+      - Hopper
   QUARTZ_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.quartz_block.sign
@@ -1548,7 +1646,8 @@ Items:
     Sell: tne.item.quartz_block.sell
     #The names supported by shop signs
     Names:
-      - QUARTZ_BLOCK
+      - QuartzBlock
+      - Quartz Block
   QUARTZ_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.quartz_stairs.sign
@@ -1558,7 +1657,8 @@ Items:
     Sell: tne.item.quartz_stairs.sell
     #The names supported by shop signs
     Names:
-      - QUARTZ_STAIRS
+      - QuartzStairs
+      - Quartz Stairs
   ACTIVATOR_RAIL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.activator_rail.sign
@@ -1568,7 +1668,8 @@ Items:
     Sell: tne.item.activator_rail.sell
     #The names supported by shop signs
     Names:
-      - ACTIVATOR_RAIL
+      - ActivatorRail
+      - Activator Rail
   DROPPER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dropper.sign
@@ -1578,7 +1679,7 @@ Items:
     Sell: tne.item.dropper.sell
     #The names supported by shop signs
     Names:
-      - DROPPER
+      - Dropper
   STAINED_CLAY:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stained_clay.sign
@@ -1588,7 +1689,8 @@ Items:
     Sell: tne.item.stained_clay.sell
     #The names supported by shop signs
     Names:
-      - STAINED_CLAY
+      - StainedClay
+      - Stained Clay
   STAINED_GLASS_PANE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stained_glass_pane.sign
@@ -1598,7 +1700,8 @@ Items:
     Sell: tne.item.stained_glass_pane.sell
     #The names supported by shop signs
     Names:
-      - STAINED_GLASS_PANE
+      - StainedGlassPane
+      - Stained Glass Pane
   LEAVES_2:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leaves_2.sign
@@ -1608,7 +1711,8 @@ Items:
     Sell: tne.item.leaves_2.sell
     #The names supported by shop signs
     Names:
-      - LEAVES_2
+      - Leaves2
+      - Leaves 2
   LOG_2:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.log_2.sign
@@ -1618,7 +1722,8 @@ Items:
     Sell: tne.item.log_2.sell
     #The names supported by shop signs
     Names:
-      - LOG_2
+      - Log2
+      - Log 2
   ACACIA_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.acacia_stairs.sign
@@ -1628,7 +1733,8 @@ Items:
     Sell: tne.item.acacia_stairs.sell
     #The names supported by shop signs
     Names:
-      - ACACIA_STAIRS
+      - AcaciaStairs
+      - Acacia Stairs
   DARK_OAK_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dark_oak_stairs.sign
@@ -1638,7 +1744,8 @@ Items:
     Sell: tne.item.dark_oak_stairs.sell
     #The names supported by shop signs
     Names:
-      - DARK_OAK_STAIRS
+      - DarkOakStairs
+      - Dark Oak Stairs
   SLIME_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.slime_block.sign
@@ -1648,7 +1755,8 @@ Items:
     Sell: tne.item.slime_block.sell
     #The names supported by shop signs
     Names:
-      - SLIME_BLOCK
+      - SlimeBlock
+      - Slime Block
   BARRIER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.barrier.sign
@@ -1658,7 +1766,7 @@ Items:
     Sell: tne.item.barrier.sell
     #The names supported by shop signs
     Names:
-      - BARRIER
+      - Barrier
   IRON_TRAPDOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_trapdoor.sign
@@ -1668,7 +1776,8 @@ Items:
     Sell: tne.item.iron_trapdoor.sell
     #The names supported by shop signs
     Names:
-      - IRON_TRAPDOOR
+      - IronTrapdoor
+      - Iron Trapdoor
   PRISMARINE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.prismarine.sign
@@ -1678,7 +1787,7 @@ Items:
     Sell: tne.item.prismarine.sell
     #The names supported by shop signs
     Names:
-      - PRISMARINE
+      - Prismarine
   SEA_LANTERN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sea_lantern.sign
@@ -1688,7 +1797,8 @@ Items:
     Sell: tne.item.sea_lantern.sell
     #The names supported by shop signs
     Names:
-      - SEA_LANTERN
+      - SeaLantern
+      - Sea Lantern
   HAY_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.hay_block.sign
@@ -1698,7 +1808,8 @@ Items:
     Sell: tne.item.hay_block.sell
     #The names supported by shop signs
     Names:
-      - HAY_BLOCK
+      - HayBlock
+      - Hay Block
   CARPET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.carpet.sign
@@ -1708,7 +1819,7 @@ Items:
     Sell: tne.item.carpet.sell
     #The names supported by shop signs
     Names:
-      - CARPET
+      - Carpet
   HARD_CLAY:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.hard_clay.sign
@@ -1718,7 +1829,8 @@ Items:
     Sell: tne.item.hard_clay.sell
     #The names supported by shop signs
     Names:
-      - HARD_CLAY
+      - HardClay
+      - Hard Clay
   COAL_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.coal_block.sign
@@ -1728,7 +1840,8 @@ Items:
     Sell: tne.item.coal_block.sell
     #The names supported by shop signs
     Names:
-      - COAL_BLOCK
+      - CoalBlock
+      - Coal Block
   PACKED_ICE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.packed_ice.sign
@@ -1738,7 +1851,8 @@ Items:
     Sell: tne.item.packed_ice.sell
     #The names supported by shop signs
     Names:
-      - PACKED_ICE
+      - PackedIce
+      - Packed Ice
   DOUBLE_PLANT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.double_plant.sign
@@ -1748,7 +1862,8 @@ Items:
     Sell: tne.item.double_plant.sell
     #The names supported by shop signs
     Names:
-      - DOUBLE_PLANT
+      - DoublePlant
+      - Double Plant
   STANDING_BANNER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.standing_banner.sign
@@ -1758,7 +1873,8 @@ Items:
     Sell: tne.item.standing_banner.sell
     #The names supported by shop signs
     Names:
-      - STANDING_BANNER
+      - StandingBanner
+      - Standing Banner
   WALL_BANNER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wall_banner.sign
@@ -1768,7 +1884,8 @@ Items:
     Sell: tne.item.wall_banner.sell
     #The names supported by shop signs
     Names:
-      - WALL_BANNER
+      - WallBanner
+      - Wall Banner
   DAYLIGHT_DETECTOR_INVERTED:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.daylight_detector_inverted.sign
@@ -1778,7 +1895,8 @@ Items:
     Sell: tne.item.daylight_detector_inverted.sell
     #The names supported by shop signs
     Names:
-      - DAYLIGHT_DETECTOR_INVERTED
+      - DaylightDetectorInverted
+      - Daylight Detector Inverted
   RED_SANDSTONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.red_sandstone.sign
@@ -1788,7 +1906,8 @@ Items:
     Sell: tne.item.red_sandstone.sell
     #The names supported by shop signs
     Names:
-      - RED_SANDSTONE
+      - RedSandstone
+      - Red Sandstone
   RED_SANDSTONE_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.red_sandstone_stairs.sign
@@ -1798,7 +1917,8 @@ Items:
     Sell: tne.item.red_sandstone_stairs.sell
     #The names supported by shop signs
     Names:
-      - RED_SANDSTONE_STAIRS
+      - RedSandstoneStairs
+      - Red Sandstone Stairs
   DOUBLE_STONE_SLAB2:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.double_stone_slab2.sign
@@ -1808,7 +1928,8 @@ Items:
     Sell: tne.item.double_stone_slab2.sell
     #The names supported by shop signs
     Names:
-      - DOUBLE_STONE_SLAB2
+      - DoubleStoneSlab2
+      - Double Stone Slab2
   STONE_SLAB2:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_slab2.sign
@@ -1818,7 +1939,8 @@ Items:
     Sell: tne.item.stone_slab2.sell
     #The names supported by shop signs
     Names:
-      - STONE_SLAB2
+      - StoneSlab2
+      - Stone Slab2
   SPRUCE_FENCE_GATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spruce_fence_gate.sign
@@ -1828,7 +1950,8 @@ Items:
     Sell: tne.item.spruce_fence_gate.sell
     #The names supported by shop signs
     Names:
-      - SPRUCE_FENCE_GATE
+      - SpruceFenceGate
+      - Spruce Fence Gate
   BIRCH_FENCE_GATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.birch_fence_gate.sign
@@ -1838,7 +1961,8 @@ Items:
     Sell: tne.item.birch_fence_gate.sell
     #The names supported by shop signs
     Names:
-      - BIRCH_FENCE_GATE
+      - BirchFenceGate
+      - Birch Fence Gate
   JUNGLE_FENCE_GATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jungle_fence_gate.sign
@@ -1848,7 +1972,8 @@ Items:
     Sell: tne.item.jungle_fence_gate.sell
     #The names supported by shop signs
     Names:
-      - JUNGLE_FENCE_GATE
+      - JungleFenceGate
+      - Jungle Fence Gate
   DARK_OAK_FENCE_GATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dark_oak_fence_gate.sign
@@ -1858,7 +1983,8 @@ Items:
     Sell: tne.item.dark_oak_fence_gate.sell
     #The names supported by shop signs
     Names:
-      - DARK_OAK_FENCE_GATE
+      - DarkOakFenceGate
+      - Dark Oak Fence Gate
   ACACIA_FENCE_GATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.acacia_fence_gate.sign
@@ -1868,7 +1994,8 @@ Items:
     Sell: tne.item.acacia_fence_gate.sell
     #The names supported by shop signs
     Names:
-      - ACACIA_FENCE_GATE
+      - AcaciaFenceGate
+      - Acacia Fence Gate
   SPRUCE_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spruce_fence.sign
@@ -1878,7 +2005,8 @@ Items:
     Sell: tne.item.spruce_fence.sell
     #The names supported by shop signs
     Names:
-      - SPRUCE_FENCE
+      - SpruceFence
+      - Spruce Fence
   BIRCH_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.birch_fence.sign
@@ -1888,7 +2016,8 @@ Items:
     Sell: tne.item.birch_fence.sell
     #The names supported by shop signs
     Names:
-      - BIRCH_FENCE
+      - BirchFence
+      - Birch Fence
   JUNGLE_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jungle_fence.sign
@@ -1898,7 +2027,8 @@ Items:
     Sell: tne.item.jungle_fence.sell
     #The names supported by shop signs
     Names:
-      - JUNGLE_FENCE
+      - JungleFence
+      - Jungle Fence
   DARK_OAK_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dark_oak_fence.sign
@@ -1908,7 +2038,8 @@ Items:
     Sell: tne.item.dark_oak_fence.sell
     #The names supported by shop signs
     Names:
-      - DARK_OAK_FENCE
+      - DarkOakFence
+      - Dark Oak Fence
   ACACIA_FENCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.acacia_fence.sign
@@ -1918,7 +2049,8 @@ Items:
     Sell: tne.item.acacia_fence.sell
     #The names supported by shop signs
     Names:
-      - ACACIA_FENCE
+      - AcaciaFence
+      - Acacia Fence
   SPRUCE_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spruce_door.sign
@@ -1928,7 +2060,8 @@ Items:
     Sell: tne.item.spruce_door.sell
     #The names supported by shop signs
     Names:
-      - SPRUCE_DOOR
+      - SpruceDoor
+      - Spruce Door
   BIRCH_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.birch_door.sign
@@ -1938,7 +2071,8 @@ Items:
     Sell: tne.item.birch_door.sell
     #The names supported by shop signs
     Names:
-      - BIRCH_DOOR
+      - BirchDoor
+      - Birch Door
   JUNGLE_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jungle_door.sign
@@ -1948,7 +2082,8 @@ Items:
     Sell: tne.item.jungle_door.sell
     #The names supported by shop signs
     Names:
-      - JUNGLE_DOOR
+      - JungleDoor
+      - Jungle Door
   ACACIA_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.acacia_door.sign
@@ -1958,7 +2093,8 @@ Items:
     Sell: tne.item.acacia_door.sell
     #The names supported by shop signs
     Names:
-      - ACACIA_DOOR
+      - AcaciaDoor
+      - Acacia Door
   DARK_OAK_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dark_oak_door.sign
@@ -1968,7 +2104,8 @@ Items:
     Sell: tne.item.dark_oak_door.sell
     #The names supported by shop signs
     Names:
-      - DARK_OAK_DOOR
+      - DarkOakDoor
+      - Dark Oak Door
   END_ROD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.end_rod.sign
@@ -1978,7 +2115,8 @@ Items:
     Sell: tne.item.end_rod.sell
     #The names supported by shop signs
     Names:
-      - END_ROD
+      - EndRod
+      - End Rod
   CHORUS_PLANT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chorus_plant.sign
@@ -1988,7 +2126,8 @@ Items:
     Sell: tne.item.chorus_plant.sell
     #The names supported by shop signs
     Names:
-      - CHORUS_PLANT
+      - ChorusPlant
+      - Chorus Plant
   CHORUS_FLOWER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chorus_flower.sign
@@ -1998,7 +2137,8 @@ Items:
     Sell: tne.item.chorus_flower.sell
     #The names supported by shop signs
     Names:
-      - CHORUS_FLOWER
+      - ChorusFlower
+      - Chorus Flower
   PURPUR_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.purpur_block.sign
@@ -2008,7 +2148,8 @@ Items:
     Sell: tne.item.purpur_block.sell
     #The names supported by shop signs
     Names:
-      - PURPUR_BLOCK
+      - PurpurBlock
+      - Purpur Block
   PURPUR_PILLAR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.purpur_pillar.sign
@@ -2018,7 +2159,8 @@ Items:
     Sell: tne.item.purpur_pillar.sell
     #The names supported by shop signs
     Names:
-      - PURPUR_PILLAR
+      - PurpurPillar
+      - Purpur Pillar
   PURPUR_STAIRS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.purpur_stairs.sign
@@ -2028,7 +2170,8 @@ Items:
     Sell: tne.item.purpur_stairs.sell
     #The names supported by shop signs
     Names:
-      - PURPUR_STAIRS
+      - PurpurStairs
+      - Purpur Stairs
   PURPUR_DOUBLE_SLAB:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.purpur_double_slab.sign
@@ -2038,7 +2181,8 @@ Items:
     Sell: tne.item.purpur_double_slab.sell
     #The names supported by shop signs
     Names:
-      - PURPUR_DOUBLE_SLAB
+      - PurpurDoubleSlab
+      - Purpur Double Slab
   PURPUR_SLAB:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.purpur_slab.sign
@@ -2048,7 +2192,8 @@ Items:
     Sell: tne.item.purpur_slab.sell
     #The names supported by shop signs
     Names:
-      - PURPUR_SLAB
+      - PurpurSlab
+      - Purpur Slab
   END_BRICKS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.end_bricks.sign
@@ -2058,7 +2203,8 @@ Items:
     Sell: tne.item.end_bricks.sell
     #The names supported by shop signs
     Names:
-      - END_BRICKS
+      - EndBricks
+      - End Bricks
   BEETROOT_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.beetroot_block.sign
@@ -2068,7 +2214,8 @@ Items:
     Sell: tne.item.beetroot_block.sell
     #The names supported by shop signs
     Names:
-      - BEETROOT_BLOCK
+      - BeetrootBlock
+      - Beetroot Block
   GRASS_PATH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.grass_path.sign
@@ -2078,7 +2225,8 @@ Items:
     Sell: tne.item.grass_path.sell
     #The names supported by shop signs
     Names:
-      - GRASS_PATH
+      - GrassPath
+      - Grass Path
   END_GATEWAY:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.end_gateway.sign
@@ -2088,7 +2236,8 @@ Items:
     Sell: tne.item.end_gateway.sell
     #The names supported by shop signs
     Names:
-      - END_GATEWAY
+      - EndGateway
+      - End Gateway
   COMMAND_REPEATING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.command_repeating.sign
@@ -2098,7 +2247,8 @@ Items:
     Sell: tne.item.command_repeating.sell
     #The names supported by shop signs
     Names:
-      - COMMAND_REPEATING
+      - CommandRepeating
+      - Command Repeating
   COMMAND_CHAIN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.command_chain.sign
@@ -2108,7 +2258,8 @@ Items:
     Sell: tne.item.command_chain.sell
     #The names supported by shop signs
     Names:
-      - COMMAND_CHAIN
+      - CommandChain
+      - Command Chain
   FROSTED_ICE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.frosted_ice.sign
@@ -2118,7 +2269,8 @@ Items:
     Sell: tne.item.frosted_ice.sell
     #The names supported by shop signs
     Names:
-      - FROSTED_ICE
+      - FrostedIce
+      - Frosted Ice
   MAGMA:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.magma.sign
@@ -2128,7 +2280,7 @@ Items:
     Sell: tne.item.magma.sell
     #The names supported by shop signs
     Names:
-      - MAGMA
+      - Magma
   NETHER_WART_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_wart_block.sign
@@ -2138,7 +2290,8 @@ Items:
     Sell: tne.item.nether_wart_block.sell
     #The names supported by shop signs
     Names:
-      - NETHER_WART_BLOCK
+      - NetherWartBlock
+      - Nether Wart Block
   RED_NETHER_BRICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.red_nether_brick.sign
@@ -2148,7 +2301,8 @@ Items:
     Sell: tne.item.red_nether_brick.sell
     #The names supported by shop signs
     Names:
-      - RED_NETHER_BRICK
+      - RedNetherBrick
+      - Red Nether Brick
   BONE_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bone_block.sign
@@ -2158,7 +2312,8 @@ Items:
     Sell: tne.item.bone_block.sell
     #The names supported by shop signs
     Names:
-      - BONE_BLOCK
+      - BoneBlock
+      - Bone Block
   STRUCTURE_VOID:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.structure_void.sign
@@ -2168,7 +2323,8 @@ Items:
     Sell: tne.item.structure_void.sell
     #The names supported by shop signs
     Names:
-      - STRUCTURE_VOID
+      - StructureVoid
+      - Structure Void
   OBSERVER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.observer.sign
@@ -2178,7 +2334,7 @@ Items:
     Sell: tne.item.observer.sell
     #The names supported by shop signs
     Names:
-      - OBSERVER
+      - Observer
   WHITE_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.white_shulker_box.sign
@@ -2188,7 +2344,8 @@ Items:
     Sell: tne.item.white_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - WHITE_SHULKER_BOX
+      - WhiteShulkerBox
+      - White Shulker Box
   ORANGE_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.orange_shulker_box.sign
@@ -2198,7 +2355,8 @@ Items:
     Sell: tne.item.orange_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - ORANGE_SHULKER_BOX
+      - OrangeShulkerBox
+      - Orange Shulker Box
   MAGENTA_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.magenta_shulker_box.sign
@@ -2208,7 +2366,8 @@ Items:
     Sell: tne.item.magenta_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - MAGENTA_SHULKER_BOX
+      - MagentaShulkerBox
+      - Magenta Shulker Box
   LIGHT_BLUE_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.light_blue_shulker_box.sign
@@ -2218,7 +2377,8 @@ Items:
     Sell: tne.item.light_blue_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - LIGHT_BLUE_SHULKER_BOX
+      - LightBlueShulkerBox
+      - Light Blue Shulker Box
   YELLOW_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.yellow_shulker_box.sign
@@ -2228,7 +2388,8 @@ Items:
     Sell: tne.item.yellow_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - YELLOW_SHULKER_BOX
+      - YellowShulkerBox
+      - Yellow Shulker Box
   LIME_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lime_shulker_box.sign
@@ -2238,7 +2399,8 @@ Items:
     Sell: tne.item.lime_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - LIME_SHULKER_BOX
+      - LimeShulkerBox
+      - Lime Shulker Box
   PINK_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.pink_shulker_box.sign
@@ -2248,7 +2410,8 @@ Items:
     Sell: tne.item.pink_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - PINK_SHULKER_BOX
+      - PinkShulkerBox
+      - Pink Shulker Box
   GRAY_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gray_shulker_box.sign
@@ -2258,7 +2421,8 @@ Items:
     Sell: tne.item.gray_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - GRAY_SHULKER_BOX
+      - GrayShulkerBox
+      - Gray Shulker Box
   SILVER_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.silver_shulker_box.sign
@@ -2268,7 +2432,8 @@ Items:
     Sell: tne.item.silver_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - SILVER_SHULKER_BOX
+      - SilverShulkerBox
+      - Silver Shulker Box
   CYAN_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cyan_shulker_box.sign
@@ -2278,7 +2443,8 @@ Items:
     Sell: tne.item.cyan_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - CYAN_SHULKER_BOX
+      - CyanShulkerBox
+      - Cyan Shulker Box
   PURPLE_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.purple_shulker_box.sign
@@ -2288,7 +2454,8 @@ Items:
     Sell: tne.item.purple_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - PURPLE_SHULKER_BOX
+      - PurpleShulkerBox
+      - Purple Shulker Box
   BLUE_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.blue_shulker_box.sign
@@ -2298,7 +2465,8 @@ Items:
     Sell: tne.item.blue_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - BLUE_SHULKER_BOX
+      - BlueShulkerBox
+      - Blue Shulker Box
   BROWN_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.brown_shulker_box.sign
@@ -2308,7 +2476,8 @@ Items:
     Sell: tne.item.brown_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - BROWN_SHULKER_BOX
+      - BrownShulkerBox
+      - Brown Shulker Box
   GREEN_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.green_shulker_box.sign
@@ -2318,7 +2487,8 @@ Items:
     Sell: tne.item.green_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - GREEN_SHULKER_BOX
+      - GreenShulkerBox
+      - Green Shulker Box
   RED_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.red_shulker_box.sign
@@ -2328,7 +2498,8 @@ Items:
     Sell: tne.item.red_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - RED_SHULKER_BOX
+      - RedShulkerBox
+      - Red Shulker Box
   BLACK_SHULKER_BOX:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.black_shulker_box.sign
@@ -2338,7 +2509,8 @@ Items:
     Sell: tne.item.black_shulker_box.sell
     #The names supported by shop signs
     Names:
-      - BLACK_SHULKER_BOX
+      - BlackShulkerBox
+      - Black Shulker Box
   STRUCTURE_BLOCK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.structure_block.sign
@@ -2348,7 +2520,8 @@ Items:
     Sell: tne.item.structure_block.sell
     #The names supported by shop signs
     Names:
-      - STRUCTURE_BLOCK
+      - StructureBlock
+      - Structure Block
   IRON_SPADE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_spade.sign
@@ -2358,7 +2531,8 @@ Items:
     Sell: tne.item.iron_spade.sell
     #The names supported by shop signs
     Names:
-      - IRON_SPADE
+      - IronSpade
+      - Iron Spade
   IRON_PICKAXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_pickaxe.sign
@@ -2368,7 +2542,8 @@ Items:
     Sell: tne.item.iron_pickaxe.sell
     #The names supported by shop signs
     Names:
-      - IRON_PICKAXE
+      - IronPickaxe
+      - Iron Pickaxe
   IRON_AXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_axe.sign
@@ -2378,7 +2553,8 @@ Items:
     Sell: tne.item.iron_axe.sell
     #The names supported by shop signs
     Names:
-      - IRON_AXE
+      - IronAxe
+      - Iron Axe
   FLINT_AND_STEEL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.flint_and_steel.sign
@@ -2388,7 +2564,8 @@ Items:
     Sell: tne.item.flint_and_steel.sell
     #The names supported by shop signs
     Names:
-      - FLINT_AND_STEEL
+      - FlintAndSteel
+      - Flint And Steel
   APPLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.apple.sign
@@ -2398,7 +2575,7 @@ Items:
     Sell: tne.item.apple.sell
     #The names supported by shop signs
     Names:
-      - APPLE
+      - Apple
   BOW:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bow.sign
@@ -2408,7 +2585,7 @@ Items:
     Sell: tne.item.bow.sell
     #The names supported by shop signs
     Names:
-      - BOW
+      - Bow
   ARROW:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.arrow.sign
@@ -2418,7 +2595,7 @@ Items:
     Sell: tne.item.arrow.sell
     #The names supported by shop signs
     Names:
-      - ARROW
+      - Arrow
   COAL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.coal.sign
@@ -2428,7 +2605,7 @@ Items:
     Sell: tne.item.coal.sell
     #The names supported by shop signs
     Names:
-      - COAL
+      - Coal
   DIAMOND:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond.sign
@@ -2438,7 +2615,7 @@ Items:
     Sell: tne.item.diamond.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND
+      - Diamond
   IRON_INGOT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_ingot.sign
@@ -2448,7 +2625,8 @@ Items:
     Sell: tne.item.iron_ingot.sell
     #The names supported by shop signs
     Names:
-      - IRON_INGOT
+      - IronIngot
+      - Iron Ingot
   GOLD_INGOT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_ingot.sign
@@ -2458,7 +2636,8 @@ Items:
     Sell: tne.item.gold_ingot.sell
     #The names supported by shop signs
     Names:
-      - GOLD_INGOT
+      - GoldIngot
+      - Gold Ingot
   IRON_SWORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_sword.sign
@@ -2468,7 +2647,8 @@ Items:
     Sell: tne.item.iron_sword.sell
     #The names supported by shop signs
     Names:
-      - IRON_SWORD
+      - IronSword
+      - Iron Sword
   WOOD_SWORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_sword.sign
@@ -2478,7 +2658,8 @@ Items:
     Sell: tne.item.wood_sword.sell
     #The names supported by shop signs
     Names:
-      - WOOD_SWORD
+      - WoodSword
+      - Wood Sword
   WOOD_SPADE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_spade.sign
@@ -2488,7 +2669,8 @@ Items:
     Sell: tne.item.wood_spade.sell
     #The names supported by shop signs
     Names:
-      - WOOD_SPADE
+      - WoodSpade
+      - Wood Spade
   WOOD_PICKAXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_pickaxe.sign
@@ -2498,7 +2680,8 @@ Items:
     Sell: tne.item.wood_pickaxe.sell
     #The names supported by shop signs
     Names:
-      - WOOD_PICKAXE
+      - WoodPickaxe
+      - Wood Pickaxe
   WOOD_AXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_axe.sign
@@ -2508,7 +2691,8 @@ Items:
     Sell: tne.item.wood_axe.sell
     #The names supported by shop signs
     Names:
-      - WOOD_AXE
+      - WoodAxe
+      - Wood Axe
   STONE_SWORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_sword.sign
@@ -2518,7 +2702,8 @@ Items:
     Sell: tne.item.stone_sword.sell
     #The names supported by shop signs
     Names:
-      - STONE_SWORD
+      - StoneSword
+      - Stone Sword
   STONE_SPADE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_spade.sign
@@ -2528,7 +2713,8 @@ Items:
     Sell: tne.item.stone_spade.sell
     #The names supported by shop signs
     Names:
-      - STONE_SPADE
+      - StoneSpade
+      - Stone Spade
   STONE_PICKAXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_pickaxe.sign
@@ -2538,7 +2724,8 @@ Items:
     Sell: tne.item.stone_pickaxe.sell
     #The names supported by shop signs
     Names:
-      - STONE_PICKAXE
+      - StonePickaxe
+      - Stone Pickaxe
   STONE_AXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_axe.sign
@@ -2548,7 +2735,8 @@ Items:
     Sell: tne.item.stone_axe.sell
     #The names supported by shop signs
     Names:
-      - STONE_AXE
+      - StoneAxe
+      - Stone Axe
   DIAMOND_SWORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_sword.sign
@@ -2558,7 +2746,8 @@ Items:
     Sell: tne.item.diamond_sword.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_SWORD
+      - DiamondSword
+      - Diamond Sword
   DIAMOND_SPADE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_spade.sign
@@ -2568,7 +2757,8 @@ Items:
     Sell: tne.item.diamond_spade.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_SPADE
+      - DiamondSpade
+      - Diamond Spade
   DIAMOND_PICKAXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_pickaxe.sign
@@ -2578,7 +2768,8 @@ Items:
     Sell: tne.item.diamond_pickaxe.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_PICKAXE
+      - DiamondPickaxe
+      - Diamond Pickaxe
   DIAMOND_AXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_axe.sign
@@ -2588,7 +2779,8 @@ Items:
     Sell: tne.item.diamond_axe.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_AXE
+      - DiamondAxe
+      - Diamond Axe
   STICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stick.sign
@@ -2598,7 +2790,7 @@ Items:
     Sell: tne.item.stick.sell
     #The names supported by shop signs
     Names:
-      - STICK
+      - Stick
   BOWL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bowl.sign
@@ -2608,7 +2800,7 @@ Items:
     Sell: tne.item.bowl.sell
     #The names supported by shop signs
     Names:
-      - BOWL
+      - Bowl
   MUSHROOM_SOUP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.mushroom_soup.sign
@@ -2618,7 +2810,8 @@ Items:
     Sell: tne.item.mushroom_soup.sell
     #The names supported by shop signs
     Names:
-      - MUSHROOM_SOUP
+      - MushroomSoup
+      - Mushroom Soup
   GOLD_SWORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_sword.sign
@@ -2628,7 +2821,8 @@ Items:
     Sell: tne.item.gold_sword.sell
     #The names supported by shop signs
     Names:
-      - GOLD_SWORD
+      - GoldSword
+      - Gold Sword
   GOLD_SPADE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_spade.sign
@@ -2638,7 +2832,8 @@ Items:
     Sell: tne.item.gold_spade.sell
     #The names supported by shop signs
     Names:
-      - GOLD_SPADE
+      - GoldSpade
+      - Gold Spade
   GOLD_PICKAXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_pickaxe.sign
@@ -2648,7 +2843,8 @@ Items:
     Sell: tne.item.gold_pickaxe.sell
     #The names supported by shop signs
     Names:
-      - GOLD_PICKAXE
+      - GoldPickaxe
+      - Gold Pickaxe
   GOLD_AXE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_axe.sign
@@ -2658,7 +2854,8 @@ Items:
     Sell: tne.item.gold_axe.sell
     #The names supported by shop signs
     Names:
-      - GOLD_AXE
+      - GoldAxe
+      - Gold Axe
   STRING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.string.sign
@@ -2668,7 +2865,7 @@ Items:
     Sell: tne.item.string.sell
     #The names supported by shop signs
     Names:
-      - STRING
+      - String
   FEATHER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.feather.sign
@@ -2678,7 +2875,7 @@ Items:
     Sell: tne.item.feather.sell
     #The names supported by shop signs
     Names:
-      - FEATHER
+      - Feather
   SULPHUR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sulphur.sign
@@ -2688,7 +2885,7 @@ Items:
     Sell: tne.item.sulphur.sell
     #The names supported by shop signs
     Names:
-      - SULPHUR
+      - Sulphur
   WOOD_HOE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_hoe.sign
@@ -2698,7 +2895,8 @@ Items:
     Sell: tne.item.wood_hoe.sell
     #The names supported by shop signs
     Names:
-      - WOOD_HOE
+      - WoodHoe
+      - Wood Hoe
   STONE_HOE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.stone_hoe.sign
@@ -2708,7 +2906,8 @@ Items:
     Sell: tne.item.stone_hoe.sell
     #The names supported by shop signs
     Names:
-      - STONE_HOE
+      - StoneHoe
+      - Stone Hoe
   IRON_HOE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_hoe.sign
@@ -2718,7 +2917,8 @@ Items:
     Sell: tne.item.iron_hoe.sell
     #The names supported by shop signs
     Names:
-      - IRON_HOE
+      - IronHoe
+      - Iron Hoe
   DIAMOND_HOE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_hoe.sign
@@ -2728,7 +2928,8 @@ Items:
     Sell: tne.item.diamond_hoe.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_HOE
+      - DiamondHoe
+      - Diamond Hoe
   GOLD_HOE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_hoe.sign
@@ -2738,7 +2939,8 @@ Items:
     Sell: tne.item.gold_hoe.sell
     #The names supported by shop signs
     Names:
-      - GOLD_HOE
+      - GoldHoe
+      - Gold Hoe
   SEEDS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.seeds.sign
@@ -2748,7 +2950,7 @@ Items:
     Sell: tne.item.seeds.sell
     #The names supported by shop signs
     Names:
-      - SEEDS
+      - Seeds
   WHEAT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wheat.sign
@@ -2758,7 +2960,7 @@ Items:
     Sell: tne.item.wheat.sell
     #The names supported by shop signs
     Names:
-      - WHEAT
+      - Wheat
   BREAD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bread.sign
@@ -2768,7 +2970,7 @@ Items:
     Sell: tne.item.bread.sell
     #The names supported by shop signs
     Names:
-      - BREAD
+      - Bread
   LEATHER_HELMET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leather_helmet.sign
@@ -2778,7 +2980,8 @@ Items:
     Sell: tne.item.leather_helmet.sell
     #The names supported by shop signs
     Names:
-      - LEATHER_HELMET
+      - LeatherHelmet
+      - Leather Helmet
   LEATHER_CHESTPLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leather_chestplate.sign
@@ -2788,7 +2991,8 @@ Items:
     Sell: tne.item.leather_chestplate.sell
     #The names supported by shop signs
     Names:
-      - LEATHER_CHESTPLATE
+      - LeatherChestplate
+      - Leather Chestplate
   LEATHER_LEGGINGS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leather_leggings.sign
@@ -2798,7 +3002,8 @@ Items:
     Sell: tne.item.leather_leggings.sell
     #The names supported by shop signs
     Names:
-      - LEATHER_LEGGINGS
+      - LeatherLeggings
+      - Leather Leggings
   LEATHER_BOOTS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leather_boots.sign
@@ -2808,7 +3013,8 @@ Items:
     Sell: tne.item.leather_boots.sell
     #The names supported by shop signs
     Names:
-      - LEATHER_BOOTS
+      - LeatherBoots
+      - Leather Boots
   CHAINMAIL_HELMET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chainmail_helmet.sign
@@ -2818,7 +3024,8 @@ Items:
     Sell: tne.item.chainmail_helmet.sell
     #The names supported by shop signs
     Names:
-      - CHAINMAIL_HELMET
+      - ChainmailHelmet
+      - Chainmail Helmet
   CHAINMAIL_CHESTPLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chainmail_chestplate.sign
@@ -2828,7 +3035,8 @@ Items:
     Sell: tne.item.chainmail_chestplate.sell
     #The names supported by shop signs
     Names:
-      - CHAINMAIL_CHESTPLATE
+      - ChainmailChestplate
+      - Chainmail Chestplate
   CHAINMAIL_LEGGINGS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chainmail_leggings.sign
@@ -2838,7 +3046,8 @@ Items:
     Sell: tne.item.chainmail_leggings.sell
     #The names supported by shop signs
     Names:
-      - CHAINMAIL_LEGGINGS
+      - ChainmailLeggings
+      - Chainmail Leggings
   CHAINMAIL_BOOTS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chainmail_boots.sign
@@ -2848,7 +3057,8 @@ Items:
     Sell: tne.item.chainmail_boots.sell
     #The names supported by shop signs
     Names:
-      - CHAINMAIL_BOOTS
+      - ChainmailBoots
+      - Chainmail Boots
   IRON_HELMET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_helmet.sign
@@ -2858,7 +3068,8 @@ Items:
     Sell: tne.item.iron_helmet.sell
     #The names supported by shop signs
     Names:
-      - IRON_HELMET
+      - IronHelmet
+      - Iron Helmet
   IRON_CHESTPLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_chestplate.sign
@@ -2868,7 +3079,8 @@ Items:
     Sell: tne.item.iron_chestplate.sell
     #The names supported by shop signs
     Names:
-      - IRON_CHESTPLATE
+      - IronChestplate
+      - Iron Chestplate
   IRON_LEGGINGS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_leggings.sign
@@ -2878,7 +3090,8 @@ Items:
     Sell: tne.item.iron_leggings.sell
     #The names supported by shop signs
     Names:
-      - IRON_LEGGINGS
+      - IronLeggings
+      - Iron Leggings
   IRON_BOOTS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_boots.sign
@@ -2888,7 +3101,8 @@ Items:
     Sell: tne.item.iron_boots.sell
     #The names supported by shop signs
     Names:
-      - IRON_BOOTS
+      - IronBoots
+      - Iron Boots
   DIAMOND_HELMET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_helmet.sign
@@ -2898,7 +3112,8 @@ Items:
     Sell: tne.item.diamond_helmet.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_HELMET
+      - DiamondHelmet
+      - Diamond Helmet
   DIAMOND_CHESTPLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_chestplate.sign
@@ -2908,7 +3123,8 @@ Items:
     Sell: tne.item.diamond_chestplate.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_CHESTPLATE
+      - DiamondChestplate
+      - Diamond Chestplate
   DIAMOND_LEGGINGS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_leggings.sign
@@ -2918,7 +3134,8 @@ Items:
     Sell: tne.item.diamond_leggings.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_LEGGINGS
+      - DiamondLeggings
+      - Diamond Leggings
   DIAMOND_BOOTS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_boots.sign
@@ -2928,7 +3145,8 @@ Items:
     Sell: tne.item.diamond_boots.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_BOOTS
+      - DiamondBoots
+      - Diamond Boots
   GOLD_HELMET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_helmet.sign
@@ -2938,7 +3156,8 @@ Items:
     Sell: tne.item.gold_helmet.sell
     #The names supported by shop signs
     Names:
-      - GOLD_HELMET
+      - GoldHelmet
+      - Gold Helmet
   GOLD_CHESTPLATE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_chestplate.sign
@@ -2948,7 +3167,8 @@ Items:
     Sell: tne.item.gold_chestplate.sell
     #The names supported by shop signs
     Names:
-      - GOLD_CHESTPLATE
+      - GoldChestplate
+      - Gold Chestplate
   GOLD_LEGGINGS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_leggings.sign
@@ -2958,7 +3178,8 @@ Items:
     Sell: tne.item.gold_leggings.sell
     #The names supported by shop signs
     Names:
-      - GOLD_LEGGINGS
+      - GoldLeggings
+      - Gold Leggings
   GOLD_BOOTS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_boots.sign
@@ -2968,7 +3189,8 @@ Items:
     Sell: tne.item.gold_boots.sell
     #The names supported by shop signs
     Names:
-      - GOLD_BOOTS
+      - GoldBoots
+      - Gold Boots
   FLINT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.flint.sign
@@ -2978,7 +3200,7 @@ Items:
     Sell: tne.item.flint.sell
     #The names supported by shop signs
     Names:
-      - FLINT
+      - Flint
   PORK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.pork.sign
@@ -2988,7 +3210,7 @@ Items:
     Sell: tne.item.pork.sell
     #The names supported by shop signs
     Names:
-      - PORK
+      - Pork
   GRILLED_PORK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.grilled_pork.sign
@@ -2998,7 +3220,8 @@ Items:
     Sell: tne.item.grilled_pork.sell
     #The names supported by shop signs
     Names:
-      - GRILLED_PORK
+      - GrilledPork
+      - Grilled Pork
   PAINTING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.painting.sign
@@ -3008,7 +3231,7 @@ Items:
     Sell: tne.item.painting.sell
     #The names supported by shop signs
     Names:
-      - PAINTING
+      - Painting
   GOLDEN_APPLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.golden_apple.sign
@@ -3018,7 +3241,8 @@ Items:
     Sell: tne.item.golden_apple.sell
     #The names supported by shop signs
     Names:
-      - GOLDEN_APPLE
+      - GoldenApple
+      - Golden Apple
   SIGN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sign.sign
@@ -3028,7 +3252,7 @@ Items:
     Sell: tne.item.sign.sell
     #The names supported by shop signs
     Names:
-      - SIGN
+      - Sign
   WOOD_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.wood_door.sign
@@ -3038,7 +3262,8 @@ Items:
     Sell: tne.item.wood_door.sell
     #The names supported by shop signs
     Names:
-      - WOOD_DOOR
+      - WoodDoor
+      - Wood Door
   BUCKET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bucket.sign
@@ -3048,7 +3273,7 @@ Items:
     Sell: tne.item.bucket.sell
     #The names supported by shop signs
     Names:
-      - BUCKET
+      - Bucket
   WATER_BUCKET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.water_bucket.sign
@@ -3058,7 +3283,8 @@ Items:
     Sell: tne.item.water_bucket.sell
     #The names supported by shop signs
     Names:
-      - WATER_BUCKET
+      - WaterBucket
+      - Water Bucket
   LAVA_BUCKET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lava_bucket.sign
@@ -3068,7 +3294,8 @@ Items:
     Sell: tne.item.lava_bucket.sell
     #The names supported by shop signs
     Names:
-      - LAVA_BUCKET
+      - LavaBucket
+      - Lava Bucket
   MINECART:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.minecart.sign
@@ -3078,7 +3305,7 @@ Items:
     Sell: tne.item.minecart.sell
     #The names supported by shop signs
     Names:
-      - MINECART
+      - Minecart
   SADDLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.saddle.sign
@@ -3088,7 +3315,7 @@ Items:
     Sell: tne.item.saddle.sell
     #The names supported by shop signs
     Names:
-      - SADDLE
+      - Saddle
   IRON_DOOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_door.sign
@@ -3098,7 +3325,8 @@ Items:
     Sell: tne.item.iron_door.sell
     #The names supported by shop signs
     Names:
-      - IRON_DOOR
+      - IronDoor
+      - Iron Door
   REDSTONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone.sign
@@ -3108,7 +3336,7 @@ Items:
     Sell: tne.item.redstone.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE
+      - Redstone
   SNOW_BALL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.snow_ball.sign
@@ -3118,7 +3346,8 @@ Items:
     Sell: tne.item.snow_ball.sell
     #The names supported by shop signs
     Names:
-      - SNOW_BALL
+      - SnowBall
+      - Snow Ball
   BOAT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.boat.sign
@@ -3128,7 +3357,7 @@ Items:
     Sell: tne.item.boat.sell
     #The names supported by shop signs
     Names:
-      - BOAT
+      - Boat
   LEATHER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leather.sign
@@ -3138,7 +3367,7 @@ Items:
     Sell: tne.item.leather.sell
     #The names supported by shop signs
     Names:
-      - LEATHER
+      - Leather
   MILK_BUCKET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.milk_bucket.sign
@@ -3148,7 +3377,8 @@ Items:
     Sell: tne.item.milk_bucket.sell
     #The names supported by shop signs
     Names:
-      - MILK_BUCKET
+      - MilkBucket
+      - Milk Bucket
   CLAY_BRICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.clay_brick.sign
@@ -3158,7 +3388,8 @@ Items:
     Sell: tne.item.clay_brick.sell
     #The names supported by shop signs
     Names:
-      - CLAY_BRICK
+      - ClayBrick
+      - Clay Brick
   CLAY_BALL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.clay_ball.sign
@@ -3168,7 +3399,8 @@ Items:
     Sell: tne.item.clay_ball.sell
     #The names supported by shop signs
     Names:
-      - CLAY_BALL
+      - ClayBall
+      - Clay Ball
   SUGAR_CANE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sugar_cane.sign
@@ -3178,7 +3410,8 @@ Items:
     Sell: tne.item.sugar_cane.sell
     #The names supported by shop signs
     Names:
-      - SUGAR_CANE
+      - SugarCane
+      - Sugar Cane
   PAPER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.paper.sign
@@ -3188,7 +3421,7 @@ Items:
     Sell: tne.item.paper.sell
     #The names supported by shop signs
     Names:
-      - PAPER
+      - Paper
   BOOK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.book.sign
@@ -3198,7 +3431,7 @@ Items:
     Sell: tne.item.book.sell
     #The names supported by shop signs
     Names:
-      - BOOK
+      - Book
   SLIME_BALL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.slime_ball.sign
@@ -3208,7 +3441,8 @@ Items:
     Sell: tne.item.slime_ball.sell
     #The names supported by shop signs
     Names:
-      - SLIME_BALL
+      - SlimeBall
+      - Slime Ball
   STORAGE_MINECART:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.storage_minecart.sign
@@ -3218,7 +3452,8 @@ Items:
     Sell: tne.item.storage_minecart.sell
     #The names supported by shop signs
     Names:
-      - STORAGE_MINECART
+      - StorageMinecart
+      - Storage Minecart
   POWERED_MINECART:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.powered_minecart.sign
@@ -3228,7 +3463,8 @@ Items:
     Sell: tne.item.powered_minecart.sell
     #The names supported by shop signs
     Names:
-      - POWERED_MINECART
+      - PoweredMinecart
+      - Powered Minecart
   EGG:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.egg.sign
@@ -3238,7 +3474,7 @@ Items:
     Sell: tne.item.egg.sell
     #The names supported by shop signs
     Names:
-      - EGG
+      - Egg
   COMPASS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.compass.sign
@@ -3248,7 +3484,7 @@ Items:
     Sell: tne.item.compass.sell
     #The names supported by shop signs
     Names:
-      - COMPASS
+      - Compass
   FISHING_ROD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.fishing_rod.sign
@@ -3258,7 +3494,8 @@ Items:
     Sell: tne.item.fishing_rod.sell
     #The names supported by shop signs
     Names:
-      - FISHING_ROD
+      - FishingRod
+      - Fishing Rod
   WATCH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.watch.sign
@@ -3268,7 +3505,7 @@ Items:
     Sell: tne.item.watch.sell
     #The names supported by shop signs
     Names:
-      - WATCH
+      - Watch
   GLOWSTONE_DUST:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.glowstone_dust.sign
@@ -3278,7 +3515,8 @@ Items:
     Sell: tne.item.glowstone_dust.sell
     #The names supported by shop signs
     Names:
-      - GLOWSTONE_DUST
+      - GlowstoneDust
+      - Glowstone Dust
   RAW_FISH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.raw_fish.sign
@@ -3288,7 +3526,8 @@ Items:
     Sell: tne.item.raw_fish.sell
     #The names supported by shop signs
     Names:
-      - RAW_FISH
+      - RawFish
+      - Raw Fish
   COOKED_FISH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cooked_fish.sign
@@ -3298,7 +3537,8 @@ Items:
     Sell: tne.item.cooked_fish.sell
     #The names supported by shop signs
     Names:
-      - COOKED_FISH
+      - CookedFish
+      - Cooked Fish
   INK_SACK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ink_sack.sign
@@ -3308,7 +3548,8 @@ Items:
     Sell: tne.item.ink_sack.sell
     #The names supported by shop signs
     Names:
-      - INK_SACK
+      - InkSack
+      - Ink Sack
   BONE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bone.sign
@@ -3318,7 +3559,7 @@ Items:
     Sell: tne.item.bone.sell
     #The names supported by shop signs
     Names:
-      - BONE
+      - Bone
   SUGAR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.sugar.sign
@@ -3328,7 +3569,7 @@ Items:
     Sell: tne.item.sugar.sell
     #The names supported by shop signs
     Names:
-      - SUGAR
+      - Sugar
   CAKE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cake.sign
@@ -3338,7 +3579,7 @@ Items:
     Sell: tne.item.cake.sell
     #The names supported by shop signs
     Names:
-      - CAKE
+      - Cake
   BED:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.bed.sign
@@ -3348,7 +3589,7 @@ Items:
     Sell: tne.item.bed.sell
     #The names supported by shop signs
     Names:
-      - BED
+      - Bed
   DIODE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diode.sign
@@ -3358,7 +3599,7 @@ Items:
     Sell: tne.item.diode.sell
     #The names supported by shop signs
     Names:
-      - DIODE
+      - Diode
   COOKIE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cookie.sign
@@ -3368,7 +3609,7 @@ Items:
     Sell: tne.item.cookie.sell
     #The names supported by shop signs
     Names:
-      - COOKIE
+      - Cookie
   MAP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.map.sign
@@ -3378,7 +3619,7 @@ Items:
     Sell: tne.item.map.sell
     #The names supported by shop signs
     Names:
-      - MAP
+      - Map
   SHEARS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.shears.sign
@@ -3388,7 +3629,7 @@ Items:
     Sell: tne.item.shears.sell
     #The names supported by shop signs
     Names:
-      - SHEARS
+      - Shears
   MELON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.melon.sign
@@ -3398,7 +3639,7 @@ Items:
     Sell: tne.item.melon.sell
     #The names supported by shop signs
     Names:
-      - MELON
+      - Melon
   PUMPKIN_SEEDS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.pumpkin_seeds.sign
@@ -3408,7 +3649,8 @@ Items:
     Sell: tne.item.pumpkin_seeds.sell
     #The names supported by shop signs
     Names:
-      - PUMPKIN_SEEDS
+      - PumpkinSeeds
+      - Pumpkin Seeds
   MELON_SEEDS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.melon_seeds.sign
@@ -3418,7 +3660,8 @@ Items:
     Sell: tne.item.melon_seeds.sell
     #The names supported by shop signs
     Names:
-      - MELON_SEEDS
+      - MelonSeeds
+      - Melon Seeds
   RAW_BEEF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.raw_beef.sign
@@ -3428,7 +3671,8 @@ Items:
     Sell: tne.item.raw_beef.sell
     #The names supported by shop signs
     Names:
-      - RAW_BEEF
+      - RawBeef
+      - Raw Beef
   COOKED_BEEF:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cooked_beef.sign
@@ -3438,7 +3682,8 @@ Items:
     Sell: tne.item.cooked_beef.sell
     #The names supported by shop signs
     Names:
-      - COOKED_BEEF
+      - CookedBeef
+      - Cooked Beef
   RAW_CHICKEN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.raw_chicken.sign
@@ -3448,7 +3693,8 @@ Items:
     Sell: tne.item.raw_chicken.sell
     #The names supported by shop signs
     Names:
-      - RAW_CHICKEN
+      - RawChicken
+      - Raw Chicken
   COOKED_CHICKEN:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cooked_chicken.sign
@@ -3458,7 +3704,8 @@ Items:
     Sell: tne.item.cooked_chicken.sell
     #The names supported by shop signs
     Names:
-      - COOKED_CHICKEN
+      - CookedChicken
+      - Cooked Chicken
   ROTTEN_FLESH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.rotten_flesh.sign
@@ -3468,7 +3715,8 @@ Items:
     Sell: tne.item.rotten_flesh.sell
     #The names supported by shop signs
     Names:
-      - ROTTEN_FLESH
+      - RottenFlesh
+      - Rotten Flesh
   ENDER_PEARL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ender_pearl.sign
@@ -3478,7 +3726,8 @@ Items:
     Sell: tne.item.ender_pearl.sell
     #The names supported by shop signs
     Names:
-      - ENDER_PEARL
+      - EnderPearl
+      - Ender Pearl
   BLAZE_ROD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.blaze_rod.sign
@@ -3488,7 +3737,8 @@ Items:
     Sell: tne.item.blaze_rod.sell
     #The names supported by shop signs
     Names:
-      - BLAZE_ROD
+      - BlazeRod
+      - Blaze Rod
   GHAST_TEAR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.ghast_tear.sign
@@ -3498,7 +3748,8 @@ Items:
     Sell: tne.item.ghast_tear.sell
     #The names supported by shop signs
     Names:
-      - GHAST_TEAR
+      - GhastTear
+      - Ghast Tear
   GOLD_NUGGET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_nugget.sign
@@ -3508,7 +3759,8 @@ Items:
     Sell: tne.item.gold_nugget.sell
     #The names supported by shop signs
     Names:
-      - GOLD_NUGGET
+      - GoldNugget
+      - Gold Nugget
   NETHER_STALK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_stalk.sign
@@ -3518,7 +3770,8 @@ Items:
     Sell: tne.item.nether_stalk.sell
     #The names supported by shop signs
     Names:
-      - NETHER_STALK
+      - NetherStalk
+      - Nether Stalk
   POTION:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.potion.sign
@@ -3528,7 +3781,7 @@ Items:
     Sell: tne.item.potion.sell
     #The names supported by shop signs
     Names:
-      - POTION
+      - Potion
   GLASS_BOTTLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.glass_bottle.sign
@@ -3538,7 +3791,8 @@ Items:
     Sell: tne.item.glass_bottle.sell
     #The names supported by shop signs
     Names:
-      - GLASS_BOTTLE
+      - GlassBottle
+      - Glass Bottle
   SPIDER_EYE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spider_eye.sign
@@ -3548,7 +3802,8 @@ Items:
     Sell: tne.item.spider_eye.sell
     #The names supported by shop signs
     Names:
-      - SPIDER_EYE
+      - SpiderEye
+      - Spider Eye
   FERMENTED_SPIDER_EYE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.fermented_spider_eye.sign
@@ -3558,7 +3813,8 @@ Items:
     Sell: tne.item.fermented_spider_eye.sell
     #The names supported by shop signs
     Names:
-      - FERMENTED_SPIDER_EYE
+      - FermentedSpiderEye
+      - Fermented Spider Eye
   BLAZE_POWDER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.blaze_powder.sign
@@ -3568,7 +3824,8 @@ Items:
     Sell: tne.item.blaze_powder.sell
     #The names supported by shop signs
     Names:
-      - BLAZE_POWDER
+      - BlazePowder
+      - Blaze Powder
   MAGMA_CREAM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.magma_cream.sign
@@ -3578,7 +3835,8 @@ Items:
     Sell: tne.item.magma_cream.sell
     #The names supported by shop signs
     Names:
-      - MAGMA_CREAM
+      - MagmaCream
+      - Magma Cream
   BREWING_STAND_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.brewing_stand_item.sign
@@ -3588,7 +3846,8 @@ Items:
     Sell: tne.item.brewing_stand_item.sell
     #The names supported by shop signs
     Names:
-      - BREWING_STAND_ITEM
+      - BrewingStandItem
+      - Brewing Stand Item
   CAULDRON_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cauldron_item.sign
@@ -3598,7 +3857,8 @@ Items:
     Sell: tne.item.cauldron_item.sell
     #The names supported by shop signs
     Names:
-      - CAULDRON_ITEM
+      - CauldronItem
+      - Cauldron Item
   EYE_OF_ENDER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.eye_of_ender.sign
@@ -3608,7 +3868,8 @@ Items:
     Sell: tne.item.eye_of_ender.sell
     #The names supported by shop signs
     Names:
-      - EYE_OF_ENDER
+      - EyeOfEnder
+      - Eye Of Ender
   SPECKLED_MELON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.speckled_melon.sign
@@ -3618,7 +3879,8 @@ Items:
     Sell: tne.item.speckled_melon.sell
     #The names supported by shop signs
     Names:
-      - SPECKLED_MELON
+      - SpeckledMelon
+      - Speckled Melon
   MONSTER_EGG:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.monster_egg.sign
@@ -3628,7 +3890,8 @@ Items:
     Sell: tne.item.monster_egg.sell
     #The names supported by shop signs
     Names:
-      - MONSTER_EGG
+      - MonsterEgg
+      - Monster Egg
   EXP_BOTTLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.exp_bottle.sign
@@ -3638,7 +3901,8 @@ Items:
     Sell: tne.item.exp_bottle.sell
     #The names supported by shop signs
     Names:
-      - EXP_BOTTLE
+      - ExpBottle
+      - Exp Bottle
   FIREBALL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.fireball.sign
@@ -3648,7 +3912,7 @@ Items:
     Sell: tne.item.fireball.sell
     #The names supported by shop signs
     Names:
-      - FIREBALL
+      - Fireball
   BOOK_AND_QUILL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.book_and_quill.sign
@@ -3658,7 +3922,8 @@ Items:
     Sell: tne.item.book_and_quill.sell
     #The names supported by shop signs
     Names:
-      - BOOK_AND_QUILL
+      - BookAndQuill
+      - Book And Quill
   WRITTEN_BOOK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.written_book.sign
@@ -3668,7 +3933,8 @@ Items:
     Sell: tne.item.written_book.sell
     #The names supported by shop signs
     Names:
-      - WRITTEN_BOOK
+      - WrittenBook
+      - Written Book
   EMERALD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.emerald.sign
@@ -3678,7 +3944,7 @@ Items:
     Sell: tne.item.emerald.sell
     #The names supported by shop signs
     Names:
-      - EMERALD
+      - Emerald
   ITEM_FRAME:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.item_frame.sign
@@ -3688,7 +3954,8 @@ Items:
     Sell: tne.item.item_frame.sell
     #The names supported by shop signs
     Names:
-      - ITEM_FRAME
+      - ItemFrame
+      - Item Frame
   FLOWER_POT_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.flower_pot_item.sign
@@ -3698,7 +3965,8 @@ Items:
     Sell: tne.item.flower_pot_item.sell
     #The names supported by shop signs
     Names:
-      - FLOWER_POT_ITEM
+      - FlowerPotItem
+      - Flower Pot Item
   CARROT_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.carrot_item.sign
@@ -3708,7 +3976,8 @@ Items:
     Sell: tne.item.carrot_item.sell
     #The names supported by shop signs
     Names:
-      - CARROT_ITEM
+      - CarrotItem
+      - Carrot Item
   POTATO_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.potato_item.sign
@@ -3718,7 +3987,8 @@ Items:
     Sell: tne.item.potato_item.sell
     #The names supported by shop signs
     Names:
-      - POTATO_ITEM
+      - PotatoItem
+      - Potato Item
   BAKED_POTATO:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.baked_potato.sign
@@ -3728,7 +3998,8 @@ Items:
     Sell: tne.item.baked_potato.sell
     #The names supported by shop signs
     Names:
-      - BAKED_POTATO
+      - BakedPotato
+      - Baked Potato
   POISONOUS_POTATO:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.poisonous_potato.sign
@@ -3738,7 +4009,8 @@ Items:
     Sell: tne.item.poisonous_potato.sell
     #The names supported by shop signs
     Names:
-      - POISONOUS_POTATO
+      - PoisonousPotato
+      - Poisonous Potato
   EMPTY_MAP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.empty_map.sign
@@ -3748,7 +4020,8 @@ Items:
     Sell: tne.item.empty_map.sell
     #The names supported by shop signs
     Names:
-      - EMPTY_MAP
+      - EmptyMap
+      - Empty Map
   GOLDEN_CARROT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.golden_carrot.sign
@@ -3758,7 +4031,8 @@ Items:
     Sell: tne.item.golden_carrot.sell
     #The names supported by shop signs
     Names:
-      - GOLDEN_CARROT
+      - GoldenCarrot
+      - Golden Carrot
   SKULL_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.skull_item.sign
@@ -3768,7 +4042,8 @@ Items:
     Sell: tne.item.skull_item.sell
     #The names supported by shop signs
     Names:
-      - SKULL_ITEM
+      - SkullItem
+      - Skull Item
   CARROT_STICK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.carrot_stick.sign
@@ -3778,7 +4053,8 @@ Items:
     Sell: tne.item.carrot_stick.sell
     #The names supported by shop signs
     Names:
-      - CARROT_STICK
+      - CarrotStick
+      - Carrot Stick
   NETHER_STAR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_star.sign
@@ -3788,7 +4064,8 @@ Items:
     Sell: tne.item.nether_star.sell
     #The names supported by shop signs
     Names:
-      - NETHER_STAR
+      - NetherStar
+      - Nether Star
   PUMPKIN_PIE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.pumpkin_pie.sign
@@ -3798,7 +4075,8 @@ Items:
     Sell: tne.item.pumpkin_pie.sell
     #The names supported by shop signs
     Names:
-      - PUMPKIN_PIE
+      - PumpkinPie
+      - Pumpkin Pie
   FIREWORK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.firework.sign
@@ -3808,7 +4086,7 @@ Items:
     Sell: tne.item.firework.sell
     #The names supported by shop signs
     Names:
-      - FIREWORK
+      - Firework
   FIREWORK_CHARGE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.firework_charge.sign
@@ -3818,7 +4096,8 @@ Items:
     Sell: tne.item.firework_charge.sell
     #The names supported by shop signs
     Names:
-      - FIREWORK_CHARGE
+      - FireworkCharge
+      - Firework Charge
   ENCHANTED_BOOK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.enchanted_book.sign
@@ -3828,7 +4107,8 @@ Items:
     Sell: tne.item.enchanted_book.sell
     #The names supported by shop signs
     Names:
-      - ENCHANTED_BOOK
+      - EnchantedBook
+      - Enchanted Book
   REDSTONE_COMPARATOR:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.redstone_comparator.sign
@@ -3838,7 +4118,8 @@ Items:
     Sell: tne.item.redstone_comparator.sell
     #The names supported by shop signs
     Names:
-      - REDSTONE_COMPARATOR
+      - RedstoneComparator
+      - Redstone Comparator
   NETHER_BRICK_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.nether_brick_item.sign
@@ -3848,7 +4129,8 @@ Items:
     Sell: tne.item.nether_brick_item.sell
     #The names supported by shop signs
     Names:
-      - NETHER_BRICK_ITEM
+      - NetherBrickItem
+      - Nether Brick Item
   QUARTZ:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.quartz.sign
@@ -3858,7 +4140,7 @@ Items:
     Sell: tne.item.quartz.sell
     #The names supported by shop signs
     Names:
-      - QUARTZ
+      - Quartz
   EXPLOSIVE_MINECART:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.explosive_minecart.sign
@@ -3868,7 +4150,8 @@ Items:
     Sell: tne.item.explosive_minecart.sell
     #The names supported by shop signs
     Names:
-      - EXPLOSIVE_MINECART
+      - ExplosiveMinecart
+      - Explosive Minecart
   HOPPER_MINECART:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.hopper_minecart.sign
@@ -3878,7 +4161,8 @@ Items:
     Sell: tne.item.hopper_minecart.sell
     #The names supported by shop signs
     Names:
-      - HOPPER_MINECART
+      - HopperMinecart
+      - Hopper Minecart
   PRISMARINE_SHARD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.prismarine_shard.sign
@@ -3888,7 +4172,8 @@ Items:
     Sell: tne.item.prismarine_shard.sell
     #The names supported by shop signs
     Names:
-      - PRISMARINE_SHARD
+      - PrismarineShard
+      - Prismarine Shard
   PRISMARINE_CRYSTALS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.prismarine_crystals.sign
@@ -3898,7 +4183,8 @@ Items:
     Sell: tne.item.prismarine_crystals.sell
     #The names supported by shop signs
     Names:
-      - PRISMARINE_CRYSTALS
+      - PrismarineCrystals
+      - Prismarine Crystals
   RABBIT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.rabbit.sign
@@ -3908,7 +4194,7 @@ Items:
     Sell: tne.item.rabbit.sell
     #The names supported by shop signs
     Names:
-      - RABBIT
+      - Rabbit
   COOKED_RABBIT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cooked_rabbit.sign
@@ -3918,7 +4204,8 @@ Items:
     Sell: tne.item.cooked_rabbit.sell
     #The names supported by shop signs
     Names:
-      - COOKED_RABBIT
+      - CookedRabbit
+      - Cooked Rabbit
   RABBIT_STEW:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.rabbit_stew.sign
@@ -3928,7 +4215,8 @@ Items:
     Sell: tne.item.rabbit_stew.sell
     #The names supported by shop signs
     Names:
-      - RABBIT_STEW
+      - RabbitStew
+      - Rabbit Stew
   RABBIT_FOOT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.rabbit_foot.sign
@@ -3938,7 +4226,8 @@ Items:
     Sell: tne.item.rabbit_foot.sell
     #The names supported by shop signs
     Names:
-      - RABBIT_FOOT
+      - RabbitFoot
+      - Rabbit Foot
   RABBIT_HIDE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.rabbit_hide.sign
@@ -3948,7 +4237,8 @@ Items:
     Sell: tne.item.rabbit_hide.sell
     #The names supported by shop signs
     Names:
-      - RABBIT_HIDE
+      - RabbitHide
+      - Rabbit Hide
   ARMOR_STAND:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.armor_stand.sign
@@ -3958,7 +4248,8 @@ Items:
     Sell: tne.item.armor_stand.sell
     #The names supported by shop signs
     Names:
-      - ARMOR_STAND
+      - ArmorStand
+      - Armor Stand
   IRON_BARDING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_barding.sign
@@ -3968,7 +4259,8 @@ Items:
     Sell: tne.item.iron_barding.sell
     #The names supported by shop signs
     Names:
-      - IRON_BARDING
+      - IronBarding
+      - Iron Barding
   GOLD_BARDING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_barding.sign
@@ -3978,7 +4270,8 @@ Items:
     Sell: tne.item.gold_barding.sell
     #The names supported by shop signs
     Names:
-      - GOLD_BARDING
+      - GoldBarding
+      - Gold Barding
   DIAMOND_BARDING:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.diamond_barding.sign
@@ -3988,7 +4281,8 @@ Items:
     Sell: tne.item.diamond_barding.sell
     #The names supported by shop signs
     Names:
-      - DIAMOND_BARDING
+      - DiamondBarding
+      - Diamond Barding
   LEASH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.leash.sign
@@ -3998,7 +4292,7 @@ Items:
     Sell: tne.item.leash.sell
     #The names supported by shop signs
     Names:
-      - LEASH
+      - Leash
   NAME_TAG:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.name_tag.sign
@@ -4008,7 +4302,8 @@ Items:
     Sell: tne.item.name_tag.sell
     #The names supported by shop signs
     Names:
-      - NAME_TAG
+      - NameTag
+      - Name Tag
   COMMAND_MINECART:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.command_minecart.sign
@@ -4018,7 +4313,8 @@ Items:
     Sell: tne.item.command_minecart.sell
     #The names supported by shop signs
     Names:
-      - COMMAND_MINECART
+      - CommandMinecart
+      - Command Minecart
   MUTTON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.mutton.sign
@@ -4028,7 +4324,7 @@ Items:
     Sell: tne.item.mutton.sell
     #The names supported by shop signs
     Names:
-      - MUTTON
+      - Mutton
   COOKED_MUTTON:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.cooked_mutton.sign
@@ -4038,7 +4334,8 @@ Items:
     Sell: tne.item.cooked_mutton.sell
     #The names supported by shop signs
     Names:
-      - COOKED_MUTTON
+      - CookedMutton
+      - Cooked Mutton
   BANNER:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.banner.sign
@@ -4048,7 +4345,7 @@ Items:
     Sell: tne.item.banner.sell
     #The names supported by shop signs
     Names:
-      - BANNER
+      - Banner
   END_CRYSTAL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.end_crystal.sign
@@ -4058,7 +4355,8 @@ Items:
     Sell: tne.item.end_crystal.sell
     #The names supported by shop signs
     Names:
-      - END_CRYSTAL
+      - EndCrystal
+      - End Crystal
   SPRUCE_DOOR_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spruce_door_item.sign
@@ -4068,7 +4366,8 @@ Items:
     Sell: tne.item.spruce_door_item.sell
     #The names supported by shop signs
     Names:
-      - SPRUCE_DOOR_ITEM
+      - SpruceDoorItem
+      - Spruce Door Item
   BIRCH_DOOR_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.birch_door_item.sign
@@ -4078,7 +4377,8 @@ Items:
     Sell: tne.item.birch_door_item.sell
     #The names supported by shop signs
     Names:
-      - BIRCH_DOOR_ITEM
+      - BirchDoorItem
+      - Birch Door Item
   JUNGLE_DOOR_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.jungle_door_item.sign
@@ -4088,7 +4388,8 @@ Items:
     Sell: tne.item.jungle_door_item.sell
     #The names supported by shop signs
     Names:
-      - JUNGLE_DOOR_ITEM
+      - JungleDoorItem
+      - Jungle Door Item
   ACACIA_DOOR_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.acacia_door_item.sign
@@ -4098,7 +4399,8 @@ Items:
     Sell: tne.item.acacia_door_item.sell
     #The names supported by shop signs
     Names:
-      - ACACIA_DOOR_ITEM
+      - AcaciaDoorItem
+      - Acacia Door Item
   DARK_OAK_DOOR_ITEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dark_oak_door_item.sign
@@ -4108,7 +4410,8 @@ Items:
     Sell: tne.item.dark_oak_door_item.sell
     #The names supported by shop signs
     Names:
-      - DARK_OAK_DOOR_ITEM
+      - DarkOakDoorItem
+      - Dark Oak Door Item
   CHORUS_FRUIT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chorus_fruit.sign
@@ -4118,7 +4421,8 @@ Items:
     Sell: tne.item.chorus_fruit.sell
     #The names supported by shop signs
     Names:
-      - CHORUS_FRUIT
+      - ChorusFruit
+      - Chorus Fruit
   CHORUS_FRUIT_POPPED:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.chorus_fruit_popped.sign
@@ -4128,7 +4432,8 @@ Items:
     Sell: tne.item.chorus_fruit_popped.sell
     #The names supported by shop signs
     Names:
-      - CHORUS_FRUIT_POPPED
+      - ChorusFruitPopped
+      - Chorus Fruit Popped
   BEETROOT:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.beetroot.sign
@@ -4138,7 +4443,7 @@ Items:
     Sell: tne.item.beetroot.sell
     #The names supported by shop signs
     Names:
-      - BEETROOT
+      - Beetroot
   BEETROOT_SEEDS:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.beetroot_seeds.sign
@@ -4148,7 +4453,8 @@ Items:
     Sell: tne.item.beetroot_seeds.sell
     #The names supported by shop signs
     Names:
-      - BEETROOT_SEEDS
+      - BeetrootSeeds
+      - Beetroot Seeds
   BEETROOT_SOUP:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.beetroot_soup.sign
@@ -4158,7 +4464,8 @@ Items:
     Sell: tne.item.beetroot_soup.sell
     #The names supported by shop signs
     Names:
-      - BEETROOT_SOUP
+      - BeetrootSoup
+      - Beetroot Soup
   DRAGONS_BREATH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.dragons_breath.sign
@@ -4168,7 +4475,8 @@ Items:
     Sell: tne.item.dragons_breath.sell
     #The names supported by shop signs
     Names:
-      - DRAGONS_BREATH
+      - DragonsBreath
+      - Dragons Breath
   SPLASH_POTION:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.splash_potion.sign
@@ -4178,7 +4486,8 @@ Items:
     Sell: tne.item.splash_potion.sell
     #The names supported by shop signs
     Names:
-      - SPLASH_POTION
+      - SplashPotion
+      - Splash Potion
   SPECTRAL_ARROW:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.spectral_arrow.sign
@@ -4188,7 +4497,8 @@ Items:
     Sell: tne.item.spectral_arrow.sell
     #The names supported by shop signs
     Names:
-      - SPECTRAL_ARROW
+      - SpectralArrow
+      - Spectral Arrow
   TIPPED_ARROW:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.tipped_arrow.sign
@@ -4198,7 +4508,8 @@ Items:
     Sell: tne.item.tipped_arrow.sell
     #The names supported by shop signs
     Names:
-      - TIPPED_ARROW
+      - TippedArrow
+      - Tipped Arrow
   LINGERING_POTION:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.lingering_potion.sign
@@ -4208,7 +4519,8 @@ Items:
     Sell: tne.item.lingering_potion.sell
     #The names supported by shop signs
     Names:
-      - LINGERING_POTION
+      - LingeringPotion
+      - Lingering Potion
   SHIELD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.shield.sign
@@ -4218,7 +4530,7 @@ Items:
     Sell: tne.item.shield.sell
     #The names supported by shop signs
     Names:
-      - SHIELD
+      - Shield
   ELYTRA:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.elytra.sign
@@ -4228,7 +4540,7 @@ Items:
     Sell: tne.item.elytra.sell
     #The names supported by shop signs
     Names:
-      - ELYTRA
+      - Elytra
   BOAT_SPRUCE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.boat_spruce.sign
@@ -4238,7 +4550,8 @@ Items:
     Sell: tne.item.boat_spruce.sell
     #The names supported by shop signs
     Names:
-      - BOAT_SPRUCE
+      - BoatSpruce
+      - Boat Spruce
   BOAT_BIRCH:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.boat_birch.sign
@@ -4248,7 +4561,8 @@ Items:
     Sell: tne.item.boat_birch.sell
     #The names supported by shop signs
     Names:
-      - BOAT_BIRCH
+      - BoatBirch
+      - Boat Birch
   BOAT_JUNGLE:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.boat_jungle.sign
@@ -4258,7 +4572,8 @@ Items:
     Sell: tne.item.boat_jungle.sell
     #The names supported by shop signs
     Names:
-      - BOAT_JUNGLE
+      - BoatJungle
+      - Boat Jungle
   BOAT_ACACIA:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.boat_acacia.sign
@@ -4268,7 +4583,8 @@ Items:
     Sell: tne.item.boat_acacia.sell
     #The names supported by shop signs
     Names:
-      - BOAT_ACACIA
+      - BoatAcacia
+      - Boat Acacia
   BOAT_DARK_OAK:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.boat_dark_oak.sign
@@ -4278,7 +4594,8 @@ Items:
     Sell: tne.item.boat_dark_oak.sell
     #The names supported by shop signs
     Names:
-      - BOAT_DARK_OAK
+      - BoatDarkOak
+      - Boat Dark Oak
   TOTEM:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.totem.sign
@@ -4288,7 +4605,7 @@ Items:
     Sell: tne.item.totem.sell
     #The names supported by shop signs
     Names:
-      - TOTEM
+      - Totem
   SHULKER_SHELL:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.shulker_shell.sign
@@ -4298,7 +4615,8 @@ Items:
     Sell: tne.item.shulker_shell.sell
     #The names supported by shop signs
     Names:
-      - SHULKER_SHELL
+      - ShulkerShell
+      - Shulker Shell
   IRON_NUGGET:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.iron_nugget.sign
@@ -4308,7 +4626,8 @@ Items:
     Sell: tne.item.iron_nugget.sell
     #The names supported by shop signs
     Names:
-      - IRON_NUGGET
+      - IronNugget
+      - Iron Nugget
   GOLD_RECORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.gold_record.sign
@@ -4318,7 +4637,8 @@ Items:
     Sell: tne.item.gold_record.sell
     #The names supported by shop signs
     Names:
-      - GOLD_RECORD
+      - GoldRecord
+      - Gold Record
   GREEN_RECORD:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.green_record.sign
@@ -4328,7 +4648,8 @@ Items:
     Sell: tne.item.green_record.sell
     #The names supported by shop signs
     Names:
-      - GREEN_RECORD
+      - GreenRecord
+      - Green Record
   RECORD_3:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_3.sign
@@ -4338,7 +4659,8 @@ Items:
     Sell: tne.item.record_3.sell
     #The names supported by shop signs
     Names:
-      - RECORD_3
+      - Record3
+      - Record 3
   RECORD_4:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_4.sign
@@ -4348,7 +4670,8 @@ Items:
     Sell: tne.item.record_4.sell
     #The names supported by shop signs
     Names:
-      - RECORD_4
+      - Record4
+      - Record 4
   RECORD_5:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_5.sign
@@ -4358,7 +4681,8 @@ Items:
     Sell: tne.item.record_5.sell
     #The names supported by shop signs
     Names:
-      - RECORD_5
+      - Record5
+      - Record 5
   RECORD_6:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_6.sign
@@ -4368,7 +4692,8 @@ Items:
     Sell: tne.item.record_6.sell
     #The names supported by shop signs
     Names:
-      - RECORD_6
+      - Record6
+      - Record 6
   RECORD_7:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_7.sign
@@ -4378,7 +4703,8 @@ Items:
     Sell: tne.item.record_7.sell
     #The names supported by shop signs
     Names:
-      - RECORD_7
+      - Record7
+      - Record 7
   RECORD_8:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_8.sign
@@ -4388,7 +4714,8 @@ Items:
     Sell: tne.item.record_8.sell
     #The names supported by shop signs
     Names:
-      - RECORD_8
+      - Record8
+      - Record 8
   RECORD_9:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_9.sign
@@ -4398,7 +4725,8 @@ Items:
     Sell: tne.item.record_9.sell
     #The names supported by shop signs
     Names:
-      - RECORD_9
+      - Record9
+      - Record 9
   RECORD_10:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_10.sign
@@ -4408,7 +4736,8 @@ Items:
     Sell: tne.item.record_10.sell
     #The names supported by shop signs
     Names:
-      - RECORD_10
+      - Record10
+      - Record 10
   RECORD_11:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_11.sign
@@ -4418,7 +4747,8 @@ Items:
     Sell: tne.item.record_11.sell
     #The names supported by shop signs
     Names:
-      - RECORD_11
+      - Record11
+      - Record 11
   RECORD_12:
     #The permission node required to create a shop sign with this item
     Sign: tne.item.record_12.sign
@@ -4428,4 +4758,5 @@ Items:
     Sell: tne.item.record_12.sell
     #The names supported by shop signs
     Names:
-      - RECORD_12
+      - Record12
+      - Record 12

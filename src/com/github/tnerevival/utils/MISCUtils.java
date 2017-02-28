@@ -13,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -304,7 +303,7 @@ public class MISCUtils {
     FileWriter writer = null;
     BufferedWriter buffWriter = null;
     try {
-      writer = new FileWriter(new File(TNE.instance().getDataFolder(), "items.yml"));
+      writer = new FileWriter(new File(TNE.instance().getDataFolder(), "item.yml"));
       buffWriter = new BufferedWriter(writer);
     } catch(Exception e) {
       MISCUtils.debug(e);
@@ -328,18 +327,9 @@ public class MISCUtils {
           buffWriter.write("    Sell: " + "tne.item." + mat.name().toLowerCase() + ".sell" + System.lineSeparator());
           buffWriter.write("    #The names supported by shop signs" + System.lineSeparator());
           buffWriter.write("    Names:" + System.lineSeparator());
-          buffWriter.write("      - " + mat.name() + System.lineSeparator());
-          for(MaterialData data : mat.getData().getEnumConstants()) {
-            buffWriter.write("  " + mat.name() + ":" + System.lineSeparator());
-            buffWriter.write("    #The permission node required to create a shop sign with this item" + System.lineSeparator());
-            buffWriter.write("    Sign: " + "tne.item." + mat.name().toLowerCase() + ".sign" + System.lineSeparator());
-            buffWriter.write("    #The permission node required to buy this item" + System.lineSeparator());
-            buffWriter.write("    Buy: " + "tne.item." + mat.name().toLowerCase() + ".buy" + System.lineSeparator());
-            buffWriter.write("    #The permission node required to sell this item" + System.lineSeparator());
-            buffWriter.write("    Sell: " + "tne.item." + mat.name().toLowerCase() + ".sell" + System.lineSeparator());
-            buffWriter.write("    #The names supported by shop signs" + System.lineSeparator());
-            buffWriter.write("    Names:" + System.lineSeparator());
-            buffWriter.write("      - " + mat.name() + System.lineSeparator());
+          buffWriter.write("      - " + MaterialUtils.formatMaterialName(mat) + System.lineSeparator());
+          if(mat.name().contains("_")) {
+            buffWriter.write("      - " + MaterialUtils.formatMaterialNameWithSpace(mat) + System.lineSeparator());
           }
         } catch(Exception e) {
           MISCUtils.debug(e);
