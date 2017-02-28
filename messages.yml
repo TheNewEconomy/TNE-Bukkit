@@ -60,6 +60,7 @@ Messages:
        NoPerm: <red>I'm sorry, but you do not have permission to do that.
        Saved: <yellow>Successfully saved all TNE Data!
        NoPlayer: <red>Unable to locate player "$player"!
+       Disabled: <red>Economy features are currently disabled in this world!
 
     Item:
       Invalid: <red>Invalid item name and/or durability combination entered.

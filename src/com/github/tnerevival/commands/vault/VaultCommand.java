@@ -21,6 +21,7 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -74,6 +75,11 @@ public class VaultCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(MISCUtils.ecoDisabled(getWorld(sender))) {
+      Message disabled = new Message("Messages.General.Disabled");
+      disabled.translate(getWorld(sender), sender);
+      return false;
+    }
     Player player = getPlayer(sender);
     if(!Vault.enabled(getWorld(sender), IDFinder.getID(player).toString())) {
       new Message("Messages.Vault.Disabled").translate(IDFinder.getWorld(player), player);

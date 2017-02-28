@@ -47,7 +47,7 @@ public class ConnectionListener implements Listener {
 
     Account account = AccountUtils.getAccount(IDFinder.getID(player));
 
-    if(TNE.instance().manager.enabled(IDFinder.getID(player), IDFinder.getWorld(player))) {
+    if(!MISCUtils.ecoDisabled(IDFinder.getWorld(player)) && TNE.instance().manager.enabled(IDFinder.getID(player), IDFinder.getWorld(player))) {
       if(!TNE.instance().manager.confirmed(IDFinder.getID(player), IDFinder.getWorld(player))) {
         String node = "Messages.Account.Confirm";
         if (account.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {

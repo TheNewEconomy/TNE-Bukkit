@@ -400,6 +400,13 @@ public class MISCUtils {
   }
 
   //World Utils
+  public static Boolean ecoDisabled(String world) {
+    if(TNE.instance().worldConfigurations.contains("Worlds." + world + ".DisableEconomy")) {
+      return TNE.instance().worldConfigurations.getBoolean("Worlds." + world + ".DisableEconomy");
+    }
+    return false;
+  }
+
   public static Boolean multiWorld() {
     return TNE.instance().api().getBoolean("Core.Multiworld");
   }

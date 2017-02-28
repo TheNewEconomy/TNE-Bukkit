@@ -183,7 +183,7 @@ public class TNE extends JavaPlugin {
   }
 
   private void initializeConfigurations() {
-    items = new File(getDataFolder(), "item.yml");
+    items = new File(getDataFolder(), "items.yml");
     mobs = new File(getDataFolder(), "mobs.yml");
     messages = new File(getDataFolder(), "messages.yml");
     objects = new File(getDataFolder(), "objects.yml");

@@ -14,6 +14,9 @@ Worlds:
     #world-specific configurations are optional
     #Note: World name is case sensitive
     Example:
+
+        #Whether or not to completely disable economy features for this world
+        DisableEconomy: true
         
         #How much it costs to enter this world if ChangeFee is enabled in the main configuration
         ChangeFee: 10.0

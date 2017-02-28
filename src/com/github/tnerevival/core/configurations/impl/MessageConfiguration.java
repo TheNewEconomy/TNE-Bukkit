@@ -24,6 +24,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.General.NoPerm", "<red>I'm sorry, but you do not have permission to do that.");
     configurations.put("Messages.General.NoPlayer", "<red>Unable to locate player \"$player\"!");
     configurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
+    configurations.put("Messages.General.Disabled", "<red>Economy features are currently disabled in this world!");
     configurations.put("Messages.Item.Invalid", "<red>Invalid item name and/or durability combination entered.");
     configurations.put("Messages.Item.InvalidAmount", "<red>Invalid item amount entered.");
 

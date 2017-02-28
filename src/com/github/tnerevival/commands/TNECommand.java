@@ -120,6 +120,12 @@ public abstract class TNECommand {
     String player = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : "";
     String world = (!player.equals(""))? IDFinder.getWorld(getPlayer(sender)) : TNE.instance().defaultWorld;
 
+    if(MISCUtils.ecoDisabled(getWorld(sender))) {
+      Message disabled = new Message("Messages.General.Disabled");
+      disabled.translate(getWorld(sender), sender);
+      return false;
+    }
+
     if(!developer()) {
       if (!activated(IDFinder.getWorld(IDFinder.getID(player)), player)) {
         return false;
