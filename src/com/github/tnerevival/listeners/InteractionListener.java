@@ -10,6 +10,7 @@ import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.signs.ItemSign;
 import com.github.tnerevival.core.signs.ShopSign;
 import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
@@ -342,9 +343,21 @@ public class InteractionListener implements Listener {
             BlockFace face = (s.isWallSign())? s.getAttachedFace() : s.getFacing().getOppositeFace();
             Block b = event.getBlock().getRelative(face);
             MISCUtils.debug("Placed on: " + b.getType().toString());
+            if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+              TNESign itemSign = TNESign.getSign((new SerializableLocation(b.getLocation())));
+              if(TNESign.validSign(b.getLocation()) && itemSign.getType().equals(SignType.ITEM)) {
+                ((ItemSign)itemSign).addOffer(player, event.getLines());
+                event.getBlock().setType(Material.AIR);
+              }
+            } else {
+              ((ItemSign)sign).addOffer(player, event.getLines());
+              event.setLine(0, ChatColor.BLUE + event.getLine(0));
+              TNE.instance().manager.signs.put(sign.getLocation(), sign);
+            }
+          } else {
+            event.setLine(0, ChatColor.BLUE + event.getLine(0));
+            TNE.instance().manager.signs.put(sign.getLocation(), sign);
           }
-          event.setLine(0, ChatColor.BLUE + event.getLine(0));
-          TNE.instance().manager.signs.put(sign.getLocation(), sign);
         }
       }
     }
@@ -395,13 +408,12 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onRightClick(PlayerInteractEvent event) {
+  public void onClick(PlayerInteractEvent event) {
     Action action = event.getAction();
     Player player = event.getPlayer();
-    String world = player.getWorld().getName();
     Block block = event.getClickedBlock();
 
-    if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
+    if(action.equals(Action.RIGHT_CLICK_BLOCK)) {
       if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
         if(TNESign.validSign(block.getLocation())) {
           if(player.isSneaking()) return;
@@ -414,9 +426,7 @@ public class InteractionListener implements Listener {
           }
           MISCUtils.debug(TNESign.validSign(block.getLocation()) + "");
           MISCUtils.debug(TNESign.getSign(location).toString() + "");
-          if(sign == null) {
-            MISCUtils.debug("Sign instance is null");
-          }
+          if(sign == null) MISCUtils.debug("Sign instance is null");
 
           if(sign instanceof ShopSign) {
             if(!((ShopSign)sign).onRightClick(player, b.getLine(1), b.getWorld().getName())) {
@@ -437,12 +447,36 @@ public class InteractionListener implements Listener {
         }
       } else {
         String name = event.getMaterial().name();
-        TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, event.getItem(), name, InteractionType.CRAFTING);
+        TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, event.getItem(), name, InteractionType.PLACING);
         Bukkit.getServer().getPluginManager().callEvent(e);
 
         if(e.isCancelled()) {
           event.setCancelled(true);
           return;
+        }
+      }
+    } else if(action.equals(Action.LEFT_CLICK_BLOCK)) {
+      if(action.equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.WALL_SIGN) || action.equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.SIGN_POST)) {
+        if(TNESign.validSign(block.getLocation())) {
+          SerializableLocation location = new SerializableLocation(block.getLocation());
+          TNESign sign = TNESign.getSign(location);
+
+          for(TNESign s : TNE.instance().manager.signs.values()) {
+            MISCUtils.debug(s.getLocation().toString() + ";" + s.getType() + ";" + s.getOwner());
+          }
+          MISCUtils.debug(TNESign.validSign(block.getLocation()) + "");
+          MISCUtils.debug(TNESign.getSign(location).toString() + "");
+          if(sign == null) MISCUtils.debug("Sign instance is null");
+          if (!sign.onClick(player, player.isSneaking())) {
+            event.setCancelled(true);
+          }
+          if(!event.isCancelled()) {
+            BigDecimal use = sign.getType().use(IDFinder.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+            AccountUtils.transaction(IDFinder.getID(event.getPlayer()).toString(), null, use, TransactionType.MONEY_REMOVE, IDFinder.getWorld(event.getPlayer()));
+            Message charged = new Message("Messages.Objects.SignUse");
+            charged.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(event.getPlayer()), use));
+            charged.translate(IDFinder.getWorld(player), player);
+          }
         }
       }
     }
@@ -454,10 +488,13 @@ public class InteractionListener implements Listener {
 
     if(b != null) {
       if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
-        SerializableLocation location = new SerializableLocation(b.getLocation());
-        org.bukkit.block.Sign sign = (org.bukkit.block.Sign) b.getState();
-        sign.setLine(0, "Slot: " + event.getNewSlot());
-        sign.update(true);
+        if(TNESign.validSign(b.getLocation())) {
+          TNESign sign = TNESign.getSign(new SerializableLocation(b.getLocation()));
+          if(sign.getType().equals(SignType.ITEM)) {
+            int offer = ((ItemSign)sign).currentOffer;
+            ((ItemSign)sign).setCurrentOffer((event.getNewSlot() > event.getPreviousSlot())? offer + 1 : offer - 1);
+          }
+        }
       }
     }
   }

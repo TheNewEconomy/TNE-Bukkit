@@ -96,6 +96,11 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Auction.MaxQueue", "<red>The auction queue is currently full.");
     configurations.put("Messages.Auction.Queued", "<white>Your auction has been added to the queue as lot <green>$lot<white>.");
 
+    configurations.put("Messages.SignShop.MaxOffers", "<red>You've created the max number of offers for this sign already.");
+    configurations.put("Messages.SignShop.Removed", "<white>Successfully removed offer from Sign Shop.");
+    configurations.put("Messages.SignShop.Added", "<white>Successfully added offer to Sign Shop.");
+    configurations.put("Messages.SignShop.NoMultiple", "<red>Multiple offers has been disabled on this world.");
+
     configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
     configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");
     configurations.put("Messages.Shop.NoTrade", "<red>This shop currently no trade option for that item.");

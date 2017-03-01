@@ -16,10 +16,23 @@
  */
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.TNE;
+import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
+import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.signs.item.ItemEntry;
 import com.github.tnerevival.serializable.SerializableLocation;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -29,17 +42,164 @@ import java.util.UUID;
 public class ItemSign extends TNESign {
 
   public TreeMap<Integer, ItemEntry> offers = new TreeMap<>();
-  public boolean admin = false;
+  public int currentOffer = 0;
 
   public ItemSign(UUID owner, SerializableLocation location) {
     super(owner, location);
     setType(SignType.ITEM);
   }
 
+  public void addOffer(Player player, String[] lines) {
+    MISCUtils.debug("ItemSign addOffer lines: " + lines.toString());
+    String world = location.getLocation().getWorld().getName();
+    if(!IDFinder.getID(player).equals(owner)) {
+      new Message("Messages.General.NoPerm").translate(world, player);
+      return;
+    }
+    boolean admin = false;
+    BigDecimal buy = new BigDecimal(-1.0);
+    BigDecimal sell = new BigDecimal(-1.0);
+    ItemStack trade = new ItemStack(Material.AIR);
+    ItemStack item = new ItemStack(Material.AIR);
+    if(offers.size() > 0 && !TNE.instance().api().getBoolean("Core.Signs.Item.Multiple", world, IDFinder.getID(player))) {
+      new Message("Messages.SignShop.NoMultiple").translate(world, player);
+      return;
+    }
+
+    if(offers.size() == 9) {
+      new Message("Messages.SignShop.MaxOffers").translate(world, player);
+      return;
+    }
+
+    String[] mainLine = lines[1].split(":");
+    Material itemType = MaterialHelper.getMaterial(mainLine[0]);
+    if(!itemType.equals(Material.AIR)) {
+      Integer itemAmount = (mainLine.length > 1 && MISCUtils.isInteger(mainLine[1]))? Integer.valueOf(mainLine[1]) : 1;
+      item.setType(itemType);
+      item.setAmount(itemAmount);
+      if(lines[3].contains("Admin")) {
+        if(!player.hasPermission("tne.sign.admin")) {
+          new Message("Messages.General.NoPerm").translate(world, player);
+          return;
+        }
+        admin = true;
+      }
+      String[] separated = lines[2].split(":");
+      if(lines[2].toUpperCase().contains("B") || lines[2].toUpperCase().contains("S")) {
+        for(String s : separated) {
+          String[] split = s.trim().split(" ");
+          MISCUtils.debug("Line 2: " + lines[2]);
+          MISCUtils.debug("Value: " + split[0]);
+          Double value = (CurrencyFormatter.isDouble(split[0], world))? CurrencyFormatter.translateDouble(split[0], world) : -1.0;
+          switch(split[1].toUpperCase().trim()) {
+            case "B":
+              MISCUtils.debug("Added buy value of " + value);
+              buy = new BigDecimal(value);
+              break;
+            case "S":
+              MISCUtils.debug("Added sell value of " + value);
+              sell = new BigDecimal(value);
+              break;
+            default:
+              break;
+          }
+        }
+      } else {
+        Material material = MaterialHelper.getMaterial(separated[0]);
+        if(!material.equals(Material.AIR)) {
+          MISCUtils.debug("Adding trade offer for material " + material.name().toLowerCase());
+          Integer tradeAmount = (separated.length > 1 && MISCUtils.isInteger(separated[1]))? Integer.valueOf(separated[1]) : 1;
+          trade = new ItemStack(material, tradeAmount);
+        }
+      }
+      MISCUtils.debug("Added offer for " + item.getType().toString());
+      ItemEntry entry = new ItemEntry(offers.size(), item);
+      entry.setBuy(buy);
+      entry.setSell(sell);
+      entry.setTrade(trade);
+      entry.setAdmin(admin);
+      offers.put(entry.getOrder(), entry);
+      TNE.instance().manager.signs.put(location, this);
+    }
+  }
+
+  public void setCurrentOffer(int offer) {
+    if(offer < 0) currentOffer = offers.size() - 1;
+    else if(offer == offers.size()) currentOffer = 0;
+    else currentOffer = offer;
+    TNE.instance().manager.signs.put(location, this);
+    update();
+  }
+
+  public void update() {
+    World w = location.getLocation().getWorld();
+    Block b = w.getBlockAt(location.getLocation());
+    if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+      Sign s = (Sign)b.getState();
+      updateLines(s);
+    }
+  }
+
+  private void updateLines(Sign s) {
+    ItemEntry entry = offers.get(currentOffer);
+    MISCUtils.debug("ItemSign.updateLines Offer: " + currentOffer);
+    s.setLine(1, MaterialHelper.getShopName(entry.getItem().getType()) + ((entry.getItem().getAmount() > 1)? ":" + entry.getItem().getAmount() : ""));
+    String buy = "";
+    if(!entry.getTrade().getType().equals(Material.AIR)) {
+      MISCUtils.debug("Added trade values");
+      buy = MaterialHelper.getShopName(entry.getItem().getType());
+      if(entry.getTrade().getAmount() > 1) {
+        buy = buy + ":" + entry.getTrade().getAmount();
+      }
+    } else {
+      MISCUtils.debug("Added sell/buy values");
+      MISCUtils.debug("Buy Double: " + entry.getBuy().doubleValue());
+      MISCUtils.debug("Sell Double: " + entry.getSell().doubleValue());
+      if(entry.getBuy().doubleValue() >= 0.0) buy = entry.getBuy().doubleValue() + " B";
+
+      if(entry.getSell().doubleValue() >= 0.0) {
+        if(!buy.trim().equalsIgnoreCase("")) buy = buy + ":";
+        buy = buy + entry.getSell().doubleValue() + " S";
+      }
+    }
+    String author = (entry.admin)? ChatColor.RED + "Admin" : IDFinder.getOffline(owner.toString()).getName();
+    MISCUtils.debug("Buy line: " + buy);
+    s.setLine(2, buy);
+    s.setLine(3, author);
+    s.update(true);
+  }
+
+  private void shiftOffers(int after) {
+    TreeMap<Integer, ItemEntry> newOffers = new TreeMap<>();
+    for(ItemEntry entry : offers.values()) {
+      int order = (entry.getOrder() > after)? entry.getOrder() - 1 : entry.getOrder();
+      newOffers.put(order, entry.reorder(order));
+    }
+    offers = newOffers;
+    if(currentOffer == offers.size()) currentOffer = offers.size() - 1;
+  }
+
   @Override
   public boolean onClick(Player player, boolean shift) {
+    String world = location.getLocation().getWorld().getName();
     if(super.onClick(player, shift)) {
       if (player.hasPermission(SignType.ITEM.getUsePermission())) {
+        if(shift && TNE.instance().api().getBoolean("Core.Signs.Item.Multiple", world, IDFinder.getID(player))) {
+          if(!IDFinder.getID(player).equals(owner)) {
+            new Message("Messages.General.NoPerm").translate(world, player);
+            return false;
+          }
+          offers.remove(currentOffer);
+          if(offers.size() == 0) {
+            location.getLocation().getWorld().getBlockAt(location.getLocation()).setType(Material.AIR);
+            TNESign.removeSign(location);
+            return true;
+          }
+          shiftOffers(currentOffer);
+          update();
+          new Message("Messages.SignShop.Removed").translate(world, player);
+          return true;
+        }
       }
     }
     return false;

@@ -21,15 +21,26 @@ public class MaterialHelper {
     MISCUtils.debug("Materials Using: " + validNames.size());
   }
 
+  public static String getShopName(Material material) {
+    for(MaterialNameHelper helper : validNames) {
+      if(helper.getMaterial().equals(material)) {
+        if(helper.getShopName() != null) {
+          return helper.getShopName();
+        }
+      }
+    }
+    return MaterialUtils.formatMaterialName(material);
+  }
 
   public static Material getMaterial(String search) {
-    if(!Material.getMaterial(search.toUpperCase()).equals(Material.AIR)) {
+    MISCUtils.debug("MaterialHelper.getMaterial(" + search + ")");
+    if(Material.getMaterial(search.toUpperCase()) != null && !Material.getMaterial(search.toUpperCase()).equals(Material.AIR)) {
       return Material.getMaterial(search.toUpperCase());
     }
 
     for(MaterialNameHelper helper : validNames) {
       if(helper.validName(search)) {
-        return helper.material;
+        return helper.getMaterial();
       }
     }
     return Material.AIR;

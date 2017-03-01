@@ -373,9 +373,12 @@ public class MISCUtils {
 
   public static Boolean isDouble(String value, String world) {
     try {
+      MISCUtils.debug("MISCUtils.isDouble(" + value + "," + world + ")");
       Double.valueOf(value.replace(TNE.instance().api().getString("Core.Currency.Decimal", world), "."));
+      MISCUtils.debug("Double confirmed");
       return true;
     } catch(Exception e) {
+      MISCUtils.debug("Double denied");
       return false;
     }
   }

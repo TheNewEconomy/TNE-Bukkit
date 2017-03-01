@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.signs.item;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
@@ -11,14 +12,23 @@ import java.math.BigDecimal;
 public class ItemEntry {
 
   private int order;
-  private ItemStack item;
-  private ItemStack trade;
-  private BigDecimal sell;
-  private BigDecimal buy;
+  private ItemStack item = new ItemStack(Material.AIR);
+  private ItemStack trade = new ItemStack(Material.AIR);
+  private BigDecimal sell = new BigDecimal(-1.0);
+  private BigDecimal buy = new BigDecimal(-1.0);
+  public boolean admin = false;
 
   public ItemEntry(int order, ItemStack item) {
     this.order = order;
     this.item = item;
+  }
+
+  public ItemEntry reorder(int order) {
+    ItemEntry entry = new ItemEntry(order, item);
+    entry.setTrade(trade);
+    entry.setSell(sell);
+    entry.setBuy(buy);
+    return entry;
   }
 
   public int getOrder() {
@@ -59,5 +69,13 @@ public class ItemEntry {
 
   public void setBuy(BigDecimal buy) {
     this.buy = buy;
+  }
+
+  public boolean isAdmin() {
+    return admin;
+  }
+
+  public void setAdmin(boolean admin) {
+    this.admin = admin;
   }
 }
