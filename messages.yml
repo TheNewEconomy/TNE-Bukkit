@@ -143,6 +143,10 @@ Messages:
       Removed: <white>Successfully removed offer from Sign Shop.
       Added: <white>Successfully added offer to Sign Shop.
       NoMultiple: <red>Multiple offers has been disabled on this world.
+      InvalidBuy: <red>Couldn't create offer, invalid buy/sell/trade value.
+      OwnerInsufficient: <red>I'm sorry, but the owner of this offer does not currently has insufficient funds.
+      Insufficient: <red>You do not have the sufficient materials, or money necessary to purchase the item from this Sign Shop.
+      Successful: <white>Sucessfully purchased item from Sign Shop.
 
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.

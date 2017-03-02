@@ -100,6 +100,10 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.SignShop.Removed", "<white>Successfully removed offer from Sign Shop.");
     configurations.put("Messages.SignShop.Added", "<white>Successfully added offer to Sign Shop.");
     configurations.put("Messages.SignShop.NoMultiple", "<red>Multiple offers has been disabled on this world.");
+    configurations.put("Messages.SignShop.InvalidBuy", "<red>Couldn't create offer, invalid buy/sell/trade value.");
+    configurations.put("Messages.SignShop.OwnerInsufficient", "<red>I'm sorry, but the owner of this offer does not currently has insufficient funds.");
+    configurations.put("Messages.SignShop.Insufficient", "<red>You do not have the sufficient materials, or money necessary to purchase the item from this Sign Shop.");
+    configurations.put("Messages.SignShop.Successful", "<white>Sucessfully purchased item from Sign Shop.");
 
     configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
     configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");

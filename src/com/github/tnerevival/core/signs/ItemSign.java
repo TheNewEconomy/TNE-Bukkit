@@ -22,7 +22,10 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.material.MaterialHelper;
 import com.github.tnerevival.core.signs.item.ItemEntry;
+import com.github.tnerevival.core.transaction.TransactionType;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -85,7 +89,14 @@ public class ItemSign extends TNESign {
         admin = true;
       }
       String[] separated = lines[2].split(":");
-      if(lines[2].toUpperCase().contains("B") || lines[2].toUpperCase().contains("S")) {
+      if(!MaterialHelper.getMaterial(separated[0]).equals(Material.AIR)) {
+        Material material = MaterialHelper.getMaterial(separated[0]);
+        if(!material.equals(Material.AIR)) {
+          MISCUtils.debug("Adding trade offer for material " + material.name().toLowerCase());
+          Integer tradeAmount = (separated.length > 1 && MISCUtils.isInteger(separated[1]))? Integer.valueOf(separated[1]) : 1;
+          trade = new ItemStack(material, tradeAmount);
+        }
+      } else if(lines[2].toUpperCase().contains("B") || lines[2].toUpperCase().contains("S")) {
         for(String s : separated) {
           String[] split = s.trim().split(" ");
           MISCUtils.debug("Line 2: " + lines[2]);
@@ -104,13 +115,10 @@ public class ItemSign extends TNESign {
               break;
           }
         }
-      } else {
-        Material material = MaterialHelper.getMaterial(separated[0]);
-        if(!material.equals(Material.AIR)) {
-          MISCUtils.debug("Adding trade offer for material " + material.name().toLowerCase());
-          Integer tradeAmount = (separated.length > 1 && MISCUtils.isInteger(separated[1]))? Integer.valueOf(separated[1]) : 1;
-          trade = new ItemStack(material, tradeAmount);
-        }
+      }
+      if(trade.getType().equals(Material.AIR) && buy.doubleValue() < 0.0 && sell.doubleValue() < 0.0) {
+        new Message("Messages.SignShop.InvalidBuy").translate(world, player);
+        return;
       }
       MISCUtils.debug("Added offer for " + item.getType().toString());
       ItemEntry entry = new ItemEntry(offers.size(), item);
@@ -147,7 +155,7 @@ public class ItemSign extends TNESign {
     String buy = "";
     if(!entry.getTrade().getType().equals(Material.AIR)) {
       MISCUtils.debug("Added trade values");
-      buy = MaterialHelper.getShopName(entry.getItem().getType());
+      buy = MaterialHelper.getShopName(entry.getTrade().getType());
       if(entry.getTrade().getAmount() > 1) {
         buy = buy + ":" + entry.getTrade().getAmount();
       }
@@ -199,6 +207,20 @@ public class ItemSign extends TNESign {
           update();
           new Message("Messages.SignShop.Removed").translate(world, player);
           return true;
+        } else if(!shift) {
+          ItemEntry entry = offers.get(currentOffer);
+          if(entry.getSell().doubleValue() >= 0.0) {
+            if(!entry.isAdmin()) {
+              if(!AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_INQUIRY, world)) {
+                new Message("Messages.SignShop.OwnerInsufficient").translate(world, player);
+                return false;
+              }
+              AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_REMOVE, world);
+            }
+            if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, entry.getSell(), TransactionType.MONEY_GIVE, world)) {
+              MISCUtils.setItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getItem())), false);
+            }
+          }
         }
       }
     }
@@ -207,8 +229,28 @@ public class ItemSign extends TNESign {
 
   @Override
   public boolean onRightClick(Player player, boolean shift) {
+    String world = location.getLocation().getWorld().getName();
     if(super.onRightClick(player, shift)) {
       if (player.hasPermission(SignType.ITEM.getUsePermission())) {
+        ItemEntry entry = offers.get(currentOffer);
+        if(entry.getBuy().doubleValue() >= 0.0 || !entry.getTrade().getType().equals(Material.AIR)) {
+          if(entry.getBuy().doubleValue() >= 0.0) {
+            if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, entry.getBuy(), TransactionType.MONEY_INQUIRY, world)) {
+              new Message("Messages.SignShop.Insufficient").translate(world, player);
+              return false;
+            }
+            AccountUtils.transaction(IDFinder.getID(player).toString(), null, entry.getBuy(), TransactionType.MONEY_INQUIRY, world);
+          } else {
+            if(!MISCUtils.hasItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getTrade())))) {
+              new Message("Messages.SignShop.Insufficient").translate(world, player);
+              return false;
+            }
+            MISCUtils.setItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getTrade())), false);
+          }
+          MISCUtils.setItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getItem())), true);
+          new Message("Messages.SignShop.Successful").translate(world, player);
+          return true;
+        }
       }
     }
     return false;
