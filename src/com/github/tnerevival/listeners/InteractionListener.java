@@ -306,6 +306,7 @@ public class InteractionListener implements Listener {
   public void onChange(SignChangeEvent event) {
     if(event.getLine(0).contains("[tne:") && event.getLine(0).contains("]")) {
       Player player = event.getPlayer();
+      String world = event.getBlock().getWorld().getName();
       String line = event.getLine(0);
       String stripped = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
       String[] match = stripped.split(":");
@@ -350,6 +351,10 @@ public class InteractionListener implements Listener {
                 event.getBlock().setType(Material.AIR);
               }
             } else {
+              if(TNESign.getOwned(IDFinder.getID(player), SignType.ITEM) >= TNE.instance().api().getInteger("Core.Signs.Item.Max", world, IDFinder.getID(player))) {
+                new Message("Messages.SignShop.Max").translate(world, player);
+                return;
+              }
               ((ItemSign)sign).addOffer(player, event.getLines());
               event.setLine(0, ChatColor.BLUE + event.getLine(0));
               TNE.instance().manager.signs.put(sign.getLocation(), sign);

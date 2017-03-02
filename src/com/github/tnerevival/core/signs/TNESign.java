@@ -209,6 +209,18 @@ public abstract class TNESign {
     return null;
   }
 
+  public static int getOwned(UUID id, SignType type) {
+    int owned = 0;
+
+    for(TNESign sign : TNE.instance().manager.signs.values()) {
+      if(sign.getOwner().equals(id)) {
+        if(type.equals(SignType.UNKNOWN) || sign.getType().equals(type)) owned++;
+      }
+    }
+
+    return owned;
+  }
+
   public static TNESign instance(String type, UUID owner, SerializableLocation location) {
     switch(type.toLowerCase()) {
       case "item":

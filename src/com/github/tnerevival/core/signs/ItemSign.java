@@ -70,7 +70,7 @@ public class ItemSign extends TNESign {
       return;
     }
 
-    if(offers.size() == 9) {
+    if(offers.size() == TNE.instance().api().getInteger("Core.Signs.Item.MaxOffers", world, owner.toString())) {
       new Message("Messages.SignShop.MaxOffers").translate(world, player);
       return;
     }

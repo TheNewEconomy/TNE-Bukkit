@@ -276,6 +276,9 @@ Core:
             #Whether or not item signs may have multiple offers
             Multiple: true
 
+            #The maximum number of offers per sign if Multiple is true.
+            MaxOffers: 9
+
         #All configurations relating to shop signs.
         Shop:
 

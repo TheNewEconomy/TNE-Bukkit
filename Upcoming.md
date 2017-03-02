@@ -20,6 +20,19 @@
   - World Sharing
     - Removed the need for the ShareAccounts configuration
     - Added the ability to share configurations, balances, or both with different worlds.
+  - Sign Shops
+    - Added ability to create sign shops as an easy alternative to our convoluted shops feature
+    - Ability to have multiple item offers per sign
+      - This can be disabled
+      - Offers may be admin, or player based
+      - Offers may be buy, sell, buy and sell, or trade
+      - The maximum number of offers you may have per sign is configurable
+      - Players may browse through the various offers by simply scrolling their mouse wheel while looking at a sign shop
+    - No commands needed
+      - To add a new offer simply shift right click with a sign, and use the proper format
+      - To remove an offer, shift left click on the sign while the offer is displayed
+      - To buy/trade simply right click
+      - To sell to a sign simple left click
   - Mob Rewards
     - Added ability to specify the currency for mob rewards
     - Added ability to add rewards for forge mods
@@ -39,6 +52,9 @@
   - Technical
     - API
       - All balance-related methods that involve the data-type will be deprecated for methods using the BigDecimal class
+      - Changed how developers access the TNE API.
+        - This is now done via TNE.instance().api() rather than TNE.instance.api
+        - The new way prevents any unnecessary modification that may occur
     - SQL
       - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
   - Bug Fixes

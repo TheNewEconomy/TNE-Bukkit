@@ -62,6 +62,7 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Signs.Item.Use", 20.0);
     configurations.put("Core.Signs.Item.Max", 10);
     configurations.put("Core.Signs.Item.Multiple", true);
+    configurations.put("Core.Signs.Item.MaxOffers", 9);
 
     configurations.put("Core.Death.Lose", false);
     configurations.put("Core.Death.Bank.Drop", 0);
