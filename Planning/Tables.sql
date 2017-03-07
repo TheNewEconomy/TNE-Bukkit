@@ -152,8 +152,21 @@ CREATE TABLE IF NOT EXISTS `vault_items` (
 CREATE TABLE IF NOT EXISTS `signs` (
   `sign_owner` VARCHAR(36),
   `sign_type` VARCHAR(30) NOT NULL,
-  `sign_location` VARCHAR(230) NOT NULL UNIQUE,
-  `sign_meta` LONGTEXT
+  `sign_location` VARCHAR(230) NOT NULL,
+  `sign_meta` LONGTEXT,
+  PRIMARY KEY(sign_location)
+);
+
+CREATE TABLE IF NOT EXISTS `sign_offers` (
+  `sign_location` VARCHAR(230) NOT NULL,
+  `offer_order` INT(60) NOT NULL,
+  `offer_buy` DOUBLE,
+  `offer_sell` DOUBLE,
+  `offer_trade` LONGTEXT,
+  `offer_amount` INT(60) NOT NULL,
+  `offer_damage` INT(60) NOT NULL,
+  `offer_material` VARCHAR(80) NOT NULL,
+  PRIMARY KEY(sign_location, offer_order)
 );
 
 CREATE TABLE IF NOT EXISTS `transactions` (

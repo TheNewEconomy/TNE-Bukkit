@@ -12,13 +12,14 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Chest;
+import org.bukkit.block.EnderChest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class TNESign {
   protected UUID owner;
@@ -64,6 +65,7 @@ public abstract class TNESign {
   public boolean onDestroy(Player player) {
     TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.DESTROYED);
     Bukkit.getServer().getPluginManager().callEvent(event);
+    if(!owner.equals(IDFinder.getID(player)) && !player.hasPermission("tne.sign.admin")) return false;
     return (!event.isCancelled());
   }
 
@@ -188,6 +190,16 @@ public abstract class TNESign {
     return false;
   }
 
+  public static Location getAttachedSign(Location location) {
+    List<Location> validLoc = validSignLocations(location);
+    for(Location loc : validLoc) {
+      if(loc.getWorld().getBlockAt(loc).getState() instanceof Sign && validSign(loc)) {
+        return loc;
+      }
+    }
+    return null;
+  }
+
   public static void removeSign(SerializableLocation location) {
     Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance().manager.signs.entrySet().iterator();
 
@@ -219,6 +231,46 @@ public abstract class TNESign {
     }
 
     return owned;
+  }
+
+  public static TNESign getOwningSign(Location location) {
+    MISCUtils.debug("TNESign:getOwningSign(" + location.toString() + ")");
+    for(Location loc : validChestLocations(location)) {
+      MISCUtils.debug("Possibly sign location: " + loc.toString() + " is valid? " + validSign(loc));
+      if(validSign(loc)) return getSign(new SerializableLocation(loc));
+    }
+    return null;
+  }
+
+  public SignChest getAttachedChest() {
+    for(Location loc : validChestLocations(location.getLocation())) {
+      if(loc.getBlock().getState() instanceof Chest || loc.getBlock().getState() instanceof EnderChest) {
+        return new SignChest(loc.getBlock());
+      }
+    }
+    return null;
+  }
+
+  public static List<Location> validChestLocations(Location location) {
+    List<Location> locations = new ArrayList<>();
+    locations.add(location.clone().add(1, 0, 0));
+    locations.add(location.clone().add(-1, 0, 0));
+    locations.add(location.clone().add(0, 1, 0));
+    locations.add(location.clone().add(0, -1, 0));
+    locations.add(location.clone().add(0, 0, 1));
+    locations.add(location.clone().add(0, 0, -1));
+
+    return locations;
+  }
+
+  public static List<Location> validSignLocations(Location location) {
+    List<Location> locations = new ArrayList<>();
+    locations.add(location.clone().add(1, 0, 0));
+    locations.add(location.clone().add(-1, 0, 0));
+    locations.add(location.clone().add(0, 0, 1));
+    locations.add(location.clone().add(0, 0, -1));
+
+    return locations;
   }
 
   public static TNESign instance(String type, UUID owner, SerializableLocation location) {

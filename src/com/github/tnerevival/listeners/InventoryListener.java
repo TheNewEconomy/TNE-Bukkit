@@ -97,10 +97,22 @@ public class InventoryListener implements Listener {
 
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
       boolean open = TNE.instance().inventoryManager.getInventory(player) == null;
-      TNEInventory tneInventory = (TNE.instance().inventoryManager.getInventory(inventory) != null)? TNE.instance().inventoryManager.getInventory(inventory) : TNE.instance().inventoryManager.generateInventory(inventory, (Player)event.getPlayer(), world);
+      if(!open && TNE.instance().inventoryManager.getInventory(inventory) != null) {
+        TNEInventory inv = TNE.instance().inventoryManager.getInventory(inventory);
+        if(inv.viewers.size() >= TNE.instance().api().getInteger("Core.Vault.MaxViewers")) {
+          event.setCancelled(true);
+        }
+      }
 
-      if(tneInventory != null && open) {
-        event.setCancelled(!tneInventory.onOpen(player));
+      if(!event.isCancelled()) {
+        TNEInventory tneInventory = (TNE.instance().inventoryManager.getInventory(inventory) != null) ? TNE.instance().inventoryManager.getInventory(inventory) : TNE.instance().inventoryManager.generateInventory(inventory, (Player) event.getPlayer(), world);
+
+        if (tneInventory != null && open) {
+          event.setCancelled(!tneInventory.onOpen(player));
+        }
+      }
+      if(event.isCancelled()) {
+        new Message("Messages.Vault.Occupied").translate(world, event.getPlayer());
       }
     }
   }
@@ -113,6 +125,7 @@ public class InventoryListener implements Listener {
     String world = IDFinder.getWorld(id);
     int slot = event.getRawSlot();
     boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
+    InventoryAction action = event.getAction();
 
     MISCUtils.debug("Slot " + slot);
 
@@ -134,7 +147,7 @@ public class InventoryListener implements Listener {
     }
 
     if(inventory.getTitle() != null) {
-      if(inventory.getTitle().toLowerCase().contains("vault")) {
+      if(inventory.getTitle().toLowerCase().contains("vault") && TNE.instance().api().getInteger("Core.Vault.MaxViewers") > 1) {
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
           @Override
           public void run() {

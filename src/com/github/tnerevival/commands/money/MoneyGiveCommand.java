@@ -67,6 +67,13 @@ public class MoneyGiveCommand extends TNECommand {
         gave.addVariable("$amount",  CurrencyFormatter.format(world, value));
         gave.addVariable("$player", arguments[0]);
         gave.translate(world, sender);
+        if(getPlayer(sender, arguments[0]) != null) {
+          String name = (sender instanceof Player)? sender.getName() : "Console";
+          Message received = new Message("Messages.Money.Received");
+          received.addVariable("$amount", CurrencyFormatter.format(world, value));
+          received.addVariable("$from", name);
+          received.translate(IDFinder.getWorld(getPlayer(sender, arguments[0])), getPlayer(sender, arguments[0]));
+        }
         return true;
       }
     } else {

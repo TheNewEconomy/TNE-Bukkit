@@ -51,7 +51,7 @@
     - Added configurations to specify the number of decimal places displayed for balances 
   - Technical
     - API
-      - All balance-related methods that involve the data-type will be deprecated for methods using the BigDecimal class
+      - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
       - Changed how developers access the TNE API.
         - This is now done via TNE.instance().api() rather than TNE.instance.api
         - The new way prevents any unnecessary modification that may occur
@@ -61,6 +61,7 @@
     - tne reload all fix
     - fixed support issues for servers running on Minecraft 1.7
     - fixed incompatibility issues with the essentials invsee command
+    - fixed issue where paid players weren't receiving Messages.Money.Received
   
 - Alpha 6.0 "Final Stages"
   - Rework shops to be more user-friendly. I want a shop system that isn't all command based such as the one we have now. More or less a more chest "friendly" version.

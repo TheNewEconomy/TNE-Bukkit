@@ -63,6 +63,7 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Signs.Item.Max", 10);
     configurations.put("Core.Signs.Item.Multiple", true);
     configurations.put("Core.Signs.Item.MaxOffers", 9);
+    configurations.put("Core.Signs.Item.EnderChest", true);
 
     configurations.put("Core.Death.Lose", false);
     configurations.put("Core.Death.Bank.Drop", 0);
@@ -77,7 +78,6 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Vault.Cost", 20.0);
     configurations.put("Core.Vault.Rows", 3);
     configurations.put("Core.Vault.MultiManage", false);
-    configurations.put("Core.Vault.MultiView", false);
     configurations.put("Core.Vault.MaxViewers", 1);
 
     configurations.put("Core.Bank.Enabled", false);

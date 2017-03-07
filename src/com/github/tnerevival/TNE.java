@@ -16,6 +16,7 @@ import com.github.tnerevival.worker.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,6 +42,14 @@ public class TNE extends JavaPlugin {
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
   public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
+  public static final BlockFace[] signCheck = new BlockFace[] {
+    BlockFace.EAST,
+    BlockFace.WEST,
+    BlockFace.NORTH,
+    BlockFace.SOUTH,
+    BlockFace.UP,
+    BlockFace.DOWN
+  };
   public static boolean debugMode = false;
 
   // Files & Custom Configuration Files

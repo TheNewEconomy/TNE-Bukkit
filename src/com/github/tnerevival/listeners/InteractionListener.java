@@ -20,10 +20,9 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Furnace;
+import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -127,28 +126,49 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onBreak(BlockBreakEvent event) {
+    String world = event.getBlock().getWorld().getName();
     String name = event.getBlock().getType().name();
 
-    if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
+    if(event.getBlock().getState() instanceof org.bukkit.block.Sign) {
       if(TNESign.validSign(event.getBlock().getLocation())) {
         SerializableLocation location = new SerializableLocation(event.getBlock().getLocation());
         TNESign sign = TNESign.getSign(location);
-
-        MISCUtils.debug(sign.toString() + "");
-        if(!sign.onDestroy(event.getPlayer())) {
-          event.setCancelled(true);
-        } else {
+        MISCUtils.debug(sign.getType().getName());
+        if(sign.onDestroy(event.getPlayer())) {
           TNESign.removeSign(location);
+          return;
         }
+        event.setCancelled(true);
         return;
       }
     }
 
-    TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), new ItemStack(event.getBlock().getType()), name, InteractionType.CRAFTING);
-    Bukkit.getServer().getPluginManager().callEvent(e);
+    if(event.getBlock().getState() instanceof Chest || event.getBlock().getState() instanceof EnderChest) {
+      TNESign sign = TNESign.getOwningSign(event.getBlock().getLocation());
+      if (sign != null) {
+        MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
+        if (!sign.getOwner().equals(IDFinder.getID(event.getPlayer())) && !event.getPlayer().hasPermission("tne.sign.admin")) {
+          new Message("Messages.SignShop.UnableChest").translate(world, event.getPlayer());
+          event.setCancelled(true);
+        }
+      }
+    }
+    Location attached = TNESign.getAttachedSign(event.getBlock().getLocation());
+    if(attached != null && TNESign.validSign(attached)) {
+      TNESign sign = TNESign.getSign(new SerializableLocation(attached));
+      if(!sign.getOwner().equals(IDFinder.getID(event.getPlayer())) && !event.getPlayer().hasPermission("tne.sign.admin")) {
+        new Message("Messages.General.NoPerm").translate(world, event.getPlayer());
+        event.setCancelled(true);
+      }
+    }
 
-    if(e.isCancelled()) {
-      event.setCancelled(true);
+    if(!event.isCancelled()) {
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(event.getPlayer(), new ItemStack(event.getBlock().getType()), name, InteractionType.CRAFTING);
+      Bukkit.getServer().getPluginManager().callEvent(e);
+
+      if (e.isCancelled()) {
+        event.setCancelled(true);
+      }
     }
   }
 
@@ -448,6 +468,16 @@ public class InteractionListener implements Listener {
             Message charged = new Message("Messages.Objects.SignUse");
             charged.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(event.getPlayer()), use));
             charged.translate(IDFinder.getWorld(player), player);
+          }
+        }
+      } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof EnderChest) {
+        TNESign sign = TNESign.getOwningSign(block.getLocation());
+        if(sign != null) {
+          MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
+          if(!sign.getOwner().equals(IDFinder.getID(event.getPlayer())) && !event.getPlayer().hasPermission("tne.sign.admin")) {
+            new Message("Messages.SignShop.UnableChest").translate(block.getWorld().getName(), event.getPlayer());
+            event.setCancelled(true);
+            return;
           }
         }
       } else {

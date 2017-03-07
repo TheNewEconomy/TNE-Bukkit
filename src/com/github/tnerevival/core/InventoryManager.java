@@ -22,6 +22,7 @@ import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.inventory.InventoryType;
 import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.impl.VaultInventory;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -146,12 +147,15 @@ public class InventoryManager {
     if(old != null) {
       Map<Integer, ItemStack> changes = new HashMap<>();
       for(int i = 0; i < old.getSize(); i++) {
+        String oldItem = (old.getItem(i) != null)? old.getItem(i).getType().toString() + ":" + old.getItem(i).getAmount() : "EMPTY";
+        String newItem = (current.getItem(i) != null)? current.getItem(i).getType().toString() + ":" + current.getItem(i).getAmount() : "EMPTY";
+        MISCUtils.debug(oldItem + " == " + newItem);
         if(i >= old.getSize() || old.getItem(i) == null && current.getItem(i) == null) continue;
         if(old.getItem(i) != null && current.getItem(i) == null) {
           changes.put(i, null);
         } else if(old.getItem(i) == null && current.getItem(i) != null) {
           changes.put(i, current.getItem(i));
-        } else if(old.getItem(i).equals(current.getItem(i))) {
+        } else if(!old.getItem(i).equals(current.getItem(i))) {
           changes.put(i, current.getItem(i));
         }
       }

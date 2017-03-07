@@ -11,6 +11,7 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -75,6 +76,10 @@ public class MISCUtils {
     return true;
   }
 
+  public static boolean hasItem(Inventory inventory, Material material, int amount) {
+    return getItemCount(inventory, material) >= amount;
+  }
+
   public static void setItems(UUID id, List<SerializableItemStack> items, boolean add) {
     setItems(id, items, add, false);
   }
@@ -106,11 +111,27 @@ public class MISCUtils {
     return count;
   }
 
-  static Integer getItemCount(UUID id, Material item) {
+  public static Integer getItemCount(UUID id, Material item) {
     Player p = IDFinder.getPlayer(id.toString());
+    return getItemCount(p.getInventory(), item);
+  }
+
+  public static void setItemCount(UUID id, Material item, Integer amount) {
+    Player p = IDFinder.getPlayer(id.toString());
+    Integer count = getItemCount(id, item);
+    setItemCount(p.getInventory(), item, amount);
+    if(count < amount) {
+      int leftOver = leftOver(p.getInventory(), item, amount);
+      if(leftOver > 0) {
+        p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, leftOver));
+      }
+    }
+  }
+
+  public static int getItemCount(Inventory inventory, Material item) {
     int count = 0;
     if(item != null) {
-      for(ItemStack i : p.getInventory().getContents()) {
+      for(ItemStack i : inventory.getContents()) {
         if(i != null && i.getType() != null && i.getType() == item) {
           count += i.getAmount();
         }
@@ -119,26 +140,25 @@ public class MISCUtils {
     return count;
   }
 
-  static void setItemCount(UUID id, Material item, Integer amount) {
-    Player p = IDFinder.getPlayer(id.toString());
-    Integer count = getItemCount(id, item);
+  public static void setItemCount(Inventory inventory, Material item, int amount) {
+    Integer count = getItemCount(inventory, item);
     if(item != null) {
       if(count > amount) {
         Integer remove = count - amount;
         Integer slot = 0;
-        for(ItemStack i : p.getInventory().getContents()) {
+        for(ItemStack i : inventory.getContents()) {
           if(i != null && i.getType() != null && i.getType() == item) {
             if(remove > i.getAmount()) {
               remove -= i.getAmount();
               i.setAmount(0);
-              p.getInventory().setItem(slot, null);
+              inventory.setItem(slot, null);
             } else {
               if(i.getAmount() - remove > 0) {
                 i.setAmount(i.getAmount() - remove);
-                p.getInventory().setItem(slot, i);
+                inventory.setItem(slot, i);
                 return;
               }
-              p.getInventory().setItem(slot, null);
+              inventory.setItem(slot, null);
               return;
             }
           }
@@ -146,26 +166,31 @@ public class MISCUtils {
         }
       } else if(count < amount) {
         Integer add = amount - count;
-
-        while(add > 0) {
-          if(add > item.getMaxStackSize()) {
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(new ItemStack(item, item.getMaxStackSize()));
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, item.getMaxStackSize()));
-            }
+        for(int i = 0; i < inventory.getSize(); i++) {
+          ItemStack stack = inventory.getItem(i);
+          if(stack == null || stack.getType().equals(Material.AIR)) {
             add -= item.getMaxStackSize();
-          } else {
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(new ItemStack(item, add));
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, add));
-            }
-            add = 0;
+          } else if(stack.getType().equals(item)) {
+            int amt = (item.getMaxStackSize() - stack.getAmount() >= add)? stack.getAmount() + add : item.getMaxStackSize() - stack.getAmount();
+            ItemStack newStack = stack.clone();
+            newStack.setAmount(amt);
+            inventory.setItem(i, newStack);
+            add -= amt;
           }
         }
       }
     }
+  }
+
+  public static int leftOver(Inventory inventory, Material item, int amount) {
+    int available = 0;
+    for(int i = 0; i < inventory.getSize(); i++) {
+      if(available >= amount) break;
+      ItemStack stack = inventory.getItem(i);
+      if(stack == null || stack.getType().equals(Material.AIR)) available += item.getMaxStackSize();
+      else if(stack.getType().equals(item)) available += item.getMaxStackSize() - stack.getAmount();
+    }
+    return (amount - available <= 0)? 0 : amount - available;
   }
 
   public static String sendGetRequest(String URL) {
