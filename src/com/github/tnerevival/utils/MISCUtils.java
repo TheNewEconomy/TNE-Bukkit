@@ -129,6 +129,7 @@ public class MISCUtils {
   }
 
   public static int getItemCount(Inventory inventory, Material item) {
+    MISCUtils.debug("MISCUtils:getItemCount(inventory, " + item.name() +")");
     int count = 0;
     if(item != null) {
       for(ItemStack i : inventory.getContents()) {
@@ -137,10 +138,12 @@ public class MISCUtils {
         }
       }
     }
+    MISCUtils.debug("COUNT: " + count);
     return count;
   }
 
   public static void setItemCount(Inventory inventory, Material item, int amount) {
+    MISCUtils.debug("MISCUtils:setItemCount(inventory, " + item.name() + ", " + amount + ")");
     Integer count = getItemCount(inventory, item);
     if(item != null) {
       if(count > amount) {
@@ -167,10 +170,17 @@ public class MISCUtils {
       } else if(count < amount) {
         Integer add = amount - count;
         for(int i = 0; i < inventory.getSize(); i++) {
+          if(add <= 0) break;
           ItemStack stack = inventory.getItem(i);
           if(stack == null || stack.getType().equals(Material.AIR)) {
-            add -= item.getMaxStackSize();
-          } else if(stack.getType().equals(item)) {
+            if(add > item.getMaxStackSize()) {
+              inventory.setItem(i, new ItemStack(item, item.getMaxStackSize()));
+              add -= item.getMaxStackSize();
+            } else {
+              inventory.setItem(i, new ItemStack(item, add));
+              add = 0;
+            }
+          } else if(stack.isSimilar(new ItemStack(item))) {
             int amt = (item.getMaxStackSize() - stack.getAmount() >= add)? stack.getAmount() + add : item.getMaxStackSize() - stack.getAmount();
             ItemStack newStack = stack.clone();
             newStack.setAmount(amt);
@@ -188,7 +198,7 @@ public class MISCUtils {
       if(available >= amount) break;
       ItemStack stack = inventory.getItem(i);
       if(stack == null || stack.getType().equals(Material.AIR)) available += item.getMaxStackSize();
-      else if(stack.getType().equals(item)) available += item.getMaxStackSize() - stack.getAmount();
+      else if(stack.isSimilar(new ItemStack(item))) available += item.getMaxStackSize() - stack.getAmount();
     }
     return (amount - available <= 0)? 0 : amount - available;
   }

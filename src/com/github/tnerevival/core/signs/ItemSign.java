@@ -278,7 +278,12 @@ public class ItemSign extends TNESign {
               AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_REMOVE, world);
             }
             if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, entry.getSell(), TransactionType.MONEY_GIVE, world)) {
-              MISCUtils.setItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getItem())), false);
+              MISCUtils.setItemCount(player.getInventory(),
+                                     entry.getItem().getType(),
+                                     MISCUtils.getItemCount(IDFinder.getID(player),
+                                                            entry.getItem().getType()
+                                     ) - entry.getItem().getAmount());
+              player.updateInventory();
             }
             new Message("Messages.SignShop.Successful").translate(world, player);
             return false;
@@ -329,8 +334,12 @@ public class ItemSign extends TNESign {
             if(!entry.isAdmin()) changeStock(player, entry.getItem().getType(), entry.getItem().getAmount(), false);
             MISCUtils.setItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getTrade())), false);
           }
-          MISCUtils.setItems(IDFinder.getID(player), Collections.singletonList(new SerializableItemStack(0, entry.getItem())), true);
-          MISCUtils.setItemCount(IDFinder.getID(player), entry.getItem().getType(), MISCUtils.getItemCount(IDFinder.getID(player), entry.getItem().getType()) + entry.getItem().getAmount());
+          MISCUtils.setItemCount(player.getInventory(),
+              entry.getItem().getType(),
+              MISCUtils.getItemCount(IDFinder.getID(player),
+                  entry.getItem().getType()
+              ) + entry.getItem().getAmount());
+          player.updateInventory();
           new Message("Messages.SignShop.Successful").translate(world, player);
           return true;
         }
