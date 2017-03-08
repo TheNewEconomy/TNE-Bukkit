@@ -129,14 +129,6 @@ public class InventoryListener implements Listener {
     InventoryAction action = event.getAction();
     final Inventory clicked = (slot >= inventory.getSize())? player.getInventory() : inventory;
     final int clickedSlot = slot;
-    final ItemStack stack = clicked.getItem(clickedSlot);
-    final ItemStack cursor = event.getCursor();
-
-    String cursorString = (cursor == null)? "null" : cursor.toString();
-
-    MISCUtils.debug("Cursor Item: " + cursorString);
-    MISCUtils.debug("Slot Raw " + clickedSlot);
-    MISCUtils.debug("Slot " + event.getSlot());
 
     if(inventory.getType().equals(InventoryType.ENCHANTING) || inventory.getType().equals(InventoryType.FURNACE)) {
       MISCUtils.debug("Inventory is enchanting OR smelting");
@@ -155,6 +147,15 @@ public class InventoryListener implements Listener {
       }
       MISCUtils.debug("Exiting click event");
     }
+    final ItemStack stack = clicked.getItem(clickedSlot);
+    final ItemStack cursor = event.getCursor();
+
+    String cursorString = (cursor == null)? "null" : cursor.toString();
+
+    MISCUtils.debug("Cursor Item: " + cursorString);
+    MISCUtils.debug("Slot Raw " + clickedSlot);
+    MISCUtils.debug("Slot " + event.getSlot());
+
     Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
       @Override
       public void run() {

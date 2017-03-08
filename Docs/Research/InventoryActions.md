@@ -95,7 +95,7 @@ StartTest: Right Click Filled Slot with filled cursor dif type, GoldOre:4 - Beet
 StartTest: ShiftClick from top -> bottom inventory
 ==
 #### Author: creatorfromhell:
-#### Results have proven that any form of shift click will require extra effort
+#### Results have proven that any form of shift click will require the plugin to override this action, and manually perform it
 #### Trackable: To Be Determined
 
 [TheNewEconomy] [DEBUG MODE]Original Cursor: ItemStack{AIR x 0}  
@@ -106,5 +106,5 @@ StartTest: ShiftClick from top -> bottom inventory
 StartTest: ShiftClick from bottom-> top inventory
 ==
 #### Author: creatorfromhell:
-#### Results have proven that any form of shift click will require extra effort
+#### Results have proven that any form of shift click will require the plugin to override this action, and manually perform it
 #### Trackable: To Be Determined
