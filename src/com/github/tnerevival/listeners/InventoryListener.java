@@ -159,7 +159,6 @@ public class InventoryListener implements Listener {
       @Override
       public void run() {
         ItemStack current = clicked.getItem(clickedSlot);
-        //ItemStack original = (stack == null || )
         ItemStack cursor = player.getOpenInventory().getCursor();
 
         String cursorString = (cursor == null)? "null" : cursor.toString();
