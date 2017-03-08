@@ -44,7 +44,7 @@ public class VaultViewCommand extends TNECommand {
 
     Player player = getPlayer(sender);
     String world = getWorld(sender);
-    String owner = (arguments.length >= 2)? arguments[0] : player.getName();
+    String owner = (arguments.length >= 1)? arguments[0] : player.getName();
 
     if(IDFinder.getID(owner) == null) {
       Message notFound = new Message("Messages.General.NoPlayer");

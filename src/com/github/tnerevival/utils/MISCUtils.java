@@ -273,7 +273,9 @@ public class MISCUtils {
           for (int i = 0; i < contents.length; i++) {
             MISCUtils.debug("Looping contents..." + i + "");
             if(contents[i] != null) MISCUtils.debug("Item Type: " + contents[i].getType().name());
-            MISCUtils.debug("Correct Material: " + stack.getType().name());
+            if(stack != null) {
+              MISCUtils.debug("Correct Material: " + stack.getType().name());
+            }
             MISCUtils.debug("Correct Material: " + correctMat);
             if (contents[i] != null && contents[i].getType().name().equalsIgnoreCase(correctMat)) {
               ItemStack cloneStack = contents[i].clone();

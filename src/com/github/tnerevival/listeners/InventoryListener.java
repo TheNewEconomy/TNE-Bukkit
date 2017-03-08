@@ -29,6 +29,7 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -120,19 +121,28 @@ public class InventoryListener implements Listener {
   @EventHandler
   public void onClick(InventoryClickEvent event) {
     final Inventory inventory = event.getInventory();
-    Player player = (Player)event.getWhoClicked();
+    final Player player = (Player)event.getWhoClicked();
     final UUID id = IDFinder.getID(player);
     String world = IDFinder.getWorld(id);
     int slot = event.getRawSlot();
     boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
     InventoryAction action = event.getAction();
+    final Inventory clicked = (slot >= inventory.getSize())? player.getInventory() : inventory;
+    final int clickedSlot = slot;
+    final ItemStack stack = clicked.getItem(clickedSlot);
+    final ItemStack cursor = event.getCursor();
 
-    MISCUtils.debug("Slot " + slot);
+    String cursorString = (cursor == null)? "null" : cursor.toString();
+
+    MISCUtils.debug("Cursor Item: " + cursorString);
+    MISCUtils.debug("Slot Raw " + clickedSlot);
+    MISCUtils.debug("Slot " + event.getSlot());
 
     if(inventory.getType().equals(InventoryType.ENCHANTING) || inventory.getType().equals(InventoryType.FURNACE)) {
       MISCUtils.debug("Inventory is enchanting OR smelting");
       InteractionType intType = (inventory.getType().equals(InventoryType.ENCHANTING))? InteractionType.ENCHANT : InteractionType.SMELTING;
-      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, event.getCurrentItem(), event.getCurrentItem().getType().name(), intType);
+      String item = (event.getCurrentItem() != null)? event.getCurrentItem().getType().name() : Material.AIR.name();
+      TNEObjectInteractionEvent e = new TNEObjectInteractionEvent(player, event.getCurrentItem(), item, intType);
       Bukkit.getServer().getPluginManager().callEvent(e);
 
       MISCUtils.debug("Event called");
@@ -145,17 +155,22 @@ public class InventoryListener implements Listener {
       }
       MISCUtils.debug("Exiting click event");
     }
+    Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+      @Override
+      public void run() {
+        ItemStack current = clicked.getItem(clickedSlot);
+        //ItemStack original = (stack == null || )
+        ItemStack cursor = player.getOpenInventory().getCursor();
 
-    if(inventory.getTitle() != null) {
-      if(inventory.getTitle().toLowerCase().contains("vault") && TNE.instance().api().getInteger("Core.Vault.MaxViewers") > 1) {
-        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-          @Override
-          public void run() {
-            InventoryManager.handleInventoryChanges(id);
-          }
-        }, 1L);
+        String cursorString = (cursor == null)? "null" : cursor.toString();
+
+        MISCUtils.debug("Cursor Item: " + cursorString);
+        String original = (stack == null)? "empty" : stack.toString();
+        String currentString = (current == null)? "empty" : current.toString();
+        MISCUtils.debug("Original ItemStack: " + original);
+        MISCUtils.debug("New ItemStack: " + currentString);
       }
-    }
+    }, 1L);
   }
 
   @EventHandler

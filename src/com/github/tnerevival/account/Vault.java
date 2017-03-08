@@ -259,7 +259,8 @@ public class Vault {
     while(i.hasNext()) {
       UUID id = i.next();
       if(initiator != null && !id.equals(initiator) || initiator == null) {
-        IDFinder.getPlayer(id.toString()).openInventory(getInventory());
+        IDFinder.getPlayer(id.toString()).getOpenInventory().getTopInventory().setContents(getInventory().getContents());
+        IDFinder.getPlayer(id.toString()).updateInventory();
       }
     }
   }
