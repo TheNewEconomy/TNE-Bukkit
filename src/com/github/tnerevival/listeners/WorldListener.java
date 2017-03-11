@@ -22,7 +22,7 @@ public class WorldListener implements Listener {
   }
 
   @EventHandler
-  public void onWorldChange(PlayerChangedWorldEvent event) {
+  public void onWorldChange(final PlayerChangedWorldEvent event) {
     Player player = event.getPlayer();
     String world = player.getWorld().getName();
 
@@ -49,7 +49,7 @@ public class WorldListener implements Listener {
   }
 
   @EventHandler
-  public void onWorldLoad(WorldLoadEvent event) {
+  public void onWorldLoad(final WorldLoadEvent event) {
     String world = event.getWorld().getName();
     TNE.instance().manager.currencyManager.initializeWorld(world);
   }

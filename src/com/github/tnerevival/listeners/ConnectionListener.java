@@ -31,7 +31,7 @@ public class ConnectionListener implements Listener {
   }
 
   @EventHandler
-  public void onJoin(PlayerJoinEvent event) {
+  public void onJoin(final PlayerJoinEvent event) {
     Player player = event.getPlayer();
     MISCUtils.debug(IDFinder.getID(player) + "");
     if(!plugin.manager.accounts.containsKey(IDFinder.getID(player))) {
@@ -61,14 +61,14 @@ public class ConnectionListener implements Listener {
   }
 
   @EventHandler
-  public void onLeave(PlayerQuitEvent event) {
+  public void onLeave(final PlayerQuitEvent event) {
     Player player = event.getPlayer();
 
     TNE.instance().manager.confirmed.remove(IDFinder.getID(player));
   }
 
   @EventHandler
-  public void onDeath(PlayerDeathEvent event) {
+  public void onDeath(final PlayerDeathEvent event) {
     Player killed = event.getEntity();
     String world = IDFinder.getWorld(killed);
     UUID id = IDFinder.getID(killed);

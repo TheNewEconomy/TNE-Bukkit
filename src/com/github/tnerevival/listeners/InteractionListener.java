@@ -61,7 +61,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onCommand(PlayerCommandPreprocessEvent event) {
+  public void onCommand(final PlayerCommandPreprocessEvent event) {
     if(TNE.instance().api().getBoolean("Objects.Commands.Enabled", "objects")) {
 
       ObjectConfiguration configuration = TNE.configurations.getObjectConfiguration();
@@ -125,7 +125,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onBreak(BlockBreakEvent event) {
+  public void onBreak(final BlockBreakEvent event) {
     String world = event.getBlock().getWorld().getName();
     String name = event.getBlock().getType().name();
 
@@ -173,7 +173,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onPlace(BlockPlaceEvent event) {
+  public void onPlace(final BlockPlaceEvent event) {
     String name = event.getBlock().getType().name();
 
     if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST)) {
@@ -192,7 +192,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onSmelt(FurnaceSmeltEvent event) {
+  public void onSmelt(final FurnaceSmeltEvent event) {
     if (TNE.instance().api().getBoolean("Materials.Enabled", TNE.instance().defaultWorld, "")) {
       if (event.getResult() != null && !event.getResult().getType().equals(Material.AIR)) {
         String name = event.getBlock().getType().name();
@@ -218,7 +218,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onEnchant(EnchantItemEvent event) {
+  public void onEnchant(final EnchantItemEvent event) {
     if (TNE.instance().api().getBoolean("Materials.Enabled", IDFinder.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()))) {
       if (event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
 
@@ -243,7 +243,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onPreCraft(PrepareItemCraftEvent event) {
+  public void onPreCraft(final PrepareItemCraftEvent event) {
     if(event.getInventory().getResult() != null) {
       Player player = (Player)event.getView().getPlayer();
 
@@ -264,7 +264,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onCraft(CraftItemEvent event) {
+  public void onCraft(final CraftItemEvent event) {
 
     Player player = (Player) event.getWhoClicked();
 
@@ -323,7 +323,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onChange(SignChangeEvent event) {
+  public void onChange(final SignChangeEvent event) {
     if(event.getLine(0).contains("[tne:") && event.getLine(0).contains("]")) {
       Player player = event.getPlayer();
       String world = event.getBlock().getWorld().getName();
@@ -389,7 +389,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onInteractWithEntity(PlayerInteractEntityEvent event) {
+  public void onInteractWithEntity(final PlayerInteractEntityEvent event) {
     Entity entity = event.getRightClicked();
     Player player = event.getPlayer();
     String world = TNE.instance().defaultWorld;
@@ -433,7 +433,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onClick(PlayerInteractEvent event) {
+  public void onClick(final PlayerInteractEvent event) {
     Action action = event.getAction();
     Player player = event.getPlayer();
     Block block = event.getClickedBlock();
@@ -518,7 +518,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler
-  public void onItemChange(PlayerItemHeldEvent event) {
+  public void onItemChange(final PlayerItemHeldEvent event) {
     Block b = event.getPlayer().getTargetBlock(new HashSet<>(Arrays.asList(new Material[] { Material.AIR })), 5);
 
     if(b != null) {
@@ -535,7 +535,7 @@ public class InteractionListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onEntityDeath(EntityDeathEvent event) {
+  public void onEntityDeath(final EntityDeathEvent event) {
     LivingEntity entity = event.getEntity();
 
     if(entity.getKiller() != null) {

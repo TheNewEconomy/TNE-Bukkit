@@ -19,7 +19,6 @@ package com.github.tnerevival.listeners;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
-import com.github.tnerevival.core.InventoryManager;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.event.object.InteractionType;
@@ -30,14 +29,18 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,7 +56,7 @@ public class InventoryListener implements Listener {
   }
 
   @EventHandler
-  public void onOpen(InventoryOpenEvent event) {
+  public void onOpen(final InventoryOpenEvent event) {
     UUID player = IDFinder.getID((Player)event.getPlayer());
     String world = IDFinder.getWorld(player);
     Inventory inventory = event.getInventory();
@@ -119,16 +122,17 @@ public class InventoryListener implements Listener {
   }
 
   @EventHandler
-  public void onClick(InventoryClickEvent event) {
-    final Inventory inventory = event.getInventory();
+  public void onClick(final InventoryClickEvent event) {
+    if(!(event.getWhoClicked() instanceof Player)) return;
+
     final Player player = (Player)event.getWhoClicked();
-    final UUID id = IDFinder.getID(player);
-    String world = IDFinder.getWorld(id);
-    int slot = event.getRawSlot();
-    boolean top = event.getRawSlot() < event.getView().getTopInventory().getSize();
+    boolean bottom = (event.getRawSlot() != event.getView().convertSlot(event.getRawSlot()));
+    final int slot = event.getView().convertSlot(event.getRawSlot());
+    final Inventory inventory = (bottom)? event.getView().getBottomInventory() : event.getView().getTopInventory();
     InventoryAction action = event.getAction();
-    final Inventory clicked = (slot >= inventory.getSize())? player.getInventory() : inventory;
-    final int clickedSlot = slot;
+
+    final InventoryView view = event.getView();
+    final int rawSlot = event.getRawSlot();
 
     if(inventory.getType().equals(InventoryType.ENCHANTING) || inventory.getType().equals(InventoryType.FURNACE)) {
       MISCUtils.debug("Inventory is enchanting OR smelting");
@@ -147,47 +151,52 @@ public class InventoryListener implements Listener {
       }
       MISCUtils.debug("Exiting click event");
     }
-    final ItemStack stack = clicked.getItem(clickedSlot);
-    final ItemStack cursor = event.getCursor();
 
-    String cursorString = (cursor == null)? "null" : cursor.toString();
+    if(view.getTitle() != null && view.getTitle().toLowerCase().contains("vault")
+       || view.getTopInventory().getHolder() != null && view.getTopInventory().getHolder() instanceof Chest
+       || view.getTopInventory().getHolder() != null && view.getTopInventory().getHolder() instanceof DoubleChest) {
 
-    MISCUtils.debug("Cursor Item: " + cursorString);
-    MISCUtils.debug("Slot Raw " + clickedSlot);
-    MISCUtils.debug("Slot " + event.getSlot());
+      final ItemStack originalItem = event.getCurrentItem();
+      final ItemStack originalCursor = event.getCursor();
 
-    Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-      @Override
-      public void run() {
-        ItemStack current = clicked.getItem(clickedSlot);
-        ItemStack cursor = player.getOpenInventory().getCursor();
+      Material involved = Material.AIR;
 
-        String cursorString = (cursor == null)? "null" : cursor.toString();
-
-        MISCUtils.debug("Cursor Item: " + cursorString);
-        String original = (stack == null)? "empty" : stack.toString();
-        String currentString = (current == null)? "empty" : current.toString();
-        MISCUtils.debug("Original ItemStack: " + original);
-        MISCUtils.debug("New ItemStack: " + currentString);
+      MISCUtils.debug("Slot: " + rawSlot);
+      if(action.equals(InventoryAction.NOTHING)) return;
+      MISCUtils.debug("Item: " + originalItem.toString());
+      MISCUtils.debug("Cursor: " + originalCursor.toString());
+      if(action.equals(InventoryAction.COLLECT_TO_CURSOR)) {
+        MISCUtils.debug("Collected to cursor");
+      } else if(action.equals(InventoryAction.HOTBAR_MOVE_AND_READD)) {
+        MISCUtils.debug("HOTBAR ACTION");
+      } else {
+        if (originalItem.getType().equals(Material.AIR)) {
+          MISCUtils.debug("Player put block in slot");
+        } else if (!originalItem.getType().equals(Material.AIR) && originalCursor.getType().equals(Material.AIR)) {
+          MISCUtils.debug("Player took item");
+        } else if (!originalCursor.getType().equals(Material.AIR) && originalItem.getType().equals(originalCursor.getType())) {
+          MISCUtils.debug("Player added to stack from cursor");
+        } else if (!originalCursor.getType().equals(Material.AIR) && !originalItem.getType().equals(Material.AIR)) {
+          MISCUtils.debug("Player swapped items");
+        }
       }
-    }, 1L);
+    }
   }
 
   @EventHandler
-  public void onDrag(InventoryDragEvent event) {
-    final UUID id = IDFinder.getID((Player)event.getWhoClicked());
-    final Map<Integer, ItemStack> changed = event.getNewItems();
-    final String world = IDFinder.getWorld(id);
-    Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-      @Override
-      public void run() {
-        InventoryManager.handleInventoryChanges(id, changed);
-      }
-    }, 1L);
+  public void onDrag(final InventoryDragEvent event) {
+    final Player player = (Player)event.getWhoClicked();
+    Map<Integer, ItemStack> original = new HashMap<>();
+    for(int i : event.getRawSlots()) {
+      ItemStack item = (event.getView().getItem(i) == null)? new ItemStack(Material.AIR) : event.getView().getItem(i);
+      original.put(i, item);
+    }
+    Map<Integer, ItemStack> changed = event.getNewItems();
+    MISCUtils.debug("onDrag: original-" + original.size() + " changed-" + changed.size());
   }
 
   @EventHandler
-  public void onClose(InventoryCloseEvent event) {
+  public void onClose(final InventoryCloseEvent event) {
     UUID player = IDFinder.getID((Player)event.getPlayer());
     InventoryType type = event.getInventory().getType();
 
