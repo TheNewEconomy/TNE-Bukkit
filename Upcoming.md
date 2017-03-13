@@ -9,6 +9,8 @@
     - Ability to allow caching for SQL-based formats
     
 - Alpha 5.2 "Quality of Life"
+  - Compatibility
+    - Fixed issues that prevented Minecraft 1.7 compatibility
   - Commands
     - bank withdraw/deposit
       - Added currency name argument

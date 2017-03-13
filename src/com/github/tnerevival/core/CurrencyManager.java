@@ -31,11 +31,17 @@ public class CurrencyManager {
   private Map<String, Currency> currencies = new HashMap<>();
   private Set<String> worlds = TNE.instance().worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
+  //Cache-related maps.
+  private Map<String, List<Currency>> worldCurrencies = new HashMap<>();
+  private Map<String, List<Currency>> trackedCurrencies = new HashMap<>();
+
   public CurrencyManager() {
     loadCurrencies();
   }
 
   public void loadCurrencies() {
+    worldCurrencies = new HashMap<>();
+    trackedCurrencies = new HashMap<>();
     loadCurrency(TNE.instance().getConfig(), false, TNE.instance().defaultWorld);
 
     for(String s : worlds) {
@@ -215,6 +221,8 @@ public class CurrencyManager {
   }
 
   public List<Currency> getWorldCurrencies(String world) {
+    if(worldCurrencies.containsKey(world)) return worldCurrencies.get(world);
+
     List<Currency> values = new ArrayList<>();
 
     for(String s : currencies.keySet()) {
@@ -225,6 +233,34 @@ public class CurrencyManager {
     if(values.size() == 0) {
       values.add(get(TNE.instance().defaultWorld));
     }
+
+    worldCurrencies.put(world, values);
+    return values;
+  }
+
+  public List<Currency> getTrackedCurrencies(String world) {
+    if(trackedCurrencies.containsKey(world)) return trackedCurrencies.get(world);
+
+    List<Currency> values = new ArrayList<>();
+
+    for(String s : currencies.keySet()) {
+      if(s.contains(world + ":") || s.contains(IDFinder.getBalanceShareWorld(world) + ":")) {
+
+        Currency currency = currencies.get(s);
+        if(currency.isItem() && currency.canTrackChest()) {
+          values.add(currency);
+        }
+      }
+    }
+
+    if(values.size() == 0) {
+      Currency defaultCur = get(TNE.instance().defaultWorld);
+      if(defaultCur.isItem() && defaultCur.canTrackChest()) {
+        values.add(defaultCur);
+      }
+    }
+
+    trackedCurrencies.put(world, values);
     return values;
   }
 

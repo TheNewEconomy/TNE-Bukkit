@@ -24,6 +24,8 @@ import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.inventory.TNEInventory;
+import com.github.tnerevival.core.inventory.TNEUpdateType;
+import com.github.tnerevival.core.inventory.impl.ChestInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -64,6 +66,7 @@ public class InventoryListener implements Listener {
 
     if(inventory.getTitle() == null || inventory.getTitle() != null && !inventory.getTitle().toLowerCase().contains("shop")
        && !inventory.getTitle().toLowerCase().contains("vault") && !inventory.getTitle().toLowerCase().contains("auction")) {
+
       ObjectConfiguration config = TNE.configurations.getObjectConfiguration();
       if(config.inventoryEnabled(type, world, player.toString())) {
         if(config.isTimed(type, world, player.toString())) {
@@ -99,22 +102,26 @@ public class InventoryListener implements Listener {
     }
 
 
-    if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
+    if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")
+       || inventory.getHolder() != null && inventory.getHolder() instanceof Chest
+       && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > -1
+       || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest
+       && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > -1) {
+      MISCUtils.debug("Entered custom inventory territory...tread lightly");
       boolean open = TNE.instance().inventoryManager.getInventory(player) == null;
-      if(!open && TNE.instance().inventoryManager.getInventory(inventory) != null) {
-        TNEInventory inv = TNE.instance().inventoryManager.getInventory(inventory);
-        if(inv.viewers.size() >= TNE.instance().api().getInteger("Core.Vault.MaxViewers")) {
-          event.setCancelled(true);
-        }
-      }
 
       if(!event.isCancelled()) {
         TNEInventory tneInventory = (TNE.instance().inventoryManager.getInventory(inventory) != null) ? TNE.instance().inventoryManager.getInventory(inventory) : TNE.instance().inventoryManager.generateInventory(inventory, (Player) event.getPlayer(), world);
+        if(inventory.getHolder() != null && inventory.getHolder() instanceof Chest
+           || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest) {
+             tneInventory = new ChestInventory(player, inventory, inventory.getLocation());
+        }
 
         if (tneInventory != null && open) {
           event.setCancelled(!tneInventory.onOpen(player));
         }
       }
+
       if(event.isCancelled()) {
         new Message("Messages.Vault.Occupied").translate(world, event.getPlayer());
       }
@@ -152,32 +159,69 @@ public class InventoryListener implements Listener {
       MISCUtils.debug("Exiting click event");
     }
 
-    if(view.getTitle() != null && view.getTitle().toLowerCase().contains("vault")
-       || view.getTopInventory().getHolder() != null && view.getTopInventory().getHolder() instanceof Chest
-       || view.getTopInventory().getHolder() != null && view.getTopInventory().getHolder() instanceof DoubleChest) {
-
+    TNEInventory tneInventory = TNE.instance().inventoryManager.getInventory(IDFinder.getID(player));
+    if(tneInventory != null) {
       final ItemStack originalItem = event.getCurrentItem();
+      Material involved = (originalItem != null) ? originalItem.getType() : Material.AIR;
       final ItemStack originalCursor = event.getCursor();
 
-      Material involved = Material.AIR;
 
+      MISCUtils.debug("====== Inventory Click Information ======");
       MISCUtils.debug("Slot: " + rawSlot);
-      if(action.equals(InventoryAction.NOTHING)) return;
+      if (action.equals(InventoryAction.NOTHING)) return;
+      MISCUtils.debug("Type: " + involved.name());
       MISCUtils.debug("Item: " + originalItem.toString());
       MISCUtils.debug("Cursor: " + originalCursor.toString());
-      if(action.equals(InventoryAction.COLLECT_TO_CURSOR)) {
+
+      TNEUpdateType updateType = TNEUpdateType.NONE;
+      if (action.equals(InventoryAction.COLLECT_TO_CURSOR)) {
         MISCUtils.debug("Collected to cursor");
-      } else if(action.equals(InventoryAction.HOTBAR_MOVE_AND_READD)) {
+        updateType = TNEUpdateType.COLLECT_ALL;
+      } else if (action.equals(InventoryAction.HOTBAR_MOVE_AND_READD)) {
         MISCUtils.debug("HOTBAR ACTION");
+        updateType = TNEUpdateType.SLOT;
+      } else if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
+        MISCUtils.debug("SHIFT CLICK!");
+        updateType = TNEUpdateType.SHIFT;
+        event.setCancelled(true);
       } else {
         if (originalItem.getType().equals(Material.AIR)) {
           MISCUtils.debug("Player put block in slot");
+          updateType = TNEUpdateType.SLOT;
         } else if (!originalItem.getType().equals(Material.AIR) && originalCursor.getType().equals(Material.AIR)) {
           MISCUtils.debug("Player took item");
+          updateType = TNEUpdateType.SLOT;
         } else if (!originalCursor.getType().equals(Material.AIR) && originalItem.getType().equals(originalCursor.getType())) {
           MISCUtils.debug("Player added to stack from cursor");
+          updateType = TNEUpdateType.SLOT;
         } else if (!originalCursor.getType().equals(Material.AIR) && !originalItem.getType().equals(Material.AIR)) {
           MISCUtils.debug("Player swapped items");
+          updateType = TNEUpdateType.SLOT;
+        }
+      }
+
+      if(!updateType.equals(TNEUpdateType.NONE)) {
+        Map<Integer, ItemStack> changes = new HashMap<>();
+        switch(updateType) {
+          case SLOT:
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+              ItemStack current = null;
+              @Override
+              public void run() {
+                ItemStack cursor = player.getOpenInventory().getCursor();
+                current = player.getOpenInventory().getItem(rawSlot);
+
+                String cursorString = (cursor == null) ? "null" : cursor.toString();
+                String currentString = (current == null) ? "empty" : current.toString();
+                MISCUtils.debug("Cursor Item: " + cursorString);
+                MISCUtils.debug("New ItemStack: " + currentString);
+              }
+            }, 1L);
+            break;
+          case COLLECT_ALL:
+            break;
+          case SHIFT:
+            break;
         }
       }
     }

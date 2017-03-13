@@ -51,6 +51,9 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Shops.Shares.Enabled", true);
     configurations.put("Core.Shops.Shares.Max", 3);
 
+    configurations.put("Core.Signs.Bank.Enabled", true);
+    configurations.put("Core.Signs.Bank.Place", 20.0);
+    configurations.put("Core.Signs.Bank.Use", 20.0);
     configurations.put("Core.Signs.Vault.Enabled", true);
     configurations.put("Core.Signs.Vault.Place", 20.0);
     configurations.put("Core.Signs.Vault.Use", 20.0);

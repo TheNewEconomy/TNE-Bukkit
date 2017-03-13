@@ -93,11 +93,9 @@ public class TNEInventory {
   }
 
   public boolean onOpen(UUID id) {
-    if(InventoryType.fromTitle(inventory.getTitle()) != null && InventoryType.fromTitle(inventory.getTitle()).canOpen(IDFinder.getPlayer(id.toString()))) {
-      viewers.add(id);
-      return true;
-    }
-    return false;
+    if(InventoryType.fromTitle(inventory.getTitle()) != null && !InventoryType.fromTitle(inventory.getTitle()).canOpen(IDFinder.getPlayer(id.toString()))) return false;
+    viewers.add(id);
+    return true;
   }
 
   public boolean onClick(UUID player, ClickType type, int slot, ItemStack item) {
@@ -111,6 +109,12 @@ public class TNEInventory {
       if(entry.getKey() >= inventory.getSize()) continue;
       inventory.setItem(entry.getKey(), entry.getValue());
     }
+  }
+
+  public Map<Integer, ItemStack> doShift(ItemStack stack) {
+    Map<Integer, ItemStack> changes = new HashMap<>();
+
+    return changes;
   }
 
   public void onClose(UUID id) {

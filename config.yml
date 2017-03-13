@@ -247,15 +247,27 @@ Core:
     Signs:
 
         #All configurations relating to bank signs.
-        Vault:
+        Bank:
 
-            #Whether or not players can use bank signs to view their banks
+            #Whether or not players may create vault signs
             Enabled: true
 
             #The cost to make a bank sign, if the player has valid permissions.
             Place: 20.0
 
             #The cost to use a bank sign, if the player has valid permissions.
+            Use: 20.0
+
+        #All configurations relating to vault signs.
+        Vault:
+
+            #Whether or not players can use vault signs to view their vaults
+            Enabled: true
+
+            #The cost to make a vault sign, if the player has valid permissions.
+            Place: 20.0
+
+            #The cost to use a vault sign, if the player has valid permissions.
             Use: 20.0
 
         #All configurations relating to item buy/sell signs.

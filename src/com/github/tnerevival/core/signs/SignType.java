@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 public enum SignType {
 
   UNKNOWN("unknown", "", "", ""),
+  BANK("bank", "tne.place.bank", "tne.use.bank", "Core.Signs.Bank"),
   VAULT("vault", "tne.place.vault", "tne.use.vault", "Core.Signs.Vault"),
   ITEM("item", "tne.place.item", "tne.use.item", "Core.Signs.Item"),
   SHOP("shop", "tne.place.shop", "tne.use.shop", "Core.Signs.Shop");
