@@ -22,7 +22,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Furnace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -143,7 +146,7 @@ public class InteractionListener implements Listener {
       }
     }
 
-    if(event.getBlock().getState() instanceof Chest || event.getBlock().getState() instanceof EnderChest) {
+    if(event.getBlock().getState() instanceof Chest || MISCUtils.isOneEight() && event.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
       TNESign sign = TNESign.getOwningSign(event.getBlock().getLocation());
       if (sign != null) {
         MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
@@ -470,7 +473,7 @@ public class InteractionListener implements Listener {
             charged.translate(IDFinder.getWorld(player), player);
           }
         }
-      } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof EnderChest) {
+      } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest || action.equals(Action.RIGHT_CLICK_BLOCK) && MISCUtils.isOneEight() && block.getState() instanceof org.bukkit.block.EnderChest) {
         TNESign sign = TNESign.getOwningSign(block.getLocation());
         if(sign != null) {
           MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
@@ -519,7 +522,8 @@ public class InteractionListener implements Listener {
 
   @EventHandler
   public void onItemChange(final PlayerItemHeldEvent event) {
-    Block b = event.getPlayer().getTargetBlock(new HashSet<>(Arrays.asList(new Material[] { Material.AIR })), 5);
+    Block b = (MISCUtils.isOneEight())? event.getPlayer().getTargetBlock(new HashSet<>(Arrays.asList(new Material[] { Material.AIR })), 5)
+              : event.getPlayer().getTargetBlock(new HashSet<>(Arrays.asList(new Byte[] { 0 })), 5);
 
     if(b != null) {
       if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {

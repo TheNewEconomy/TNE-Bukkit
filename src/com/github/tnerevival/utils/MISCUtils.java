@@ -116,16 +116,16 @@ public class MISCUtils {
     return getItemCount(p.getInventory(), item);
   }
 
-  public static void setItemCount(UUID id, Material item, Integer amount) {
+  public static void setItemCount(UUID id, Material item, int amount) {
     Player p = IDFinder.getPlayer(id.toString());
     Integer count = getItemCount(id, item);
-    setItemCount(p.getInventory(), item, amount);
     if(count < amount) {
       int leftOver = leftOver(p.getInventory(), item, amount);
       if(leftOver > 0) {
         p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, leftOver));
       }
     }
+    setItemCount(p.getInventory(), item, amount);
     p.updateInventory();
   }
 
@@ -183,10 +183,12 @@ public class MISCUtils {
             }
           } else if(stack.isSimilar(new ItemStack(item))) {
             int amt = (item.getMaxStackSize() - stack.getAmount() >= add)? stack.getAmount() + add : item.getMaxStackSize() - stack.getAmount();
-            ItemStack newStack = stack.clone();
-            newStack.setAmount(amt);
-            inventory.setItem(i, newStack);
-            add -= amt;
+            if(amt > 0) {
+              ItemStack newStack = stack.clone();
+              newStack.setAmount(amt);
+              inventory.setItem(i, newStack);
+              add -= amt;
+            }
           }
         }
       }

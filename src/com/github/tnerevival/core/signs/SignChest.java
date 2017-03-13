@@ -1,8 +1,8 @@
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.EnderChest;
 
 /**
  * Created by creatorfromhell on 3/6/2017.
@@ -15,7 +15,7 @@ public class SignChest {
 
   public SignChest(Block block) {
     location = block.getLocation();
-    ender = block.getState() instanceof EnderChest;
+    ender = MISCUtils.isOneEight() && block.getState() instanceof org.bukkit.block.EnderChest;
   }
 
   public SignChest() {
