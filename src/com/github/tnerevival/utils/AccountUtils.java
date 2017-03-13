@@ -131,14 +131,19 @@ public class AccountUtils {
 
     if(!account.getStatus().getBalance()) return;
 
-    String balanceString = (String.valueOf(balance).contains("."))? String.valueOf(balance) : String.valueOf(balance) + ".0";
+    BigDecimal rounded = round(world, currencyName, balance);
+    String balanceString = (rounded.toString().contains("."))? rounded.toString() : rounded.toString() + ".0";
     MISCUtils.debug("AccountUtils.setBalance to " + balanceString);
     String[] split = balanceString.split("\\.");
+    //String minor = ((split[1].length() >= currency.getDecimalPlaces())? split[1] : split[1] + pad(currency.getDecimalPlaces() - split[1].length())).trim();
+    MISCUtils.debug("Minor String: " + split[1]);
 
     if(!account.isSpecial() && currency.isItem()) {
       MISCUtils.debug("SETTING ITEM CURRENCY");
       Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
       Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
+      MISCUtils.setItemCount(id, majorItem, 0);
+      MISCUtils.setItemCount(id, minorItem, 0);
       MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
       return;
@@ -150,6 +155,15 @@ public class AccountUtils {
       account.setBalance(TNE.instance().defaultWorld, balance, currencyName);
     }
     TNE.instance().manager.accounts.put(id, account);
+  }
+
+  private static String pad(int amount) {
+    String padding = "";
+
+    for(int i = 0; i < amount; i++) {
+      padding = padding + "0";
+    }
+    return padding;
   }
 
   public static BigDecimal round(String world, String currency, BigDecimal amount) {
