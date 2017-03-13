@@ -135,8 +135,6 @@ public class AccountUtils {
     String balanceString = (rounded.toString().contains("."))? rounded.toString() : rounded.toString() + ".0";
     MISCUtils.debug("AccountUtils.setBalance to " + balanceString);
     String[] split = balanceString.split("\\.");
-    //String minor = ((split[1].length() >= currency.getDecimalPlaces())? split[1] : split[1] + pad(currency.getDecimalPlaces() - split[1].length())).trim();
-    MISCUtils.debug("Minor String: " + split[1]);
 
     if(!account.isSpecial() && currency.isItem()) {
       MISCUtils.debug("SETTING ITEM CURRENCY");

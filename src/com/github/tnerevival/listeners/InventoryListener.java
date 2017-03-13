@@ -133,6 +133,7 @@ public class InventoryListener implements Listener {
     if(!(event.getWhoClicked() instanceof Player)) return;
 
     final Player player = (Player)event.getWhoClicked();
+    final UUID id = IDFinder.getID(player);
     boolean bottom = (event.getRawSlot() != event.getView().convertSlot(event.getRawSlot()));
     final int slot = event.getView().convertSlot(event.getRawSlot());
     final Inventory inventory = (bottom)? event.getView().getBottomInventory() : event.getView().getTopInventory();
@@ -159,7 +160,7 @@ public class InventoryListener implements Listener {
       MISCUtils.debug("Exiting click event");
     }
 
-    TNEInventory tneInventory = TNE.instance().inventoryManager.getInventory(IDFinder.getID(player));
+    final TNEInventory tneInventory = TNE.instance().inventoryManager.getInventory(id);
     if(tneInventory != null) {
       final ItemStack originalItem = event.getCurrentItem();
       Material involved = (originalItem != null) ? originalItem.getType() : Material.AIR;
@@ -201,26 +202,35 @@ public class InventoryListener implements Listener {
       }
 
       if(!updateType.equals(TNEUpdateType.NONE)) {
-        Map<Integer, ItemStack> changes = new HashMap<>();
         switch(updateType) {
           case SLOT:
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-              ItemStack current = null;
               @Override
               public void run() {
-                ItemStack cursor = player.getOpenInventory().getCursor();
-                current = player.getOpenInventory().getItem(rawSlot);
-
-                String cursorString = (cursor == null) ? "null" : cursor.toString();
+                Map<Integer, ItemStack> changes = new HashMap<>();
+                ItemStack current = player.getOpenInventory().getItem(rawSlot);
+                changes.put(slot, current);
                 String currentString = (current == null) ? "empty" : current.toString();
-                MISCUtils.debug("Cursor Item: " + cursorString);
                 MISCUtils.debug("New ItemStack: " + currentString);
+                tneInventory.onUpdate(changes, id);
               }
             }, 1L);
             break;
           case COLLECT_ALL:
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+              @Override
+              public void run() {
+                tneInventory.onUpdate(tneInventory.doCollect(id, originalCursor.getType()), id);
+              }
+            }, 1L);
             break;
           case SHIFT:
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+              @Override
+              public void run() {
+                tneInventory.onUpdate(tneInventory.doShift(id, slot, originalItem), id);
+              }
+            }, 1L);
             break;
         }
       }
@@ -230,13 +240,17 @@ public class InventoryListener implements Listener {
   @EventHandler
   public void onDrag(final InventoryDragEvent event) {
     final Player player = (Player)event.getWhoClicked();
-    Map<Integer, ItemStack> original = new HashMap<>();
-    for(int i : event.getRawSlots()) {
-      ItemStack item = (event.getView().getItem(i) == null)? new ItemStack(Material.AIR) : event.getView().getItem(i);
-      original.put(i, item);
+    final TNEInventory tneInventory = TNE.instance().inventoryManager.getInventory(IDFinder.getID(player));
+    if(tneInventory != null) {
+      Map<Integer, ItemStack> original = new HashMap<>();
+      for (int i : event.getRawSlots()) {
+        ItemStack item = (event.getView().getItem(i) == null) ? new ItemStack(Material.AIR) : event.getView().getItem(i);
+        original.put(i, item);
+      }
+      Map<Integer, ItemStack> changed = event.getNewItems();
+      tneInventory.onUpdate(changed, IDFinder.getID(player));
+      MISCUtils.debug("onDrag: original-" + original.size() + " changed-" + changed.size());
     }
-    Map<Integer, ItemStack> changed = event.getNewItems();
-    MISCUtils.debug("onDrag: original-" + original.size() + " changed-" + changed.size());
   }
 
   @EventHandler

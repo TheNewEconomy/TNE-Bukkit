@@ -21,6 +21,7 @@ import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -111,9 +112,40 @@ public class TNEInventory {
     }
   }
 
-  public Map<Integer, ItemStack> doShift(ItemStack stack) {
+  public Map<Integer, ItemStack> doShift(UUID id, int previousSlot, ItemStack stack) {
     Map<Integer, ItemStack> changes = new HashMap<>();
+    InventoryView view = IDFinder.getPlayer(id.toString()).getOpenInventory();
+    boolean top = view.convertSlot(previousSlot) == previousSlot;
+    int slot = (top)? inventory.firstEmpty() : view.getBottomInventory().firstEmpty();
+    if(slot != -1) {
+      if(!top) {
+        inventory.setItem(slot, stack);
+        view.setItem(previousSlot, new ItemStack(Material.AIR));
+        IDFinder.getPlayer(id.toString()).updateInventory();
+        changes.put(slot, stack);
+      } else {
+        inventory.setItem(previousSlot, new ItemStack(Material.AIR));
+        view.setItem(slot, stack);
+        IDFinder.getPlayer(id.toString()).updateInventory();
+        changes.put(previousSlot, new ItemStack(Material.AIR));
+      }
+    }
+    return changes;
+  }
 
+  public Map<Integer, ItemStack> doCollect(UUID id, Material material) {
+    Map<Integer, ItemStack> changes = new HashMap<>();
+    InventoryView view = IDFinder.getPlayer(id.toString()).getOpenInventory();
+
+    for(int i = 0; i < inventory.getSize(); i++) {
+      ItemStack old = inventory.getItem(i);
+      ItemStack current = view.getItem(i);
+      if(old != null && old.getType().equals(material)) {
+        if(current == null || !current.equals(old)) {
+          changes.put(i, current);
+        }
+      }
+    }
     return changes;
   }
 
