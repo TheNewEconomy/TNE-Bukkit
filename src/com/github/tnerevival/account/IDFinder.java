@@ -18,6 +18,7 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,6 +33,9 @@ import java.util.UUID;
 public class IDFinder {
 
   public static String getWorld(Player player) {
+    if(player == null) {
+      return TNE.instance().defaultWorld;
+    }
     return player.getWorld().getName();
   }
 
@@ -132,15 +136,24 @@ public class IDFinder {
     }
 
     if(identifier.contains("faction-")) {
-      return ecoID(identifier);
+      MISCUtils.debug("Faction");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
     }
 
     if(identifier.contains("town-")) {
-      return ecoID(identifier);
+      MISCUtils.debug("Towny Town");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
     }
 
     if(identifier.contains("nation-")) {
-      return ecoID(identifier);
+      MISCUtils.debug("Towny Nation");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
     }
 
     if(!TNE.instance().api().getBoolean("Core.UUID")) {
@@ -154,6 +167,18 @@ public class IDFinder {
       return ecoID(identifier);
     }
     return mojangID;
+  }
+
+  private static void checkSpecial(UUID id) {
+    if(AccountUtils.exists(id)) {
+      Account account = AccountUtils.getAccount(id);
+      if(!account.isSpecial()) {
+        account.setSpecial(true);
+        TNE.instance().manager.accounts.put(id, account);
+      }
+    } else {
+      TNE.instance().manager.special.add(id);
+    }
   }
 
   public static boolean isUUID(String lookup) {

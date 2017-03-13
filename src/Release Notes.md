@@ -2,6 +2,7 @@ Alpha 5.2 "Quality of Life"
 =============================
 - Compatibility
   - Fixed issues that prevented Minecraft 1.7 compatibility
+  - Fixed incompatibility with item-base currencies, and towny and factions
 - Commands
     - bank withdraw/deposit
       - Added currency name argument
@@ -42,6 +43,9 @@ Alpha 5.2 "Quality of Life"
     - Interest configurations are now set on a per-currency level
   - Currencies
     - Added configurations to specify the number of decimal places displayed for balances 
+  - MISC
+    - Added the ability to disable the entire economy system for specific worlds
+      - This will be done in the worlds.yml file simply by added Worlds.<worldname>.DisableEconomy: true
   - Technical
     - API
       - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
@@ -51,6 +55,8 @@ Alpha 5.2 "Quality of Life"
     - SQL
       - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
   - Bug Fixes
+    - Fixed issue where accounts weren't getting initialized with item-based currencies properly
+    - Fixed issue where getting balances of players with item-based currencies while MultiWorld was set to true returned incorrect values
     - tne reload all fix
     - fixed support issues for servers running on Minecraft 1.7
     - fixed incompatibility issues with the essentials invsee command

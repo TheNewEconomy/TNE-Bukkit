@@ -126,6 +126,7 @@ public class MISCUtils {
         p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, leftOver));
       }
     }
+    p.updateInventory();
   }
 
   public static int getItemCount(Inventory inventory, Material item) {

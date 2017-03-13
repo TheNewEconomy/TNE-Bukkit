@@ -27,14 +27,21 @@ public class AccountUtils {
   }
 
   public static void createAccount(UUID id) {
+    MISCUtils.debug("MISCUtils.createAccount(" + id.toString() + ")");
     Account a = new Account(id);
     String defaultCurrency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName();
-    a.setBalance(TNE.instance().defaultWorld, AccountUtils.getInitialBalance(TNE.instance().defaultWorld, defaultCurrency), defaultCurrency);
     TNEAccountCreationEvent e = new TNEAccountCreationEvent(id, a);
     MISCUtils.debug(e.getId() + "");
     Bukkit.getServer().getPluginManager().callEvent(e);
+    if(TNE.instance().manager.special.contains(id)) {
+      a.setSpecial(true);
+      TNE.instance().manager.special.remove(id);
+    }
+    MISCUtils.debug("Special Account: " + a.isSpecial());
     TNE.instance().manager.accounts.put(e.getId(), e.getAccount());
-
+    if(!a.isSpecial()) {
+      setBalance(id, TNE.instance().defaultWorld, defaultCurrency, AccountUtils.getInitialBalance(TNE.instance().defaultWorld, defaultCurrency));
+    }
     String identifier = (IDFinder.ecoToUsername(id) != null)? IDFinder.ecoToUsername(id) : id.toString();
     convertAccount(identifier);
   }
@@ -101,17 +108,18 @@ public class AccountUtils {
 
     if(!account.getStatus().getBalance()) return BigDecimal.ZERO;
 
-    if(MISCUtils.multiWorld()) {
-      return account.getBalance(world, currencyName);
-    }
-
-    if(currency.isItem()) {
+    if(!account.isSpecial() && currency.isItem()) {
+      MISCUtils.debug("GETTING ITEM CURRENCY");
       Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
       Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
       Integer major = MISCUtils.getItemCount(id, majorItem);
       Integer minor = MISCUtils.getItemCount(id, minorItem);
       String balance = major + "." + minor;
       return new BigDecimal(balance);
+    }
+
+    if(MISCUtils.multiWorld()) {
+      return account.getBalance(world, currencyName);
     }
     return account.getBalance(TNE.instance().defaultWorld, currencyName);
   }
@@ -124,15 +132,18 @@ public class AccountUtils {
     if(!account.getStatus().getBalance()) return;
 
     String balanceString = (String.valueOf(balance).contains("."))? String.valueOf(balance) : String.valueOf(balance) + ".0";
+    MISCUtils.debug("AccountUtils.setBalance to " + balanceString);
     String[] split = balanceString.split("\\.");
 
-    if(currency.isItem()) {
+    if(!account.isSpecial() && currency.isItem()) {
+      MISCUtils.debug("SETTING ITEM CURRENCY");
       Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
       Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
       MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
       MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
       return;
     }
+
     if(MISCUtils.multiWorld()) {
       account.setBalance(world, balance, currencyName);
     } else {

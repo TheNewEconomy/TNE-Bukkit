@@ -30,6 +30,7 @@ public class EconomyManager {
   public  EventMap<String, Shop> shops = new EventMap<>();
 
   public List<UUID> confirmed = new ArrayList<>();
+  public List<UUID> special = new ArrayList<>();
 
   public EventMap<SerializableLocation, TNESign> signs = new EventMap<>();
 

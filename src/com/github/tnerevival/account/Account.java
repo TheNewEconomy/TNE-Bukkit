@@ -38,12 +38,10 @@ public class Account implements Serializable {
    * This number is unique to the account.
    */
   private int accountNumber = 0;
-
   private UUID uid;
-
   private AccountStatus status;
-
   private String pin;
+  private boolean special;
 
   public Account(UUID uid) {
     this(uid, TNE.instance().manager.accounts.size() + 1);
@@ -55,6 +53,7 @@ public class Account implements Serializable {
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
+    this.special = false;
     setBalance(TNE.instance().defaultWorld, BigDecimal.ZERO, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName());
   }
 
@@ -268,6 +267,14 @@ public class Account implements Serializable {
 
   public void setPin(String pin) {
     this.pin = pin;
+  }
+
+  public boolean isSpecial() {
+    return special;
+  }
+
+  public void setSpecial(boolean special) {
+    this.special = special;
   }
 
   public Map<Location, TrackedItems> getTrackedItems() {

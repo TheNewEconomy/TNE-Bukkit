@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `balances` LONGTEXT,
   `joinedDate` VARCHAR(60),
   `accountnumber` INTEGER,
-  `accountstatus` VARCHAR(60)
+  `accountstatus` VARCHAR(60),
+  `account_special` BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS `user_balances` (
