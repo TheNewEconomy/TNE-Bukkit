@@ -1,6 +1,8 @@
 Anything with {} are required arguments, () are optional.
 
-##Admin
+Admin
+-----------
+
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.*               | Gives access to ALL The New Economy commands listed below | |
@@ -25,7 +27,8 @@ Anything with {} are required arguments, () are optional.
 | tne.admin.save      | Force saves all TNE data                                                              | /tne save |
 | tne.admin.status    | Set {username}'s account status. Valid options:Normal, Locked, BalanceLocked, and BankLocked. | /tne status {username} {status} |
 
-##Auction
+Auction
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -46,7 +49,8 @@ Anything with {} are required arguments, () are optional.
 |                     | {global:true/false} - Whether or not this auction is global or world-based,           |         |
 |                     | {permission:node} - The permission needed to partake in this auction.                 |         |
 
-##Bank
+Bank
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -63,7 +67,8 @@ Anything with {} are required arguments, () are optional.
 | tne.bank.view       | View your bank                                                                        | /bank view
 | tne.bank.withdraw   | Withdraw the specified amout of money from your bank                                  | /bank withdraw {amount}
 
-##Bypass
+Bypass
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -74,7 +79,8 @@ Anything with {} are required arguments, () are optional.
 | tne.bypass.nametag  | Bypass all nametag costs | |
 | tne.bypass.world    | Bypass all world costs | |
 
-##Credit
+Credit
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -86,13 +92,15 @@ Anything with {} are required arguments, () are optional.
 | tne.lottery.create  | Soon™ | |
 | tne.lottery.view    | Soon™ | |
 
-##Eco
+Eco
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
 | tne.eco.clean       | Fixes all items in the inventory that contain Crafting Cost in the lore.              | /eco clean |
 
-##Lottery
+Lottery(Upcoming)
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -100,7 +108,8 @@ Anything with {} are required arguments, () are optional.
 | tne.lottery.create  | Soon™ | |
 | tne.lottery.view    | Soon™ | |
 
-##Money
+Money
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -115,7 +124,8 @@ Anything with {} are required arguments, () are optional.
 | tne.money.take      | Make some of {player}'s money vanish into thin air                                    | /money take {player} {amount} |
 | tne.money.pay       | Pay a player money from your balance                                                  | /money pay {player} {amount} |
 
-##Package
+Package
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -124,7 +134,8 @@ Anything with {} are required arguments, () are optional.
 | tne.package.list    | List all packages for the specified inventory {type}                                  | /package list {type} |
 | tne.package.buy     | Buy {package} for inventory {type}                                                    | /package buy {type} {package} |
 
-##Pin
+Pin
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -133,7 +144,8 @@ Anything with {} are required arguments, () are optional.
 | tne.pin.set         | Set your pin to {pin}'s value. Old pin is required if you have one set. Pins are case-sensitive   | /pin set {pin} {confirm pin} (old pin) |
 | tne.pin.confirm     | Cofirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin} |
 
-##Shop
+Shop
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -151,7 +163,8 @@ Anything with {} are required arguments, () are optional.
 | tne.shop.toggle     | Toggle this shop's visibility. Only whitelisted players can buy from hidden shops                       | /shop toggle {name} |
 | tne.shop.whitelist  | Add/remove the specified player to the shop's whitelist                                                 | /shop whitelist {name} {player} |
 
-##Placement and use of all signs
+Placement and use of all signs
+-----------
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
@@ -170,7 +183,8 @@ Anything with {} are required arguments, () are optional.
 
 
 
-##Parent permissions
+Parent permissions
+-----------
 
 This section is a complete list of all Parent and Child permissions. If you are unsure how this works, let me try to explain.
 

@@ -20,8 +20,8 @@ Basic Information
 Some basic information you might want to look over.
 - [Github](https://github.com/TheNewEconomy/TNE-Bukkit)
 - [Bugs/Feature Requests/Suggestions](https://github.com/TheNewEconomy/TNE-Bukkit/issues)
-- [Permission Nodes](https://creatorfromhell.com/wiki/TheNewEconomy/Permissions/)
-- [Commands](https://creatorfromhell.com/wiki/TheNewEconomy/Commands/)
+- [Permission Nodes](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Docs/Permissions.md)
+- [Commands](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Docs/Commands.md)
 - [To view the default configuration file w/ comments](http://paste.ubuntu.com/6885962/)
 - [We're on Esper! #TheNewEconomy](http://chat.mibbit.com/?server=irc.esper.net&channel=%23TheNewEconomy)
 

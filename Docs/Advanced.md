@@ -3,14 +3,14 @@ Advanced Economy
 If you're reading this then you've come to expect more out of your economy plugin, which is why I released TNE for Bukkit
 in the first place. Here I'll go over a few of the more complicated features of TNE, which there aren't many of.
 
-###Account Sharing
+### Account Sharing
 This section we'll be taking a deeper look into TNE's account sharing feature, which allows you to force worlds to share 
 economy account data between each other.
 
 In order to share accounts between worlds you need to use two configuration settings for worlds.yml. These are `ShareAccounts` 
 and `ShareWorld`. 
 
-####In-Depth Configurations
+#### In-Depth Configurations
 <i>Here I'll go over the two configuration settings in-depth.</i>
 
 Correct Format:
@@ -21,20 +21,20 @@ Worlds:
           ShareWorld: world1
 ```
 
-#####ShareAccounts
+##### ShareAccounts
 <i>This is used to determine whether a world should share it's account data with another world. If it's set to true, you
 must specify the world's data to use with `ShareWorld`.</i>
 
 Example:    
 `ShareAccounts: true`
 
-#####ShareWorld
+##### ShareWorld
 <i>The world's data to use for this world.</i>
 
 Example:    
 `ShareWorld: WorldName`
 
-####Examples
+#### Examples
 <i>Here's a few examples to better explain how it works.</i>
 
 Let's say you want to share data for World1 and World2 with World3.

@@ -3,7 +3,8 @@ Commands
 
 Anything with {} are required arguments, () are optional.
 
-##Admin Commands
+Admin Commands
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -27,7 +28,8 @@ Anything with {} are required arguments, () are optional.
 | /tne save                                                                     | tne.admin.save      | Force saves all TNE data                                                              |
 | /tne status {username} {status}                                               | tne.admin.status    | Set {username}'s account status. Valid options:Normal, Locked, BalanceLocked, and BankLocked. |
 
-##Auction
+Auction
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -52,7 +54,8 @@ bid = Amount to bid
 lot = The auction's lot number.
 
 
-##Bank
+Bank
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -68,7 +71,8 @@ lot = The auction's lot number.
 | /bank withdraw {amount}                                                       | tne.bank.withdraw   | Withdraw the specified amout of money from your bank                                  |
 
 
-##Credit
+Credit
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -77,14 +81,16 @@ lot = The auction's lot number.
 | /credit commands                                                              | tne.credit.commands | View all command credits you have accumulated                                         |
 | /credit inventory {inventory}                                                 | tne.credit.inventory| View time credits for {inventory} in every world                                      |
 
-##Eco
+Eco
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
 | /eco clean                                                                    | tne.eco.clean       | Fixes all items in the inventory that contain Crafting Cost in the lore.              |
 
 
-##Money
+Money
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -100,7 +106,8 @@ lot = The auction's lot number.
 | /money take {player} {amount}                                                 | tne.money.take      | Make some of {player}'s money vanish into thin air                                    |
 
 
-##Package
+Package
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -109,7 +116,8 @@ lot = The auction's lot number.
 | /package buy {type} {package}                                                 | tne.package.buy     | Buy {package} for inventory {type}                                                    |
 
 
-##Pin
+Pin
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -118,7 +126,8 @@ lot = The auction's lot number.
 | /pin confirm {pin}                                                            | tne.pin.confirm     | Cofirm your identity with your account pin. Pins are case-sensitive                   |
 
 
-##Shop
+Shop
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
@@ -139,10 +148,11 @@ lot = The auction's lot number.
 
 
 
-#Planned
+Planned
+=======
 
-
-##Lottery
+Lottery
+-----------
 
 | Command                                                                       | Permission          | Description                                                                           |
 |-------------------------------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------|
