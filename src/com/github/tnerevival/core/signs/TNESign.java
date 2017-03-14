@@ -42,12 +42,19 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
+    Integer max = type.max(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+    if(max > -1 && getOwned(IDFinder.getID(player), type) >= max) {
+      new Message("Messages.SignShop.Max").translate(IDFinder.getWorld(player), player);
+      event.setCancelled(true);
+    }
+
     BigDecimal place = type.place(IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
-    if(place != null && place.compareTo(BigDecimal.ZERO) > 0) {
+    if(!event.isCancelled() && place != null && place.compareTo(BigDecimal.ZERO) > 0) {
       if (!AccountUtils.transaction(IDFinder.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
         insufficient.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), place));
+        insufficient.translate(IDFinder.getWorld(player), player);
         event.setCancelled(true);
       }
     }
@@ -280,6 +287,8 @@ public abstract class TNESign {
         return new ShopSign(owner, location);
       case "vault":
         return new VaultSign(owner, location);
+      case "bank":
+        return new BankSign(owner, location);
       default:
         MISCUtils.debug("defaulting...");
         return new VaultSign(owner, location);

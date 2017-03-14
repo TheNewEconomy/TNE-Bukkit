@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.account.TrackedItems;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
 import com.github.tnerevival.core.material.MaterialHelper;
@@ -11,12 +12,15 @@ import com.github.tnerevival.core.transaction.Transaction;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -162,6 +166,50 @@ public class AccountUtils {
       padding = padding + "0";
     }
     return padding;
+  }
+
+  public static Material trackedMaterial(Location location, int slot) {
+    for(Account acc : TNE.instance().manager.accounts.values()) {
+      Material mat = acc.trackedMaterial(location, slot);
+      if(mat != null) return mat;
+    }
+    return null;
+  }
+
+  public static boolean trackedMaterial(String world, Material material) {
+    if(TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() <= 0) return false;
+    for(Currency currency : TNE.instance().manager.currencyManager.getTrackedCurrencies(world)) {
+      if(currency.isItem()) {
+        return material.equals(MaterialHelper.getMaterial(currency.getTier("minor").getMaterial()))
+               || material.equals(MaterialHelper.getMaterial(currency.getTier("major").getMaterial()));
+      }
+    }
+    return false;
+  }
+
+  public static void track(UUID id, Location location, int slot, Material material) {
+    Account account = getAccount(id);
+    if(account != null) {
+      TrackedItems items = account.getTrackedItems().get(location);
+      if(items == null) items = new TrackedItems(location);
+
+      items.getMaterialMap().put(slot, material);
+      account.getTrackedItems().put(location, items);
+      TNE.instance().manager.accounts.put(account.getUid(), account);
+    }
+  }
+
+  public static void removeTracked(Location location, int slot) {
+    Map<UUID, Account> modified = new HashMap<>();
+    for(Account acc : TNE.instance().manager.accounts.values()) {
+      if(acc.trackedMaterial(location, slot) != null) {
+        TrackedItems items = acc.getTrackedItems().get(location);
+        items.getMaterialMap().remove(slot);
+        acc.getTrackedItems().put(location, items);
+        modified.put(acc.getUid(), acc);
+      }
+    }
+    TNE.instance().manager.accounts.putAll(modified);
   }
 
   public static BigDecimal round(String world, String currency, BigDecimal amount) {

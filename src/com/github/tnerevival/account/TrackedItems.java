@@ -26,7 +26,7 @@ import java.util.Map;
  * Created by creatorfromhell on 2/5/2017.
  **/
 public class TrackedItems {
-  private Map<Material, Integer> materialMap = new HashMap<>();
+  private Map<Integer, Material> materialMap = new HashMap<>();
 
   private Location location;
 
@@ -34,11 +34,11 @@ public class TrackedItems {
     this.location = location;
   }
 
-  public Map<Material, Integer> getMaterialMap() {
+  public Map<Integer, Material> getMaterialMap() {
     return materialMap;
   }
 
-  public void setMaterialMap(Map<Material, Integer> materialMap) {
+  public void setMaterialMap(Map<Integer, Material> materialMap) {
     this.materialMap = materialMap;
   }
 

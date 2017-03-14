@@ -104,9 +104,9 @@ public class InventoryListener implements Listener {
 
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")
        || inventory.getHolder() != null && inventory.getHolder() instanceof Chest
-       && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > -1
+       && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > 0
        || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest
-       && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > -1) {
+       && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > 0) {
       MISCUtils.debug("Entered custom inventory territory...tread lightly");
       boolean open = TNE.instance().inventoryManager.getInventory(player) == null;
 
@@ -134,7 +134,7 @@ public class InventoryListener implements Listener {
 
     final Player player = (Player)event.getWhoClicked();
     final UUID id = IDFinder.getID(player);
-    boolean bottom = (event.getRawSlot() != event.getView().convertSlot(event.getRawSlot()));
+    final boolean bottom = (event.getRawSlot() != event.getView().convertSlot(event.getRawSlot()));
     final int slot = event.getView().convertSlot(event.getRawSlot());
     final Inventory inventory = (bottom)? event.getView().getBottomInventory() : event.getView().getTopInventory();
     InventoryAction action = event.getAction();
@@ -178,6 +178,7 @@ public class InventoryListener implements Listener {
       if (action.equals(InventoryAction.COLLECT_TO_CURSOR)) {
         MISCUtils.debug("Collected to cursor");
         updateType = TNEUpdateType.COLLECT_ALL;
+        event.setCancelled(true);
       } else if (action.equals(InventoryAction.HOTBAR_MOVE_AND_READD)) {
         MISCUtils.debug("HOTBAR ACTION");
         updateType = TNEUpdateType.SLOT;
@@ -204,12 +205,13 @@ public class InventoryListener implements Listener {
       if(!updateType.equals(TNEUpdateType.NONE)) {
         switch(updateType) {
           case SLOT:
+            if(bottom) break;
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
               @Override
               public void run() {
                 Map<Integer, ItemStack> changes = new HashMap<>();
                 ItemStack current = player.getOpenInventory().getItem(rawSlot);
-                changes.put(slot, current);
+                changes.put(rawSlot, current);
                 String currentString = (current == null) ? "empty" : current.toString();
                 MISCUtils.debug("New ItemStack: " + currentString);
                 tneInventory.onUpdate(changes, id);
@@ -217,20 +219,27 @@ public class InventoryListener implements Listener {
             }, 1L);
             break;
           case COLLECT_ALL:
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            /*Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
               @Override
               public void run() {
                 tneInventory.onUpdate(tneInventory.doCollect(id, originalCursor.getType()), id);
               }
-            }, 1L);
+            }, 1L);*/
             break;
           case SHIFT:
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            /*Map<Integer, ItemStack> changes = new HashMap<>();
+            if(bottom) {
+              changes.put(tneInventory.getInventory().firstEmpty(), originalItem);
+            } else {
+              changes.put(slot, new ItemStack(Material.AIR));
+            }
+            tneInventory.onUpdate(changes, id);
+            /*Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
               @Override
               public void run() {
                 tneInventory.onUpdate(tneInventory.doShift(id, slot, originalItem), id);
               }
-            }, 1L);
+            }, 1L);*/
             break;
         }
       }

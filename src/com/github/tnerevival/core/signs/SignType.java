@@ -68,4 +68,11 @@ public enum SignType {
   public BigDecimal use(String world, String player) {
     return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Use", world, player));
   }
+
+  public Integer max(String world, String player) {
+    if(TNE.instance().api().hasConfiguration(configuration + ".Max")) {
+      return TNE.instance().api().getInteger(configuration + ".Max", world, player);
+    }
+    return -1;
+  }
 }

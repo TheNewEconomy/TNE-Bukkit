@@ -1,6 +1,7 @@
 package com.github.tnerevival.core.inventory.impl;
 
 import com.github.tnerevival.core.inventory.TNEInventory;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
@@ -29,6 +30,21 @@ public class ChestInventory extends TNEInventory {
 
   @Override
   public void onUpdate(Map<Integer, ItemStack> changed, UUID player) {
-    //TODO: Check for any tracked items in chest and change accordingly.
+    String world = location.getWorld().getName();
+    for(Map.Entry<Integer, ItemStack> entry : changed.entrySet()) {
+      boolean remove = false;
+      if(entry.getKey() >= inventory.getSize()) continue;
+      if(entry.getValue() == null) remove = true;
+
+      if(remove && AccountUtils.trackedMaterial(location, entry.getKey()) != null) {
+        MISCUtils.debug("Removing tracked material");
+        AccountUtils.removeTracked(location, entry.getKey());
+      }
+
+      if(!remove && AccountUtils.trackedMaterial(world, entry.getValue().getType())) {
+        MISCUtils.debug("Adding tracked material.");
+        AccountUtils.track(player, location, entry.getKey(), entry.getValue().getType());
+      }
+    }
   }
 }

@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.credits.CreditsEntry;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -343,6 +344,13 @@ public class Account implements Serializable {
     MISCUtils.debug("Account.hasVault(" + world + ")");
     MISCUtils.debug("Outcome: " + vaults.containsKey(world));
     return vaults.containsKey(world);
+  }
+
+  public Material trackedMaterial(Location location, int slot) {
+    if(trackedItems.containsKey(location)) {
+      return trackedItems.get(location).getMaterialMap().get(slot);
+    }
+    return null;
   }
 
   public BigDecimal addAll(String world, String currency) {

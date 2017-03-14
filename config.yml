@@ -110,6 +110,7 @@ Core:
             ItemCurrency: false
 
             #Would you like to track when a player puts ItemCurrency into a chest for balance usage later? May impact performance.
+            #Temporarily modifies inventory behaviour for chests.
             TrackChest: false
 
             #If you want to use an item, which one?(Please use the name of the item)
@@ -257,6 +258,9 @@ Core:
 
             #The cost to use a bank sign, if the player has valid permissions.
             Use: 20.0
+
+            #The max number of item shops a single player may own
+            Max: 10
 
         #All configurations relating to vault signs.
         Vault:

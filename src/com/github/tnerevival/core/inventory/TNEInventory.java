@@ -112,11 +112,11 @@ public class TNEInventory {
     }
   }
 
-  public Map<Integer, ItemStack> doShift(UUID id, int previousSlot, ItemStack stack) {
+  /*public Map<Integer, ItemStack> doShift(UUID id, int previousSlot, ItemStack stack) {
     Map<Integer, ItemStack> changes = new HashMap<>();
     InventoryView view = IDFinder.getPlayer(id.toString()).getOpenInventory();
     boolean top = view.convertSlot(previousSlot) == previousSlot;
-    int slot = (top)? inventory.firstEmpty() : view.getBottomInventory().firstEmpty();
+    int slot = (top)? view.getTopInventory().firstEmpty() : firstEmpty(view);
     if(slot != -1) {
       if(!top) {
         inventory.setItem(slot, stack);
@@ -131,7 +131,7 @@ public class TNEInventory {
       }
     }
     return changes;
-  }
+  }*/
 
   public Map<Integer, ItemStack> doCollect(UUID id, Material material) {
     Map<Integer, ItemStack> changes = new HashMap<>();
@@ -140,6 +140,11 @@ public class TNEInventory {
     for(int i = 0; i < inventory.getSize(); i++) {
       ItemStack old = inventory.getItem(i);
       ItemStack current = view.getItem(i);
+      String oldString = (old == null)? "Air" : old.toString();
+      String currentString = (old == null)? "Air" : current.toString();
+      MISCUtils.debug("Slot: " + i);
+      MISCUtils.debug("Old: " + oldString);
+      MISCUtils.debug("Current: " + currentString);
       if(old != null && old.getType().equals(material)) {
         if(current == null || !current.equals(old)) {
           changes.put(i, current);
@@ -147,6 +152,14 @@ public class TNEInventory {
       }
     }
     return changes;
+  }
+
+  public int firstEmpty(InventoryView view) {
+    for(int i = view.getTopInventory().getSize(); i < view.countSlots(); i++) {
+      ItemStack stack = view.getItem(i);
+      if(stack == null || stack.getType().equals(Material.AIR)) return i;
+    }
+    return -1;
   }
 
   public void onClose(UUID id) {
