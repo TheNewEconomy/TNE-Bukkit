@@ -1,0 +1,103 @@
+World Configurations
+======================
+As of TNE Alpha 3.2 servers owners have the ability to set every configuration on a per-world basis.
+
+File
+--------------
+worlds.yml
+
+Configuration
+--------------
+```YAML
+#All configurations that can be made world-specific
+#To use, please check the Example world below
+Worlds:
+
+    #An example of what world-specific configurations are available
+    #Please note that you do NOT have to include all the following configurations as all
+    #world-specific configurations are optional
+    #Note: World name is case sensitive
+    Example:
+        
+        #How much it costs to enter this world if ChangeFee is enabled in the main configuration
+        ChangeFee: 10.0
+        
+        #The initial balance for this world if multiworld is enabled
+        #Overriden if ShareAccounts = true
+        Balance: 500.0
+
+        #Whether or not to shorten money amounts
+        #Example: 2100 would be 2.1k
+        Shorten: true
+        
+        #Whether or not you want this world to share accounts with another
+        ShareAccounts: false
+        
+        #The world to share accounts with if ShareAccounts is true
+        ShareWorld: WorldName
+        
+        #All configurations relating to currency.
+        Currency:
+
+            #Would you like to use an item as the currency?
+            ItemCurrency: false
+        
+            #If you want to use an item, which one?(USe the item's id for now)
+            #Example: 266(Gold Ingot)
+            ItemMajor: 266
+        
+            #The minor item currency item.
+            #Example: for USD this might be quarters or dimes
+            ItemMinor: 265
+
+            #The name of the major currency
+            #Example: Dollars
+            MajorName:
+
+                #The singular name. Example: Dollar
+                Single: Dollar
+
+                #The plural name. Example: Dollars
+                Plural: Dollars
+            
+            #The name of the minor currency
+            #Example: Cents
+            MinorName:
+
+                #The singular name. Example: Cent
+                Single: Cent
+
+                #The plural name. Example: Cents
+                Plural: Cents
+        
+        #All configurations relating to banks.
+        Bank:
+
+            #Whether or not banks are enabled.
+            Enabled: true
+
+            #Whether or not players can use signs to access their banks.
+            Sign: false
+
+            #Whether or not players can use a command to access their banks.
+            Command: true
+            
+            #Whether or not testificates named "Banker" allow access to player banks.
+            NPC: false
+
+            #How much is costs to open a bank account.
+            Cost: 20.0
+
+            #The number of rows a bank has.( minimum is 1, maximum is 6)
+            #1 row = 9 slots
+            Rows: 3
+            
+            #All configurations relating to bank gold interest.
+            Interest:
+
+                #Whether or not interest is enabled.
+                Enabled: false
+
+                #The interest rate in decimal form.
+                Rate: 0.2
+```

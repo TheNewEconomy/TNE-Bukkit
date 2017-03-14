@@ -1,0 +1,67 @@
+Alpha 5.2 "Quality of Life"
+=============================
+- Compatibility
+  - Fixed issues that prevented Minecraft 1.7 compatibility
+  - Fixed incompatibility with item-base currencies, and towny and factions
+- Commands
+  - bank withdraw/deposit
+    - Added currency name argument
+  - vault commands
+    - Added commands for the new vault system
+  - money top
+    - Shows the players with the highest balances
+      - This may be sorted by bank balances, all currencies, and all worlds.
+- Revamped Inventory System
+  - This new system is more efficient than the old outdated one
+  - This new system allows us to detect some slot changes.
+- World Sharing
+  - Removed the need for the ShareAccounts configuration
+  - Added the ability to share configurations, balances, or both with different worlds.
+- Sign Shops
+  - Added ability to create sign shops as an easy alternative to our convoluted shops feature
+  - Ability to let players use their ender chest inventory for storage/item stock
+  - Ability to have multiple item offers per sign
+    - This can be disabled
+    - Offers may be admin, or player based
+    - Offers may be buy, sell, buy and sell, or trade
+    - The maximum number of offers you may have per sign is configurable
+    - Players may browse through the various offers by simply scrolling their mouse wheel while looking at a sign shop
+  - No commands needed
+    - To add a new offer simply shift right click with a sign, and use the proper format
+    - To remove an offer, shift left click on the sign while the offer is displayed
+    - To buy/trade simply right click
+    - To sell to a sign simple left click
+- Mob Rewards
+  - Added ability to specify the currency for mob rewards
+  - Added ability to add rewards for forge mods
+  - Added ability to specify various rewards for slimes based on size.
+  - Added ability to have a chance reward, which gives a random reward between a set of two amounts
+  - Added ability to give a custom reward for mobs with a custom name, this could be use for boss mobs
+  - Added ability to have a Multiplier per mob, player, world, or just a general multiplier, which will multiple a mob's reward by a given amount.
+- Messages
+  - Added ability to specify different names for various mobs for mob reward messages
+  - Added ability to change the reward message for every mob, based on the Vanilla name, or a custom name.
+- Banks
+  - Separated into two systems; banks, which hold money, and vaults, which hold items
+  - Banks may now hold multiple currencies per world
+  - Interest configurations are now set on a per-currency level
+- Currencies
+  - Added configurations to specify the number of decimal places displayed for balances 
+- MISC
+  - Added the ability to disable the entire economy system for specific worlds
+    - This will be done in the worlds.yml file simply by added Worlds.<worldname>.DisableEconomy: true
+- Technical
+  - API
+    - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
+    - Changed how developers access the TNE API.
+      - This is now done via TNE.instance().api() rather than TNE.instance.api
+      - The new way prevents any unnecessary modification that may occur
+  - SQL
+    - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
+- Bug Fixes
+  - All issues pertaining the the old inventory
+  - Fixed issue where accounts weren't getting initialized with item-based currencies properly
+  - Fixed issue where getting balances of players with item-based currencies while MultiWorld was set to true returned incorrect values
+  - tne reload all fix
+  - fixed incompatibility issues with the essentials invsee command
+  - fixed issue where paid players weren't receiving Messages.Money.Received
