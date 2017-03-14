@@ -25,6 +25,7 @@ import com.github.tnerevival.utils.MISCUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.math.BigDecimal;
 
 /**
  * Created by creatorfromhell on 11/15/2016.
@@ -39,7 +40,7 @@ public class BOSEconomy extends Converter {
   @Override
   public void flatfile() throws InvalidDatabaseImport {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance.getDataFolder(), "../BOSEconomy/accounts.txt")));
+      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(), "../BOSEconomy/accounts.txt")));
 
       String line;
       String id = "";
@@ -56,7 +57,7 @@ public class BOSEconomy extends Converter {
             lowerID = "";
           } else {
             String eco = (acc.trim().equalsIgnoreCase(""))? id : acc;
-            AccountUtils.convertedAdd(eco, TNE.instance.defaultWorld, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName(), money);
+            AccountUtils.convertedAdd(eco, TNE.instance().defaultWorld, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName(), new BigDecimal(money));
             inBlock = false;
             bank = false;
             money = 0.0;

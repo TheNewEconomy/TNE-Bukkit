@@ -6,14 +6,17 @@ import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
-import com.github.tnerevival.core.inventory.InventoryManager;
 import com.github.tnerevival.core.version.ReleaseType;
-import com.github.tnerevival.listeners.*;
+import com.github.tnerevival.listeners.ConnectionListener;
+import com.github.tnerevival.listeners.InteractionListener;
+import com.github.tnerevival.listeners.InventoryListener;
+import com.github.tnerevival.listeners.WorldListener;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.worker.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,18 +33,27 @@ public class TNE extends JavaPlugin {
 
   public List<String> modified = new ArrayList<>();
 
-  public static TNE instance;
+  private static TNE instance;
   public EconomyManager manager;
   public InventoryManager inventoryManager;
   public SaveManager saveManager;
   private CommandManager commandManager;
-  public TNEAPI api = null;
+  private TNEAPI api = null;
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
   public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
+  public static final BlockFace[] signCheck = new BlockFace[] {
+    BlockFace.EAST,
+    BlockFace.WEST,
+    BlockFace.NORTH,
+    BlockFace.SOUTH,
+    BlockFace.UP,
+    BlockFace.DOWN
+  };
   public static boolean debugMode = false;
 
   // Files & Custom Configuration Files
+  public File items;
   public File mobs;
   public File messages;
   public File objects;
@@ -49,10 +61,11 @@ public class TNE extends JavaPlugin {
   public File players;
   public File worlds;
 
+  public FileConfiguration itemConfigurations;
   public FileConfiguration mobConfigurations;
   public FileConfiguration messageConfigurations;
-  public FileConfiguration objectConfigurations;
   public FileConfiguration materialConfigurations;
+  public FileConfiguration objectConfigurations;
   public FileConfiguration playerConfigurations;
   public FileConfiguration worldConfigurations;
 
@@ -69,7 +82,7 @@ public class TNE extends JavaPlugin {
   private InterestWorker interestWorker;
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
-  public CacheWorker cacheWorker;
+  private CacheWorker cacheWorker;
 
   public static Map<String, UUID> uuidCache = new HashMap<>();
 
@@ -105,10 +118,8 @@ public class TNE extends JavaPlugin {
       saveWorker.runTaskTimer(this, configurations.getLong("Core.AutoSaver.Interval") * 20, configurations.getLong("Core.AutoSaver.Interval") * 20);
     }
 
-    if(configurations.getBoolean("Core.Bank.Interest.Enabled")) {
-      interestWorker = new InterestWorker(this);
-      interestWorker.runTaskTimer(this, configurations.getLong("Core.Bank.Interest.Interval") * 20, configurations.getLong("Core.Bank.Interest.Interval") * 20);
-    }
+    interestWorker = new InterestWorker(this);
+    interestWorker.runTaskTimer(this, 20, 20);
 
     if(!saveManager.type.equalsIgnoreCase("flatfile") && saveManager.cache) {
       cacheWorker = new CacheWorker(this);
@@ -181,12 +192,14 @@ public class TNE extends JavaPlugin {
   }
 
   private void initializeConfigurations() {
+    items = new File(getDataFolder(), "items.yml");
     mobs = new File(getDataFolder(), "mobs.yml");
     messages = new File(getDataFolder(), "messages.yml");
     objects = new File(getDataFolder(), "objects.yml");
     materials = new File(getDataFolder(), "materials.yml");
     players = new File(getDataFolder(), "players.yml");
     worlds = new File(getDataFolder(), "worlds.yml");
+    itemConfigurations = YamlConfiguration.loadConfiguration(items);
     mobConfigurations = YamlConfiguration.loadConfiguration(mobs);
     messageConfigurations = YamlConfiguration.loadConfiguration(messages);
     objectConfigurations = YamlConfiguration.loadConfiguration(objects);
@@ -202,6 +215,7 @@ public class TNE extends JavaPlugin {
 
   public void loadConfigurations() {
     getConfig().options().copyDefaults(true);
+    itemConfigurations.options().copyDefaults(true);
     mobConfigurations.options().copyDefaults(true);
     messageConfigurations.options().copyDefaults(true);
     objectConfigurations.options().copyDefaults(true);
@@ -216,6 +230,9 @@ public class TNE extends JavaPlugin {
       saveConfig();
     }
     try {
+      if(!check || !items.exists() || modified.contains(itemConfigurations.getName())) {
+        itemConfigurations.save(items);
+      }
       if(!check || !mobs.exists() || modified.contains(mobConfigurations.getName())) {
         mobConfigurations.save(mobs);
       }
@@ -240,12 +257,17 @@ public class TNE extends JavaPlugin {
   }
 
   private void setConfigurationDefaults() throws UnsupportedEncodingException {
+    Reader itemsStream = new InputStreamReader(this.getResource("items.yml"), "UTF8");
     Reader mobsStream = new InputStreamReader(this.getResource("mobs.yml"), "UTF8");
     Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
     Reader objectsStream = new InputStreamReader(this.getResource("objects.yml"), "UTF8");
     Reader materialsStream = new InputStreamReader(this.getResource("materials.yml"), "UTF8");
     Reader playersStream = new InputStreamReader(this.getResource("players.yml"), "UTF8");
     Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
+      if (itemsStream != null) {
+          YamlConfiguration config = YamlConfiguration.loadConfiguration(itemsStream);
+          itemConfigurations.setDefaults(config);
+      }
       if (mobsStream != null) {
           YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
           mobConfigurations.setDefaults(config);
@@ -277,11 +299,19 @@ public class TNE extends JavaPlugin {
       }
   }
 
-  public void setupVault() {
+  private void setupVault() {
     if(getServer().getPluginManager().getPlugin("Vault") == null) {
       return;
     }
-        getServer().getServicesManager().register(Economy.class, new TNEVaultEconomy(this), this, ServicePriority.Highest);
-        MISCUtils.debug("Hooked into Vault");
+    getServer().getServicesManager().register(Economy.class, new TNEVaultEconomy(this), this, ServicePriority.Highest);
+    MISCUtils.debug("Hooked into Vault");
+  }
+
+  public TNEAPI api() {
+    return api;
+  }
+
+  public static TNE instance() {
+    return instance;
   }
 }

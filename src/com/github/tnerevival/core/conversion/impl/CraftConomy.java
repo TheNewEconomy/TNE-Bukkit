@@ -29,6 +29,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -37,10 +38,10 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 11/13/2016.
  **/
 public class CraftConomy extends Converter {
-  private File tneConfigFile = new File(TNE.instance.getDataFolder(), "config.yml");
+  private File tneConfigFile = new File(TNE.instance().getDataFolder(), "config.yml");
   private FileConfiguration tneConfig = YamlConfiguration.loadConfiguration(tneConfigFile);
 
-  private File configFile = new File(TNE.instance.getDataFolder(), "../Craftconomy3/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Craftconomy3/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String prefix = config.getString("System.Database.Prefix");
@@ -62,23 +63,23 @@ public class CraftConomy extends Converter {
       while (mysqlDB().results(currencyIndex).next()) {
         String major = mysqlDB().results(currencyIndex).getString("name");
 
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Format", "<symbol><major><decimal><minor><shorten>");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Balance", 100.00);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Default", false);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Conversion", 1.0);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Symbol", mysqlDB().results(currencyIndex).getString("sign"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Decimal", ".");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".ItemCurrency", false);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMajor", "GOLD_INGOT");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMinor", "IRON_INGOT");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Single", major);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", mysqlDB().results(currencyIndex).getString("plural"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", mysqlDB().results(currencyIndex).getString("minor"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", mysqlDB().results(currencyIndex).getString("minorplural"));
-        TNE.instance.getConfig().save(tneConfigFile);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Format", "<symbol><major><decimal><minor><shorten>");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Balance", 100.00);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Default", false);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Conversion", 1.0);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Symbol", mysqlDB().results(currencyIndex).getString("sign"));
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Decimal", ".");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".ItemCurrency", false);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".ItemMajor", "GOLD_INGOT");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".ItemMinor", "IRON_INGOT");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MajorName.Single", major);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MajorName.Plural", mysqlDB().results(currencyIndex).getString("plural"));
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MinorName.Single", mysqlDB().results(currencyIndex).getString("minor"));
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MinorName.Plural", mysqlDB().results(currencyIndex).getString("minorplural"));
+        TNE.instance().getConfig().save(tneConfigFile);
       }
 
-      TNE.instance.manager.currencyManager.loadCurrencies();
+      TNE.instance().manager.currencyManager.loadCurrencies();
 
       Map<Integer, String> ids = new HashMap<>();
       int accountIndex = mysqlDB().executeQuery("SELECT * FROM " + accountTable + ";");
@@ -92,46 +93,46 @@ public class CraftConomy extends Converter {
         if(ids.containsKey(mysqlDB().results(balanceIndex).getInt("username_id"))) {
           String currencyName = mysqlDB().results(balanceIndex).getString("currency_id");
           Double amount = mysqlDB().results(balanceIndex).getDouble("balance");
-          String world = (mysqlDB().results(balanceIndex).getString("worldName").equalsIgnoreCase("default")) ? TNE.instance.defaultWorld : mysqlDB().results(balanceIndex).getString("worldName");
-          Currency currency = TNE.instance.manager.currencyManager.get(world);
-          if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
-            currency = TNE.instance.manager.currencyManager.get(world, currencyName);
+          String world = (mysqlDB().results(balanceIndex).getString("worldName").equalsIgnoreCase("default")) ? TNE.instance().defaultWorld : mysqlDB().results(balanceIndex).getString("worldName");
+          Currency currency = TNE.instance().manager.currencyManager.get(world);
+          if (TNE.instance().manager.currencyManager.contains(world, currencyName)) {
+            currency = TNE.instance().manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.convertedAdd(ids.get(mysqlDB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
+          AccountUtils.convertedAdd(ids.get(mysqlDB().results(balanceIndex).getInt("username_id")), TNE.instance().defaultWorld, currency.getName(), new BigDecimal(amount));
         }
       }
     } catch(Exception e) {
       MISCUtils.debug(e);
-      TNE.instance.getLogger().log(Level.WARNING, "Unable to load CraftConomy Data.");
+      TNE.instance().getLogger().log(Level.WARNING, "Unable to load CraftConomy Data.");
     }
   }
 
   @Override
   public void h2() throws InvalidDatabaseImport {
-    db = new H2(TNE.instance.getDataFolder() + "../CraftConomy3/database.h2.db", mysqlUser, mysqlPassword);
+    db = new H2(TNE.instance().getDataFolder() + "../CraftConomy3/database.h2.db", mysqlUser, mysqlPassword);
 
     try {
       int currencyIndex = h2DB().executeQuery("SELECT * FROM " + currencyTable + ";");
       while (h2DB().results(currencyIndex).next()) {
         String major = h2DB().results(currencyIndex).getString("name");
 
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Format", "<symbol><major><decimal><minor><shorten>");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Balance", 100.00);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Default", false);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Conversion", 1.0);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Symbol", h2DB().results(currencyIndex).getString("sign"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".Decimal", ".");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".ItemCurrency", false);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMajor", "GOLD_INGOT");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".ItemMinor", "IRON_INGOT");
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Single", major);
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MajorName.Plural", h2DB().results(currencyIndex).getString("plural"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Single", h2DB().results(currencyIndex).getString("minor"));
-        TNE.instance.getConfig().set("Core.Currency." + major + ".MinorName.Plural", h2DB().results(currencyIndex).getString("minorplural"));
-        TNE.instance.getConfig().save(tneConfigFile);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Format", "<symbol><major><decimal><minor><shorten>");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Balance", 100.00);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Default", false);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Conversion", 1.0);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Symbol", h2DB().results(currencyIndex).getString("sign"));
+        TNE.instance().getConfig().set("Core.Currency." + major + ".Decimal", ".");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".ItemCurrency", false);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".ItemMajor", "GOLD_INGOT");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".ItemMinor", "IRON_INGOT");
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MajorName.Single", major);
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MajorName.Plural", h2DB().results(currencyIndex).getString("plural"));
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MinorName.Single", h2DB().results(currencyIndex).getString("minor"));
+        TNE.instance().getConfig().set("Core.Currency." + major + ".MinorName.Plural", h2DB().results(currencyIndex).getString("minorplural"));
+        TNE.instance().getConfig().save(tneConfigFile);
       }
 
-      TNE.instance.manager.currencyManager.loadCurrencies();
+      TNE.instance().manager.currencyManager.loadCurrencies();
 
       Map<Integer, String> ids = new HashMap<>();
       int accountIndex = h2DB().executeQuery("SELECT * FROM " + accountTable + ";");
@@ -145,16 +146,16 @@ public class CraftConomy extends Converter {
         if(ids.containsKey(h2DB().results(balanceIndex).getInt("username_id"))) {
           String currencyName = h2DB().results(balanceIndex).getString("currency_id");
           Double amount = h2DB().results(balanceIndex).getDouble("balance");
-          String world = (h2DB().results(balanceIndex).getString("worldName").equalsIgnoreCase("default")) ? TNE.instance.defaultWorld : h2DB().results(balanceIndex).getString("worldName");
-          Currency currency = TNE.instance.manager.currencyManager.get(world);
-          if (TNE.instance.manager.currencyManager.contains(world, currencyName)) {
-            currency = TNE.instance.manager.currencyManager.get(world, currencyName);
+          String world = (h2DB().results(balanceIndex).getString("worldName").equalsIgnoreCase("default")) ? TNE.instance().defaultWorld : h2DB().results(balanceIndex).getString("worldName");
+          Currency currency = TNE.instance().manager.currencyManager.get(world);
+          if (TNE.instance().manager.currencyManager.contains(world, currencyName)) {
+            currency = TNE.instance().manager.currencyManager.get(world, currencyName);
           }
-          AccountUtils.convertedAdd(ids.get(h2DB().results(balanceIndex).getInt("username_id")), TNE.instance.defaultWorld, currency.getName(), amount);
+          AccountUtils.convertedAdd(ids.get(h2DB().results(balanceIndex).getInt("username_id")), TNE.instance().defaultWorld, currency.getName(), new BigDecimal(amount));
         }
       }
     } catch(Exception e) {
-      TNE.instance.getLogger().log(Level.WARNING, "Unable to load CraftConomy Data.");
+      TNE.instance().getLogger().log(Level.WARNING, "Unable to load CraftConomy Data.");
     }
   }
 }

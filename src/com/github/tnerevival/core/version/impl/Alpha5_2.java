@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by creatorfromhell on 1/17/2017.
  **/
-public class Alpha6_0 extends Version {
+public class Alpha5_2 extends Version {
   @Override
   public double versionNumber() {
     return 5.1;
@@ -45,24 +45,8 @@ public class Alpha6_0 extends Version {
 
   @Override
   public void update(double version, String type) {
-    if(version < 4.0 || version == 5.0) return;
-
-    String table = prefix + "_INFO";
-    if(type.equalsIgnoreCase("mysql")) {
-      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(id)");
-      mysql().executeUpdate("ALTER TABLE `" + table + "` ADD COLUMN `server_name` VARCHAR(250) AFTER `version`");
-
-      table = prefix + "_ECOIDS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `username` VARCHAR(56)");
-      mysql().close();
-    } else if(type.equalsIgnoreCase("h2")) {
-      h2().executeUpdate("ALTER TABLE `" + table + "` ADD UNIQUE(id)");
-      h2().executeUpdate("ALTER TABLE `" + table + "` ADD COLUMN `server_name` VARCHAR(250) AFTER `version`");
-
-      table = prefix + "_ECOIDS";
-      h2().executeUpdate("ALTER TABLE `" + table + "` MODIFY `username` VARCHAR(56)");
-      h2().close();
-    }
+    if(version < 4.0) return;
+    //TODO: Table updating
   }
 
   @Override
@@ -265,9 +249,9 @@ public class Alpha6_0 extends Version {
       mysql().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getServerName(),
+              TNE.instance().getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getServerName()
+              TNE.instance().getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";
@@ -386,9 +370,9 @@ public class Alpha6_0 extends Version {
       h2().executePreparedUpdate("INSERT INTO `" + table + "` (id, version, server_name) VALUES(1, ?, ?) ON DUPLICATE KEY UPDATE version = ?, server_name = ?",
           new Object[] {
               versionNumber(),
-              TNE.instance.getServer().getServerName(),
+              TNE.instance().getServer().getServerName(),
               versionNumber(),
-              TNE.instance.getServer().getServerName()
+              TNE.instance().getServer().getServerName()
           });
 
       table = prefix + "_ECOIDS";

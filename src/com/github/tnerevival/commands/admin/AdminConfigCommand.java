@@ -20,7 +20,6 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -57,19 +56,19 @@ public class AdminConfigCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : "";
-      String world = (sender instanceof Player)? IDFinder.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+      String world = (sender instanceof Player)? IDFinder.getWorld(getPlayer(sender)) : TNE.instance().defaultWorld;
       String action = (arguments[0].equalsIgnoreCase("set"))? "set" : "get";
-      if(TNE.instance.api.hasConfiguration(arguments[1])) {
+      if(TNE.instance().api().hasConfiguration(arguments[1])) {
         Message m = null;
         switch(action) {
           case "set":
-            TNE.instance.api.setConfiguration(arguments[1], arguments[2]);
+            TNE.instance().api().setConfiguration(arguments[1], arguments[2]);
             m = new Message("Messages.Admin.SetConfiguration");
             m.addVariable("$node", arguments[1]);
             m.addVariable("$value", arguments[2] + "");
             break;
           default:
-            Object value = TNE.instance.api.getConfiguration(arguments[1], world, id);
+            Object value = TNE.instance().api().getConfiguration(arguments[1], world, id);
             m = new Message("Messages.Admin.Configuration");
             m.addVariable("$node", arguments[1]);
             m.addVariable("$value", value + "");

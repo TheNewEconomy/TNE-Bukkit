@@ -7,13 +7,69 @@
     - API documentation
   - SQL Improvements
     - Ability to allow caching for SQL-based formats
+    
+- Alpha 5.2 "Quality of Life"
+  - Compatibility
+    - Fixed issues that prevented Minecraft 1.7 compatibility
+  - Commands
+    - bank withdraw/deposit
+      - Added currency name argument
+    - vault commands
+      - Added commands for the new vault system
+    - money top
+      - Shows the players with the highest balances
+        - This may be sorted by bank balances, all currencies, and all worlds.
+  - World Sharing
+    - Removed the need for the ShareAccounts configuration
+    - Added the ability to share configurations, balances, or both with different worlds.
+  - Sign Shops
+    - Added ability to create sign shops as an easy alternative to our convoluted shops feature
+    - Ability to have multiple item offers per sign
+      - This can be disabled
+      - Offers may be admin, or player based
+      - Offers may be buy, sell, buy and sell, or trade
+      - The maximum number of offers you may have per sign is configurable
+      - Players may browse through the various offers by simply scrolling their mouse wheel while looking at a sign shop
+    - No commands needed
+      - To add a new offer simply shift right click with a sign, and use the proper format
+      - To remove an offer, shift left click on the sign while the offer is displayed
+      - To buy/trade simply right click
+      - To sell to a sign simple left click
+  - Mob Rewards
+    - Added ability to specify the currency for mob rewards
+    - Added ability to add rewards for forge mods
+    - Added ability to specify various rewards for slimes based on size.
+    - Added ability to have a chance reward, which gives a random reward between a set of two amounts
+    - Added ability to give a custom reward for mobs with a custom name, this could be use for boss mobs
+    - Added ability to have a Multiplier per mob, player, world, or just a general multiplier, which will multiple a mob's reward by a given amount.
+  - Messages
+    - Added ability to specify different names for various mobs for mob reward messages
+    - Added ability to change the reward message for every mob, based on the Vanilla name, or a custom name.
+  - Banks
+    - Separated into two systems; banks, which hold money, and vaults, which hold items
+    - Banks may now hold multiple currencies
+    - Interest configurations are now set on a per-currency level
+  - Currencies
+    - Added configurations to specify the number of decimal places displayed for balances 
+  - Technical
+    - API
+      - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
+      - Changed how developers access the TNE API.
+        - This is now done via TNE.instance().api() rather than TNE.instance.api
+        - The new way prevents any unnecessary modification that may occur
+    - SQL
+      - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
+  - Bug Fixes
+    - tne reload all fix
+    - fixed support issues for servers running on Minecraft 1.7
+    - fixed incompatibility issues with the essentials invsee command
+    - fixed issue where paid players weren't receiving Messages.Money.Received
+  
 - Alpha 6.0 "Final Stages"
-  - Shop sign support
   - Rework shops to be more user-friendly. I want a shop system that isn't all command based such as the one we have now. More or less a more chest "friendly" version.
   - Lotteries
   - Player Trading(depending on whether it is a wanted feature)
-  - PHP class for converting TNE data to PHP class objects
-  - Separation of Banks into an Item Bank, and Money Vault
+  
 - Alpha 6.1 "Stability"
   - Major stability improvements
   - Bug fixes galore
@@ -22,3 +78,10 @@
 - Version Unknown
   - Administration command additions
     - Ability to modify configurations in-game
+  - Inventory System
+    - Complete rewrite of the old system to no longer run our internal events on every inventory for credit purposes, this
+    was one of the few places still causing errors for server owners.
+    - This new system allows us to track when items are moved/removed in/from inventories such as vaults to help prevent
+    duplicated inventories.
+    - This also fixes a weird issue caused when using Essential's invsee command with TNE running
+    - This new system will also allow me to implement my new inventory-based shop system correctly

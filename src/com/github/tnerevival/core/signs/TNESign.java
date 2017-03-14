@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.signs;
 
+import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -10,10 +11,14 @@ import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 public abstract class TNESign {
   protected UUID owner;
@@ -21,8 +26,9 @@ public abstract class TNESign {
   protected SerializableLocation location;
   protected Inventory inventory = null;
 
-  public TNESign(UUID owner) {
+  public TNESign(UUID owner, SerializableLocation location) {
     this.owner = owner;
+    this.location = location;
   }
 
   /**
@@ -36,12 +42,19 @@ public abstract class TNESign {
       event.setCancelled(true);
     }
 
-    Double place = type.place(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+    Integer max = type.max(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+    if(max > -1 && getOwned(IDFinder.getID(player), type) >= max) {
+      new Message("Messages.SignShop.Max").translate(IDFinder.getWorld(player), player);
+      event.setCancelled(true);
+    }
 
-    if(place != null && place > 0.0) {
+    BigDecimal place = type.place(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+
+    if(!event.isCancelled() && place != null && place.compareTo(BigDecimal.ZERO) > 0) {
       if (!AccountUtils.transaction(IDFinder.getID(player).toString(), null, place, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
         Message insufficient = new Message("Messages.Money.Insufficient");
         insufficient.addVariable("$amount", CurrencyFormatter.format(IDFinder.getWorld(player), place));
+        insufficient.translate(IDFinder.getWorld(player), player);
         event.setCancelled(true);
       }
     }
@@ -58,6 +71,7 @@ public abstract class TNESign {
   public boolean onDestroy(Player player) {
     TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.DESTROYED);
     Bukkit.getServer().getPluginManager().callEvent(event);
+    if(!owner.equals(IDFinder.getID(player)) && !player.hasPermission("tne.sign.admin")) return false;
     return (!event.isCancelled());
   }
 
@@ -66,7 +80,7 @@ public abstract class TNESign {
    * @param player
    * @return Whether or not the action was performed successfully
    */
-  public boolean onClick(Player player) {
+  public boolean onClick(Player player, boolean shift) {
     TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.LEFT_CLICKED);
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
@@ -80,13 +94,13 @@ public abstract class TNESign {
    * @param player
    * @return Whether or not the action was performed successfully
    */
-  public boolean onRightClick(Player player) {
+  public boolean onRightClick(Player player, boolean shift) {
     TNESignEvent event = new TNESignEvent(IDFinder.getID(player), this, SignEventAction.RIGHT_CLICKED);
     if(!player.hasPermission(type.getUsePermission())) {
       event.setCancelled(true);
     }
 
-    Double use = type.use(IDFinder.getWorld(player), IDFinder.getID(player).toString());
+    BigDecimal use = type.use(IDFinder.getWorld(player), IDFinder.getID(player).toString());
 
     if(!type.enabled(IDFinder.getWorld(player), IDFinder.getID(player).toString())) {
       new Message("Messages.Objects.SignDisabled").translate(IDFinder.getWorld(player), player);
@@ -165,5 +179,119 @@ public abstract class TNESign {
   public String getMeta() {
     //TODO: Implement as needed in child classes.
     return "";
+  }
+
+  /**
+   * Utility Methods
+   */
+
+
+  public static Boolean validSign(Location location) {
+    SerializableLocation cerealLoc = new SerializableLocation(location);
+    for(SerializableLocation loc : TNE.instance().manager.signs.keySet()) {
+      if(loc.equals(cerealLoc)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static Location getAttachedSign(Location location) {
+    List<Location> validLoc = validSignLocations(location);
+    for(Location loc : validLoc) {
+      if(loc.getWorld().getBlockAt(loc).getState() instanceof Sign && validSign(loc)) {
+        return loc;
+      }
+    }
+    return null;
+  }
+
+  public static void removeSign(SerializableLocation location) {
+    Iterator<Map.Entry<SerializableLocation, TNESign>> i = TNE.instance().manager.signs.entrySet().iterator();
+
+    while(i.hasNext()) {
+      Map.Entry<SerializableLocation, TNESign> e = i.next();
+
+      if(e.getKey().equals(location)) {
+        i.remove();
+      }
+    }
+  }
+
+  public static TNESign getSign(SerializableLocation location) {
+    for(Map.Entry<SerializableLocation, TNESign> entry : TNE.instance().manager.signs.entrySet()) {
+      if(entry.getKey().equals(location)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  public static int getOwned(UUID id, SignType type) {
+    int owned = 0;
+
+    for(TNESign sign : TNE.instance().manager.signs.values()) {
+      if(sign.getOwner().equals(id)) {
+        if(type.equals(SignType.UNKNOWN) || sign.getType().equals(type)) owned++;
+      }
+    }
+
+    return owned;
+  }
+
+  public static TNESign getOwningSign(Location location) {
+    MISCUtils.debug("TNESign:getOwningSign(" + location.toString() + ")");
+    for(Location loc : validChestLocations(location)) {
+      MISCUtils.debug("Possibly sign location: " + loc.toString() + " is valid? " + validSign(loc));
+      if(validSign(loc)) return getSign(new SerializableLocation(loc));
+    }
+    return null;
+  }
+
+  public SignChest getAttachedChest() {
+    for(Location loc : validChestLocations(location.getLocation())) {
+      if(loc.getBlock().getState() instanceof Chest || loc.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
+        return new SignChest(loc.getBlock());
+      }
+    }
+    return null;
+  }
+
+  public static List<Location> validChestLocations(Location location) {
+    List<Location> locations = new ArrayList<>();
+    locations.add(location.clone().add(1, 0, 0));
+    locations.add(location.clone().add(-1, 0, 0));
+    locations.add(location.clone().add(0, 1, 0));
+    locations.add(location.clone().add(0, -1, 0));
+    locations.add(location.clone().add(0, 0, 1));
+    locations.add(location.clone().add(0, 0, -1));
+
+    return locations;
+  }
+
+  public static List<Location> validSignLocations(Location location) {
+    List<Location> locations = new ArrayList<>();
+    locations.add(location.clone().add(1, 0, 0));
+    locations.add(location.clone().add(-1, 0, 0));
+    locations.add(location.clone().add(0, 0, 1));
+    locations.add(location.clone().add(0, 0, -1));
+
+    return locations;
+  }
+
+  public static TNESign instance(String type, UUID owner, SerializableLocation location) {
+    switch(type.toLowerCase()) {
+      case "item":
+        return new ItemSign(owner, location);
+      case "shop":
+        return new ShopSign(owner, location);
+      case "vault":
+        return new VaultSign(owner, location);
+      case "bank":
+        return new BankSign(owner, location);
+      default:
+        MISCUtils.debug("defaulting...");
+        return new VaultSign(owner, location);
+    }
   }
 }

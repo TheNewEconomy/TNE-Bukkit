@@ -1,4 +1,4 @@
-# The New Economy v0.0.6.0
+# The New Economy v0.0.5.2
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
@@ -60,6 +60,7 @@ Messages:
        NoPerm: <red>I'm sorry, but you do not have permission to do that.
        Saved: <yellow>Successfully saved all TNE Data!
        NoPlayer: <red>Unable to locate player "$player"!
+       Disabled: <red>Economy features are currently disabled in this world!
 
     Item:
       Invalid: <red>Invalid item name and/or durability combination entered.
@@ -108,6 +109,7 @@ Messages:
        NoPins: <red>Pins are disabled in this world!
        NoCurrency: <red>The currency "$currency" could not be found in "$world".
        Converted: <white>Successfully exchanged "<gold>$from_amount<white>" to "<gold>$amount<white>".
+       Top: <white>=========[<gold>Economy Top<white>]========= $page/$page_top
 
     Auction:
        Start: <white>Auction has started for $item. Starting bid is <gold>$start<white>.
@@ -135,6 +137,21 @@ Messages:
        PersonalQueue: <red>You have reached the maximum queue allowance.
        MaxQueue: <red>The auction queue is currently full.
        Queued: <white>Your auction has been added to the queue as lot <green>$lot<white>.
+
+    SignShop:
+      MaxOffers: <red>You've created the max number of offers for this sign already.
+      Removed: <white>Successfully removed offer from Sign Shop.
+      Added: <white>Successfully added offer to Sign Shop.
+      NoMultiple: <red>Multiple offers has been disabled on this world.
+      InvalidBuy: <red>Couldn't create offer, invalid buy/sell/trade value.
+      OwnerInsufficient: <red>I'm sorry, but the owner of this offer does not currently has insufficient funds.
+      Insufficient: <red>You do not have the sufficient materials, or money necessary to purchase the item from this Sign Shop.
+      Successful: <white>Successfully completed transaction with Sign Shop.
+      Max: <red> You've placed the maximum number of this sign in this world.
+      OutOfStock: <red>I'm sorry, but that item is currently out of stock.
+      UnableAccept: <red>I'm sorry, but this shop currently cannot accept that item at this time.
+      UnableChest: <red>I'm sorry, but that chest belongs to a nearby sign shop.
+      DroppingExtra: <white>Adding items to your inventory since your sign shop's chest is full.
 
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.
@@ -193,7 +210,8 @@ Messages:
        Disabled: <red>I'm sorry, but vaults are disabled in this world.
        Balance: <white>There is currently <gold>$amount<white> in the vault of $name.
        Deposit: <white>You have deposited <gold>$amount<white> into the vault of $name.
-       Invalid: <red>I'm sorry, but you don't have access to the vault of $name!
+       Invalid: <red>I'm sorry, but you don't have access to the vault of $name.
+       Occupied: <red>I'm sorry, but that vault is currently occupied by other players.
     
     Bank:
        Added: <white>$player has been added to your bank!
@@ -229,6 +247,13 @@ Messages:
        Killed: <white>You received $reward <white>for killing a <green>$mob<white>.
        KilledVowel: <white>You received $reward <white>for killing an <green>$mob<white>.
        NPCTag: <red>I'm sorry, but you cannot use a name tag on a villager.
+
+       #This is used to rename mobs for the mob reward messages.
+       Custom:
+
+           #The name of the mob, followed by the new name.
+           example-mob: New Name
+           MOCREATURES_TURKEY: Turkey
     
     World:
        Change: <red>You have been charged <gold> $amount<red> for changing worlds.

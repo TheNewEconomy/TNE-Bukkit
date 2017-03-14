@@ -32,17 +32,17 @@ public class CommandManager {
   private Field knownCommands = null;
 
   public CommandManager() {
-    commands.put(new String[] { "theneweconomy", "tne" }, new AdminCommand(TNE.instance));
-    commands.put(new String[] { "theneweconomydev", "tnedev" }, new DeveloperCommand(TNE.instance));
-    commands.put(new String[] { "eco" }, new EcoCommand(TNE.instance));
-    commands.put(new String[] { "auction", "sauction" }, new AuctionCommand(TNE.instance));
-    commands.put(new String[] { "bank" }, new BankCommand(TNE.instance));
-    commands.put(new String[] { "credit" }, new CreditCommand(TNE.instance));
-    commands.put(new String[] { "money", "bal", "balance" }, new MoneyCommand(TNE.instance));
-    commands.put(new String[] { "package" }, new PackageCommand(TNE.instance));
-    commands.put(new String[] { "pin" }, new PinCommand(TNE.instance));
-    commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance));
-    commands.put(new String[] { "vault" }, new VaultCommand(TNE.instance));
+    commands.put(new String[] { "theneweconomy", "tne" }, new AdminCommand(TNE.instance()));
+    commands.put(new String[] { "theneweconomydev", "tnedev" }, new DeveloperCommand(TNE.instance()));
+    commands.put(new String[] { "eco" }, new EcoCommand(TNE.instance()));
+    commands.put(new String[] { "auction", "sauction" }, new AuctionCommand(TNE.instance()));
+    commands.put(new String[] { "bank" }, new BankCommand(TNE.instance()));
+    commands.put(new String[] { "credit" }, new CreditCommand(TNE.instance()));
+    commands.put(new String[] { "money", "bal", "balance", "pay", "baltop", "balancetop" }, new MoneyCommand(TNE.instance()));
+    commands.put(new String[] { "package" }, new PackageCommand(TNE.instance()));
+    commands.put(new String[] { "pin" }, new PinCommand(TNE.instance()));
+    commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance()));
+    commands.put(new String[] { "vault" }, new VaultCommand(TNE.instance()));
     registerCommands();
   }
 
@@ -79,7 +79,7 @@ public class CommandManager {
     try {
       Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
       c.setAccessible(true);
-      PluginCommand pluginCommand = c.newInstance(command, TNE.instance);
+      PluginCommand pluginCommand = c.newInstance(command, TNE.instance());
       if(pluginCommand != null) {
         ((SimpleCommandMap) commandMap.get(Bukkit.getServer())).register(command, pluginCommand);
         MISCUtils.debug("Registered command " + command);
@@ -108,9 +108,9 @@ public class CommandManager {
 
   public TNECommand Find(String name) {
     for(TNECommand c : commands.values()) {
-      if(name.equalsIgnoreCase("pay") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
-      if(name.equalsIgnoreCase("balance") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
-      if(name.equalsIgnoreCase("bal") && c.getName().equalsIgnoreCase("money") && TNE.instance.api.getBoolean("Core.Commands.PayShort")) return c;
+      if(name.equalsIgnoreCase("pay") && c.getName().equalsIgnoreCase("money") && TNE.instance().api().getBoolean("Core.Commands.PayShort")) return c;
+      if(name.equalsIgnoreCase("balance") && c.getName().equalsIgnoreCase("money") && TNE.instance().api().getBoolean("Core.Commands.PayShort")) return c;
+      if(name.equalsIgnoreCase("bal") && c.getName().equalsIgnoreCase("money") && TNE.instance().api().getBoolean("Core.Commands.PayShort")) return c;
       if(c.getName().equalsIgnoreCase(name)) {
         return c;
       }

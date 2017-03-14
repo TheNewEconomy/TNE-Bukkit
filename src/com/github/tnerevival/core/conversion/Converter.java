@@ -57,7 +57,7 @@ public abstract class Converter {
 
   public void convert() {
     try {
-      new File(TNE.instance.getDataFolder(), "conversion.yml").createNewFile();
+      new File(TNE.instance().getDataFolder(), "conversion.yml").createNewFile();
     } catch(Exception e) {
       MISCUtils.debug(e);
     }
@@ -92,7 +92,7 @@ public abstract class Converter {
           break;
       }
     } catch(InvalidDatabaseImport exception) {
-      TNE.instance.getLogger().log(Level.WARNING, exception.getMessage());
+      TNE.instance().getLogger().log(Level.WARNING, exception.getMessage());
     }
   }
 

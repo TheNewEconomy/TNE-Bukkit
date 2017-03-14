@@ -43,13 +43,20 @@ public class VaultViewCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
     Player player = getPlayer(sender);
-    String world = (arguments.length >= 1)? arguments[0] : getWorld(sender);
-    String owner = (arguments.length >= 2)? arguments[1] : player.getName();
+    String world = getWorld(sender);
+    String owner = (arguments.length >= 1)? arguments[0] : player.getName();
+
+    if(IDFinder.getID(owner) == null) {
+      Message notFound = new Message("Messages.General.NoPlayer");
+      notFound.addVariable("$player", owner);
+      notFound.translate(IDFinder.getWorld(player), player);
+      return false;
+    }
 
     Account account = AccountUtils.getAccount(IDFinder.getID(owner));
     if(Vault.command(getWorld(sender), IDFinder.getID(player).toString())) {
       if(account.hasVault(world)) {
-        if(!account.getVault(world).getOwner().equals(IDFinder.getID(player)) && !account.getVault(world).getMembers().contains(IDFinder.getID(player)) || !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Vault.MultiView")) {
+        if(!account.getVault(world).getOwner().equals(IDFinder.getID(player)) && !account.getVault(world).getMembers().contains(IDFinder.getID(player))) {
           new Message("Messages.General.NoPerm").translate(IDFinder.getWorld(player), player);
           return false;
         }
@@ -73,7 +80,7 @@ public class VaultViewCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/vault view [world] [owner's name] - View a vault you're a member/owner of";
+    return "/vault view [owner's name] - View a vault you're a member/owner of";
   }
 
 }

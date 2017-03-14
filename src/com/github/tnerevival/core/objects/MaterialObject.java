@@ -1,18 +1,20 @@
 package com.github.tnerevival.core.objects;
 
+import java.math.BigDecimal;
+
 public class
 MaterialObject {
 
   private String name;
   private Boolean item;
-  private Double cost;
-  private Double value;
-  private Double use;
-  private Double crafting;
-  private Double enchant;
-  private Double place;
-  private Double mine;
-  private Double smelt;
+  private BigDecimal cost;
+  private BigDecimal value;
+  private BigDecimal use;
+  private BigDecimal crafting;
+  private BigDecimal enchant;
+  private BigDecimal place;
+  private BigDecimal mine;
+  private BigDecimal smelt;
 
   public MaterialObject(String name) {
     this.name = name;
@@ -34,67 +36,67 @@ MaterialObject {
     this.item = item;
   }
 
-  public Double getCost() {
+  public BigDecimal getCost() {
     return cost;
   }
 
-  public void setCost(Double cost) {
+  public void setCost(BigDecimal cost) {
     this.cost = cost;
   }
 
-  public Double getValue() {
+  public BigDecimal getValue() {
     return value;
   }
 
-  public void setValue(Double value) {
+  public void setValue(BigDecimal value) {
     this.value = value;
   }
 
-  public Double getUse() {
+  public BigDecimal getUse() {
     return use;
   }
 
-  public void setUse(Double use) {
+  public void setUse(BigDecimal use) {
     this.use = use;
   }
 
-  public Double getCrafting() {
+  public BigDecimal getCrafting() {
     return crafting;
   }
 
-  public void setCrafting(Double crafting) {
+  public void setCrafting(BigDecimal crafting) {
     this.crafting = crafting;
   }
 
-  public Double getEnchant() {
+  public BigDecimal getEnchant() {
     return enchant;
   }
 
-  public void setEnchant(Double enchant) {
+  public void setEnchant(BigDecimal enchant) {
     this.enchant = enchant;
   }
 
-  public Double getPlace() {
+  public BigDecimal getPlace() {
     return place;
   }
 
-  public void setPlace(Double place) {
+  public void setPlace(BigDecimal place) {
     this.place = place;
   }
 
-  public Double getMine() {
+  public BigDecimal getMine() {
     return mine;
   }
 
-  public void setMine(Double mine) {
+  public void setMine(BigDecimal mine) {
     this.mine = mine;
   }
 
-  public Double getSmelt() {
+  public BigDecimal getSmelt() {
     return smelt;
   }
 
-  public void setSmelt(Double smelt) {
+  public void setSmelt(BigDecimal smelt) {
     this.smelt = smelt;
   }
 }

@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.currency;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,12 +25,19 @@ public class Currency {
   private Map<String, Tier> tiers = new HashMap<>();
 
   private boolean worldDefault = true;
-  private double balance;
+  private BigDecimal balance;
   private boolean item;
+  private boolean trackChest;
   private String name;
   private String format;
   private double rate;
   private String decimal;
+  private int decimalPlaces;
+
+  //Interest-related configurations
+  private boolean interestEnabled = false;
+  private double interestRate = 0.2;
+  private long interestInterval = 1800;
 
   public void addTier(Tier tier) {
     addTier(tier.getSingle(), tier);
@@ -51,11 +59,11 @@ public class Currency {
     this.worldDefault = worldDefault;
   }
 
-  public double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 
@@ -65,6 +73,14 @@ public class Currency {
 
   public void setItem(boolean item) {
     this.item = item;
+  }
+
+  public boolean canTrackChest() {
+    return trackChest;
+  }
+
+  public void setTrackChest(boolean trackChest) {
+    this.trackChest = trackChest;
   }
 
   public String getName() {
@@ -97,6 +113,14 @@ public class Currency {
 
   public void setDecimal(String decimal) {
     this.decimal = decimal;
+  }
+
+  public int getDecimalPlaces() {
+    return decimalPlaces;
+  }
+
+  public void setDecimalPlaces(int decimalPlaces) {
+    this.decimalPlaces = decimalPlaces;
   }
 
   public String getMajor() {
@@ -141,5 +165,29 @@ public class Currency {
 
   public Tier getTier(String id) {
     return tiers.get(id);
+  }
+
+  public boolean isInterestEnabled() {
+    return interestEnabled;
+  }
+
+  public void setInterestEnabled(boolean interestEnabled) {
+    this.interestEnabled = interestEnabled;
+  }
+
+  public double getInterestRate() {
+    return interestRate;
+  }
+
+  public void setInterestRate(double interestRate) {
+    this.interestRate = interestRate;
+  }
+
+  public long getInterestInterval() {
+    return interestInterval;
+  }
+
+  public void setInterestInterval(long interestInterval) {
+    this.interestInterval = interestInterval;
   }
 }

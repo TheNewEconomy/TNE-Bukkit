@@ -42,11 +42,11 @@ public class AdminBalanceCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1 && arguments.length <= 3) {
       String world = (arguments.length >= 2)? getWorld(sender, arguments[1]) : getWorld(sender);
-      String currencyName = (arguments.length >= 3)? arguments[2] : TNE.instance.manager.currencyManager.get(world).getName();
+      String currencyName = (arguments.length >= 3)? arguments[2] : TNE.instance().manager.currencyManager.get(world).getName();
       Currency currency = getCurrency(world, currencyName);
-      MISCUtils.debug(TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0])) + "");
+      MISCUtils.debug(TNE.instance().manager.accounts.containsKey(IDFinder.getID(arguments[0])) + "");
       MISCUtils.debug("RETURNED ID: " + IDFinder.getID(arguments[0]).toString() + " for User: " + arguments[0]);
-      if(IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
+      if(IDFinder.getID(arguments[0]) != null && TNE.instance().manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
         Account acc = AccountUtils.getAccount(IDFinder.getID(arguments[0]));
         if(acc.getBalances().containsKey(world + ":" + currency.getName())) {
           MISCUtils.debug("Has currency and balance.");
@@ -56,7 +56,7 @@ public class AdminBalanceCommand extends TNECommand {
           MISCUtils.debug("Passed player check");
           balance.addVariable("$world", world);
           MISCUtils.debug("Passed world check");
-          balance.addVariable("$amount", CurrencyFormatter.format(world, plugin.api.getBalance(arguments[0], world, currency)));
+          balance.addVariable("$amount", CurrencyFormatter.format(world, plugin.api().getBalanceDecimal(arguments[0], world, currency)));
           MISCUtils.debug("Passed amount check");
           balance.translate(world, sender);
           return true;

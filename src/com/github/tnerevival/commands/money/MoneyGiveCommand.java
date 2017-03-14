@@ -11,6 +11,8 @@ import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 public class MoneyGiveCommand extends TNECommand {
 
   public MoneyGiveCommand(TNE plugin) {
@@ -41,15 +43,15 @@ public class MoneyGiveCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String world = (arguments.length == 3)? getWorld(sender, arguments[2]) : getWorld(sender);
-      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance.manager.currencyManager.get(world).getName();
+      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance().manager.currencyManager.get(world).getName();
       Currency currency = getCurrency(world, currencyName);
-      Double value = CurrencyFormatter.translateDouble(arguments[1], world);
-      if(value < 0) {
+      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], world);
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
         new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
 
-      if(!TNE.instance.manager.currencyManager.contains(world, currencyName)) {
+      if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
         Message m = new Message("Messages.Money.NoCurrency");
         m.addVariable("$currency", currencyName);
         m.addVariable("$world", world);
@@ -62,9 +64,16 @@ public class MoneyGiveCommand extends TNECommand {
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
         AccountUtils.transaction(id, IDFinder.getID(arguments[0]).toString(), value, currency, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
-        gave.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
+        gave.addVariable("$amount",  CurrencyFormatter.format(world, value));
         gave.addVariable("$player", arguments[0]);
         gave.translate(world, sender);
+        if(getPlayer(sender, arguments[0]) != null) {
+          String name = (sender instanceof Player)? sender.getName() : "Console";
+          Message received = new Message("Messages.Money.Received");
+          received.addVariable("$amount", CurrencyFormatter.format(world, value));
+          received.addVariable("$from", name);
+          received.translate(IDFinder.getWorld(getPlayer(sender, arguments[0])), getPlayer(sender, arguments[0]));
+        }
         return true;
       }
     } else {

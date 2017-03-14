@@ -65,7 +65,7 @@ public class VaultBuyCommand extends TNECommand {
     MISCUtils.debug(IDFinder.getID(player).toString());
     Vault vault = new Vault(IDFinder.getID(player), getWorld(sender), Vault.size(getWorld(player), IDFinder.getID(player).toString()));
     account.getVaults().put(getWorld(sender), vault);
-    TNE.instance.manager.accounts.put(account.getUid(), account);
+    TNE.instance().manager.accounts.put(account.getUid(), account);
     new Message("Messages.Vault.Bought").translate(IDFinder.getWorld(player), player);
     return true;
   }

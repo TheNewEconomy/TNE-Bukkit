@@ -1,5 +1,6 @@
 package com.github.tnerevival.core.objects;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,9 @@ public class TNEInventoryObject {
   private String name;
   private boolean enabled;
   private boolean timed;
-  private double cost;
+  private BigDecimal cost;
 
-  public TNEInventoryObject(String name, boolean enabled, boolean timed, double cost) {
+  public TNEInventoryObject(String name, boolean enabled, boolean timed, BigDecimal cost) {
     this.name = name;
     this.enabled = enabled;
     this.timed = timed;
@@ -32,7 +33,7 @@ public class TNEInventoryObject {
     return timed;
   }
 
-  public double getCost() {
+  public BigDecimal getCost() {
     return cost;
   }
 
@@ -59,9 +60,9 @@ public class TNEInventoryObject {
 
   }
 
-  public TNEAccessPackage findPackage(double cost) {
+  public TNEAccessPackage findPackage(BigDecimal cost) {
     for(TNEAccessPackage access : packages.values()) {
-      if(access.getCost() == cost) {
+      if(access.getCost().compareTo(cost) == 0) {
         return access;
       }
     }

@@ -1,20 +1,25 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.account.credits.CreditsEntry;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Location;
+import org.bukkit.Material;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Account implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+  private Map<Location, TrackedItems> trackedItems = new HashMap<>();
+
   /**
    * A HashMap of this account's balances from every world that the player has visited.
    */
-  private Map<String, Double> balances = new HashMap<>();
+  private Map<String, BigDecimal> balances = new HashMap<>();
 
   /**
    * A HashMap of this account's banks from every world that the player has visited.
@@ -34,39 +39,38 @@ public class Account implements Serializable {
    * This number is unique to the account.
    */
   private int accountNumber = 0;
-
   private UUID uid;
-
   private AccountStatus status;
-
   private String pin;
+  private boolean special;
 
   public Account(UUID uid) {
-    this(uid, TNE.instance.manager.accounts.size() + 1);
+    this(uid, TNE.instance().manager.accounts.size() + 1);
   }
 
   public Account(UUID uid, int accountNumber) {
     this.uid = uid;
-    this.joined = TNE.instance.dateFormat.format(new Date());
+    this.joined = TNE.instance().dateFormat.format(new Date());
     this.accountNumber = accountNumber;
     this.status = AccountStatus.NORMAL;
     this.pin = "TNENOSTRINGVALUE";
-    setBalance(TNE.instance.defaultWorld, 0.0, TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName());
+    this.special = false;
+    setBalance(TNE.instance().defaultWorld, BigDecimal.ZERO, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName());
   }
 
   public String balancesToString() {
     int count = 0;
     String toReturn = "";
-    for(Map.Entry<String, Double> entry : balances.entrySet()) {
+    for(Map.Entry<String, BigDecimal> entry : balances.entrySet()) {
         if(count > 0) toReturn += "-";
-        toReturn += entry.getKey() + "," + entry.getValue();
+        toReturn += entry.getKey() + "," + entry.getValue().doubleValue();
         count++;
     }
     return toReturn;
   }
 
   public void balancesFromString(String from) {
-    String[] worlds = from.split("\\-");
+    String[] worlds = from.split("-");
 
     List<Integer> combine = new ArrayList<>();
     for(int i = 0; i < worlds.length; i++) {
@@ -81,14 +85,14 @@ public class Account implements Serializable {
         combine.add(i);
         continue;
       }
-      String[] balance = world.split("\\,");
+      String[] balance = world.split(",");
       if(balance.length == 2) {
-        balances.put(balance[0], Double.valueOf(balance[1]));
+        balances.put(balance[0], new BigDecimal(balance[1]));
       }
     }
   }
 
-  public String combine(String[] values, List<Integer> indexes) {
+  private String combine(String[] values, List<Integer> indexes) {
     StringBuilder builder = new StringBuilder();
 
     int i = 0;
@@ -98,18 +102,6 @@ public class Account implements Serializable {
       i++;
     }
     return builder.toString();
-  }
-
-  public void balancesFromStringOld(String from) {
-    String[] b = from.split("\\-");
-
-    for(String s : b) {
-      String[] balance = s.split("\\,");
-      if(balance.length == 2) {
-        String name = TNE.instance.manager.currencyManager.get(balance[0]).getName();
-        balances.put(balance[0] + ":" + name, Double.valueOf(balance[1]));
-      }
-    }
   }
 
   public String commandsToString() {
@@ -164,6 +156,12 @@ public class Account implements Serializable {
     }
   }
 
+  public void applyInterest() {
+    for(Bank b : banks.values()) {
+      b.applyInterest();
+    }
+  }
+
   /*
    * Inventory Time Credits
    */
@@ -171,7 +169,7 @@ public class Account implements Serializable {
     if(credits.get(inventory) != null) {
       return credits.get(inventory).getCredits();
     }
-    return new HashMap<String, Long>();
+    return new HashMap<>();
   }
 
   public void addTime(String world, String inventory, Long time) {
@@ -272,28 +270,38 @@ public class Account implements Serializable {
     this.pin = pin;
   }
 
-  public Map<String, Double> getBalances() {
+  public boolean isSpecial() {
+    return special;
+  }
+
+  public void setSpecial(boolean special) {
+    this.special = special;
+  }
+
+  public Map<Location, TrackedItems> getTrackedItems() {
+    return trackedItems;
+  }
+
+  public void setTrackedItems(Map<Location, TrackedItems> trackedItems) {
+    this.trackedItems = trackedItems;
+  }
+
+  public Map<String, BigDecimal> getBalances() {
     return balances;
   }
 
-  public void setBalances(Map<String, Double> balances) {
+  public void setBalances(Map<String, BigDecimal> balances) {
     this.balances = balances;
   }
 
-  public void setBalancesOld(Map<String, Double> balances) {
-    for(Map.Entry<String, Double> entry : balances.entrySet()) {
-      setBalance(entry.getKey(), entry.getValue(), TNE.instance.manager.currencyManager.get(entry.getKey()).getName());
-    }
-  }
-
-  public Double getBalance(String world, String currency) {
+  public BigDecimal getBalance(String world, String currency) {
     MISCUtils.debug("Returning balance for " + world + ":" + currency);
     return balances.get(world + ":" + currency);
   }
 
-  public void setBalance(String world, Double balance, String currency) {
+  public void setBalance(String world, BigDecimal balance, String currency) {
     MISCUtils.debug("Setting balance for " + world + ":" + currency);
-    this.balances.put(world + ":" + currency, AccountUtils.round(balance));
+    this.balances.put(world + ":" + currency, balance);
   }
 
   public Map<String, Bank> getBanks() {
@@ -336,5 +344,50 @@ public class Account implements Serializable {
     MISCUtils.debug("Account.hasVault(" + world + ")");
     MISCUtils.debug("Outcome: " + vaults.containsKey(world));
     return vaults.containsKey(world);
+  }
+
+  public Material trackedMaterial(Location location, int slot) {
+    if(trackedItems.containsKey(location)) {
+      return trackedItems.get(location).getMaterialMap().get(slot);
+    }
+    return null;
+  }
+
+  public BigDecimal addAll(String world, String currency) {
+    BigDecimal total = BigDecimal.ZERO;
+
+    for(Map.Entry<String, BigDecimal> entry : balances.entrySet()) {
+      if(world.equalsIgnoreCase("all") || entry.getKey().contains(world)) {
+        if(currency.equalsIgnoreCase("all") || entry.getKey().contains(currency)) {
+          String w = entry.getKey().split(":")[0];
+          String cur = entry.getKey().split(":")[1];
+          total = total.add(TNE.instance().manager.currencyManager.convert(TNE.instance().manager.currencyManager.get(w, cur), 1.0, entry.getValue()));
+        }
+      }
+    }
+    return total;
+  }
+
+  public BigDecimal addAllBank(String world, String currency) {
+    BigDecimal total = BigDecimal.ZERO;
+    Map<String, BigDecimal> balances = new HashMap<>();
+    if(world.equalsIgnoreCase("all")) {
+      for (Bank b : banks.values()) {
+        for(Map.Entry<String, BigDecimal> balance : b.getBalances(currency).entrySet()) {
+          BigDecimal bal = (balances.containsKey(balance.getKey()))? balances.get(balance.getKey()).add(balance.getValue()) : balance.getValue();
+          balances.put(balance.getKey(), bal);
+        }
+      }
+    } else {
+      if(banks.containsKey(world)) {
+        balances = banks.get(world).getBalances(currency);
+      }
+    }
+
+    for(BigDecimal value : balances.values()) {
+      total = total.add(value);
+    }
+
+    return total;
   }
 }

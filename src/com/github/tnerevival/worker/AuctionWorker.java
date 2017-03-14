@@ -20,15 +20,15 @@ public class AuctionWorker extends BukkitRunnable {
 
   @Override
   public void run() {
-    List<World> worlds = TNE.instance.getServer().getWorlds();
+    List<World> worlds = TNE.instance().getServer().getWorlds();
     for(int i = 0; i <= worlds.size(); i++) {
       String world = (i == worlds.size())? "Global" : worlds.get(i).getName();
       if(plugin.manager.auctionManager.hasActive(world)) {
 
         for(Auction auction : plugin.manager.auctionManager.getActive(world)) {
-          Integer notificationTime = TNE.instance.api.getInteger("Core.Auctions.Interval", world, auction.getPlayer().toString());
-          Boolean countdown = TNE.instance.api.getBoolean("Core.Auctions.Countdown", world, auction.getPlayer().toString());
-          Integer countdownStart = TNE.instance.api.getInteger("Core.Auctions.CountdownTime", world, auction.getPlayer().toString());
+          Integer notificationTime = TNE.instance().api().getInteger("Core.Auctions.Interval", world, auction.getPlayer().toString());
+          Boolean countdown = TNE.instance().api().getBoolean("Core.Auctions.Countdown", world, auction.getPlayer().toString());
+          Integer countdownStart = TNE.instance().api().getInteger("Core.Auctions.CountdownTime", world, auction.getPlayer().toString());
 
           Integer remaining = auction.remaining();
           if (remaining > 0) {

@@ -23,14 +23,13 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.Record;
 import com.github.tnerevival.core.transaction.TransactionHistory;
-import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by creatorfromhell on 11/1/2016.
@@ -68,8 +67,8 @@ public class AdminHistoryCommand extends TNECommand {
     String type = "all";
     int page = 1;
 
-    if(arguments.length > 1 && IDFinder.getID(arguments[0]) != null && TNE.instance.manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
-      Player target = MISCUtils.getPlayer(IDFinder.getID(arguments[0]));
+    if(arguments.length > 1 && IDFinder.getID(arguments[0]) != null && TNE.instance().manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
+      Player target = IDFinder.getPlayer(arguments[0]);
       for (int i = 1; i < arguments.length; i++) {
         String s = arguments[i];
         if (s.contains(":")) {
@@ -95,7 +94,7 @@ public class AdminHistoryCommand extends TNECommand {
       }
 
       String id = IDFinder.getID(target).toString();
-      TransactionHistory history = TNE.instance.manager.transactions.getHistory(id);
+      TransactionHistory history = TNE.instance().manager.transactions.getHistory(id);
 
       if (history != null) {
         List<Record> records = history.getRecords(world, IDFinder.getID(player).toString(), type, page);
@@ -106,14 +105,14 @@ public class AdminHistoryCommand extends TNECommand {
         if (records.size() > 0) {
           for (Record r : records) {
             MISCUtils.debug((r == null) + "");
-            Double difference = AccountUtils.round(r.getBalance() - r.getOldBalance());
-            String amount = ((difference >= 0.0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
+            BigDecimal difference = r.getBalance().subtract(r.getOldBalance());
+            String amount = ((difference.compareTo(BigDecimal.ZERO) >= 0) ? ChatColor.GREEN + "+" : ChatColor.RED + "") + difference;
 
-            String time = r.convert(world, IDFinder.getID(player), TNE.instance.api.getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
+            String time = r.convert(world, IDFinder.getID(player), TNE.instance().api().getString("Core.Transactions.Timezone", world, IDFinder.getID(player)));
 
             Player p = null;
             if (r.getPlayer() != null && IDFinder.isUUID(r.getPlayer())) {
-              p = MISCUtils.getPlayer(UUID.fromString(r.getPlayer()));
+              p = IDFinder.getPlayer(r.getPlayer());
             }
             StringBuilder builder = new StringBuilder();
             builder.append(ChatColor.GREEN + r.getType() + ChatColor.WHITE + " | ");

@@ -33,7 +33,7 @@ public class ClaimsListener implements ListListener {
   @Override
   public void update() {
     for(Claim c : changed) {
-      TNE.instance.saveManager.versionInstance.saveClaim(c);
+      TNE.instance().saveManager.versionInstance.saveClaim(c);
     }
   }
 
@@ -49,7 +49,7 @@ public class ClaimsListener implements ListListener {
 
   @Override
   public Collection<Claim> getAll() {
-    return TNE.instance.saveManager.versionInstance.loadClaims();
+    return TNE.instance().saveManager.versionInstance.loadClaims();
   }
 
   @Override
@@ -59,13 +59,13 @@ public class ClaimsListener implements ListListener {
 
   @Override
   public boolean add(Object item) {
-    TNE.instance.saveManager.versionInstance.saveClaim((Claim)item);
+    TNE.instance().saveManager.versionInstance.saveClaim((Claim)item);
     return true;
   }
 
   @Override
   public int size() {
-    return TNE.instance.saveManager.versionInstance.loadClaims().size();
+    return TNE.instance().saveManager.versionInstance.loadClaims().size();
   }
 
   @Override
@@ -76,7 +76,7 @@ public class ClaimsListener implements ListListener {
   @Override
   public boolean contains(Object item) {
     Claim claim = (Claim)item;
-    return TNE.instance.saveManager.versionInstance.loadClaim(claim.getPlayer(), claim.getLot()) != null;
+    return TNE.instance().saveManager.versionInstance.loadClaim(claim.getPlayer(), claim.getLot()) != null;
   }
 
   @Override
@@ -86,7 +86,7 @@ public class ClaimsListener implements ListListener {
 
   @Override
   public boolean remove(Object item) {
-    TNE.instance.saveManager.versionInstance.deleteClaim((Claim)item);
+    TNE.instance().saveManager.versionInstance.deleteClaim((Claim)item);
     return true;
   }
 }

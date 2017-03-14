@@ -18,10 +18,10 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
+import com.github.tnerevival.utils.MISCUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created by creatorfromhell on 1/17/2017.
@@ -31,23 +31,11 @@ public class Bank {
   private List<UUID> members = new ArrayList<>();
   private UUID owner;
   private String world;
-  private Double gold;
+  private Map<String, BankBalance> balances = new HashMap<>();
 
   public Bank(UUID owner, String world) {
-    this(owner, world, 0.0);
-  }
-
-  public Bank(UUID owner, String world, double gold) {
     this.owner = owner;
-    this.gold = gold;
     this.world = world;
-  }
-
-  /**
-   * @return the gold
-   */
-  public Double getGold() {
-    return gold;
   }
 
   public UUID getOwner() {
@@ -74,11 +62,21 @@ public class Bank {
     this.world = world;
   }
 
-  /**
-   * @param gold the gold to set
-   */
-  public void setGold(Double gold) {
-    this.gold = gold;
+  public BigDecimal getGold(String currency) {
+    return (balances.containsKey(currency))? balances.get(currency).getBalance() : BigDecimal.ZERO;
+  }
+
+  public void setGold(String currency, BigDecimal gold) {
+    balances.put(currency, new BankBalance(currency, gold));
+  }
+
+  public Map<String, BigDecimal> getBalances(String currency) {
+    Map<String, BigDecimal> sorted = new HashMap<>();
+    for(BankBalance balance : balances.values()) {
+      if(!currency.equalsIgnoreCase("all") && !balance.getCurrency().equals(currency)) continue;
+      sorted.put(balance.getCurrency(), TNE.instance().manager.currencyManager.convert(TNE.instance().manager.currencyManager.get(world, balance.getCurrency()), 1.0, balance.getBalance()));
+    }
+    return sorted;
   }
 
   private String membersToString() {
@@ -101,7 +99,7 @@ public class Bank {
   public static Bank fromString(String parse, String world) {
     String[] parsed = parse.split(":");
     Bank b = new Bank(UUID.fromString(parsed[0]), world);
-    b.setGold(Double.valueOf(parsed[1]));
+    //TODO: Balances to String.
     if(parsed.length >= 3) {
       b.membersFromString(parsed[2]);
     }
@@ -110,22 +108,80 @@ public class Bank {
   }
 
   public String toString() {
-    return owner.toString() + ":" + gold + ":" + membersToString();
+    //TODO: Balances to String.
+    return owner.toString() + ":" + "<INSERT BALANCES STRING HERE>" + ":" + membersToString();
+  }
+
+  public void applyInterest() {
+    Iterator<Map.Entry<String, BankBalance>> i = balances.entrySet().iterator();
+    while(i.hasNext()) {
+      Map.Entry<String, BankBalance> entry = i.next();
+      if(TNE.instance().manager.currencyManager.contains(world, entry.getKey())) {
+        com.github.tnerevival.core.currency.Currency currency = TNE.instance().manager.currencyManager.get(world, entry.getKey());
+        BankBalance balance = entry.getValue();
+        if(currency.isInterestEnabled() && (new Date().getTime() - balance.getLastInterest()) >= currency.getInterestInterval()) {
+          BigDecimal gold = balance.getBalance();
+          BigDecimal interestEarned = gold.multiply(new BigDecimal(currency.getInterestRate()));
+          balance.setBalance(gold.add(interestEarned));
+          balance.setLastInterest(new Date().getTime());
+          balances.put(entry.getKey(), balance);
+        }
+      }
+    }
   }
 
   public static Boolean enabled(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Bank.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Bank.Enabled", world, player);
   }
 
-  public static Double cost(String world, String player) {
-    return AccountUtils.round(TNE.instance.api.getDouble("Core.Bank.Cost", world, player));
+  public static BigDecimal cost(String world, String player) {
+    return new BigDecimal(TNE.instance().api().getDouble("Core.Bank.Cost", world, player));
   }
 
-  public static Boolean interestEnabled(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Bank.Interest.Enabled", world, player);
+  public static boolean bankMember(UUID owner, UUID id) {
+    String world = TNE.instance().defaultWorld;
+    if(MISCUtils.multiWorld()) {
+      world = IDFinder.getWorld(id);
+    }
+    if(world == null) {
+      TNE.instance().getLogger().warning("***WORLD NAME IS NULL***");
+      return false;
+    }
+
+    return bankMember(owner, id, world);
   }
 
-  public static Double interestRate(String world, String player) {
-    return TNE.instance.api.getDouble("Core.Bank.Interest.Rate", world, player);
+  public static Boolean bankMember(UUID owner, UUID id, String world) {
+    if(owner.equals(id)) return true;
+    Bank b = getBank(owner, world);
+
+    return b.getMembers().contains(id);
+  }
+
+  public static Bank getBank(UUID owner, String world) {
+    return AccountUtils.getAccount(owner).getBank(world);
+  }
+
+  public static BigDecimal getBankBalance(UUID owner, String world, String currency) {
+    if(AccountUtils.getAccount(owner).hasBank(world)) {
+      if(AccountUtils.getAccount(owner).getStatus().getBank()) {
+        Bank b = getBank(owner, world);
+        return b.getGold(currency);
+      }
+    }
+    return BigDecimal.ZERO;
+  }
+
+  public static BigDecimal getBankBalance(UUID owner) {
+    return getBankBalance(owner, TNE.instance().defaultWorld, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName());
+  }
+
+  public static void setBankBalance(UUID owner, String world, String currency, BigDecimal amount) {
+    if(AccountUtils.getAccount(owner).getStatus().getBank()) {
+      if(AccountUtils.getAccount(owner).hasBank(world)) {
+        Bank bank = getBank(owner, world);
+        bank.setGold(currency, amount);
+      }
+    }
   }
 }

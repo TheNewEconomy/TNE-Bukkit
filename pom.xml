@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github</groupId>
     <artifactId>TNE</artifactId>
-    <version>0.0.6.0-SNAPSHOT</version>
+    <version>0.0.5.2-SNAPSHOT</version>
     <name>The New Economy</name>
     <build>
         <directory>target</directory>
@@ -59,9 +59,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.11-R0.1-SNAPSHOT</version>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/junit/junit -->

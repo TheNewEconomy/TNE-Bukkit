@@ -3,6 +3,8 @@ package com.github.tnerevival.core.configurations.impl;
 import com.github.tnerevival.core.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Set;
+
 public class MessageConfiguration extends Configuration {
 
   @Override
@@ -22,6 +24,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.General.NoPerm", "<red>I'm sorry, but you do not have permission to do that.");
     configurations.put("Messages.General.NoPlayer", "<red>Unable to locate player \"$player\"!");
     configurations.put("Messages.General.Saved", "<yellow>Successfully saved all TNE Data!");
+    configurations.put("Messages.General.Disabled", "<red>Economy features are currently disabled in this world!");
     configurations.put("Messages.Item.Invalid", "<red>Invalid item name and/or durability combination entered.");
     configurations.put("Messages.Item.InvalidAmount", "<red>Invalid item amount entered.");
 
@@ -65,6 +68,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Money.NoPins", "<red>Pins are disabled in this world!");
     configurations.put("Messages.Money.NoCurrency", "<red>The currency \"$currency\" could not be found in \"$world\".");
     configurations.put("Messages.Money.Converted", "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\".");
+    configurations.put("Messages.Money.Top", "<white>=========[<gold>Economy Top<white>]========= Page: $page/$page_top");
 
     configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
     configurations.put("Messages.Auction.Return", "<white>Your items have been returned.");
@@ -91,6 +95,20 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Auction.PersonalQueue", "<red>You have reached the maximum queue allowance.");
     configurations.put("Messages.Auction.MaxQueue", "<red>The auction queue is currently full.");
     configurations.put("Messages.Auction.Queued", "<white>Your auction has been added to the queue as lot <green>$lot<white>.");
+
+    configurations.put("Messages.SignShop.MaxOffers", "<red>You've created the max number of offers for this sign already.");
+    configurations.put("Messages.SignShop.Removed", "<white>Successfully removed offer from Sign Shop.");
+    configurations.put("Messages.SignShop.Added", "<white>Successfully added offer to Sign Shop.");
+    configurations.put("Messages.SignShop.NoMultiple", "<red>Multiple offers has been disabled on this world.");
+    configurations.put("Messages.SignShop.InvalidBuy", "<red>Couldn't create offer, invalid buy/sell/trade value.");
+    configurations.put("Messages.SignShop.OwnerInsufficient", "<red>I'm sorry, but the owner of this offer does not currently has insufficient funds.");
+    configurations.put("Messages.SignShop.Insufficient", "<red>You do not have the sufficient materials, or money necessary to purchase the item from this Sign Shop.");
+    configurations.put("Messages.SignShop.Successful", "<white>Successfully completed transaction with Sign Shop.");
+    configurations.put("Messages.SignShop.Max", "<red> You've placed the maximum number of this sign in this world.");
+    configurations.put("Messages.SignShop.OutOfStock", "<red>I'm sorry, but that item is currently out of stock.");
+    configurations.put("Messages.SignShop.UnableAccept", "<red>I'm sorry, but this shop currently cannot accept that item at this time.");
+    configurations.put("Messages.SignShop.UnableChest", "<red>I'm sorry, but that chest belongs to a nearby sign shop.");
+    configurations.put("Messages.SignShop.DroppingExtra", "<white>Adding items to your inventory since your sign shop's chest is full.");
 
     configurations.put("Messages.Shop.BuyLimit", "<red>Shop has reached its buy limit for this item.");
     configurations.put("Messages.Shop.NoStock", "<red>The item you wish to purchase is currently out of stock.");
@@ -148,6 +166,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Vault.Deposit", "<white>You have deposited <gold>$amount<white> in the vault of $name.");
     configurations.put("Messages.Vault.Withdraw", "<white>You have withdrawn <gold>$amount<gold> from the vault of $name.");
     configurations.put("Messages.Vault.Invalid", "<red>I'm sorry, but you don't have access to $owner's vault!");
+    configurations.put("Messages.Vault.Occupied", "<red>I'm sorry, but that vault is currently occupied by other players.");
 
     configurations.put("Messages.Bank.Added", "<white>$player has been added to your bank!");
     configurations.put("Messages.Bank.Removed", "<white>$player has been removed from your bank!");
@@ -184,6 +203,12 @@ public class MessageConfiguration extends Configuration {
 
     configurations.put("Messages.World.Change", "<white>You have been charged <gold> $amount<white> for changing worlds.");
     configurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
+
+    String base = "Messages.Mob.Custom";
+    Set<String> keys = configurationFile.getConfigurationSection(base).getKeys(false);
+    for(String s : keys) {
+      configurations.put(base + "." + s, configurationFile.getString(base + "." + s));
+    }
 
     super.load(configurationFile);
   }

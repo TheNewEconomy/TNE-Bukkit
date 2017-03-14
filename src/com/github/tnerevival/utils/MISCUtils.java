@@ -10,15 +10,13 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,25 +28,29 @@ public class MISCUtils {
 
   //Minecraft Version Utils
   public static boolean isOneEight() {
-    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven();
+    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven() || isOneTwelve();
   }
 
   public static boolean isOneNine() {
-    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven();
+    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven() || isOneTwelve();
   }
 
   public static boolean isOneTen() {
-    return Bukkit.getVersion().contains("1.10") || isOneEleven();
+    return Bukkit.getVersion().contains("1.10") || isOneEleven() || isOneTwelve();
   }
 
   public static boolean isOneEleven() {
-    return Bukkit.getVersion().contains("1.11");
+    return Bukkit.getVersion().contains("1.11") || isOneTwelve();
+  }
+
+  public static boolean isOneTwelve() {
+    return Bukkit.getVersion().contains("1.12");
   }
 
   //True MISC Utils
   public static void debug(String message) {
     if(TNE.debugMode) {
-      TNE.instance.getLogger().info("[DEBUG MODE]" + message);
+      TNE.instance().getLogger().info("[DEBUG MODE]" + message);
     }
   }
 
@@ -74,6 +76,10 @@ public class MISCUtils {
     return true;
   }
 
+  public static boolean hasItem(Inventory inventory, Material material, int amount) {
+    return getItemCount(inventory, material) >= amount;
+  }
+
   public static void setItems(UUID id, List<SerializableItemStack> items, boolean add) {
     setItems(id, items, add, false);
   }
@@ -95,7 +101,7 @@ public class MISCUtils {
   }
 
   public static Integer getItemCount(UUID id, ItemStack stack) {
-    Player p = MISCUtils.getPlayer(id);
+    Player p = IDFinder.getPlayer(id.toString());
     int count = 0;
     for(ItemStack i : p.getInventory().getContents()) {
       if(i != null && i.getType() != null && i.getType().equals(stack.getType()) && i.getDurability() == stack.getDurability()) {
@@ -106,38 +112,57 @@ public class MISCUtils {
   }
 
   public static Integer getItemCount(UUID id, Material item) {
-    Player p = MISCUtils.getPlayer(id);
+    Player p = IDFinder.getPlayer(id.toString());
+    return getItemCount(p.getInventory(), item);
+  }
+
+  public static void setItemCount(UUID id, Material item, int amount) {
+    Player p = IDFinder.getPlayer(id.toString());
+    Integer count = getItemCount(id, item);
+    if(count < amount) {
+      int leftOver = leftOver(p.getInventory(), item, amount);
+      if(leftOver > 0) {
+        p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, leftOver));
+      }
+    }
+    setItemCount(p.getInventory(), item, amount);
+    p.updateInventory();
+  }
+
+  public static int getItemCount(Inventory inventory, Material item) {
+    MISCUtils.debug("MISCUtils:getItemCount(inventory, " + item.name() +")");
     int count = 0;
     if(item != null) {
-      for(ItemStack i : p.getInventory().getContents()) {
+      for(ItemStack i : inventory.getContents()) {
         if(i != null && i.getType() != null && i.getType() == item) {
           count += i.getAmount();
         }
       }
     }
+    MISCUtils.debug("COUNT: " + count);
     return count;
   }
 
-  public static void setItemCount(UUID id, Material item, Integer amount) {
-    Player p = MISCUtils.getPlayer(id);
-    Integer count = getItemCount(id, item);
+  public static void setItemCount(Inventory inventory, Material item, int amount) {
+    MISCUtils.debug("MISCUtils:setItemCount(inventory, " + item.name() + ", " + amount + ")");
+    Integer count = getItemCount(inventory, item);
     if(item != null) {
       if(count > amount) {
         Integer remove = count - amount;
         Integer slot = 0;
-        for(ItemStack i : p.getInventory().getContents()) {
+        for(ItemStack i : inventory.getContents()) {
           if(i != null && i.getType() != null && i.getType() == item) {
             if(remove > i.getAmount()) {
               remove -= i.getAmount();
               i.setAmount(0);
-              p.getInventory().setItem(slot, null);
+              inventory.setItem(slot, null);
             } else {
               if(i.getAmount() - remove > 0) {
                 i.setAmount(i.getAmount() - remove);
-                p.getInventory().setItem(slot, i);
+                inventory.setItem(slot, i);
                 return;
               }
-              p.getInventory().setItem(slot, null);
+              inventory.setItem(slot, null);
               return;
             }
           }
@@ -145,159 +170,40 @@ public class MISCUtils {
         }
       } else if(count < amount) {
         Integer add = amount - count;
-
-        while(add > 0) {
-          if(add > item.getMaxStackSize()) {
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(new ItemStack(item, item.getMaxStackSize()));
+        for(int i = 0; i < inventory.getSize(); i++) {
+          if(add <= 0) break;
+          ItemStack stack = inventory.getItem(i);
+          if(stack == null || stack.getType().equals(Material.AIR)) {
+            if(add > item.getMaxStackSize()) {
+              inventory.setItem(i, new ItemStack(item, item.getMaxStackSize()));
+              add -= item.getMaxStackSize();
             } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, item.getMaxStackSize()));
+              inventory.setItem(i, new ItemStack(item, add));
+              add = 0;
             }
-            add -= item.getMaxStackSize();
-          } else {
-            if(p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(new ItemStack(item, add));
-            } else {
-              p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(item, add));
+          } else if(stack.isSimilar(new ItemStack(item))) {
+            int amt = (item.getMaxStackSize() - stack.getAmount() >= add)? stack.getAmount() + add : item.getMaxStackSize() - stack.getAmount();
+            if(amt > 0) {
+              ItemStack newStack = stack.clone();
+              newStack.setAmount(amt);
+              inventory.setItem(i, newStack);
+              add -= amt;
             }
-            add = 0;
           }
         }
       }
     }
   }
 
-  public static void reloadConfigurations(String type) {
-    if(type.equalsIgnoreCase("all")) {
-      TNE.instance.reloadConfig();
-      reloadConfigsMaterials();
-      reloadConfigsMessages();
-      reloadConfigsMobs();
-      reloadConfigsObjects();
-      reloadConfigPlayers();
-      reloadConfigsWorlds();
-      TNE.instance.manager.currencyManager.loadCurrencies();
-    } else if(type.equalsIgnoreCase("config")) {
-      TNE.instance.reloadConfig();
-      TNE.configurations.load(TNE.instance.getConfig(), "main");
-    } else if(type.equalsIgnoreCase("currencies")) {
-      TNE.instance.manager.currencyManager.loadCurrencies();
-    } else if(type.equalsIgnoreCase("materials")) {
-      reloadConfigsMaterials();
-    } else if(type.equalsIgnoreCase("messages")) {
-      reloadConfigsMessages();
-    } else if(type.equalsIgnoreCase("mobs")) {
-      reloadConfigsMobs();
-    } else if(type.equalsIgnoreCase("objects")) {
-      reloadConfigsObjects();
-    } else if(type.equalsIgnoreCase("players")) {
-      reloadConfigPlayers();
-    } else if(type.equalsIgnoreCase("worlds")) {
-      reloadConfigsWorlds();
+  public static int leftOver(Inventory inventory, Material item, int amount) {
+    int available = 0;
+    for(int i = 0; i < inventory.getSize(); i++) {
+      if(available >= amount) break;
+      ItemStack stack = inventory.getItem(i);
+      if(stack == null || stack.getType().equals(Material.AIR)) available += item.getMaxStackSize();
+      else if(stack.isSimilar(new ItemStack(item))) available += item.getMaxStackSize() - stack.getAmount();
     }
-  }
-
-  public static void reloadConfigsMaterials() {
-    if(TNE.instance.materials == null) {
-      TNE.instance.materials = new File(TNE.instance.getDataFolder(), "materials.yml");
-    }
-    TNE.instance.materialConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.materials);
-    TNE.configurations.load(TNE.instance.materialConfigurations, "materials");
-  }
-
-  public static void reloadConfigsMobs() {
-    if(TNE.instance.mobs == null) {
-      TNE.instance.mobs = new File(TNE.instance.getDataFolder(), "mobs.yml");
-    }
-    TNE.instance.mobConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.mobs);
-    TNE.configurations.load(TNE.instance.mobConfigurations, "mob");
-  }
-
-  public static void reloadConfigsMessages() {
-    if(TNE.instance.messages == null) {
-      TNE.instance.messages = new File(TNE.instance.getDataFolder(), "messages.yml");
-    }
-    TNE.instance.messageConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.messages);
-    TNE.configurations.load(TNE.instance.messageConfigurations, "messages");
-  }
-
-  public static void reloadConfigsObjects() {
-    if(TNE.instance.objects == null) {
-      TNE.instance.objects = new File(TNE.instance.getDataFolder(), "objects.yml");
-    }
-    TNE.instance.objectConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.objects);
-    TNE.configurations.load(TNE.instance.objectConfigurations, "objects");
-  }
-
-  public static void reloadConfigPlayers() {
-    if(TNE.instance.players == null) {
-      TNE.instance.players = new File(TNE.instance.getDataFolder(), "players.yml");
-    }
-    TNE.instance.playerConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.players);
-    TNE.configurations.load(TNE.instance.playerConfigurations, "players");
-  }
-
-  public static void reloadConfigsWorlds() {
-    if(TNE.instance.worlds == null) {
-      TNE.instance.worlds = new File(TNE.instance.getDataFolder(), "worlds.yml");
-    }
-    TNE.instance.worldConfigurations = YamlConfiguration.loadConfiguration(TNE.instance.worlds);
-  }
-
-  public static JSONObject[] sendPostRequest(String url, String payload) {
-    StringBuilder builder = new StringBuilder();
-    try {
-      HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-      connection.setConnectTimeout(5000);
-      connection.setReadTimeout(5000);
-      connection.setRequestMethod("POST");
-      connection.setDoOutput(true);
-      connection.setRequestProperty("Content-Type", "application/json");
-
-      OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-      out.write(payload);
-      out.flush();
-      out.close();
-
-      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-      String response;
-      while ((response = reader.readLine()) != null) {
-        builder.append(response);
-      }
-      connection.disconnect();
-      reader.close();
-    } catch(Exception e) {
-      MISCUtils.debug(e);
-    }
-
-    String toSplit = builder.toString().replace("[", "").replace("]", "");
-    MISCUtils.debug(toSplit);
-    String[] split = toSplit.split("},");
-    List<JSONObject> objects = new ArrayList<>();
-
-    for(String s : split) {
-      String sSuffix = (s.endsWith("}"))? s : s + "}";
-      objects.add((JSONObject)JSONValue.parse(sSuffix));
-    }
-
-    return objects.toArray(new JSONObject[objects.size()]);
-  }
-
-  public static String sendSecureGetRequest(String url) {
-    StringBuilder builder = new StringBuilder();
-    try {
-      HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-      String response;
-      while ((response = reader.readLine()) != null) {
-        builder.append(response);
-      }
-      reader.close();
-    } catch(Exception e) {
-      MISCUtils.debug(e);
-    }
-    return builder.toString();
+    return (amount - available <= 0)? 0 : amount - available;
   }
 
   public static String sendGetRequest(String URL) {
@@ -325,11 +231,11 @@ public class MISCUtils {
 
     String id = IDFinder.getID(event.getPlayer()).toString();
     String world = IDFinder.getWorld(event.getPlayer());
-    double cost = event.getType().getCost(event.getIdentifier(), IDFinder.getActualWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+    BigDecimal cost = event.getType().getCost(event.getIdentifier(), IDFinder.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
-    if(cost != 0.0 && !event.isCancelled()) {
-      if(cost > 0.0) {
+    if(cost.compareTo(BigDecimal.ZERO) != 0 && !event.isCancelled()) {
+      if(cost.compareTo(BigDecimal.ZERO) > 0) {
         if(AccountUtils.transaction(id, null, cost, TransactionType.MONEY_INQUIRY, world)) {
           MISCUtils.debug("Removing funds");
           AccountUtils.transaction(id, null, cost, TransactionType.MONEY_REMOVE, world);
@@ -337,7 +243,7 @@ public class MISCUtils {
           MISCUtils.debug("Insufficient funds!");
           event.setCancelled(true);
           Message insufficient = new Message("Messages.Money.Insufficient");
-          insufficient.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
+          insufficient.addVariable("$amount", CurrencyFormatter.format(world, cost));
           insufficient.translate(world, event.getPlayer());
           return;
         }
@@ -349,7 +255,7 @@ public class MISCUtils {
       String newName = event.getIdentifier() + ((event.getAmount() > 1 )? "\'s" : "");
 
       Message m = new Message(message);
-      m.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(cost)));
+      m.addVariable("$amount", CurrencyFormatter.format(world, cost));
       m.addVariable("$stack_size", event.getAmount() + "");
       m.addVariable("$item", newName);
       m.translate(world, event.getPlayer());
@@ -362,7 +268,7 @@ public class MISCUtils {
       final String correctMat = event.getIdentifier();
       final String loreSearch = (event.getType().equals(InteractionType.ENCHANT))? "Enchanting Cost" : "Smelting Cost";
       MISCUtils.debug("LoreSearch: " + loreSearch);
-      TNE.instance.getServer().getScheduler().runTaskLater(TNE.instance, new Runnable() {
+      TNE.instance().getServer().getScheduler().runTaskLater(TNE.instance(), new Runnable() {
         @Override
         public void run() {
           ItemStack[] contents = p.getInventory().getContents().clone();
@@ -370,7 +276,9 @@ public class MISCUtils {
           for (int i = 0; i < contents.length; i++) {
             MISCUtils.debug("Looping contents..." + i + "");
             if(contents[i] != null) MISCUtils.debug("Item Type: " + contents[i].getType().name());
-            MISCUtils.debug("Correct Material: " + stack.getType().name());
+            if(stack != null) {
+              MISCUtils.debug("Correct Material: " + stack.getType().name());
+            }
             MISCUtils.debug("Correct Material: " + correctMat);
             if (contents[i] != null && contents[i].getType().name().equalsIgnoreCase(correctMat)) {
               ItemStack cloneStack = contents[i].clone();
@@ -400,17 +308,17 @@ public class MISCUtils {
     FileWriter writer = null;
     BufferedWriter buffWriter = null;
     try {
-      writer = new FileWriter(new File(TNE.instance.getDataFolder(), "Material.txt"));
+      writer = new FileWriter(new File(TNE.instance().getDataFolder(), "Material.txt"));
       buffWriter = new BufferedWriter(writer);
     } catch(Exception e) {
-
+      MISCUtils.debug(e);
     }
     for(Material mat : Material.values()) {
-      if(buffWriter != null && writer != null) {
+      if(buffWriter != null) {
         try {
           buffWriter.write("validNames.add(new MaterialNameHelper(Material." + mat.name() + ", new String[0]));" + System.lineSeparator());
         } catch(Exception e) {
-
+          MISCUtils.debug(e);
         }
       }
     }
@@ -431,24 +339,58 @@ public class MISCUtils {
     }
   }
 
-  public static UUID distringuishId(String identifier) {
-    if(IDFinder.isUUID(identifier)) {
-      return UUID.fromString(identifier);
+  public static void materialsYAML() {
+    FileWriter writer = null;
+    BufferedWriter buffWriter = null;
+    try {
+      writer = new FileWriter(new File(TNE.instance().getDataFolder(), "item.yml"));
+      buffWriter = new BufferedWriter(writer);
+    } catch(Exception e) {
+      MISCUtils.debug(e);
     }
-    return IDFinder.getID(identifier);
-  }
-
-  @SuppressWarnings("deprecation")
-  public static Player getPlayer(String username) {
-    return IDFinder.getPlayer(username);
-  }
-
-  @SuppressWarnings("deprecation")
-  public static Player getPlayer(UUID id) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
-      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
+    if(buffWriter != null) {
+      try {
+        buffWriter.write("Items:" + System.lineSeparator());
+      } catch(Exception e) {
+        MISCUtils.debug(e);
+      }
     }
-    return Bukkit.getPlayer(id);
+    for(Material mat : Material.values()) {
+      if(buffWriter != null) {
+        try {
+          buffWriter.write("  " + mat.name() + ":" + System.lineSeparator());
+          buffWriter.write("    #The permission node required to create a shop sign with this item" + System.lineSeparator());
+          buffWriter.write("    Sign: " + "tne.item." + mat.name().toLowerCase() + ".sign" + System.lineSeparator());
+          buffWriter.write("    #The permission node required to buy this item" + System.lineSeparator());
+          buffWriter.write("    Buy: " + "tne.item." + mat.name().toLowerCase() + ".buy" + System.lineSeparator());
+          buffWriter.write("    #The permission node required to sell this item" + System.lineSeparator());
+          buffWriter.write("    Sell: " + "tne.item." + mat.name().toLowerCase() + ".sell" + System.lineSeparator());
+          buffWriter.write("    #The names supported by shop signs" + System.lineSeparator());
+          buffWriter.write("    Names:" + System.lineSeparator());
+          buffWriter.write("      - " + MaterialUtils.formatMaterialName(mat) + System.lineSeparator());
+          if(mat.name().contains("_")) {
+            buffWriter.write("      - " + MaterialUtils.formatMaterialNameWithSpace(mat) + System.lineSeparator());
+          }
+        } catch(Exception e) {
+          MISCUtils.debug(e);
+        }
+      }
+    }
+    if(buffWriter != null) {
+      try {
+        buffWriter.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if(writer != null) {
+      try {
+        writer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @SuppressWarnings("rawtypes")
@@ -471,9 +413,12 @@ public class MISCUtils {
 
   public static Boolean isDouble(String value, String world) {
     try {
-      Double.valueOf(value.replace(TNE.instance.api.getString("Core.Currency.Decimal", world), "."));
+      MISCUtils.debug("MISCUtils.isDouble(" + value + "," + world + ")");
+      Double.valueOf(value.replace(TNE.instance().api().getString("Core.Currency.Decimal", world), "."));
+      MISCUtils.debug("Double confirmed");
       return true;
     } catch(Exception e) {
+      MISCUtils.debug("Double denied");
       return false;
     }
   }
@@ -488,11 +433,18 @@ public class MISCUtils {
   }
 
   //World Utils
+  public static Boolean ecoDisabled(String world) {
+    if(TNE.instance().worldConfigurations.contains("Worlds." + world + ".DisableEconomy")) {
+      return TNE.instance().worldConfigurations.getBoolean("Worlds." + world + ".DisableEconomy");
+    }
+    return false;
+  }
+
   public static Boolean multiWorld() {
-    return TNE.instance.api.getBoolean("Core.Multiworld");
+    return TNE.instance().api().getBoolean("Core.Multiworld");
   }
 
   public static Boolean worldConfigExists(String node) {
-    return (TNE.instance.worldConfigurations.get(node) != null);
+    return (TNE.instance().worldConfigurations.get(node) != null);
   }
 }
