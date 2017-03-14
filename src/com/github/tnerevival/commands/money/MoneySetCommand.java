@@ -11,6 +11,8 @@ import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Daniel on 10/12/2016.
  */
@@ -44,15 +46,15 @@ public class MoneySetCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String world = (arguments.length == 3)? getWorld(sender, arguments[2]) : getWorld(sender);
-      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance.manager.currencyManager.get(world).getName();
+      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance().manager.currencyManager.get(world).getName();
       Currency currency = getCurrency(world, currencyName);
-      Double value = CurrencyFormatter.translateDouble(arguments[1], world);
-      if(value < 0) {
+      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], world);
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
         new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
 
-      if(!TNE.instance.manager.currencyManager.contains(world, currencyName)) {
+      if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
         Message m = new Message("Messages.Money.NoCurrency");
         m.addVariable("$currency", currencyName);
         m.addVariable("$world", world);
@@ -66,7 +68,7 @@ public class MoneySetCommand extends TNECommand {
 
         AccountUtils.transaction(IDFinder.getID(arguments[0]).toString(), id, value, currency, TransactionType.MONEY_SET, world);
         Message set = new Message("Messages.Money.Set");
-        set.addVariable("$amount",  CurrencyFormatter.format(world, AccountUtils.round(value)));
+        set.addVariable("$amount",  CurrencyFormatter.format(world, value));
         set.addVariable("$player", arguments[0]);
         set.translate(world, sender);
         return true;

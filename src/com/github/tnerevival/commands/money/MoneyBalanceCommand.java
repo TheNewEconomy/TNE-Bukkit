@@ -41,12 +41,12 @@ public class MoneyBalanceCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     String world = (arguments.length >= 1)? getWorld(sender, arguments[0]) : getWorld(sender);
-    String currencyName = (arguments.length >= 2)? arguments[1] : TNE.instance.manager.currencyManager.get(world).getName();
+    String currencyName = (arguments.length >= 2)? arguments[1] : TNE.instance().manager.currencyManager.get(world).getName();
     Currency currency = getCurrency(world, currencyName);
 
     MISCUtils.debug(AccountUtils.getAccount(IDFinder.getID(player)).getBalances().toString());
 
-    if(!TNE.instance.manager.currencyManager.contains(world, currencyName)) {
+    if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
       Message m = new Message("Messages.Money.NoCurrency");
       m.addVariable("$currency", currencyName);
       m.addVariable("$world", world);
@@ -55,7 +55,7 @@ public class MoneyBalanceCommand extends TNECommand {
     }
 
     Message balance = new Message("Messages.Money.Balance");
-    balance.addVariable("$amount",  CurrencyFormatter.format(currency, plugin.api.getBalance(player.getUniqueId().toString(), world, currency)));
+    balance.addVariable("$amount",  CurrencyFormatter.format(currency, world, plugin.api().getBalanceDecimal(player.getUniqueId().toString(), world, currency)));
     balance.translate(world, player);
     return true;
   }

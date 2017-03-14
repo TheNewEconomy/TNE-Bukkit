@@ -118,10 +118,16 @@ public abstract class TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
     String player = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : "";
-    String world = (!player.equals(""))? IDFinder.getWorld(getPlayer(sender)) : TNE.instance.defaultWorld;
+    String world = (!player.equals(""))? IDFinder.getWorld(getPlayer(sender)) : TNE.instance().defaultWorld;
+
+    if(MISCUtils.ecoDisabled(getWorld(sender))) {
+      Message disabled = new Message("Messages.General.Disabled");
+      disabled.translate(getWorld(sender), sender);
+      return false;
+    }
 
     if(!developer()) {
-      if (!activated(IDFinder.getActualWorld(IDFinder.getID(player)), player)) {
+      if (!activated(IDFinder.getWorld(IDFinder.getID(player)), player)) {
         return false;
       }
 
@@ -132,7 +138,7 @@ public abstract class TNECommand {
         if (!acc.getStatus().getBalance()) {
           Message locked = new Message("Messages.Account.Locked");
           locked.addVariable("$player", p.getDisplayName());
-          locked.translate(IDFinder.getActualWorld(p), p);
+          locked.translate(IDFinder.getWorld(p), p);
           return false;
         }
       }
@@ -140,28 +146,28 @@ public abstract class TNECommand {
       if (confirm() && sender instanceof Player) {
         Player p = (Player) sender;
         Account acc = AccountUtils.getAccount(IDFinder.getID(p));
-        if (TNE.instance.manager.enabled(IDFinder.getID(p), IDFinder.getActualWorld(p))) {
-          MISCUtils.debug(TNE.instance.manager.enabled(IDFinder.getID(p), IDFinder.getActualWorld(p)) + "");
-          if (!TNE.instance.manager.confirmed(IDFinder.getID(p), IDFinder.getActualWorld(p))) {
-            MISCUtils.debug(TNE.instance.manager.confirmed(IDFinder.getID(p), IDFinder.getActualWorld(p)) + "");
+        if (TNE.instance().manager.enabled(IDFinder.getID(p), IDFinder.getWorld(p))) {
+          MISCUtils.debug(TNE.instance().manager.enabled(IDFinder.getID(p), IDFinder.getWorld(p)) + "");
+          if (!TNE.instance().manager.confirmed(IDFinder.getID(p), IDFinder.getWorld(p))) {
+            MISCUtils.debug(TNE.instance().manager.confirmed(IDFinder.getID(p), IDFinder.getWorld(p)) + "");
             if (acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
               MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
               Message set = new Message("Messages.Account.Set");
-              set.translate(IDFinder.getActualWorld(p), p);
+              set.translate(IDFinder.getWorld(p), p);
               return false;
             }
 
             if (!acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE")) {
               MISCUtils.debug(acc.getPin().equalsIgnoreCase("TNENOSTRINGVALUE") + "");
               Message confirm = new Message("Messages.Account.Confirm");
-              confirm.translate(IDFinder.getActualWorld(p), p);
+              confirm.translate(IDFinder.getWorld(p), p);
               return false;
             }
           }
         }
       }
     } else {
-      if(!((Player)sender).getUniqueId().equals("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {
+      if(!(sender instanceof Player) || !IDFinder.getID(getPlayer(sender)).toString().equalsIgnoreCase("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")){
         sender.sendMessage(ChatColor.RED + "You must be a TNE developer to use this command.");
         return false;
       }
@@ -262,7 +268,7 @@ public abstract class TNECommand {
 
   protected String getWorld(CommandSender sender) {
     if(sender instanceof Player) return IDFinder.getWorld(getPlayer(sender));
-    return TNE.instance.defaultWorld;
+    return TNE.instance().defaultWorld;
   }
 
   protected Currency getCurrency(String world, String name) {
@@ -272,7 +278,7 @@ public abstract class TNECommand {
     if(plugin.manager.currencyManager.get(world) != null) {
       return plugin.manager.currencyManager.get(world);
     }
-    return plugin.manager.currencyManager.get(TNE.instance.defaultWorld);
+    return plugin.manager.currencyManager.get(TNE.instance().defaultWorld);
   }
 
   protected Player getPlayer(CommandSender sender) {

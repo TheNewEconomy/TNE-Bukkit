@@ -1,4 +1,4 @@
-# The New Economy v0.0.6.0
+# The New Economy v0.0.5.2
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
@@ -14,15 +14,21 @@ Worlds:
     #world-specific configurations are optional
     #Note: World name is case sensitive
     Example:
+
+        #Whether or not to completely disable economy features for this world
+        DisableEconomy: true
         
         #How much it costs to enter this world if ChangeFee is enabled in the main configuration
         ChangeFee: 10.0
-        
-        #Whether or not you want this world to share accounts with another
-        ShareAccounts: false
-        
-        #The world to share accounts with if ShareAccounts is true
-        ShareWorld: WorldName
+
+        #Configurations related to information sharing between worlds
+        Share:
+
+          #If you want to share balances with another world.
+          Balances: worldname
+
+          #If you want to share configurations with another world
+          Configurations: worldname
         
         #All configurations relating to currency.
         Currency:
@@ -94,34 +100,3 @@ Worlds:
 
                 #The plural name. Example: Cents
                 Plural: Cents
-        
-        #All configurations relating to banks.
-        Bank:
-
-            #Whether or not banks are enabled.
-            Enabled: true
-
-            #Whether or not players can use signs to access their banks.
-            Sign: false
-
-            #Whether or not players can use a command to access their banks.
-            Command: true
-            
-            #Whether or not testificates named "Banker" allow access to player banks.
-            NPC: false
-
-            #How much is costs to open a bank account.
-            Cost: 20.0
-
-            #The number of rows a bank has.( minimum is 1, maximum is 6)
-            #1 row = 9 slots
-            Rows: 3
-            
-            #All configurations relating to bank gold interest.
-            Interest:
-
-                #Whether or not interest is enabled.
-                Enabled: false
-
-                #The interest rate in decimal form.
-                Rate: 0.2

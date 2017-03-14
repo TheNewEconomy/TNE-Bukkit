@@ -11,6 +11,8 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
+import java.math.BigDecimal;
+
 public class MoneyTakeCommand extends TNECommand {
 
   public MoneyTakeCommand(TNE plugin) {
@@ -41,16 +43,16 @@ public class MoneyTakeCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
       String world = (arguments.length >= 3)? getWorld(sender, arguments[2]) : getWorld(sender);
-      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance.manager.currencyManager.get(world).getName();
+      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance().manager.currencyManager.get(world).getName();
       Currency currency = getCurrency(world, currencyName);
-      Double value = CurrencyFormatter.translateDouble(arguments[1], world);
+      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], world);
 
-      if(value < 0) {
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
         new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
 
-      if(!TNE.instance.manager.currencyManager.contains(world, currencyName)) {
+      if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
         Message m = new Message("Messages.Money.NoCurrency");
         m.addVariable("$currency", currencyName);
         m.addVariable("$world", world);
@@ -61,9 +63,9 @@ public class MoneyTakeCommand extends TNECommand {
       MISCUtils.debug(world);
 
       if(getPlayer(sender, arguments[0]) != null) {
-        if(AccountUtils.transaction(IDFinder.getID(getPlayer(sender, arguments[0])).toString(), IDFinder.getID(getPlayer(sender)).toString(), AccountUtils.round(value), currency, TransactionType.MONEY_REMOVE, world)) {
+        if(AccountUtils.transaction(IDFinder.getID(getPlayer(sender, arguments[0])).toString(), IDFinder.getID(getPlayer(sender)).toString(), value, currency, TransactionType.MONEY_REMOVE, world)) {
           Message took = new Message("Messages.Money.Took");
-          took.addVariable("$amount", CurrencyFormatter.format(world, AccountUtils.round(value)));
+          took.addVariable("$amount", CurrencyFormatter.format(world, value));
           took.addVariable("$player", arguments[0]);
           took.translate(world, sender);
           return true;

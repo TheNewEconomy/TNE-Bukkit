@@ -6,7 +6,6 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,7 +39,7 @@ public class PinConfirmCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = (Player)sender;
 
-    if(TNE.instance.manager.confirmed(IDFinder.getID(player), IDFinder.getWorld(player))) {
+    if(TNE.instance().manager.confirmed(IDFinder.getID(player), IDFinder.getWorld(player))) {
       Message message = new Message("Messages.Pin.Already");
       message.translate(IDFinder.getWorld(player), player);
       return false;
@@ -59,7 +58,7 @@ public class PinConfirmCommand extends TNECommand {
         return false;
       }
 
-      TNE.instance.manager.confirmed.add(IDFinder.getID(player));
+      TNE.instance().manager.confirmed.add(IDFinder.getID(player));
       Message message = new Message("Messages.Pin.Confirmed");
       message.translate(IDFinder.getWorld(player), player);
       return true;

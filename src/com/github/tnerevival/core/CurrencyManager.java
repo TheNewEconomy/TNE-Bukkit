@@ -7,6 +7,7 @@ import com.github.tnerevival.core.currency.Tier;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -28,21 +29,23 @@ import java.util.*;
  */
 public class CurrencyManager {
   private Map<String, Currency> currencies = new HashMap<>();
-  private Set<String> worlds = TNE.instance.worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+  private Set<String> worlds = TNE.instance().worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+
+  //Cache-related maps.
+  private Map<String, List<Currency>> worldCurrencies = new HashMap<>();
+  private Map<String, List<Currency>> trackedCurrencies = new HashMap<>();
 
   public CurrencyManager() {
     loadCurrencies();
   }
 
   public void loadCurrencies() {
-    loadCurrency(TNE.instance.getConfig(), false, IDFinder.getWorld(TNE.instance.defaultWorld));
+    worldCurrencies = new HashMap<>();
+    trackedCurrencies = new HashMap<>();
+    loadCurrency(TNE.instance().getConfig(), false, TNE.instance().defaultWorld);
 
     for(String s : worlds) {
-      loadCurrency(TNE.instance.worldConfigurations, true, IDFinder.getWorld(s));
-    }
-
-    for(String s : currencies.keySet()) {
-      MISCUtils.debug(s);
+      loadCurrency(TNE.instance().worldConfigurations, true, s);
     }
   }
 
@@ -61,12 +64,14 @@ public class CurrencyManager {
 
         MISCUtils.debug("[Loop]Loading Currency: " + cur + " for world: " + name);
         String base = curBase + "." + cur;
-        Double balance = configuration.contains(base + ".Balance")?  configuration.getDouble(base + ".Balance") : 200.00;
+        BigDecimal balance = configuration.contains(base + ".Balance")?  BigDecimal.valueOf(configuration.getDouble(base + ".Balance")) : new BigDecimal(200.00);
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
+        Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? configuration.getInt(base + ".DecimalPlace") : 2;
         String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten>";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
         Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");
+        Boolean track = configuration.contains(base + ".TrackChest") && configuration.getBoolean(base + ".TrackChest");
         String symbol = configuration.contains(base + ".Symbol")? configuration.getString(base + ".Symbol") : "$";
         String major = configuration.contains(base + ".MajorName.Single")? configuration.getString(base + ".MajorName.Single") : "dollar";
         String majorPlural = configuration.contains(base + ".MajorName.Plural")? configuration.getString(base + ".MajorName.Plural") : "dollars";
@@ -74,6 +79,11 @@ public class CurrencyManager {
         String minorPlural = configuration.contains(base + ".MinorName.Plural")? configuration.getString(base + ".MinorName.Plural") : "cents";
         String majorItem = configuration.contains(base + ".ItemMajor")? configuration.getString(base + ".ItemMajor") : "GOLD_INGOT";
         String minorItem = configuration.contains(base + ".ItemMinor")? configuration.getString(base + ".ItemMinor") : "IRON_INGOT";
+
+        //Interest-related configurations
+        Boolean interestEnabled = !configuration.contains(base + ".Interest.Enabled") || configuration.getBoolean(base + ".Interest.Enabled");
+        Double interestRate = configuration.contains(base + ".Interest.Rate")? configuration.getDouble(base + ".Interest.Rate") : 0.2;
+        Long interestInterval = configuration.contains(base + ".Interest.Interval")? configuration.getLong(base + ".Interest.Interval") : 1800;
 
 
         Tier majorTier = new Tier();
@@ -91,42 +101,76 @@ public class CurrencyManager {
         Currency currency = new Currency();
         currency.setBalance(balance);
         currency.setDecimal(decimal);
+        currency.setDecimalPlaces(decimalPlaces);
         currency.setFormat(format);
         currency.setName(cur);
         currency.setWorldDefault(worldDefault);
         currency.setRate(rate);
         currency.setItem(item);
+        currency.setTrackChest(track);
         currency.addTier("Major", majorTier);
         currency.addTier("Minor", minorTier);
+
+        //Interest-related configurations
+        currency.setInterestEnabled(interestEnabled);
+        currency.setInterestRate(interestRate);
+        currency.setInterestInterval(interestInterval);
 
         add(name, currency);
       }
     }
   }
 
+  public void initializeWorld(String world) {
+    loadCurrency(TNE.instance().worldConfigurations, true, world);
+
+    Map<String, Currency> toAdd = new HashMap<>();
+    Iterator<Map.Entry<String, Currency>> iterator = currencies.entrySet().iterator();
+    while(iterator.hasNext()) {
+      Map.Entry<String, Currency> entry = iterator.next();
+      if(entry.getKey().contains(TNE.instance().defaultWorld + ":") || !IDFinder.getBalanceShareWorld(world).equals(world) && entry.getKey().contains(IDFinder.getBalanceShareWorld(world) + ":")) {
+        if (!TNE.instance().worldConfigurations.contains("Worlds." + world + ".Currency." + entry.getValue().getName() + ".Disabled") ||
+            !TNE.instance().worldConfigurations.getBoolean("Worlds." + world + ".Currency." + entry.getValue().getName() + ".Disabled")) {
+          toAdd.put(world + ":" + entry.getValue().getName(), entry.getValue());
+        }
+      }
+    }
+    currencies.putAll(toAdd);
+  }
+
   public void add(String world, Currency currency) {
     MISCUtils.debug("[Add]Loading Currency: " + currency.getName() + " for world: " + world);
     currencies.put(world + ":" + currency.getName(), currency);
-    if(world.equals(TNE.instance.defaultWorld)) {
+    if(world.equals(TNE.instance().defaultWorld)) {
       copyToWorlds(currency);
+    } else if(!IDFinder.getBalanceShareWorld(world).equals(world)) {
+      copyToWorld(currency, IDFinder.getBalanceShareWorld(world));
     }
   }
 
-  public void copyToWorlds(Currency currency) {
-    if(!currencies.containsKey(TNE.instance.defaultWorld + ":" + currency.getName())) {
-      if (!TNE.instance.getConfig().contains("Core.Currency." + currency.getName() + ".Disabled") ||
-          !TNE.instance.getConfig().getBoolean("Core.Currency." + currency.getName() + ".Disabled")) {
-            currencies.put(TNE.instance.defaultWorld + ":" + currency.getName(), currency);
+  private void copyToWorlds(Currency currency) {
+    if(!currencies.containsKey(TNE.instance().defaultWorld + ":" + currency.getName())) {
+      if (!TNE.instance().getConfig().contains("Core.Currency." + currency.getName() + ".Disabled") ||
+          !TNE.instance().getConfig().getBoolean("Core.Currency." + currency.getName() + ".Disabled")) {
+            currencies.put(TNE.instance().defaultWorld + ":" + currency.getName(), currency);
       }
     }
 
     for(String s : worlds) {
-
       if(!currencies.containsKey(s + ":" + currency.getName())) {
-        if (!TNE.instance.worldConfigurations.contains("Worlds." + s + ".Currency." + currency.getName() + ".Disabled") ||
-            !TNE.instance.worldConfigurations.getBoolean("Worlds." + s + ".Currency." + currency.getName() + ".Disabled")) {
+        if (!TNE.instance().worldConfigurations.contains("Worlds." + s + ".Currency." + currency.getName() + ".Disabled") ||
+            !TNE.instance().worldConfigurations.getBoolean("Worlds." + s + ".Currency." + currency.getName() + ".Disabled")) {
             currencies.put(s + ":" + currency.getName(), currency);
         }
+      }
+    }
+  }
+
+  public void copyToWorld(Currency currency, String world) {
+    if(!currencies.containsKey(world + ":" + currency.getName())) {
+      if (!TNE.instance().worldConfigurations.contains("Worlds." + world + ".Currency." + currency.getName() + ".Disabled") ||
+          !TNE.instance().worldConfigurations.getBoolean("Worlds." + world + ".Currency." + currency.getName() + ".Disabled")) {
+        currencies.put(world + ":" + currency.getName(), currency);
       }
     }
   }
@@ -137,28 +181,34 @@ public class CurrencyManager {
         return entry.getValue();
       }
     }
-    return get(TNE.instance.defaultWorld, "Default");
+    return get(TNE.instance().defaultWorld, "Default");
   }
 
   public Currency get(String world, String name) {
     if(contains(world, name)) {
       return currencies.get(world + ":" + name);
+    } else if(contains(IDFinder.getBalanceShareWorld(world), name)) {
+      return currencies.get(IDFinder.getBalanceShareWorld(world) + ":" + name);
     }
     return get(world);
   }
 
-  public double convert(Currency from, Currency to, double amount) {
+  public BigDecimal convert(Currency from, Currency to, BigDecimal amount) {
     double fromRate = from.getRate();
     double toRate = to.getRate();
 
     return convert(fromRate, toRate, amount);
   }
 
-  public double convert(double fromRate, double toRate, double amount) {
-    double rate = fromRate - toRate;
-    double difference = amount * rate;
+  public BigDecimal convert(Currency from, double toRate, BigDecimal amount) {
+    return convert(from.getRate(), toRate, amount);
+  }
 
-    return amount + difference;
+  public BigDecimal convert(double fromRate, double toRate, BigDecimal amount) {
+    double rate = fromRate - toRate;
+    BigDecimal difference = amount.multiply(new BigDecimal(rate));
+
+    return amount.add(difference);
   }
 
   public boolean contains(String world) {
@@ -171,16 +221,46 @@ public class CurrencyManager {
   }
 
   public List<Currency> getWorldCurrencies(String world) {
+    if(worldCurrencies.containsKey(world)) return worldCurrencies.get(world);
+
     List<Currency> values = new ArrayList<>();
 
     for(String s : currencies.keySet()) {
-      if(s.contains(world + ":")) {
+      if(s.contains(world + ":") || s.contains(IDFinder.getBalanceShareWorld(world) + ":")) {
         values.add(currencies.get(s));
       }
     }
     if(values.size() == 0) {
-      values.add(get(TNE.instance.defaultWorld));
+      values.add(get(TNE.instance().defaultWorld));
     }
+
+    worldCurrencies.put(world, values);
+    return values;
+  }
+
+  public List<Currency> getTrackedCurrencies(String world) {
+    if(trackedCurrencies.containsKey(world)) return trackedCurrencies.get(world);
+
+    List<Currency> values = new ArrayList<>();
+
+    for(String s : currencies.keySet()) {
+      if(s.contains(world + ":") || s.contains(IDFinder.getBalanceShareWorld(world) + ":")) {
+
+        Currency currency = currencies.get(s);
+        if(currency.isItem() && currency.canTrackChest()) {
+          values.add(currency);
+        }
+      }
+    }
+
+    if(values.size() == 0) {
+      Currency defaultCur = get(TNE.instance().defaultWorld);
+      if(defaultCur.isItem() && defaultCur.canTrackChest()) {
+        values.add(defaultCur);
+      }
+    }
+
+    trackedCurrencies.put(world, values);
     return values;
   }
 

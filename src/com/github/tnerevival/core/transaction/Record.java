@@ -2,6 +2,7 @@ package com.github.tnerevival.core.transaction;
 
 import com.github.tnerevival.TNE;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -28,14 +29,14 @@ public class Record {
   private String id = "";
   private String initiator = "";
   private String player = "N/A";
-  private String world = TNE.instance.defaultWorld;
+  private String world = TNE.instance().defaultWorld;
   private String type = TransactionType.MONEY_INQUIRY.id;
-  private Double cost = 0.0;
-  private Double oldBalance = 0.0;
-  private Double balance = 0.0;
+  private BigDecimal cost = BigDecimal.ZERO;
+  private BigDecimal oldBalance = BigDecimal.ZERO;
+  private BigDecimal balance = BigDecimal.ZERO;
   private long time = new Date().getTime();
 
-  public Record(String id, String initiator, String player, String world, String type, Double cost, Double oldBalance, Double balance, Long time) {
+  public Record(String id, String initiator, String player, String world, String type, BigDecimal cost, BigDecimal oldBalance, BigDecimal balance, Long time) {
     this.id = id;
     this.initiator = initiator;
     this.player = player;
@@ -57,7 +58,7 @@ public class Record {
 
   public String convert(String world, UUID id, String timeZone) {
     final Date date = new Date(time);
-    final SimpleDateFormat dateFormat = new SimpleDateFormat(TNE.instance.api.getString("Core.Transactions.Format", world, id));
+    final SimpleDateFormat dateFormat = new SimpleDateFormat(TNE.instance().api().getString("Core.Transactions.Format", world, id));
     dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
 
     return dateFormat.format(date);
@@ -103,27 +104,27 @@ public class Record {
     this.type = type;
   }
 
-  public Double getCost() {
+  public BigDecimal getCost() {
     return cost;
   }
 
-  public void setCost(Double cost) {
+  public void setCost(BigDecimal cost) {
     this.cost = cost;
   }
 
-  public Double getOldBalance() {
+  public BigDecimal getOldBalance() {
     return oldBalance;
   }
 
-  public void setOldBalance(Double oldBalance) {
+  public void setOldBalance(BigDecimal oldBalance) {
     this.oldBalance = oldBalance;
   }
 
-  public Double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(Double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 

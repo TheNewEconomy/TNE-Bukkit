@@ -2,7 +2,7 @@ package com.github.tnerevival.commands.admin;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.utils.MISCUtils;
+import com.github.tnerevival.core.configurations.ConfigurationManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -36,14 +36,14 @@ public class AdminReloadCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length < 2) {
       if(arguments.length == 0) {
-        MISCUtils.reloadConfigurations("config");
+        ConfigurationManager.reloadConfigurations("config");
         sender.sendMessage(ChatColor.WHITE + "Configurations reloaded!");
         return true;
       } else if(arguments.length == 1) {
         if(arguments[0].equalsIgnoreCase("all") || arguments[0].equalsIgnoreCase("config") || arguments[0].equalsIgnoreCase("currencies") || arguments[0].equalsIgnoreCase("materials")
             || arguments[0].equalsIgnoreCase("messages") || arguments[0].equalsIgnoreCase("mobs") || arguments[0].equalsIgnoreCase("objects") || arguments[0].equalsIgnoreCase("players")
             || arguments[0].equalsIgnoreCase("worlds")) {
-          MISCUtils.reloadConfigurations(arguments[0]);
+          ConfigurationManager.reloadConfigurations(arguments[0]);
           String message = (arguments[0].equalsIgnoreCase("all"))? " All configurations reloaded." : arguments[0] + ".yml reloaded.";
           sender.sendMessage(ChatColor.WHITE + message);
           return true;

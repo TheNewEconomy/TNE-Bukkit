@@ -18,6 +18,7 @@ package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.api.MojangAPI;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,40 +32,29 @@ import java.util.UUID;
  **/
 public class IDFinder {
 
-  public static String getWorld(String actualWorld) {
-    if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
-      MISCUtils.debug("WORLD USING: " + TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld"));
-      return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
-    }
-    return actualWorld;
-  }
-
   public static String getWorld(Player player) {
-    return getWorld(getID(player));
-  }
-
-  public static String getWorld(UUID id) {
-    if(MISCUtils.multiWorld()) {
-      if(getPlayer(id.toString()) != null) {
-        String actualWorld = getActualWorld(id);
-        if(MISCUtils.worldConfigExists("Worlds." + actualWorld + ".ShareAccounts") && TNE.instance.worldConfigurations.getBoolean("Worlds." + actualWorld + ".ShareAccounts")) {
-          MISCUtils.debug("WORLD USING: " + TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld"));
-          return TNE.instance.worldConfigurations.getString("Worlds." + actualWorld + ".ShareWorld");
-        }
-        MISCUtils.debug("WORLD USING: " + actualWorld);
-        return actualWorld;
-      }
+    if(player == null) {
+      return TNE.instance().defaultWorld;
     }
-    MISCUtils.debug("WORLD USING: Default");
-    return TNE.instance.defaultWorld;
-  }
-
-  public static String getActualWorld(Player player) {
     return player.getWorld().getName();
   }
 
-  public static String getActualWorld(UUID id) {
-    return getActualWorld(getPlayer(id.toString()));
+  public static String getWorld(UUID id) {
+    return getWorld(getPlayer(id.toString()));
+  }
+
+  public static String getBalanceShareWorld(String world) {
+    if(MISCUtils.worldConfigExists("Worlds." + world + ".Share.Balances")) {
+      return TNE.instance().worldConfigurations.getString("Worlds." + world + ".Share.Balances");
+    }
+    return world;
+  }
+
+  public static String getConfigurationShare(String world) {
+    if(MISCUtils.worldConfigExists("Worlds." + world + ".Share.Configurations")) {
+      return TNE.instance().worldConfigurations.getString("Worlds." + world + ".Share.Configurations");
+    }
+    return world;
   }
 
   public static UUID ecoID(String username) {
@@ -72,12 +62,25 @@ public class IDFinder {
   }
 
   public static UUID ecoID(String username, boolean skip) {
-    if(TNE.instance.manager.ecoIDs.containsKey(username)) {
-      return TNE.instance.manager.ecoIDs.get(username);
+    if(TNE.instance().manager.ecoIDs.containsKey(username)) {
+      return TNE.instance().manager.ecoIDs.get(username);
     }
     UUID eco = (skip)? genUUID() : genUUID(username);
-    TNE.instance.manager.ecoIDs.put(username, eco);
+    TNE.instance().manager.ecoIDs.put(username, eco);
     return eco;
+  }
+
+  public static String getUsername(String identifier) {
+    if(isUUID(identifier)) {
+      if(getPlayer(identifier) == null) {
+        if(getOffline(identifier) != null) {
+          return getOffline(identifier).getName();
+        }
+        return MojangAPI.getPlayerUsername(getID(identifier));
+      }
+      return getPlayer(identifier).getName();
+    }
+    return identifier;
   }
 
   public static UUID genUUID(String name) {
@@ -89,7 +92,7 @@ public class IDFinder {
 
   public static UUID genUUID() {
     UUID id = UUID.randomUUID();
-    while(TNE.instance.manager.accounts.containsKey(id) || TNE.instance.manager.ecoIDs.containsValue(id)) {
+    while(TNE.instance().manager.accounts.containsKey(id) || TNE.instance().manager.ecoIDs.containsValue(id)) {
       //This should never happen, but we'll play it safe
       id = UUID.randomUUID();
     }
@@ -97,7 +100,7 @@ public class IDFinder {
   }
 
   public static String ecoToUsername(UUID id) {
-    return (String) MISCUtils.getKey(TNE.instance.manager.ecoIDs, id);
+    return (MISCUtils.getKey(TNE.instance().manager.ecoIDs, id) != null)? (String)MISCUtils.getKey(TNE.instance().manager.ecoIDs, id) : getUsername(id.toString());
   }
 
   public static UUID getID(Player player) {
@@ -105,7 +108,7 @@ public class IDFinder {
   }
 
   public static UUID getID(OfflinePlayer player) {
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
+    if(!TNE.instance().api().getBoolean("Core.UUID")) {
       return ecoID(player.getName());
     }
     return player.getUniqueId();
@@ -113,10 +116,16 @@ public class IDFinder {
 
   public static Player getPlayer(String identifier) {
     UUID id = (getID(identifier));
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
+    if(!TNE.instance().api().getBoolean("Core.UUID")) {
       return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
     return Bukkit.getPlayer(id);
+  }
+
+  public static OfflinePlayer getOffline(String identifier) {
+    UUID id = getID(identifier);
+
+    return Bukkit.getOfflinePlayer(id);
   }
 
   public static UUID getID(String identifier) {
@@ -127,18 +136,27 @@ public class IDFinder {
     }
 
     if(identifier.contains("faction-")) {
-      return ecoID(identifier);
+      MISCUtils.debug("Faction");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
     }
 
     if(identifier.contains("town-")) {
-      return ecoID(identifier);
+      MISCUtils.debug("Towny Town");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
     }
 
     if(identifier.contains("nation-")) {
-      return ecoID(identifier);
+      MISCUtils.debug("Towny Nation");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
     }
 
-    if(!TNE.instance.api.getBoolean("Core.UUID")) {
+    if(!TNE.instance().api().getBoolean("Core.UUID")) {
       MISCUtils.debug("ECO ID RETURNED");
       return ecoID(identifier);
     }
@@ -149,6 +167,18 @@ public class IDFinder {
       return ecoID(identifier);
     }
     return mojangID;
+  }
+
+  private static void checkSpecial(UUID id) {
+    if(AccountUtils.exists(id)) {
+      Account account = AccountUtils.getAccount(id);
+      if(!account.isSpecial()) {
+        account.setSpecial(true);
+        TNE.instance().manager.accounts.put(id, account);
+      }
+    } else {
+      TNE.instance().manager.special.add(id);
+    }
   }
 
   public static boolean isUUID(String lookup) {

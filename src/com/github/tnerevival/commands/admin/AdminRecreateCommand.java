@@ -54,7 +54,7 @@ public class AdminRecreateCommand extends TNECommand {
       return false;
     }
     sender.sendMessage("Attempting to recreate database tables...");
-    TNE.instance.saveManager.recreate();
+    TNE.instance().saveManager.recreate();
     return true;
   }
 

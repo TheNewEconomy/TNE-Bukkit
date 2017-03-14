@@ -1,8 +1,8 @@
 package com.github.tnerevival.core.auction;
 
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.MISCUtils;
 
 import java.util.UUID;
 
@@ -38,7 +38,7 @@ public class Claim {
   }
 
   public void claim() {
-    MISCUtils.getPlayer(player).getInventory().addItem(item.toItemStack());
+    IDFinder.getPlayer(player.toString()).getInventory().addItem(item.toItemStack());
   }
 
   public UUID getPlayer() {

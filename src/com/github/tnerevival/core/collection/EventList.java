@@ -47,14 +47,14 @@ public class EventList<E> extends ArrayList<E> {
   }
 
   public Collection<E> getAll() {
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
       return list;
     }
     return listener.getAll();
   }
 
   public Collection<E> getAll(Object identifier) {
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
       return getAll();
     }
     return listener.getAll(identifier);
@@ -82,12 +82,12 @@ public class EventList<E> extends ArrayList<E> {
 
   public boolean add(E item, boolean skip) {
 
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
-      if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && TNE.instance.saveManager.cache && !contains(item) && !skip) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
+      if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && TNE.instance().saveManager.cache && !contains(item) && !skip) {
         listener.add(item);
       }
 
-      if(TNE.instance.saveManager.cache && contains(item)) {
+      if(TNE.instance().saveManager.cache && contains(item)) {
         listener.changed().add(item);
       }
       return list.add(item);
@@ -121,15 +121,15 @@ public class EventList<E> extends ArrayList<E> {
 
   public boolean remove(Object item, boolean database) {
     boolean removed = true;
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       listener.preRemove(item);
     }
 
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
       removed = list.remove(item);
     }
 
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache || database) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance().saveManager.cache || database) {
       removed = listener.remove(item);
     }
     return removed;

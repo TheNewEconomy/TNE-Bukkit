@@ -48,12 +48,12 @@ public class EventMap<K, V> extends HashMap<K, V> {
   @Override
   public V get(Object key) {
     MISCUtils.debug("EventMap.get");
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
       return map.get(key);
     }
 
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
-      if(!TNE.instance.saveManager.cache || !map.containsKey(key)) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
+      if(!TNE.instance().saveManager.cache || !map.containsKey(key)) {
         return listener.get(key);
       }
     }
@@ -68,17 +68,17 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   public V put(K key, V value, boolean skip) {
     MISCUtils.debug("EventMap.put(skip)");
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
       map.put(key, value);
     }
 
     if(!skip) {
-      if (!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
-        if (!TNE.instance.saveManager.cache || !map.containsKey(key)) {
+      if (!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
+        if (!TNE.instance().saveManager.cache || !map.containsKey(key)) {
           listener.put(key, value);
         }
 
-        if(TNE.instance.saveManager.cache && map.containsKey(key)) {
+        if(TNE.instance().saveManager.cache && map.containsKey(key)) {
           listener.changed().put(key, value);
         }
       }
@@ -95,15 +95,15 @@ public class EventMap<K, V> extends HashMap<K, V> {
   public V remove(Object key, boolean database) {
     MISCUtils.debug("EventMap.remove(database)");
     V removed = get(key);
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && database) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && database) {
       listener.preRemove(key, removed);
     }
 
-    if(TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance.saveManager.cache) {
+    if(TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") || TNE.instance().saveManager.cache) {
       removed = map.remove(key);
     }
 
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache || database) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance().saveManager.cache || database) {
       listener.remove(key);
     }
     return removed;
@@ -122,7 +122,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
   @Override
   public int size() {
     MISCUtils.debug("EventMap.size");
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       return listener.size();
     }
     return map.size();
@@ -131,7 +131,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
   @Override
   public boolean isEmpty() {
     MISCUtils.debug("EventMap.isEmpty");
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile")) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
       return listener.isEmpty();
     }
     return map.isEmpty();
@@ -150,7 +150,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public boolean containsValue(Object value) {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance().saveManager.cache) {
       return listener.containsValue(value);
     }
     return map.containsValue(value);
@@ -158,7 +158,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public Set<K> keySet() {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance().saveManager.cache) {
       return listener.keySet();
     }
     return map.keySet();
@@ -166,7 +166,12 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public Collection<V> values() {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache) {
+    return values(true);
+  }
+
+  public Collection<V> values(boolean useCache) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance().saveManager.cache ||
+       !TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && TNE.instance().saveManager.cache && !useCache) {
       return listener.values();
     }
     return map.values();
@@ -174,7 +179,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
-    if(!TNE.instance.saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance.saveManager.cache) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile") && !TNE.instance().saveManager.cache) {
       return listener.entrySet();
     }
     return map.entrySet();

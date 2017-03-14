@@ -6,7 +6,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.ShareEntry;
 import com.github.tnerevival.core.shops.Shop;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -52,12 +51,12 @@ public class ShopShareCommand extends TNECommand {
           Shop s = Shop.getShop(arguments[0], IDFinder.getWorld(getPlayer(sender)));
           UUID target = IDFinder.getID(arguments[1]);
           if(!s.isAdmin()) {
-            if(!TNE.instance.api.getBoolean("Core.Shops.Shares.Enabled", s.getWorld(), s.getOwner())) {
+            if(!TNE.instance().api().getBoolean("Core.Shops.Shares.Enabled", s.getWorld(), s.getOwner())) {
               new Message("Messages.Shop.ShareNone").translate(IDFinder.getWorld(player), player);
               return false;
             }
 
-            if(s.getShares().size() >= TNE.instance.api.getInteger("Core.Shops.Shares.Max", s.getWorld(), s.getOwner())) {
+            if(s.getShares().size() >= TNE.instance().api().getInteger("Core.Shops.Shares.Max", s.getWorld(), s.getOwner())) {
               new Message("Messages.Shop.ShareMax").translate(IDFinder.getWorld(player), player);
               return false;
             }
@@ -66,7 +65,7 @@ public class ShopShareCommand extends TNECommand {
               s.removeShares(target);
 
               Message hidden = new Message("Messages.Shop.ShareRemoved");
-              hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
+              hidden.addVariable("$player", IDFinder.getPlayer(target.toString()).getName());
               hidden.translate(IDFinder.getWorld(player), player);
               return true;
             } else {
@@ -77,7 +76,7 @@ public class ShopShareCommand extends TNECommand {
 
                 s.addShares(entry);
                 Message hidden = new Message("Messages.Shop.ShareAdded");
-                hidden.addVariable("$player", MISCUtils.getPlayer(target).getDisplayName());
+                hidden.addVariable("$player", IDFinder.getPlayer(target.toString()).getName());
                 hidden.translate(IDFinder.getWorld(player), player);
                 return true;
               } else {

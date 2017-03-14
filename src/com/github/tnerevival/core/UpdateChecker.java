@@ -15,7 +15,7 @@ public class UpdateChecker {
   }
 
   public String getLatestBuild() {
-    String build = TNE.instance.getDescription().getVersion();
+    String build = TNE.instance().getDescription().getVersion();
     try {
         URL url = new URL("https://creatorfromhell.com/tne/tnebuild.txt");
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -28,7 +28,7 @@ public class UpdateChecker {
   }
 
   public String getCurrentBuild() {
-    return TNE.instance.getDescription().getVersion();
+    return TNE.instance().getDescription().getVersion();
   }
 
   public ReleaseType getRelease() {

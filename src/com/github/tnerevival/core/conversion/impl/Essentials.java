@@ -24,12 +24,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 /**
  * Created by creatorfromhell on 11/15/2016.
  **/
 public class Essentials extends Converter {
-  private File dataDirectory = new File(TNE.instance.getDataFolder(), "../Essentials/userdata");
+  private File dataDirectory = new File(TNE.instance().getDataFolder(), "../Essentials/userdata");
 
   @Override
   public String name() {
@@ -44,9 +45,9 @@ public class Essentials extends Converter {
       FileConfiguration acc = YamlConfiguration.loadConfiguration(accountFile);
 
       Double money = acc.contains("money")? acc.getDouble("money") : 0.0;
-      String currency = TNE.instance.manager.currencyManager.get(TNE.instance.defaultWorld).getName();
+      String currency = TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName();
 
-      AccountUtils.convertedAdd(acc.getString("lastAccountName"), TNE.instance.defaultWorld, currency, money);
+      AccountUtils.convertedAdd(acc.getString("lastAccountName"), TNE.instance().defaultWorld, currency, new BigDecimal(money));
     }
   }
 }

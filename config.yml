@@ -1,4 +1,4 @@
-# The New Economy v0.0.6.0
+# The New Economy v0.0.5.2
 # Author: creatorfromhell
 # License: AGPLv3
 # If you would like to contribute to the plugin
@@ -21,7 +21,7 @@ Core:
     Pins:
 
         #Whether or not account pins should be enabled
-        Enabled: true
+        Enabled: false
 
         #Whether or not players must set their pin before using money-related functions
         Force: true
@@ -84,7 +84,7 @@ Core:
             # If shortened, it will ignore the value of Format.
             #It's also possible to include all colour variables from messages.yml
             #Example: <major> and <minor>
-            Format: <symbol><major><decimal><minor><shorten>
+            Format: <symbol><major.amount><decimal><minor.amount><shorten>
 
             #The initial balance for accounts.
             #Will be used if no world-specific configurations are found if multiworld is enabled
@@ -103,8 +103,15 @@ Core:
             #The character to use as the decimal place holder.
             Decimal: .
 
+            #The amount of digits to display after the decimal character.
+            DecimalPlaces: 2
+
             #Would you like to use an item as the currency?
             ItemCurrency: false
+
+            #Would you like to track when a player puts ItemCurrency into a chest for balance usage later? May impact performance.
+            #Temporarily modifies inventory behaviour for chests.
+            TrackChest: false
 
             #If you want to use an item, which one?(Please use the name of the item)
             #Example: GOLD_INGOT
@@ -133,6 +140,18 @@ Core:
 
                 #The plural name. Example: Cents
                 Plural: Cents
+
+            #All configurations relating to bank gold interest.
+            Interest:
+
+                #Whether or not interest is enabled.
+                Enabled: false
+
+                #The interest rate in decimal form.
+                Rate: 0.2
+
+                #The interval at which interest is gained(in seconds)
+                Interval: 1800
 
     #All configurations relating to the TNE Auctions System.
     Auctions:
@@ -231,8 +250,8 @@ Core:
         #All configurations relating to bank signs.
         Bank:
 
-            #Whether or not players can use bank signs to view their banks
-            Enabled: false
+            #Whether or not players may create vault signs
+            Enabled: true
 
             #The cost to make a bank sign, if the player has valid permissions.
             Place: 20.0
@@ -240,11 +259,26 @@ Core:
             #The cost to use a bank sign, if the player has valid permissions.
             Use: 20.0
 
+            #The max number of item shops a single player may own
+            Max: 10
+
+        #All configurations relating to vault signs.
+        Vault:
+
+            #Whether or not players can use vault signs to view their vaults
+            Enabled: true
+
+            #The cost to make a vault sign, if the player has valid permissions.
+            Place: 20.0
+
+            #The cost to use a vault sign, if the player has valid permissions.
+            Use: 20.0
+
         #All configurations relating to item buy/sell signs.
         Item:
 
             #Whether or not item signs are enabled.
-            Enabled: false
+            Enabled: true
 
             #The cost to make a item sign, if the player has valid permissions.
             Place: 20.0
@@ -252,11 +286,24 @@ Core:
             #The cost to use a item sign, if the player has valid permissions.
             Use: 20.0
 
+            #The max number of item shops a single player may own
+            Max: 10
+
+            #Whether or not item signs may have multiple offers
+            Multiple: true
+
+            #The maximum number of offers per sign if Multiple is true.
+            MaxOffers: 9
+
+            #Whether or not sign shops may use a player's ender chest inventory for storage.
+            #This allows a chest-free, clean shop display
+            EnderChest: true
+
         #All configurations relating to shop signs.
         Shop:
 
             #Whether or not shop signs are enabled.
-            Enabled: false
+            Enabled: true
 
             #The cost to make a shop sign, if the player has valid permissions.
             Place: 20.0
@@ -303,8 +350,8 @@ Core:
         #Whether or not players can manage vaults from other worlds.
         MultiManage: false
 
-        #Whether or not player can view vaults from other worlds.
-        MultiView: false
+        #How many players can view a vault at the same time. Anything more than one will impact performance.
+        MaxViewers: 1
 
     #All configurations relating to banks.
     Bank:
@@ -320,18 +367,6 @@ Core:
 
         #Whether or not players can manage banks from other worlds.
         MultiManage: false
-
-        #All configurations relating to bank gold interest.
-        Interest:
-
-            #Whether or not interest is enabled.
-            Enabled: false
-
-            #The interest rate in decimal form.
-            Rate: 0.2
-
-            #The interval at which interest is gained(in seconds)
-            Interval: 1800
             
             
     #All configurations relating to worlds

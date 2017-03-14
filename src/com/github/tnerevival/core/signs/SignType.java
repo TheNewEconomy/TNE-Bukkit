@@ -2,6 +2,8 @@ package com.github.tnerevival.core.signs;
 
 import com.github.tnerevival.TNE;
 
+import java.math.BigDecimal;
+
 public enum SignType {
 
   UNKNOWN("unknown", "", "", ""),
@@ -24,7 +26,7 @@ public enum SignType {
 
   public static SignType fromName(String name) {
     for(SignType type : values()) {
-      if(type.getName().equalsIgnoreCase(name)) {
+      if(type.getName().equalsIgnoreCase(name.trim())) {
         return type;
       }
     }
@@ -56,14 +58,21 @@ public enum SignType {
   }
 
   public Boolean enabled(String world, String player) {
-    return TNE.instance.api.getBoolean(configuration + ".Enabled", world, player);
+    return TNE.instance().api().getBoolean(configuration + ".Enabled", world, player);
   }
 
-  public Double place(String world, String player) {
-    return TNE.instance.api.getDouble(configuration + ".Place", world, player);
+  public BigDecimal place(String world, String player) {
+    return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Place", world, player));
   }
 
-  public Double use(String world, String player) {
-    return TNE.instance.api.getDouble(configuration + ".Use", world, player);
+  public BigDecimal use(String world, String player) {
+    return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Use", world, player));
+  }
+
+  public Integer max(String world, String player) {
+    if(TNE.instance().api().hasConfiguration(configuration + ".Max")) {
+      return TNE.instance().api().getInteger(configuration + ".Max", world, player);
+    }
+    return -1;
   }
 }

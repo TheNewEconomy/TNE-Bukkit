@@ -32,7 +32,7 @@ public class SignsListener implements MapListener {
   @Override
   public void update() {
     for(TNESign sign : changed.values()) {
-      TNE.instance.saveManager.versionInstance.saveSign(sign);
+      TNE.instance().saveManager.versionInstance.saveSign(sign);
     }
   }
 
@@ -48,17 +48,17 @@ public class SignsListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.saveSign((TNESign)value);
+    TNE.instance().saveManager.versionInstance.saveSign((TNESign)value);
   }
 
   @Override
   public Object get(Object key) {
-    return TNE.instance.saveManager.versionInstance.loadSign(((SerializableLocation)key).toString());
+    return TNE.instance().saveManager.versionInstance.loadSign(((SerializableLocation)key).toString());
   }
 
   @Override
   public Collection<TNESign> values() {
-    return TNE.instance.saveManager.versionInstance.loadSigns();
+    return TNE.instance().saveManager.versionInstance.loadSigns();
   }
 
   @Override
@@ -83,7 +83,7 @@ public class SignsListener implements MapListener {
 
   @Override
   public void preRemove(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.deleteSign((TNESign)value);
+    TNE.instance().saveManager.versionInstance.deleteSign((TNESign)value);
   }
 
   @Override

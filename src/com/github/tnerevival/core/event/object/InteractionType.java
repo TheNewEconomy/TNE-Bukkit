@@ -3,6 +3,8 @@ package com.github.tnerevival.core.event.object;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.objects.MaterialObject;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Daniel on 10/12/2016.
  */
@@ -22,7 +24,7 @@ public enum InteractionType {
     this.paid = paid;
   }
 
-  public double getCost(String identifier, String world, String player) {
+  public BigDecimal getCost(String identifier, String world, String player) {
     switch(this) {
       case MINING:
         if(containsMaterial(identifier, world, player)) {
@@ -49,7 +51,7 @@ public enum InteractionType {
           return getMaterial(identifier, world, player).getSmelt();
         }
       default:
-        return 0.0;
+        return BigDecimal.ZERO;
     }
   }
 

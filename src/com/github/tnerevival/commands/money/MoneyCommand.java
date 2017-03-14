@@ -3,6 +3,7 @@ package com.github.tnerevival.commands.money;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,6 +18,7 @@ public class MoneyCommand extends TNECommand {
     subCommands.add(new MoneyPayCommand(plugin));
     subCommands.add(new MoneySetCommand(plugin));
     subCommands.add(new MoneyTakeCommand(plugin));
+    subCommands.add(new MoneyTopCommand(plugin));
   }
 
   @Override
@@ -26,8 +28,8 @@ public class MoneyCommand extends TNECommand {
 
   @Override
   public String[] getAliases() {
-    if(TNE.instance.api.getBoolean("Core.Commands.BalanceShort")) {
-      return new String[] { "bal", "balance" };
+    if(TNE.instance().api().getBoolean("Core.Commands.BalanceShort")) {
+      return new String[] { "bal", "balance", "pay", "baltop", "balancetop" };
     }
     return new String[0];
   }
@@ -54,18 +56,20 @@ public class MoneyCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(MISCUtils.ecoDisabled(getWorld(sender))) {
+      Message disabled = new Message("Messages.General.Disabled");
+      disabled.translate(getWorld(sender), sender);
+      return false;
+    }
 
-    if(command.equalsIgnoreCase("bal") || command.equalsIgnoreCase("balance") ||
-       arguments.length == 0 && sender instanceof Player && !command.equalsIgnoreCase("pay")) {
+    if(command.equalsIgnoreCase("baltop") || command.equalsIgnoreCase("balancetop")) {
+      TNECommand sub = FindSub("top");
+      return sub.execute(sender, command, arguments);
+    }
+
+    if(command.equalsIgnoreCase("bal") || command.equalsIgnoreCase("balance") || arguments.length == 0 && sender instanceof Player) {
       TNECommand sub = FindSub("balance");
-      if(sub.canExecute(sender)) {
-        return sub.execute(sender, command, arguments);
-      } else {
-        Message unable = new Message("Messages.Command.Unable");
-        unable.addVariable("$command", "/" + getName());
-        unable.translate(TNE.instance.defaultWorld, sender);
-        return false;
-      }
+      return sub.execute(sender, command, arguments);
     }
 
     if(command.equalsIgnoreCase("pay")) {

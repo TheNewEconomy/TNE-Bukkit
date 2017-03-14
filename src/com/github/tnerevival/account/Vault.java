@@ -26,16 +26,15 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by creatorfromhell on 1/17/2017.
  **/
 public class Vault {
+  public List<UUID> viewers = new ArrayList<>();
 
   private List<SerializableItemStack> items = new ArrayList<>();
   private List<UUID> members = new ArrayList<>();
@@ -53,6 +52,20 @@ public class Vault {
     items.add(new SerializableItemStack(slot, stack));
   }
 
+  public void setItem(int slot, ItemStack stack) {
+    removeItem(slot);
+    if(stack != null) {
+      addItem(slot, stack);
+    }
+  }
+
+  public void setItems(Map<Integer, ItemStack> items) {
+    for(Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
+      if(entry.getKey() >= size) continue;
+      setItem(entry.getKey(), entry.getValue());
+    }
+  }
+
   public SerializableItemStack getItem(int slot) {
     for(SerializableItemStack item : items) {
       if(item.getSlot().equals(slot)) {
@@ -60,6 +73,18 @@ public class Vault {
       }
     }
     return null;
+  }
+
+  public void removeAll(Material material) {
+    Iterator<SerializableItemStack> i = items.iterator();
+
+    while(i.hasNext()) {
+      SerializableItemStack item = i.next();
+
+      if(item.toItemStack().getType().equals(material)) {
+        i.remove();
+      }
+    }
   }
 
   public void removeItem(int slot) {
@@ -130,7 +155,7 @@ public class Vault {
     List<Integer> valid = new ArrayList<>();
 
     for(int i = 0; i < size; i++) {
-      if(getItem(i) != null || TNE.instance.api.getBoolean("Core.Death.Vault.IncludeEmpty", world, owner)) {
+      if(getItem(i) != null || TNE.instance().api().getBoolean("Core.Death.Vault.IncludeEmpty", world, owner)) {
         valid.add(i);
       }
     }
@@ -140,7 +165,7 @@ public class Vault {
   public List<Integer> generateSlots(String world) {
     List<Integer> valid = validSlots(world);
     List<Integer> generated = new ArrayList<>();
-    int remaining = TNE.instance.api.getInteger("Core.Death.Vault.Drop", world, owner);
+    int remaining = TNE.instance().api().getInteger("Core.Death.Vault.Drop", world, owner);
 
     if(valid.size() <= remaining) return valid;
 
@@ -225,31 +250,52 @@ public class Vault {
     return inventory;
   }
 
+  public void update() {
+    update(null);
+  }
+
+  public void update(UUID initiator) {
+    Iterator<UUID> i = viewers.iterator();
+    while(i.hasNext()) {
+      UUID id = i.next();
+      if(initiator != null && !id.equals(initiator) || initiator == null) {
+        IDFinder.getPlayer(id.toString()).getOpenInventory().getTopInventory().setContents(getInventory().getContents());
+        IDFinder.getPlayer(id.toString()).updateInventory();
+      }
+    }
+  }
+
   /*
    * Static helper methods
    */
+  public static UUID parseTitle(String title) {
+    String ownerUser = title.split("]")[1].trim();
+    MISCUtils.debug("Vault.parseTitle" + ChatColor.stripColor(ownerUser));
+    return IDFinder.getID(ChatColor.stripColor(ownerUser));
+  }
+
   public static Integer size(String world, String player) {
-    Integer rows = TNE.instance.api.getInteger("Core.Vault.Rows", world, player);
+    Integer rows = TNE.instance().api().getInteger("Core.Vault.Rows", world, player);
     return (rows >= 1 && rows <= 6) ? (rows * 9) : 27;
   }
 
   public static Boolean enabled(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Vault.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Vault.Enabled", world, player);
   }
 
   public static Boolean command(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Vault.Command", world, player);
+    return TNE.instance().api().getBoolean("Core.Vault.Command", world, player);
   }
 
-  public static Double cost(String world, String player) {
-    return AccountUtils.round(TNE.instance.api.getDouble("Core.Vault.Cost", world, player));
+  public static BigDecimal cost(String world, String player) {
+    return new BigDecimal(TNE.instance().api().getDouble("Core.Vault.Cost", world, player));
   }
 
   public static Boolean sign(String world, String player) {
-    return TNE.instance.api.getBoolean("Core.Signs.Vault.Enabled", world, player);
+    return TNE.instance().api().getBoolean("Core.Signs.Vault.Enabled", world, player);
   }
 
   public static Boolean npc(String world) {
-    return TNE.instance.api.getBoolean("Core.Vault.NPC", world);
+    return TNE.instance().api().getBoolean("Core.Vault.NPC", world);
   }
 }

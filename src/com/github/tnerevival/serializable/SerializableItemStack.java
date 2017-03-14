@@ -12,8 +12,8 @@ import java.util.*;
 public class SerializableItemStack implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
-  List<String> lore = new ArrayList<String>();
+  HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<>();
+  List<String> lore = new ArrayList<>();
 
   String name;
   Integer slot;

@@ -51,7 +51,7 @@ public class DeveloperAccountsCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    sender.sendMessage(TNE.instance.manager.accounts.toString());
+    sender.sendMessage(TNE.instance().manager.accounts.toString());
     return true;
   }
 

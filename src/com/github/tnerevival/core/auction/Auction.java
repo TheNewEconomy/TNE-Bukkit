@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.serializable.SerializableItemStack;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -16,12 +17,12 @@ public class Auction {
   private long added = System.nanoTime();
   private long startTime = System.nanoTime();
   private UUID player;
-  private String world = TNE.instance.defaultWorld;
+  private String world = TNE.instance().defaultWorld;
   private Boolean silent = false;
   private SerializableItemStack item;
-  private TransactionCost cost = new TransactionCost(50.00, TNE.instance.manager.currencyManager.get(world));
+  private TransactionCost cost = new TransactionCost(new BigDecimal(50.00), TNE.instance().manager.currencyManager.get(world));
   private Bid highestBid = null;
-  private Double increment = 10.00;
+  private BigDecimal increment = BigDecimal.TEN;
   private Boolean global = true;
   private Integer time = 30;
   private String node = "";
@@ -40,7 +41,7 @@ public class Auction {
     return time - (int)TimeUnit.SECONDS.convert(elapsed, TimeUnit.NANOSECONDS);
   }
 
-  public double getNextBid() {
+  public BigDecimal getNextBid() {
     return (highestBid != null)? highestBid.getBid().getAmount() : cost.getAmount();
   }
 
@@ -108,11 +109,11 @@ public class Auction {
     this.highestBid = highestBid;
   }
 
-  public Double getIncrement() {
+  public BigDecimal getIncrement() {
     return increment;
   }
 
-  public void setIncrement(Double increment) {
+  public void setIncrement(BigDecimal increment) {
     this.increment = increment;
   }
 

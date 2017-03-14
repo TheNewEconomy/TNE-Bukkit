@@ -51,7 +51,7 @@ public class BankAddCommand extends TNECommand {
       return false;
     }
 
-    if(IDFinder.getPlayer(arguments[0]) == null) {
+    if(IDFinder.getID(arguments[0]) == null) {
       Message notFound = new Message("Messages.General.NoPlayer");
       notFound.addVariable("$player", arguments[0]);
       notFound.translate(IDFinder.getWorld(player), player);
@@ -65,7 +65,7 @@ public class BankAddCommand extends TNECommand {
       return false;
     }
 
-    if(!account.getBank(world).getOwner().equals(IDFinder.getID(player))|| !world.equals(getWorld(sender)) && !TNE.instance.api.getBoolean("Core.Bank.MultiManage")) {
+    if(!account.getBank(world).getOwner().equals(IDFinder.getID(player))|| !world.equals(getWorld(sender)) && !TNE.instance().api().getBoolean("Core.Bank.MultiManage")) {
       new Message("Messages.General.NoPerm").translate(getWorld(player), player);
       return false;
     }

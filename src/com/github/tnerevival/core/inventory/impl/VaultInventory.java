@@ -1,66 +1,64 @@
 package com.github.tnerevival.core.inventory.impl;
 
 import com.github.tnerevival.TNE;
-import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.Vault;
-import com.github.tnerevival.core.inventory.InventoryViewer;
-import com.github.tnerevival.serializable.SerializableItemStack;
-import com.github.tnerevival.utils.AccountUtils;
-import org.bukkit.Material;
+import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.inventory.TNEInventory;
+import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Daniel on 9/13/2016.
- */
-public class VaultInventory extends GenericInventory {
-
-  public VaultInventory(UUID owner) {
-    this.owner = owner;
-  }
-
-
-  @Override
-  public List<Material> getBlacklisted() {
-    List<Material> blocked = new ArrayList<>();
-    blocked.add(Material.ENCHANTED_BOOK);
-    blocked.add(Material.SPECTRAL_ARROW);
-    blocked.add(Material.TIPPED_ARROW);
-    blocked.add(Material.POTION);
-    blocked.add(Material.LINGERING_POTION);
-    blocked.add(Material.SPLASH_POTION);
-
-    return blocked;
+ * Created by creatorfromhell on 2/14/2017.
+ * All rights reserved.
+ **/
+public class VaultInventory extends TNEInventory {
+  public VaultInventory(UUID inventoryID, Inventory inventory, String world) {
+    super(inventoryID, inventory, world);
   }
 
   @Override
-  public List<Integer> getValidSlots() {
-    return new ArrayList<>();
-  }
-
-  @Override
-  public List<Integer> getInvalidSlots() {
-    return new ArrayList<>();
-  }
-
-  @Override
-  public void onClose(InventoryViewer viewer) {
-    Account account = AccountUtils.getAccount(owner);
-
-    Vault vault = account.getVault(world);
-
-    List<SerializableItemStack> items = new ArrayList<>();
-
-    for(int i = 0; i < vault.getSize(); i++) {
-      if(inventory.getItem(i) != null && !inventory.getItem(i).getType().equals(Material.AIR))
-      items.add(new SerializableItemStack(i, inventory.getItem(i)));
+  public boolean onOpen(UUID id) {
+    UUID owner = Vault.parseTitle(inventory.getTitle());
+    Vault vault = TNE.instance().manager.accounts.get(owner).getVault(world);
+    MISCUtils.debug("Vault owner is " + IDFinder.getPlayer(vault.getOwner().toString()).getName());
+    if(!vault.viewers.contains(id)) {
+      if(vault.viewers.size() >= TNE.instance().api().getInteger("Core.Vault.MaxViewers", world, id)) {
+        new Message("Messages.Vault.Occupied").translate(world, IDFinder.getPlayer(id.toString()));
+        return false;
+      }
+      vault.viewers.add(id);
+      TNE.instance().manager.accounts.get(owner).setVault(world, vault);
+      MISCUtils.debug("ADDING VAULT VIEWER!!!!!!!!!!!!");
     }
-    vault.setItems(items);
-    account.getVaults().put(world, vault);
-    TNE.instance.manager.accounts.put(owner, account);
+    MISCUtils.debug("Vault has been opened!");
+    return super.onOpen(id);
+  }
 
-    super.onClose(viewer);
+  @Override
+  public void onUpdate(Map<Integer, ItemStack> changed, UUID player) {
+    UUID owner = Vault.parseTitle(inventory.getTitle());
+    Vault vault = TNE.instance().manager.accounts.get(owner).getVault(world);
+    for(Map.Entry<Integer, ItemStack> entry : changed.entrySet()) {
+      if(entry.getKey() >= inventory.getSize()) continue;
+      if(entry.getValue() == null) vault.removeItem(entry.getKey());
+      else vault.setItem(entry.getKey(), entry.getValue());
+      inventory.setItem(entry.getKey(), entry.getValue());
+    }
+    vault.update(player);
+    TNE.instance().manager.accounts.get(owner).setVault(world, vault);
+  }
+
+  @Override
+  public void onClose(UUID id) {
+    UUID owner = Vault.parseTitle(inventory.getTitle());
+    Vault vault = TNE.instance().manager.accounts.get(owner).getVault(world);
+    vault.viewers.remove(id);
+    TNE.instance().manager.accounts.get(owner).setVault(world, vault);
+    super.onClose(id);
   }
 }

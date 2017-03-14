@@ -5,6 +5,7 @@ import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class ShopEntry implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -14,17 +15,17 @@ public class ShopEntry implements Serializable {
   private boolean unlimited = false;
   private int stock = 0;
   private int maxstock = 0;
-  private double cost = 0.0;
+  private BigDecimal cost = BigDecimal.ZERO;
   private SerializableItemStack trade = null;
 
-  public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy) {
+  public ShopEntry(SerializableItemStack item, BigDecimal cost, int stock, boolean buy) {
     this.item = item;
     this.cost = cost;
     this.stock = stock;
     this.buy = buy;
   }
 
-  public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, boolean unlimited) {
+  public ShopEntry(SerializableItemStack item, BigDecimal cost, int stock, boolean buy, boolean unlimited) {
     this.item = item;
     this.cost = cost;
     this.stock = stock;
@@ -32,7 +33,7 @@ public class ShopEntry implements Serializable {
     this.unlimited = unlimited;
   }
 
-  public ShopEntry(SerializableItemStack item, double cost, int stock, boolean buy, boolean unlimited, SerializableItemStack trade) {
+  public ShopEntry(SerializableItemStack item, BigDecimal cost, int stock, boolean buy, boolean unlimited, SerializableItemStack trade) {
     this.item = item;
     this.cost = cost;
     this.stock = stock;
@@ -81,11 +82,11 @@ public class ShopEntry implements Serializable {
     this.maxstock = maxstock;
   }
 
-  public double getCost() {
+  public BigDecimal getCost() {
     return cost;
   }
 
-  public void setCost(double cost) {
+  public void setCost(BigDecimal cost) {
     this.cost = cost;
   }
 
@@ -102,7 +103,7 @@ public class ShopEntry implements Serializable {
     StringBuilder builder = new StringBuilder();
 
     builder.append(item.toString());
-    builder.append("*" + cost);
+    builder.append("*" + cost.doubleValue());
     builder.append("*" + stock);
     builder.append("*" + buy);
     builder.append("*" + unlimited);
@@ -119,7 +120,7 @@ public class ShopEntry implements Serializable {
     MISCUtils.debug(parsed[0]);
 
     if(parsed.length >= 6) {
-      ShopEntry entry =  new ShopEntry(SerializableItemStack.fromString(parsed[0]), Double.valueOf(parsed[1]), Integer.valueOf(parsed[2]), Boolean.valueOf(parsed[3]), Boolean.valueOf(parsed[4]));
+      ShopEntry entry =  new ShopEntry(SerializableItemStack.fromString(parsed[0]), new BigDecimal(parsed[1]), Integer.valueOf(parsed[2]), Boolean.valueOf(parsed[3]), Boolean.valueOf(parsed[4]));
       entry.setMaxstock(Integer.valueOf(parsed[5]));
       if (parsed.length == 7) {
         entry.setTrade(SerializableItemStack.fromString(parsed[6]));
@@ -141,7 +142,7 @@ public class ShopEntry implements Serializable {
     if(Integer.compare(item.getAmount(), entry.getItem().getAmount()) != 0) return false;
     if(Boolean.compare(buy, entry.isBuy()) != 0) return false;
     if(Boolean.compare(unlimited, entry.isUnlimited()) != 0) return false;
-    if(Double.compare(cost, entry.getCost()) != 0) return false;
+    if(cost.compareTo(entry.getCost()) != 0) return false;
     if(trade != null && !trade.getName().equals(Material.AIR.toString())) {
       if(!trade.getName().equals(entry.getTrade().getName())) return false;
       if(Short.compare(trade.getDamage(), entry.getTrade().getDamage()) != 0) return false;

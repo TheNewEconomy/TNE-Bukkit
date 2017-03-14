@@ -30,7 +30,7 @@ public class IDSListener implements MapListener {
   @Override
   public void update() {
     for(Map.Entry<String, UUID> entry : changed.entrySet()) {
-      TNE.instance.saveManager.versionInstance.saveID(entry.getKey(), entry.getValue());
+      TNE.instance().saveManager.versionInstance.saveID(entry.getKey(), entry.getValue());
     }
   }
 
@@ -46,22 +46,22 @@ public class IDSListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.saveID((String)key, (UUID)value);
+    TNE.instance().saveManager.versionInstance.saveID((String)key, (UUID)value);
   }
 
   @Override
   public Object get(Object key) {
-    return TNE.instance.saveManager.versionInstance.loadID((String)key);
+    return TNE.instance().saveManager.versionInstance.loadID((String)key);
   }
 
   @Override
   public Collection<UUID> values() {
-    return TNE.instance.saveManager.versionInstance.loadIDS().values();
+    return TNE.instance().saveManager.versionInstance.loadIDS().values();
   }
 
   @Override
   public int size() {
-    return TNE.instance.saveManager.versionInstance.loadIDS().size();
+    return TNE.instance().saveManager.versionInstance.loadIDS().size();
   }
 
   @Override
@@ -85,16 +85,16 @@ public class IDSListener implements MapListener {
 
   @Override
   public Set<String> keySet() {
-    return TNE.instance.saveManager.versionInstance.loadIDS().keySet();
+    return TNE.instance().saveManager.versionInstance.loadIDS().keySet();
   }
 
   @Override
   public Set<Map.Entry<String, UUID>> entrySet() {
-    return TNE.instance.saveManager.versionInstance.loadIDS().entrySet();
+    return TNE.instance().saveManager.versionInstance.loadIDS().entrySet();
   }
 
   @Override
   public void remove(Object key) {
-    TNE.instance.saveManager.versionInstance.removeID((String)key);
+    TNE.instance().saveManager.versionInstance.removeID((String)key);
   }
 }

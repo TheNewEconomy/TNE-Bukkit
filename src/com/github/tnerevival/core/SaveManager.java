@@ -5,7 +5,7 @@ import com.github.tnerevival.core.conversion.Converter;
 import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.core.version.impl.Alpha5_0;
-import com.github.tnerevival.core.version.impl.Alpha6_0;
+import com.github.tnerevival.core.version.impl.Alpha5_2;
 
 import java.io.*;
 import java.sql.*;
@@ -21,16 +21,16 @@ public class SaveManager {
     versions = new HashMap<>();
     versions.put(5.0, new Alpha5_0());
     versions.put(5.1, new Alpha5_0());
-    versions.put(6.0, new Alpha6_0());
+    versions.put(5.2, new Alpha5_2());
   }
 
   public Version versionInstance;
-  Double currentSaveVersion = 6.0;
+  Double currentSaveVersion = 5.2;
   Double saveVersion = 0.0;
   public boolean cache = TNE.configurations.getBoolean("Core.Database.Transactions.Cache");
   public long update = TNE.configurations.getLong("Core.Database.Transactions.Update");
   public String type = TNE.configurations.getString("Core.Database.Type");
-  File file = new File(TNE.instance.getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
+  File file = new File(TNE.instance().getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
 
   public SaveManager() {
     versionInstance = versions.get(currentSaveVersion);
@@ -42,10 +42,10 @@ public class SaveManager {
     } else {
       getVersion();
       if(saveVersion < 5.0) {
-        TNE.instance.getLogger().info("Versions before Alpha 5.0 aren't supported by this version! Please run Alpha 5.0 before continuing to this version.");
+        TNE.instance().getLogger().info("Versions before Alpha 5.0 aren't supported by this version! Please run Alpha 5.0 before continuing to this version.");
         return;
       }
-      TNE.instance.getLogger().info("Save file of version: " + saveVersion + " detected.");
+      TNE.instance().getLogger().info("Save file of version: " + saveVersion + " detected.");
       load();
     }
     convert();
@@ -121,7 +121,7 @@ public class SaveManager {
   private void initiate() {
     if(type.equalsIgnoreCase("flatfile")) {
       try {
-        TNE.instance.getDataFolder().mkdir();
+        TNE.instance().getDataFolder().mkdir();
         file.createNewFile();
       } catch (IOException e) {
         e.printStackTrace();
@@ -201,7 +201,7 @@ public class SaveManager {
       Converter converter = getConverter();
       if(converter != null) {
         converter.convert();
-        TNE.instance.getConfig().set("Core.Conversion.Convert", false);
+        TNE.instance().getConfig().set("Core.Conversion.Convert", false);
         return;
       }
       System.out.println("Invalid conversion attempted!");
@@ -251,15 +251,15 @@ public class SaveManager {
     } else if(type.equalsIgnoreCase("h2") || type.equalsIgnoreCase("sqlite")) {
       saveH2();
     }
-    TNE.instance.getLogger().info("Data saved!");
+    TNE.instance().getLogger().info("Data saved!");
   }
 
   public Boolean backupDatabase() throws IOException {
     if(type.equalsIgnoreCase("mysql")) return false;
 
     String db = (type.equalsIgnoreCase("flatfile")) ? TNE.configurations.getString("Core.Database.FlatFile.File") : TNE.configurations.getString("Core.Database.H2.File");
-    FileInputStream fileIn = new FileInputStream(new File(TNE.instance.getDataFolder(), db));
-    FileOutputStream fileOut = new FileOutputStream(new File(TNE.instance.getDataFolder(), "Database.zip"));
+    FileInputStream fileIn = new FileInputStream(new File(TNE.instance().getDataFolder(), db));
+    FileOutputStream fileOut = new FileOutputStream(new File(TNE.instance().getDataFolder(), "Database.zip"));
     ZipOutputStream zipOut = new ZipOutputStream(fileOut);
     ZipEntry entry = new ZipEntry(db);
     zipOut.putNextEntry(entry);

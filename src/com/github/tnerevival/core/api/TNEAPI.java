@@ -14,13 +14,12 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.AccountUtils;
-import com.github.tnerevival.utils.BankUtils;
-import com.github.tnerevival.utils.SignUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class TNEAPI {
@@ -35,7 +34,6 @@ public class TNEAPI {
   /*
    * Account-related Methods
    */
-
   /**
    * Used to get a player's UUID from their username or string version of UUID.
    * @param identifier The player's username of stringified version of their UUID.
@@ -87,7 +85,7 @@ public class TNEAPI {
    * @param amount The amount of funds to add to the player's account.
    */
   public void fundsAdd(String identifier, String world, Double amount) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
   }
 
   /**
@@ -98,6 +96,36 @@ public class TNEAPI {
    * @param currency The currency of the funds.
    */
   public void fundsAdd(String identifier, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), currency, TransactionType.MONEY_GIVE, world);
+  }
+
+  /**
+   * Add funds to a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The amount of funds to add to the player's account.
+   */
+  public void fundsAdd(String identifier, BigDecimal amount) {
+    fundsAdd(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
+  }
+
+  /**
+   * Add funds to a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to add to the player's account.
+   */
+  public void fundsAdd(String identifier, String world, BigDecimal amount) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+  }
+
+  /**
+   * Add funds to a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to add to the player's account.
+   * @param currency The currency of the funds.
+   */
+  public void fundsAdd(String identifier, String world, BigDecimal amount, Currency currency) {
     AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
   }
 
@@ -119,7 +147,7 @@ public class TNEAPI {
    * @return Whether or not this player has the specified funds.
    */
   public Boolean fundsHas(String identifier, String world, Double amount) {
-    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
+    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
   }
 
   /**
@@ -131,9 +159,41 @@ public class TNEAPI {
    * @return Whether or not this player has the specified funds.
    */
   public Boolean fundsHas(String identifier, String world, Double amount, Currency currency) {
-    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_INQUIRY, world);
+    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), currency, TransactionType.MONEY_INQUIRY, world);
   }
 
+  /**
+   * Determines if the specified player has the specified amount of funds.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The amount of funds to check for.
+   * @return Whether or not this player has the specified funds.
+   */
+  public Boolean fundsHas(String identifier, BigDecimal amount) {
+    return fundsHas(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
+  }
+
+  /**
+   * Determines if the specified player has the specified amount of funds.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to check for.
+   * @return Whether or not this player has the specified funds.
+   */
+  public Boolean fundsHas(String identifier, String world, BigDecimal amount) {
+    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
+  }
+
+  /**
+   * Determines if the specified player has the specified amount of funds.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to check for.
+   * @param currency The currency of the funds.
+   * @return Whether or not this player has the specified funds.
+   */
+  public Boolean fundsHas(String identifier, String world, BigDecimal amount, Currency currency) {
+    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_INQUIRY, world);
+  }
 
   /**
    * Remove funds from a player's economy account.
@@ -152,7 +212,7 @@ public class TNEAPI {
    * @param amount The amount of funds to remove to the player's account.
    */
   public void fundsRemove(String identifier, String world, Double amount) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
   }
 
   /**
@@ -163,6 +223,37 @@ public class TNEAPI {
    * @param currency The currency of the funds.
    */
   public void fundsRemove(String identifier, String world, Double amount, Currency currency) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), currency, TransactionType.MONEY_REMOVE, world);
+  }
+
+  /**
+   * Remove funds from a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The amount of funds to remove to the player's account.
+   */
+  public void fundsRemove(String identifier, BigDecimal amount) {
+    fundsRemove(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
+  }
+
+
+  /**
+   * Remove funds from a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to remove to the player's account.
+   */
+  public void fundsRemove(String identifier, String world, BigDecimal amount) {
+    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
+  }
+
+  /**
+   * Remove funds from a player's economy account.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param amount The amount of funds to remove to the player's account.
+   * @param currency The currency of the funds.
+   */
+  public void fundsRemove(String identifier, String world, BigDecimal amount, Currency currency) {
     AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_REMOVE, world);
   }
 
@@ -172,7 +263,7 @@ public class TNEAPI {
    * @return The balance for the specified player.
    */
   public Double getBalance(String identifier) {
-    return AccountUtils.getFunds(IDFinder.getID(identifier));
+    return AccountUtils.getFunds(IDFinder.getID(identifier)).doubleValue();
   }
 
   /**
@@ -182,7 +273,7 @@ public class TNEAPI {
    * @return The balance for the specified player.
    */
   public Double getBalance(String identifier, String world) {
-    return AccountUtils.getFunds(IDFinder.getID(identifier), world);
+    return AccountUtils.getFunds(IDFinder.getID(identifier), world).doubleValue();
   }
 
   /**
@@ -193,6 +284,36 @@ public class TNEAPI {
    * @return The balance for the specified player.
    */
   public Double getBalance(String identifier, String world, Currency currency) {
+    return AccountUtils.getFunds(IDFinder.getID(identifier), world, currency.getName()).doubleValue();
+  }
+
+  /**
+   * Get the specified player's balance.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @return The balance for the specified player.
+   */
+  public BigDecimal getBalanceDecimal(String identifier) {
+    return AccountUtils.getFunds(IDFinder.getID(identifier));
+  }
+
+  /**
+   * Get the specified player's balance.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @return The balance for the specified player.
+   */
+  public BigDecimal getBalanceDecimal(String identifier, String world) {
+    return AccountUtils.getFunds(IDFinder.getID(identifier), world);
+  }
+
+  /**
+   * Get the  specified player's balance.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param world The world balance to perform this action on.
+   * @param currency The currency of the funds.
+   * @return The balance for the specified player.
+   */
+  public BigDecimal getBalanceDecimal(String identifier, String world, Currency currency) {
     return AccountUtils.getFunds(IDFinder.getID(identifier), world, currency.getName());
   }
 
@@ -202,7 +323,7 @@ public class TNEAPI {
    * @param amount The new balance amount for this player.
    */
   public void setBalance(String identifier, Double amount) {
-    AccountUtils.setFunds(IDFinder.getID(identifier), plugin.defaultWorld, amount, getCurrency(plugin.defaultWorld).getName());
+    AccountUtils.setFunds(IDFinder.getID(identifier), plugin.defaultWorld, new BigDecimal(amount), getCurrency(plugin.defaultWorld).getName());
   }
 
   /**
@@ -212,7 +333,7 @@ public class TNEAPI {
    * @param world The world balance to perform this action on.
    */
   public void setBalance(String identifier, Double amount, String world) {
-    AccountUtils.setFunds(IDFinder.getID(identifier), world, amount, getCurrency(plugin.defaultWorld).getName());
+    AccountUtils.setFunds(IDFinder.getID(identifier), world, new BigDecimal(amount), getCurrency(plugin.defaultWorld).getName());
   }
 
   /**
@@ -223,6 +344,36 @@ public class TNEAPI {
    * @param currency The currency of the funds.
    */
   public void setBalance(String identifier, Double amount, String world, Currency currency) {
+    AccountUtils.setFunds(IDFinder.getID(identifier), world, new BigDecimal(amount), currency.getName());
+  }
+
+  /**
+   * Set the specified player's balance.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The new balance amount for this player.
+   */
+  public void setBalance(String identifier, BigDecimal amount) {
+    AccountUtils.setFunds(IDFinder.getID(identifier), plugin.defaultWorld, amount, getCurrency(plugin.defaultWorld).getName());
+  }
+
+  /**
+   * Set the specified player's balance.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The new balance amount for this player.
+   * @param world The world balance to perform this action on.
+   */
+  public void setBalance(String identifier, BigDecimal amount, String world) {
+    AccountUtils.setFunds(IDFinder.getID(identifier), world, amount, getCurrency(plugin.defaultWorld).getName());
+  }
+
+  /**
+   * Set the specified player's balance.
+   * @param identifier The player's username of stringified version of their UUID.
+   * @param amount The new balance amount for this player.
+   * @param world The world balance to perform this action on.
+   * @param currency The currency of the funds.
+   */
+  public void setBalance(String identifier, BigDecimal amount, String world, Currency currency) {
     AccountUtils.setFunds(IDFinder.getID(identifier), world, amount, currency.getName());
   }
 
@@ -239,7 +390,7 @@ public class TNEAPI {
     Bank b = new Bank(IDFinder.getID(owner), world);
     Account acc = getAccount(owner);
     acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -248,7 +399,7 @@ public class TNEAPI {
    * @return True if the owner has a bank, otherwise false.
    */
   public Boolean hasBank(String owner) {
-    return AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(TNE.instance.defaultWorld);
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasBank(TNE.instance().defaultWorld);
   }
 
   /**
@@ -268,11 +419,11 @@ public class TNEAPI {
    * @param world The name of the world to use.
    */
   public void addBankMember(String owner, String identifier, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    Bank b = Bank.getBank(IDFinder.getID(owner), world);
     b.addMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -282,11 +433,11 @@ public class TNEAPI {
    * @param world The name of the world to use.
    */
   public void removeBankMember(String owner, String identifier, String world) {
-    Bank b = BankUtils.getBank(IDFinder.getID(owner), world);
+    Bank b = Bank.getBank(IDFinder.getID(owner), world);
     b.removeMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setBank(world, b);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -297,7 +448,7 @@ public class TNEAPI {
    * @return True if the player is a member, otherwise false.
    */
   public Boolean bankMember(String owner, String identifier, String world) {
-    return BankUtils.bankMember(IDFinder.getID(owner), IDFinder.getID(identifier), world);
+    return Bank.bankMember(IDFinder.getID(owner), IDFinder.getID(identifier), world);
   }
 
   /**
@@ -316,7 +467,19 @@ public class TNEAPI {
    * @return The balance of the bank.
    */
   public Double getBankBalance(String owner, String world) {
-    return BankUtils.getBank(IDFinder.getID(owner), world).getGold();
+    return getBankBalance(owner, world, plugin.manager.currencyManager.get(world).getName());
+  }
+
+  /**
+   * Get the balance of a bank.
+   * @param owner The identifier of the bank owner.
+   * @param world The name of the world to use.
+   * @param currency The name of the currency to use.
+   * @return The balance of the bank.
+   */
+  public Double getBankBalance(String owner, String world, String currency) {
+    currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
+    return Bank.getBank(IDFinder.getID(owner), world).getGold(currency).doubleValue();
   }
 
   /**
@@ -335,7 +498,19 @@ public class TNEAPI {
    * @param amount The new amount for the bank balance.
    */
   public void setBankBalance(String owner, String world, Double amount) {
-    BankUtils.getBank(IDFinder.getID(owner), world).setGold(amount);
+    setBankBalance(owner, world, plugin.manager.currencyManager.get(world).getName(), amount);
+  }
+
+  /**
+   * Set the balance of a bank to a new amount.
+   * @param owner The identifier of the bank owner.
+   * @param world The name of the world to use.
+   * @param currency The name of the currency to store.
+   * @param amount The new amount for the bank balance.
+   */
+  public void setBankBalance(String owner, String world, String currency, Double amount) {
+    currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
+    Bank.getBank(IDFinder.getID(owner), world).setGold(currency, new BigDecimal(amount));
   }
   
   /*
@@ -350,7 +525,7 @@ public class TNEAPI {
     Vault vault = new Vault(IDFinder.getID(owner), world, Vault.size(world, owner));
     Account acc = getAccount(owner);
     acc.setVault(world, vault);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -359,7 +534,7 @@ public class TNEAPI {
    * @return True if the owner has a vault, otherwise false.
    */
   public Boolean hasVault(String owner) {
-    return AccountUtils.getAccount(IDFinder.getID(owner)).hasVault(TNE.instance.defaultWorld);
+    return AccountUtils.getAccount(IDFinder.getID(owner)).hasVault(TNE.instance().defaultWorld);
   }
 
   /**
@@ -383,7 +558,7 @@ public class TNEAPI {
     vault.addMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setVault(world, vault);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -397,7 +572,7 @@ public class TNEAPI {
     vault.removeMember(IDFinder.getID(identifier));
     Account acc = getAccount(owner);
     acc.setVault(world, vault);
-    TNE.instance.manager.accounts.put(acc.getUid(), acc);
+    TNE.instance().manager.accounts.put(acc.getUid(), acc);
   }
 
   /**
@@ -533,7 +708,7 @@ public class TNEAPI {
    * @return The inventory instance of the vault.
    */
   public Inventory getVaultInventory(String owner) {
-    return getVaultInventory(owner, TNE.instance.defaultWorld);
+    return getVaultInventory(owner, TNE.instance().defaultWorld);
   }
 
   /**
@@ -555,7 +730,7 @@ public class TNEAPI {
    * @return The formatted balance.
    */
   public String format(Double amount) {
-    return CurrencyFormatter.format(plugin.defaultWorld, amount);
+    return CurrencyFormatter.format(plugin.defaultWorld, new BigDecimal(amount));
   }
 
   /**
@@ -565,7 +740,7 @@ public class TNEAPI {
    * @return The formatted balance.
    */
   public String format(String world, Double amount) {
-    return CurrencyFormatter.format(world, amount);
+    return CurrencyFormatter.format(world, new BigDecimal(amount));
   }
 
 
@@ -577,7 +752,7 @@ public class TNEAPI {
    * @return The formatted balance.
    */
   public String format(String name, String world, Double amount) {
-    return CurrencyFormatter.format(world, name, amount);
+    return CurrencyFormatter.format(world, name, new BigDecimal(amount));
   }
 
   /**
@@ -637,7 +812,7 @@ public class TNEAPI {
    * @return True if the currency exists, otherwise false.
    */
   public Boolean currencyExists(String name) {
-    return plugin.manager.currencyManager.contains(TNE.instance.defaultWorld, name);
+    return plugin.manager.currencyManager.contains(TNE.instance().defaultWorld, name);
   }
 
   /**
@@ -738,7 +913,7 @@ public class TNEAPI {
    * @return True if there is a TNESign, otherwise false.
    */
   public Boolean validSign(Location location) {
-    return SignUtils.validSign(location);
+    return TNESign.validSign(location);
   }
 
   /**
@@ -747,7 +922,7 @@ public class TNEAPI {
    * @return The instance of the sign at the location if it exists, otherwise null.
    */
   public TNESign getSign(Location location) {
-    return SignUtils.getSign(new SerializableLocation(location));
+    return TNESign.getSign(new SerializableLocation(location));
   }
 
   /**
@@ -756,8 +931,8 @@ public class TNEAPI {
    * @param owner The string identifier of the owner for this sign.
    * @return The sign instance based on the type, and owner.
    */
-  public TNESign createInstance(SignType type, String owner) {
-    return createInstance(type, IDFinder.getID(owner));
+  public TNESign createInstance(SignType type, String owner, Location location) {
+    return createInstance(type, IDFinder.getID(owner), location);
   }
 
 
@@ -767,8 +942,8 @@ public class TNEAPI {
    * @param owner The UUID of the owner for this sign.
    * @return The sign instance based on the type, and owner.
    */
-  public TNESign createInstance(SignType type, UUID owner) {
-    return SignUtils.instance(type.getName(), owner);
+  public TNESign createInstance(SignType type, UUID owner, Location location) {
+    return TNESign.instance(type.getName(), owner, new SerializableLocation(location));
   }
 
   /**
@@ -778,7 +953,7 @@ public class TNEAPI {
    */
   public Boolean removeSign(Location location) {
     if(!validSign(location)) return false;
-    SignUtils.removeSign(new SerializableLocation(location));
+    TNESign.removeSign(new SerializableLocation(location));
     return true;
   }
 
@@ -791,7 +966,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public String getString(String configuration) {
-    return (String)getConfiguration(configuration, TNE.instance.defaultWorld);
+    return (String)getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -832,7 +1007,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Boolean getBoolean(String configuration) {
-    return (Boolean)getConfiguration(configuration, TNE.instance.defaultWorld);
+    return (Boolean)getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -873,7 +1048,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Double getDouble(String configuration) {
-    return getDouble(configuration, TNE.instance.defaultWorld);
+    return getDouble(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -917,7 +1092,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Integer getInteger(String configuration) {
-    return (Integer)getConfiguration(configuration, TNE.instance.defaultWorld);
+    return (Integer)getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**
@@ -968,7 +1143,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public Object getConfiguration(String configuration) {
-    return getConfiguration(configuration, TNE.instance.defaultWorld);
+    return getConfiguration(configuration, TNE.instance().defaultWorld);
   }
 
   /**

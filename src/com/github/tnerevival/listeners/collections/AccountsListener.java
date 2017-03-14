@@ -31,7 +31,7 @@ public class AccountsListener implements MapListener {
   @Override
   public void update() {
     for(Account acc : changed.values()) {
-      TNE.instance.saveManager.versionInstance.saveAccount(acc);
+      TNE.instance().saveManager.versionInstance.saveAccount(acc);
     }
   }
 
@@ -47,17 +47,17 @@ public class AccountsListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.instance.saveManager.versionInstance.saveAccount((Account)value);
+    TNE.instance().saveManager.versionInstance.saveAccount((Account)value);
   }
 
   @Override
   public Object get(Object key) {
-    return TNE.instance.saveManager.versionInstance.loadAccount((UUID)key);
+    return TNE.instance().saveManager.versionInstance.loadAccount((UUID)key);
   }
 
   @Override
   public Collection values() {
-    return TNE.instance.saveManager.versionInstance.loadAccounts();
+    return TNE.instance().saveManager.versionInstance.loadAccounts();
   }
 
   @Override
@@ -88,7 +88,7 @@ public class AccountsListener implements MapListener {
   @Override
   public Set<UUID> keySet() {
     Set<UUID> keys = new HashSet<>();
-    Collection<Account> accounts = TNE.instance.saveManager.versionInstance.loadAccounts();
+    Collection<Account> accounts = TNE.instance().saveManager.versionInstance.loadAccounts();
     for(Account account : accounts) {
       keys.add(account.getUid());
     }
@@ -98,7 +98,7 @@ public class AccountsListener implements MapListener {
   @Override
   public Set<Map.Entry<UUID, Account>> entrySet() {
     Map<UUID, Account> accountMap = new HashMap<>();
-    Collection<Account> accounts = TNE.instance.saveManager.versionInstance.loadAccounts();
+    Collection<Account> accounts = TNE.instance().saveManager.versionInstance.loadAccounts();
     for(Account account : accounts) {
       accountMap.put(account.getUid(), account);
     }
@@ -107,6 +107,6 @@ public class AccountsListener implements MapListener {
 
   @Override
   public void remove(Object key) {
-    TNE.instance.saveManager.versionInstance.deleteAccount((UUID)key);
+    TNE.instance().saveManager.versionInstance.deleteAccount((UUID)key);
   }
 }

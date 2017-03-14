@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 public class WorldListener implements Listener {
 
@@ -21,11 +22,11 @@ public class WorldListener implements Listener {
   }
 
   @EventHandler
-  public void onWorldChange(PlayerChangedWorldEvent event) {
+  public void onWorldChange(final PlayerChangedWorldEvent event) {
     Player player = event.getPlayer();
     String world = player.getWorld().getName();
 
-    if(TNE.instance.api.getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
+    if(!MISCUtils.ecoDisabled(world) && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
           AccountUtils.transaction(IDFinder.getID(player).toString(), null, AccountUtils.getWorldCost(world), TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
@@ -45,5 +46,11 @@ public class WorldListener implements Listener {
     } else {
       AccountUtils.initializeWorldData(IDFinder.getID(player));
     }
+  }
+
+  @EventHandler
+  public void onWorldLoad(final WorldLoadEvent event) {
+    String world = event.getWorld().getName();
+    TNE.instance().manager.currencyManager.initializeWorld(world);
   }
 }

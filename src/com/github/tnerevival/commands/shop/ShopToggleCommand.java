@@ -5,7 +5,6 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.shops.Shop;
-import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -59,7 +58,7 @@ public class ShopToggleCommand extends TNECommand {
 
             for(UUID shopper : s.getShoppers()) {
               if(!s.whitelisted(shopper)) {
-                Player p = MISCUtils.getPlayer(shopper);
+                Player p = IDFinder.getPlayer(shopper.toString());
                 p.closeInventory();
                 Message hidden = new Message("Messages.Shop.MustWhitelist");
                 hidden.addVariable("$shop", s.getName());

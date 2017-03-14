@@ -10,7 +10,7 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
     configurations.put("Core.Metrics", true);
-    configurations.put("Core.Pins.Enabled", true);
+    configurations.put("Core.Pins.Enabled", false);
     configurations.put("Core.Pins.Force", true);
     configurations.put("Core.Commands.PayShort", true);
     configurations.put("Core.Commands.BalanceShort", true);
@@ -51,20 +51,22 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Shops.Shares.Enabled", true);
     configurations.put("Core.Shops.Shares.Max", 3);
 
-    configurations.put("Core.Signs.Bank.Enabled", false);
+    configurations.put("Core.Signs.Bank.Enabled", true);
     configurations.put("Core.Signs.Bank.Place", 20.0);
     configurations.put("Core.Signs.Bank.Use", 20.0);
-    configurations.put("Core.Signs.Shop.Enabled", false);
+    configurations.put("Core.Signs.Vault.Enabled", true);
+    configurations.put("Core.Signs.Vault.Place", 20.0);
+    configurations.put("Core.Signs.Vault.Use", 20.0);
+    configurations.put("Core.Signs.Shop.Enabled", true);
     configurations.put("Core.Signs.Shop.Place", 20.0);
     configurations.put("Core.Signs.Shop.Use", 20.0);
-    configurations.put("Core.Signs.Sell.Enabled", false);
-    configurations.put("Core.Signs.Sell.Place", 20.0);
-    configurations.put("Core.Signs.Sell.Use", 20.0);
-    configurations.put("Core.Signs.Sell.Max", 10);
-    configurations.put("Core.Signs.Buy.Enabled", false);
-    configurations.put("Core.Signs.Buy.Place", 20.0);
-    configurations.put("Core.Signs.Buy.Use", 20.0);
-    configurations.put("Core.Signs.Buy.Max", 10);
+    configurations.put("Core.Signs.Item.Enabled", true);
+    configurations.put("Core.Signs.Item.Place", 20.0);
+    configurations.put("Core.Signs.Item.Use", 20.0);
+    configurations.put("Core.Signs.Item.Max", 10);
+    configurations.put("Core.Signs.Item.Multiple", true);
+    configurations.put("Core.Signs.Item.MaxOffers", 9);
+    configurations.put("Core.Signs.Item.EnderChest", true);
 
     configurations.put("Core.Death.Lose", false);
     configurations.put("Core.Death.Bank.Drop", 0);
@@ -79,15 +81,12 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Vault.Cost", 20.0);
     configurations.put("Core.Vault.Rows", 3);
     configurations.put("Core.Vault.MultiManage", false);
-    configurations.put("Core.Vault.MultiView", false);
+    configurations.put("Core.Vault.MaxViewers", 1);
 
     configurations.put("Core.Bank.Enabled", false);
     configurations.put("Core.Bank.Connected", false);
     configurations.put("Core.Bank.Cost", 20.0);
     configurations.put("Core.Bank.MultiManage", false);
-    configurations.put("Core.Bank.Interest.Enabled", false);
-    configurations.put("Core.Bank.Interest.Rate", 0.2);
-    configurations.put("Core.Bank.Interest.Interval", 1800);
 
     configurations.put("Core.World.EnableChangeFee", false);
     configurations.put("Core.World.ChangeFee", 5.0);
