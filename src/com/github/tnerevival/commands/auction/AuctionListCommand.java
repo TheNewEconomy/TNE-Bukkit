@@ -2,7 +2,10 @@ package com.github.tnerevival.commands.auction;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.inventory.impl.AuctionInventory;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -68,6 +71,12 @@ public class AuctionListCommand extends TNECommand {
                    : ((arguments.length > 1 && MISCUtils.isInteger(arguments[1]))? Integer.valueOf(arguments[1]) : 1);
 
     List<Integer> lots = plugin.manager.auctionManager.getLots(scope, page, getPlayer(sender).getUniqueId());
+
+    AuctionInventory inv = (AuctionInventory)TNE.instance().inventoryManager.generateInventory(
+        Bukkit.createInventory(null, 9, ChatColor.GREEN + "Auction View"),
+        getPlayer(sender), world);
+    inv.setLots(lots);
+    getPlayer(sender).openInventory(inv.getInventory());
 
     return true;
   }

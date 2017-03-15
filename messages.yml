@@ -147,11 +147,13 @@ Messages:
       OwnerInsufficient: <red>I'm sorry, but the owner of this offer does not currently has insufficient funds.
       Insufficient: <red>You do not have the sufficient materials, or money necessary to purchase the item from this Sign Shop.
       Successful: <white>Successfully completed transaction with Sign Shop.
-      Max: <red> You've placed the maximum number of this sign in this world.
       OutOfStock: <red>I'm sorry, but that item is currently out of stock.
       UnableAccept: <red>I'm sorry, but this shop currently cannot accept that item at this time.
-      UnableChest: <red>I'm sorry, but that chest belongs to a nearby sign shop.
       DroppingExtra: <white>Adding items to your inventory since your sign shop's chest is full.
+
+    Sign:
+      UnableChest: <red>I'm sorry, but that chest belongs to a nearby sign.
+      Max: <red> You've placed the maximum number of this sign in this world.
 
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.

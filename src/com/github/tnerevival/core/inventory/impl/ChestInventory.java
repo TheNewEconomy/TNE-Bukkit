@@ -36,7 +36,7 @@ public class ChestInventory extends TNEInventory {
       if(entry.getKey() >= inventory.getSize()) continue;
       if(entry.getValue() == null) remove = true;
 
-      if(remove && AccountUtils.trackedMaterial(location, entry.getKey()) != null) {
+      if(AccountUtils.trackedMaterial(location, entry.getKey()) != null) {
         MISCUtils.debug("Removing tracked material");
         AccountUtils.removeTracked(location, entry.getKey());
       }

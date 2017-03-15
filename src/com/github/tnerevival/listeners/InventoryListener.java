@@ -103,6 +103,8 @@ public class InventoryListener implements Listener {
 
 
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")
+       || inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("auction")
+       || inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("shop")
        || inventory.getHolder() != null && inventory.getHolder() instanceof Chest
        && TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() > 0
        || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest

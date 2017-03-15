@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 public enum InventoryType {
   VAULT("vault", "tne.inventory.vault.open"),
   SHOP("shop", "tne.inventory.shop.open"),
+  UNKNOWN("", ""),
   AUCTION("auction", "tne.inventory.auction.open");
 
   private String identifier;
@@ -21,7 +22,7 @@ public enum InventoryType {
 
   public static InventoryType fromTitle(String title) {
     for(InventoryType type : values()) {
-      if(title.toLowerCase().contains(title.toLowerCase())) return type;
+      if(title.toLowerCase().contains(type.getIdentifier().toLowerCase())) return type;
     }
     return null;
   }

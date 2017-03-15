@@ -177,11 +177,12 @@ public class AccountUtils {
   }
 
   public static boolean trackedMaterial(String world, Material material) {
+    if(material == null) return false;
     if(TNE.instance().manager.currencyManager.getTrackedCurrencies(world).size() <= 0) return false;
     for(Currency currency : TNE.instance().manager.currencyManager.getTrackedCurrencies(world)) {
       if(currency.isItem()) {
-        return material.equals(MaterialHelper.getMaterial(currency.getTier("minor").getMaterial()))
-               || material.equals(MaterialHelper.getMaterial(currency.getTier("major").getMaterial()));
+        return material.equals(MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial()))
+               || material.equals(MaterialHelper.getMaterial(currency.getTier("Major").getMaterial()));
       }
     }
     return false;

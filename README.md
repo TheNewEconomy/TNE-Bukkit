@@ -1,8 +1,6 @@
 <p align="center">
     <img src="http://i.imgur.com/ZS0xmkb.png" width="728" />
 </p>
-=============
-**If you're looking for a lightweight economy plugin download [The New Economy Lite](http://dev.bukkit.org/bukkit-plugins/tnelite/).**  
 
 **Please Note: This project is in Alpha stage, and may therefore contain multiple bugs. Please report any bugs you find.**  
 

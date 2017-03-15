@@ -149,10 +149,12 @@ public class InteractionListener implements Listener {
     if(event.getBlock().getState() instanceof Chest || MISCUtils.isOneEight() && event.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
       TNESign sign = TNESign.getOwningSign(event.getBlock().getLocation());
       if (sign != null) {
-        MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
-        if (!sign.getOwner().equals(IDFinder.getID(event.getPlayer())) && !event.getPlayer().hasPermission("tne.sign.admin")) {
-          new Message("Messages.SignShop.UnableChest").translate(world, event.getPlayer());
-          event.setCancelled(true);
+        if(sign.getType().equals(SignType.BANK) || sign.getType().equals(SignType.ITEM)) {
+          MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
+          if (!sign.getOwner().equals(IDFinder.getID(event.getPlayer())) && !event.getPlayer().hasPermission("tne.sign.admin")) {
+            new Message("Messages.Sign.UnableChest").translate(world, event.getPlayer());
+            event.setCancelled(true);
+          }
         }
       }
     }
@@ -375,7 +377,7 @@ public class InteractionListener implements Listener {
               }
             } else {
               if(TNESign.getOwned(IDFinder.getID(player), SignType.ITEM) >= TNE.instance().api().getInteger("Core.Signs.Item.Max", world, IDFinder.getID(player))) {
-                new Message("Messages.SignShop.Max").translate(world, player);
+                new Message("Messages.Sign.Max").translate(world, player);
                 return;
               }
               ((ItemSign)sign).addOffer(player, event.getLines());
@@ -473,12 +475,14 @@ public class InteractionListener implements Listener {
             charged.translate(IDFinder.getWorld(player), player);
           }
         }
-      } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest || action.equals(Action.RIGHT_CLICK_BLOCK) && MISCUtils.isOneEight() && block.getState() instanceof org.bukkit.block.EnderChest) {
+      } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest
+                || action.equals(Action.RIGHT_CLICK_BLOCK) && MISCUtils.isOneEight()
+                   && block.getState() instanceof org.bukkit.block.EnderChest) {
         TNESign sign = TNESign.getOwningSign(block.getLocation());
         if(sign != null) {
           MISCUtils.debug(event.getPlayer().hasPermission("tne.sign.admin") + "");
           if(!sign.getOwner().equals(IDFinder.getID(event.getPlayer())) && !event.getPlayer().hasPermission("tne.sign.admin")) {
-            new Message("Messages.SignShop.UnableChest").translate(block.getWorld().getName(), event.getPlayer());
+            new Message("Messages.Sign.UnableChest").translate(block.getWorld().getName(), event.getPlayer());
             event.setCancelled(true);
             return;
           }

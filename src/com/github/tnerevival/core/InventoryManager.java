@@ -21,9 +21,14 @@ import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.inventory.InventoryType;
 import com.github.tnerevival.core.inventory.TNEInventory;
+import com.github.tnerevival.core.inventory.impl.AuctionInventory;
+import com.github.tnerevival.core.inventory.impl.ChestInventory;
+import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.inventory.impl.VaultInventory;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -50,15 +55,25 @@ public class InventoryManager {
       inventoryID = UUID.randomUUID();
       switch(type) {
         case AUCTION:
-          tneInventory = new TNEInventory(inventoryID, inventory, world);
+          MISCUtils.debug("Generated Auction Inventory");
+          tneInventory = new AuctionInventory(inventoryID, inventory, world);
           break;
         case SHOP:
-          tneInventory = new TNEInventory(inventoryID, inventory, world);
+          MISCUtils.debug("Generated Shop Inventory");
+          tneInventory = new ShopInventory(inventoryID, inventory, world);
           break;
         case VAULT:
+          MISCUtils.debug("Generated Vault Inventory");
           tneInventory = new VaultInventory(inventoryID, inventory, world);
           break;
       }
+    }
+
+    if(inventory.getHolder() != null && inventory.getHolder() instanceof Chest
+        || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest) {
+      MISCUtils.debug("Generated Chest Inventory");
+      inventoryID = UUID.randomUUID();
+      tneInventory = new ChestInventory(inventoryID, inventory, inventory.getLocation());
     }
     if(tneInventory != null) {
       tneInventory.viewers.add(IDFinder.getID(player));

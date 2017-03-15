@@ -47,10 +47,20 @@ Alpha 5.2 "Quality of Life"
   - Interest configurations are now set on a per-currency level
 - Currencies
   - Added configurations to specify the number of decimal places displayed for balances 
+  - New ways to store your item-based currencies
+    - Automated currency tracking
+      - This is completely optional
+      - This will affect chest behaviour for now
+      - This may impact server performance as it runs various checks
+    - Bank Signs
+      - Bank Signs may be disabled
+      - When a sign with line 1 of "[tne:bank]" is attached to a chest, this will declare it as a bank chest, and use any item-based currency store for balance purposes
 - MISC
   - Added the ability to disable the entire economy system for specific worlds
-    - This will be done in the worlds.yml file simply by added Worlds.<worldname>.DisableEconomy: true
+    - This will be done in the worlds.yml file simply by added Worlds.\<worldname\>.DisableEconomy: true
 - Technical
+  - Java 7
+    - This may be the final version to use Java 7 as we look towards moving over to Java 8
   - API
     - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
     - Changed how developers access the TNE API.

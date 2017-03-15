@@ -44,7 +44,7 @@ public abstract class TNESign {
 
     Integer max = type.max(IDFinder.getWorld(player), IDFinder.getID(player).toString());
     if(max > -1 && getOwned(IDFinder.getID(player), type) >= max) {
-      new Message("Messages.SignShop.Max").translate(IDFinder.getWorld(player), player);
+      new Message("Messages.Sign.Max").translate(IDFinder.getWorld(player), player);
       event.setCancelled(true);
     }
 

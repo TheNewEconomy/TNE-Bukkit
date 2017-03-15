@@ -3,7 +3,10 @@ package com.github.tnerevival.commands.auction;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.inventory.impl.AuctionInventory;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -68,6 +71,11 @@ public class AuctionInfoCommand extends TNECommand {
         return false;
       }
       lot = plugin.manager.auctionManager.getLot(world);
+      AuctionInventory inv = (AuctionInventory)TNE.instance().inventoryManager.generateInventory(
+                              Bukkit.createInventory(null, 9, ChatColor.GREEN + "Auction View"),
+                              getPlayer(sender), world);
+      inv.setLot(lot);
+      getPlayer(sender).openInventory(inv.getInventory());
     }
 
     if(!plugin.manager.auctionManager.exists(lot)) {
