@@ -100,7 +100,6 @@ public class Transaction {
       UUID id = IDFinder.getID(initiator);
       if(initiator == null || recipient == null) return TransactionResult.FAILED;
       if(!AccountUtils.exists(id) || !AccountUtils.exists(IDFinder.getID(recipient))) return TransactionResult.FAILED;
-
       if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(id, world, cost.getCurrency().getName()).compareTo(cost.getAmount()) < 0) {
         return TransactionResult.FAILED;
       }

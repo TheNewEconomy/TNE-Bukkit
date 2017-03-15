@@ -66,6 +66,18 @@ public class Vault {
     }
   }
 
+
+  public void setItems(ItemStack[] items) {
+    for(int i = 0; i < items.length; i++) {
+      ItemStack stack = items[i];
+      if(stack == null || stack.getType().equals(Material.AIR)) {
+        removeItem(i);
+      } else {
+        setItem(i, stack);
+      }
+    }
+  }
+
   public SerializableItemStack getItem(int slot) {
     for(SerializableItemStack item : items) {
       if(item.getSlot().equals(slot)) {

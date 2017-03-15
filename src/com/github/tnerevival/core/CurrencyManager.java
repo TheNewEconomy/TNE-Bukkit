@@ -71,6 +71,7 @@ public class CurrencyManager {
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
         Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");
+        Boolean ender = configuration.contains(base + ".EnderChest") && configuration.getBoolean(base + ".EnderChest");
         Boolean track = configuration.contains(base + ".TrackChest") && configuration.getBoolean(base + ".TrackChest");
         String symbol = configuration.contains(base + ".Symbol")? configuration.getString(base + ".Symbol") : "$";
         String major = configuration.contains(base + ".MajorName.Single")? configuration.getString(base + ".MajorName.Single") : "dollar";
@@ -107,6 +108,7 @@ public class CurrencyManager {
         currency.setWorldDefault(worldDefault);
         currency.setRate(rate);
         currency.setItem(item);
+        currency.setEnderChest(ender);
         currency.setTrackChest(track);
         currency.addTier("Major", majorTier);
         currency.addTier("Minor", minorTier);

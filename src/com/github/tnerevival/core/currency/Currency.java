@@ -27,6 +27,7 @@ public class Currency {
   private boolean worldDefault = true;
   private BigDecimal balance;
   private boolean item;
+  private boolean enderChest;
   private boolean trackChest;
   private String name;
   private String format;
@@ -73,6 +74,14 @@ public class Currency {
 
   public void setItem(boolean item) {
     this.item = item;
+  }
+
+  public boolean canEnderChest() {
+    return enderChest;
+  }
+
+  public void setEnderChest(boolean enderChest) {
+    this.enderChest = enderChest;
   }
 
   public boolean canTrackChest() {

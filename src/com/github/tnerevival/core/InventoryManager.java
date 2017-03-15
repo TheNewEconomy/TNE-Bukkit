@@ -25,6 +25,8 @@ import com.github.tnerevival.core.inventory.impl.AuctionInventory;
 import com.github.tnerevival.core.inventory.impl.ChestInventory;
 import com.github.tnerevival.core.inventory.impl.ShopInventory;
 import com.github.tnerevival.core.inventory.impl.VaultInventory;
+import com.github.tnerevival.core.signs.SignType;
+import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -71,6 +73,8 @@ public class InventoryManager {
 
     if(inventory.getHolder() != null && inventory.getHolder() instanceof Chest
         || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest) {
+      TNESign sign = TNESign.getOwningSign(inventory.getLocation());
+      if(sign != null && sign.getType().equals(SignType.BANK)) return null;
       MISCUtils.debug("Generated Chest Inventory");
       inventoryID = UUID.randomUUID();
       tneInventory = new ChestInventory(inventoryID, inventory, inventory.getLocation());

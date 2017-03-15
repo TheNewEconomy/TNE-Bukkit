@@ -18,6 +18,7 @@ package com.github.tnerevival.listeners;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.account.credits.InventoryTimeTracking;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
@@ -25,7 +26,6 @@ import com.github.tnerevival.core.event.object.InteractionType;
 import com.github.tnerevival.core.event.object.TNEObjectInteractionEvent;
 import com.github.tnerevival.core.inventory.TNEInventory;
 import com.github.tnerevival.core.inventory.TNEUpdateType;
-import com.github.tnerevival.core.inventory.impl.ChestInventory;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
@@ -103,6 +103,7 @@ public class InventoryListener implements Listener {
 
 
     if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")
+       && TNE.instance().api().getInteger("Core.Vault.MaxViewers", world, player) > 1
        || inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("auction")
        || inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("shop")
        || inventory.getHolder() != null && inventory.getHolder() instanceof Chest
@@ -114,10 +115,6 @@ public class InventoryListener implements Listener {
 
       if(!event.isCancelled()) {
         TNEInventory tneInventory = (TNE.instance().inventoryManager.getInventory(inventory) != null) ? TNE.instance().inventoryManager.getInventory(inventory) : TNE.instance().inventoryManager.generateInventory(inventory, (Player) event.getPlayer(), world);
-        if(inventory.getHolder() != null && inventory.getHolder() instanceof Chest
-           || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest) {
-             tneInventory = new ChestInventory(player, inventory, inventory.getLocation());
-        }
 
         if (tneInventory != null && open) {
           event.setCancelled(!tneInventory.onOpen(player));
@@ -220,29 +217,6 @@ public class InventoryListener implements Listener {
               }
             }, 1L);
             break;
-          case COLLECT_ALL:
-            /*Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-              @Override
-              public void run() {
-                tneInventory.onUpdate(tneInventory.doCollect(id, originalCursor.getType()), id);
-              }
-            }, 1L);*/
-            break;
-          case SHIFT:
-            /*Map<Integer, ItemStack> changes = new HashMap<>();
-            if(bottom) {
-              changes.put(tneInventory.getInventory().firstEmpty(), originalItem);
-            } else {
-              changes.put(slot, new ItemStack(Material.AIR));
-            }
-            tneInventory.onUpdate(changes, id);
-            /*Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-              @Override
-              public void run() {
-                tneInventory.onUpdate(tneInventory.doShift(id, slot, originalItem), id);
-              }
-            }, 1L);*/
-            break;
         }
       }
     }
@@ -268,6 +242,7 @@ public class InventoryListener implements Listener {
   public void onClose(final InventoryCloseEvent event) {
     UUID player = IDFinder.getID((Player)event.getPlayer());
     InventoryType type = event.getInventory().getType();
+    String world = IDFinder.getWorld(player);
 
     if(plugin.inventoryManager.inventoryTime.containsKey(player)) {
       InventoryTimeTracking tracking = plugin.inventoryManager.inventoryTime.get(player);
@@ -278,6 +253,15 @@ public class InventoryListener implements Listener {
     if(TNE.instance().inventoryManager.getInventory(player) != null) {
       TNE.instance().inventoryManager.getInventory(player).onClose(player);
       TNE.instance().inventoryManager.removePlayer(player);
+    }
+
+    if(event.getInventory().getTitle() != null && event.getInventory().getTitle().toLowerCase().contains("vault")
+       && TNE.instance().api().getInteger("Core.Vault.MaxViewers", world, player) == 1) {
+      UUID owner = Vault.parseTitle(event.getInventory().getTitle());
+      Vault vault = TNE.instance().manager.accounts.get(owner).getVault(world);
+      vault.viewers.remove(player);
+      vault.setItems(event.getInventory().getContents());
+      TNE.instance().manager.accounts.get(owner).setVault(world, vault);
     }
   }
 }

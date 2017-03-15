@@ -109,6 +109,9 @@ Core:
             #Would you like to use an item as the currency?
             ItemCurrency: false
 
+            #Would you like your item currency balances to also check the player's ender chest?
+            EnderChest: true
+
             #Would you like to track when a player puts ItemCurrency into a chest for balance usage later? May impact performance.
             #Temporarily modifies inventory behaviour for chests.
             TrackChest: false

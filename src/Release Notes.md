@@ -48,6 +48,8 @@ Alpha 5.2 "Quality of Life"
 - Currencies
   - Added configurations to specify the number of decimal places displayed for balances 
   - New ways to store your item-based currencies
+    - Ender Chests
+      - You may now choose to use item-based currencies stored in a player's ender chest as part of their balance
     - Automated currency tracking
       - This is completely optional
       - This will affect chest behaviour for now
@@ -55,6 +57,18 @@ Alpha 5.2 "Quality of Life"
     - Bank Signs
       - Bank Signs may be disabled
       - When a sign with line 1 of "[tne:bank]" is attached to a chest, this will declare it as a bank chest, and use any item-based currency store for balance purposes
+    - Balance Calculations
+      - Balances will be calculated and used in the following order:
+        - Calculated
+          - Virtual
+            - Player Balance
+            - Bank Balance
+          - Item-based
+            - Player Inventory
+            - Ender Inventory
+            - Vault Inventory
+            - Bank Balance
+            - Bank Sign Inventory
 - MISC
   - Added the ability to disable the entire economy system for specific worlds
     - This will be done in the worlds.yml file simply by added Worlds.\<worldname\>.DisableEconomy: true
