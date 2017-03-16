@@ -27,6 +27,7 @@ public class SaveManager {
   public Version versionInstance;
   Double currentSaveVersion = 5.2;
   Double saveVersion = 0.0;
+  public boolean updating = false;
   public boolean cache = TNE.configurations.getBoolean("Core.Database.Transactions.Cache");
   public long update = TNE.configurations.getLong("Core.Database.Transactions.Update");
   public String type = TNE.configurations.getString("Core.Database.Type");
@@ -230,16 +231,17 @@ public class SaveManager {
 
   public void load() {
     if(saveVersion < versionInstance.versionNumber() && saveVersion != 0) {
-      versionInstance.update(saveVersion, type.toLowerCase());
+      updating = true;
     }
     if(type.equalsIgnoreCase("flatfile")) {
       loadFlatFile();
     } else if(type.equalsIgnoreCase("mysql")) {
       loadMySQL();
-    } else if(type.equalsIgnoreCase("sqlite")) {
-      loadSQLite();
     } else if(type.equalsIgnoreCase("h2")) {
       loadH2();
+    }
+    if(updating) {
+      versionInstance.update(saveVersion, type.toLowerCase());
     }
   }
 
@@ -297,30 +299,10 @@ public class SaveManager {
     versionInstance.saveMySQL();
   }
 
-  //SQLite Methods
-  private void loadSQLite() {
-    Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
-    if(saveVersion != 0.0 && saveVersion < 3.0) {
-      loadVersion.loadSQLite();
-      return;
-    }
-    loadVersion.loadH2();
-  }
-
-  private void saveSQLite() {
-    //We no longer support SQLite starting post Alpha 3.0. For now we just load from SQLite
-    if(currentSaveVersion < 3.0) {
-      //For testing purposes we need to populate SQLite with some data.
-      versionInstance.saveSQLite();
-    }
-    versionInstance.saveH2();
-  }
 
   private void loadH2() {
     Version loadVersion = (saveVersion != 0.0) ? versions.get(saveVersion) : versionInstance;
-    if(saveVersion == 0.0 || saveVersion != 0.0 && saveVersion >= 3.0) {
-      loadVersion.loadH2();
-    }
+    loadVersion.loadH2();
   }
 
   private void saveH2() {

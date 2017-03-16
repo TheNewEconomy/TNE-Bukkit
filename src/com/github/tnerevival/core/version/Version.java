@@ -39,9 +39,6 @@ public abstract class Version {
       case "h2":
         db = new H2(h2File, mysqlUser, mysqlPassword);
         break;
-      case "sqlite":
-        db = new H2(h2File, mysqlUser, mysqlPassword);
-        break;
       default:
         db = new FlatFile(TNE.instance().getDataFolder() + File.separator + TNE.configurations.getString("Core.Database.FlatFile.File"));
     }
@@ -56,11 +53,6 @@ public abstract class Version {
   public MySQL mysql() {
     if(db == null) createDB();
     return (MySQL)db;
-  }
-
-  public SQLite sqlite() {
-    if(db == null) createDB();
-    return (SQLite)db;
   }
 
   public H2 h2() {
@@ -110,8 +102,6 @@ public abstract class Version {
   public abstract void saveFlat(File file);
   public abstract void loadMySQL();
   public abstract void saveMySQL();
-  public abstract void loadSQLite();
-  public abstract void saveSQLite();
   public abstract void loadH2();
   public abstract void saveH2();
   public abstract void createTables(String type);

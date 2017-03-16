@@ -59,16 +59,15 @@ Alpha 5.2 "Quality of Life"
       - When a sign with line 1 of "[tne:bank]" is attached to a chest, this will declare it as a bank chest, and use any item-based currency store for balance purposes
     - Balance Calculations
       - Balances will be calculated and used in the following order:
-        - Calculated
-          - Virtual
-            - Player Balance
-            - Bank Balance
-          - Item-based
-            - Player Inventory
-            - Ender Inventory
-            - Vault Inventory
-            - Bank Balance
-            - Bank Sign Inventory
+        - Virtual
+          - Player Balance
+          - Bank Balance
+        - Item-based
+          - Player Inventory
+          - Ender Inventory
+          - Vault Inventory
+          - Bank Balance
+          - Bank Sign Inventory
 - MISC
   - Added the ability to disable the entire economy system for specific worlds
     - This will be done in the worlds.yml file simply by added Worlds.\<worldname\>.DisableEconomy: true

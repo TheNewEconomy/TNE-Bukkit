@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `inventory_credits` LONGTEXT,
   `command_credits` LONGTEXT,
   `acc_pin` VARCHAR(30),
-  `balances` LONGTEXT,
   `joinedDate` VARCHAR(60),
   `accountnumber` INTEGER,
   `accountstatus` VARCHAR(60),
@@ -67,8 +66,8 @@ CREATE TABLE IF NOT EXISTS `shop_items` (
   `slot` INT(60) NOT NULL,
   `amount` INT(60) NOT NULL,
   `damage` INT(60) NOT NULL,
-  `material` VARCHAR(80) NOT NULL,
-  `custom_name` VARCHAR(80) NOT NULL,
+  `material` LONGTEXT,
+  `custom_name` LONGTEXT,
   `enchantments` LONGTEXT,
   `lore` LONGTEXT,
   PRIMARY KEY(shop_name, shop_world, slot)
@@ -143,8 +142,8 @@ CREATE TABLE IF NOT EXISTS `vault_items` (
   `slot` INT(60) NOT NULL,
   `amount` INT(60) NOT NULL,
   `damage` INT(60) NOT NULL,
-  `material` VARCHAR(80) NOT NULL,
-  `custom_name` VARCHAR(80) NOT NULL,
+  `material` LONGTEXT,
+  `custom_name` LONGTEXT,
   `enchantments` LONGTEXT,
   `lore` LONGTEXT,
   PRIMARY KEY(uuid, world, slot)
@@ -166,7 +165,8 @@ CREATE TABLE IF NOT EXISTS `sign_offers` (
   `offer_trade` LONGTEXT,
   `offer_amount` INT(60) NOT NULL,
   `offer_damage` INT(60) NOT NULL,
-  `offer_material` VARCHAR(80) NOT NULL,
+  `offer_material` LONGTEXT,
+  `offer_admin` BOOLEAN,
   PRIMARY KEY(sign_location, offer_order)
 );
 

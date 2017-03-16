@@ -82,7 +82,7 @@ public class TNE extends JavaPlugin {
   private InterestWorker interestWorker;
   private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
-  private CacheWorker cacheWorker;
+  public CacheWorker cacheWorker;
 
   public static Map<String, UUID> uuidCache = new HashMap<>();
 

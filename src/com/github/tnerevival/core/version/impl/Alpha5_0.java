@@ -851,7 +851,7 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void loadMySQL() {
-    if(TNE.instance().saveManager.cache) {
+    if(TNE.instance().saveManager.cache || TNE.instance().saveManager.updating) {
       Collection<Account> accounts = loadAccounts();
       Collection<Shop> shops = loadShops();
       Collection<Auction> auctions = loadAuctions();
@@ -885,18 +885,8 @@ public class Alpha5_0 extends Version {
   }
 
   @Override
-  public void loadSQLite() {
-    loadH2();
-  }
-
-  @Override
-  public void saveSQLite() {
-    saveH2();
-  }
-
-  @Override
   public void loadH2() {
-    if(TNE.instance().saveManager.cache) {
+    if(TNE.instance().saveManager.cache || TNE.instance().saveManager.updating) {
       Collection<Account> accounts = loadAccounts();
       Collection<Shop> shops = loadShops();
       Collection<Auction> auctions = loadAuctions();
