@@ -127,7 +127,6 @@ CREATE TABLE IF NOT EXISTS `vault_members` (
 CREATE TABLE IF NOT EXISTS `vault_items` (
   `uuid` VARCHAR(36) NOT NULL,
   `world` VARCHAR(50) NOT NULL,
-  `member` VARCHAR(36) NOT NULL,
   `slot` INT(60) NOT NULL,
   `amount` INT(60) NOT NULL,
   `damage` INT(60) NOT NULL,

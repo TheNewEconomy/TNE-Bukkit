@@ -336,31 +336,6 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveShop(Shop shop) {
-    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
-      String table = prefix + "_SHOPS";
-      sql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_world, shop_owner, shop_hidden, shop_admin, shop_items, shop_blacklist, shop_whitelist, shop_shares) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" +
-              " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?, shop_items = ?, shop_blacklist = ?, shop_whitelist = ?, shop_shares = ?",
-          new Object[]{
-              shop.getName(),
-              shop.getWorld(),
-              shop.getOwner().toString(),
-              SQLDatabase.boolToDB(shop.isHidden()),
-              SQLDatabase.boolToDB(shop.isAdmin()),
-              shop.itemsToString(),
-              shop.listToString(true),
-              shop.listToString(false),
-              shop.sharesToString(),
-              shop.getOwner().toString(),
-              SQLDatabase.boolToDB(shop.isHidden()),
-              SQLDatabase.boolToDB(shop.isAdmin()),
-              shop.itemsToString(),
-              shop.listToString(true),
-              shop.listToString(false),
-              shop.sharesToString()
-          }
-      );
-      sql().close();
-    }
   }
 
   @Override
@@ -412,22 +387,6 @@ public class Alpha5_0 extends Version {
 
   @Override
   public void saveSign(TNESign sign) {
-    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
-      String table = prefix + "_SIGNS";
-      sql().executePreparedUpdate("INSERT INTO `" + table + "` (sign_owner, sign_type, sign_location, sign_meta) VALUES(?, ?, ?, ?)" +
-              " ON DUPLICATE KEY UPDATE sign_owner = ?, sign_type = ?, sign_meta = ?",
-          new Object[] {
-              sign.getOwner().toString(),
-              sign.getType().getName(),
-              sign.getLocation().toString(),
-              sign.getMeta(),
-              sign.getOwner().toString(),
-              sign.getType().getName(),
-              sign.getMeta()
-          }
-      );
-      sql().close();
-    }
   }
 
   @Override

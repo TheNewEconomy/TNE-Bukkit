@@ -18,6 +18,8 @@ package com.github.tnerevival.core.version.impl;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Claim;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
@@ -283,22 +285,288 @@ public class Alpha5_2 extends Version {
 
   @Override
   public Collection<Account> loadAccounts() {
-    return null;
+    List<Account> accounts = new ArrayList<>();
+
+    String table = prefix + "_USERS";
+    try {
+      int accountIndex = sql().executeQuery("SELECT * FROM " + table + ";");
+      while (sql().results(accountIndex).next()) {
+        Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")), sql().results(accountIndex).getInt("accountnumber"));
+        account.balancesFromString(sql().results(accountIndex).getString("balances"));
+        account.setStatus(sql().results(accountIndex).getString("accountstatus"));
+        account.setJoined(sql().results(accountIndex).getString("joinedDate"));
+        account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));
+        account.commandsFromString(sql().results(accountIndex).getString("command_credits"));
+        account.setPin(sql().results(accountIndex).getString("acc_pin"));
+
+        table = prefix + "_BANKS";
+        int bankIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
+        while(sql().results(bankIndex).next()) {
+          Bank bank = new Bank(account.getUid(), sql().results(bankIndex).getString("world"));
+
+          String extraTable = prefix + "_BANK_BALANCES";
+          int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getDouble("balance")));
+          }
+          extraTable = prefix + "_BANK_MEMBERS";
+          extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            bank.addMember(UUID.fromString(sql().results(extraIndex).getString("member")));
+          }
+          account.setBank(bank.getWorld(), bank);
+        }
+
+        table = prefix + "_VAULTS";
+        int vaultIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
+        while(sql().results(vaultIndex).next()) {
+          Vault vault = new Vault(account.getUid(), sql().results(vaultIndex).getString("world"), sql().results(vaultIndex).getInt("size"));
+
+          String extraTable = prefix + "_VAULT_ITEMS";
+          int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), vault.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            int slot = sql().results(extraIndex).getInt("slot");
+            ItemStack stack = new ItemStack(MaterialHelper.getMaterial(sql().results(extraIndex).getString("material")));
+            stack.setDurability((short)sql().results(extraIndex).getInt("damage"));
+            stack.setAmount(sql().results(extraIndex).getInt("amount"));
+            SerializableItemStack item = new SerializableItemStack(slot, stack);
+            item.setCustomName(sql().results(extraIndex).getString("custom_name"));
+            item.addEnchantments(sql().results(extraIndex).getString("enchantments"));
+            item.addLore(sql().results(extraIndex).getString("lore"));
+          }
+
+          extraTable = prefix + "_VAULT_MEMBERS";
+          extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), vault.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            vault.addMember(UUID.fromString(sql().results(extraIndex).getString("member")));
+          }
+          account.setVault(vault.getWorld(), vault);
+        }
+        accounts.add(account);
+      }
+      sql().close();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+    return accounts;
   }
 
   @Override
   public Account loadAccount(UUID id) {
+    String table = prefix + "_USERS";
+    try {
+      int accountIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?", new Object[] {
+          id.toString()
+      });
+      if(sql().results(accountIndex).next()) {
+        Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")), sql().results(accountIndex).getInt("accountnumber"));
+        account.balancesFromString(sql().results(accountIndex).getString("balances"));
+        account.setStatus(sql().results(accountIndex).getString("accountstatus"));
+        account.setJoined(sql().results(accountIndex).getString("joinedDate"));
+        account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));
+        account.commandsFromString(sql().results(accountIndex).getString("command_credits"));
+        account.setPin(sql().results(accountIndex).getString("acc_pin"));
+
+        table = prefix + "_BANKS";
+        int bankIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
+        while(sql().results(bankIndex).next()) {
+          Bank bank = new Bank(id, sql().results(bankIndex).getString("world"));
+
+          String extraTable = prefix + "_BANK_BALANCES";
+          int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getDouble("balance")));
+          }
+          extraTable = prefix + "_BANK_MEMBERS";
+          extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            bank.addMember(UUID.fromString(sql().results(extraIndex).getString("member")));
+          }
+          account.setBank(bank.getWorld(), bank);
+        }
+
+        table = prefix + "_VAULTS";
+        int vaultIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
+        while(sql().results(vaultIndex).next()) {
+          Vault vault = new Vault(id, sql().results(vaultIndex).getString("world"), sql().results(vaultIndex).getInt("size"));
+
+          String extraTable = prefix + "_VAULT_ITEMS";
+          int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), vault.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            int slot = sql().results(extraIndex).getInt("slot");
+            ItemStack stack = new ItemStack(MaterialHelper.getMaterial(sql().results(extraIndex).getString("material")));
+            stack.setDurability((short)sql().results(extraIndex).getInt("damage"));
+            stack.setAmount(sql().results(extraIndex).getInt("amount"));
+            SerializableItemStack item = new SerializableItemStack(slot, stack);
+            item.setCustomName(sql().results(extraIndex).getString("custom_name"));
+            item.addEnchantments(sql().results(extraIndex).getString("enchantments"));
+            item.addLore(sql().results(extraIndex).getString("lore"));
+          }
+
+          extraTable = prefix + "_VAULT_MEMBERS";
+          extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), vault.getWorld() });
+          while(sql().results(extraIndex).next()) {
+            vault.addMember(UUID.fromString(sql().results(extraIndex).getString("member")));
+          }
+          account.setVault(vault.getWorld(), vault);
+        }
+        sql().close();
+        return account;
+      }
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
     return null;
   }
 
   @Override
   public void saveAccount(Account acc) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
+      String table = prefix + "_USERS";
+      sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, acc_pin, inventory_credits, command_credits, joinedDate, accountnumber, accountstatus, account_special) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE acc_pin = ?, inventory_credits = ?, command_credits = ?, joinedDate = ?, accountnumber = ?, accountstatus = ?, account_special = ?",
+          new Object[]{
+              acc.getUid().toString(),
+              acc.getPin(),
+              acc.creditsToString(),
+              acc.commandsToString(),
+              acc.getJoined(),
+              acc.getAccountNumber(),
+              acc.getStatus().getName(),
+              acc.isSpecial(),
+              acc.getPin(),
+              acc.creditsToString(),
+              acc.commandsToString(),
+              acc.getJoined(),
+              acc.getAccountNumber(),
+              acc.getStatus().getName(),
+              acc.isSpecial(),
+          }
+      );
 
+      table = prefix + "_BALANCES";
+      for (String s : acc.getBalances().keySet()) {
+        String[] parts = s.split(":");
+        double amount = acc.getBalance(parts[0], parts[1]).doubleValue();
+        sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, server_name, world, currency, balance) " +
+                "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
+            new Object[]{
+                acc.getUid().toString(),
+                TNE.instance().getServer().getServerName(),
+                parts[0],
+                parts[1],
+                amount,
+                amount
+            }
+        );
+      }
+
+      table = prefix + "_BANKS";
+      for (Map.Entry<String, Bank> entry : acc.getBanks().entrySet()) {
+        sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, world) VALUES(?, ?)",
+            new Object[]{
+                acc.getUid().toString(),
+                entry.getKey()
+            }
+        );
+
+        sql().executePreparedUpdate("DELETE FROM " + prefix + "_BANK_BALANCES WHERE uuid = ? ", new Object[] { acc.getUid().toString() });
+        for (String s : entry.getValue().getBalances().keySet()) {
+          sql().executePreparedUpdate("INSERT INTO `" + prefix + "_BANK_BALANCES` (uuid, world, currency, balance)" +
+                  " VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
+              new Object[]{
+                  acc.getUid().toString(),
+                  entry.getKey(),
+                  s,
+                  entry.getValue().getGold(s).doubleValue(),
+                  entry.getValue().getGold(s).doubleValue()
+              }
+          );
+        }
+        sql().executePreparedUpdate("DELETE FROM " + prefix + "_BANK_MEMBERS WHERE uuid = ? ", new Object[] { acc.getUid().toString() });
+        for (UUID id : entry.getValue().getMembers()) {
+          sql().executePreparedUpdate("INSERT INTO `" + prefix + "_BANK_MEMBERS` (uuid, world, member, permissions)" +
+                  " VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE permissions = ?",
+              new Object[]{
+                  acc.getUid().toString(),
+                  entry.getKey(),
+                  id.toString(),
+                  "",
+                  ""
+              }
+          );
+        }
+      }
+
+      table = prefix + "_VAULTS";
+      for (Map.Entry<String, Vault> entry : acc.getVaults().entrySet()) {
+        sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, world, size) VALUES(?, ?, ?) ON DUPLICATE" +
+                "KEY UPDATE size = ?",
+            new Object[]{
+                acc.getUid().toString(),
+                entry.getKey(),
+                entry.getValue().getSize(),
+                entry.getValue().getSize()
+            }
+        );
+
+        sql().executePreparedUpdate("DELETE FROM " + prefix + "_VAULT_ITEMS WHERE uuid = ? ", new Object[] { acc.getUid().toString() });
+        for (SerializableItemStack stack : entry.getValue().getItems()) {
+          sql().executePreparedUpdate("INSERT INTO `" + prefix + "_VAULT_ITEMS` (uuid, world, slot, amount, " +
+                  "damage, material, custom_name, enchantments, lore) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE " +
+                  "KEY UPDATE amount = ?, damage = ?, material = ?, custom_name = ?, enchantments = ?, lore = ?",
+              new Object[]{
+                  acc.getUid().toString(),
+                  entry.getKey(),
+                  stack.getSlot(),
+                  stack.getAmount(),
+                  stack.getDamage(),
+                  stack.getName(),
+                  stack.getCustomName(),
+                  stack.enchantmentsToString(),
+                  stack.loreToString(),
+                  stack.getAmount(),
+                  stack.getDamage(),
+                  stack.getName(),
+                  stack.getCustomName(),
+                  stack.enchantmentsToString(),
+                  stack.loreToString(),
+              }
+          );
+        }
+
+        sql().executePreparedUpdate("DELETE FROM " + prefix + "_VAULT_MEMBERS WHERE uuid = ? ", new Object[] { acc.getUid().toString() });
+        for (UUID id : entry.getValue().getMembers()) {
+          sql().executePreparedUpdate("INSERT INTO `" + prefix + "_VAULT_MEMBERS` (uuid, world, member, permissions)" +
+                  " VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE permissions = ?",
+              new Object[]{
+                  acc.getUid().toString(),
+                  entry.getKey(),
+                  id.toString(),
+                  "",
+                  ""
+              }
+          );
+        }
+      }
+      sql().close();
+    }
   }
 
   @Override
   public void deleteAccount(UUID id) {
-
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_USERS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_TRACKED WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_BANKS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_BANK_BALANCES WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_BANK_MEMBERS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_VAULTS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_VAULT_MEMBERS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_VAULT_ITEMS WHERE uuid = ? ", new Object[] { id.toString() });
+      sql().close();
+    }
   }
 
   @Override

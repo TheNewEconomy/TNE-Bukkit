@@ -70,6 +70,10 @@ public class Bank {
     balances.put(currency, new BankBalance(currency, gold));
   }
 
+  public Map<String, BankBalance> getBalances() {
+    return balances;
+  }
+
   public Map<String, BigDecimal> getBalances(String currency) {
     Map<String, BigDecimal> sorted = new HashMap<>();
     for(BankBalance balance : balances.values()) {

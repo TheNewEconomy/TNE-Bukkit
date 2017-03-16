@@ -230,6 +230,23 @@ public class SerializableItemStack implements Serializable {
     return name + ";" + slot + ";" + amount + ";" + damage + ";" + customName + ";" + loreToString() + ";" + enchantmentsToString();
   }
 
+  public void addLore(String lore) {
+    setLore(Arrays.asList(lore.split("\\~")));
+  }
+
+  public void addEnchantments(String enchants) {
+    HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
+    String[] enchantmentsArray = enchants.split("\\~");
+
+    for(String s : enchantmentsArray) {
+      String[] enchantmentVariables = s.split("\\,");
+      if(enchantmentVariables.length == 2) {
+        enchantments.put(new SerializableEnchantment(enchantmentVariables[0]), Integer.valueOf(enchantmentVariables[1]));
+      }
+    }
+    setEnchantments(enchantments);
+  }
+
   public static SerializableItemStack fromString(String itemString) {
     String[] variables = itemString.split("\\;");
     if(variables.length < 5) return new SerializableItemStack(0, new ItemStack(Material.AIR));
