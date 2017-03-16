@@ -250,6 +250,17 @@ Core:
     #All configurations relating to the TNE Sign System
     Signs:
 
+        #All configurations relative to balance signs.
+        Balance:
+            #Whether or not players may create vault signs
+            Enabled: true
+
+            #The name of the currency to use for the sign.
+            Currency: Default
+
+            #The cost to make a bank sign, if the player has valid permissions.
+            Place: 20.0
+
         #All configurations relating to bank signs.
         Bank:
 

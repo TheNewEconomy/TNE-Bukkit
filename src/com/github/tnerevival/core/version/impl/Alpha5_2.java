@@ -30,7 +30,9 @@ import com.github.tnerevival.core.db.flat.Entry;
 import com.github.tnerevival.core.db.flat.FlatFileConnection;
 import com.github.tnerevival.core.db.flat.Section;
 import com.github.tnerevival.core.material.MaterialHelper;
+import com.github.tnerevival.core.shops.ShareEntry;
 import com.github.tnerevival.core.shops.Shop;
+import com.github.tnerevival.core.shops.ShopEntry;
 import com.github.tnerevival.core.signs.ItemSign;
 import com.github.tnerevival.core.signs.SignType;
 import com.github.tnerevival.core.signs.TNESign;
@@ -106,19 +108,8 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_world` VARCHAR(50) NOT NULL," +
           "`shop_name` VARCHAR(60) NOT NULL," +
-          "`shop_buy` DOUBLE," +
-          "`shop_sell` DOUBLE," +
-          "`shop_trade` LONGTEXT," +
-          "`shop_stock` INT NOT NULL," +
-          "`shop_max` INT NOT NULL," +
-          "`shop_unlimited` BOOLEAN," +
           "`slot` INT(60) NOT NULL," +
-          "`amount` INT(60) NOT NULL," +
-          "`damage` INT(60) NOT NULL," +
-          "`material` LONGTEXT," +
-          "`custom_name` LONGTEXT," +
-          "`enchantments` LONGTEXT," +
-          "`lore` LONGTEXT," +
+          "`shop_entry` LONGTEXT," +
           "PRIMARY KEY(shop_name, shop_world, slot)" +
           ");");
 
@@ -312,22 +303,185 @@ public class Alpha5_2 extends Version {
 
   @Override
   public Collection<Shop> loadShops() {
-    return null;
+    List<Shop> shops = new ArrayList<>();
+
+    String table = prefix + "_SHOPS";
+    try {
+      int shopIndex = sql().executeQuery("SELECT * FROM `" + table + "`;");
+      while (sql().results(shopIndex).next()) {
+        Shop s = new Shop(sql().results(shopIndex).getString("shop_name"), sql().results(shopIndex).getString("shop_world"));
+        s.setOwner(UUID.fromString(sql().results(shopIndex).getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(sql().results(shopIndex).getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(sql().results(shopIndex).getInt("shop_admin")));
+
+        String extraTable = prefix + "_SHOP_SHARES";
+        int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+            s.getName(),
+            s.getWorld()
+        });
+        while(sql().results(extraIndex).next()) {
+          ShareEntry share = new ShareEntry(UUID.fromString(sql().results(extraIndex).getString("uuid")),
+              sql().results(extraIndex).getDouble("percentage"));
+          s.addShares(share);
+        }
+
+        extraTable = prefix + "_SHOP_PERMISSIONS";
+        extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+            s.getName(),
+            s.getWorld()
+        });
+        while(sql().results(extraIndex).next()) {
+          s.permissionFromString(UUID.fromString(sql().results(extraIndex).getString("uuid")),
+              sql().results(extraIndex).getString("permissions"));
+        }
+
+        extraTable = prefix + "SHOP_ITEMS";
+        extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+            s.getName(),
+            s.getWorld()
+        });
+        while(sql().results(extraIndex).next()) {
+          ShopEntry entry = ShopEntry.fromString(sql().results(extraIndex).getString("shop_entry"));
+          s.addItem(entry);
+        }
+
+        shops.add(s);
+      }
+      sql().close();
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
+    return shops;
   }
 
   @Override
   public Shop loadShop(String name, String world) {
+    String table = prefix + "_SHOPS";
+    try {
+      int shopIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+          name,
+          world
+      });
+
+      if(sql().results(shopIndex).next()) {
+        Shop s = new Shop(sql().results(shopIndex).getString("shop_name"), sql().results(shopIndex).getString("shop_world"));
+        s.setOwner(UUID.fromString(sql().results(shopIndex).getString("shop_owner")));
+        s.setHidden(SQLDatabase.boolFromDB(sql().results(shopIndex).getInt("shop_hidden")));
+        s.setAdmin(SQLDatabase.boolFromDB(sql().results(shopIndex).getInt("shop_admin")));
+
+        String extraTable = prefix + "_SHOP_SHARES";
+        int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+            name,
+            world
+        });
+        while(sql().results(extraIndex).next()) {
+          ShareEntry share = new ShareEntry(UUID.fromString(sql().results(extraIndex).getString("uuid")),
+              sql().results(extraIndex).getDouble("percentage"));
+          s.addShares(share);
+        }
+
+        extraTable = prefix + "_SHOP_PERMISSIONS";
+        extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+            name,
+            world
+        });
+        while(sql().results(extraIndex).next()) {
+          s.permissionFromString(UUID.fromString(sql().results(extraIndex).getString("uuid")),
+              sql().results(extraIndex).getString("permissions"));
+        }
+
+        extraTable = prefix + "_SHOP_ITEMS";
+        extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE shop_name = ? AND shop_world = ?", new Object[] {
+            name,
+            world
+        });
+        while(sql().results(extraIndex).next()) {
+          ShopEntry entry = ShopEntry.fromString(sql().results(extraIndex).getString("shop_entry"));
+          s.addItem(entry);
+        }
+        sql().close();
+        return s;
+      }
+    } catch(Exception e) {
+      MISCUtils.debug(e);
+    }
     return null;
   }
 
   @Override
   public void saveShop(Shop shop) {
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
+      String table = prefix + "_SHOPS";
+      sql().executePreparedUpdate("INSERT INTO `" + table + "` (shop_name, shop_world, shop_owner, shop_hidden, shop_admin) VALUES(?, ?, ?, ?, ?)" +
+              " ON DUPLICATE KEY UPDATE shop_owner = ?, shop_hidden = ?, shop_admin = ?",
+          new Object[]{
+              shop.getName(),
+              shop.getWorld(),
+              shop.getOwner().toString(),
+              SQLDatabase.boolToDB(shop.isHidden()),
+              SQLDatabase.boolToDB(shop.isAdmin()),
+              shop.getOwner().toString(),
+              SQLDatabase.boolToDB(shop.isHidden()),
+              SQLDatabase.boolToDB(shop.isAdmin()),
+          }
+      );
 
+      for(UUID id : shop.getPermissions().keySet()) {
+        String permissions = prefix + "_SHOP_PERMISSIONS";
+        sql().executePreparedUpdate("INSERT INTO `" + permissions + "` (shop_world, shop_name, uuid, permissions) VALUES(?, ?, ?, ?)" +
+                " ON DUPLICATE KEY UPDATE permissions = ?",
+            new Object[]{
+                shop.getWorld(),
+                shop.getName(),
+                id.toString(),
+                shop.permissionToString(id),
+                shop.permissionToString(id)
+            }
+        );
+      }
+
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOP_ITEMS WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      for(ShopEntry entry : shop.getItems()) {
+        String entries = prefix + "_SHOP_ITEMS";
+        sql().executePreparedUpdate("INSERT INTO `" + entries + "` (shop_world, shop_name, slot, shop_entry) VALUES(?, ?, ?, ?)" +
+                " ON DUPLICATE KEY UPDATE shop_entry = ?",
+            new Object[]{
+                shop.getWorld(),
+                shop.getName(),
+                entry.getItem().getSlot(),
+                entry.toString(),
+                entry.toString(),
+            }
+        );
+      }
+
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOP_SHARES WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      for(ShareEntry share : shop.getShares()) {
+        String shares = prefix + "_SHOP_SHARES";
+        sql().executePreparedUpdate("INSERT INTO `" + shares + "` (shop_world, shop_name, uuid, percentage) VALUES(?, ?, ?, ?)" +
+                " ON DUPLICATE KEY UPDATE percentage = ?",
+            new Object[]{
+                shop.getWorld(),
+                shop.getName(),
+                share.getShareOwner().toString(),
+                share.getPercent(),
+                share.getPercent()
+            }
+        );
+      }
+      sql().close();
+    }
   }
 
   @Override
   public void deleteShop(Shop shop) {
-
+    if(!TNE.instance().saveManager.type.equalsIgnoreCase("flatfile")) {
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOPS WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOP_SHARES WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOP_PERMISSIONS WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      sql().executePreparedUpdate("DELETE FROM " + prefix + "_SHOP_ITEMS WHERE shop_name = ? AND shop_world = ?", new Object[] { shop.getName(), shop.getWorld() });
+      sql().close();
+    }
   }
 
   @Override
@@ -1198,19 +1352,8 @@ public class Alpha5_2 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_world` VARCHAR(50) NOT NULL," +
           "`shop_name` VARCHAR(60) NOT NULL," +
-          "`shop_buy` DOUBLE," +
-          "`shop_sell` DOUBLE," +
-          "`shop_trade` LONGTEXT," +
-          "`shop_stock` INT NOT NULL," +
-          "`shop_max` INT NOT NULL," +
-          "`shop_unlimited` BOOLEAN," +
           "`slot` INT(60) NOT NULL," +
-          "`amount` INT(60) NOT NULL," +
-          "`damage` INT(60) NOT NULL," +
-          "`material` LONGTEXT," +
-          "`custom_name` LONGTEXT," +
-          "`enchantments` LONGTEXT," +
-          "`lore` LONGTEXT," +
+          "`shop_entry` LONGTEXT," +
           "PRIMARY KEY(shop_name, shop_world, slot)" +
           ");");
 
@@ -1419,19 +1562,8 @@ public class Alpha5_2 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`shop_world` VARCHAR(50) NOT NULL," +
           "`shop_name` VARCHAR(60) NOT NULL," +
-          "`shop_buy` DOUBLE," +
-          "`shop_sell` DOUBLE," +
-          "`shop_trade` LONGTEXT," +
-          "`shop_stock` INT NOT NULL," +
-          "`shop_max` INT NOT NULL," +
-          "`shop_unlimited` BOOLEAN," +
           "`slot` INT(60) NOT NULL," +
-          "`amount` INT(60) NOT NULL," +
-          "`damage` INT(60) NOT NULL," +
-          "`material` VARCHAR(80) NOT NULL," +
-          "`custom_name` VARCHAR(80) NOT NULL," +
-          "`enchantments` LONGTEXT," +
-          "`lore` LONGTEXT," +
+          "`shop_entry` LONGTEXT," +
           "PRIMARY KEY(shop_name, shop_world, slot)" +
           ");");
 

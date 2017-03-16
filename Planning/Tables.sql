@@ -57,19 +57,8 @@ CREATE TABLE IF NOT EXISTS `shop_permissions` (
 CREATE TABLE IF NOT EXISTS `shop_items` (
   `shop_world` VARCHAR(50) NOT NULL,
   `shop_name` VARCHAR(60) NOT NULL,
-  `shop_buy` DOUBLE,
-  `shop_sell` DOUBLE,
-  `shop_trade` LONGTEXT,
-  `shop_stock` INT NOT NULL,
-  `shop_max` INT NOT NULL,
-  `shop_unlimited` BOOLEAN,
   `slot` INT(60) NOT NULL,
-  `amount` INT(60) NOT NULL,
-  `damage` INT(60) NOT NULL,
-  `material` LONGTEXT,
-  `custom_name` LONGTEXT,
-  `enchantments` LONGTEXT,
-  `lore` LONGTEXT,
+  `shop_entry` LONGTEXT,
   PRIMARY KEY(shop_name, shop_world, slot)
 );
 

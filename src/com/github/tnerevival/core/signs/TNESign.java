@@ -12,6 +12,7 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -29,6 +30,14 @@ public abstract class TNESign {
   public TNESign(UUID owner, SerializableLocation location) {
     this.owner = owner;
     this.location = location;
+  }
+
+  public String getLine(int line) {
+    BlockState state = location.getLocation().getBlock().getState();
+    if(state instanceof Sign) {
+      return ((Sign)state).getLine(line);
+    }
+    return "";
   }
 
   /**
@@ -289,6 +298,8 @@ public abstract class TNESign {
         return new VaultSign(owner, location);
       case "bank":
         return new BankSign(owner, location);
+      case "balance":
+        return new BalanceSign(owner, location);
       default:
         MISCUtils.debug("defaulting...");
         return new VaultSign(owner, location);

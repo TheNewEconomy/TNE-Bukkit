@@ -10,7 +10,8 @@ public enum SignType {
   BANK("bank", "tne.place.bank", "tne.use.bank", "Core.Signs.Bank"),
   VAULT("vault", "tne.place.vault", "tne.use.vault", "Core.Signs.Vault"),
   ITEM("item", "tne.place.item", "tne.use.item", "Core.Signs.Item"),
-  SHOP("shop", "tne.place.shop", "tne.use.shop", "Core.Signs.Shop");
+  SHOP("shop", "tne.place.shop", "tne.use.shop", "Core.Signs.Shop"),
+  BALANCE("balance", "tne.place.balance", "tne.use.balance", "Core.Signs.Balance");
 
   private String name;
   private String placePermission;
@@ -55,6 +56,14 @@ public enum SignType {
 
   public void setUsePermission(String usePermission) {
     this.usePermission = usePermission;
+  }
+
+  public String getConfiguration() {
+    return configuration;
+  }
+
+  public void setConfiguration(String configuration) {
+    this.configuration = configuration;
   }
 
   public Boolean enabled(String world, String player) {

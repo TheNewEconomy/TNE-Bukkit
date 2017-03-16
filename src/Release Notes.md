@@ -17,6 +17,8 @@ Alpha 5.2 "Quality of Life"
 - World Sharing
   - Removed the need for the ShareAccounts configuration
   - Added the ability to share configurations, balances, or both with different worlds.
+- Balance Signs
+  - These are created by typing [tne:balance] at the top of a sign, and will send balance information to the player that right clicks it.
 - Sign Shops
   - Added ability to create sign shops as an easy alternative to our convoluted shops feature
   - Ability to let players use their ender chest inventory for storage/item stock
@@ -88,3 +90,4 @@ Alpha 5.2 "Quality of Life"
   - tne reload all fix
   - fixed incompatibility issues with the essentials invsee command
   - fixed issue where paid players weren't receiving Messages.Money.Received
+  - fixed an issue with the updating system

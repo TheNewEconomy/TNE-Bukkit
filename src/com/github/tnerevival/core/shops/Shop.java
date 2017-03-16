@@ -16,18 +16,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Shop implements Serializable {
   private static final long serialVersionUID = 1L;
 
+  private Map<UUID, ShopPermission> permissions = new HashMap<>();
   private List<UUID> shoppers = new ArrayList<>();
   private List<ShopEntry> items = new ArrayList<>();
-  private List<UUID> blacklist = new ArrayList<>();
-  private List<UUID> whitelist = new ArrayList<>();
   private List<ShareEntry> shares = new ArrayList<>();
 
   private UUID owner;
@@ -88,44 +84,38 @@ public class Shop implements Serializable {
     this.items = items;
   }
 
-  public List<UUID> getBlacklist() {
-    return blacklist;
-  }
-
   public boolean blacklisted(UUID player) {
-    return blacklist.contains(player);
+    if(permissions.containsKey(player)) return permissions.get(player).isBlacklisted();
+    return false;
   }
 
   public void addBlacklist(UUID player) {
-    blacklist.add(player);
+    ShopPermission permission = (permissions.containsKey(player))? permissions.get(player) : new ShopPermission(player);
+    permission.setBlacklisted(true);
+    permissions.put(player, permission);
   }
 
   public void removeBlacklist(UUID player) {
-    blacklist.remove(player);
-  }
-
-  public void setBlacklist(List<UUID> blacklist) {
-    this.blacklist = blacklist;
-  }
-
-  public List<UUID> getWhitelist() {
-    return whitelist;
-  }
-
-  public void setWhitelist(List<UUID> whitelist) {
-    this.whitelist = whitelist;
+    ShopPermission permission = (permissions.containsKey(player))? permissions.get(player) : new ShopPermission(player);
+    permission.setBlacklisted(false);
+    permissions.put(player, permission);
   }
 
   public boolean whitelisted(UUID player) {
-    return whitelist.contains(player);
+    if(permissions.containsKey(player)) return permissions.get(player).isWhitelisted();
+    return false;
   }
 
   public void addWhitelist(UUID player) {
-    whitelist.add(player);
+    ShopPermission permission = (permissions.containsKey(player))? permissions.get(player) : new ShopPermission(player);
+    permission.setWhitelisted(true);
+    permissions.put(player, permission);
   }
 
   public void removeWhitelist(UUID player) {
-    whitelist.remove(player);
+    ShopPermission permission = (permissions.containsKey(player))? permissions.get(player) : new ShopPermission(player);
+    permission.setWhitelisted(false);
+    permissions.put(player, permission);
   }
 
   public List<ShareEntry> getShares() {
@@ -352,17 +342,34 @@ public class Shop implements Serializable {
     shares.add(entry);
   }
 
-  public String listToString(boolean blacklist) {
-    StringBuilder builder = new StringBuilder();
-
-    List<UUID> list = (blacklist)? this.blacklist : this.whitelist;
-
-    for(UUID id : list) {
-      if(builder.length() > 0) builder.append(",");
-      builder.append(id.toString());
+  public String permissionToString(UUID id) {
+    String value = "";
+    if(permissions.containsKey(id)) {
+      ShopPermission permission = permissions.get(id);
+      if(permission.isWhitelisted()) value += "whitelist";
+      if(permission.isBlacklisted()) {
+        if(value.length() == 0) value += ",";
+        value += "blacklist";
+      }
     }
-    return builder.toString();
+    return value;
   }
+
+  public void permissionFromString(UUID id, String permission) {
+    String[] parsed = permission.split(",");
+
+    for(String s : parsed) {
+      switch(s) {
+        case "blacklist":
+          addBlacklist(id);
+          break;
+        case "whitelist":
+          addWhitelist(id);
+          break;
+      }
+    }
+  }
+
 
   public void listFromString(String parse, boolean blacklist) {
     String[] parsed = parse.split(",");
@@ -370,10 +377,10 @@ public class Shop implements Serializable {
     for(String s : parsed) {
       if(IDFinder.isUUID(s)) {
         if (blacklist) {
-          this.blacklist.add(UUID.fromString(s));
+          addBlacklist(UUID.fromString(s));
           continue;
         }
-        this.whitelist.add(UUID.fromString(s));
+        addWhitelist(UUID.fromString(s));
       }
     }
   }
@@ -421,9 +428,17 @@ public class Shop implements Serializable {
     }
   }
 
+  public Map<UUID, ShopPermission> getPermissions() {
+    return permissions;
+  }
+
+  public void setPermissions(Map<UUID, ShopPermission> permissions) {
+    this.permissions = permissions;
+  }
+
   /*
-   * Static methods
-   */
+     * Static methods
+     */
   public static boolean exists(String name, String world) {
     return TNE.instance().manager.shops.containsKey(name + ":" + world);
   }
