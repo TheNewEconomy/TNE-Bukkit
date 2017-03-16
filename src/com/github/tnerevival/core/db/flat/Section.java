@@ -12,6 +12,10 @@ public class Section implements Serializable {
   Integer version;
   String name;
 
+  public boolean hasArticle(String name) {
+    return articles.containsKey(name);
+  }
+
   public Section(String name) {
     this.name = name;
   }

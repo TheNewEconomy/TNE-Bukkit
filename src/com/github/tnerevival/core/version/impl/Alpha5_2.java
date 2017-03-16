@@ -869,14 +869,14 @@ public class Alpha5_2 extends Version {
                   entry.getOrder(),
                   entry.getBuy().doubleValue(),
                   entry.getSell().doubleValue(),
-                  (entry.getTrade().getType().equals(Material.AIR))? "" : entry.getTrade().toString(),
+                  (entry.getTrade().getType().equals(Material.AIR))? "" : new SerializableItemStack(entry.getOrder(), entry.getTrade()).toString(),
                   entry.getItem().getAmount(),
                   entry.getItem().getDurability(),
                   entry.getItem().getType().name(),
                   entry.isAdmin(),
                   entry.getBuy().doubleValue(),
                   entry.getSell().doubleValue(),
-                  (entry.getTrade().getType().equals(Material.AIR))? "" : entry.getTrade().toString(),
+                  (entry.getTrade().getType().equals(Material.AIR))? "" : new SerializableItemStack(entry.getOrder(), entry.getTrade()).toString(),
                   entry.getItem().getAmount(),
                   entry.getItem().getDurability(),
                   entry.getItem().getType().name(),
@@ -1236,6 +1236,25 @@ public class Alpha5_2 extends Version {
       TNESign sign = TNESign.instance((String)info.getData("type"), UUID.fromString((String)info.getData("owner")), SerializableLocation.fromString((String)info.getData("location")));
       sign.loadMeta((String)info.getData("meta"));
 
+      if(signs.hasArticle(sign.getLocation().toString() + "-offers")) {
+        Article offers = signs.getArticle(sign.getLocation().toString() + "-offers");
+
+        for(Entry entry : offers.getEntries().values()) {
+          ItemStack stack = new ItemStack(MaterialHelper.getMaterial((String)entry.getData("material")));
+          stack.setAmount((int)entry.getData("amount"));
+          stack.setDurability((short)entry.getData("damage"));
+          ItemEntry offer = new ItemEntry((int)entry.getData("order"), stack);
+          offer.setAdmin(SQLDatabase.boolFromDB((int)entry.getData("admin")));
+          offer.setBuy(new BigDecimal((double)entry.getData("buy")));
+          offer.setSell(new BigDecimal((double)entry.getData("sell")));
+          if(!((String)entry.getData("trade")).equals("")) {
+            SerializableItemStack trade = SerializableItemStack.fromString((String)entry.getData("trade"));
+            offer.setTrade(trade.toItemStack());
+          }
+          ((ItemSign)sign).offers.put(offer.getOrder(), offer);
+        }
+      }
+
       TNE.instance().manager.signs.put(sign.getLocation(), sign);
     }
 
@@ -1340,6 +1359,26 @@ public class Alpha5_2 extends Version {
       info.addData("extra", sign.getMeta());
       info.addData("location", sign.getLocation().toString());
       a.addEntry(info);
+
+      if(sign.getType().equals(SignType.ITEM)) {
+        Article offers = new Article(sign.getLocation().toString() + "-offers");
+
+        for(ItemEntry entry : ((ItemSign)sign).offers.values()) {
+          Entry offer = new Entry(entry.getOrder() + "");
+          offer.addData("order", entry.getOrder());
+          offer.addData("location", sign.getLocation().toString());
+          offer.addData("buy", entry.getBuy());
+          offer.addData("sell", entry.getSell());
+          String trade = (entry.getTrade().getType().equals(Material.AIR))? "" : new SerializableItemStack(entry.getOrder(), entry.getTrade()).toString();
+          offer.addData("trade", trade);
+          offer.addData("amount", entry.getItem().getAmount());
+          offer.addData("damage", entry.getItem().getDurability());
+          offer.addData("material", entry.getItem().getType().toString());
+          offer.addData("admin", SQLDatabase.boolToDB(entry.isAdmin()));
+          offers.addEntry(offer);
+        }
+        signs.addArticle(offers.getName(), offers);
+      }
 
       signs.addArticle(sign.getLocation().toString(), a);
     }
