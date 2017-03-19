@@ -150,6 +150,7 @@ public class TNE extends JavaPlugin {
     }
 
     getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled!");
+    getLogger().info("Executing with Java Version: " + System.getProperty("java.version"));
 
     String updateMessage = "Using the latest version: " + updater.getCurrentBuild();
     if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";

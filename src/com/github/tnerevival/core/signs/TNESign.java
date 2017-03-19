@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -259,7 +260,7 @@ public abstract class TNESign {
 
   public SignChest getAttachedChest() {
     for(Location loc : validChestLocations(location.getLocation())) {
-      if(loc.getBlock().getState() instanceof Chest || loc.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
+      if(loc.getBlock().getState() instanceof Chest || loc.getBlock().getState() instanceof DoubleChest || loc.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
         return new SignChest(loc.getBlock());
       }
     }

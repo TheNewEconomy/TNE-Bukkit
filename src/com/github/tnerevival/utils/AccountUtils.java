@@ -17,7 +17,9 @@ import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -141,12 +143,22 @@ public class AccountUtils {
         MISCUtils.debug("Getting Tracked Item Balances");
         for (TrackedItems items : account.getTrackedItems().values()) {
           if (!items.getLocation().getWorld().getName().equals(world)) continue;
-          Inventory inv = ((Chest) items.getLocation().getBlock().getState()).getBlockInventory();
-          for (Integer i : items.getMaterialMap().keySet()) {
-            if (inv.getItem(i) != null && inv.getItem(i).getType().equals(majorItem)) {
-              major += inv.getItem(i).getAmount();
-            } else if (inv.getItem(i) != null && inv.getItem(i).getType().equals(minorItem)) {
-              minor += inv.getItem(i).getAmount();
+          BlockState state = items.getLocation().getBlock().getState();
+          if(state instanceof Chest) {
+            Inventory inv = ((Chest) state).getInventory();
+            if(inv.getHolder() instanceof DoubleChest) inv = ((DoubleChest)inv.getHolder()).getInventory();
+            for (Integer i : items.getMaterialMap().keySet()) {
+              int slot = i;
+              MISCUtils.debug("Is DoubleChest? " + (inv.getHolder() instanceof DoubleChest));
+              MISCUtils.debug("Chest Information");
+              MISCUtils.debug("Inventory Type: " + inv.getType().toString());
+              MISCUtils.debug("Size: " + inv.getSize() + "");
+              MISCUtils.debug("Normalized Slot: " + slot);
+              if (inv.getItem(slot) != null && inv.getItem(slot).getType().equals(majorItem)) {
+                major += inv.getItem(slot).getAmount();
+              } else if (inv.getItem(slot) != null && inv.getItem(slot).getType().equals(minorItem)) {
+                minor += inv.getItem(slot).getAmount();
+              }
             }
           }
         }
@@ -162,12 +174,15 @@ public class AccountUtils {
           BankSign bank = ((BankSign) sign);
 
           if (bank.getAttachedChest().isEnder()) continue;
-          Inventory inventory = ((Chest) bank.getAttachedChest().getLocation().getBlock().getState()).getBlockInventory();
-          major += MISCUtils.getItemCount(inventory, majorItem);
-          minor += MISCUtils.getItemCount(inventory, minorItem);
+          BlockState state = bank.getAttachedChest().getLocation().getBlock().getState();
+          if(state instanceof Chest) {
+            Inventory inventory = ((Chest) state).getInventory();
+            if(inventory.getHolder() instanceof DoubleChest) inventory = ((DoubleChest)inventory.getHolder()).getInventory();
+            major += MISCUtils.getItemCount(inventory, majorItem);
+            minor += MISCUtils.getItemCount(inventory, minorItem);
+          }
         }
       }
-
       String balance = major + "." + minor;
       return new BigDecimal(balance);
     }
@@ -258,40 +273,44 @@ public class AccountUtils {
       MISCUtils.debug("Setting Tracked Item Balances");
       for (TrackedItems items : account.getTrackedItems().values()) {
         if (!items.getLocation().getWorld().getName().equals(world)) continue;
-        Inventory inv = ((Chest) items.getLocation().getBlock().getState()).getBlockInventory();
-        List<Integer> toRemove = new ArrayList<>();
-        for (Integer i : items.getMaterialMap().keySet()) {
-          if(inv.getItem(i) != null) {
-            ItemStack stack = inv.getItem(i);
-            if (stack.getType().equals(majorItem) && majorLeft > 0) {
-              if (stack.getAmount() > majorLeft) {
-                ItemStack newStack = stack.clone();
-                newStack.setAmount(stack.getAmount() - majorLeft);
-                inv.setItem(i, newStack);
-                majorLeft = 0;
-                continue;
+        BlockState state = items.getLocation().getBlock().getState();
+        if (state instanceof Chest) {
+          Inventory inv = ((Chest) state).getInventory();
+          List<Integer> toRemove = new ArrayList<>();
+          for (Integer i : items.getMaterialMap().keySet()) {
+            int slot = i;
+            if (inv.getItem(slot) != null) {
+              ItemStack stack = inv.getItem(slot);
+              if (stack.getType().equals(majorItem) && majorLeft > 0) {
+                if (stack.getAmount() > majorLeft) {
+                  ItemStack newStack = stack.clone();
+                  newStack.setAmount(stack.getAmount() - majorLeft);
+                  inv.setItem(slot, newStack);
+                  majorLeft = 0;
+                  continue;
+                }
+                majorLeft -= stack.getAmount();
+                inv.setItem(slot, new ItemStack(Material.AIR));
+                toRemove.add(i);
               }
-              majorLeft -= stack.getAmount();
-              inv.setItem(i, new ItemStack(Material.AIR));
-              toRemove.add(i);
-            }
 
-            if (stack.getType().equals(minorItem) && minorLeft > 0) {
-              if (stack.getAmount() > minorLeft) {
-                ItemStack newStack = stack.clone();
-                newStack.setAmount(stack.getAmount() - minorLeft);
-                inv.setItem(i, newStack);
-                minorLeft = 0;
-                break;
+              if (stack.getType().equals(minorItem) && minorLeft > 0) {
+                if (stack.getAmount() > minorLeft) {
+                  ItemStack newStack = stack.clone();
+                  newStack.setAmount(stack.getAmount() - minorLeft);
+                  inv.setItem(slot, newStack);
+                  minorLeft = 0;
+                  break;
+                }
+                minorLeft -= stack.getAmount();
+                inv.setItem(i, new ItemStack(Material.AIR));
+                toRemove.add(i);
               }
-              minorLeft -= stack.getAmount();
-              inv.setItem(i, new ItemStack(Material.AIR));
-              toRemove.add(i);
             }
           }
-        }
-        for(int i : toRemove) {
-          items.getMaterialMap().remove(i);
+          for (int i : toRemove) {
+            items.getMaterialMap().remove(i);
+          }
         }
       }
     }
@@ -322,20 +341,11 @@ public class AccountUtils {
           BankSign bank = ((BankSign) sign);
 
           if (bank.getAttachedChest().isEnder()) continue;
-          inventories.add(((Chest) bank.getAttachedChest().getLocation().getBlock().getState()).getBlockInventory());
+          inventories.add(((Chest) bank.getAttachedChest().getLocation().getBlock().getState()).getInventory());
         }
       }
       MISCUtils.multiSetItems(inventories.toArray(new Inventory[inventories.size()]), materials, world);
     }
-  }
-
-  private static String pad(int amount) {
-    String padding = "";
-
-    for(int i = 0; i < amount; i++) {
-      padding = padding + "0";
-    }
-    return padding;
   }
 
   public static Material trackedMaterial(Location location, int slot) {

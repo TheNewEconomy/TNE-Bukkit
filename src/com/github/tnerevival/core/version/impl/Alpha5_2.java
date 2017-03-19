@@ -1283,9 +1283,9 @@ public class Alpha5_2 extends Version {
 
     Section accounts = new Section("accounts");
 
-    while(accIT.hasNext()) {
+    /*while(accIT.hasNext()) {
       //TODO: Account & Shop loading/saving
-    }
+    }*/
 
     Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance().manager.ecoIDs.entrySet().iterator();
 
@@ -1307,9 +1307,9 @@ public class Alpha5_2 extends Version {
     Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance().manager.shops.entrySet().iterator();
     Section shops = new Section("SHOPS");
 
-    while(shopIT.hasNext()) {
+    /*while(shopIT.hasNext()) {
       //TODO: Account & Shop loading/saving
-    }
+    }*/
 
     Section auctions = new Section("AUCTIONS");
     for(Auction auction : TNE.instance().manager.auctionManager.getJoined()) {

@@ -22,10 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Furnace;
+import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -146,7 +143,8 @@ public class InteractionListener implements Listener {
       }
     }
 
-    if(event.getBlock().getState() instanceof Chest || MISCUtils.isOneEight() && event.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
+    if(event.getBlock().getState() instanceof Chest || event.getBlock().getState() instanceof DoubleChest
+       || MISCUtils.isOneEight() && event.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
       TNESign sign = TNESign.getOwningSign(event.getBlock().getLocation());
       if (sign != null) {
         if(sign.getType().equals(SignType.BANK) || sign.getType().equals(SignType.ITEM)) {
@@ -476,6 +474,7 @@ public class InteractionListener implements Listener {
           }
         }
       } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest
+                || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof DoubleChest
                 || action.equals(Action.RIGHT_CLICK_BLOCK) && MISCUtils.isOneEight()
                    && block.getState() instanceof org.bukkit.block.EnderChest) {
         TNESign sign = TNESign.getOwningSign(block.getLocation());

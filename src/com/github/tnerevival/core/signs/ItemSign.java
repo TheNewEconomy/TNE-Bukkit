@@ -31,9 +31,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -196,8 +194,9 @@ public class ItemSign extends TNESign {
     if(chest != null || chest == null && TNE.instance().api().getBoolean("Core.Signs.Item.EnderChest")) {
       if(chest == null) chest = new SignChest();
       if(!chest.isEnder() || chest.isEnder() && TNE.instance().api().getBoolean("Core.Signs.Item.EnderChest")) {
+        BlockState state = chest.getLocation().getBlock().getState();
         Inventory inventory = (chest.isEnder())? IDFinder.getOffline(owner.toString()).getPlayer().getEnderChest()
-                                               : ((Chest)chest.getLocation().getBlock().getState()).getInventory();
+            : ((state instanceof DoubleChest)? ((DoubleChest) state).getInventory() : ((Chest) state).getInventory());
         int itemCount = MISCUtils.getItemCount(inventory, material);
         MISCUtils.debug("Item Count: " + itemCount);
         if (add) {
@@ -219,8 +218,12 @@ public class ItemSign extends TNESign {
           return false;
         }
         MISCUtils.setItemCount(inventory, material, itemCount - amount);
-        if(chest.isEnder()) IDFinder.getOffline(owner.toString()).getPlayer().getEnderChest().setContents(inventory.getContents());
-        else ((Chest)chest.getLocation().getBlock().getState()).getInventory().setContents(inventory.getContents());
+        if(chest.isEnder()) {
+          IDFinder.getOffline(owner.toString()).getPlayer().getEnderChest().setContents(inventory.getContents());
+        } else {
+          if (state instanceof DoubleChest) ((DoubleChest) state).getInventory().setContents(inventory.getContents());
+          else ((Chest) state).getInventory().setContents(inventory.getContents());
+        }
         return true;
       }
     }
@@ -232,8 +235,9 @@ public class ItemSign extends TNESign {
     if (chest != null || chest == null && TNE.instance().api().getBoolean("Core.Signs.Item.EnderChest")) {
       if (chest == null) chest = new SignChest();
       if (!chest.isEnder() || chest.isEnder() && TNE.instance().api().getBoolean("Core.Signs.Item.EnderChest")) {
+        BlockState state = chest.getLocation().getBlock().getState();
         Inventory inventory = (chest.isEnder()) ? IDFinder.getOffline(owner.toString()).getPlayer().getEnderChest()
-            : ((Chest) chest.getLocation().getBlock().getState()).getInventory();
+            : ((state instanceof DoubleChest)? ((DoubleChest) state).getInventory() : ((Chest) state).getInventory());
         return MISCUtils.hasItem(inventory, material, amount);
       }
     }

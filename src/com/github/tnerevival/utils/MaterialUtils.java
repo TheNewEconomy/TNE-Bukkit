@@ -7,6 +7,18 @@ import org.bukkit.Material;
  * All rights reserved.
  **/
 public class MaterialUtils {
+
+  /*public static Inventory grabInventory(Location location, int slot) {
+    Location loc = location;
+    if(slot >= 27) {
+
+    }
+  }
+
+  public static Location getConnectedChest(Location location) {
+
+  }*/
+
   public static String formatMaterialName(Material material) {
     String[] wordsSplit = material.name().split("_");
     String sReturn = "";

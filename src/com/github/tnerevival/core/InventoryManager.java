@@ -72,7 +72,7 @@ public class InventoryManager {
     }
 
     if(inventory.getHolder() != null && inventory.getHolder() instanceof Chest
-        || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest) {
+       || inventory.getHolder() != null && inventory.getHolder() instanceof DoubleChest) {
       TNESign sign = TNESign.getOwningSign(inventory.getLocation());
       if(sign != null && sign.getType().equals(SignType.BANK)) return null;
       MISCUtils.debug("Generated Chest Inventory");
