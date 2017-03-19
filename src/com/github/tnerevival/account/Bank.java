@@ -20,13 +20,14 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * Created by creatorfromhell on 1/17/2017.
  **/
-public class Bank {
+public class Bank implements Serializable {
 
   private List<UUID> members = new ArrayList<>();
   private UUID owner;
@@ -187,5 +188,34 @@ public class Bank {
         bank.setGold(currency, amount);
       }
     }
+  }
+
+
+  /*
+   * Conversion methods for Alpha 5.0/1 -> 5.2
+   */
+  public static void convert(Account account, String parse, String world) {
+    String[] parsed = parse.split(":");
+    Bank b = new Bank(UUID.fromString(parsed[0]), world);
+    Vault v = new Vault(UUID.fromString(parsed[0]), world, Integer.valueOf(parsed[1]));
+
+    b.setGold(TNE.instance().manager.currencyManager.get(world).getName(), new BigDecimal(Double.valueOf(parsed[2])));
+    if(parsed.length >= 5) {
+      String membersString = parsed[4];
+      String[] parsedMembers = membersString.split("\\*");
+
+      for(String s : parsedMembers) {
+        if(IDFinder.isUUID(s)) {
+          b.addMember(UUID.fromString(s));
+          v.addMember(UUID.fromString(s));
+        }
+      }
+    }
+
+    if(parsed.length >= 4) {
+      v.itemsFromString(parsed[3]);
+    }
+    account.getBanks().put(world, b);
+    account.getVaults().put(world, v);
   }
 }

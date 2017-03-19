@@ -190,8 +190,7 @@ public class Alpha5_0 extends Version {
         int bankIndex = sql().executePreparedQuery("SELECT * FROM " + bankTable + " WHERE uuid = ?;", new Object[]{account.getUid().toString()});
 
         while (sql().results(bankIndex).next()) {
-          //TODO: Convert old banks to new banks and vaults
-          //account.getBanks().put(sql().results(bankIndex).getString("world"), Bank.fromString(sql().results(bankIndex).getString("bank")));
+          Bank.convert(account, sql().results(bankIndex).getString("bank"), sql().results(bankIndex).getString("world"));
         }
         accounts.add(account);
       }
@@ -222,8 +221,7 @@ public class Alpha5_0 extends Version {
         int bankIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
 
         while(mysql().results(bankIndex).next()) {
-          //TODO: Convert old banks to new banks and vaults
-          //account.getBanks().put(sql().results(bankIndex).getString("world"), Bank.fromString(sql().results(bankIndex).getString("bank")));
+          Bank.convert(account, sql().results(bankIndex).getString("bank"), sql().results(bankIndex).getString("world"));
         }
         sql().close();
         return account;
@@ -700,9 +698,7 @@ public class Alpha5_0 extends Version {
 
       while(bankIterator.hasNext()) {
         java.util.Map.Entry<String, Object> bankEntry = bankIterator.next();
-
-        //TODO: Convert old banks to new banks and vaults
-        bankMap.put(bankEntry.getKey(), Bank.fromString((String)bankEntry.getValue(), bankEntry.getKey()));
+        Bank.convert(account, (String)bankEntry.getValue(), bankEntry.getKey());
       }
       account.setBanks(bankMap);
 

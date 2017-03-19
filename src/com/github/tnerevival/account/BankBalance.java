@@ -1,5 +1,6 @@
 package com.github.tnerevival.account;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,7 +8,7 @@ import java.util.Date;
  * Created by creatorfromhell on 2/17/2017.
  * All rights reserved.
  **/
-public class BankBalance {
+public class BankBalance implements Serializable {
   private String currency;
   private BigDecimal balance;
   private long lastInterest;

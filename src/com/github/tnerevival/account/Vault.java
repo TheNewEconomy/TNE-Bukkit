@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,7 +34,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by creatorfromhell on 1/17/2017.
  **/
-public class Vault {
+public class Vault implements Serializable {
   public List<UUID> viewers = new ArrayList<>();
 
   private List<SerializableItemStack> items = new ArrayList<>();
