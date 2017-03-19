@@ -267,9 +267,7 @@ public class Vault {
   }
 
   public void update(UUID initiator) {
-    Iterator<UUID> i = viewers.iterator();
-    while(i.hasNext()) {
-      UUID id = i.next();
+    for(UUID id : viewers) {
       if(initiator != null && !id.equals(initiator) || initiator == null) {
         IDFinder.getPlayer(id.toString()).getOpenInventory().getTopInventory().setContents(getInventory().getContents());
         IDFinder.getPlayer(id.toString()).updateInventory();

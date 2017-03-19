@@ -109,6 +109,12 @@ Core:
             #Would you like to use an item as the currency?
             ItemCurrency: false
 
+            #Would you like this currency to be trackable in chests attached to bank signs?
+            BankChest: true
+
+            #Would you like your item currency balances to also check the player's vault?
+            Vault: true
+
             #Would you like your item currency balances to also check the player's ender chest?
             EnderChest: true
 

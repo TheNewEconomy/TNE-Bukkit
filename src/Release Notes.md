@@ -68,14 +68,15 @@ Alpha 5.2 "Quality of Life"
           - Player Inventory
           - Ender Inventory
           - Vault Inventory
-          - Bank Balance
           - Bank Sign Inventory
+          - Bank Balance
 - MISC
   - Added the ability to disable the entire economy system for specific worlds
     - This will be done in the worlds.yml file simply by added Worlds.\<worldname\>.DisableEconomy: true
 - Technical
   - Java 7
-    - This may be the final version to use Java 7 as we look towards moving over to Java 8
+    - This will also be the final version to use Java 7 as we look towards moving over to Java 8
+    - With Java 9 just around the corner, there's no reason not to update to Java 8
   - API
     - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
     - Changed how developers access the TNE API.

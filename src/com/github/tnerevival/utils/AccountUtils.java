@@ -8,21 +8,25 @@ import com.github.tnerevival.account.TrackedItems;
 import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.event.account.TNEAccountCreationEvent;
 import com.github.tnerevival.core.material.MaterialHelper;
+import com.github.tnerevival.core.signs.BankSign;
+import com.github.tnerevival.core.signs.SignType;
+import com.github.tnerevival.core.signs.TNESign;
 import com.github.tnerevival.core.transaction.Transaction;
 import com.github.tnerevival.core.transaction.TransactionCost;
 import com.github.tnerevival.core.transaction.TransactionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class AccountUtils {
 
@@ -118,6 +122,52 @@ public class AccountUtils {
       Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
       Integer major = MISCUtils.getItemCount(id, majorItem);
       Integer minor = MISCUtils.getItemCount(id, minorItem);
+
+      if(MISCUtils.isOneNine() && currency.canEnderChest()) {
+        MISCUtils.debug("Getting Ender Chest Balances");
+        Inventory inventory = IDFinder.getOffline(id.toString()).getPlayer().getEnderChest();
+        major += MISCUtils.getItemCount(inventory, majorItem);
+        minor += MISCUtils.getItemCount(inventory, minorItem);
+      }
+
+      if(currency.canVault() && account.hasVault(world)) {
+        MISCUtils.debug("Getting Vault Balances");
+        Inventory inventory = account.getVault(world).getInventory();
+        major += MISCUtils.getItemCount(inventory, majorItem);
+        minor += MISCUtils.getItemCount(inventory, minorItem);
+      }
+
+      if(currency.canTrackChest()) {
+        MISCUtils.debug("Getting Tracked Item Balances");
+        for (TrackedItems items : account.getTrackedItems().values()) {
+          if (!items.getLocation().getWorld().getName().equals(world)) continue;
+          Inventory inv = ((Chest) items.getLocation().getBlock().getState()).getBlockInventory();
+          for (Integer i : items.getMaterialMap().keySet()) {
+            if (inv.getItem(i) != null && inv.getItem(i).getType().equals(majorItem)) {
+              major += inv.getItem(i).getAmount();
+            } else if (inv.getItem(i) != null && inv.getItem(i).getType().equals(minorItem)) {
+              minor += inv.getItem(i).getAmount();
+            }
+          }
+        }
+      }
+
+      if(currency.canBankChest()) {
+        MISCUtils.debug("Getting Bank Sign Balances");
+        for (TNESign sign : TNE.instance().manager.signs.values()) {
+          if (!sign.getLocation().getLocation().getWorld().getName().equals(world)) continue;
+          if (!sign.getOwner().equals(id)) continue;
+          if (!sign.getType().equals(SignType.BANK)) continue;
+
+          BankSign bank = ((BankSign) sign);
+
+          if (bank.getAttachedChest().isEnder()) continue;
+          Inventory inventory = ((Chest) bank.getAttachedChest().getLocation().getBlock().getState()).getBlockInventory();
+          major += MISCUtils.getItemCount(inventory, majorItem);
+          minor += MISCUtils.getItemCount(inventory, minorItem);
+        }
+      }
+
       String balance = major + "." + minor;
       return new BigDecimal(balance);
     }
@@ -142,13 +192,18 @@ public class AccountUtils {
 
     if(!account.isSpecial() && currency.isItem()) {
       MISCUtils.debug("SETTING ITEM CURRENCY");
-      Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
-      Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
-      MISCUtils.setItemCount(id, majorItem, 0);
-      MISCUtils.setItemCount(id, minorItem, 0);
-      MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
-      MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
-      return;
+      double currentBalance = getBalance(id, world, currencyName).doubleValue();
+      if(balance.doubleValue() >= currentBalance) {
+        Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
+        Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
+        MISCUtils.setItemCount(id, majorItem, 0);
+        MISCUtils.setItemCount(id, minorItem, 0);
+        MISCUtils.setItemCount(id, majorItem, Integer.valueOf(split[0].trim()));
+        MISCUtils.setItemCount(id, minorItem, Integer.valueOf(split[1].trim()));
+        return;
+      } else {
+        removeItemFunds(id, world, currencyName, new BigDecimal(currentBalance - balance.doubleValue()));
+      }
     }
 
     if(MISCUtils.multiWorld()) {
@@ -157,6 +212,121 @@ public class AccountUtils {
       account.setBalance(TNE.instance().defaultWorld, balance, currencyName);
     }
     TNE.instance().manager.accounts.put(id, account);
+  }
+
+  private static void removeItemFunds(UUID id, String world, String currencyName, BigDecimal amount) {
+    Player player = IDFinder.getOffline(id.toString()).getPlayer();
+    world = IDFinder.getBalanceShareWorld(world);
+    Currency currency = TNE.instance().manager.currencyManager.get(world, currencyName);
+    BigDecimal rounded = round(world, currencyName, amount);
+    Account account = getAccount(id);
+    String balanceString = (rounded.toString().contains("."))? rounded.toString() : rounded.toString() + ".0";
+    MISCUtils.debug("AccountUtils.setBalance to " + balanceString);
+    String[] split = balanceString.split("\\.");
+    Material majorItem = MaterialHelper.getMaterial(currency.getTier("Major").getMaterial());
+    Material minorItem = MaterialHelper.getMaterial(currency.getTier("Minor").getMaterial());
+    int majorAmount = Integer.valueOf(split[0].trim());
+    int minorAmount = Integer.valueOf(split[1].trim());
+
+    int majorLeft = majorAmount;
+    int minorLeft = minorAmount;
+
+    MISCUtils.debug("Setting ITEM CURRENCY");
+    if(majorLeft > 0) {
+      int major = MISCUtils.getItemCount(id, majorItem);
+      if(major > majorLeft) {
+        MISCUtils.setItemCount(id, majorItem, major - majorLeft);
+        majorLeft = 0;
+      } else {
+        MISCUtils.setItemCount(id, majorItem, 0);
+        majorLeft -= major;
+      }
+    }
+
+    if(minorLeft > 0) {
+      int minor = MISCUtils.getItemCount(id, minorItem);
+      if(minor > minorLeft) {
+        MISCUtils.setItemCount(id, minorItem, minor - minorLeft);
+        minorLeft = 0;
+      } else {
+        MISCUtils.setItemCount(id, minorItem, 0);
+        minorLeft -= minor;
+      }
+    }
+
+    if (currency.canTrackChest()) {
+      MISCUtils.debug("Setting Tracked Item Balances");
+      for (TrackedItems items : account.getTrackedItems().values()) {
+        if (!items.getLocation().getWorld().getName().equals(world)) continue;
+        Inventory inv = ((Chest) items.getLocation().getBlock().getState()).getBlockInventory();
+        List<Integer> toRemove = new ArrayList<>();
+        for (Integer i : items.getMaterialMap().keySet()) {
+          if(inv.getItem(i) != null) {
+            ItemStack stack = inv.getItem(i);
+            if (stack.getType().equals(majorItem) && majorLeft > 0) {
+              if (stack.getAmount() > majorLeft) {
+                ItemStack newStack = stack.clone();
+                newStack.setAmount(stack.getAmount() - majorLeft);
+                inv.setItem(i, newStack);
+                majorLeft = 0;
+                continue;
+              }
+              majorLeft -= stack.getAmount();
+              inv.setItem(i, new ItemStack(Material.AIR));
+              toRemove.add(i);
+            }
+
+            if (stack.getType().equals(minorItem) && minorLeft > 0) {
+              if (stack.getAmount() > minorLeft) {
+                ItemStack newStack = stack.clone();
+                newStack.setAmount(stack.getAmount() - minorLeft);
+                inv.setItem(i, newStack);
+                minorLeft = 0;
+                break;
+              }
+              minorLeft -= stack.getAmount();
+              inv.setItem(i, new ItemStack(Material.AIR));
+              toRemove.add(i);
+            }
+          }
+        }
+        for(int i : toRemove) {
+          items.getMaterialMap().remove(i);
+        }
+      }
+    }
+
+    if(majorLeft > 0 || minorLeft > 0) {
+      List<Inventory> inventories = new ArrayList<>();
+      Map<Material, Integer> materials = new HashMap<>();
+      if(majorLeft > 0) materials.put(majorItem, majorLeft);
+      if(minorLeft > 0) materials.put(minorItem, minorLeft);
+
+      if (MISCUtils.isOneNine() && currency.canEnderChest()) {
+        MISCUtils.debug("Adding Ender Chest");
+        inventories.add(IDFinder.getOffline(id.toString()).getPlayer().getEnderChest());
+      }
+
+      if (currency.canVault() && account.hasVault(world)) {
+        MISCUtils.debug("Adding Vault");
+        inventories.add(account.getVault(world).getInventory());
+      }
+
+      if (currency.canBankChest()) {
+        MISCUtils.debug("Adding Bank Sign Inventories");
+        for (TNESign sign : TNE.instance().manager.signs.values()) {
+          if (!sign.getLocation().getLocation().getWorld().getName().equals(world)) continue;
+          if (!sign.getOwner().equals(id)) continue;
+          if (!sign.getType().equals(SignType.BANK)) continue;
+
+          BankSign bank = ((BankSign) sign);
+
+          if (bank.getAttachedChest().isEnder()) continue;
+          inventories.add(((Chest) bank.getAttachedChest().getLocation().getBlock().getState()).getBlockInventory());
+        }
+      }
+      MISCUtils.multiSetItems(inventories.toArray(new Inventory[inventories.size()]), materials, world);
+    }
   }
 
   private static String pad(int amount) {

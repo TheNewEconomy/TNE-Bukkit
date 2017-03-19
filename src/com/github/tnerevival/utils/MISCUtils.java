@@ -2,6 +2,7 @@ package com.github.tnerevival.utils;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.InteractionType;
@@ -190,6 +191,84 @@ public class MISCUtils {
               add -= amt;
             }
           }
+        }
+      }
+    }
+  }
+
+  public static Inventory changeItemCount(Inventory inv, Material item, int amount) {
+    Inventory inventory = inv;
+    MISCUtils.debug("MISCUtils:setItemCount(inventory, " + item.name() + ", " + amount + ")");
+    Integer count = getItemCount(inventory, item);
+    if(item != null) {
+      if(count > amount) {
+        Integer remove = count - amount;
+        Integer slot = 0;
+        for(ItemStack i : inventory.getContents()) {
+          if(i != null && i.getType() != null && i.getType() == item) {
+            if(remove > i.getAmount()) {
+              remove -= i.getAmount();
+              i.setAmount(0);
+              inventory.setItem(slot, null);
+            } else {
+              if(i.getAmount() - remove > 0) {
+                i.setAmount(i.getAmount() - remove);
+                inventory.setItem(slot, i);
+                return inventory;
+              }
+              inventory.setItem(slot, null);
+              return inventory;
+            }
+          }
+          slot++;
+        }
+      } else if(count < amount) {
+        Integer add = amount - count;
+        for(int i = 0; i < inventory.getSize(); i++) {
+          if(add <= 0) break;
+          ItemStack stack = inventory.getItem(i);
+          if(stack == null || stack.getType().equals(Material.AIR)) {
+            if(add > item.getMaxStackSize()) {
+              inventory.setItem(i, new ItemStack(item, item.getMaxStackSize()));
+              add -= item.getMaxStackSize();
+            } else {
+              inventory.setItem(i, new ItemStack(item, add));
+              add = 0;
+            }
+          } else if(stack.isSimilar(new ItemStack(item))) {
+            int amt = (item.getMaxStackSize() - stack.getAmount() >= add)? stack.getAmount() + add : item.getMaxStackSize() - stack.getAmount();
+            if(amt > 0) {
+              ItemStack newStack = stack.clone();
+              newStack.setAmount(amt);
+              inventory.setItem(i, newStack);
+              add -= amt;
+            }
+          }
+        }
+      }
+    }
+    return inventory;
+  }
+
+  public static void multiSetItems(Inventory[] inventories, Map<Material, Integer> materials, String world) {
+    for(Map.Entry<Material, Integer> entry : materials.entrySet()) {
+      int amountLeft = entry.getValue();
+      for(Inventory inventory : inventories) {
+        if(amountLeft <= 0) break;
+        int amount = getItemCount(inventory, entry.getKey());
+        if(amount <= amountLeft) {
+          amountLeft -= amount;
+          setItemCount(inventory, entry.getKey(), 0);
+          continue;
+        }
+        amountLeft = 0;
+        setItemCount(inventory, entry.getKey(), amount - amountLeft);
+        if(inventory.getTitle() != null && inventory.getTitle().toLowerCase().contains("vault")) {
+          UUID owner = Vault.parseTitle(inventory.getTitle());
+          Vault vault = TNE.instance().manager.accounts.get(owner).getVault(world);
+          vault.setItems(inventory.getContents());
+          vault.update();
+          TNE.instance().manager.accounts.get(owner).setVault(world, vault);
         }
       }
     }

@@ -27,6 +27,8 @@ public class Currency {
   private boolean worldDefault = true;
   private BigDecimal balance;
   private boolean item;
+  private boolean vault;
+  private boolean bankChest;
   private boolean enderChest;
   private boolean trackChest;
   private String name;
@@ -74,6 +76,22 @@ public class Currency {
 
   public void setItem(boolean item) {
     this.item = item;
+  }
+
+  public boolean canVault() {
+    return vault;
+  }
+
+  public void setVault(boolean vault) {
+    this.vault = vault;
+  }
+
+  public boolean canBankChest() {
+    return bankChest;
+  }
+
+  public void setBankChest(boolean bankChest) {
+    this.bankChest = bankChest;
   }
 
   public boolean canEnderChest() {
