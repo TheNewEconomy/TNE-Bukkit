@@ -75,7 +75,7 @@ Alpha 5.2 "Quality of Life"
     - This will be done in the worlds.yml file simply by added Worlds.\<worldname\>.DisableEconomy: true
 - Technical
   - Java 7
-    - This will also be the final version to use Java 7 as we look towards moving over to Java 8
+    - This will be the final version to use Java 7 as we look towards moving over to Java 8
     - With Java 9 just around the corner, there's no reason not to update to Java 8
   - API
     - All balance-related methods that involve the double data-type will be deprecated for methods using the BigDecimal class
@@ -85,7 +85,7 @@ Alpha 5.2 "Quality of Life"
   - SQL
     - SQL-based storage will be getting a few table rewrites as I look to more efficiently store data for TNE
 - Bug Fixes
-  - All issues pertaining the the old inventory
+  - All issues pertaining to the old inventory
   - Fixed issue where accounts weren't getting initialized with item-based currencies properly
   - Fixed issue where getting balances of players with item-based currencies while MultiWorld was set to true returned incorrect values
   - tne reload all fix
