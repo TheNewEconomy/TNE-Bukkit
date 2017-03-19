@@ -1178,7 +1178,40 @@ public class Alpha5_2 extends Version {
     Iterator<Map.Entry<String, Article>> it = accounts.getArticle().entrySet().iterator();
 
     while(it.hasNext()) {
-      //TODO: Account & Shop loading/saving
+      Map.Entry<String, Article> entry = it.next();
+      UUID uid = UUID.fromString(entry.getKey());
+      Entry info = entry.getValue().getEntry("info");
+      Entry balances = entry.getValue().getEntry("balances");
+      Entry banks = entry.getValue().getEntry("banks");
+
+      Account account = new Account(uid, (Integer) info.getData("accountnumber"));
+      Map<String, BigDecimal> balanceMap = new HashMap<>();
+      Map<String, Bank> bankMap = new HashMap<>();
+
+      account.setAccountNumber((Integer) info.getData("accountnumber"));
+      account.setStatus((String) info.getData("status"));
+      account.setPin((String) info.getData("pin"));
+      account.creditsFromString((String)info.getData("inventory_credits"));
+      account.commandsFromString((String)info.getData("command_credits"));
+
+      Iterator<Map.Entry<String, Object>> balanceIterator = balances.getData().entrySet().iterator();
+
+      while(balanceIterator.hasNext()) {
+        java.util.Map.Entry<String, Object> balanceEntry = balanceIterator.next();
+
+        balanceMap.put(balanceEntry.getKey(), new BigDecimal((Double)balanceEntry.getValue()));
+      }
+      account.setBalances(balanceMap);
+
+      Iterator<java.util.Map.Entry<String, Object>> bankIterator = banks.getData().entrySet().iterator();
+
+      while(bankIterator.hasNext()) {
+        java.util.Map.Entry<String, Object> bankEntry = bankIterator.next();
+        Bank.convert(account, (String)bankEntry.getValue(), bankEntry.getKey());
+      }
+      account.setBanks(bankMap);
+
+      TNE.instance().manager.accounts.put(uid, account);
     }
 
     Iterator<Map.Entry<String, Article>> idsIterator = ids.getArticle().entrySet().iterator();
@@ -1193,7 +1226,23 @@ public class Alpha5_2 extends Version {
 
     Iterator<Map.Entry<String, Article>> shopsIterator = shops.getArticle().entrySet().iterator();
     while(shopsIterator.hasNext()) {
-      //TODO: Account & Shop loading/saving
+      Map.Entry<String, Article> shopEntry = shopsIterator.next();
+
+      Entry info = shopEntry.getValue().getEntry("info");
+      Shop s = new Shop(shopEntry.getKey(), (String)info.getData("world"));
+
+      s.setOwner(UUID.fromString((String)info.getData("owner")));
+      s.setHidden((boolean)info.getData("hidden"));
+      s.setAdmin((boolean)info.getData("admin"));
+      s.permissionsFromString((String)info.getData("permissions"));
+      s.sharesFromString((String)info.getData("shares"));
+      MISCUtils.debug("Items:" + info.getData("items"));
+
+      if(!((String)info.getData("items")).trim().equals("")) {
+        s.itemsFromString((String) info.getData("items"));
+      }
+
+      TNE.instance().manager.shops.put(shopEntry.getKey() + ":" + s.getWorld(), s);
     }
 
     for(Article a : auctions.getArticle().values()) {
@@ -1283,9 +1332,9 @@ public class Alpha5_2 extends Version {
 
     Section accounts = new Section("accounts");
 
-    /*while(accIT.hasNext()) {
-      //TODO: Account & Shop loading/saving
-    }*/
+    while(accIT.hasNext()) {
+      //TODO: Account  loading/saving
+    }
 
     Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance().manager.ecoIDs.entrySet().iterator();
 
@@ -1307,9 +1356,25 @@ public class Alpha5_2 extends Version {
     Iterator<Map.Entry<String, Shop>> shopIT = TNE.instance().manager.shops.entrySet().iterator();
     Section shops = new Section("SHOPS");
 
-    /*while(shopIT.hasNext()) {
-      //TODO: Account & Shop loading/saving
-    }*/
+    while(shopIT.hasNext()) {
+      Map.Entry<String, Shop> shopEntry = shopIT.next();
+      Shop s = shopEntry.getValue();
+
+      Article a = new Article(s.getName());
+      Entry info = new Entry("info");
+
+      info.addData("owner", s.getOwner().toString());
+      info.addData("world", s.getWorld());
+      info.addData("hidden", s.isHidden());
+      info.addData("admin", s.isAdmin());
+      MISCUtils.debug("Items:" + s.itemsToString());
+      info.addData("items", s.itemsToString());
+      info.addData("permissions", s.permissionsToString());
+      info.addData("shares", s.sharesToString());
+      a.addEntry(info);
+
+      shops.addArticle(s.getName(), a);
+    }
 
     Section auctions = new Section("AUCTIONS");
     for(Auction auction : TNE.instance().manager.auctionManager.getJoined()) {

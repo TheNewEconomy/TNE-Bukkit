@@ -733,7 +733,6 @@ public class Alpha5_0 extends Version {
       if(!((String)info.getData("items")).trim().equals("")) {
         s.itemsFromString((String) info.getData("items"));
       }
-
       TNE.instance().manager.shops.put(shopEntry.getKey() + ":" + s.getWorld(), s);
     }
 

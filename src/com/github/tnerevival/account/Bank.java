@@ -17,6 +17,7 @@
 package com.github.tnerevival.account;
 
 import com.github.tnerevival.TNE;
+import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
@@ -101,20 +102,22 @@ public class Bank implements Serializable {
     }
   }
 
-  public static Bank fromString(String parse, String world) {
-    String[] parsed = parse.split(":");
-    Bank b = new Bank(UUID.fromString(parsed[0]), world);
-    //TODO: Balances to String.
-    if(parsed.length >= 3) {
-      b.membersFromString(parsed[2]);
+  public String balanacesToString() {
+    String toReturn = "";
+    for(Map.Entry<String, BankBalance> entry : balances.entrySet()) {
+      if(toReturn.length() > 0) toReturn += "*";
+      toReturn += entry.getValue().getCurrency() + ":" + entry.getValue().getBalance().doubleValue() + ":" + entry.getKey();
     }
-
-    return b;
+    return toReturn;
   }
 
-  public String toString() {
-    //TODO: Balances to String.
-    return owner.toString() + ":" + "<INSERT BALANCES STRING HERE>" + ":" + membersToString();
+  public void balancesFromString(String data) {
+    String[] parsed = data.split("\\*");
+    for(String s : parsed) {
+      String[] parts = s.split(":");
+      BigDecimal bal = CurrencyFormatter.translateBigDecimal(parts[1], parts[2]);
+      BankBalance balance = new BankBalance(parts[0], bal);
+    }
   }
 
   public void applyInterest() {

@@ -348,9 +348,18 @@ public class Shop implements Serializable {
       ShopPermission permission = permissions.get(id);
       if(permission.isWhitelisted()) value += "whitelist";
       if(permission.isBlacklisted()) {
-        if(value.length() == 0) value += ",";
+        if(value.length() > 0) value += ",";
         value += "blacklist";
       }
+    }
+    return value;
+  }
+
+  public String permissionsToString() {
+    String value = "";
+    for(UUID id : permissions.keySet()) {
+      if(value.length() > 0) value += "*";
+      value += id.toString() + ":" + permissionToString(id);
     }
     return value;
   }
@@ -366,6 +375,17 @@ public class Shop implements Serializable {
         case "whitelist":
           addWhitelist(id);
           break;
+      }
+    }
+  }
+
+  public void permissionsFromString(String data) {
+    String[] parsed = data.split("\\*");
+
+    for(String s : parsed) {
+      String[] parse = s.split(":");
+      if(IDFinder.isUUID(parse[0])) {
+        permissionFromString(UUID.fromString(parse[0]), parse[1]);
       }
     }
   }
