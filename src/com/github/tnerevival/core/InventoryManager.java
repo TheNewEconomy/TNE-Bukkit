@@ -89,12 +89,12 @@ public class InventoryManager {
 
   public TNEInventory getInventory(Inventory inventory) {
     UUID inventoryID = getInventoryID(inventory);
-
     if(inventoryID != null) return inventories.get(inventoryID);
     return null;
   }
 
   public TNEInventory getInventory(UUID player) {
+    if(getInventoryID(player) == null) return null;
     return inventories.get(getInventoryID(player));
   }
 
