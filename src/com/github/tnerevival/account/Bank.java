@@ -125,8 +125,12 @@ public class Bank implements Serializable {
     String[] parsed = data.split("`");
     if(IDFinder.isUUID(parsed[0])) {
       Bank bank = new Bank(UUID.fromString(parsed[0]), parsed[1]);
-      bank.balancesFromString(bank.getWorld(), parsed[2]);
-      bank.membersFromString(parsed[3]);
+      if(parsed.length >= 3) {
+        bank.balancesFromString(bank.getWorld(), parsed[2]);
+      }
+      if(parsed.length >= 4) {
+        bank.membersFromString(parsed[3]);
+      }
       return bank;
     }
     return null;

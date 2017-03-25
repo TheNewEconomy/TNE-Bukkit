@@ -85,7 +85,7 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`material` LONGTEXT," +
-          "`location` LONGTEXT," +
+          "`location` VARCHAR(350)," +
           "`slot` INT(60) NOT NULL," +
           "PRIMARY KEY(uuid, location, slot)" +
           ");");
@@ -131,7 +131,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`member` VARCHAR(36) NOT NULL," +
-          "`permissions` LONGTEXT" +
+          "`permissions` LONGTEXT," +
           "PRIMARY KEY(uuid, world, member)" +
           ");");
 
@@ -161,7 +161,7 @@ public class Alpha5_2 extends Version {
 
       table = prefix + "_SIGN_OFFERS";
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location` LONGTEXT," +
+          "`sign_location` VARCHAR(350)," +
           "`offer_order` INT(60) NOT NULL," +
           "`offer_buy` DOUBLE," +
           "`offer_sell` DOUBLE," +
@@ -187,8 +187,8 @@ public class Alpha5_2 extends Version {
       table = prefix + "_BANKS";
       sql().executeUpdate("ALTER TABLE `" + table + "` DROP COLUMN `bank`");
 
-      table = prefix + "SIGNS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` LONGTEXT UNIQUE");
+      table = prefix + "_SIGNS";
+      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(350) UNIQUE");
     }
   }
 
@@ -1769,7 +1769,7 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`material` LONGTEXT," +
-          "`location` LONGTEXT," +
+          "`location` VARCHAR(350)," +
           "`slot` INT(60) NOT NULL," +
           "PRIMARY KEY(uuid, location, slot)" +
           ");");
@@ -1859,7 +1859,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`member` VARCHAR(36) NOT NULL," +
-          "`permissions` LONGTEXT" +
+          "`permissions` LONGTEXT," +
           "PRIMARY KEY(uuid, world, member)" +
           ");");
 
@@ -1899,13 +1899,13 @@ public class Alpha5_2 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` LONGTEXT  NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(350)  NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
 
       table = prefix + "_SIGN_OFFERS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location` LONGTEXT NOT NULL," +
+          "`sign_location` VARCHAR(350) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
           "`offer_buy` DOUBLE," +
           "`offer_sell` DOUBLE," +
@@ -2069,7 +2069,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`member` VARCHAR(36) NOT NULL," +
-          "`permissions` LONGTEXT" +
+          "`permissions` LONGTEXT," +
           "PRIMARY KEY(uuid, world, member)" +
           ");");
 
@@ -2109,13 +2109,13 @@ public class Alpha5_2 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` LONGTEXT NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(350) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
 
       table = prefix + "_SIGN_OFFERS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location`  NOT NULL NOT NULL," +
+          "`sign_location`  VARCHAR(350) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
           "`offer_buy` DOUBLE," +
           "`offer_sell` DOUBLE," +

@@ -264,8 +264,11 @@ Core:
             #The name of the currency to use for the sign.
             Currency: Default
 
-            #The cost to make a bank sign, if the player has valid permissions.
+            #The cost to make a balance sign, if the player has valid permissions.
             Place: 20.0
+
+            #The cost to use a balance sign, if the player has valid permissions.
+            Use: 20.0
 
         #All configurations relating to bank signs.
         Bank:

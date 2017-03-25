@@ -266,31 +266,33 @@ public class ItemSign extends TNESign {
           return true;
         } else if(!shift) {
           ItemEntry entry = offers.get(currentOffer);
-          if(entry.getSell().doubleValue() >= 0.0) {
-            if(!MISCUtils.hasItem(player.getInventory(), entry.getItem().getType(), entry.getItem().getAmount())) {
-              new Message("Messages.SignShop.Insufficient").translate(world, player);
+          if(entry != null) {
+            if (entry.getSell().doubleValue() >= 0.0) {
+              if (!MISCUtils.hasItem(player.getInventory(), entry.getItem().getType(), entry.getItem().getAmount())) {
+                new Message("Messages.SignShop.Insufficient").translate(world, player);
+                return false;
+              }
+              if (!entry.isAdmin()) {
+                if (!AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_INQUIRY, world)) {
+                  new Message("Messages.SignShop.OwnerInsufficient").translate(world, player);
+                  return false;
+                }
+                if (!changeStock(player, entry.getItem().getType(), entry.getItem().getAmount(), true)) {
+                  return false;
+                }
+                AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_REMOVE, world);
+              }
+              if (AccountUtils.transaction(IDFinder.getID(player).toString(), null, entry.getSell(), TransactionType.MONEY_GIVE, world)) {
+                MISCUtils.setItemCount(player.getInventory(),
+                    entry.getItem().getType(),
+                    MISCUtils.getItemCount(IDFinder.getID(player),
+                        entry.getItem().getType()
+                    ) - entry.getItem().getAmount());
+                player.updateInventory();
+              }
+              new Message("Messages.SignShop.Successful").translate(world, player);
               return false;
             }
-            if(!entry.isAdmin()) {
-              if(!AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_INQUIRY, world)) {
-                new Message("Messages.SignShop.OwnerInsufficient").translate(world, player);
-                return false;
-              }
-              if(!changeStock(player, entry.getItem().getType(), entry.getItem().getAmount(), true)) {
-                return false;
-              }
-              AccountUtils.transaction(owner.toString(), null, entry.getSell(), TransactionType.MONEY_REMOVE, world);
-            }
-            if(AccountUtils.transaction(IDFinder.getID(player).toString(), null, entry.getSell(), TransactionType.MONEY_GIVE, world)) {
-              MISCUtils.setItemCount(player.getInventory(),
-                                     entry.getItem().getType(),
-                                     MISCUtils.getItemCount(IDFinder.getID(player),
-                                                            entry.getItem().getType()
-                                     ) - entry.getItem().getAmount());
-              player.updateInventory();
-            }
-            new Message("Messages.SignShop.Successful").translate(world, player);
-            return false;
           }
         }
       }

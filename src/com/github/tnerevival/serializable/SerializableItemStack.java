@@ -71,7 +71,9 @@ public class SerializableItemStack implements Serializable {
    * @param lore the lore to set
    */
   public void setLore(List<String> lore) {
-    this.lore = lore;
+    for(String s : lore) {
+      this.lore.add(s.replace("&section", "§"));
+    }
   }
 
   /**
@@ -169,7 +171,7 @@ public class SerializableItemStack implements Serializable {
       int count = 0;
       for(String s : lore) {
         if(count > 0) { toReturn += "~"; }
-        toReturn += s;
+        toReturn += s.replace("§", "&section");
         count++;
       }
       return toReturn;
@@ -183,7 +185,7 @@ public class SerializableItemStack implements Serializable {
 
   public HashMap<SerializableEnchantment, Integer> getEnchantmentsFromStack(ItemStack i) {
     Map<Enchantment, Integer> enchantments = i.getEnchantments();
-    HashMap<SerializableEnchantment, Integer> serializedEnchantments = new HashMap<SerializableEnchantment, Integer>();
+    HashMap<SerializableEnchantment, Integer> serializedEnchantments = new HashMap<>();
     for(Enchantment e : enchantments.keySet()) {
       serializedEnchantments.put(new SerializableEnchantment(e), enchantments.get(e));
     }
@@ -254,15 +256,15 @@ public class SerializableItemStack implements Serializable {
     stack.setName(variables[0]);
     stack.setAmount(Integer.valueOf(variables[2]));
     stack.setDamage(Short.valueOf(variables[3]));
-    if(variables[4] != null && !variables[4].equals("TNENOSTRINGVALUE")) {
+    if(variables.length >= 5 && variables[4] != null && !variables[4].equals("TNENOSTRINGVALUE")) {
       stack.setCustomName(variables[4]);
     }
 
-    if(variables[5] != null && !variables[5].equals("TNENOSTRINGVALUE")) {
+    if(variables.length >= 6 && variables[5] != null && !variables[5].equals("TNENOSTRINGVALUE")) {
       stack.setLore(Arrays.asList(variables[5].split("\\~")));
     }
 
-    if(variables[6] != null && !variables[6].equals("TNENOSTRINGVALUE")) {
+    if(variables.length >= 7 && variables[6] != null && !variables[6].equals("TNENOSTRINGVALUE")) {
       HashMap<SerializableEnchantment, Integer> enchantments = new HashMap<SerializableEnchantment, Integer>();
       String[] enchantmentsArray = variables[6].split("\\~");
 
