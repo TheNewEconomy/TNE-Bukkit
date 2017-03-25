@@ -19,6 +19,7 @@ package com.github.tnerevival.core.version.impl;
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.Bank;
+import com.github.tnerevival.account.TrackedItems;
 import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.auction.Auction;
 import com.github.tnerevival.core.auction.Claim;
@@ -47,6 +48,7 @@ import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.utils.MISCUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -1183,14 +1185,20 @@ public class Alpha5_2 extends Version {
       Entry info = entry.getValue().getEntry("info");
       Entry balances = entry.getValue().getEntry("balances");
       Entry banks = entry.getValue().getEntry("banks");
+      Entry vaults = entry.getValue().getEntry("vaults");
+      Entry tracked = entry.getValue().getEntry("tracked");
 
       Account account = new Account(uid, (Integer) info.getData("accountnumber"));
       Map<String, BigDecimal> balanceMap = new HashMap<>();
       Map<String, Bank> bankMap = new HashMap<>();
+      Map<String, Vault> vaultMap = new HashMap<>();
+      Map<Location, TrackedItems> trackedMap = new HashMap<>();
 
       account.setAccountNumber((Integer) info.getData("accountnumber"));
+      account.setJoined((String)info.getData("joined"));
       account.setStatus((String) info.getData("status"));
       account.setPin((String) info.getData("pin"));
+      account.setSpecial((Boolean)info.getData("special"));
       account.creditsFromString((String)info.getData("inventory_credits"));
       account.commandsFromString((String)info.getData("command_credits"));
 
@@ -1207,9 +1215,28 @@ public class Alpha5_2 extends Version {
 
       while(bankIterator.hasNext()) {
         java.util.Map.Entry<String, Object> bankEntry = bankIterator.next();
-        Bank.convert(account, (String)bankEntry.getValue(), bankEntry.getKey());
+        bankMap.put(bankEntry.getKey(), Bank.fromString((String)bankEntry.getValue()));
       }
       account.setBanks(bankMap);
+
+      Iterator<java.util.Map.Entry<String, Object>> vaultIterator = vaults.getData().entrySet().iterator();
+
+      while(vaultIterator.hasNext()) {
+        java.util.Map.Entry<String, Object> vaultEntry = vaultIterator.next();
+        vaultMap.put(vaultEntry.getKey(), Vault.fromString((String)vaultEntry.getValue()));
+      }
+      account.setVaults(vaultMap);
+
+      Iterator<java.util.Map.Entry<String, Object>> trackedIterator = tracked.getData().entrySet().iterator();
+
+      while(trackedIterator.hasNext()) {
+        java.util.Map.Entry<String, Object> trackEntry = trackedIterator.next();
+        Location location = SerializableLocation.fromString(trackEntry.getKey()).getLocation();
+        TrackedItems items = new TrackedItems(location);
+        items.materialsFromString((String)trackEntry.getValue());
+        trackedMap.put(location, items);
+      }
+      account.setTrackedItems(trackedMap);
 
       TNE.instance().manager.accounts.put(uid, account);
     }
@@ -1333,7 +1360,62 @@ public class Alpha5_2 extends Version {
     Section accounts = new Section("accounts");
 
     while(accIT.hasNext()) {
-      //TODO: Account  loading/saving
+      java.util.Map.Entry<UUID, Account> entry = accIT.next();
+
+      Account acc = entry.getValue();
+      Article account = new Article(entry.getKey().toString());
+      //Info
+      Entry info = new Entry("info");
+      info.addData("accountnumber", acc.getAccountNumber());
+      info.addData("uuid", acc.getUid());
+      info.addData("joined", acc.getJoined());
+      info.addData("status", acc.getStatus().getName());
+      info.addData("inventory_credits", acc.creditsToString());
+      info.addData("command_credits", acc.commandsToString());
+      info.addData("pin", acc.getPin());
+      info.addData("special", acc.isSpecial());
+      account.addEntry(info);
+
+      //Balances
+      Entry balances = new Entry("balances");
+      Iterator<Map.Entry<String, BigDecimal>> balIT = acc.getBalances().entrySet().iterator();
+
+      while(balIT.hasNext()) {
+        java.util.Map.Entry<String, BigDecimal> balanceEntry = balIT.next();
+        balances.addData(balanceEntry.getKey(), balanceEntry.getValue().doubleValue());
+      }
+      account.addEntry(balances);
+
+      //Banks
+      Entry banks = new Entry("banks");
+      Iterator<java.util.Map.Entry<String, Bank>> bankIT = acc.getBanks().entrySet().iterator();
+
+      while(bankIT.hasNext()) {
+        java.util.Map.Entry<String, Bank> bankEntry = bankIT.next();
+        banks.addData(bankEntry.getKey(), bankEntry.getValue().toString());
+      }
+      account.addEntry(banks);
+
+      //Vaults
+      Entry vaults = new Entry("vaults");
+      Iterator<Map.Entry<String, Vault>> vaultIT = acc.getVaults().entrySet().iterator();
+
+      while(vaultIT.hasNext()) {
+        Map.Entry<String, Vault> vaultEntry = vaultIT.next();
+        vaults.addData(vaultEntry.getValue().getWorld(), vaultEntry.getValue().toString());
+      }
+      account.addEntry(vaults);
+
+      //Tracked Items
+      Entry tracked = new Entry("tracked");
+      Iterator<Map.Entry<Location, TrackedItems>> trackedIT = acc.getTrackedItems().entrySet().iterator();
+
+      while(trackedIT.hasNext()) {
+        Map.Entry<Location, TrackedItems> trackedEntry = trackedIT.next();
+        tracked.addData(new SerializableLocation(trackedEntry.getKey()).toString(), trackedEntry.getValue().materialsToString());
+      }
+      account.addEntry(tracked);
+      accounts.addArticle(entry.getKey().toString(), account);
     }
 
     Iterator<Map.Entry<String, UUID>> idsIT = TNE.instance().manager.ecoIDs.entrySet().iterator();

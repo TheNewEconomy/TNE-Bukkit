@@ -102,22 +102,39 @@ public class Bank implements Serializable {
     }
   }
 
-  public String balanacesToString() {
+  public String balancesToString() {
     String toReturn = "";
     for(Map.Entry<String, BankBalance> entry : balances.entrySet()) {
       if(toReturn.length() > 0) toReturn += "*";
-      toReturn += entry.getValue().getCurrency() + ":" + entry.getValue().getBalance().doubleValue() + ":" + entry.getKey();
+      toReturn += entry.getValue().getCurrency() + ":" + entry.getValue().getBalance().doubleValue();
     }
     return toReturn;
   }
 
-  public void balancesFromString(String data) {
+  public void balancesFromString(String world, String data) {
     String[] parsed = data.split("\\*");
     for(String s : parsed) {
       String[] parts = s.split(":");
-      BigDecimal bal = CurrencyFormatter.translateBigDecimal(parts[1], parts[2]);
+      BigDecimal bal = CurrencyFormatter.translateBigDecimal(parts[1], world);
       BankBalance balance = new BankBalance(parts[0], bal);
+      balances.put(balance.getCurrency(), balance);
     }
+  }
+
+  public static Bank fromString(String data) {
+    String[] parsed = data.split("`");
+    if(IDFinder.isUUID(parsed[0])) {
+      Bank bank = new Bank(UUID.fromString(parsed[0]), parsed[1]);
+      bank.balancesFromString(bank.getWorld(), parsed[2]);
+      bank.membersFromString(parsed[3]);
+      return bank;
+    }
+    return null;
+  }
+
+  @Override
+  public String toString() {
+    return owner.toString() + "`" + world + "`" + balancesToString() + "`" + membersToString();
   }
 
   public void applyInterest() {

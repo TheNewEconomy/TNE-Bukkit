@@ -677,7 +677,6 @@ public class Alpha5_0 extends Version {
 
       Account account = new Account(uid, (Integer) info.getData("accountnumber"));
       Map<String, BigDecimal> balanceMap = new HashMap<>();
-      Map<String, Bank> bankMap = new HashMap<>();
 
       account.setAccountNumber((Integer) info.getData("accountnumber"));
       account.setStatus((String) info.getData("status"));
@@ -700,7 +699,6 @@ public class Alpha5_0 extends Version {
         java.util.Map.Entry<String, Object> bankEntry = bankIterator.next();
         Bank.convert(account, (String)bankEntry.getValue(), bankEntry.getKey());
       }
-      account.setBanks(bankMap);
 
       TNE.instance().manager.accounts.put(uid, account);
     }

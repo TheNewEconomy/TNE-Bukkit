@@ -156,6 +156,10 @@ public class Account implements Serializable {
     }
   }
 
+  public void trackedItemsFromString(String data) {
+
+  }
+
   public void applyInterest() {
     for(Bank b : banks.values()) {
       b.applyInterest();
@@ -328,7 +332,7 @@ public class Account implements Serializable {
     return vaults;
   }
 
-  public void setVault(Map<String, Vault> vaults) {
+  public void setVaults(Map<String, Vault> vaults) {
     this.vaults = vaults;
   }
 

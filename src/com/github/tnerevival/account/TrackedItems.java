@@ -16,6 +16,7 @@
  */
 package com.github.tnerevival.account;
 
+import com.github.tnerevival.core.material.MaterialHelper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -48,5 +49,25 @@ public class TrackedItems {
 
   public void setLocation(Location location) {
     this.location = location;
+  }
+
+  public void materialsFromString(String data) {
+    String[] parsed = data.split(",");
+
+    for(String s : parsed) {
+      String[] parts = s.split("-");
+      Integer slot = Integer.valueOf(parts[0]);
+      Material material = MaterialHelper.getMaterial(parts[1]);
+    }
+  }
+
+  public String materialsToString() {
+    String data = "";
+
+    for(Map.Entry<Integer, Material> entry : materialMap.entrySet()) {
+      if(data.length() > 0) data += ",";
+      data += entry.getKey() + "-" + entry.getValue().name();
+    }
+    return data;
   }
 }

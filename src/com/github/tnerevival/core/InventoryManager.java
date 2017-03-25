@@ -98,7 +98,7 @@ public class InventoryManager {
     return inventories.get(getInventoryID(player));
   }
 
-  public UUID getInventoryID(Inventory inventory) {
+  private UUID getInventoryID(Inventory inventory) {
     for(HumanEntity entity : inventory.getViewers()) {
       if(entity instanceof Player) {
         if(inventoryIDs.containsKey(IDFinder.getID((Player)entity))) return inventoryIDs.get(IDFinder.getID((Player)entity));
@@ -107,7 +107,7 @@ public class InventoryManager {
     return null;
   }
 
-  public UUID getInventoryID(UUID player) {
+  private UUID getInventoryID(UUID player) {
     return inventoryIDs.get(player);
   }
 

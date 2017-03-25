@@ -232,17 +232,20 @@ public class Vault implements Serializable {
 
   public static Vault fromString(String parse) {
     String[] parsed = parse.split(":");
-    Vault vault = new Vault(UUID.fromString(parsed[0]), parsed[1], Integer.valueOf(parsed[2]));
-    if(parsed.length >= 4) {
-      vault.itemsFromString(parsed[3]);
+    if(IDFinder.isUUID(parsed[0])) {
+      Vault vault = new Vault(UUID.fromString(parsed[0]), parsed[1], Integer.valueOf(parsed[2]));
+      if (parsed.length >= 4) {
+        vault.itemsFromString(parsed[3]);
+      }
+      if (parsed.length >= 5) {
+        vault.membersFromString(parsed[4]);
+      }
+      return vault;
     }
-    if(parsed.length >= 5) {
-      vault.membersFromString(parsed[4]);
-    }
-
-    return vault;
+    return null;
   }
 
+  @Override
   public String toString() {
     return owner.toString() + ":" + world + ":" + size + ":" + itemsToString() + ":" + membersToString();
   }
