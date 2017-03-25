@@ -5,13 +5,26 @@
 **Please Note: This project is in Alpha stage, and may therefore contain multiple bugs. Please report any bugs you find.**  
 
 About
-----------
-The New Economy was originally a hMod Plugin made by Noobaholic. After reading multiple requests on the Bukkit Forums for the plugin, which Noobaholic replied that he was too busy at the moment to port it to Bukkit, I decided to port it to Bukkit. The New Economy is a feature-packed economy plugin that is currently still under heavy development. I hope to provide a visual data editor for TNE flat file saves soon.  
-
+--------------
+The New Economy is a feature-packed economy plugin that is currently still under heavy development. TNE is meant to offer an all-in-one solution for server economies, while also being completely configurable to each server's needs. Whether you want a simple single currency economy, or multiple currencies per world with multiple worlds, TNE is for you.
 
 Build Status
 --------------
 [![Build Status](https://travis-ci.org/TheNewEconomy/TNE-Bukkit.svg?branch=master)](https://travis-ci.org/TheNewEconomy/TNE-Bukkit)
+
+If you've switched from another economy plugin to TNE, please take a moment to tell us which one:
+What economy plugin did you switch from?
+
+![alt text](http://i.imgur.com/ZS0xmkb.png)
+
+Please Note: This project is in Alpha stage, and may therefore contain multiple bugs. Please report any bugs you find.
+
+Support
+-------------
+There's only two ways to support the development of TNE at this moment.
+
+* [My Patreon](https://www.patreon.com/creatorfromhell)
+* Share TNE with other server owners
 
 Basic Information
 ----------
@@ -48,6 +61,20 @@ For support choose one of the following.
 
 - Skype: creatorfromhell
 - Email: daniel.viddy@gmail.com  
+
+API
+---------
+To acces the API import the jar file(TNE.jar) then use the following code:  
+
+TNE.instance().api();  
+
+In the following example we'll get a player's balance using the API.  
+
+TNEAPI ecoAPI = TNE.instance().api();  
+ecoAPI.getBalance(player);
+
+Source code for the API class can be found here.
+
 
 Team
 ----------
