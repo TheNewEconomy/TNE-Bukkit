@@ -22,10 +22,11 @@ public class SaveManager {
     versions.put(5.0, new Alpha5_0());
     versions.put(5.1, new Alpha5_0());
     versions.put(5.2, new Alpha5_2());
+    versions.put(5.3, new Alpha5_2());
   }
 
   public Version versionInstance;
-  Double currentSaveVersion = 5.2;
+  Double currentSaveVersion = 5.3;
   Double saveVersion = 0.0;
   public boolean updating = false;
   public boolean cache = TNE.configurations.getBoolean("Core.Database.Transactions.Cache");

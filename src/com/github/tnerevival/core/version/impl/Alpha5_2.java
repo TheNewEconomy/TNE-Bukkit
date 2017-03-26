@@ -63,12 +63,12 @@ import java.util.*;
 public class Alpha5_2 extends Version {
   @Override
   public double versionNumber() {
-    return 5.2;
+    return 5.3;
   }
 
   @Override
   public void update(double version, String type) {
-    if(version < 4.0) return;
+    if(version < 4.0 || version == 5.2) return;
     if(type.equalsIgnoreCase("mysql") || type.equalsIgnoreCase("h2")) {
       //New Tables
       String table = prefix + "_BALANCES";
