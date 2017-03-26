@@ -144,7 +144,7 @@ public class InteractionListener implements Listener {
     }
 
     if(event.getBlock().getState() instanceof Chest || event.getBlock().getState() instanceof DoubleChest
-       || MISCUtils.isOneEight() && event.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
+       || MISCUtils.isOneNine() && event.getBlock().getState() instanceof org.bukkit.block.EnderChest) {
       TNESign sign = TNESign.getOwningSign(event.getBlock().getLocation());
       if (sign != null) {
         if(sign.getType().equals(SignType.BANK) || sign.getType().equals(SignType.ITEM)) {
@@ -475,7 +475,7 @@ public class InteractionListener implements Listener {
         }
       } else if(action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof Chest
                 || action.equals(Action.RIGHT_CLICK_BLOCK) && block.getState() instanceof DoubleChest
-                || action.equals(Action.RIGHT_CLICK_BLOCK) && MISCUtils.isOneEight()
+                || action.equals(Action.RIGHT_CLICK_BLOCK) && MISCUtils.isOneNine()
                    && block.getState() instanceof org.bukkit.block.EnderChest) {
         TNESign sign = TNESign.getOwningSign(block.getLocation());
         if(sign != null) {

@@ -15,7 +15,7 @@ public class SignChest {
 
   public SignChest(Block block) {
     location = block.getLocation();
-    ender = MISCUtils.isOneEight() && block.getState() instanceof org.bukkit.block.EnderChest;
+    ender = MISCUtils.isOneNine() && block.getState() instanceof org.bukkit.block.EnderChest;
   }
 
   public SignChest() {
