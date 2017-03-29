@@ -300,6 +300,13 @@ public class Alpha5_2 extends Version {
         account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));
         account.commandsFromString(sql().results(accountIndex).getString("command_credits"));
         account.setPin(sql().results(accountIndex).getString("acc_pin"));
+        account.setSpecial(sql().results(accountIndex).getBoolean("account_special"));
+
+        String balancesTable = prefix + "_BALANCES";
+        int balancesIndex = sql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[] { account.getUid().toString() });
+        while(sql().results(balancesIndex).next()) {
+          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getDouble("balance")), sql().results(balancesIndex).getString("currency"));
+        }
 
         table = prefix + "_BANKS";
         int bankIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
@@ -362,12 +369,18 @@ public class Alpha5_2 extends Version {
       });
       if(sql().results(accountIndex).next()) {
         Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")), sql().results(accountIndex).getInt("accountnumber"));
-        account.balancesFromString(sql().results(accountIndex).getString("balances"));
         account.setStatus(sql().results(accountIndex).getString("accountstatus"));
         account.setJoined(sql().results(accountIndex).getString("joinedDate"));
         account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));
         account.commandsFromString(sql().results(accountIndex).getString("command_credits"));
         account.setPin(sql().results(accountIndex).getString("acc_pin"));
+        account.setSpecial(sql().results(accountIndex).getBoolean("account_special"));
+
+        String balancesTable = prefix + "_BALANCES";
+        int balancesIndex = sql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[] { account.getUid().toString() });
+        while(sql().results(balancesIndex).next()) {
+          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getDouble("balance")), sql().results(balancesIndex).getString("currency"));
+        }
 
         table = prefix + "_BANKS";
         int bankIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?;", new Object[] { account.getUid().toString() });
