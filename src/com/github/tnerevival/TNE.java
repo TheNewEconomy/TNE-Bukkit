@@ -87,6 +87,7 @@ public class TNE extends JavaPlugin {
   public static Map<String, UUID> uuidCache = new HashMap<>();
 
   public void onLoad() {
+    getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
     instance = this;
     api = new TNEAPI(this);
     setupVault();
@@ -141,16 +142,9 @@ public class TNE extends JavaPlugin {
       statsWorker = new StatisticsWorker(this);
       statsWorker.runTaskTimer(this, 24000, 24000);
       Statistics.send();
-      try {
-          MetricsLite metrics = new MetricsLite(this);
-          metrics.start();
-      } catch (IOException e) {
-          getLogger().severe("Error while enabling plugin metrics.");
-      }
     }
 
     getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled!");
-    getLogger().info("Executing with Java Version: " + System.getProperty("java.version"));
 
     String updateMessage = "Using the latest version: " + updater.getCurrentBuild();
     if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";
