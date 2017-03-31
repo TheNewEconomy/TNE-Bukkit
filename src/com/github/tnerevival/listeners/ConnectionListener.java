@@ -37,7 +37,7 @@ public class ConnectionListener implements Listener {
     if(!plugin.manager.accounts.containsKey(IDFinder.getID(player))) {
       AccountUtils.createAccount(IDFinder.getID(player));
     }
-    if(player.hasPermission("tne.admin") && !TNE.updater.getRelease().equals(ReleaseType.LATEST)) {
+    if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.updater.getRelease().equals(ReleaseType.LATEST)) {
       String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.updater.getLatestBuild();
       if(TNE.updater.getRelease().equals(ReleaseType.PRERELEASE)) {
         message = ChatColor.GREEN + "[TNE] Prerelease! Thank you for testing TNE Build: " + TNE.updater.getCurrentBuild() + ".";
