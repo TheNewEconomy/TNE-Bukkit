@@ -1,13 +1,13 @@
 Possible Features/Changes
 =========================
 
-- Bank Improvements
-  - advanced bank permission controls.
-    - ability for bank account owners to dictate what permissions
+- Bank/Vault Improvements
+  - advanced bank/vault permission controls.
+    - ability for bank/vault account owners to dictate what permissions
     each player has
       - includes permissions to deposit, withdraw, add items, remove items
     - ability to control whether or not players can add/remove items and funds
-    that they have not deposited into a bank
+    that they have not deposited into a bank/vault
 - Transaction History Improvements
   - drastic changes to more accurately depict transaction history
   - ability to track funds gained since last login.

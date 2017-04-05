@@ -1,7 +1,6 @@
 - Alpha 6.0 "Final Stages"
   - Rework shops to be more user-friendly. I want a shop system that isn't command based such as the one we have now. More or less a more chest "friendly" version.
   - Lotteries
-  - Player Trading(depending on whether it is a wanted feature)
   
 - Alpha 6.1 "Stability"
   - Major stability improvements
