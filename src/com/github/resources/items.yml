@@ -1,3 +1,8 @@
+# The New Economy v0.0.5.5
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 Items:
   STONE:
     #The permission node required to create a shop sign with this item
