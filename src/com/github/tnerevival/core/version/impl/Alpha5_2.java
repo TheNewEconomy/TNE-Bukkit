@@ -63,12 +63,19 @@ import java.util.*;
 public class Alpha5_2 extends Version {
   @Override
   public double versionNumber() {
-    return 5.4;
+    return 5.5;
   }
 
   @Override
   public void update(double version, String type) {
-    if(version < 4.0 || version == 5.2 || version == 5.3) return;
+    if(version < 4.0) return;
+    if(version >= 5.2 && version <= 5.4) {
+      String table = prefix + "_SIGNS";
+      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
+      table = prefix + "SIGN_OFFERS";
+      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250)");
+      return;
+    }
     if(type.equalsIgnoreCase("mysql") || type.equalsIgnoreCase("h2")) {
       //New Tables
       String table = prefix + "_BALANCES";
@@ -161,7 +168,7 @@ public class Alpha5_2 extends Version {
 
       table = prefix + "_SIGN_OFFERS";
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location` VARCHAR(350)," +
+          "`sign_location` VARCHAR(250)," +
           "`offer_order` INT(60) NOT NULL," +
           "`offer_buy` DOUBLE," +
           "`offer_sell` DOUBLE," +
@@ -188,7 +195,7 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("ALTER TABLE `" + table + "` DROP COLUMN `bank`");
 
       table = prefix + "_SIGNS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(350) UNIQUE");
+      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
     }
   }
 
@@ -1912,13 +1919,13 @@ public class Alpha5_2 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` VARCHAR(350)  NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(250)  NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
 
       table = prefix + "_SIGN_OFFERS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location` VARCHAR(350) NOT NULL," +
+          "`sign_location` VARCHAR(250) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
           "`offer_buy` DOUBLE," +
           "`offer_sell` DOUBLE," +
@@ -2122,13 +2129,13 @@ public class Alpha5_2 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` VARCHAR(350) NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(250) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
 
       table = prefix + "_SIGN_OFFERS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location`  VARCHAR(350) NOT NULL," +
+          "`sign_location`  VARCHAR(250) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
           "`offer_buy` DOUBLE," +
           "`offer_sell` DOUBLE," +
