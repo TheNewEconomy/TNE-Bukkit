@@ -93,6 +93,15 @@ public class TNEInventory {
     }
   }
 
+  public boolean isBanned(Material material) {
+    for(Material mat : bannedItems) {
+      if(mat.equals(material)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean onOpen(UUID id) {
     if(InventoryType.fromTitle(inventory.getTitle()) != null && !InventoryType.fromTitle(inventory.getTitle()).canOpen(IDFinder.getPlayer(id.toString()))) return false;
     viewers.add(id);

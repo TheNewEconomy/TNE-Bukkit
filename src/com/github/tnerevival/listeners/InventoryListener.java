@@ -212,10 +212,14 @@ public class InventoryListener implements Listener {
               public void run() {
                 Map<Integer, ItemStack> changes = new HashMap<>();
                 ItemStack current = player.getOpenInventory().getItem(rawSlot);
-                changes.put(rawSlot, current);
-                String currentString = (current == null) ? "empty" : current.toString();
-                MISCUtils.debug("New ItemStack: " + currentString);
-                tneInventory.onUpdate(changes, id);
+                if(!tneInventory.isBanned(current.getType())) {
+                  changes.put(rawSlot, current);
+                  String currentString = (current == null) ? "empty" : current.toString();
+                  MISCUtils.debug("New ItemStack: " + currentString);
+                  tneInventory.onUpdate(changes, id);
+                } else {
+                  event.setCancelled(true);
+                }
               }
             }, 1L);
             break;
@@ -230,6 +234,10 @@ public class InventoryListener implements Listener {
     final TNEInventory tneInventory = TNE.instance().inventoryManager.getInventory(IDFinder.getID(player));
     if(tneInventory != null) {
       Map<Integer, ItemStack> original = new HashMap<>();
+      if(event.getOldCursor().getType() != null && tneInventory.isBanned(event.getOldCursor().getType())) {
+        event.setCancelled(true);
+        return;
+      }
       for (int i : event.getRawSlots()) {
         ItemStack item = (event.getView().getItem(i) == null) ? new ItemStack(Material.AIR) : event.getView().getItem(i);
         original.put(i, item);
