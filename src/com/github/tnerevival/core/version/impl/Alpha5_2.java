@@ -72,11 +72,13 @@ public class Alpha5_2 extends Version {
     if(version >= 5.2 && version <= 5.4) {
       String table = prefix + "_SIGNS";
       mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
-      table = prefix + "SIGN_OFFERS";
+      table = prefix + "_SIGN_OFFERS";
       mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250)");
+      table = prefix + "_TRACKED";
+      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `location` VARCHAR(250)");
       return;
     }
-    if(type.equalsIgnoreCase("mysql") || type.equalsIgnoreCase("h2")) {
+    if(!type.equalsIgnoreCase("flatfile")) {
       //New Tables
       String table = prefix + "_BALANCES";
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -92,7 +94,7 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`material` LONGTEXT," +
-          "`location` VARCHAR(350)," +
+          "`location` VARCHAR(250)," +
           "`slot` INT(60) NOT NULL," +
           "PRIMARY KEY(uuid, location, slot)" +
           ");");
@@ -1786,10 +1788,10 @@ public class Alpha5_2 extends Version {
           ");");
 
       table = prefix + "_TRACKED";
-      sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`material` LONGTEXT," +
-          "`location` VARCHAR(350)," +
+          "`location` VARCHAR(250)," +
           "`slot` INT(60) NOT NULL," +
           "PRIMARY KEY(uuid, location, slot)" +
           ");");
@@ -2003,6 +2005,15 @@ public class Alpha5_2 extends Version {
           "`balance` DOUBLE," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
+
+      table = prefix + "_TRACKED";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+              "`uuid` VARCHAR(36) NOT NULL," +
+              "`material` LONGTEXT," +
+              "`location` VARCHAR(250)," +
+              "`slot` INT(60) NOT NULL," +
+              "PRIMARY KEY(uuid, location, slot)" +
+              ");");
 
       table = prefix + "_SHOPS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
