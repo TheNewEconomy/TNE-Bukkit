@@ -65,7 +65,7 @@ Worlds:
             Conversion: 1.0
 
             #The character to use as the symbol for this currency.
-            Symbol: $
+            Symbol: '$'
 
             #The character to use as the decimal place holder.
             Decimal: .
