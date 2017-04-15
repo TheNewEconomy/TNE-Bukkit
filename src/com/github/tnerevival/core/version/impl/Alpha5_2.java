@@ -71,11 +71,19 @@ public class Alpha5_2 extends Version {
     if(version < 4.0) return;
     if(version >= 5.2 && version <= 5.4) {
       String table = prefix + "_SIGNS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
       table = prefix + "_SIGN_OFFERS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250)");
       table = prefix + "_TRACKED";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `location` VARCHAR(250)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `location` VARCHAR(250)");
+      table = prefix + "_BALANCES";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(26)");
+      table = prefix + "_BANK_BALANCES";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(26)");
+      table = prefix + "_TRANSACTIONS";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_cost` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_oldBalance` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_balance` VARCHAR(26)");
       return;
     }
     if(!type.equalsIgnoreCase("flatfile")) {
@@ -86,7 +94,7 @@ public class Alpha5_2 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -131,7 +139,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -215,9 +223,9 @@ public class Alpha5_2 extends Version {
             sql().results(transactionIndex).getString("trans_player"),
             sql().results(transactionIndex).getString("trans_world"),
             sql().results(transactionIndex).getString("trans_type"),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_cost")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_oldBalance")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_balance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_cost")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_oldBalance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_balance")),
             sql().results(transactionIndex).getLong("trans_time")
         );
         TransactionHistory history = (transactions.containsKey(r.getInitiator()))? transactions.get(r.getInitiator()) : new TransactionHistory();
@@ -247,9 +255,9 @@ public class Alpha5_2 extends Version {
             sql().results(transactionIndex).getString("trans_player"),
             sql().results(transactionIndex).getString("trans_world"),
             sql().results(transactionIndex).getString("trans_type"),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_cost")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_oldBalance")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_balance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_cost")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_oldBalance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_balance")),
             sql().results(transactionIndex).getLong("trans_time")
         );
         history.add(r);
@@ -274,9 +282,9 @@ public class Alpha5_2 extends Version {
               record.getPlayer(),
               record.getWorld(),
               record.getType(),
-              record.getCost(),
-              record.getOldBalance(),
-              record.getBalance(),
+              record.getCost().toPlainString(),
+              record.getOldBalance().toPlainString(),
+              record.getBalance().toPlainString(),
               record.getTime(),
               record.getPlayer(),
               record.getWorld()
@@ -314,7 +322,7 @@ public class Alpha5_2 extends Version {
         String balancesTable = prefix + "_BALANCES";
         int balancesIndex = sql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[] { account.getUid().toString() });
         while(sql().results(balancesIndex).next()) {
-          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getDouble("balance")), sql().results(balancesIndex).getString("currency"));
+          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getString("balance")), sql().results(balancesIndex).getString("currency"));
         }
 
         table = prefix + "_BANKS";
@@ -325,7 +333,7 @@ public class Alpha5_2 extends Version {
           String extraTable = prefix + "_BANK_BALANCES";
           int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
           while(sql().results(extraIndex).next()) {
-            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getDouble("balance")));
+            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getString("balance")));
           }
           extraTable = prefix + "_BANK_MEMBERS";
           extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
@@ -388,7 +396,7 @@ public class Alpha5_2 extends Version {
         String balancesTable = prefix + "_BALANCES";
         int balancesIndex = sql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[] { account.getUid().toString() });
         while(sql().results(balancesIndex).next()) {
-          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getDouble("balance")), sql().results(balancesIndex).getString("currency"));
+          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getString("balance")), sql().results(balancesIndex).getString("currency"));
         }
 
         table = prefix + "_BANKS";
@@ -399,7 +407,7 @@ public class Alpha5_2 extends Version {
           String extraTable = prefix + "_BANK_BALANCES";
           int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
           while(sql().results(extraIndex).next()) {
-            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getDouble("balance")));
+            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getString("balance")));
           }
           extraTable = prefix + "_BANK_MEMBERS";
           extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
@@ -471,7 +479,7 @@ public class Alpha5_2 extends Version {
       table = prefix + "_BALANCES";
       for (String s : acc.getBalances().keySet()) {
         String[] parts = s.split(":");
-        double amount = acc.getBalance(parts[0], parts[1]).doubleValue();
+        String amount = acc.getBalance(parts[0], parts[1]).toPlainString();
         sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, server_name, world, currency, balance) " +
                 "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
             new Object[]{
@@ -502,8 +510,8 @@ public class Alpha5_2 extends Version {
                   acc.getUid().toString(),
                   entry.getKey(),
                   s,
-                  entry.getValue().getGold(s).doubleValue(),
-                  entry.getValue().getGold(s).doubleValue()
+                  entry.getValue().getGold(s).toPlainString(),
+                  entry.getValue().getGold(s).toPlainString()
               }
           );
         }
@@ -1229,7 +1237,7 @@ public class Alpha5_2 extends Version {
       while(balanceIterator.hasNext()) {
         java.util.Map.Entry<String, Object> balanceEntry = balanceIterator.next();
 
-        balanceMap.put(balanceEntry.getKey(), new BigDecimal((Double)balanceEntry.getValue()));
+        balanceMap.put(balanceEntry.getKey(), new BigDecimal((String)balanceEntry.getValue()));
       }
       account.setBalances(balanceMap);
 
@@ -1366,9 +1374,9 @@ public class Alpha5_2 extends Version {
             (String) info.getData("player"),
             (String) info.getData("world"),
             TransactionType.fromID((String) info.getData("type")),
-            new TransactionCost(new BigDecimal((Double) info.getData("cost"))),
-            new BigDecimal((Double) info.getData("oldBalance")),
-            new BigDecimal((Double) info.getData("balance")),
+            new TransactionCost(new BigDecimal((String) info.getData("cost"))),
+            new BigDecimal((String) info.getData("oldBalance")),
+            new BigDecimal((String) info.getData("balance")),
             (Long) info.getData("time")
         );
       }
@@ -1404,7 +1412,7 @@ public class Alpha5_2 extends Version {
 
       while(balIT.hasNext()) {
         java.util.Map.Entry<String, BigDecimal> balanceEntry = balIT.next();
-        balances.addData(balanceEntry.getKey(), balanceEntry.getValue().doubleValue());
+        balances.addData(balanceEntry.getKey(), balanceEntry.getValue().toPlainString());
       }
       account.addEntry(balances);
 
@@ -1562,9 +1570,9 @@ public class Alpha5_2 extends Version {
         info.addData("player", r.getPlayer());
         info.addData("world", r.getWorld());
         info.addData("type", r.getType());
-        info.addData("cost", r.getCost().doubleValue());
-        info.addData("oldBalance", r.getOldBalance().doubleValue());
-        info.addData("balance", r.getBalance().doubleValue());
+        info.addData("cost", r.getCost().toPlainString());
+        info.addData("oldBalance", r.getOldBalance().toPlainString());
+        info.addData("balance", r.getBalance().toPlainString());
         info.addData("time", r.getTime());
         a.addEntry(info);
         transactions.addArticle(r.getId(), a);
@@ -1783,7 +1791,7 @@ public class Alpha5_2 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -1872,7 +1880,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -1946,9 +1954,9 @@ public class Alpha5_2 extends Version {
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
-          "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE," +
-          "`trans_balance` DOUBLE," +
+          "`trans_cost` VARCHAR(26)," +
+          "`trans_oldBalance` VARCHAR(26)," +
+          "`trans_balance` VARCHAR(26)," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
@@ -2002,7 +2010,7 @@ public class Alpha5_2 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -2091,7 +2099,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -2165,9 +2173,9 @@ public class Alpha5_2 extends Version {
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
-          "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE," +
-          "`trans_balance` DOUBLE," +
+          "`trans_cost` VARCHAR(26)," +
+          "`trans_oldBalance` VARCHAR(26)," +
+          "`trans_balance` VARCHAR(26)," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");

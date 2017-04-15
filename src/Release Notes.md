@@ -2,7 +2,7 @@ Alpha 5.5
 =============================
 General Changes
 - Added ability to change currency SI prefixes on a per currency basis.
-- Removed the metrics configuration as MCStats has gone past its useful days.
+- Switched metrics to bStats
 - Server Account
   - Ability to have a general server account.
     - You may configure the name used for this account in config.yml.

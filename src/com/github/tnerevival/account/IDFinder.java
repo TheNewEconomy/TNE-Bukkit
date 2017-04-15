@@ -163,7 +163,7 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
-    UUID mojangID = MojangAPI.getPlayerUUID(identifier);
+    UUID mojangID = (identifier.equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name")))? null : MojangAPI.getPlayerUUID(identifier);
     if(mojangID == null) {
       MISCUtils.debug("MOJANG API RETURNED NULL VALUE");
       return ecoID(identifier);

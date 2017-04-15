@@ -106,7 +106,7 @@ public class Bank implements Serializable {
     String toReturn = "";
     for(Map.Entry<String, BankBalance> entry : balances.entrySet()) {
       if(toReturn.length() > 0) toReturn += "*";
-      toReturn += entry.getValue().getCurrency() + ":" + entry.getValue().getBalance().doubleValue();
+      toReturn += entry.getValue().getCurrency() + ":" + entry.getValue().getBalance().toPlainString();
     }
     return toReturn;
   }
@@ -177,7 +177,7 @@ public class Bank implements Serializable {
       return false;
     }
 
-    if(IDFinder.getUsername(owner.toString()).equals(TNE.instance().api().getString("Core.Server.Name"))
+    if(IDFinder.ecoToUsername(owner).equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
        && IDFinder.getPlayer(id.toString()).hasPermission("tne.server.bank")) {
       return true;
     }

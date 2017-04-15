@@ -144,7 +144,7 @@ Pin
 | tne.pin.set         | Set your pin to {pin}'s value. Old pin is required if you have one set. Pins are case-sensitive   | /pin set {pin} {confirm pin} (old pin) |
 | tne.pin.confirm     | Confirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin} |
 
-Server
+Server(Coming in 5.5)
 -----------
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
