@@ -1,8 +1,7 @@
 Alpha 5.5
 =============================
-General Changes
-- Added ability to change currency SI prefixes on a per currency basis.
-- Switched metrics to bStats
+- General Changes
+  - Switched metrics to bStats as MCStats is no longer maintained
 - Server Account
   - Ability to have a general server account.
     - You may configure the name used for this account in config.yml.
@@ -10,9 +9,17 @@ General Changes
   - Ability to take, give, and pay money to/from the server account's funds.
 - EcoIDS
   - Made Eco ID searches case insensitive.
+- Currency Changes
+  - Added ability to change currency SI prefixes on a per currency basis.
+  - Set a new cap on max number of decimal places that may be rounded to, which is now 5
+  - Added ability to set max balance on a per currency basis, this is capped at the max possible balance size of 9 Quintillion
+- Technical
+  - Changed the save format for balances
+  - Maximum possible balance size is now 9 Quintillion
+    - This is better know as 9,000,000,000,000,000,000
 
-Bug Fixes
-- Fixed issue where amounts in the billions+ range weren't displaying properly
-- Fixed issue where ender chests were being included in releases pre 1.10
-- Fixed minor console error display when players were dying
-- Fixed issue using special characters for the money symbol
+- Bug Fixes
+  - Fixed issue where amounts in the billions+ range weren't displaying properly
+  - Fixed issue where ender chests were being included in releases pre 1.10
+  - Fixed minor console error display when players were dying
+  - Fixed issue using special characters for the money symbol
