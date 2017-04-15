@@ -1,16 +1,19 @@
 package com.github.tnerevival;
 
+import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.CommandManager;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
+import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
 import com.github.tnerevival.listeners.InventoryListener;
 import com.github.tnerevival.listeners.WorldListener;
+import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 import com.github.tnerevival.worker.*;
 import net.milkbowl.vault.economy.Economy;
@@ -25,6 +28,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -80,7 +84,6 @@ public class TNE extends JavaPlugin {
   private AuctionWorker auctionWorker;
   private SaveWorker saveWorker;
   private InterestWorker interestWorker;
-  private StatisticsWorker statsWorker;
   private InventoryTimeWorker invWorker;
   public CacheWorker cacheWorker;
 
@@ -138,18 +141,21 @@ public class TNE extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 
-    if(configurations.getBoolean("Core.Metrics")) {
-      statsWorker = new StatisticsWorker(this);
-      statsWorker.runTaskTimer(this, 24000, 24000);
-      Statistics.send();
-    }
-
     getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled!");
 
     String updateMessage = "Using the latest version: " + updater.getCurrentBuild();
     if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";
     if(updater.getRelease().equals(ReleaseType.OUTDATED)) updateMessage = "Outdated! The current build is " + updater.getLatestBuild();
     getLogger().info(updateMessage);
+
+    if(api.getBoolean("Core.Server.Enabled")) {
+      UUID id = IDFinder.getID(api.getString("Core.Server.Name"));
+      if(!AccountUtils.exists(id)) {
+        AccountUtils.createAccount(id);
+        AccountUtils.transaction(null, id.toString(), new BigDecimal(api.getDouble("Core.Server.Balance")), TransactionType.MONEY_SET, defaultWorld);
+        getLogger().info("Created server economy account.");
+      }
+    }
   }
 
   public void onDisable() {
@@ -161,7 +167,6 @@ public class TNE extends JavaPlugin {
     saveConfigurations(true);
     saveManager.save();
     try {
-      if(statsWorker != null) statsWorker.cancel();
       if(cacheWorker != null) cacheWorker.cancel();
       if(invWorker != null) invWorker.cancel();
       if(auctionWorker != null) auctionWorker.cancel();

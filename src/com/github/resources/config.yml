@@ -10,12 +10,21 @@ Core:
     
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
-    
-    #whether or not to enable plugin metrics for TNE
-    Metrics: true
 
     #Whether or not to run the server in debug mode. OCD WARNING: Causes console spam.
     Debug: false
+
+    #All configurations relating to the main server account.
+    Server:
+
+        #Whether or not the server account has been enabled.
+        Enabled: true
+
+        #The name of the server account.
+        Name: Server Account
+
+        #The starting balance for the server account.
+        Balance: 500
 
     #All configurations relating to account pins
     Pins:

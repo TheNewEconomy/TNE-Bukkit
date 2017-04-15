@@ -9,7 +9,9 @@ public class MainConfiguration extends Configuration {
   public void load(FileConfiguration configurationFile) {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
-    configurations.put("Core.Metrics", true);
+    configurations.put("Core.Server.Enabled", true);
+    configurations.put("Core.Server.Name", "Server Account");
+    configurations.put("Core.Server.Balance", 500);
     configurations.put("Core.Pins.Enabled", false);
     configurations.put("Core.Pins.Force", true);
     configurations.put("Core.Commands.PayShort", true);
