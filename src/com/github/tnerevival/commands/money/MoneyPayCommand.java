@@ -42,6 +42,7 @@ public class MoneyPayCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
+    String world = getWorld(sender);
     if(arguments.length >= 2) {
       BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], IDFinder.getWorld(getPlayer(sender)));
       if(value.compareTo(BigDecimal.ZERO) < 0) {
@@ -50,6 +51,12 @@ public class MoneyPayCommand extends TNECommand {
       }
       if(getPlayer(sender, arguments[0]) != null && IDFinder.getID(player).equals(IDFinder.getID(getPlayer(sender, arguments[0])))) {
         new Message("Messages.Money.SelfPay").translate(IDFinder.getWorld(player), player);
+        return false;
+      }
+
+      if(arguments[0].equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
+          && !sender.hasPermission("tne.server.pay")) {
+        new Message("Messages.General.NoPerm").translate(world, sender);
         return false;
       }
 

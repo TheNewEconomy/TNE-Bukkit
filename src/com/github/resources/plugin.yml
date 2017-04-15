@@ -72,6 +72,12 @@ permissions:
          tne.pin: true
          tne.pin.set: true
          tne.pin.confirm: true
+         tne.server.bank: true
+         tne.server.balance: true
+         tne.server.give: true
+         tne.server.pay: true
+         tne.server.set: true
+         tne.server.take: true
          tne.shop: true
          tne.shop.admin: true
          tne.shop.add: true
@@ -203,6 +209,16 @@ permissions:
          tne.pin: true
          tne.pin.set: true
          tne.pin.confirm: true
+
+   tne.server.*:
+      description: Gives access to all functions relating to the main server account.
+      children:
+         tne.server.bank: true
+         tne.server.balance: true
+         tne.server.give: true
+         tne.server.pay: true
+         tne.server.set: true
+         tne.server.take: true
 
    tne.shop.*:
       description: Gives access to all shop-related features & commands.

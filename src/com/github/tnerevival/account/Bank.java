@@ -177,6 +177,10 @@ public class Bank implements Serializable {
       return false;
     }
 
+    if(IDFinder.getUsername(owner.toString()).equals(TNE.instance().api().getString("Core.Server.Name"))
+       && IDFinder.getPlayer(id.toString()).hasPermission("tne.server.bank")) {
+      return true;
+    }
     return bankMember(owner, id, world);
   }
 

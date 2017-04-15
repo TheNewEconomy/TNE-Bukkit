@@ -62,8 +62,10 @@ public class IDFinder {
   }
 
   public static UUID ecoID(String username, boolean skip) {
-    if(TNE.instance().manager.ecoIDs.containsKey(username)) {
-      return TNE.instance().manager.ecoIDs.get(username);
+    for(String s : TNE.instance().manager.ecoIDs.keySet()) {
+      if(s.equalsIgnoreCase(username)) {
+        return TNE.instance().manager.ecoIDs.get(s);
+      }
     }
     UUID eco = (skip)? genUUID() : genUUID(username);
     TNE.instance().manager.ecoIDs.put(username, eco);

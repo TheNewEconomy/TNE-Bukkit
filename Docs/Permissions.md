@@ -139,10 +139,22 @@ Pin
 
 | Node                | Description                                                                           | Command |
 |---------------------|---------------------------------------------------------------------------------------|---------|
-| tne.pin.*           | Gives access to all Pin commands | |
-| tne.pin             | | |
+| tne.pin.*           | Gives access to all Pin commands                                                      |  |
+| tne.pin             |                                                                                       |  |
 | tne.pin.set         | Set your pin to {pin}'s value. Old pin is required if you have one set. Pins are case-sensitive   | /pin set {pin} {confirm pin} (old pin) |
-| tne.pin.confirm     | Cofirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin} |
+| tne.pin.confirm     | Confirm your identity with your account pin. Pins are case-sensitive                               | /pin confirm {pin} |
+
+Server
+-----------
+| Node                | Description                                                                           | Command |
+|---------------------|---------------------------------------------------------------------------------------|---------|
+| tne.server.*        | Gives access to all actions related to the server's economy account.                  |  |
+| tne.server.bank     | Gives access to the server's bank accounts.                                           |  |
+| tne.server.pay      | Gives access to paying the server account.                                            |  |
+| tne.server.give     | Gives access to giving the server account funds.                                      |  |
+| tne.server.set      | Gives access to setting the server account's balances.                                |  |
+| tne.server.take     | Gives access to taking funds from the server account.                                 |  |
+| tne.server.balance  | Gives access to checking the server account's balances.                               |  |
 
 Shop
 -----------

@@ -54,6 +54,12 @@ public class MoneySetCommand extends TNECommand {
         return false;
       }
 
+      if(arguments[0].equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
+          && !sender.hasPermission("tne.server.set")) {
+        new Message("Messages.General.NoPerm").translate(world, sender);
+        return false;
+      }
+
       if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
         Message m = new Message("Messages.Money.NoCurrency");
         m.addVariable("$currency", currencyName);

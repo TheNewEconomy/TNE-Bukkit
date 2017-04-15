@@ -46,6 +46,13 @@ public class AdminBalanceCommand extends TNECommand {
       Currency currency = getCurrency(world, currencyName);
       MISCUtils.debug(TNE.instance().manager.accounts.containsKey(IDFinder.getID(arguments[0])) + "");
       MISCUtils.debug("RETURNED ID: " + IDFinder.getID(arguments[0]).toString() + " for User: " + arguments[0]);
+
+      if(arguments[0].equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
+          && !sender.hasPermission("tne.server.balance")) {
+        new Message("Messages.General.NoPerm").translate(world, sender);
+        return false;
+      }
+
       if(IDFinder.getID(arguments[0]) != null && TNE.instance().manager.accounts.containsKey(IDFinder.getID(arguments[0]))) {
         Account acc = AccountUtils.getAccount(IDFinder.getID(arguments[0]));
         if(acc.getBalances().containsKey(world + ":" + currency.getName())) {

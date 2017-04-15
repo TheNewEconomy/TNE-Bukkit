@@ -3,6 +3,11 @@ Alpha 5.5
 General Changes
 - Added ability to change currency SI prefixes on a per currency basis.
 - Removed the metrics configuration as MCStats has gone past its useful days.
+- Server Account Capabilities
+  - Ability to grant access to the server account's banks
+  - Ability to take, give, and pay money to/from the server account's funds.
+- EcoIDS
+  - Made Eco ID searches case insensitive.
 
 Bug Fixes
 - Fixed issue where amounts in the billions range weren't displaying properly

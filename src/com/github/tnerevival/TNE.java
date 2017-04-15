@@ -1,5 +1,7 @@
 package com.github.tnerevival;
 
+import com.github.tnerevival.account.Account;
+import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.CommandManager;
 import com.github.tnerevival.commands.TNECommand;
@@ -7,7 +9,6 @@ import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
-import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.ConnectionListener;
 import com.github.tnerevival.listeners.InteractionListener;
@@ -19,6 +20,7 @@ import com.github.tnerevival.worker.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -152,7 +154,14 @@ public class TNE extends JavaPlugin {
       UUID id = IDFinder.getID(api.getString("Core.Server.Name"));
       if(!AccountUtils.exists(id)) {
         AccountUtils.createAccount(id);
-        AccountUtils.transaction(null, id.toString(), new BigDecimal(api.getDouble("Core.Server.Balance")), TransactionType.MONEY_SET, defaultWorld);
+        Account acc = AccountUtils.getAccount(id);
+        acc.setBalance(defaultWorld, new BigDecimal(api.getDouble("Core.Server.Balance")), manager.currencyManager.get(defaultWorld).getName());
+        for(World w : getServer().getWorlds()) {
+          if(Bank.enabled(w.getName(), id.toString())) {
+            acc.setBank(w.getName(), new Bank(id, w.getName()));
+          }
+        }
+        manager.accounts.put(id, acc);
         getLogger().info("Created server economy account.");
       }
     }

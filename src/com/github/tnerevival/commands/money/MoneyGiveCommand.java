@@ -59,6 +59,12 @@ public class MoneyGiveCommand extends TNECommand {
         return false;
       }
 
+      if(arguments[0].equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
+         && !sender.hasPermission("tne.server.give")) {
+        new Message("Messages.General.NoPerm").translate(world, sender);
+        return false;
+      }
+
       if(IDFinder.getID(arguments[0]) != null) {
 
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
