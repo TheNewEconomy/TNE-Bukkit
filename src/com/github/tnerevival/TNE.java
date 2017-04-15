@@ -143,12 +143,17 @@ public class TNE extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 
-    getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled!");
+    getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled! Java Version: " + System.getProperty("java.version"));
 
     String updateMessage = "Using the latest version: " + updater.getCurrentBuild();
     if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";
     if(updater.getRelease().equals(ReleaseType.OUTDATED)) updateMessage = "Outdated! The current build is " + updater.getLatestBuild();
     getLogger().info(updateMessage);
+
+    if(api().getBoolean("Core.Metrics")) {
+      Metrics metrics = new Metrics(this);
+      getLogger().info("Sending plugin statistics.");
+    }
 
     if(api.getBoolean("Core.Server.Enabled")) {
       UUID id = IDFinder.getID(api.getString("Core.Server.Name"));

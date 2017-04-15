@@ -14,6 +14,10 @@ Core:
     #Whether or not to run the server in debug mode. OCD WARNING: Causes console spam.
     Debug: false
 
+    #Whether or not to enable plugin metrics. This allows us to know how many servers are running TNE,
+    #what TNE version, java version, etc.
+    Metrics: true
+
     #All configurations relating to the main server account.
     Server:
 
