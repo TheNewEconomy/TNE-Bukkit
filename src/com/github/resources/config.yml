@@ -86,6 +86,18 @@ Core:
             #Example: <major> and <minor>
             Format: <symbol><major.amount><decimal><minor.amount><shorten>
 
+            #The SI Prefixes used when <shorten> is used for the currency's format.
+            #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
+            #http://www.unitarium.com/si-prefixes
+            #The order in which the characters are:
+            #Thousand - k
+            #Million - M
+            #Billion - G
+            #Trillion - T
+            #Quadrillion - P
+            #Quintillion - E
+            Prefixes: 'kMGTPE'
+
             #The initial balance for accounts.
             #Will be used if no world-specific configurations are found if multiworld is enabled
             Balance: 200.0

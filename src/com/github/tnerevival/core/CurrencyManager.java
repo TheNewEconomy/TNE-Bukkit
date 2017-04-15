@@ -67,7 +67,8 @@ public class CurrencyManager {
         BigDecimal balance = configuration.contains(base + ".Balance")?  BigDecimal.valueOf(configuration.getDouble(base + ".Balance")) : new BigDecimal(200.00);
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
         Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? configuration.getInt(base + ".DecimalPlace") : 2;
-        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format") : "<major> and <minor><shorten>";
+        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format").trim() : "<major> and <minor><shorten>";
+        String prefixes = configuration.contains(base + ".Prefixes")? configuration.getString(base + ".Prefixes").trim() : "kMGTPE";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
         Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");
@@ -106,6 +107,7 @@ public class CurrencyManager {
         currency.setDecimal(decimal);
         currency.setDecimalPlaces(decimalPlaces);
         currency.setFormat(format);
+        currency.setPrefixes(prefixes);
         currency.setName(cur);
         currency.setWorldDefault(worldDefault);
         currency.setRate(rate);

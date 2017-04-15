@@ -33,6 +33,7 @@ public class Currency {
   private boolean trackChest;
   private String name;
   private String format;
+  private String prefixes;
   private double rate;
   private String decimal;
   private int decimalPlaces;
@@ -124,6 +125,14 @@ public class Currency {
 
   public void setFormat(String format) {
     this.format = format;
+  }
+
+  public String getPrefixes() {
+    return prefixes;
+  }
+
+  public void setPrefixes(String prefixes) {
+    this.prefixes = prefixes;
   }
 
   public double getRate() {

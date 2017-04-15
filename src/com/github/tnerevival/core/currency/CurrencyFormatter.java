@@ -64,7 +64,7 @@ public class CurrencyFormatter {
     replacements.put("<minor.name>", minorName);
     replacements.put("<major.amount>", major + "");
     replacements.put("<minor.amount>", minor + "");
-    replacements.put("<short.amount>", shorten(amount, currency.getDecimal()));
+    replacements.put("<short.amount>", shorten(currency, amount, currency.getDecimal()));
     replacements.putAll(Message.colours);
 
     String formatted = (currency.shorten())? shortFormat : format;
@@ -81,13 +81,14 @@ public class CurrencyFormatter {
     return bigDecimal.subtract(fractionValue).setScale(0).longValue();
   }
 
-  private static String shorten(BigDecimal balance, String decimal) {
+  private static String shorten(Currency currency, BigDecimal balance, String decimal) {
+    String prefixes = currency.getPrefixes();
     Long dollars = getWhole(balance);
     if (dollars < 1000) {
       return "" + dollars;
     }
     int exp = (int) (Math.log(dollars) / Math.log(1000));
-    return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
+    return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), prefixes.charAt(exp - 1));
   }
 
   public static Boolean isDouble(String value, String world) {
