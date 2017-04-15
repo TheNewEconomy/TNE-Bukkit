@@ -66,7 +66,8 @@ public class CurrencyManager {
         String base = curBase + "." + cur;
         BigDecimal balance = configuration.contains(base + ".Balance")?  BigDecimal.valueOf(configuration.getDouble(base + ".Balance")) : new BigDecimal(200.00);
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
-        Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? configuration.getInt(base + ".DecimalPlace") : 2;
+        Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? ((configuration.getInt(base + ".DecimalPlace") > 5)? 5 : configuration.getInt(base + ".DecimalPlace")) : 2;
+        Long maxBalance = configuration.contains(base + ".MaxBalance")? ((configuration.getLong(base + ".MaxBalance") > 9000000000000000000L)? 9000000000000000000L : configuration.getLong(base + ".MaxBalance")) : 9000000000000000000L;
         String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format").trim() : "<major> and <minor><shorten>";
         String prefixes = configuration.contains(base + ".Prefixes")? configuration.getString(base + ".Prefixes").trim() : "kMGTPE";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
@@ -103,6 +104,7 @@ public class CurrencyManager {
         minorTier.setPlural(minorPlural);
 
         Currency currency = new Currency();
+        currency.setMaxBalance(maxBalance);
         currency.setBalance(balance);
         currency.setDecimal(decimal);
         currency.setDecimalPlaces(decimalPlaces);

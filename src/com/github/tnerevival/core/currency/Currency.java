@@ -26,6 +26,7 @@ public class Currency {
 
   private boolean worldDefault = true;
   private BigDecimal balance;
+  private long maxBalance;
   private boolean item;
   private boolean vault;
   private boolean bankChest;
@@ -69,6 +70,14 @@ public class Currency {
 
   public void setBalance(BigDecimal balance) {
     this.balance = balance;
+  }
+
+  public long getMaxBalance() {
+    return maxBalance;
+  }
+
+  public void setMaxBalance(long maxBalance) {
+    this.maxBalance = maxBalance;
   }
 
   public boolean isItem() {

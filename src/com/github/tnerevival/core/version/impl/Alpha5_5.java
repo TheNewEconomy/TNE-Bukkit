@@ -60,16 +60,36 @@ import java.util.*;
 /**
  * Created by creatorfromhell on 1/17/2017.
  **/
-public class Alpha5_2 extends Version {
+public class Alpha5_5 extends Version {
   @Override
   public double versionNumber() {
-    return 5.4;
+    return 5.5;
   }
 
   @Override
   public void update(double version, String type) {
-    if(version < 4.0 || version == 5.2 || version == 5.3) return;
-    if(type.equalsIgnoreCase("mysql") || type.equalsIgnoreCase("h2")) {
+    if(version < 4.0) return;
+    if(version >= 5.2 && version <= 5.4) {
+      String table = prefix + "_SIGNS";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
+      table = prefix + "_SIGN_OFFERS";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250)");
+      table = prefix + "_TRACKED";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `location` VARCHAR(250)");
+      table = prefix + "_BALANCES";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(26)");
+      table = prefix + "_BANK_BALANCES";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(26)");
+      table = prefix + "_TRANSACTIONS";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_cost` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_oldBalance` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_balance` VARCHAR(26)");
+      table = prefix + "_SIGN_OFFERS";
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `offer_buy` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `offer_sell` VARCHAR(26)");
+      return;
+    }
+    if(!type.equalsIgnoreCase("flatfile")) {
       //New Tables
       String table = prefix + "_BALANCES";
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -77,7 +97,7 @@ public class Alpha5_2 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -85,7 +105,7 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`material` LONGTEXT," +
-          "`location` VARCHAR(350)," +
+          "`location` VARCHAR(250)," +
           "`slot` INT(60) NOT NULL," +
           "PRIMARY KEY(uuid, location, slot)" +
           ");");
@@ -122,7 +142,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -161,10 +181,10 @@ public class Alpha5_2 extends Version {
 
       table = prefix + "_SIGN_OFFERS";
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location` VARCHAR(350)," +
+          "`sign_location` VARCHAR(250)," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` DOUBLE," +
-          "`offer_sell` DOUBLE," +
+          "`offer_buy` VARCHAR(26)," +
+          "`offer_sell` VARCHAR(26)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
@@ -188,7 +208,7 @@ public class Alpha5_2 extends Version {
       sql().executeUpdate("ALTER TABLE `" + table + "` DROP COLUMN `bank`");
 
       table = prefix + "_SIGNS";
-      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(350) UNIQUE");
+      mysql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `sign_location` VARCHAR(250) UNIQUE");
     }
   }
 
@@ -206,9 +226,9 @@ public class Alpha5_2 extends Version {
             sql().results(transactionIndex).getString("trans_player"),
             sql().results(transactionIndex).getString("trans_world"),
             sql().results(transactionIndex).getString("trans_type"),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_cost")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_oldBalance")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_balance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_cost")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_oldBalance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_balance")),
             sql().results(transactionIndex).getLong("trans_time")
         );
         TransactionHistory history = (transactions.containsKey(r.getInitiator()))? transactions.get(r.getInitiator()) : new TransactionHistory();
@@ -238,9 +258,9 @@ public class Alpha5_2 extends Version {
             sql().results(transactionIndex).getString("trans_player"),
             sql().results(transactionIndex).getString("trans_world"),
             sql().results(transactionIndex).getString("trans_type"),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_cost")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_oldBalance")),
-            new BigDecimal(sql().results(transactionIndex).getDouble("trans_balance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_cost")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_oldBalance")),
+            new BigDecimal(sql().results(transactionIndex).getString("trans_balance")),
             sql().results(transactionIndex).getLong("trans_time")
         );
         history.add(r);
@@ -265,9 +285,9 @@ public class Alpha5_2 extends Version {
               record.getPlayer(),
               record.getWorld(),
               record.getType(),
-              record.getCost(),
-              record.getOldBalance(),
-              record.getBalance(),
+              record.getCost().toPlainString(),
+              record.getOldBalance().toPlainString(),
+              record.getBalance().toPlainString(),
               record.getTime(),
               record.getPlayer(),
               record.getWorld()
@@ -305,7 +325,7 @@ public class Alpha5_2 extends Version {
         String balancesTable = prefix + "_BALANCES";
         int balancesIndex = sql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[] { account.getUid().toString() });
         while(sql().results(balancesIndex).next()) {
-          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getDouble("balance")), sql().results(balancesIndex).getString("currency"));
+          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getString("balance")), sql().results(balancesIndex).getString("currency"));
         }
 
         table = prefix + "_BANKS";
@@ -316,7 +336,7 @@ public class Alpha5_2 extends Version {
           String extraTable = prefix + "_BANK_BALANCES";
           int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
           while(sql().results(extraIndex).next()) {
-            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getDouble("balance")));
+            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getString("balance")));
           }
           extraTable = prefix + "_BANK_MEMBERS";
           extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
@@ -379,7 +399,7 @@ public class Alpha5_2 extends Version {
         String balancesTable = prefix + "_BALANCES";
         int balancesIndex = sql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[] { account.getUid().toString() });
         while(sql().results(balancesIndex).next()) {
-          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getDouble("balance")), sql().results(balancesIndex).getString("currency"));
+          account.setBalance(sql().results(balancesIndex).getString("world"), new BigDecimal(sql().results(balancesIndex).getString("balance")), sql().results(balancesIndex).getString("currency"));
         }
 
         table = prefix + "_BANKS";
@@ -390,7 +410,7 @@ public class Alpha5_2 extends Version {
           String extraTable = prefix + "_BANK_BALANCES";
           int extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
           while(sql().results(extraIndex).next()) {
-            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getDouble("balance")));
+            bank.setGold(sql().results(extraIndex).getString("currency"), new BigDecimal(sql().results(extraIndex).getString("balance")));
           }
           extraTable = prefix + "_BANK_MEMBERS";
           extraIndex = sql().executePreparedQuery("SELECT * FROM " + extraTable + " WHERE uuid = ? AND world = ?", new Object[] { account.getUid().toString(), bank.getWorld() });
@@ -462,7 +482,7 @@ public class Alpha5_2 extends Version {
       table = prefix + "_BALANCES";
       for (String s : acc.getBalances().keySet()) {
         String[] parts = s.split(":");
-        double amount = acc.getBalance(parts[0], parts[1]).doubleValue();
+        String amount = acc.getBalance(parts[0], parts[1]).toPlainString();
         sql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, server_name, world, currency, balance) " +
                 "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
             new Object[]{
@@ -493,8 +513,8 @@ public class Alpha5_2 extends Version {
                   acc.getUid().toString(),
                   entry.getKey(),
                   s,
-                  entry.getValue().getGold(s).doubleValue(),
-                  entry.getValue().getGold(s).doubleValue()
+                  entry.getValue().getGold(s).toPlainString(),
+                  entry.getValue().getGold(s).toPlainString()
               }
           );
         }
@@ -791,8 +811,8 @@ public class Alpha5_2 extends Version {
             stack.setAmount(sql().results(offersIndex).getInt("offer_amount"));
 
             ItemEntry entry = new ItemEntry(order, stack);
-            entry.setBuy(new BigDecimal(sql().results(offersIndex).getDouble("offer_buy")));
-            entry.setSell(new BigDecimal(sql().results(offersIndex).getDouble("offer_sell")));
+            entry.setBuy(new BigDecimal(sql().results(offersIndex).getString("offer_buy")));
+            entry.setSell(new BigDecimal(sql().results(offersIndex).getString("offer_sell")));
             entry.setAdmin(sql().results(offersIndex).getBoolean("offer_admin"));
             String trade = sql().results(offersIndex).getString("offer_trade");
             if(!trade.trim().equals("")) {
@@ -835,8 +855,8 @@ public class Alpha5_2 extends Version {
             stack.setAmount(sql().results(offersIndex).getInt("offer_amount"));
 
             ItemEntry entry = new ItemEntry(order, stack);
-            entry.setBuy(new BigDecimal(sql().results(offersIndex).getDouble("offer_buy")));
-            entry.setSell(new BigDecimal(sql().results(offersIndex).getDouble("offer_sell")));
+            entry.setBuy(new BigDecimal(sql().results(offersIndex).getString("offer_buy")));
+            entry.setSell(new BigDecimal(sql().results(offersIndex).getString("offer_sell")));
             entry.setAdmin(sql().results(offersIndex).getBoolean("offer_admin"));
             String trade = sql().results(offersIndex).getString("offer_trade");
             if(!trade.trim().equals("")) {
@@ -882,15 +902,15 @@ public class Alpha5_2 extends Version {
               new Object[]{
                   sign.getLocation().toString(),
                   entry.getOrder(),
-                  entry.getBuy().doubleValue(),
-                  entry.getSell().doubleValue(),
+                  entry.getBuy().toPlainString(),
+                  entry.getSell().toPlainString(),
                   (entry.getTrade().getType().equals(Material.AIR))? "" : new SerializableItemStack(entry.getOrder(), entry.getTrade()).toString(),
                   entry.getItem().getAmount(),
                   entry.getItem().getDurability(),
                   entry.getItem().getType().name(),
                   entry.isAdmin(),
-                  entry.getBuy().doubleValue(),
-                  entry.getSell().doubleValue(),
+                  entry.getBuy().toPlainString(),
+                  entry.getSell().toPlainString(),
                   (entry.getTrade().getType().equals(Material.AIR))? "" : new SerializableItemStack(entry.getOrder(), entry.getTrade()).toString(),
                   entry.getItem().getAmount(),
                   entry.getItem().getDurability(),
@@ -990,7 +1010,7 @@ public class Alpha5_2 extends Version {
               auction.getWorld(),
               SQLDatabase.boolToDB(auction.getSilent()),
               auction.getItem().toString(),
-              auction.getCost().getAmount(),
+              auction.getCost().getAmount().toPlainString(),
               auction.getIncrement(),
               SQLDatabase.boolToDB(auction.getGlobal()),
               auction.getTime(),
@@ -1001,7 +1021,7 @@ public class Alpha5_2 extends Version {
               auction.getWorld(),
               SQLDatabase.boolToDB(auction.getSilent()),
               auction.getItem().toString(),
-              auction.getCost().getAmount(),
+              auction.getCost().getAmount().toPlainString(),
               auction.getIncrement(),
               SQLDatabase.boolToDB(auction.getGlobal()),
               auction.getTime(),
@@ -1084,7 +1104,7 @@ public class Alpha5_2 extends Version {
               claim.getCost().getAmount(),
               claim.getItem().toString(),
               SQLDatabase.boolToDB(claim.isPaid()),
-              claim.getCost().getAmount()
+              claim.getCost().getAmount().toPlainString()
           });
       sql().close();
     }
@@ -1220,7 +1240,7 @@ public class Alpha5_2 extends Version {
       while(balanceIterator.hasNext()) {
         java.util.Map.Entry<String, Object> balanceEntry = balanceIterator.next();
 
-        balanceMap.put(balanceEntry.getKey(), new BigDecimal((Double)balanceEntry.getValue()));
+        balanceMap.put(balanceEntry.getKey(), new BigDecimal((String)balanceEntry.getValue()));
       }
       account.setBalances(balanceMap);
 
@@ -1294,7 +1314,7 @@ public class Alpha5_2 extends Version {
       auction.setWorld((String)info.getData("world"));
       auction.setSilent((boolean)info.getData("silent"));
       auction.setItem(SerializableItemStack.fromString((String)info.getData("item")));
-      auction.setCost(new TransactionCost(new BigDecimal((double)info.getData("cost"))));
+      auction.setCost(new TransactionCost(new BigDecimal((String)info.getData("cost"))));
       auction.setIncrement(new BigDecimal((double)info.getData("increment")));
       auction.setGlobal((boolean)info.getData("global"));
       auction.setTime((int)info.getData("time"));
@@ -1310,7 +1330,7 @@ public class Alpha5_2 extends Version {
           UUID.fromString((String)info.getData("player")),
           (int)info.getData("lot"),
           SerializableItemStack.fromString((String)info.getData("item")),
-          new TransactionCost(new BigDecimal((double)info.getData("cost")))
+          new TransactionCost(new BigDecimal((String) info.getData("cost")))
       );
       claim.setPaid((boolean)info.getData("paid"));
 
@@ -1334,8 +1354,8 @@ public class Alpha5_2 extends Version {
           stack.setDurability((short)entry.getData("damage"));
           ItemEntry offer = new ItemEntry((int)entry.getData("order"), stack);
           offer.setAdmin(SQLDatabase.boolFromDB((int)entry.getData("admin")));
-          offer.setBuy(new BigDecimal((double)entry.getData("buy")));
-          offer.setSell(new BigDecimal((double)entry.getData("sell")));
+          offer.setBuy(new BigDecimal((String) entry.getData("buy")));
+          offer.setSell(new BigDecimal((String) entry.getData("sell")));
           if(!((String)entry.getData("trade")).equals("")) {
             SerializableItemStack trade = SerializableItemStack.fromString((String)entry.getData("trade"));
             offer.setTrade(trade.toItemStack());
@@ -1357,9 +1377,9 @@ public class Alpha5_2 extends Version {
             (String) info.getData("player"),
             (String) info.getData("world"),
             TransactionType.fromID((String) info.getData("type")),
-            new TransactionCost(new BigDecimal((Double) info.getData("cost"))),
-            new BigDecimal((Double) info.getData("oldBalance")),
-            new BigDecimal((Double) info.getData("balance")),
+            new TransactionCost(new BigDecimal((String) info.getData("cost"))),
+            new BigDecimal((String) info.getData("oldBalance")),
+            new BigDecimal((String) info.getData("balance")),
             (Long) info.getData("time")
         );
       }
@@ -1395,7 +1415,7 @@ public class Alpha5_2 extends Version {
 
       while(balIT.hasNext()) {
         java.util.Map.Entry<String, BigDecimal> balanceEntry = balIT.next();
-        balances.addData(balanceEntry.getKey(), balanceEntry.getValue().doubleValue());
+        balances.addData(balanceEntry.getKey(), balanceEntry.getValue().toPlainString());
       }
       account.addEntry(balances);
 
@@ -1482,7 +1502,7 @@ public class Alpha5_2 extends Version {
       info.addData("world", auction.getWorld());
       info.addData("silent", auction.getSilent());
       info.addData("item", auction.getItem().toString());
-      info.addData("cost", auction.getCost().getAmount().doubleValue());
+      info.addData("cost", auction.getCost().getAmount().toPlainString());
       info.addData("increment", auction.getIncrement());
       info.addData("global", auction.getGlobal());
       info.addData("time", auction.getTime());
@@ -1499,7 +1519,7 @@ public class Alpha5_2 extends Version {
       info.addData("lot", claim.getLot());
       info.addData("item", claim.getItem().toString());
       info.addData("paid", claim.isPaid());
-      info.addData("cost", claim.getCost().getAmount().doubleValue());
+      info.addData("cost", claim.getCost().getAmount().toPlainString());
       a.addEntry(info);
       claims.addArticle(claim.getLot() + "", a);
     }
@@ -1527,8 +1547,8 @@ public class Alpha5_2 extends Version {
           Entry offer = new Entry(entry.getOrder() + "");
           offer.addData("order", entry.getOrder());
           offer.addData("location", sign.getLocation().toString());
-          offer.addData("buy", entry.getBuy());
-          offer.addData("sell", entry.getSell());
+          offer.addData("buy", entry.getBuy().toPlainString());
+          offer.addData("sell", entry.getSell().toPlainString());
           String trade = (entry.getTrade().getType().equals(Material.AIR))? "" : new SerializableItemStack(entry.getOrder(), entry.getTrade()).toString();
           offer.addData("trade", trade);
           offer.addData("amount", entry.getItem().getAmount());
@@ -1553,9 +1573,9 @@ public class Alpha5_2 extends Version {
         info.addData("player", r.getPlayer());
         info.addData("world", r.getWorld());
         info.addData("type", r.getType());
-        info.addData("cost", r.getCost().doubleValue());
-        info.addData("oldBalance", r.getOldBalance().doubleValue());
-        info.addData("balance", r.getBalance().doubleValue());
+        info.addData("cost", r.getCost().toPlainString());
+        info.addData("oldBalance", r.getOldBalance().toPlainString());
+        info.addData("balance", r.getBalance().toPlainString());
         info.addData("time", r.getTime());
         a.addEntry(info);
         transactions.addArticle(r.getId(), a);
@@ -1774,15 +1794,15 @@ public class Alpha5_2 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
       table = prefix + "_TRACKED";
-      sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`material` LONGTEXT," +
-          "`location` VARCHAR(350)," +
+          "`location` VARCHAR(250)," +
           "`slot` INT(60) NOT NULL," +
           "PRIMARY KEY(uuid, location, slot)" +
           ");");
@@ -1863,7 +1883,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -1912,16 +1932,16 @@ public class Alpha5_2 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` VARCHAR(350)  NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(250)  NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
 
       table = prefix + "_SIGN_OFFERS";
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location` VARCHAR(350) NOT NULL," +
+          "`sign_location` VARCHAR(250) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` DOUBLE," +
-          "`offer_sell` DOUBLE," +
+          "`offer_buy` VARCHAR(26)," +
+          "`offer_sell` VARCHAR(26)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
@@ -1937,9 +1957,9 @@ public class Alpha5_2 extends Version {
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
-          "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE," +
-          "`trans_balance` DOUBLE," +
+          "`trans_cost` VARCHAR(26)," +
+          "`trans_oldBalance` VARCHAR(26)," +
+          "`trans_balance` VARCHAR(26)," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
@@ -1993,9 +2013,18 @@ public class Alpha5_2 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
+
+      table = prefix + "_TRACKED";
+      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
+              "`uuid` VARCHAR(36) NOT NULL," +
+              "`material` LONGTEXT," +
+              "`location` VARCHAR(250)," +
+              "`slot` INT(60) NOT NULL," +
+              "PRIMARY KEY(uuid, location, slot)" +
+              ");");
 
       table = prefix + "_SHOPS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
@@ -2073,7 +2102,7 @@ public class Alpha5_2 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` DOUBLE," +
+          "`balance` VARCHAR(26)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -2122,16 +2151,16 @@ public class Alpha5_2 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_owner` VARCHAR(36)," +
           "`sign_type` VARCHAR(30) NOT NULL," +
-          "`sign_location` VARCHAR(350) NOT NULL UNIQUE," +
+          "`sign_location` VARCHAR(250) NOT NULL UNIQUE," +
           "`sign_meta` LONGTEXT" +
           ");");
 
       table = prefix + "_SIGN_OFFERS";
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
-          "`sign_location`  VARCHAR(350) NOT NULL," +
+          "`sign_location`  VARCHAR(250) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` DOUBLE," +
-          "`offer_sell` DOUBLE," +
+          "`offer_buy` VARCHAR(26)," +
+          "`offer_sell` VARCHAR(26)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
@@ -2147,9 +2176,9 @@ public class Alpha5_2 extends Version {
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
-          "`trans_cost` DOUBLE," +
-          "`trans_oldBalance` DOUBLE," +
-          "`trans_balance` DOUBLE," +
+          "`trans_cost` VARCHAR(26)," +
+          "`trans_oldBalance` VARCHAR(26)," +
+          "`trans_balance` VARCHAR(26)," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");

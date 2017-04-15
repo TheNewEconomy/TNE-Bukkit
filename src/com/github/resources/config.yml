@@ -101,7 +101,7 @@ Core:
 
             #The maximum balance possible for this currency.
             # Maximum possible value: 9000000000000000000
-            Max: 9000000000000000000
+            MaxBalance: 9000000000000000000
 
             #The SI Prefixes used when <shorten> is used for the currency's format.
             #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
@@ -133,6 +133,7 @@ Core:
             Decimal: .
 
             #The amount of digits to display after the decimal character.
+            #The maximum amount of places is 5
             DecimalPlaces: 2
 
             #Would you like to use an item as the currency?

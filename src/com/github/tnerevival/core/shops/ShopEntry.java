@@ -103,7 +103,7 @@ public class ShopEntry implements Serializable {
     StringBuilder builder = new StringBuilder();
 
     builder.append(item.toString());
-    builder.append("*" + cost.doubleValue());
+    builder.append("*" + cost.toPlainString());
     builder.append("*" + stock);
     builder.append("*" + buy);
     builder.append("*" + unlimited);

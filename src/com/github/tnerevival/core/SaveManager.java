@@ -6,6 +6,7 @@ import com.github.tnerevival.core.conversion.impl.*;
 import com.github.tnerevival.core.version.Version;
 import com.github.tnerevival.core.version.impl.Alpha5_0;
 import com.github.tnerevival.core.version.impl.Alpha5_2;
+import com.github.tnerevival.core.version.impl.Alpha5_5;
 
 import java.io.*;
 import java.sql.*;
@@ -24,7 +25,7 @@ public class SaveManager {
     versions.put(5.2, new Alpha5_2());
     versions.put(5.3, new Alpha5_2());
     versions.put(5.4, new Alpha5_2());
-    versions.put(5.5, new Alpha5_2());
+    versions.put(5.5, new Alpha5_5());
   }
 
   public Version versionInstance;
