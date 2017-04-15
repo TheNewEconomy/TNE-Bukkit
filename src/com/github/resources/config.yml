@@ -339,13 +339,13 @@ Core:
         #Whether or not players who die lose all their money
         Lose: false
 
-        #All death configurations for banks.
-        Bank:
+        #All death configurations for vaults.
+        Vault:
 
-          #The amount of items players should drop from their bank on their death(completely random)
+          #The amount of items players should drop from their vault on their death(completely random)
           Drop: 0
 
-          #Whether or not there's a chance to drop nothing(empty slot) from a player's bank.
+          #Whether or not there's a chance to drop nothing(empty slot) from a player's vault.
           #This adds the ability for players to get lucky and lose nothing on death.
           IncludeEmpty: true
 

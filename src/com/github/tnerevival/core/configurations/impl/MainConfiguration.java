@@ -73,9 +73,9 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Signs.Item.EnderChest", true);
 
     configurations.put("Core.Death.Lose", false);
-    configurations.put("Core.Death.Bank.Drop", 0);
-    configurations.put("Core.Death.Bank.IncludeEmpty", true);
-    configurations.put("Core.Death.Bank.PlayerOnly", true);
+    configurations.put("Core.Death.Vault.Drop", 0);
+    configurations.put("Core.Death.Vault.IncludeEmpty", true);
+    configurations.put("Core.Death.Vault.PlayerOnly", true);
 
     configurations.put("Core.Vault.Enabled", false);
     configurations.put("Core.Vault.Sign", false);

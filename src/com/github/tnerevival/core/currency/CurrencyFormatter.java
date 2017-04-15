@@ -50,8 +50,8 @@ public class CurrencyFormatter {
     String format = currency.getFormat();
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
-    Integer major = Integer.parseInt(amountStr[0]);
-    Integer minor = Integer.parseInt((amountStr[1].length() == 1)? amountStr[1] + "0" : amountStr[1]);
+    Long major = Long.parseLong(amountStr[0]);
+    Long minor = Long.parseLong((amountStr[1].length() == 1)? amountStr[1] + "0" : amountStr[1]);
     String majorName = (major == 1)? currency.getTier("Major").getSingle() : currency.getTier("Major").getPlural();
     String minorName = (minor == 1)? currency.getTier("Minor").getSingle() : currency.getTier("Minor").getPlural();
 
@@ -75,14 +75,14 @@ public class CurrencyFormatter {
     return formatted;
   }
 
-  private static int getWhole(BigDecimal number) {
+  private static long getWhole(BigDecimal number) {
     BigDecimal bigDecimal = number.setScale(2, BigDecimal.ROUND_HALF_UP);
     BigDecimal fractionValue =  bigDecimal.remainder(BigDecimal.ONE);
-    return bigDecimal.subtract(fractionValue).setScale(0).intValue();
+    return bigDecimal.subtract(fractionValue).setScale(0).longValue();
   }
 
   private static String shorten(BigDecimal balance, String decimal) {
-    Integer dollars = getWhole(balance);
+    Long dollars = getWhole(balance);
     if (dollars < 1000) {
       return "" + dollars;
     }
