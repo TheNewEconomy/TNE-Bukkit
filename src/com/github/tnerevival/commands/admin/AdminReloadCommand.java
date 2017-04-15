@@ -40,9 +40,11 @@ public class AdminReloadCommand extends TNECommand {
         sender.sendMessage(ChatColor.WHITE + "Configurations reloaded!");
         return true;
       } else if(arguments.length == 1) {
-        if(arguments[0].equalsIgnoreCase("all") || arguments[0].equalsIgnoreCase("config") || arguments[0].equalsIgnoreCase("currencies") || arguments[0].equalsIgnoreCase("materials")
-            || arguments[0].equalsIgnoreCase("messages") || arguments[0].equalsIgnoreCase("mobs") || arguments[0].equalsIgnoreCase("objects") || arguments[0].equalsIgnoreCase("players")
-            || arguments[0].equalsIgnoreCase("worlds")) {
+        if(arguments[0].equalsIgnoreCase("all") || arguments[0].equalsIgnoreCase("config")
+            || arguments[0].equalsIgnoreCase("currencies") || arguments[0].equalsIgnoreCase("items")
+            || arguments[0].equalsIgnoreCase("materials") || arguments[0].equalsIgnoreCase("messages")
+            || arguments[0].equalsIgnoreCase("mobs") || arguments[0].equalsIgnoreCase("objects")
+            || arguments[0].equalsIgnoreCase("players") || arguments[0].equalsIgnoreCase("worlds")) {
           ConfigurationManager.reloadConfigurations(arguments[0]);
           String message = (arguments[0].equalsIgnoreCase("all"))? " All configurations reloaded." : arguments[0] + ".yml reloaded.";
           sender.sendMessage(ChatColor.WHITE + message);
@@ -56,7 +58,7 @@ public class AdminReloadCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/theneweconomy reload <all/config/currencies/materials/messages/mobs/objects/players/worlds> - reload the TNE configurations or reload the specified file";
+    return "/theneweconomy reload <all/config/currencies/items/materials/messages/mobs/objects/players/worlds> - reload the TNE configurations or reload the specified file";
   }
 
 }

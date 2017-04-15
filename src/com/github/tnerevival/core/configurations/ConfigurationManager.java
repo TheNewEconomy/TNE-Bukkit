@@ -254,7 +254,6 @@ public class ConfigurationManager {
   public static void reloadConfigurations(String type) {
     if(type.equalsIgnoreCase("all")) {
       TNE.instance().reloadConfig();
-      TNE.instance().manager.currencyManager.loadCurrencies();
       reloadConfigsMaterials();
       reloadConfigsMessages();
       reloadConfigsMobs();
@@ -267,7 +266,9 @@ public class ConfigurationManager {
       TNE.configurations.load(TNE.instance().getConfig(), "main");
     } else if(type.equalsIgnoreCase("currencies")) {
       TNE.instance().manager.currencyManager.loadCurrencies();
-    } else if(type.equalsIgnoreCase("materials")) {
+    } else if(type.equalsIgnoreCase("items")) {
+      reloadConfigsItems();
+    }else if(type.equalsIgnoreCase("materials")) {
       reloadConfigsMaterials();
     } else if(type.equalsIgnoreCase("messages")) {
       reloadConfigsMessages();
@@ -304,6 +305,13 @@ public class ConfigurationManager {
     }
     TNE.instance().messageConfigurations = YamlConfiguration.loadConfiguration(TNE.instance().messages);
     TNE.configurations.load(TNE.instance().messageConfigurations, "messages");
+  }
+
+  private static void reloadConfigsItems() {
+    if(TNE.instance().items == null) {
+      TNE.instance().items = new File(TNE.instance().getDataFolder(), "items.yml");
+    }
+    TNE.instance().itemConfigurations = YamlConfiguration.loadConfiguration(TNE.instance().items);
   }
 
   private static void reloadConfigsObjects() {
