@@ -102,15 +102,15 @@ public class ItemSign extends TNESign {
           String[] split = s.trim().split(" ");
           MISCUtils.debug("Line 2: " + lines[2]);
           MISCUtils.debug("Value: " + split[0]);
-          Double value = (CurrencyFormatter.isDouble(split[0], world))? CurrencyFormatter.translateDouble(split[0], world) : -1.0;
+          BigDecimal value = (CurrencyFormatter.isBigDecimal(split[0], world))? CurrencyFormatter.translateBigDecimal(split[0], world) : new BigDecimal(-1.0);
           switch(split[1].toUpperCase().trim()) {
             case "B":
               MISCUtils.debug("Added buy value of " + value);
-              buy = new BigDecimal(value);
+              buy = value;
               break;
             case "S":
               MISCUtils.debug("Added sell value of " + value);
-              sell = new BigDecimal(value);
+              sell = value;
               break;
             default:
               break;

@@ -30,7 +30,6 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -160,7 +159,7 @@ public class TNE extends JavaPlugin {
       if(!AccountUtils.exists(id)) {
         AccountUtils.createAccount(id);
         Account acc = AccountUtils.getAccount(id);
-        acc.setBalance(defaultWorld, new BigDecimal(api.getDouble("Core.Server.Balance")), manager.currencyManager.get(defaultWorld).getName());
+        acc.setBalance(defaultWorld, api.getBigDecimal("Core.Server.Balance"), manager.currencyManager.get(defaultWorld).getName());
         for(World w : getServer().getWorlds()) {
           if(Bank.enabled(w.getName(), id.toString())) {
             acc.setBank(w.getName(), new Bank(id, w.getName()));

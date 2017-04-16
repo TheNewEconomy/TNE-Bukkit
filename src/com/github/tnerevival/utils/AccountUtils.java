@@ -468,6 +468,6 @@ public class AccountUtils {
         return new BigDecimal(TNE.instance().worldConfigurations.getDouble("Worlds." + world + ".ChangeFee"));
       }
     }
-    return new BigDecimal(TNE.instance().api().getDouble("Core.World.ChangeFee", world));
+    return TNE.instance().api().getBigDecimal("Core.World.ChangeFee", world);
   }
 }

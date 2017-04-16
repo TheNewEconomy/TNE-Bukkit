@@ -26,7 +26,7 @@ public class BalanceSign extends TNESign {
       String currency = TNE.instance().api().getString(type.getConfiguration() + ".Currency");
       String world = IDFinder.getWorld(player);
       Message balance = new Message("Messages.Money.Balance");
-      balance.addVariable("$amount",  CurrencyFormatter.format(world, currency, TNE.instance().api().getBalanceDecimal(IDFinder.getID(player).toString(), world)));
+      balance.addVariable("$amount",  CurrencyFormatter.format(world, currency, TNE.instance().api().getBalance(IDFinder.getID(player).toString(), world)));
       balance.translate(world, player);
       if(!shift) return true;
     }

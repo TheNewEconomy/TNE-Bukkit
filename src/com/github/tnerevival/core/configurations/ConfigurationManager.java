@@ -2,6 +2,7 @@ package com.github.tnerevival.core.configurations;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
+import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.impl.*;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ConfigurationManager {
 
@@ -49,7 +49,7 @@ public class ConfigurationManager {
 
   public BigDecimal playerReward(String id, String world, String player) {
     MISCUtils.debug("ConfigurationManager.playerReward(" + id + ", " + world + "," + player + ")");
-    return new BigDecimal(TNE.instance().api().getDouble("Mobs.Player.Individual." + id + ".Reward", world, player));
+    return TNE.instance().api().getBigDecimal("Mobs.Player.Individual." + id + ".Reward", world, player);
   }
 
   public Boolean mobAge(String world, String player) {
@@ -68,9 +68,9 @@ public class ConfigurationManager {
 
   public BigDecimal getRewardMultiplier(String mob, String world, String player) {
     if(getConfiguration("Mobs." + mob + ".Multiplier", world, player) != null) {
-      return new BigDecimal(TNE.instance().api().getDouble("Mobs." + mob + ".Multiplier", world, player));
+      return TNE.instance().api().getBigDecimal("Mobs." + mob + ".Multiplier", world, player);
     }
-    return new BigDecimal(TNE.instance().api().getDouble("Mobs.Multiplier", world, player));
+    return TNE.instance().api().getBigDecimal("Mobs.Multiplier", world, player);
   }
 
   public BigDecimal mobReward(String mob, String world, String player) {
@@ -80,13 +80,12 @@ public class ConfigurationManager {
       return BigDecimal.ZERO;
     }
     if(getConfiguration("Mobs." + mob + ".Chance.Min", world, player) != null || getConfiguration("Mobs." + mob + ".Chance.Max", world, player) != null) {
-      double min = TNE.instance().api().getDouble("Mobs." + mob + ".Chance.Min", world, player);
-      double max = TNE.instance().api().getDouble("Mobs." + mob + ".Chance.Max", world, player);
-      double random = ThreadLocalRandom.current().nextDouble(min, max);
-      return new BigDecimal(random);
+      BigDecimal min = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Min", world, player);
+      BigDecimal max = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Max", world, player);
+      return TNEAPI.generateRandomBigDecimal(min, max);
     }
 
-    return new BigDecimal(TNE.instance().api().getDouble("Mobs." + mob + ".Reward", world, player));
+    return TNE.instance().api().getBigDecimal("Mobs." + mob + ".Reward", world, player);
   }
 
   public String mobCurrency(String mob, String world, String player) {

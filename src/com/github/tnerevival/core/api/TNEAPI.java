@@ -168,7 +168,7 @@ public class TNEAPI {
    * @param identifier The player's username of stringified version of their UUID.
    * @return The balance for the specified player.
    */
-  public BigDecimal getBalanceDecimal(String identifier) {
+  public BigDecimal getBalance(String identifier) {
     return AccountUtils.getFunds(IDFinder.getID(identifier));
   }
 
@@ -178,7 +178,7 @@ public class TNEAPI {
    * @param world The world balance to perform this action on.
    * @return The balance for the specified player.
    */
-  public BigDecimal getBalanceDecimal(String identifier, String world) {
+  public BigDecimal getBalance(String identifier, String world) {
     return AccountUtils.getFunds(IDFinder.getID(identifier), world);
   }
 
@@ -189,7 +189,7 @@ public class TNEAPI {
    * @param currency The currency of the funds.
    * @return The balance for the specified player.
    */
-  public BigDecimal getBalanceDecimal(String identifier, String world, Currency currency) {
+  public BigDecimal getBalance(String identifier, String world, Currency currency) {
     return AccountUtils.getFunds(IDFinder.getID(identifier), world, currency.getName());
   }
 
@@ -889,47 +889,58 @@ public class TNEAPI {
   }
 
   /**
-   * Get the value of a Double configuration.
-   * @param configuration The configuration node.
-   * @return The value of the configuration.
+   * Generates a random BigDecimal between a range.
+   * @param min The minimum value possible.
+   * @param max The maximum value possible.
+   * @return The randomly value that was generated.
    */
-  public Double getDouble(String configuration) {
-    return getDouble(configuration, TNE.instance().defaultWorld);
+  public static BigDecimal generateRandomBigDecimal(BigDecimal min, BigDecimal max) {
+    BigDecimal randomBigDecimal = min.add(new BigDecimal(Math.random()).multiply(max.subtract(min)));
+    return randomBigDecimal.setScale(5, BigDecimal.ROUND_HALF_UP);
   }
 
   /**
-   * Get the value of a Double configuration.
+   * Get the value of a BigDecimal configuration.
+   * @param configuration The configuration node.
+   * @return The value of the configuration.
+   */
+  public BigDecimal getBigDecimal(String configuration) {
+    return getBigDecimal(configuration, TNE.instance().defaultWorld);
+  }
+
+  /**
+   * Get the value of a BigDecimal configuration.
    * @param configuration The configuration node.
    * @param world The name of the world to use.
    * @return The value of the configuration.
    */
-  public Double getDouble(String configuration, String world) {
+  public BigDecimal getBigDecimal(String configuration, String world) {
     String value = getConfiguration(configuration, world, "").toString();
-    return CurrencyFormatter.translateDouble(value, world);
+    return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
   /**
-   * Get the value of a Double configuration.
+   * Get the value of a BigDecimal configuration.
    * @param configuration The configuration node.
    * @param world The name of the world to use.
    * @param uuid The uuid of the player to use.
    * @return The value of the configuration.
    */
-  public Double getDouble(String configuration, String world, UUID uuid) {
+  public BigDecimal getBigDecimal(String configuration, String world, UUID uuid) {
     String value = getConfiguration(configuration, world, uuid).toString();
-    return CurrencyFormatter.translateDouble(value, world);
+    return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
   /**
-   * Get the value of a Double configuration.
+   * Get the value of a BigDecimal configuration.
    * @param configuration The configuration node.
    * @param world The name of the world to use.
    * @param player The identifier of the player to use.
    * @return The value of the configuration.
    */
-  public Double getDouble(String configuration, String world, String player) {
+  public BigDecimal getBigDecimal(String configuration, String world, String player) {
     String value = getConfiguration(configuration, world, player).toString();
-    return CurrencyFormatter.translateDouble(value, world);
+    return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
   /**

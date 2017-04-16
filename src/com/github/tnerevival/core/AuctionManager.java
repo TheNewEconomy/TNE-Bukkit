@@ -345,7 +345,7 @@ public class AuctionManager {
       return false;
     }
 
-    BigDecimal cost = new BigDecimal(TNE.instance().api().getDouble("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer()));
+    BigDecimal cost = TNE.instance().api().getBigDecimal("Core.Auctions.Cost", auction.getWorld(), auction.getPlayer());
 
     if(cost.compareTo(BigDecimal.ZERO) > 0 && !AccountUtils.transaction(auction.getPlayer().toString(), null, cost, TNE.instance().manager.currencyManager.get(auction.getWorld()), TransactionType.MONEY_INQUIRY, auction.getWorld())) {
       Message insufficient = new Message("Messages.Money.Insufficient");

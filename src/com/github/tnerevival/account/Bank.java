@@ -164,7 +164,7 @@ public class Bank implements Serializable {
   }
 
   public static BigDecimal cost(String world, String player) {
-    return new BigDecimal(TNE.instance().api().getDouble("Core.Bank.Cost", world, player));
+    return TNE.instance().api().getBigDecimal("Core.Bank.Cost", world, player);
   }
 
   public static boolean bankMember(UUID owner, UUID id) {

@@ -71,11 +71,11 @@ public enum SignType {
   }
 
   public BigDecimal place(String world, String player) {
-    return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Place", world, player));
+    return TNE.instance().api().getBigDecimal(configuration + ".Place", world, player);
   }
 
   public BigDecimal use(String world, String player) {
-    return new BigDecimal(TNE.instance().api().getDouble(configuration + ".Use", world, player));
+    return TNE.instance().api().getBigDecimal(configuration + ".Use", world, player);
   }
 
   public Integer max(String world, String player) {

@@ -11,7 +11,6 @@ import com.github.tnerevival.utils.AccountUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ShopCreateCommand extends TNECommand {
@@ -80,20 +79,20 @@ public class ShopCreateCommand extends TNECommand {
         }
 
         if(!s.isAdmin() && !AccountUtils.transaction(s.getOwner().toString(), null,
-            new BigDecimal(TNE.instance().api().getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString())),
+            TNE.instance().api().getBigDecimal("Core.Shops.Cost", s.getWorld(), s.getOwner().toString()),
             TransactionType.MONEY_INQUIRY, IDFinder.getWorld(getPlayer(sender)))) {
 
           Message insufficient = new Message("Messages.Money.Insufficient");
 
           insufficient.addVariable("$amount", CurrencyFormatter.format(
               IDFinder.getWorld(getPlayer(sender)),
-              new BigDecimal(TNE.instance().api().getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString()))
+              TNE.instance().api().getBigDecimal("Core.Shops.Cost", s.getWorld(), s.getOwner().toString())
           ));
           return false;
         }
         if(!s.isAdmin()) {
           AccountUtils.transaction(s.getOwner().toString(), null,
-              new BigDecimal(TNE.instance().api().getDouble("Core.Shops.Cost", s.getWorld(), s.getOwner().toString())),
+              TNE.instance().api().getBigDecimal("Core.Shops.Cost", s.getWorld(), s.getOwner().toString()),
               TransactionType.MONEY_REMOVE, IDFinder.getWorld(getPlayer(sender)));
         }
         TNE.instance().manager.shops.put(s.getName() + ":" + s.getWorld(), s);

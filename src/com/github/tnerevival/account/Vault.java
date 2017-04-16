@@ -302,7 +302,7 @@ public class Vault implements Serializable {
   }
 
   public static BigDecimal cost(String world, String player) {
-    return new BigDecimal(TNE.instance().api().getDouble("Core.Vault.Cost", world, player));
+    return TNE.instance().api().getBigDecimal("Core.Vault.Cost", world, player);
   }
 
   public static Boolean sign(String world, String player) {

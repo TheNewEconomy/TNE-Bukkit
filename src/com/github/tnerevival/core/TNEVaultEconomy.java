@@ -86,7 +86,7 @@ public class TNEVaultEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(player.getUniqueId().toString(), amount);
+    api.fundsAdd(player.getUniqueId().toString(), new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
   }
 
@@ -99,28 +99,28 @@ public class TNEVaultEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(player.getUniqueId().toString(), world, amount);
+    api.fundsAdd(player.getUniqueId().toString(), world, new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
   }
 
   @Override
   public double getBalance(OfflinePlayer player, String world) {
-    return api.getBalance(player.getUniqueId().toString(), world);
+    return api.getBalance(player.getUniqueId().toString(), world).doubleValue();
   }
 
   @Override
   public double getBalance(OfflinePlayer player) {
-    return api.getBalance(player.getUniqueId().toString());
+    return api.getBalance(player.getUniqueId().toString()).doubleValue();
   }
 
   @Override
   public boolean has(OfflinePlayer player, double amount) {
-    return api.fundsHas(player.getUniqueId().toString(), amount);
+    return api.fundsHas(player.getUniqueId().toString(), new BigDecimal(amount));
   }
 
   @Override
   public boolean has(OfflinePlayer player, String world, double amount) {
-    return api.fundsHas(player.getUniqueId().toString(), world, amount);
+    return api.fundsHas(player.getUniqueId().toString(), world, new BigDecimal(amount));
   }
 
   @Override
@@ -162,7 +162,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(player, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(player.getUniqueId().toString(), amount);
+    api.fundsRemove(player.getUniqueId().toString(), new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(player), ResponseType.SUCCESS, "");
   }
 
@@ -179,7 +179,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(player, world, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(player.getUniqueId().toString(), world, amount);
+    api.fundsRemove(player.getUniqueId().toString(), world, new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(player, world), ResponseType.SUCCESS, "");
   }
 
@@ -195,7 +195,7 @@ public class TNEVaultEconomy implements Economy {
 
   @Override
   public String format(double amount) {
-    return api.format(amount);
+    return api.format(new BigDecimal(amount));
   }
 
   @Override
@@ -334,7 +334,7 @@ public class TNEVaultEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(username, amount);
+    api.fundsAdd(username, new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(username), ResponseType.SUCCESS, "");
   }
 
@@ -348,32 +348,32 @@ public class TNEVaultEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    api.fundsAdd(username, world, amount);
+    api.fundsAdd(username, world, new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(username, world), ResponseType.SUCCESS, "");
   }
 
   @Override
   @Deprecated
   public double getBalance(String username) {
-    return api.getBalance(username);
+    return api.getBalance(username).doubleValue();
   }
 
   @Override
   @Deprecated
   public double getBalance(String username, String world) {
-    return api.getBalance(username, world);
+    return api.getBalance(username, world).doubleValue();
   }
 
   @Override
   @Deprecated
   public boolean has(String username, double amount) {
-    return api.fundsHas(username, amount);
+    return api.fundsHas(username, new BigDecimal(amount));
   }
 
   @Override
   @Deprecated
   public boolean has(String username, String world, double amount) {
-    return api.fundsHas(username, world, amount);
+    return api.fundsHas(username, world, new BigDecimal(amount));
   }
 
   @Override
@@ -420,7 +420,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(username, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(username, amount);
+    api.fundsRemove(username, new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(username), ResponseType.SUCCESS, "");
   }
 
@@ -438,7 +438,7 @@ public class TNEVaultEconomy implements Economy {
     if(!has(username, world, amount)) {
       return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds!");
     }
-    api.fundsRemove(username, world, amount);
+    api.fundsRemove(username, world, new BigDecimal(amount));
     return new EconomyResponse(amount, getBalance(username, world), ResponseType.SUCCESS, "");
   }
 
