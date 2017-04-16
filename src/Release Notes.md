@@ -23,3 +23,4 @@ Alpha 5.5
   - Fixed issue where ender chests were being included in releases pre 1.10
   - Fixed minor console error display when players were dying
   - Fixed issue using special characters for the money symbol
+  - Fixed issue where the max balance wasn't being captured properly
