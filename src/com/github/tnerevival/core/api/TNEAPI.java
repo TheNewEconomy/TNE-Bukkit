@@ -74,36 +74,6 @@ public class TNEAPI {
    * @param identifier The player's username of stringified version of their UUID.
    * @param amount The amount of funds to add to the player's account.
    */
-  public void fundsAdd(String identifier, Double amount) {
-    fundsAdd(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
-  }
-
-  /**
-   * Add funds to a player's economy account.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param amount The amount of funds to add to the player's account.
-   */
-  public void fundsAdd(String identifier, String world, Double amount) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
-  }
-
-  /**
-   * Add funds to a player's economy account.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param amount The amount of funds to add to the player's account.
-   * @param currency The currency of the funds.
-   */
-  public void fundsAdd(String identifier, String world, Double amount, Currency currency) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), currency, TransactionType.MONEY_GIVE, world);
-  }
-
-  /**
-   * Add funds to a player's economy account.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param amount The amount of funds to add to the player's account.
-   */
   public void fundsAdd(String identifier, BigDecimal amount) {
     fundsAdd(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
   }
@@ -127,39 +97,6 @@ public class TNEAPI {
    */
   public void fundsAdd(String identifier, String world, BigDecimal amount, Currency currency) {
     AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
-  }
-
-  /**
-   * Determines if the specified player has the specified amount of funds.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param amount The amount of funds to check for.
-   * @return Whether or not this player has the specified funds.
-   */
-  public Boolean fundsHas(String identifier, Double amount) {
-    return fundsHas(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
-  }
-
-  /**
-   * Determines if the specified player has the specified amount of funds.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param amount The amount of funds to check for.
-   * @return Whether or not this player has the specified funds.
-   */
-  public Boolean fundsHas(String identifier, String world, Double amount) {
-    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), plugin.manager.currencyManager.get(world), TransactionType.MONEY_INQUIRY, world);
-  }
-
-  /**
-   * Determines if the specified player has the specified amount of funds.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param amount The amount of funds to check for.
-   * @param currency The currency of the funds.
-   * @return Whether or not this player has the specified funds.
-   */
-  public Boolean fundsHas(String identifier, String world, Double amount, Currency currency) {
-    return AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), currency, TransactionType.MONEY_INQUIRY, world);
   }
 
   /**
@@ -200,37 +137,6 @@ public class TNEAPI {
    * @param identifier The player's username of stringified version of their UUID.
    * @param amount The amount of funds to remove to the player's account.
    */
-  public void fundsRemove(String identifier, Double amount) {
-    fundsRemove(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
-  }
-
-
-  /**
-   * Remove funds from a player's economy account.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param amount The amount of funds to remove to the player's account.
-   */
-  public void fundsRemove(String identifier, String world, Double amount) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), plugin.manager.currencyManager.get(world), TransactionType.MONEY_REMOVE, world);
-  }
-
-  /**
-   * Remove funds from a player's economy account.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param amount The amount of funds to remove to the player's account.
-   * @param currency The currency of the funds.
-   */
-  public void fundsRemove(String identifier, String world, Double amount, Currency currency) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, new BigDecimal(amount), currency, TransactionType.MONEY_REMOVE, world);
-  }
-
-  /**
-   * Remove funds from a player's economy account.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param amount The amount of funds to remove to the player's account.
-   */
   public void fundsRemove(String identifier, BigDecimal amount) {
     fundsRemove(identifier, IDFinder.getWorld(IDFinder.getID(identifier)), amount);
   }
@@ -262,36 +168,6 @@ public class TNEAPI {
    * @param identifier The player's username of stringified version of their UUID.
    * @return The balance for the specified player.
    */
-  public Double getBalance(String identifier) {
-    return AccountUtils.getFunds(IDFinder.getID(identifier)).doubleValue();
-  }
-
-  /**
-   * Get the specified player's balance.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @return The balance for the specified player.
-   */
-  public Double getBalance(String identifier, String world) {
-    return AccountUtils.getFunds(IDFinder.getID(identifier), world).doubleValue();
-  }
-
-  /**
-   * Get the  specified player's balance.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param world The world balance to perform this action on.
-   * @param currency The currency of the funds.
-   * @return The balance for the specified player.
-   */
-  public Double getBalance(String identifier, String world, Currency currency) {
-    return AccountUtils.getFunds(IDFinder.getID(identifier), world, currency.getName()).doubleValue();
-  }
-
-  /**
-   * Get the specified player's balance.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @return The balance for the specified player.
-   */
   public BigDecimal getBalanceDecimal(String identifier) {
     return AccountUtils.getFunds(IDFinder.getID(identifier));
   }
@@ -315,36 +191,6 @@ public class TNEAPI {
    */
   public BigDecimal getBalanceDecimal(String identifier, String world, Currency currency) {
     return AccountUtils.getFunds(IDFinder.getID(identifier), world, currency.getName());
-  }
-
-  /**
-   * Set the specified player's balance.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param amount The new balance amount for this player.
-   */
-  public void setBalance(String identifier, Double amount) {
-    AccountUtils.setFunds(IDFinder.getID(identifier), plugin.defaultWorld, new BigDecimal(amount), getCurrency(plugin.defaultWorld).getName());
-  }
-
-  /**
-   * Set the specified player's balance.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param amount The new balance amount for this player.
-   * @param world The world balance to perform this action on.
-   */
-  public void setBalance(String identifier, Double amount, String world) {
-    AccountUtils.setFunds(IDFinder.getID(identifier), world, new BigDecimal(amount), getCurrency(plugin.defaultWorld).getName());
-  }
-
-  /**
-   * Set the specified player's balance.
-   * @param identifier The player's username of stringified version of their UUID.
-   * @param amount The new balance amount for this player.
-   * @param world The world balance to perform this action on.
-   * @param currency The currency of the funds.
-   */
-  public void setBalance(String identifier, Double amount, String world, Currency currency) {
-    AccountUtils.setFunds(IDFinder.getID(identifier), world, new BigDecimal(amount), currency.getName());
   }
 
   /**
@@ -456,7 +302,7 @@ public class TNEAPI {
    * @param owner The identifier of the bank owner.
    * @return The balance of the bank.
    */
-  public Double getBankBalance(String owner) {
+  public BigDecimal getBankBalance(String owner) {
     return getBankBalance(owner, plugin.defaultWorld);
   }
 
@@ -466,7 +312,7 @@ public class TNEAPI {
    * @param world The name of the world to use.
    * @return The balance of the bank.
    */
-  public Double getBankBalance(String owner, String world) {
+  public BigDecimal getBankBalance(String owner, String world) {
     return getBankBalance(owner, world, plugin.manager.currencyManager.get(world).getName());
   }
 
@@ -477,9 +323,9 @@ public class TNEAPI {
    * @param currency The name of the currency to use.
    * @return The balance of the bank.
    */
-  public Double getBankBalance(String owner, String world, String currency) {
+  public BigDecimal getBankBalance(String owner, String world, String currency) {
     currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
-    return Bank.getBank(IDFinder.getID(owner), world).getGold(currency).doubleValue();
+    return Bank.getBank(IDFinder.getID(owner), world).getGold(currency);
   }
 
   /**
@@ -487,7 +333,7 @@ public class TNEAPI {
    * @param owner The identifier of the bank owner.
    * @param amount The new amount for the bank balance.
    */
-  public void setBankBalance(String owner, Double amount) {
+  public void setBankBalance(String owner, BigDecimal amount) {
     setBankBalance(owner, plugin.defaultWorld, amount);
   }
 
@@ -497,7 +343,7 @@ public class TNEAPI {
    * @param world The name of the world to use.
    * @param amount The new amount for the bank balance.
    */
-  public void setBankBalance(String owner, String world, Double amount) {
+  public void setBankBalance(String owner, String world, BigDecimal amount) {
     setBankBalance(owner, world, plugin.manager.currencyManager.get(world).getName(), amount);
   }
 
@@ -508,9 +354,9 @@ public class TNEAPI {
    * @param currency The name of the currency to store.
    * @param amount The new amount for the bank balance.
    */
-  public void setBankBalance(String owner, String world, String currency, Double amount) {
+  public void setBankBalance(String owner, String world, String currency, BigDecimal amount) {
     currency = (plugin.manager.currencyManager.contains(world, currency))? currency : plugin.manager.currencyManager.get(world).getName();
-    Bank.getBank(IDFinder.getID(owner), world).setGold(currency, new BigDecimal(amount));
+    Bank.getBank(IDFinder.getID(owner), world).setGold(currency, amount);
   }
   
   /*
@@ -729,8 +575,8 @@ public class TNEAPI {
    * @param amount The amount to format.
    * @return The formatted balance.
    */
-  public String format(Double amount) {
-    return CurrencyFormatter.format(plugin.defaultWorld, new BigDecimal(amount));
+  public String format(BigDecimal amount) {
+    return CurrencyFormatter.format(plugin.defaultWorld, amount);
   }
 
   /**
@@ -739,8 +585,8 @@ public class TNEAPI {
    * @param amount The amount to format.
    * @return The formatted balance.
    */
-  public String format(String world, Double amount) {
-    return CurrencyFormatter.format(world, new BigDecimal(amount));
+  public String format(String world, BigDecimal amount) {
+    return CurrencyFormatter.format(world, amount);
   }
 
 
@@ -751,8 +597,8 @@ public class TNEAPI {
    * @param amount The amount to format.
    * @return The formatted balance.
    */
-  public String format(String name, String world, Double amount) {
-    return CurrencyFormatter.format(world, name, new BigDecimal(amount));
+  public String format(String name, String world, BigDecimal amount) {
+    return CurrencyFormatter.format(world, name, amount);
   }
 
   /**

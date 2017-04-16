@@ -170,10 +170,6 @@ public class TNE extends JavaPlugin {
         getLogger().info("Created server economy account.");
       }
     }
-    BigDecimal test = new BigDecimal("900000000000000.1946");
-    getLogger().info(test.toString());
-    getLogger().info(test.toPlainString());
-    getLogger().info(test.toEngineeringString());
   }
 
   public void onDisable() {

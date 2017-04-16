@@ -12,11 +12,13 @@ Alpha 5.5
 - Currency Changes
   - Added ability to change currency SI prefixes on a per currency basis.
   - Set a new cap on max number of decimal places that may be rounded to, which is now 5
-  - Added ability to set max balance on a per currency basis, this is capped at the max possible balance size of 9 Quintillion
+  - Added ability to set max balance on a per currency basis, this is capped at the max balance size of 9 Quintillion
 - Technical
   - Changed the save format for balances
   - Maximum possible balance size is now 9 Quintillion
     - This is better know as 9,000,000,000,000,000,000
+- API
+  - Removed deprecated methods.
 
 - Bug Fixes
   - Fixed issue where amounts in the billions+ range weren't displaying properly
@@ -24,3 +26,4 @@ Alpha 5.5
   - Fixed minor console error display when players were dying
   - Fixed issue using special characters for the money symbol
   - Fixed issue where the max balance wasn't being captured properly
+  - Fixed issue where servers that used InnoDB were experiencing table creation warnings
