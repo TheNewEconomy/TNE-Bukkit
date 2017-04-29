@@ -15,23 +15,31 @@ Core:
     
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
-    
-    #The initial balance for accounts.
-    #Will be used if no world-specific configurations are found if multiworld is enabled
-    Balance: 200.0
 
-    #Whether or not to shorten money amounts
-    #Example: 2100 would be 2.1k
-    Shorten: true
-    
-    #whether or not to enable plugin metrics for TNE
+    #Whether or not to run the server in debug mode. OCD WARNING: Causes console spam.
+    Debug: false
+
+    #Whether or not to enable plugin metrics. This allows us to know how many servers are running TNE,
+    #what TNE version, java version, etc.
     Metrics: true
+
+    #All configurations relating to the main server account.
+    Server:
+
+        #Whether or not the server account has been enabled.
+        Enabled: true
+
+        #The name of the server account.
+        Name: Server Account
+
+        #The starting balance for the server account.
+        Balance: 500
 
     #All configurations relating to account pins
     Pins:
 
         #Whether or not account pins should be enabled
-        Enabled: true
+        Enabled: false
 
         #Whether or not players must set their pin before using money-related functions
         Force: true
@@ -59,6 +67,9 @@ Core:
         #Whether or not to track transaction history.
         Track: true
 
+        #The time format to use when displaying transaction history data.
+        Format: M, d y
+
         #The timezone to use for transactions.
         Timezone: US/Eastern
 
@@ -74,39 +85,117 @@ Core:
     #All configurations relating to currency.
     Currency:
 
-        #The character to use as the decimal place holder.
-        Decimal: .
+        #Name of the currency
+        Default:
+            #The format to use when outputting this currency into chat.
+            #The variables you're able to use here.
+            #<symbol> - The currency's symbol
+            #<decimal> - The currency's decimal.
+            #<major> - A combination of the currency's major amount and name
+            #<minor> - A combination of the currency's minor amount and name
+            #<major.name> - The currency's major name.
+            #<minor.name> - The currency's minor name.
+            #<major.amount> - The currency's major amount.
+            #<minor.amount> - The currency's minor amount.
+            #<short.amount> - The currency's shortened amount.
+            #<shorten> - Added to make the outputted value shortened
+            # If shortened, it will ignore the value of Format.
+            #It's also possible to include all colour variables from messages.yml
+            #Example: <major> and <minor>
+            Format: <symbol><major.amount><decimal><minor.amount><shorten>
 
-        #Would you like to use an item as the currency?
-        ItemCurrency: false
-        
-        #If you want to use an item, which one?(Please use the name of the item)
-        #Example: GOLD_INGOT
-        ItemMajor: GOLD_INGOT
-        
-        #The minor item currency item.
-        #Example: for USD this might be quarters or dimes
-        ItemMinor: IRON_INGOT
+            #The maximum balance possible for this currency.
+            # Maximum possible value: 9000000000000000000
+            MaxBalance: 9000000000000000000
 
-        #The name of the major currency
-        #Example: Dollars
-        MajorName:
+            #The SI Prefixes used when <shorten> is used for the currency's format.
+            #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
+            #http://www.unitarium.com/si-prefixes
+            #The order in which the characters are:
+            #Thousand - k
+            #Million - M
+            #Billion - G
+            #Trillion - T
+            #Quadrillion - P
+            #Quintillion - E
+            Prefixes: 'kMGTPE'
 
-            #The singular name. Example: Dollar
-            Single: Dollar
+            #The initial balance for accounts.
+            #Will be used if no world-specific configurations are found if multiworld is enabled
+            Balance: 200.0
 
-            #The plural name. Example: Dollars
-            Plural: Dollars
-            
-        #The name of the minor currency
-        #Example: Cents
-        MinorName:
+            #Whether or not this currency is the world's default.
+            Default: true
 
-            #The singular name. Example: Cent
-            Single: Cent
+            #The conversion power of this currency to other currencies.
+            #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+            Conversion: 1.0
 
-            #The plural name. Example: Cents
-            Plural: Cents
+            #The character to use as the symbol for this currency.
+            Symbol: '$'
+
+            #The character to use as the decimal place holder.
+            Decimal: .
+
+            #The amount of digits to display after the decimal character.
+            #The maximum amount of places is 5
+            DecimalPlaces: 2
+
+            #Would you like to use an item as the currency?
+            ItemCurrency: false
+
+            #Would you like this currency to be trackable in chests attached to bank signs?
+            BankChest: true
+
+            #Would you like your item currency balances to also check the player's vault?
+            Vault: true
+
+            #Would you like your item currency balances to also check the player's ender chest?
+            EnderChest: true
+
+            #Would you like to track when a player puts ItemCurrency into a chest for balance usage later? May impact performance.
+            #Temporarily modifies inventory behaviour for chests.
+            TrackChest: false
+
+            #If you want to use an item, which one?(Please use the name of the item)
+            #Example: GOLD_INGOT
+            ItemMajor: GOLD_INGOT
+
+            #The minor item currency item.
+            #Example: for USD this might be quarters or dimes
+            ItemMinor: IRON_INGOT
+
+            #The name of the major currency
+            #Example: Dollars
+            MajorName:
+
+                #The singular name. Example: Dollar
+                Single: Dollar
+
+                #The plural name. Example: Dollars
+                Plural: Dollars
+
+            #The name of the minor currency
+            #Example: Cents
+            MinorName:
+
+                #The singular name. Example: Cent
+                Single: Cent
+
+                #The plural name. Example: Cents
+                Plural: Cents
+
+            #All configurations relating to bank gold interest.
+            Interest:
+
+                #Whether or not interest is enabled.
+                Enabled: false
+
+                #The interest rate in decimal form.
+                Rate: 0.2
+
+                #The interval at which interest is gained(in seconds)
+                Interval: 1800
 
     #All configurations relating to the TNE Auctions System.
     Auctions:
@@ -202,11 +291,25 @@ Core:
     #All configurations relating to the TNE Sign System
     Signs:
 
+        #All configurations relative to balance signs.
+        Balance:
+            #Whether or not players may create vault signs
+            Enabled: true
+
+            #The name of the currency to use for the sign.
+            Currency: Default
+
+            #The cost to make a balance sign, if the player has valid permissions.
+            Place: 20.0
+
+            #The cost to use a balance sign, if the player has valid permissions.
+            Use: 20.0
+
         #All configurations relating to bank signs.
         Bank:
 
-            #Whether or not players can use bank signs to view their banks
-            Enabled: false
+            #Whether or not players may create vault signs
+            Enabled: true
 
             #The cost to make a bank sign, if the player has valid permissions.
             Place: 20.0
@@ -214,11 +317,51 @@ Core:
             #The cost to use a bank sign, if the player has valid permissions.
             Use: 20.0
 
+            #The max number of item shops a single player may own
+            Max: 10
+
+        #All configurations relating to vault signs.
+        Vault:
+
+            #Whether or not players can use vault signs to view their vaults
+            Enabled: true
+
+            #The cost to make a vault sign, if the player has valid permissions.
+            Place: 20.0
+
+            #The cost to use a vault sign, if the player has valid permissions.
+            Use: 20.0
+
+        #All configurations relating to item buy/sell signs.
+        Item:
+
+            #Whether or not item signs are enabled.
+            Enabled: true
+
+            #The cost to make a item sign, if the player has valid permissions.
+            Place: 20.0
+
+            #The cost to use a item sign, if the player has valid permissions.
+            Use: 20.0
+
+            #The max number of item shops a single player may own
+            Max: 10
+
+            #Whether or not item signs may have multiple offers
+            Multiple: true
+
+            #The maximum number of offers per sign if Multiple is true.
+            MaxOffers: 9
+
+            #Whether or not sign shops may use a player's ender chest inventory for storage.
+            #This allows a chest-free, clean shop display
+            EnderChest: true
+
         #All configurations relating to shop signs.
         Shop:
 
             #Whether or not shop signs are enabled.
-            Enabled: false
+            Enabled: true
 
             #The cost to make a shop sign, if the player has valid permissions.
             Place: 20.0
@@ -228,22 +371,51 @@ Core:
 
     #All configurations relating to player death.
     Death:
-
         #Whether or not players who die lose all their money
         Lose: false
 
+        #All death configurations for vaults.
+        Vault:
+
+          #The amount of items players should drop from their vault on their death(completely random)
+          Drop: 0
+
+          #Whether or not there's a chance to drop nothing(empty slot) from a player's vault.
+          #This adds the ability for players to get lucky and lose nothing on death.
+          IncludeEmpty: true
+
+          #Whether or not player's should drop items only when killed by a player.
+          PlayerOnly: true
+
+    #All configurations relating to vaults
+    Vault:
+
+        #Whether or not vaults are enabled
+        Enabled: true
+
+        #Whether or not players can use a command to access their vaults.
+        Command: true
+
+        #Whether or not testificates named "VaultKeeper" allow access to player vaults.
+        NPC: false
+
+        #The cost to open a vault.
+        Cost: 20.0
+
+        #The number of rows a vault has(minimum is 1, maximum is 6)
+        Rows: 3
+
+        #Whether or not players can manage vaults from other worlds.
+        MultiManage: false
+
+        #How many players can view a vault at the same time. Anything more than one will impact performance.
+        MaxViewers: 1
 
     #All configurations relating to banks.
     Bank:
 
         #Whether or not banks are enabled.
         Enabled: true
-
-        #Whether or not players can use a command to access their banks.
-        Command: true
-        
-        #Whether or not testificates named "Banker" allow access to player banks.
-        NPC: false
         
         #Whether or not players can use bank balances to pay dues when personal balance is short.
         Connected: false
@@ -251,21 +423,8 @@ Core:
         #How much is costs to open a bank account.
         Cost: 20.0
 
-        #The number of rows a bank has.( minimum is 1, maximum is 6)
-        #1 row = 9 slots
-        Rows: 3
-
-        #All configurations relating to bank gold interest.
-        Interest:
-
-            #Whether or not interest is enabled.
-            Enabled: false
-
-            #The interest rate in decimal form.
-            Rate: 0.2
-
-            #The interval at which interest is gained(in seconds)
-            Interval: 1800
+        #Whether or not players can manage banks from other worlds.
+        MultiManage: false
             
             
     #All configurations relating to worlds
@@ -295,6 +454,16 @@ Core:
 
             #The file to which all the data will be saved
             File: economy.tne
+
+        #All configurations relating to direct SQL transactions
+        Transactions:
+
+            #Whether or not to cache data
+            Cache: true
+
+            #How long(in seconds) until the cached data should be stored
+            Update: 600
+
             
         #All configurations relating to the MySQL Database
         MySQL:
@@ -326,4 +495,39 @@ Core:
             
             #The SQLite Database File
             File: economy.db
+
+    #All configurations relating to converter from another economy plugin.
+    #Please make sure you have the plugin's directory in your plugin's folder as we
+    #require it for automatically gathering specific data.
+    Conversion:
+
+        #Whether or not to convert data from a previous economy plugin.
+        #Remember to backup all data before converting.
+        Convert: false
+
+        #The economy plugin you wish you convert data from.
+        #Valid options are CraftConomy, MineConomy, FeConomy, iConomy, Essentials, BOSEconomy
+        Name: iConomy
+
+        #The save format you wish to convert from.
+        #Valid options are  MySQL, H2, YAML, FlatFile
+        Format: MySQL
+
+        #All conversion options.
+        Options:
+
+            #The host for sql-related formats.
+            Host: localhost
+
+            #The port for sql-related formats.
+            Port: 3306
+
+            #The database for sql-related formats.
+            Database: sql_eco
+
+            #The username for sql-related formats.
+            User: root
+
+            #The password for sql-related formats.
+            Password: Password
 ```

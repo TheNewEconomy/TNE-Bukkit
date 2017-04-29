@@ -9,6 +9,8 @@ Configuration
 --------------
 ```YAML
 Materials:
+
+    Enabled: false
         
     #All configurations relating to items
     Items:

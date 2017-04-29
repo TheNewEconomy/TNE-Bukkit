@@ -8,7 +8,7 @@ messages.yml
 Configuration
 --------------
 ```YAML
-#All configurable messages in TNE
+# All configurable messages in TNE
 # Colour characters are supported, just use the colour code preceded by an ampersand character('&')
 # An alternate colouring format is also viable, just type out the name of the colour inside a less than and greater than symbol
 # 
@@ -64,6 +64,7 @@ Messages:
        NoPerm: <red>I'm sorry, but you do not have permission to do that.
        Saved: <yellow>Successfully saved all TNE Data!
        NoPlayer: <red>Unable to locate player "$player"!
+       Disabled: <red>Economy features are currently disabled in this world!
 
     Item:
       Invalid: <red>Invalid item name and/or durability combination entered.
@@ -73,16 +74,24 @@ Messages:
        NoBalance: <red>$player has no balance data for the world "$world"!
        NoBank: <red>$player has no bank data for the world "$world"!
        Balance: <white>$player currently has <gold>$amount <white>for world "$world"!
+       NoTransactions: <white>$player has no transactions to display.
+       Configuration: <white>The value of $node is currently $value.
+       SetConfiguration: <white>The value of $node has been set to $value.
        ID: <white>The UUID for $player is $id.
        Exists: <red>A player with that name already exists.
        Created: <white>Successfully created account for $player.
        Purge: <white>Successfully purged all economy accounts.
        PurgeWorld: <white>Successfully purged economy accounts in $world.
+       ResetPin: <white>Successfully set pin for $player to $pin.
+       StatusChange: <white>Status for $player has been changed to <green>$status<white>.
 
     Account:
        Locked: <red>You can't do that with a locked account($player)!
        Set: <yellow>You must use /pin set before accessing your money and/or bank.
        Confirm: <yellow>You must use /pin confirm before accessing your money and/or bank.
+       NoTransactions: <white>You have no transactions to display at this time.
+       Reset: <white>Your pin has been reset to <green>$pin<white>.
+       StatusChange: <white>Your account's status has been changed to <green>$status<white>.
        
     Pin:
        Set: <white>Your pin has been set successfully.
@@ -102,6 +111,9 @@ Messages:
        Negative: <red>Amount cannot be a negative value!
        SelfPay: <red>You can't pay yourself!
        NoPins: <red>Pins are disabled in this world!
+       NoCurrency: <red>The currency "$currency" could not be found in "$world".
+       Converted: <white>Successfully exchanged "<gold>$from_amount<white>" to "<gold>$amount<white>".
+       Top: <white>=========[<gold>Economy Top<white>]========= $page/$page_top
 
     Auction:
        Start: <white>Auction has started for $item. Starting bid is <gold>$start<white>.
@@ -129,6 +141,23 @@ Messages:
        PersonalQueue: <red>You have reached the maximum queue allowance.
        MaxQueue: <red>The auction queue is currently full.
        Queued: <white>Your auction has been added to the queue as lot <green>$lot<white>.
+
+    SignShop:
+      MaxOffers: <red>You've created the max number of offers for this sign already.
+      Removed: <white>Successfully removed offer from Sign Shop.
+      Added: <white>Successfully added offer to Sign Shop.
+      NoMultiple: <red>Multiple offers has been disabled on this world.
+      InvalidBuy: <red>Couldn't create offer, invalid buy/sell/trade value.
+      OwnerInsufficient: <red>I'm sorry, but the owner of this offer does not currently has insufficient funds.
+      Insufficient: <red>You do not have the sufficient materials, or money necessary to purchase the item from this Sign Shop.
+      Successful: <white>Successfully completed transaction with Sign Shop.
+      OutOfStock: <red>I'm sorry, but that item is currently out of stock.
+      UnableAccept: <red>I'm sorry, but this shop currently cannot accept that item at this time.
+      DroppingExtra: <white>Adding items to your inventory since your sign shop's chest is full.
+
+    Sign:
+      UnableChest: <red>I'm sorry, but that chest belongs to a nearby sign.
+      Max: <red> You've placed the maximum number of this sign in this world.
 
     Shop:
        BuyLimit: <red>Shop has reached its buy limit for this item.
@@ -173,6 +202,22 @@ Messages:
        InvalidTrade: <white>The trade item name "$item" is invalid.
        InvalidCost: <white>Invalid cost format entered.
         
+    Vault:
+       Added: <white>$player has been added to your vault!
+       Removed: <white>$player has been removed from your vault!
+       Already: <red>You already own a vault!
+       Bought: <white>Congratulations! You have successfully purchased a vault!
+       Insufficient: <red>I'm sorry, but you need at least <gold>$amount<red> to create a vault.
+       Overdraw: <red>I'm sorry, but the vault of $name vault does not have <gold>$amount<red>.
+       None: <red>I'm sorry, but you do not own a vault. The current cost for a vault is <gold>$amount<red>. Use /vault buy to purchase one.
+       NoNPC: <red>I'm sorry, but accessing vaults via NPCs has been disabled in this world!
+       NoSign: <red>I'm sorry, but accessing vaults via signs has been disabled in this world!
+       NoCommand: <red>I'm sorry, but accessing vaults via /vault has been disabled in this world!
+       Disabled: <red>I'm sorry, but vaults are disabled in this world.
+       Balance: <white>There is currently <gold>$amount<white> in the vault of $name.
+       Deposit: <white>You have deposited <gold>$amount<white> into the vault of $name.
+       Invalid: <red>I'm sorry, but you don't have access to the vault of $name.
+       Occupied: <red>I'm sorry, but that vault is currently occupied by other players.
     
     Bank:
        Added: <white>$player has been added to your bank!
@@ -181,14 +226,10 @@ Messages:
        Bought: <white>Congratulations! You have successfully purchased a bank!
        Insufficient: <red>I'm sorry, but you need at least <gold>$amount<red> to create a bank.
        Overdraw: <red>I'm sorry, but the bank of $name bank does not have <gold>$amount<red>.
-       None: <red>I'm sorry, but you do not own a bank. Please try /bank buy to buy one.
-       NoNPC: <red>I'm sorry, but accessing banks via NPCs has been disabled in this world!
-       NoSign: <red>I'm sorry, but accessing banks via signs has been disabled in this world!
-       NoCommand: <red>I'm sorry, but accessing banks via /bank has been disabled in this world!
+       None: <red>I'm sorry, but you do not own a bank. The current cost for a bank is <gold>$amount<red>. Use /bank buy to purchase one.
        Disabled: <red>I'm sorry, but banks are disabled in this world.
        Balance: <white>There is currently <gold>$amount<white> in the bank of $name.
        Deposit: <white>You have deposited <gold>$amount<white> into the bank of $name.
-       Cost: <white>A bank is currently <gold>$amount<white>.
        Invalid: <red>I'm sorry, but you don't have access to the bank of $name!
        
     Objects:
@@ -212,6 +253,13 @@ Messages:
        Killed: <white>You received $reward <white>for killing a <green>$mob<white>.
        KilledVowel: <white>You received $reward <white>for killing an <green>$mob<white>.
        NPCTag: <red>I'm sorry, but you cannot use a name tag on a villager.
+
+       #This is used to rename mobs for the mob reward messages.
+       Custom:
+
+           #The name of the mob, followed by the new name.
+           example-mob: New Name
+           MOCREATURES_TURKEY: Turkey
     
     World:
        Change: <red>You have been charged <gold> $amount<red> for changing worlds.

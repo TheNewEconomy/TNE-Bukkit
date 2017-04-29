@@ -9,21 +9,45 @@ mobs.yml
 Configuration
 -----------------
 ```YAML
+# The New Economy v0.0.5.5
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+
+
 #All configurations relating to mobs.
+Mobs:
+# All configurations relating to mobs.
 Mobs:
 
     #Whether or not mobs drop money on death.
     Enabled: true
 
+    #Whether or not a mob is a baby affects the reward.
+    EnableAge: true
+
     #Whether or not to send a message stating how much money a player got for killing a mob
     Message: true
+
+    #If you want to have a special multipliar, you may specify so here.
+    Multiplier: 1.0
 
     #Reward configurations for individual mobs
     #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
     Default:
-        Enabled: true
-        Reward: 10.00
-
+       Enabled: true
+        #IF you want to specify a multiplier for a mob specifically, it goes here.
+       Multiplier: 1.0
+       Reward: 10.00
+        #If you want to allow a random value between two numbers use this configuration.
+       #Note: This overwards the value of Reward
+       Chance:
+         #The minimum value that may be granted
+         Min: 5.0
+         #The maximum value that may be granted
+         Max: 15.0
+    
     Bat:
         Enabled: true
         Reward: 10.00
@@ -39,14 +63,30 @@ Mobs:
     Chicken:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Cow:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Creeper:
         Enabled: true
         Reward: 10.00
+
+    Custom:
+      Entries:
+
+    Donkey:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     EnderDragon:
         Enabled: true
@@ -60,10 +100,14 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
-    Ghast:
+    Evoker:
         Enabled: true
         Reward: 10.00
 
+    Ghast:
+        Enabled: true
+        Reward: 10.00
+        
     Giant:
         Enabled: true
         Reward: 10.00
@@ -79,48 +123,83 @@ Mobs:
     Horse:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Husk:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     IronGolem:
         Enabled: true
         Reward: 10.00
 
+    Llama:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
     MagmaCube:
         Enabled: true
         Reward: 10.00
 
+    Mule:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
     Mooshroom:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Ocelot:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Pig:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Player:
         Enabled: true
         Reward: 10.00
 
-    #You can specify a specific player's name as well.
-    #ExamplePlayerName:
-    #    Enabled: true
-    #    Reward: 10.00
+        Individual:
+          player-uuid-here:
+              Enabled: true
+              Reward: 10.00
 
     PolarBear:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Rabbit:
         Enabled: true
         Reward: 10.00
-
+        Baby:
+            Enabled: true
+            Reward: 5.00
+        
     RabbitKiller:
         Enabled: true
         Reward: 10.00
@@ -128,6 +207,9 @@ Mobs:
     Sheep:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Shulker:
         Enabled: true
@@ -141,9 +223,33 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    SkeletonHorse:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
     Slime:
         Enabled: true
         Reward: 10.00
+
+        #Here you'll find the various configurations for the various slime sizes.
+        #We support the natural ones with Small, Medium, and Large, and also custom ones with simply the size.
+        #Natural sizes.
+        Small:
+            Enabled: true
+            Reward: 5.00
+        Medium:
+            Enabled: true
+            Reward: 10.00
+        Large:
+            Enabled: true
+            Reward: 15.00
+        #Custom one for a slime size of 10
+        10:
+            Enabled: true
+            Reward: 20.00
 
     SnowGolem:
         Enabled: true
@@ -161,7 +267,18 @@ Mobs:
         Enabled: true
         Reward: 10.00
 
+    Vex:
+        Enabled: true
+        Reward: 10.00
+
     Villager:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
+    Vindicator:
         Enabled: true
         Reward: 10.00
 
@@ -180,16 +297,35 @@ Mobs:
     Wolf:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     Zombie:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
+
+    ZombieHorse:
+        Enabled: true
+        Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     ZombiePigman:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 
     ZombieVillager:
         Enabled: true
         Reward: 10.00
+        Baby:
+            Enabled: true
+            Reward: 5.00
 ```

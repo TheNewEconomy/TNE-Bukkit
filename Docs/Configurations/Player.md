@@ -11,9 +11,9 @@ Configuration
 #Used for per-player configurations.
 Players:
 
-    #If you need help finding a player's UUID please have a look at
+    # If you need help finding a player's UUID please have a look at
     # /TNE id <player name>.
-    #The username field could be the player's username or UUID.
+    # The username field could be the player's username or UUID.
     player-uuid-here:
         #Now we Simply override and configurations we want for this specific player.
         #This allows us even more control over our server.

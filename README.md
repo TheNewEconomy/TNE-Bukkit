@@ -38,13 +38,13 @@ Some basic information you might want to look over.
 
 Default Configurations
 ----------
-- [config.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/config.yml)
-- [materials.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/materials.yml)
-- [messages.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/messages.yml)
-- [mobs.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/mobs.yml)
-- [objects.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/objects.yml)
-- [players.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/players.yml)
-- [worlds.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/worlds.yml)
+- [config.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/config.yml)
+- [materials.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/materials.yml)
+- [messages.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/messages.yml)
+- [mobs.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/mobs.yml)
+- [objects.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/objects.yml)
+- [players.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/players.yml)
+- [worlds.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/worlds.yml)
 
 Features
 ----------

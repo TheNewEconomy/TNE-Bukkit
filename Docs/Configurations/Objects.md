@@ -20,7 +20,7 @@ Objects:
         ZeroMessage: false
         
         #The name of the command this configuration is for
-        Bank:
+        Example:
         
             #The cost of using this command
             Cost: 5.00
@@ -28,7 +28,7 @@ Objects:
             SubCommands:
                 
                 #The name of the subcommand this configuration is for
-                Buy:
+                Sub:
                     
                     #Cost of using this subcommand
                     Cost: 2.00

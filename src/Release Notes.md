@@ -19,7 +19,6 @@ Alpha 5.5
     - This is better know as 9,000,000,000,000,000,000
 - API
   - Removed deprecated methods.
-
 - Bug Fixes
   - Fixed issue where amounts in the billions+ range weren't displaying properly
   - Fixed issue where ender chests were being included in releases pre 1.10
