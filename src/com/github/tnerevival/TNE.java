@@ -142,7 +142,7 @@ public class TNE extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 
-    getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled! Java Version: " + System.getProperty("java.version"));
+    getLogger().info("The New Economy " + updater.getCurrentBuild() + " has been enabled!");
 
     String updateMessage = "Using the latest version: " + updater.getCurrentBuild();
     if(updater.getRelease().equals(ReleaseType.PRERELEASE)) updateMessage = "Prerelease build, please report any bugs!";
@@ -227,6 +227,7 @@ public class TNE extends JavaPlugin {
   }
 
   public void loadConfigurations() {
+    this.saveDefaultConfig();
     getConfig().options().copyDefaults(true);
     itemConfigurations.options().copyDefaults(true);
     mobConfigurations.options().copyDefaults(true);

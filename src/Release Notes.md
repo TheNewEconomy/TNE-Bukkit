@@ -7,14 +7,13 @@ Alpha 5.5
     - You may configure the name used for this account in config.yml.
   - Ability to grant access to the server account's banks
   - Ability to take, give, and pay money to/from the server account's funds.
-- EcoIDS
-  - Made Eco ID searches case insensitive.
 - Currency Changes
   - Added ability to change currency SI prefixes on a per currency basis.
   - Set a new cap on max number of decimal places that may be rounded to, which is now 5
   - Added ability to set max balance on a per currency basis, this is capped at the max balance size of 9 Quintillion
 - Technical
   - Changed the save format for balances
+  - Made Eco ID searches case insensitive.
   - Maximum possible balance size is now 9 Quintillion
     - This is better know as 9,000,000,000,000,000,000
 - API
