@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 public class ConfigurationManager {
@@ -243,6 +244,19 @@ public class ConfigurationManager {
     MISCUtils.debug("ConfigurationManager.getWorldConfigurations(" + node + ", " + IDFinder.getConfigurationShare(world) + ")");
     String path = ConfigurationType.WORLDS.getPrefix() + "." + IDFinder.getConfigurationShare(world) + "." + node;
     return TNE.instance().worldConfigurations.get(path);
+  }
+
+  public boolean worldEnabled(String node) {
+    Set<String> worlds = TNE.instance().worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
+
+    for(String s : worlds) {
+      if(TNE.instance().worldConfigurations.contains("Worlds." + s + "." + node)) {
+        if(TNE.instance().worldConfigurations.getBoolean("Worlds." + s + "." + node)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /*

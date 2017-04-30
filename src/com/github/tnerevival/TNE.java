@@ -116,7 +116,6 @@ public class TNE extends JavaPlugin {
     saveManager.initialize();
 
     invWorker = new InventoryTimeWorker(this);
-    auctionWorker = new AuctionWorker(this);
 
     if(configurations.getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
@@ -134,7 +133,10 @@ public class TNE extends JavaPlugin {
     if((boolean) ObjectConfiguration.configurations.get("Objects.Inventories.Enabled")) {
       invWorker.runTaskTimer(this, 20, 20);
     }
-    auctionWorker.runTaskTimer(this, 20, 20);
+    if(manager.auctionManager.enabled()) {
+      auctionWorker = new AuctionWorker(this);
+      auctionWorker.runTaskTimer(this, 20, 20);
+    }
 
     //Listeners
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);

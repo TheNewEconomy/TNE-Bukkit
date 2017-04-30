@@ -39,6 +39,11 @@ public class AuctionManager {
     active.setListener(listener);
   }
 
+  public boolean enabled() {
+    return TNE.configurations.getBoolean("Core.Auctions.Enabled") ||
+           TNE.configurations.worldEnabled("Auctions.Enabled");
+  }
+
   public void auctionMessage(CommandSender sender, String message, Auction auction, boolean check) {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String world = (sender instanceof Player)? IDFinder.getWorld((Player)sender) : TNE.instance().defaultWorld;
