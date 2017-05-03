@@ -11,9 +11,9 @@ This is just some of the changed syntax/features.
 // The first argument is the File instance for the configuration, or a string containing the file's location.
 // The second argument is the File instance for the default configurations, or a string containing the file's 
 // location in the jar.(optional, default null)
-// The third argument is a boolean value that determines if we should copy defaults(optional, default true)
+// The third argument is a boolean value that determines if we should copy defaults(optional, default false)
 // The fourth argument is a boolean value that determines if we should remove configuration nodes that are present in 
-// the existing configuration file, but not in the default.(optional, default true)
+// the existing configuration file, but not in the default.(optional, default false)
 ConfigurationFile configuration = ConfigurationFile.load(File instance, "config.yml", true, true);
 
 // The following will allow you to perform various actions using a node in a configuration file.
