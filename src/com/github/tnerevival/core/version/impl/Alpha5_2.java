@@ -294,7 +294,6 @@ public class Alpha5_2 extends Version {
       int accountIndex = sql().executeQuery("SELECT * FROM " + table + ";");
       while (sql().results(accountIndex).next()) {
         Account account = new Account(UUID.fromString(sql().results(accountIndex).getString("uuid")), sql().results(accountIndex).getInt("accountnumber"));
-        account.balancesFromString(sql().results(accountIndex).getString("balances"));
         account.setStatus(sql().results(accountIndex).getString("accountstatus"));
         account.setJoined(sql().results(accountIndex).getString("joinedDate"));
         account.creditsFromString(sql().results(accountIndex).getString("inventory_credits"));

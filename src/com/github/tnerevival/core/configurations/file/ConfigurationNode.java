@@ -40,6 +40,10 @@ public class ConfigurationNode {
     return null;
   }
 
+  public void parse(Object object) {
+
+  }
+
   public String getPath() {
     return path;
   }
