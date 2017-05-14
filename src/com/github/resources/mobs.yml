@@ -132,6 +132,10 @@ Mobs:
             Enabled: true
             Reward: 5.00
 
+    Illusioner:
+        Enabled: true
+        Reward: 10.00
+
     IronGolem:
         Enabled: true
         Reward: 10.00
@@ -167,6 +171,10 @@ Mobs:
         Baby:
             Enabled: true
             Reward: 5.00
+
+    Parrot:
+        Enabled: true
+        Reward: 10.00
 
     Pig:
         Enabled: true

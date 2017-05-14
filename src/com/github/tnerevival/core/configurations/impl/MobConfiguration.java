@@ -62,6 +62,8 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Husk.Reward", 10.00);
     configurations.put("Mobs.Husk.Baby.Enabled", true);
     configurations.put("Mobs.Husk.Baby.Reward", 5.00);
+    configurations.put("Mobs.Illusioner.Enabled", true);
+    configurations.put("Mobs.Illusioner.Reward", 10.00);
     configurations.put("Mobs.IronGolem.Enabled", true);
     configurations.put("Mobs.IronGolem.Reward", 10.00);
     configurations.put("Mobs.Llama.Enabled", true);
@@ -82,6 +84,8 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Ocelot.Reward", 10.00);
     configurations.put("Mobs.Ocelot.Baby.Enabled", true);
     configurations.put("Mobs.Ocelot.Baby.Reward", 5.00);
+    configurations.put("Mobs.Parrot.Enabled", true);
+    configurations.put("Mobs.Parrot.Reward", 10.00);
     configurations.put("Mobs.Pig.Enabled", true);
     configurations.put("Mobs.Pig.Reward", 10.00);
     configurations.put("Mobs.Pig.Baby.Enabled", true);

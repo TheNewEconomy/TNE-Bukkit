@@ -607,6 +607,9 @@ public class InteractionListener implements Listener {
           case HUSK:
             mob = "Husk";
             break;
+          case ILLUSIONER:
+            mob = "Illusioner";
+            break;
           case IRON_GOLEM:
             mob = "IronGolem";
             break;
@@ -624,6 +627,9 @@ public class InteractionListener implements Listener {
             break;
           case OCELOT:
             mob = "Ocelot";
+            break;
+          case PARROT:
+            mob = "Parrot";
             break;
           case PIG:
             mob = "Pig";
