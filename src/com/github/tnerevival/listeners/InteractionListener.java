@@ -5,6 +5,7 @@ import com.github.tnerevival.account.Account;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.account.Vault;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.configurations.impl.MobConfiguration;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.event.object.InteractionType;
@@ -555,174 +556,23 @@ public class InteractionListener implements Listener {
       Boolean player = false;
 
       if(TNE.instance().api().getBoolean("Mobs.Enabled", world, id)) {
-        switch(entity.getType()) {
-          case BAT:
-            mob = "Bat";
-            break;
-          case BLAZE:
-            mob = "Blaze";
-            break;
-          case CAVE_SPIDER:
-            mob = "CaveSpider";
-            break;
-          case CHICKEN:
-            mob = "Chicken";
-            break;
-          case COW:
-            mob = "Cow";
-            break;
-          case CREEPER:
-            mob = "Creeper";
-            break;
-          case DONKEY:
-            mob = "Donkey";
-            break;
-          case ELDER_GUARDIAN:
-            mob = "GuardianElder";
-            break;
-          case ENDER_DRAGON:
-            mob = "EnderDragon";
-            break;
-          case ENDERMAN:
-            mob = "Enderman";
-            break;
-          case ENDERMITE:
-            mob = "Endermite";
-            break;
-          case EVOKER:
-            mob = "Evoker";
-            break;
-          case GHAST:
-            mob = "Ghast";
-            break;
-          case GIANT:
-            mob = "Giant";
-            break;
-          case GUARDIAN:
-            mob = "Guardian";
-            break;
-          case HORSE:
-            mob = "Horse";
-            break;
-          case HUSK:
-            mob = "Husk";
-            break;
-          case ILLUSIONER:
-            mob = "Illusioner";
-            break;
-          case IRON_GOLEM:
-            mob = "IronGolem";
-            break;
-          case LLAMA:
-            mob = "Llama";
-            break;
-          case MAGMA_CUBE:
-            mob = "MagmaCube";
-            break;
-          case MULE:
-            mob = "Mule";
-            break;
-          case MUSHROOM_COW:
-            mob = "Mooshroom";
-            break;
-          case OCELOT:
-            mob = "Ocelot";
-            break;
-          case PARROT:
-            mob = "Parrot";
-            break;
-          case PIG:
-            mob = "Pig";
-            break;
-          case PIG_ZOMBIE:
-            mob = "ZombiePigman";
-            break;
-          case PLAYER:
-            mob = "Player";
+        if(entity.getType().isAlive()) {
+          mob = MobConfiguration.formatName(entity.getType().getName());
+
+          if(entity.getType().equals(EntityType.RABBIT)) {
+            Rabbit rab = (Rabbit)entity;
+            if(rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
+              mob = "RabbitKiller";
+            }
+          } else if(entity.getType().equals(EntityType.PLAYER)) {
             Player p = (Player)entity;
             if(p.getUniqueId() != null) {
               if (TNE.configurations.playerEnabled(p.getUniqueId(), world, id)) {
                 mob = p.getUniqueId().toString();
                 player = true;
-                break;
               }
             }
-            mob = "Player";
-            break;
-          case POLAR_BEAR:
-            mob = "PolarBear";
-            break;
-          case RABBIT:
-            Rabbit rab = (Rabbit)entity;
-            if(rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
-              mob = "RabbitKiller";
-              break;
-            }
-            mob = "Rabbit";
-            break;
-          case SHEEP:
-            mob = "Sheep";
-            break;
-          case SHULKER:
-            mob = "Shulker";
-            break;
-          case SILVERFISH:
-            mob = "Silverfish";
-            break;
-          case SKELETON:
-            mob = "Skeleton";
-            break;
-          case SKELETON_HORSE:
-            mob = "SkeletonHorse";
-            break;
-          case SLIME:
-            mob = "Slime";
-            break;
-          case SNOWMAN:
-            mob = "SnowGolem";
-            break;
-          case SPIDER:
-            mob = "Spider";
-            break;
-          case SQUID:
-            mob = "Squid";
-            break;
-          case STRAY:
-            mob = "Stray";
-            break;
-          case VEX:
-            mob = "Vex";
-            break;
-          case VILLAGER:
-            mob = "Villager";
-            break;
-          case VINDICATOR:
-            mob = "Vindicator";
-            break;
-          case WITCH:
-            mob = "Witch";
-            break;
-          case WITHER:
-            mob = "Wither";
-            break;
-          case WITHER_SKELETON:
-            mob = "WitherSkeleton";
-            break;
-          case WOLF:
-            mob = "Wolf";
-            break;
-          case ZOMBIE:
-            mob = "Zombie";
-            break;
-          case ZOMBIE_HORSE:
-            mob = "ZombieHorse";
-            break;
-          case ZOMBIE_VILLAGER:
-            mob = "ZombieVillager";
-            break;
-          default:
-            mob = "Default";
-            break;
+          }
         }
         mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? "Custom.Entries." + event.getEntityType().toString() : mob;
 

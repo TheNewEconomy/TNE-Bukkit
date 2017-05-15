@@ -42,7 +42,7 @@ public class MobConfiguration extends Configuration {
     super.load(configurationFile);
   }
 
-  private String formatName(String name) {
+  public static String formatName(String name) {
     String[] wordsSplit = name.split("_");
     String sReturn = "";
     for(String w: wordsSplit) {
