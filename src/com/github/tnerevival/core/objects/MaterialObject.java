@@ -2,8 +2,7 @@ package com.github.tnerevival.core.objects;
 
 import java.math.BigDecimal;
 
-public class
-MaterialObject {
+public class MaterialObject {
 
   private String name;
   private Boolean item;
