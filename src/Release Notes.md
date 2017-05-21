@@ -27,3 +27,4 @@ Alpha 5.5
   - Fixed issue using special characters for the money symbol
   - Fixed issue where the max balance wasn't being captured properly
   - Fixed issue where servers that used InnoDB were experiencing table creation warnings
+  - Fixed MySQL warning where TNE was looking for old balances column
