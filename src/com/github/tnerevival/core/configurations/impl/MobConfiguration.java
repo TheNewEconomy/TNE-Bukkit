@@ -20,9 +20,12 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Default.Reward", 10.00);
     configurations.put("Mobs.Custom.Enabled", true);
     configurations.put("Mobs.Custom.Reward", 10.00);
+    configurations.put("Mobs.Player.Enabled", true);
+    configurations.put("Mobs.Player.Reward", 10.00);
 
     for(EntityType type : EntityType.values()) {
-      if(type.isAlive()) {
+      if(type.isAlive() && !type.equals(EntityType.PLAYER)) {
+        System.out.println("Adding Mob " + type.getEntityClass().getSimpleName());
         String formatted = formatName(type.getName());
         configurations.put("Mobs." + formatted + ".Enabled", true);
         configurations.put("Mobs." + formatted + ".Reward", 10.00);
