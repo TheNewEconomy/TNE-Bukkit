@@ -16,13 +16,15 @@ public class UpdateChecker {
 
   public String getLatestBuild() {
     String build = TNE.instance().getDescription().getVersion();
-    try {
+    if(TNE.instance().getConfig().getBoolean("Core.Update.Check")) {
+      try {
         URL url = new URL("https://creatorfromhell.com/tne/tnebuild.txt");
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         build = in.readLine();
         in.close();
-    } catch (Exception e) {
-      e.printStackTrace();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
     return build;
   }
