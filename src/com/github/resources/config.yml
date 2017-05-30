@@ -133,7 +133,7 @@ Core:
             Decimal: .
 
             #The amount of digits to display after the decimal character.
-            #The maximum amount of places is 5
+            #The maximum amount of places is 4
             DecimalPlaces: 2
 
             #Would you like to use an item as the currency?

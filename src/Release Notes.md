@@ -9,8 +9,12 @@ Alpha 5.5
   - Ability to take, give, and pay money to/from the server account's funds.
 - Currency Changes
   - Added ability to change currency SI prefixes on a per currency basis.
-  - Set a new cap on max number of decimal places that may be rounded to, which is now 5
+  - Set a new cap on max number of decimal places that may be rounded to, which is now 4
   - Added ability to set max balance on a per currency basis, this is capped at the max balance size of 9 Quintillion
+- Command Changes
+  - Added /economy reset
+    - This allows server administrators the ability to reset balances to their defaults based on certain parameters.
+  - Added "economy" as a trigger for the eco commands.  
 - Technical
   - Changed the save format for balances
   - Made Eco ID searches case insensitive.
