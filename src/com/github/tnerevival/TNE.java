@@ -164,7 +164,6 @@ public class TNE extends JavaPlugin {
         getLogger().info("Created server economy account.");
       }
     }
-
     ConfigurationFile file = new ConfigurationFile(new File(getDataFolder(), "config.yml"));
   }
 
@@ -223,7 +222,7 @@ public class TNE extends JavaPlugin {
     }
   }
 
-  public void loadConfigurations() {
+  private void loadConfigurations() {
     this.saveDefaultConfig();
     getConfig().options().copyDefaults(true);
     itemConfigurations.options().copyDefaults(true);
