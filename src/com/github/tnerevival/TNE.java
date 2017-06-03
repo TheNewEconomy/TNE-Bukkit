@@ -8,7 +8,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
-import com.github.tnerevival.core.configurations.file.ConfigurationFile;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.ConnectionListener;
@@ -164,7 +163,6 @@ public class TNE extends JavaPlugin {
         getLogger().info("Created server economy account.");
       }
     }
-    ConfigurationFile file = new ConfigurationFile(new File(getDataFolder(), "config.yml"));
   }
 
   public void onDisable() {
