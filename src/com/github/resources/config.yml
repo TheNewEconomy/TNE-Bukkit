@@ -100,8 +100,8 @@ Core:
             Format: <symbol><major.amount><decimal><minor.amount><shorten>
 
             #The maximum balance possible for this currency.
-            # Maximum possible value: 9000000000000000000
-            MaxBalance: 9000000000000000000
+            # Maximum possible value: 900000000000000000000000000
+            MaxBalance: 900000000000000000000000000
 
             #The SI Prefixes used when <shorten> is used for the currency's format.
             #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
@@ -113,7 +113,9 @@ Core:
             #Trillion - T
             #Quadrillion - P
             #Quintillion - E
-            Prefixes: 'kMGTPE'
+            #Sextillion - Z
+            #Septillion - Y
+            Prefixes: 'kMGTPEZY'
 
             #The initial balance for accounts.
             #Will be used if no world-specific configurations are found if multiworld is enabled

@@ -18,8 +18,8 @@ Alpha 5.5
 - Technical
   - Changed the save format for balances
   - Made Eco ID searches case insensitive.
-  - Maximum possible balance size is now 9 Quintillion
-    - This is better know as 9,000,000,000,000,000,000
+  - Maximum possible balance size is now 900 Septillion
+    - This is better know as 900,000,000,000,000,000,000,000,000
   - TNE now automatically detects, and supports mobs & blocks for their relevant configurations
     - This revents incompatibilities, and allows us to not have to release an update just to add new mobs/blocks from new Minecraft versions.
 - API

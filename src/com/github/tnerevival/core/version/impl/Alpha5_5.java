@@ -97,7 +97,7 @@ public class Alpha5_5 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(32)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -142,7 +142,7 @@ public class Alpha5_5 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(32)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -183,8 +183,8 @@ public class Alpha5_5 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_location` VARCHAR(250)," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` VARCHAR(26)," +
-          "`offer_sell` VARCHAR(26)," +
+          "`offer_buy` VARCHAR(32)," +
+          "`offer_sell` VARCHAR(32)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
