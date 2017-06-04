@@ -15,11 +15,17 @@ Alpha 5.5
   - Added /economy reset
     - This allows server administrators the ability to reset balances to their defaults based on certain parameters.
   - Added "economy" as a trigger for the eco commands.  
+  - Made money-based arguments smarter
+    - Added ability to parse short values from chat
+      - This allows users to perform commands such as /pay <player> 1k, and it'll actually perform said action for the correct amount.
+  - Added currency argument to /money pay    
 - Technical
   - Changed the save format for balances
+    - This allows us to have virtually unlimited balances, the cap is for memory control purposes.
+    -(not really unlimited, but either way not having a limit would eat more than anything)
   - Made Eco ID searches case insensitive.
-  - Maximum possible balance size is now 900 Septillion
-    - This is better know as 900,000,000,000,000,000,000,000,000
+  - Maximum possible balance size is now 900 Decillion
+    - This is better know as 900,000,000,000,000,000,000,000,000,000,000,000
   - TNE now automatically detects, and supports mobs & blocks for their relevant configurations
     - This revents incompatibilities, and allows us to not have to release an update just to add new mobs/blocks from new Minecraft versions.
 - API

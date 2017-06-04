@@ -6,6 +6,7 @@ import com.github.tnerevival.account.Bank;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -46,12 +47,38 @@ public class BankWithdrawCommand extends TNECommand {
     Player player = getPlayer(sender);
     String world = (arguments.length >= 2)? arguments[1] : getWorld(sender);
     String owner = (arguments.length >= 3)? arguments[2] : player.getName();
-    String currency = (arguments.length >= 4)? getCurrency(world, arguments[3]).getName() : plugin.manager.currencyManager.get(world).getName();
+    String currencyName = (arguments.length >= 4)? getCurrency(world, arguments[3]).getName() : plugin.manager.currencyManager.get(world).getName();
+
+    if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
+      Message m = new Message("Messages.Money.NoCurrency");
+      m.addVariable("$currency", currencyName);
+      m.addVariable("$world", world);
+      m.translate(world, sender);
+      return false;
+    }
+
+    Currency currency = getCurrency(world, currencyName);
     Account account = AccountUtils.getAccount(IDFinder.getID(owner));
     UUID id = IDFinder.getID(player);
 
     if(arguments.length < 1) {
       help(sender);
+      return false;
+    }
+
+    String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
+    if(parsed.contains("Messages")) {
+      Message max = new Message(parsed);
+      max.addVariable("$currency", currency.getName());
+      max.addVariable("$world", world);
+      max.addVariable("$player", getPlayer(sender).getDisplayName());
+      max.translate(getWorld(sender), sender);
+      return false;
+    }
+
+    BigDecimal value = new BigDecimal(parsed);
+    if(value.compareTo(BigDecimal.ZERO) < 0) {
+      new Message("Messages.Money.Negative").translate(world, sender);
       return false;
     }
 
@@ -74,16 +101,15 @@ public class BankWithdrawCommand extends TNECommand {
       return false;
     }
 
-    BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
-    if(!AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, plugin.manager.currencyManager.get(world, currency), TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
+    if(!AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, plugin.manager.currencyManager.get(world, currencyName), TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
       Message overdraw = new Message("Messages.Bank.Overdraw");
-      overdraw.addVariable("$amount",  CurrencyFormatter.format(world, currency, value));
+      overdraw.addVariable("$amount",  CurrencyFormatter.format(world, currencyName, value));
       overdraw.addVariable("$name",  owner);
       overdraw.translate(IDFinder.getWorld(id), id);
       return false;
     }
     Message withdrawn = new Message("Messages.Bank.Withdraw");
-    withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, currency, value));
+    withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, currencyName, value));
     withdrawn.addVariable("$name",  owner);
     withdrawn.translate(IDFinder.getWorld(id), id);
     return true;

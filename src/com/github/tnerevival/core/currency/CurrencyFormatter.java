@@ -65,7 +65,7 @@ public class CurrencyFormatter {
     replacements.put("<minor.name>", minorName);
     replacements.put("<major.amount>", major + "");
     replacements.put("<minor.amount>", minor + "");
-    replacements.put("<short.amount>", shorten(currency, amount, currency.getDecimal()));
+    replacements.put("<short.amount>", shorten(currency, amount));
     replacements.putAll(Message.colours);
 
     String formatted = (currency.shorten())? shortFormat : format;
@@ -76,7 +76,23 @@ public class CurrencyFormatter {
     return formatted;
   }
 
-  private static String shorten(Currency currency, BigDecimal balance, String decimal) {
+  public static String parseAmount(Currency currency, String world, String amount) {
+    if(amount.length() > 40) return "Messages.Money.ExceededMax";
+    if(isBigDecimal(amount, currency.getName(), world)) {
+      BigDecimal translated = translateBigDecimal(amount, currency.getName(), world);
+      if(translated.compareTo(currency.getMaxBalance()) > 0) {
+        return "Messages.Money.ExceededMax";
+      }
+      return translated.toPlainString();
+    }
+    String updated = amount.replaceAll(" ", "");
+    if(!currency.getPrefixes().contains(updated.charAt(updated.length() - 1) + "")) {
+      return "Messages.Money.InvalidFormat";
+    }
+    return fromShort(currency, updated);
+  }
+
+  private static String shorten(Currency currency, BigDecimal balance) {
     String prefixes = currency.getPrefixes();
     BigInteger wholeNum = balance.toBigInteger();
     if (wholeNum.compareTo(new BigInteger("1000")) < 0) {
@@ -86,7 +102,12 @@ public class CurrencyFormatter {
     int pos = ((whole.length() - 1) / 3) - 1;
     int posInclude = ((whole.length() % 3) == 0)? 3 : whole.length() % 3;
     return whole.substring(0, posInclude) + prefixes.charAt(pos);
-
+  }
+  private static String fromShort(Currency currency, String amount) {
+    int charIndex = currency.getPrefixes().indexOf(amount.charAt(amount.length() - 1)) + 1;
+    String sub = amount.substring(0, amount.length() - 1);
+    String form = "%1$-" + ((charIndex * 3) + sub.length()) + "s";
+    return String.format(form, Integer.valueOf(sub)).replace(' ', '0');
   }
 
   public static boolean isBigDecimal(String value, String world) {

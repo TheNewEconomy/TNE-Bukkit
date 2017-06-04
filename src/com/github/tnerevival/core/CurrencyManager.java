@@ -64,12 +64,12 @@ public class CurrencyManager {
 
         MISCUtils.debug("[Loop]Loading Currency: " + cur + " for world: " + name);
         String base = curBase + "." + cur;
-        BigDecimal balance = configuration.contains(base + ".Balance")?  BigDecimal.valueOf(configuration.getDouble(base + ".Balance")) : new BigDecimal(200.00);
+        BigDecimal balance = configuration.contains(base + ".Balance")?  new BigDecimal(configuration.getString(base + ".Balance")) : new BigDecimal(200.00);
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
-        Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? ((configuration.getInt(base + ".DecimalPlace") > 5)? 5 : configuration.getInt(base + ".DecimalPlace")) : 2;
-        Long maxBalance = configuration.contains(base + ".MaxBalance")? ((configuration.getLong(base + ".MaxBalance") > 9000000000000000000L)? 9000000000000000000L : configuration.getLong(base + ".MaxBalance")) : 9000000000000000000L;
+        Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? ((configuration.getInt(base + ".DecimalPlace") > 4)? 4 : configuration.getInt(base + ".DecimalPlace")) : 2;
+        BigDecimal maxBalance = configuration.contains(base + ".MaxBalance")? ((new BigDecimal(configuration.getString(base + ".MaxBalance")).compareTo(TNE.largestSupported) > 0)? TNE.largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance"))) : TNE.largestSupported;
         String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format").trim() : "<major> and <minor><shorten>";
-        String prefixes = configuration.contains(base + ".Prefixes")? configuration.getString(base + ".Prefixes").trim() : "kMGTPEZY";
+        String prefixes = configuration.contains(base + ".Prefixes")? configuration.getString(base + ".Prefixes").trim() : "kMGTPEZYXWV";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;
         Boolean item = configuration.contains(base + ".ItemCurrency") && configuration.getBoolean(base + ".ItemCurrency");

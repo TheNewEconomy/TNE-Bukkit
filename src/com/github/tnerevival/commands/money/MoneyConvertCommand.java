@@ -62,38 +62,49 @@ public class MoneyConvertCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Player player = getPlayer(sender);
     if(arguments.length >= 2) {
-      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[0], IDFinder.getWorld(getPlayer(sender)));
-      if(value.compareTo(BigDecimal.ZERO) < 0) {
-        help(sender);
-        return false;
-      }
-
       String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : getWorld(sender);
       String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
 
       if(!TNE.instance().manager.currencyManager.contains(worldTo, currencyTo)) {
-        Message paid = new Message("Messages.Money.NoCurrency");
-        paid.addVariable("$currency", currencyTo);
-        paid.addVariable("$world", worldTo);
-        paid.translate(getWorld(sender), player);
+        Message noCur = new Message("Messages.Money.NoCurrency");
+        noCur.addVariable("$currency", currencyTo);
+        noCur.addVariable("$world", worldTo);
+        noCur.translate(getWorld(sender), player);
         return false;
       }
 
       Currency to = TNE.instance().manager.currencyManager.get(worldTo, currencyTo);
       Currency from = TNE.instance().manager.currencyManager.get(getWorld(sender));
+      String worldFrom = getWorld(sender);
 
       if(arguments.length >= 3) {
-        String worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : getWorld(sender);
+        worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : getWorld(sender);
         String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
 
         if(!TNE.instance().manager.currencyManager.contains(worldFrom, currencyFrom)) {
-          Message paid = new Message("Messages.Money.NoCurrency");
-          paid.addVariable("$currency", currencyFrom);
-          paid.addVariable("$world", worldFrom);
-          paid.translate(getWorld(sender), player);
+          Message noCur = new Message("Messages.Money.NoCurrency");
+          noCur.addVariable("$currency", currencyFrom);
+          noCur.addVariable("$world", worldFrom);
+          noCur.translate(getWorld(sender), player);
           return false;
         }
         from = TNE.instance().manager.currencyManager.get(worldFrom, currencyFrom);
+      }
+
+      String parsed = CurrencyFormatter.parseAmount(to, worldTo, arguments[0]);
+      if(parsed.contains("Messages")) {
+        Message max = new Message(parsed);
+        max.addVariable("$currency", to.getName());
+        max.addVariable("$world", worldTo);
+        max.addVariable("$player", player.getDisplayName());
+        max.translate(getWorld(sender), player);
+        return false;
+      }
+
+      BigDecimal value = new BigDecimal(parsed);
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
+        help(sender);
+        return false;
       }
 
       if(!AccountUtils.transaction(IDFinder.getID(player).toString(), null, value, from, TransactionType.MONEY_INQUIRY, IDFinder.getWorld(player))) {
