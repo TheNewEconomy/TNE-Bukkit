@@ -79,6 +79,15 @@ public class MoneyGiveCommand extends TNECommand {
       if(IDFinder.getID(arguments[0]) != null) {
 
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
+
+        if(AccountUtils.getFunds(IDFinder.getID(arguments[0]), world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
+          Message exceeds = new Message("Messages.Money.ExceedsOtherPlayerMaximum");
+          exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
+          exceeds.addVariable("$player", arguments[0]);
+          exceeds.translate(world, sender);
+          return false;
+        }
+
         AccountUtils.transaction(id, IDFinder.getID(arguments[0]).toString(), value, currency, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
         gave.addVariable("$amount",  CurrencyFormatter.format(world, value));

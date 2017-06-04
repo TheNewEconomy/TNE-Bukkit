@@ -101,13 +101,21 @@ public class BankWithdrawCommand extends TNECommand {
       return false;
     }
 
-    if(!AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, plugin.manager.currencyManager.get(world, currencyName), TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
+    if(AccountUtils.getFunds(id, world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
+      Message exceeds = new Message("Messages.Money.ExceedsPlayerMaximum");
+      exceeds.addVariable("$max",  CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
+      exceeds.translate(IDFinder.getWorld(id), id);
+      return false;
+    }
+
+    if(!AccountUtils.transaction(IDFinder.getID(owner).toString(), id.toString(), value, currency, TransactionType.BANK_WITHDRAWAL, IDFinder.getWorld(id))) {
       Message overdraw = new Message("Messages.Bank.Overdraw");
       overdraw.addVariable("$amount",  CurrencyFormatter.format(world, currencyName, value));
       overdraw.addVariable("$name",  owner);
       overdraw.translate(IDFinder.getWorld(id), id);
       return false;
     }
+
     Message withdrawn = new Message("Messages.Bank.Withdraw");
     withdrawn.addVariable("$amount",  CurrencyFormatter.format(world, currencyName, value));
     withdrawn.addVariable("$name",  owner);

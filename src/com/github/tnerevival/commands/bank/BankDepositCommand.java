@@ -98,6 +98,14 @@ public class BankDepositCommand extends TNECommand {
       return false;
     }
 
+    if(Bank.getBankBalance(IDFinder.getID(owner), world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
+      Message exceeds = new Message("Messages.Money.ExceedsBankMaximum");
+      exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
+      exceeds.addVariable("$owner", owner);
+      exceeds.translate(world, sender);
+      return false;
+    }
+
     if(!AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(owner).toString(), value, plugin.manager.currencyManager.get(world, currencyName), TransactionType.BANK_DEPOSIT, IDFinder.getWorld(player))) {
       Message insufficient = new Message("Messages.Money.Insufficient");
       insufficient.addVariable("$amount",  CurrencyFormatter.format(world, currencyName, value));
@@ -105,6 +113,7 @@ public class BankDepositCommand extends TNECommand {
       insufficient.translate(IDFinder.getWorld(player), player);
       return false;
     }
+
     Message deposit = new Message("Messages.Bank.Deposit");
     deposit.addVariable("$amount",  CurrencyFormatter.format(world, currencyName, value));
     deposit.addVariable("$name",  owner);

@@ -73,6 +73,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Money.InvalidFormat", "<red>I'm sorry, but the monetary value you've entered is wrong.");
     configurations.put("Messages.Money.ExceedsCurrencyMaximum", "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance.");
     configurations.put("Messages.Money.ExceedsPlayerMaximum", "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed.");
+    configurations.put("Messages.Money.ExceedsBankMaximum", "<red>I'm sorry, but performing this transaction will place this bank's balance over the maximum allowed.");
     configurations.put("Messages.Money.ExceedsOtherPlayerMaximum", "<red>I'm sorry, but performing this transaction will place $player's balance over the maximum allowed.");
 
     configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
