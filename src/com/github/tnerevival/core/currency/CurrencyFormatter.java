@@ -6,6 +6,7 @@ import com.github.tnerevival.utils.AccountUtils;
 import com.github.tnerevival.utils.MISCUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,20 +76,17 @@ public class CurrencyFormatter {
     return formatted;
   }
 
-  private static long getWhole(BigDecimal number) {
-    BigDecimal bigDecimal = number.setScale(2, BigDecimal.ROUND_HALF_UP);
-    BigDecimal fractionValue =  bigDecimal.remainder(BigDecimal.ONE);
-    return bigDecimal.subtract(fractionValue).setScale(0).longValue();
-  }
-
   private static String shorten(Currency currency, BigDecimal balance, String decimal) {
     String prefixes = currency.getPrefixes();
-    Long dollars = getWhole(balance);
-    if (dollars < 1000) {
-      return "" + dollars;
+    BigInteger wholeNum = balance.toBigInteger();
+    if (wholeNum.compareTo(new BigInteger("1000")) < 0) {
+      return "" + wholeNum.toString();
     }
-    int exp = (int) (Math.log(dollars) / Math.log(1000));
-    return String.format("%" + decimal + "1f%c", dollars / Math.pow(1000, exp), prefixes.charAt(exp - 1));
+    String whole = wholeNum.toString();
+    int pos = ((whole.length() - 1) / 3) - 1;
+    int posInclude = ((whole.length() % 3) == 0)? 3 : whole.length() % 3;
+    return whole.substring(0, posInclude) + prefixes.charAt(pos);
+
   }
 
   public static boolean isBigDecimal(String value, String world) {
@@ -96,7 +94,7 @@ public class CurrencyFormatter {
     return isBigDecimal(value, major, world);
   }
 
-  public static boolean isBigDecimal(String value, String currency, String world) {
+  private static boolean isBigDecimal(String value, String currency, String world) {
     String decimal = TNE.instance().manager.currencyManager.get(world, currency).getDecimal();
     try {
       new BigDecimal(value.replace(decimal, "."));
