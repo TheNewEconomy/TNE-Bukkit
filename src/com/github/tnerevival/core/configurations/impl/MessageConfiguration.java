@@ -70,10 +70,10 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Money.NoCurrency", "<red>The currency \"$currency\" could not be found in \"$world\".");
     configurations.put("Messages.Money.Converted", "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\".");
     configurations.put("Messages.Money.Top", "<white>=========[<gold>Economy Top<white>]========= Page: $page/$page_top");
-    configurations.put("Messages.Money.InvalidFormat", "<red>I'm sorry, but the monetary amount you've entered is wrong.");
-    configurations.put("Messages.Money.ExceedsCurrencyMaximum", "<red>I'm sorry, but the monetary amount you've entered exceeds the maximum possible balance.");
-    configurations.put("Messages.Money.ExceedsPlayerMaximum", "<red>I'm sorry, but performing this transactions will place your balance over the maximum allowed.");
-    configurations.put("Messages.Money.ExceedsOtherPlayerMaximum", "<red>I'm sorry, but performing this transactions will place $player's balance over the maximum allowed.");
+    configurations.put("Messages.Money.InvalidFormat", "<red>I'm sorry, but the monetary value you've entered is wrong.");
+    configurations.put("Messages.Money.ExceedsCurrencyMaximum", "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance.");
+    configurations.put("Messages.Money.ExceedsPlayerMaximum", "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed.");
+    configurations.put("Messages.Money.ExceedsOtherPlayerMaximum", "<red>I'm sorry, but performing this transaction will place $player's balance over the maximum allowed.");
 
     configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
     configurations.put("Messages.Auction.Return", "<white>Your items have been returned.");

@@ -77,11 +77,11 @@ public class CurrencyFormatter {
   }
 
   public static String parseAmount(Currency currency, String world, String amount) {
-    if(amount.length() > 40) return "Messages.Money.ExceededMax";
+    if(amount.length() > 40) return "Messages.Money.ExceedsCurrencyMaximum";
     if(isBigDecimal(amount, currency.getName(), world)) {
       BigDecimal translated = translateBigDecimal(amount, currency.getName(), world);
       if(translated.compareTo(currency.getMaxBalance()) > 0) {
-        return "Messages.Money.ExceededMax";
+        return "Messages.Money.ExceedsCurrencyMaximum";
       }
       return translated.toPlainString();
     }
