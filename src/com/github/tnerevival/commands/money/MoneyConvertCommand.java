@@ -114,9 +114,16 @@ public class MoneyConvertCommand extends TNECommand {
         return false;
       }
 
-      AccountUtils.transaction(IDFinder.getID(player).toString(), null, value, from, TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
 
       BigDecimal converted = TNE.instance().manager.currencyManager.convert(from, to, value);
+      if(converted.add(value).compareTo(to.getMaxBalance()) > 0) {
+        Message exceeds = new Message("Messages.Money.ExceedsPlayerMaximum");
+        exceeds.addVariable("$max", CurrencyFormatter.format(to, currencyTo, to.getMaxBalance()));
+        exceeds.addVariable("$player", arguments[0]);
+        exceeds.translate(getWorld(sender), sender);
+        return false;
+      }
+      AccountUtils.transaction(IDFinder.getID(player).toString(), null, value, from, TransactionType.MONEY_REMOVE, IDFinder.getWorld(player));
       AccountUtils.transaction(IDFinder.getID(player).toString(), null, converted, to, TransactionType.MONEY_GIVE, IDFinder.getWorld(player));
 
       Message success = new Message("Messages.Money.Converted");

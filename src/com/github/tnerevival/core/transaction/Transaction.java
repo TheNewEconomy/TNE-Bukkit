@@ -94,14 +94,15 @@ public class Transaction {
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_SET)) {
       if(recipient == null) {
-        if(AccountUtils.getFunds(IDFinder.getID(initiator), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
+        if(cost.getAmount().compareTo(cost.getCurrency().getMaxBalance()) > 0) {
           return TransactionResult.FAILED;
         }
       }
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_GIVE)) {
       if(recipient == null) {
-        if(AccountUtils.getFunds(IDFinder.getID(initiator), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
+        BigDecimal comparison = AccountUtils.getFunds(IDFinder.getID(initiator), world, cost.getCurrency().getName());
+        if(comparison.add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
           return TransactionResult.FAILED;
         }
       }
@@ -171,7 +172,8 @@ public class Transaction {
       }
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_SET)) {
-      if(AccountUtils.getFunds(IDFinder.getID(recipient), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
+      BigDecimal comparison = AccountUtils.getFunds(IDFinder.getID(recipient), world, cost.getCurrency().getName());
+      if(comparison.add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
         return TransactionResult.FAILED;
       }
       return TransactionResult.SUCCESS;
@@ -188,7 +190,8 @@ public class Transaction {
       if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, cost.getCurrency().getName()).compareTo(cost.getAmount()) < 0) {
         return TransactionResult.FAILED;
       }
-      if(AccountUtils.getFunds(IDFinder.getID(recipient), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
+      BigDecimal comparison = AccountUtils.getFunds(IDFinder.getID(recipient), world, cost.getCurrency().getName());
+      if(comparison.add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
         return TransactionResult.FAILED;
       }
 
@@ -209,7 +212,8 @@ public class Transaction {
       if(!AccountUtils.getAccount(id).hasBank(world)) return TransactionResult.FAILED;
       if(cost.getAmount().compareTo(BigDecimal.ZERO) > 0 && AccountUtils.getFunds(IDFinder.getID(initiator), world, TNE.instance().manager.currencyManager.get(world, cost.getCurrency().getName()).getName()).compareTo(cost.getAmount()) < 0) return TransactionResult.FAILED;
       if(recipient != null && !Bank.bankMember(id, IDFinder.getID(initiator), world)) return TransactionResult.FAILED;
-      if(Bank.getBankBalance(IDFinder.getID(recipient), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
+      BigDecimal comparison = Bank.getBankBalance(IDFinder.getID(recipient), world, cost.getCurrency().getName());
+      if(comparison.add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
         return TransactionResult.FAILED;
       }
       return TransactionResult.SUCCESS;

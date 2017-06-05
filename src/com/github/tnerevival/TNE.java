@@ -29,7 +29,6 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -39,7 +38,6 @@ public class TNE extends JavaPlugin {
   public List<String> modified = new ArrayList<>();
 
   private static TNE instance;
-  public static final BigDecimal largestSupported = new BigDecimal("900000000000000000000000000000000000");
   public EconomyManager manager;
   public InventoryManager inventoryManager;
   public SaveManager saveManager;

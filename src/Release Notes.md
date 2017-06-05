@@ -22,7 +22,7 @@ Alpha 5.5
 - Technical
   - Changed the save format for balances
     - This allows us to have virtually unlimited balances, the cap is for memory control purposes.
-    -(not really unlimited, but either way not having a limit would eat more than anything)
+    - (not really unlimited, but either way not having a limit would lead to RAM being devoured)
   - Made Eco ID searches case insensitive.
   - Maximum possible balance size is now 900 Decillion
     - This is better know as 900,000,000,000,000,000,000,000,000,000,000,000

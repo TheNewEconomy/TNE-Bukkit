@@ -88,7 +88,8 @@ public class MoneyPayCommand extends TNECommand {
         if(getPlayer(sender, arguments[0]) != null) {
           MISCUtils.debug("Player not null");
 
-          if(AccountUtils.getFunds(IDFinder.getID(arguments[0]), world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
+          BigDecimal comparison = AccountUtils.getFunds(IDFinder.getID(arguments[0]), world, currencyName);
+          if(comparison.add(value).compareTo(currency.getMaxBalance()) > 0) {
             Message exceeds = new Message("Messages.Money.ExceedsOtherPlayerMaximum");
             exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
             exceeds.addVariable("$player", arguments[0]);

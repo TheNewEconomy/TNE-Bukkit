@@ -80,7 +80,7 @@ Messages:
        PurgeWorld: <white>Successfully purged economy accounts in $world.
        ResetPin: <white>Successfully set pin for $player to $pin.
        StatusChange: <white>Status for $player has been changed to <green>$status<white>.
-       Reset: <white>Performed an economy reset using these parameters: world = $world, currency = $currency, and player = $player.
+       Reset: <white>Performed an economy reset using these parameters - world = $world, currency = $currency, and player = $player.
 
     Account:
        Locked: <red>You can't do that with a locked account($player)!

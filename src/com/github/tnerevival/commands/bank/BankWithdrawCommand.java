@@ -101,7 +101,8 @@ public class BankWithdrawCommand extends TNECommand {
       return false;
     }
 
-    if(AccountUtils.getFunds(id, world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
+    BigDecimal comparison = AccountUtils.getFunds(id, world, currencyName);
+    if(comparison.add(value).compareTo(currency.getMaxBalance()) > 0) {
       Message exceeds = new Message("Messages.Money.ExceedsPlayerMaximum");
       exceeds.addVariable("$max",  CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
       exceeds.translate(IDFinder.getWorld(id), id);

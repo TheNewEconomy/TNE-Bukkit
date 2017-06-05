@@ -149,6 +149,7 @@ public class Bank implements Serializable {
         com.github.tnerevival.core.currency.Currency currency = TNE.instance().manager.currencyManager.get(world, entry.getKey());
         BankBalance balance = entry.getValue();
         if(currency.isInterestEnabled() && (new Date().getTime() - balance.getLastInterest()) >= currency.getInterestInterval()) {
+          MISCUtils.debug("Applying interest for bank: " + getOwner().toString() + ": Currency: " + currency.getName());
           BigDecimal gold = balance.getBalance();
           BigDecimal interestEarned = gold.multiply(new BigDecimal(currency.getInterestRate()));
           balance.setBalance(gold.add(interestEarned));

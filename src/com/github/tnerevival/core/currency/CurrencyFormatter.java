@@ -51,10 +51,10 @@ public class CurrencyFormatter {
     String format = currency.getFormat();
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
-    Long major = Long.parseLong(amountStr[0]);
-    Long minor = Long.parseLong((amountStr[1].length() == 1)? amountStr[1] + "0" : amountStr[1]);
-    String majorName = (major == 1)? currency.getTier("Major").getSingle() : currency.getTier("Major").getPlural();
-    String minorName = (minor == 1)? currency.getTier("Minor").getSingle() : currency.getTier("Minor").getPlural();
+    BigInteger major = new BigInteger(amountStr[0]);
+    BigInteger minor = new BigInteger(String.format("%1$-2s", Integer.valueOf(amountStr[1])).replace(' ', '0'));
+    String majorName = (major.compareTo(BigInteger.ONE) == 0)? currency.getTier("Major").getSingle() : currency.getTier("Major").getPlural();
+    String minorName = (minor.compareTo(BigInteger.ONE) == 0)? currency.getTier("Minor").getSingle() : currency.getTier("Minor").getPlural();
 
     Map<String, String> replacements = new HashMap<>();
     replacements.put("<symbol>", currency.getTier("Major").getSymbol());

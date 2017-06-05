@@ -28,6 +28,7 @@ import java.util.*;
  * Created by creatorfromhell on 10/22/2016.
  */
 public class CurrencyManager {
+  private static BigDecimal largestSupported;
   private Map<String, Currency> currencies = new HashMap<>();
   private Set<String> worlds = TNE.instance().worldConfigurations.getConfigurationSection("Worlds").getKeys(false);
 
@@ -40,6 +41,7 @@ public class CurrencyManager {
   }
 
   public void loadCurrencies() {
+    largestSupported = new BigDecimal("900000000000000000000000000000000000");
     worldCurrencies = new HashMap<>();
     trackedCurrencies = new HashMap<>();
     loadCurrency(TNE.instance().getConfig(), false, TNE.instance().defaultWorld);
@@ -47,6 +49,7 @@ public class CurrencyManager {
     for(String s : worlds) {
       loadCurrency(TNE.instance().worldConfigurations, true, s);
     }
+    largestSupported = null;
   }
 
   private void loadCurrency(FileConfiguration configuration, boolean world, String name) {
@@ -67,7 +70,7 @@ public class CurrencyManager {
         BigDecimal balance = configuration.contains(base + ".Balance")?  new BigDecimal(configuration.getString(base + ".Balance")) : new BigDecimal(200.00);
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
         Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? ((configuration.getInt(base + ".DecimalPlace") > 4)? 4 : configuration.getInt(base + ".DecimalPlace")) : 2;
-        BigDecimal maxBalance = configuration.contains(base + ".MaxBalance")? ((new BigDecimal(configuration.getString(base + ".MaxBalance")).compareTo(TNE.largestSupported) > 0)? TNE.largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance"))) : TNE.largestSupported;
+        BigDecimal maxBalance = configuration.contains(base + ".MaxBalance")? ((new BigDecimal(configuration.getString(base + ".MaxBalance")).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance"))) : largestSupported;
         String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format").trim() : "<major> and <minor><shorten>";
         String prefixes = configuration.contains(base + ".Prefixes")? configuration.getString(base + ".Prefixes").trim() : "kMGTPEZYXWV";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
@@ -88,7 +91,7 @@ public class CurrencyManager {
         //Interest-related configurations
         Boolean interestEnabled = !configuration.contains(base + ".Interest.Enabled") || configuration.getBoolean(base + ".Interest.Enabled");
         Double interestRate = configuration.contains(base + ".Interest.Rate")? configuration.getDouble(base + ".Interest.Rate") : 0.2;
-        Long interestInterval = configuration.contains(base + ".Interest.Interval")? configuration.getLong(base + ".Interest.Interval") : 1800;
+        Long interestInterval = configuration.contains(base + ".Interest.Interval")? configuration.getLong(base + ".Interest.Interval") * 1000 : 1800;
 
 
         Tier majorTier = new Tier();

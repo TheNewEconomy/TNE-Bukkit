@@ -98,7 +98,8 @@ public class BankDepositCommand extends TNECommand {
       return false;
     }
 
-    if(Bank.getBankBalance(IDFinder.getID(owner), world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
+    BigDecimal comparison = Bank.getBankBalance(IDFinder.getID(owner), world, currencyName);
+    if(comparison.add(value).compareTo(currency.getMaxBalance()) > 0) {
       Message exceeds = new Message("Messages.Money.ExceedsBankMaximum");
       exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
       exceeds.addVariable("$owner", owner);

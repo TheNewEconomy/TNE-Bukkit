@@ -72,6 +72,13 @@ public class MoneySetCommand extends TNECommand {
         new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
+      if(value.compareTo(currency.getMaxBalance()) > 0) {
+        Message exceeds = new Message("Messages.Money.ExceedsOtherPlayerMaximum");
+        exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
+        exceeds.addVariable("$player", arguments[0]);
+        exceeds.translate(world, sender);
+        return false;
+      }
 
       if(arguments[0].equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
           && !sender.hasPermission("tne.server.set")) {
@@ -81,14 +88,6 @@ public class MoneySetCommand extends TNECommand {
 
       if(IDFinder.getID(arguments[0]) != null) {
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
-
-        if(AccountUtils.getFunds(IDFinder.getID(arguments[0]), world, currencyName).add(value).compareTo(currency.getMaxBalance()) > 0) {
-          Message exceeds = new Message("Messages.Money.ExceedsOtherPlayerMaximum");
-          exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
-          exceeds.addVariable("$player", arguments[0]);
-          exceeds.translate(world, sender);
-          return false;
-        }
 
         AccountUtils.transaction(IDFinder.getID(arguments[0]).toString(), id, value, currency, TransactionType.MONEY_SET, world);
         Message set = new Message("Messages.Money.Set");

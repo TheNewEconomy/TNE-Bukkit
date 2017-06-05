@@ -42,7 +42,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
     configurations.put("Messages.Admin.ResetPin", "<white>Successfully set pin for $player to $pin.");
     configurations.put("Messages.Admin.Status", "<white>Status for $player has been changed to <green>$status<white>.");
-    configurations.put("Messages.Admin.Reset", "<white>Performed an economy reset using these parameters: world = $world, currency = $currency, and player = $player.");
+    configurations.put("Messages.Admin.Reset", "<white>Performed an economy reset using these parameters -  world = $world, currency = $currency, and player = $player.");
 
     configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
     configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
