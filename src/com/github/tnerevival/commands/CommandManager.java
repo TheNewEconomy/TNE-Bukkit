@@ -8,6 +8,7 @@ import com.github.tnerevival.commands.credit.CreditCommand;
 import com.github.tnerevival.commands.dev.DeveloperCommand;
 import com.github.tnerevival.commands.eco.EcoCommand;
 import com.github.tnerevival.commands.money.MoneyCommand;
+import com.github.tnerevival.commands.multiplier.MultiplierCommand;
 import com.github.tnerevival.commands.packages.PackageCommand;
 import com.github.tnerevival.commands.pin.PinCommand;
 import com.github.tnerevival.commands.shop.ShopCommand;
@@ -39,6 +40,7 @@ public class CommandManager {
     commands.put(new String[] { "bank" }, new BankCommand(TNE.instance()));
     commands.put(new String[] { "credit" }, new CreditCommand(TNE.instance()));
     commands.put(new String[] { "money", "bal", "balance", "pay", "baltop", "balancetop" }, new MoneyCommand(TNE.instance()));
+    commands.put(new String[] { "multiplier", "mult" }, new MultiplierCommand(TNE.instance()));
     commands.put(new String[] { "package" }, new PackageCommand(TNE.instance()));
     commands.put(new String[] { "pin" }, new PinCommand(TNE.instance()));
     commands.put(new String[] { "shop" }, new ShopCommand(TNE.instance()));

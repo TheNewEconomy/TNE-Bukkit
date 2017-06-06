@@ -15,6 +15,7 @@ public class MoneyCommand extends TNECommand {
     subCommands.add(new MoneyConvertCommand(plugin));
     subCommands.add(new MoneyGiveCommand(plugin));
     subCommands.add(new MoneyHistoryCommand(plugin));
+    subCommands.add(new MoneyMultiplierCommand(plugin));
     subCommands.add(new MoneyPayCommand(plugin));
     subCommands.add(new MoneySetCommand(plugin));
     subCommands.add(new MoneyTakeCommand(plugin));
