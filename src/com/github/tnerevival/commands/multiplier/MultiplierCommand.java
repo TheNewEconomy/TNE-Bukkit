@@ -2,8 +2,6 @@ package com.github.tnerevival.commands.multiplier;
 
 import com.github.tnerevival.TNE;
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.commands.packages.PackageBuyCommand;
-import com.github.tnerevival.commands.packages.PackageListCommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
@@ -16,8 +14,6 @@ public class MultiplierCommand extends TNECommand {
 
   public MultiplierCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new PackageListCommand(plugin));
-    subCommands.add(new PackageBuyCommand(plugin));
   }
 
   @Override
