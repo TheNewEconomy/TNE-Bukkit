@@ -1136,7 +1136,7 @@ public class Alpha5_5 extends Version {
 
   @Override
   public UUID loadID(String username) {
-    String table = prefix + "_TRANSACTIONS";
+    String table = prefix + "_ECOID";
     try {
       int idIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE username = ?", new Object[] {
           username
