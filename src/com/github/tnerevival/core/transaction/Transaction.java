@@ -178,8 +178,10 @@ public class Transaction {
       }
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_GIVE)) {
-      if(AccountUtils.getFunds(IDFinder.getID(recipient), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
-        return TransactionResult.FAILED;
+      if(recipient != null) {
+        if (AccountUtils.getFunds(IDFinder.getID(recipient), world, cost.getCurrency().getName()).add(cost.getAmount()).compareTo(cost.getCurrency().getMaxBalance()) > 0) {
+          return TransactionResult.FAILED;
+        }
       }
       return TransactionResult.SUCCESS;
     } else if(type.equals(TransactionType.MONEY_PAY)) {

@@ -1121,7 +1121,7 @@ public class Alpha5_5 extends Version {
   public Map<String, UUID> loadIDS() {
     Map<String, UUID> ids = new HashMap<>();
 
-    String table = prefix + "_ECOIDS";
+    String table = prefix + "_ECOID";
     try {
       int idIndex = sql().executeQuery("SELECT * FROM " + table + ";");
       while (sql().results(idIndex).next()) {

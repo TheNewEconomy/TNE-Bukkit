@@ -85,7 +85,7 @@ public class TNEAPI {
    * @param amount The amount of funds to add to the player's account.
    */
   public void fundsAdd(String identifier, String world, BigDecimal amount) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
+    AccountUtils.transaction(null, IDFinder.getID(identifier).toString(), amount, plugin.manager.currencyManager.get(world), TransactionType.MONEY_GIVE, world);
   }
 
   /**
@@ -96,7 +96,7 @@ public class TNEAPI {
    * @param currency The currency of the funds.
    */
   public void fundsAdd(String identifier, String world, BigDecimal amount, Currency currency) {
-    AccountUtils.transaction(IDFinder.getID(identifier).toString(), null, amount, currency, TransactionType.MONEY_GIVE, world);
+    AccountUtils.transaction(null, IDFinder.getID(identifier).toString(), amount, currency, TransactionType.MONEY_GIVE, world);
   }
 
   /**
