@@ -1121,7 +1121,7 @@ public class Alpha5_5 extends Version {
   public Map<String, UUID> loadIDS() {
     Map<String, UUID> ids = new HashMap<>();
 
-    String table = prefix + "_ECOID";
+    String table = prefix + "_ECOIDS";
     try {
       int idIndex = sql().executeQuery("SELECT * FROM " + table + ";");
       while (sql().results(idIndex).next()) {
@@ -1136,7 +1136,7 @@ public class Alpha5_5 extends Version {
 
   @Override
   public UUID loadID(String username) {
-    String table = prefix + "_ECOID";
+    String table = prefix + "_ECOIDS";
     try {
       int idIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE username = ?", new Object[] {
           username
