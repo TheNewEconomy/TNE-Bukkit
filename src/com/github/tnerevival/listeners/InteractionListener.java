@@ -548,89 +548,98 @@ public class InteractionListener implements Listener {
 
     if(entity.getKiller() != null) {
       Player killer = entity.getKiller();
-      String world = IDFinder.getWorld(killer);
-      String id = IDFinder.getID(killer).toString();
-      String mob = entity.getCustomName();
-      BigDecimal reward = TNE.configurations.mobReward("Default", world, id);
-      String messageNode = "Messages.Mob.Killed";
-      Boolean player = false;
 
-      if(TNE.instance().api().getBoolean("Mobs.Enabled", world, id)) {
-        if(entity.getType().isAlive()) {
-          mob = MobConfiguration.formatName(entity.getType().getName());
+      //Permissions Check
+      if(killer.hasPermission("tne.general.mob")) {
 
-          if(entity.getType().equals(EntityType.RABBIT)) {
-            Rabbit rab = (Rabbit)entity;
-            if(rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
-              mob = "RabbitKiller";
-            }
-          } else if(entity.getType().equals(EntityType.PLAYER)) {
-            Player p = (Player)entity;
-            if(p.getUniqueId() != null) {
-              if (TNE.configurations.playerEnabled(p.getUniqueId(), world, id)) {
-                mob = p.getUniqueId().toString();
-                player = true;
+        String world = IDFinder.getWorld(killer);
+        String id = IDFinder.getID(killer).toString();
+        String mob = entity.getCustomName();
+        BigDecimal reward = TNE.configurations.mobReward("Default", world, id);
+        String messageNode = "Messages.Mob.Killed";
+        Boolean player = false;
+
+        if (TNE.instance().api().getBoolean("Mobs.Enabled", world, id)) {
+          if (entity.getType().isAlive()) {
+            mob = MobConfiguration.formatName(entity.getType().getName());
+
+            if (entity.getType().equals(EntityType.RABBIT)) {
+              Rabbit rab = (Rabbit) entity;
+              if (rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
+                mob = "RabbitKiller";
+              }
+            } else if (entity.getType().equals(EntityType.PLAYER)) {
+              Player p = (Player) entity;
+              if (p.getUniqueId() != null) {
+                if (TNE.configurations.playerEnabled(p.getUniqueId(), world, id)) {
+                  mob = p.getUniqueId().toString();
+                  player = true;
+                }
               }
             }
           }
-        }
-        mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? "Custom.Entries." + event.getEntityType().toString() : mob;
+          mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? "Custom.Entries." + event.getEntityType().toString() : mob;
 
-        if(entity.getCustomName() != null && TNE.configurations.mobEnabled(entity.getCustomName(), world, id)) mob = "Custom.Entries." + entity.getCustomName();
+          if (entity.getCustomName() != null && TNE.configurations.mobEnabled(entity.getCustomName(), world, id))
+            mob = "Custom.Entries." + entity.getCustomName();
 
-        if(TNE.configurations.mobAge(world, id)) {
-          if (entity instanceof Ageable) {
-            Ageable e = (Ageable) entity;
-            if (!e.isAdult()) {
-              mob = mob + ".Baby";
+          if (TNE.configurations.mobAge(world, id)) {
+            if (entity instanceof Ageable) {
+              Ageable e = (Ageable) entity;
+              if (!e.isAdult()) {
+                mob = mob + ".Baby";
+              }
+            } else if (entity instanceof Zombie) {
+              Zombie e = (Zombie) entity;
+              if (e.isBaby()) {
+                mob = mob + ".Baby";
+              }
             }
-          } else if(entity instanceof Zombie) {
-            Zombie e = (Zombie)entity;
-            if(e.isBaby()) {
-              mob = mob + ".Baby";
+          }
+          if (entity.getType().equals(EntityType.SLIME)) {
+            String tier = "Small";
+
+            switch (((Slime) entity).getSize()) {
+              case 1:
+                break;
+              case 2:
+                tier = "Medium";
+                break;
+              case 4:
+                tier = "Large";
+                break;
+              default:
+                tier = ((Slime) entity).getSize() + "";
+                break;
+            }
+            if (TNE.configurations.mobEnabled(mob + "." + tier, world, id)) {
+              mob = mob + "." + tier;
             }
           }
-        }
-        if(entity.getType().equals(EntityType.SLIME)) {
-          String tier = "Small";
 
-          switch(((Slime)entity).getSize()) {
-            case 1:
-              break;
-            case 2:
-              tier = "Medium";
-              break;
-            case 4:
-              tier = "Large";
-              break;
-            default:
-              tier = ((Slime)entity).getSize() + "";
-              break;
-          }
-          if(TNE.configurations.mobEnabled(mob + "." + tier, world, id)) {
-            mob = mob + "." + tier;
-          }
-        }
-
-        if(!TNE.instance().mobConfigurations.contains("Mobs." + mob)) mob = "Default";
-        if(entity.getCustomName() != null && TNE.instance().mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) mob = "Custom.Entries." + entity.getCustomName();
-        String currency = TNE.configurations.mobCurrency(mob, world, id);
-        reward = (player)? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
-        reward = AccountUtils.round(world, currency, reward.multiply(TNE.configurations.getRewardMultiplier(mob, world, id)));
-        String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null)? event.getEntityType().toString() : mob;
-        if(entity.getCustomName() != null && TNE.instance().mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName())) formatted = entity.getCustomName();
-        formatted = (TNE.instance().messageConfigurations.contains("Messages.Mob.Custom." + formatted))? TNE.instance().messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
-        MISCUtils.debug(formatted);
-        Character firstChar = formatted.charAt(0);
-        messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
-        if(TNE.instance().messageConfigurations.contains("Messages.Mob.Custom." + formatted.replaceAll(" ", ""))) messageNode = TNE.instance().messageConfigurations.getString("Messages.Mob.Custom." + formatted.replaceAll(" ", ""));
-        if(TNE.configurations.mobEnabled(mob, world, id)) {
-          AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TNE.instance().manager.currencyManager.get(world, currency), TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
-          if(TNE.instance().api().getBoolean("Mobs.Message")) {
-            Message mobKilled = new Message(messageNode);
-            mobKilled.addVariable("$mob", formatted.replace(".", " "));
-            mobKilled.addVariable("$reward", CurrencyFormatter.format(IDFinder.getWorld(killer), currency, reward));
-            mobKilled.translate(IDFinder.getWorld(killer), killer);
+          if (!TNE.instance().mobConfigurations.contains("Mobs." + mob)) mob = "Default";
+          if (entity.getCustomName() != null && TNE.instance().mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName()))
+            mob = "Custom.Entries." + entity.getCustomName();
+          String currency = TNE.configurations.mobCurrency(mob, world, id);
+          reward = (player) ? TNE.configurations.playerReward(mob, world, id) : TNE.configurations.mobReward(mob, world, id);
+          reward = AccountUtils.round(world, currency, reward.multiply(TNE.configurations.getRewardMultiplier(mob, world, id)));
+          String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? event.getEntityType().toString() : mob;
+          if (entity.getCustomName() != null && TNE.instance().mobConfigurations.contains("Mobs.Custom.Entries." + entity.getCustomName()))
+            formatted = entity.getCustomName();
+          formatted = (TNE.instance().messageConfigurations.contains("Messages.Mob.Custom." + formatted)) ? TNE.instance().messageConfigurations.getString("Messages.Mob.Custom." + formatted) : formatted;
+          MISCUtils.debug(formatted);
+          Character firstChar = formatted.charAt(0);
+          messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Messages.Mob.KilledVowel" : "Messages.Mob.Killed";
+          if (TNE.instance().messageConfigurations.contains("Messages.Mob.Custom." + formatted.replaceAll(" ", "")))
+            messageNode = TNE.instance().messageConfigurations.getString("Messages.Mob.Custom." + formatted.replaceAll(" ", ""));
+          if (TNE.configurations.mobEnabled(mob, world, id)) {
+            AccountUtils.transaction(IDFinder.getID(killer).toString(), null, reward, TNE.instance().manager.currencyManager.get(world, currency), TransactionType.MONEY_GIVE, IDFinder.getWorld(killer));
+            if (TNE.instance().api().getBoolean("Mobs.Message")) {
+              Message mobKilled = new Message(messageNode);
+              mobKilled.addVariable("$mob", formatted.replace(".", " "));
+              mobKilled.addVariable("$reward", CurrencyFormatter.format(IDFinder.getWorld(killer), currency, reward));
+              mobKilled.translate(IDFinder.getWorld(killer), killer);
+            }
           }
         }
       }

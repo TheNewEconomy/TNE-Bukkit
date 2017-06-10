@@ -56,7 +56,11 @@ permissions:
          tne.credit: true
          tne.credit.commands: true
          tne.credit.inventory: true
+         tne.eco: true
          tne.eco.clean: true
+         tne.eco.reset: true
+         tne.general: true
+         tne.general.mob: true
          tne.money: true
          tne.money.help: true
          tne.money.balance: true
@@ -175,7 +179,13 @@ permissions:
       description: Gives access to all TNE Eco Commands
       children:
          tne.eco: true
+         tne.eco.reset: true
          tne.eco.clean: true
+
+   tne.general.*:
+      description: Gives access to general TNE features
+      children:
+         tne.general.mob: true
    
    tne.lottery.*:
       description: Gives access to all TNE Lottery Commands
