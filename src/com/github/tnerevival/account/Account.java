@@ -156,13 +156,20 @@ public class Account implements Serializable {
     }
   }
 
-  public void trackedItemsFromString(String data) {
-
-  }
-
   public void applyInterest() {
     for(Bank b : banks.values()) {
       b.applyInterest();
+    }
+  }
+
+  public void resetFunds(String world, String currency) {
+    for(String s : balances.keySet()) {
+      String[] split = s.split(":");
+      String actualWorld = split[0];
+      String actualCurrency = split[1];
+      if(!world.equalsIgnoreCase("all") && !actualWorld.equals(world)) continue;
+      if(!currency.equalsIgnoreCase("all") && !actualCurrency.equals(currency)) continue;
+      setBalance(actualWorld, TNE.instance().manager.currencyManager.get(actualWorld, actualCurrency).getBalance(), actualCurrency);
     }
   }
 

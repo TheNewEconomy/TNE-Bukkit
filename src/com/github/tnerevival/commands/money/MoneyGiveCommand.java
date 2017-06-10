@@ -45,17 +45,28 @@ public class MoneyGiveCommand extends TNECommand {
       String world = (arguments.length == 3)? getWorld(sender, arguments[2]) : getWorld(sender);
       String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance().manager.currencyManager.get(world).getName();
       Currency currency = getCurrency(world, currencyName);
-      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], world);
-      if(value.compareTo(BigDecimal.ZERO) < 0) {
-        new Message("Messages.Money.Negative").translate(world, sender);
-        return false;
-      }
 
       if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
         Message m = new Message("Messages.Money.NoCurrency");
         m.addVariable("$currency", currencyName);
         m.addVariable("$world", world);
         m.translate(world, sender);
+        return false;
+      }
+
+      String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
+      if(parsed.contains("Messages")) {
+        Message max = new Message(parsed);
+        max.addVariable("$currency", currency.getName());
+        max.addVariable("$world", world);
+        max.addVariable("$player", getPlayer(sender).getDisplayName());
+        max.translate(getWorld(sender), sender);
+        return false;
+      }
+
+      BigDecimal value = new BigDecimal(parsed);
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
+        new Message("Messages.Money.Negative").translate(world, sender);
         return false;
       }
 
@@ -68,6 +79,17 @@ public class MoneyGiveCommand extends TNECommand {
       if(IDFinder.getID(arguments[0]) != null) {
 
         String id = (sender instanceof Player)? IDFinder.getID(getPlayer(sender)).toString() : null;
+
+
+        BigDecimal comparison = AccountUtils.getFunds(IDFinder.getID(arguments[0]), world, currencyName);
+        if(comparison.add(value).compareTo(currency.getMaxBalance()) > 0) {
+          Message exceeds = new Message("Messages.Money.ExceedsOtherPlayerMaximum");
+          exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
+          exceeds.addVariable("$player", arguments[0]);
+          exceeds.translate(world, sender);
+          return false;
+        }
+
         AccountUtils.transaction(id, IDFinder.getID(arguments[0]).toString(), value, currency, TransactionType.MONEY_GIVE, world);
         Message gave = new Message("Messages.Money.Gave");
         gave.addVariable("$amount",  CurrencyFormatter.format(world, value));

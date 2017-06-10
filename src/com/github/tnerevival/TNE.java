@@ -8,7 +8,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.*;
 import com.github.tnerevival.core.api.TNEAPI;
 import com.github.tnerevival.core.configurations.ConfigurationManager;
-import com.github.tnerevival.core.configurations.file.ConfigurationFile;
 import com.github.tnerevival.core.configurations.impl.ObjectConfiguration;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.listeners.ConnectionListener;
@@ -22,7 +21,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -48,14 +46,6 @@ public class TNE extends JavaPlugin {
 
   public SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.S");
   public static final Pattern uuidCreator = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
-  public static final BlockFace[] signCheck = new BlockFace[] {
-    BlockFace.EAST,
-    BlockFace.WEST,
-    BlockFace.NORTH,
-    BlockFace.SOUTH,
-    BlockFace.UP,
-    BlockFace.DOWN
-  };
   public static boolean debugMode = false;
 
   // Files & Custom Configuration Files
@@ -173,7 +163,6 @@ public class TNE extends JavaPlugin {
         getLogger().info("Created server economy account.");
       }
     }
-    ConfigurationFile file = new ConfigurationFile(new File(getDataFolder(), "config.yml"));
   }
 
   public void onDisable() {

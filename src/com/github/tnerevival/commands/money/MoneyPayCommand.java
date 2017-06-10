@@ -4,6 +4,7 @@ import com.github.tnerevival.TNE;
 import com.github.tnerevival.account.IDFinder;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.core.currency.Currency;
 import com.github.tnerevival.core.currency.CurrencyFormatter;
 import com.github.tnerevival.core.transaction.TransactionType;
 import com.github.tnerevival.utils.AccountUtils;
@@ -44,11 +45,33 @@ public class MoneyPayCommand extends TNECommand {
     Player player = getPlayer(sender);
     String world = getWorld(sender);
     if(arguments.length >= 2) {
-      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], IDFinder.getWorld(getPlayer(sender)));
-      if(value.compareTo(BigDecimal.ZERO) < 0) {
-        new Message("Messages.Money.Negative").translate(IDFinder.getWorld(player), player);
+      String currencyName = (arguments.length >= 3)? arguments[2] : TNE.instance().manager.currencyManager.get(world).getName();
+      Currency currency = getCurrency(world, currencyName);
+
+      if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
+        Message m = new Message("Messages.Money.NoCurrency");
+        m.addVariable("$currency", currencyName);
+        m.addVariable("$world", world);
+        m.translate(world, sender);
         return false;
       }
+
+      String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
+      if(parsed.contains("Messages")) {
+        Message max = new Message(parsed);
+        max.addVariable("$currency", currency.getName());
+        max.addVariable("$world", world);
+        max.addVariable("$player", getPlayer(sender).getDisplayName());
+        max.translate(getWorld(sender), sender);
+        return false;
+      }
+
+      BigDecimal value = new BigDecimal(parsed);
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
+        new Message("Messages.Money.Negative").translate(world, sender);
+        return false;
+      }
+
       if(getPlayer(sender, arguments[0]) != null && IDFinder.getID(player).equals(IDFinder.getID(getPlayer(sender, arguments[0])))) {
         new Message("Messages.Money.SelfPay").translate(IDFinder.getWorld(player), player);
         return false;
@@ -64,6 +87,16 @@ public class MoneyPayCommand extends TNECommand {
         MISCUtils.debug("Player has funds");
         if(getPlayer(sender, arguments[0]) != null) {
           MISCUtils.debug("Player not null");
+
+          BigDecimal comparison = AccountUtils.getFunds(IDFinder.getID(arguments[0]), world, currencyName);
+          if(comparison.add(value).compareTo(currency.getMaxBalance()) > 0) {
+            Message exceeds = new Message("Messages.Money.ExceedsOtherPlayerMaximum");
+            exceeds.addVariable("$max", CurrencyFormatter.format(world, currencyName, currency.getMaxBalance()));
+            exceeds.addVariable("$player", arguments[0]);
+            exceeds.translate(world, sender);
+            return false;
+          }
+
           boolean transaction = AccountUtils.transaction(IDFinder.getID(player).toString(), IDFinder.getID(getPlayer(sender, arguments[0])).toString(), value, TransactionType.MONEY_PAY, IDFinder.getWorld(player));
           MISCUtils.debug("" + transaction);
           if(transaction) {
@@ -94,7 +127,7 @@ public class MoneyPayCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "/money pay <player> <amount> - pay a player money from your balance";
+    return "/money pay <player> <amount> [currency] - pay a player money from your balance";
   }
 
 }

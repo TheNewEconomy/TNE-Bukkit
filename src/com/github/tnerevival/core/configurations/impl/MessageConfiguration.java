@@ -42,6 +42,7 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
     configurations.put("Messages.Admin.ResetPin", "<white>Successfully set pin for $player to $pin.");
     configurations.put("Messages.Admin.Status", "<white>Status for $player has been changed to <green>$status<white>.");
+    configurations.put("Messages.Admin.Reset", "<white>Performed an economy reset using these parameters -  world = $world, currency = $currency, and player = $player.");
 
     configurations.put("Messages.Account.Locked", "<red>You can't do that with a locked account($player)!");
     configurations.put("Messages.Account.Set", "<yellow>You must use /pin set before accessing your money and/or bank.");
@@ -69,6 +70,11 @@ public class MessageConfiguration extends Configuration {
     configurations.put("Messages.Money.NoCurrency", "<red>The currency \"$currency\" could not be found in \"$world\".");
     configurations.put("Messages.Money.Converted", "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\".");
     configurations.put("Messages.Money.Top", "<white>=========[<gold>Economy Top<white>]========= Page: $page/$page_top");
+    configurations.put("Messages.Money.InvalidFormat", "<red>I'm sorry, but the monetary value you've entered is wrong.");
+    configurations.put("Messages.Money.ExceedsCurrencyMaximum", "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance.");
+    configurations.put("Messages.Money.ExceedsPlayerMaximum", "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed.");
+    configurations.put("Messages.Money.ExceedsBankMaximum", "<red>I'm sorry, but performing this transaction will place this bank's balance over the maximum allowed.");
+    configurations.put("Messages.Money.ExceedsOtherPlayerMaximum", "<red>I'm sorry, but performing this transaction will place $player's balance over the maximum allowed.");
 
     configurations.put("Messages.Auction.Start", "<white>Auction has started for $item. Starting bid is <gold>$start<white>.");
     configurations.put("Messages.Auction.Return", "<white>Your items have been returned.");

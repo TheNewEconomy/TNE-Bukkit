@@ -30,16 +30,17 @@ public class EcoCommand extends TNECommand {
   public EcoCommand(TNE plugin) {
     super(plugin);
     subCommands.add(new EcoCleanCommand(plugin));
+    subCommands.add(new EcoResetCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "eco";
+    return "economy";
   }
 
   @Override
   public String[] getAliases() {
-    return new String[0];
+    return new String[] { "eco" };
   }
 
   @Override

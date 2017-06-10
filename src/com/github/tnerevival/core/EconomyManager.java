@@ -67,6 +67,21 @@ public class EconomyManager {
     return finalBalances;
   }
 
+  public void reset(String world, String currency, String player) {
+    if(player.equalsIgnoreCase("all")) {
+      for(Account acc : TNE.instance().manager.accounts.values()) {
+        acc.resetFunds(world, currency);
+        TNE.instance().manager.accounts.put(acc.getUid(), acc);
+      }
+      return;
+    }
+    if(AccountUtils.exists(IDFinder.getID(player))) {
+      Account acc = AccountUtils.getAccount(IDFinder.getID(player));
+      acc.resetFunds(world, currency);
+      TNE.instance().manager.accounts.put(acc.getUid(), acc);
+    }
+  }
+
   public void purge(String world) {
     Iterator<Account> it = accounts.values().iterator();
     while(it.hasNext()) {

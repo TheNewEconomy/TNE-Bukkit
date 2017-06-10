@@ -44,9 +44,28 @@ public class MoneyTakeCommand extends TNECommand {
     if(arguments.length >= 2) {
       String world = (arguments.length >= 3)? getWorld(sender, arguments[2]) : getWorld(sender);
       String currencyName = (arguments.length >= 4)? arguments[3] : TNE.instance().manager.currencyManager.get(world).getName();
-      Currency currency = getCurrency(world, currencyName);
-      BigDecimal value = CurrencyFormatter.translateBigDecimal(arguments[1], world);
 
+      if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
+        Message m = new Message("Messages.Money.NoCurrency");
+        m.addVariable("$currency", currencyName);
+        m.addVariable("$world", world);
+        m.translate(world, sender);
+        return false;
+      }
+
+      Currency currency = getCurrency(world, currencyName);
+
+      String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
+      if(parsed.contains("Messages")) {
+        Message max = new Message(parsed);
+        max.addVariable("$currency", currency.getName());
+        max.addVariable("$world", world);
+        max.addVariable("$player", getPlayer(sender).getDisplayName());
+        max.translate(getWorld(sender), sender);
+        return false;
+      }
+
+      BigDecimal value = new BigDecimal(parsed);
       if(value.compareTo(BigDecimal.ZERO) < 0) {
         new Message("Messages.Money.Negative").translate(world, sender);
         return false;
@@ -55,14 +74,6 @@ public class MoneyTakeCommand extends TNECommand {
       if(arguments[0].equalsIgnoreCase(TNE.instance().api().getString("Core.Server.Name"))
           && !sender.hasPermission("tne.server.take")) {
         new Message("Messages.General.NoPerm").translate(world, sender);
-        return false;
-      }
-
-      if(!TNE.instance().manager.currencyManager.contains(world, currencyName)) {
-        Message m = new Message("Messages.Money.NoCurrency");
-        m.addVariable("$currency", currencyName);
-        m.addVariable("$world", world);
-        m.translate(world, sender);
         return false;
       }
 

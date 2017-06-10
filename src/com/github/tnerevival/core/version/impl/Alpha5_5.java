@@ -77,16 +77,16 @@ public class Alpha5_5 extends Version {
       table = prefix + "_TRACKED";
       sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `location` VARCHAR(250)");
       table = prefix + "_BALANCES";
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(41)");
       table = prefix + "_BANK_BALANCES";
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `balance` VARCHAR(41)");
       table = prefix + "_TRANSACTIONS";
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_cost` VARCHAR(26)");
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_oldBalance` VARCHAR(26)");
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_balance` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_cost` VARCHAR(41)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_oldBalance` VARCHAR(41)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `trans_balance` VARCHAR(41)");
       table = prefix + "_SIGN_OFFERS";
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `offer_buy` VARCHAR(26)");
-      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `offer_sell` VARCHAR(26)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `offer_buy` VARCHAR(41)");
+      sql().executeUpdate("ALTER TABLE `" + table + "` MODIFY `offer_sell` VARCHAR(41)");
       return;
     }
     if(!type.equalsIgnoreCase("flatfile")) {
@@ -97,7 +97,7 @@ public class Alpha5_5 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(41)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -142,7 +142,7 @@ public class Alpha5_5 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(41)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -183,8 +183,8 @@ public class Alpha5_5 extends Version {
       sql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_location` VARCHAR(250)," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` VARCHAR(26)," +
-          "`offer_sell` VARCHAR(26)," +
+          "`offer_buy` VARCHAR(40)," +
+          "`offer_sell` VARCHAR(40)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
@@ -1136,7 +1136,7 @@ public class Alpha5_5 extends Version {
 
   @Override
   public UUID loadID(String username) {
-    String table = prefix + "_TRANSACTIONS";
+    String table = prefix + "_ECOIDS";
     try {
       int idIndex = sql().executePreparedQuery("SELECT * FROM " + table + " WHERE username = ?", new Object[] {
           username
@@ -1793,7 +1793,7 @@ public class Alpha5_5 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(41)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -1882,7 +1882,7 @@ public class Alpha5_5 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(41)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -1939,8 +1939,8 @@ public class Alpha5_5 extends Version {
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_location` VARCHAR(250) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` VARCHAR(26)," +
-          "`offer_sell` VARCHAR(26)," +
+          "`offer_buy` VARCHAR(41)," +
+          "`offer_sell` VARCHAR(41)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
@@ -1956,9 +1956,9 @@ public class Alpha5_5 extends Version {
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
-          "`trans_cost` VARCHAR(26)," +
-          "`trans_oldBalance` VARCHAR(26)," +
-          "`trans_balance` VARCHAR(26)," +
+          "`trans_cost` VARCHAR(41)," +
+          "`trans_oldBalance` VARCHAR(41)," +
+          "`trans_balance` VARCHAR(41)," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");
@@ -2012,7 +2012,7 @@ public class Alpha5_5 extends Version {
           "`server_name` VARCHAR(250) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(41)," +
           "PRIMARY KEY(uuid, server_name, world, currency)" +
           ");");
 
@@ -2101,7 +2101,7 @@ public class Alpha5_5 extends Version {
           "`uuid` VARCHAR(36) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(250) NOT NULL," +
-          "`balance` VARCHAR(26)," +
+          "`balance` VARCHAR(41)," +
           "PRIMARY KEY(uuid, world, currency)" +
           ");");
 
@@ -2158,8 +2158,8 @@ public class Alpha5_5 extends Version {
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` (" +
           "`sign_location`  VARCHAR(250) NOT NULL," +
           "`offer_order` INT(60) NOT NULL," +
-          "`offer_buy` VARCHAR(26)," +
-          "`offer_sell` VARCHAR(26)," +
+          "`offer_buy` VARCHAR(41)," +
+          "`offer_sell` VARCHAR(41)," +
           "`offer_trade` LONGTEXT," +
           "`offer_amount` INT(60) NOT NULL," +
           "`offer_damage` INT(60) NOT NULL," +
@@ -2175,9 +2175,9 @@ public class Alpha5_5 extends Version {
           "`trans_player` VARCHAR(36)," +
           "`trans_world` VARCHAR(36)," +
           "`trans_type` VARCHAR(36)," +
-          "`trans_cost` VARCHAR(26)," +
-          "`trans_oldBalance` VARCHAR(26)," +
-          "`trans_balance` VARCHAR(26)," +
+          "`trans_cost` VARCHAR(41)," +
+          "`trans_oldBalance` VARCHAR(41)," +
+          "`trans_balance` VARCHAR(41)," +
           "`trans_time` BIGINT(60)," +
           "PRIMARY KEY(trans_id)" +
           ");");

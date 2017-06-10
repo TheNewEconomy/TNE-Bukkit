@@ -95,7 +95,7 @@ public class AuctionStartCommand extends TNECommand {
         String[] split = arguments[i].toLowerCase().split(":");
         switch(split[0]) {
           case "start":
-            if(MISCUtils.isDouble(split[1], world) && CurrencyFormatter.translateBigDecimal(split[1], world).compareTo(start) > 0) {
+            if(CurrencyFormatter.isBigDecimal(split[1], world) && CurrencyFormatter.translateBigDecimal(split[1], world).compareTo(start) > 0) {
               start = CurrencyFormatter.translateBigDecimal(split[1], world);
             } else {
               new Message("Messages.Auction.InvalidStart").translate(world, player);
