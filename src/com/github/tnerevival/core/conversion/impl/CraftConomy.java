@@ -41,7 +41,7 @@ public class CraftConomy extends Converter {
   private File tneConfigFile = new File(TNE.instance().getDataFolder(), "config.yml");
   private FileConfiguration tneConfig = YamlConfiguration.loadConfiguration(tneConfigFile);
 
-  private File configFile = new File(TNE.instance().getDataFolder(), "../Craftconomy3/config.yml");
+  private File configFile = new File("plugins/Craftconomy3/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String prefix = config.getString("System.Database.Prefix");
@@ -109,7 +109,7 @@ public class CraftConomy extends Converter {
 
   @Override
   public void h2() throws InvalidDatabaseImport {
-    db = new H2(TNE.instance().getDataFolder() + "../CraftConomy3/database.h2.db", mysqlUser, mysqlPassword);
+    db = new H2("plugins/CraftConomy3/database.h2.db", mysqlUser, mysqlPassword);
 
     try {
       int currencyIndex = h2DB().executeQuery("SELECT * FROM " + currencyTable + ";");

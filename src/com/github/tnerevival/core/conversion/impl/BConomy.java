@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * All rights reserved.
  **/
 public class BConomy extends Converter {
-  private File configFile = new File(TNE.instance().getDataFolder(), "../BConomy/config.yml");
+  private File configFile = new File("plugins/BConomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String table = config.getString("Database.Mysql.Table");
@@ -45,13 +45,13 @@ public class BConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(TNE.instance().getDataFolder() + "../BConomy/accounts.db");
+    db = new SQLite("plugins/BConomy/accounts.db");
     try {
       int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 
       while (sqliteDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("userid");
-        Integer balance = mysqlDB().results(index).getInt("balance");
+        String uuid = sqliteDB().results(index).getString("userid");
+        Integer balance = sqliteDB().results(index).getInt("balance");
         AccountUtils.convertedAdd(uuid, TNE.instance().defaultWorld, TNE.instance().manager.currencyManager.get(TNE.instance().defaultWorld).getName(), new BigDecimal(balance));
       }
     } catch(Exception e) {

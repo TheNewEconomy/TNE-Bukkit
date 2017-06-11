@@ -207,6 +207,7 @@ public class SaveManager {
       if(converter != null) {
         converter.convert();
         TNE.instance().getConfig().set("Core.Conversion.Convert", false);
+        TNE.instance().saveConfig();
         return;
       }
       System.out.println("Invalid conversion attempted!");

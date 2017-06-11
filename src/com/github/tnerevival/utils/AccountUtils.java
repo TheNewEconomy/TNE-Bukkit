@@ -27,6 +27,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -66,17 +67,17 @@ public class AccountUtils {
       if (conversion.contains("Converted." + username) || conversion.contains("Converted." + id.toString())) {
         String base = "Converted." + ((conversion.contains("Converted." + username)) ? username : id.toString());
 
-        Set<String> worlds = conversion.getConfigurationSection(base + ".Funds").getKeys(false);
+        Set<String> worlds = conversion.getConfigurationSection(base).getKeys(false);
 
         for (String world : worlds) {
-          String section = base + ".Funds." + world;
+          String section = base + "." + world;
 
           Set<String> currencies = conversion.getConfigurationSection(section).getKeys(false);
 
           for(String currency : currencies) {
-
-            BigDecimal amount = (conversion.contains(section + "." + currency + ".Amount")) ? new BigDecimal(conversion.getDouble(section + "." + currency + ".Amount")) : BigDecimal.ZERO;
-            a.setBalance(world, amount, currency);
+            if(conversion.contains(section + "." + currency + ".Amount")) {
+              a.setBalance(world, new BigDecimal(conversion.getString(section + "." + currency + ".Amount")), currency);
+            }
           }
         }
         conversion.set(base, null);
@@ -92,10 +93,15 @@ public class AccountUtils {
     BigDecimal starting = BigDecimal.ZERO;
 
     if(conversion.contains("Converted." + identifier + "." + world + "." + currency + ".Amount")) {
-      starting = new BigDecimal(conversion.getDouble("Converted." + identifier + "." + world + "." + currency + ".Amount"));
+      starting = new BigDecimal(conversion.getString("Converted." + identifier + "." + world + "." + currency + ".Amount"));
     }
 
-    conversion.set("Converted." + identifier + "." + world + "." + currency + ".Amount", (starting.add(amount).doubleValue()));
+    conversion.set("Converted." + identifier + "." + world + "." + currency + ".Amount", (starting.add(amount).toPlainString()));
+    try {
+      conversion.save(conversionFile);
+    } catch (IOException e) {
+      MISCUtils.debug(e);
+    }
   }
 
   public static Account getAccount(UUID id) {

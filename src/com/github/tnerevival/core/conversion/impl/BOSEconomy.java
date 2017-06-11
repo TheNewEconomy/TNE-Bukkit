@@ -40,7 +40,7 @@ public class BOSEconomy extends Converter {
   @Override
   public void flatfile() throws InvalidDatabaseImport {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(), "../BOSEconomy/accounts.txt")));
+      BufferedReader reader = new BufferedReader(new FileReader(new File("plugins/BOSEconomy/accounts.txt")));
 
       String line;
       String id = "";

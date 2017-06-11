@@ -110,8 +110,6 @@ public class MoneyGiveCommand extends TNECommand {
     return false;
   }
 
-
-
   @Override
   public String getHelp() {
     return "/money give <player> <amount> [world] [currency] - summon money from air and give it to a player";
