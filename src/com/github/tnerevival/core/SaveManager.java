@@ -219,6 +219,8 @@ public class SaveManager {
     switch(name) {
       case "iconomy":
         return new iConomy();
+      case "bconomy":
+        return new BConomy();
       case "boseconomy":
         return new BOSEconomy();
       case "essentials":
