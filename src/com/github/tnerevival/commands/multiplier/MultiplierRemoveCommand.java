@@ -5,18 +5,18 @@ import com.github.tnerevival.commands.TNECommand;
 import org.bukkit.command.CommandSender;
 
 /**
- * Created by creatorfromhell on 6/11/2017.
+ * Created by creatorfromhell on 6/12/2017.
  * All rights reserved.
  **/
-public class MultiplierSetCommand extends TNECommand {
+public class MultiplierRemoveCommand extends TNECommand {
 
-  public MultiplierSetCommand(TNE plugin) {
+  public MultiplierRemoveCommand(TNE plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "set";
+    return "remove";
   }
 
   @Override
@@ -26,7 +26,7 @@ public class MultiplierSetCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.multiplier.set";
+    return "tne.multiplier.remove";
   }
 
   @Override
@@ -41,8 +41,8 @@ public class MultiplierSetCommand extends TNECommand {
   @Override
   public String[] getHelpLines() {
     return new String[] {
-        "/multiplier set <priority> <type(player,server,world)>  <time period/date> <multiplier> [identifier(player/server/world name)]",
-        "- Sets the multiplier with the specified priority. This will override any multiplier previously set to this priority",
+        "/multiplier remove <priority> <type(player,server,world)> [identifier(player/server/world name)]",
+        "- Removes the multiplier with the specified priority",
         "- The identifier argument isn't required for the server or world types, but may be added"
     };
   }

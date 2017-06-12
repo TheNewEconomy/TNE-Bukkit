@@ -33,6 +33,7 @@ public class Account implements Serializable {
   private Map<String, Integer> commands = new HashMap<>();
 
   private String joined;
+  private long lastOnline;
 
   /**
    * The account number for this account.
@@ -257,6 +258,14 @@ public class Account implements Serializable {
    */
   public void setJoined(String joined) {
     this.joined = joined;
+  }
+
+  public long getLastOnline() {
+    return lastOnline;
+  }
+
+  public void setLastOnline(long lastOnline) {
+    this.lastOnline = lastOnline;
   }
 
   /**

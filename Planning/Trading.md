@@ -5,7 +5,7 @@ implementation.
 
 Commands
 --------
-/trade - base command
+/trade - base command  
 /trade <player> - Send a trade offer, or accept an existing offer to/from <player>
 
 Features

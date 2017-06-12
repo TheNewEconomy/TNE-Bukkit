@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +64,11 @@ public class ConnectionListener implements Listener {
   @EventHandler
   public void onLeave(final PlayerQuitEvent event) {
     Player player = event.getPlayer();
-
+    if(AccountUtils.exists(IDFinder.getID(player))) {
+      Account account = AccountUtils.getAccount(IDFinder.getID(player));
+      account.setLastOnline(new Date().getTime());
+      TNE.instance().manager.accounts.put(account.getUid(), account);
+    }
     TNE.instance().manager.confirmed.remove(IDFinder.getID(player));
   }
 
