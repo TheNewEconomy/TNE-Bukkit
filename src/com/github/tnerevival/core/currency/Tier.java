@@ -22,6 +22,7 @@ public class Tier {
   private String single;
   private String plural;
   private String material;
+  private Integer weight;
 
   public String getMaterial() {
     return material;
@@ -53,5 +54,13 @@ public class Tier {
 
   public void setPlural(String plural) {
     this.plural = plural;
+  }
+
+  public Integer getWeight() {
+    return weight;
+  }
+
+  public void setWeight(Integer weight) {
+    this.weight = weight;
   }
 }

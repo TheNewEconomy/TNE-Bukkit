@@ -81,6 +81,11 @@ public class AccountUtils {
           }
         }
         conversion.set(base, null);
+        try {
+          conversion.save(conversionFile);
+        } catch(Exception e) {
+          MISCUtils.debug(e);
+        }
       }
       TNE.instance().manager.accounts.put(id, a);
     }

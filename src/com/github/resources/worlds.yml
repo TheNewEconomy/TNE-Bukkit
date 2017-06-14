@@ -73,14 +73,6 @@ Worlds:
             #Would you like to use an item as the currency?
             ItemCurrency: false
 
-            #If you want to use an item, which one?(Please use the name of the item)
-            #Example: GOLD_INGOT
-            ItemMajor: GOLD_INGOT
-
-            #The minor item currency item.
-            #Example: for USD this might be quarters or dimes
-            ItemMinor: IRON_INGOT
-
             #The name of the major currency
             #Example: Dollars
             MajorName:

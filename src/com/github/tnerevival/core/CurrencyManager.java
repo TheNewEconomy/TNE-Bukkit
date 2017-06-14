@@ -81,12 +81,13 @@ public class CurrencyManager {
         Boolean ender = configuration.contains(base + ".EnderChest") && configuration.getBoolean(base + ".EnderChest");
         Boolean track = configuration.contains(base + ".TrackChest") && configuration.getBoolean(base + ".TrackChest");
         String symbol = configuration.contains(base + ".Symbol")? configuration.getString(base + ".Symbol") : "$";
-        String major = configuration.contains(base + ".MajorName.Single")? configuration.getString(base + ".MajorName.Single") : "dollar";
-        String majorPlural = configuration.contains(base + ".MajorName.Plural")? configuration.getString(base + ".MajorName.Plural") : "dollars";
-        String minor = configuration.contains(base + ".MinorName.Single")? configuration.getString(base + ".MinorName.Single") : "cent";
-        String minorPlural = configuration.contains(base + ".MinorName.Plural")? configuration.getString(base + ".MinorName.Plural") : "cents";
-        String majorItem = configuration.contains(base + ".ItemMajor")? configuration.getString(base + ".ItemMajor") : "GOLD_INGOT";
-        String minorItem = configuration.contains(base + ".ItemMinor")? configuration.getString(base + ".ItemMinor") : "IRON_INGOT";
+        String major = configuration.contains(base + ".Major.Single")? configuration.getString(base + ".Major.Single") : "dollar";
+        String majorPlural = configuration.contains(base + ".Major.Plural")? configuration.getString(base + ".Major.Plural") : "dollars";
+        String minor = configuration.contains(base + ".Minor.Single")? configuration.getString(base + ".Minor.Single") : "cent";
+        String minorPlural = configuration.contains(base + ".Minor.Plural")? configuration.getString(base + ".Minor.Plural") : "cents";
+        String majorItem = configuration.contains(base + ".Minor.Major")? configuration.getString(base + ".Minor.Major") : "GOLD_INGOT";
+        String minorItem = configuration.contains(base + ".Minor.Item")? configuration.getString(base + ".Minor.Item") : "IRON_INGOT";
+        Integer minorWeight = configuration.contains(base + ".Minor.Weight")? configuration.getInt(base + ".Minor.Weight") : 100;
 
         //Interest-related configurations
         Boolean interestEnabled = !configuration.contains(base + ".Interest.Enabled") || configuration.getBoolean(base + ".Interest.Enabled");
@@ -105,6 +106,7 @@ public class CurrencyManager {
         minorTier.setMaterial(minorItem);
         minorTier.setSingle(minor);
         minorTier.setPlural(minorPlural);
+        minorTier.setWeight(minorWeight);
 
         Currency currency = new Currency();
         currency.setMaxBalance(maxBalance);

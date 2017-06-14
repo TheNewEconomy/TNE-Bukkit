@@ -83,6 +83,7 @@ public class CurrencyFormatter {
       if(translated.compareTo(currency.getMaxBalance()) > 0) {
         return "Messages.Money.ExceedsCurrencyMaximum";
       }
+      translated = parseWeight(currency, translated);
       return translated.toPlainString();
     }
     String updated = amount.replaceAll(" ", "");
@@ -90,6 +91,18 @@ public class CurrencyFormatter {
       return "Messages.Money.InvalidFormat";
     }
     return fromShort(currency, updated);
+  }
+
+  private static BigDecimal parseWeight(Currency currency, BigDecimal decimal) {
+    String[] amountStr = (String.valueOf(decimal) + (String.valueOf(decimal).contains(".")? "" : ".00")).split("\\.");
+    BigInteger major = new BigInteger(amountStr[0]);
+    BigInteger minor = new BigInteger(String.format("%1$-2s", Integer.valueOf(amountStr[1])).replace(' ', '0'));
+    BigInteger majorConversion = minor;
+    majorConversion = majorConversion.divide(new BigInteger(currency.getTier("minor").getWeight() + ""));
+    major = major.add(majorConversion);
+    minor = minor.mod(new BigInteger(currency.getTier("minor").getWeight() + ""));
+
+    return new BigDecimal(major.toString() + currency.getDecimal() + minor.toString());
   }
 
   private static String shorten(Currency currency, BigDecimal balance) {

@@ -158,17 +158,9 @@ Core:
             #Temporarily modifies inventory behaviour for chests.
             TrackChest: false
 
-            #If you want to use an item, which one?(Please use the name of the item)
-            #Example: GOLD_INGOT
-            ItemMajor: GOLD_INGOT
-
-            #The minor item currency item.
-            #Example: for USD this might be quarters or dimes
-            ItemMinor: IRON_INGOT
-
-            #The name of the major currency
+            #Configurations relating to the major tier of currency
             #Example: Dollars
-            MajorName:
+            Major:
 
                 #The singular name. Example: Dollar
                 Single: Dollar
@@ -176,15 +168,26 @@ Core:
                 #The plural name. Example: Dollars
                 Plural: Dollars
 
-            #The name of the minor currency
+                #If you want to use an item, which one?(Please use the name of the item)
+                #Example: GOLD_INGOT
+                Item: GOLD_INGOT
+
+            #Configurations relating to the minor tier of currency
             #Example: Cents
-            MinorName:
+            Minor:
 
                 #The singular name. Example: Cent
                 Single: Cent
 
                 #The plural name. Example: Cents
                 Plural: Cents
+
+                #The minor item currency item.
+                #Example: for USD this might be quarters or dimes
+                Item: IRON_INGOT
+
+                #This is used to determine how many of minor it takes to make one major
+                Weight: 100
 
             #All configurations relating to bank gold interest.
             Interest:

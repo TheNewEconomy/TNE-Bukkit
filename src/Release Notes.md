@@ -1,40 +1,10 @@
-Alpha 5.5
+Alpha 5.6
 =============================
-- General Changes
-  - Switched metrics to bStats as MCStats is no longer maintained
-- Server Account
-  - Ability to have a general server account.
-    - You may configure the name used for this account in config.yml.
-  - Ability to grant access to the server account's banks
-  - Ability to take, give, and pay money to/from the server account's funds.
-- Currency Changes
-  - Added ability to change currency SI prefixes on a per currency basis.
-  - Set a new cap on max number of decimal places that may be rounded to, which is now 4
-  - Added ability to set max balance on a per currency basis, this is capped at the max balance size of 9 Quintillion
-- Command Changes
-  - Added /economy reset
-    - This allows server administrators the ability to reset balances to their defaults based on certain parameters.
-  - Added "economy" as a trigger for the eco commands.  
-  - Made money-based arguments smarter
-    - Added ability to parse short values from chat
-      - This allows users to perform commands such as /pay <player> 1k, and it'll actually perform said action for the correct amount.
-  - Added currency argument to /money pay    
-- Technical
-  - Changed the save format for balances
-    - This allows us to have virtually unlimited balances, the cap is for memory control purposes.
-    - (not really unlimited, but either way not having a limit would lead to RAM being devoured)
-  - Made Eco ID searches case insensitive.
-  - Maximum possible balance size is now 900 Decillion
-    - This is better know as 900,000,000,000,000,000,000,000,000,000,000,000
-  - TNE now automatically detects, and supports mobs & blocks for their relevant configurations
-    - This revents incompatibilities, and allows us to not have to release an update just to add new mobs/blocks from new Minecraft versions.
-- API
-  - Removed deprecated methods.
+- Configurations
+  - Reordered some of the currency configurations
+- Currency
+  - Added ability for server owners to change the weight of the minor currency
+- Accounts
+  - We now track when the account owner was last online
 - Bug Fixes
-  - Fixed issue where amounts in the billions+ range weren't displaying properly
-  - Fixed issue where ender chests were being included in releases pre 1.10
-  - Fixed minor console error display when players were dying
-  - Fixed issue using special characters for the money symbol
-  - Fixed issue where the max balance wasn't being captured properly
-  - Fixed issue where servers that used InnoDB were experiencing table creation warnings
-  - Fixed MySQL warning where TNE was looking for old balances column
+  - Fixed conversion issues
