@@ -71,7 +71,7 @@ public class CurrencyManager {
         String decimal = configuration.contains(base + ".Decimal")? configuration.getString(base + ".Decimal") : ".";
         Integer decimalPlaces = configuration.contains(base + ".DecimalPlace")? ((configuration.getInt(base + ".DecimalPlace") > 4)? 4 : configuration.getInt(base + ".DecimalPlace")) : 2;
         BigDecimal maxBalance = configuration.contains(base + ".MaxBalance")? ((new BigDecimal(configuration.getString(base + ".MaxBalance")).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance"))) : largestSupported;
-        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format").trim() : "<major> and <minor><shorten>";
+        String format = configuration.contains(base + ".Format")? configuration.getString(base + ".Format").trim() : "<symbol><major.amount><decimal><minor.amount>";
         String prefixes = configuration.contains(base + ".Prefixes")? configuration.getString(base + ".Prefixes").trim() : "kMGTPEZYXWV";
         Boolean worldDefault = !configuration.contains(base + ".Default") || configuration.getBoolean(base + ".Default");
         Double rate = configuration.contains(base + ".Conversion")? configuration.getDouble(base + ".Conversion") : 1.0;

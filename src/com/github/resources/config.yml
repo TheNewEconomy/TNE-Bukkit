@@ -97,7 +97,7 @@ Core:
             # If shortened, it will ignore the value of Format.
             #It's also possible to include all colour variables from messages.yml
             #Example: <major> and <minor>
-            Format: <symbol><major.amount><decimal><minor.amount><shorten>
+            Format: <symbol><major.amount><decimal><minor.amount>
 
             #The maximum balance possible for this currency.
             # Maximum possible value: 900000000000000000000000000000000000
@@ -268,7 +268,7 @@ Core:
     Shops:
 
         #Whether or not shops are enabled
-        Enabled: true
+        Enabled: false
 
         #The cost to create a shop.
         Cost: 10.00

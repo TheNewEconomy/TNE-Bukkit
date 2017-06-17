@@ -47,7 +47,7 @@ public class MainConfiguration extends Configuration {
     configurations.put("Core.Auctions.Countdown", true);
     configurations.put("Core.Auctions.CountdownTime", 10);
 
-    configurations.put("Core.Shops.Enabled", true);
+    configurations.put("Core.Shops.Enabled", false);
     configurations.put("Core.Shops.Cost", 10.00);
     configurations.put("Core.Shops.Max", 5);
     configurations.put("Core.Shops.Rows", 3);
