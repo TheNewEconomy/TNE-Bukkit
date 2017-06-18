@@ -9,6 +9,7 @@ notice.
 #### TNE version?(exact version number), and whether or not you've made modification to it.
 #### Spigot/Bukkit version?
 #### Is your server run in online mode?
+#### The exact command you ran w/ arguments?
 #### config.yml?(use http://paste.ubuntu.com, and remove your SQL details)
 #### Your latest server log file?(use http://paste.ubuntu.com)
 #### If this is to do with messages/world/player configurations, please include the YAML file for such.(use http://paste.ubuntu.com)
