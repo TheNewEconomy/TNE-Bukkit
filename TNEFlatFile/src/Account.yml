@@ -1,0 +1,14 @@
+Account:
+
+  Number:
+  ID:
+  Status:
+  Special:
+  Joined:
+  LastOnline:
+
+  Holdings:
+
+    World:
+
+      Currency: "Amount"

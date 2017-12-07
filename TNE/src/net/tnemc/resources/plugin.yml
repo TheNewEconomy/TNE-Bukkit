@@ -1,0 +1,9 @@
+#General Data
+name: TheNewEconomy
+version: 0.1.0.0
+description: A modular feature-packed Bukkit Economy Plugin.
+author: creatorfromhell
+
+#Plugin Data
+main: net.tnemc.core.TNE
+softdepend: [Vault, Essentials, Reserve]

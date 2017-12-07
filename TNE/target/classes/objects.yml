@@ -1,0 +1,364 @@
+# The New Economy v0.1.0.0
+# Author: creatorfromhell
+# License: AGPLv3
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+
+Objects:
+
+    #All configurations relating to TNE commands
+    Commands:
+        
+        #Whether or not commands should cost money on usage
+        Enabled: true
+        
+        #Whether or not a message should be sent even if the charge is 0
+        ZeroMessage: false
+        
+        #The name of the command this configuration is for
+        Example:
+        
+            #The cost of using this command
+            Cost: 5.00
+            
+            SubCommands:
+                
+                #The name of the subcommand this configuration is for
+                Sub:
+                    
+                    #Cost of using this subcommand
+                    Cost: 2.00
+        
+    #All configurations relating to inventory access
+    Inventories:
+    
+        #Whether or not GUI costs should be enabled
+        Enabled: false
+        
+        #Whether or not timed access should be per-world
+        PerWorld: true
+        
+        #Whether or not a message should be sent even if the charge is 0
+        ZeroMessage: false
+        
+        Anvil:
+        
+            #Whether or not to enable changing for anvil access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought(if timed = true)
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Beacon:
+        
+            #Whether or not to enable changing for beacon access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        BrewStand:
+        
+            #Whether or not to enable changing for brewing stand access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Chest:
+        
+            #Whether or not to enable changing for chest access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        CreativeInventory:
+        
+            #Whether or not to enable changing for creative inventory access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Dispenser:
+        
+            #Whether or not to enable changing for dispenser access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Dropper:
+        
+            #Whether or not to enable changing for dropper access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        EnchantmentTable:
+        
+            #Whether or not to enable changing for enchantment tablet access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        EnderChest:
+        
+            #Whether or not to enable changing for ender chest access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Furnace:
+        
+            #Whether or not to enable changing for furnace access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Hopper:
+        
+            #Whether or not to enable changing for hopper access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        SurvivalInventory:
+        
+            #Whether or not to enable changing for survival inventory access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Villager:
+        
+            #Whether or not to enable changing for villager trading access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00
+        
+        Workbench:
+        
+            #Whether or not to enable changing for workbench access
+            Enabled: true
+            
+            #Whether or not access is timed based, or permanent
+            Timed: false
+            
+            #The cost of permanent access(if timed = false)
+            Cost: 200.00
+            
+            #Various packages of access time that can be bought
+            Packages:
+            
+                #The name of this package(DefaultPackage)
+                DefaultPackage:
+                    
+                    #Amount of access time granted(in seconds)
+                    Time: 600
+                    
+                    #Cost for this amount of access time
+                    Cost: 20.00

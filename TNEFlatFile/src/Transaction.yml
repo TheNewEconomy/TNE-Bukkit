@@ -1,0 +1,30 @@
+Transaction:
+
+  ID:
+  Type:
+  World:
+  Time:
+  Voided:
+  Initiator:
+    ID:
+    Balance:
+      World:
+      Currency:
+      Amount:
+    Charge:
+      Type:
+      World:
+      Currency:
+      Amount:
+
+  Recipient:
+    ID:
+    Balance:
+      World:
+      Currency:
+      Amount:
+    Charge:
+      Type:
+      World:
+      Currency:
+      Amount:
