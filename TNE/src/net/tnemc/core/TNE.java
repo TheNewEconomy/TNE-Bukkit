@@ -109,13 +109,13 @@ public class TNE extends TNELib {
     }
 
     reserveEconomy = new ReserveEconomy(this);
-    if(getServer().getPluginManager().getPlugin("Reserve") != null) {
-      setupReserve();
-    }
   }
 
   public void onEnable() {
     super.onEnable();
+    if(getServer().getPluginManager().getPlugin("Reserve") != null) {
+      setupReserve();
+    }
 
     //Create Debug Log
     try {
@@ -176,9 +176,11 @@ public class TNE extends TNELib {
     int size = 1;
     boolean payShort = configurations().getBoolean("Core.Commands.PayShort");
     boolean balShort = configurations().getBoolean("Core.Commands.BalanceShort");
+    boolean topShort = configurations().getBoolean("Core.Commands.TopShort");
 
     if(payShort) size += 1;
     if(balShort) size += 2;
+    if(topShort) size += 1;
 
     int index = 0;
 
@@ -193,7 +195,13 @@ public class TNE extends TNELib {
 
     if(balShort) {
       moneyArgs[index] = "bal";
-      moneyArgs[index + 1] = "balance";
+      index++;
+      moneyArgs[index] = "balance";
+      index++;
+    }
+
+    if(topShort) {
+      moneyArgs[index] = "baltop";
     }
 
     //Commands
@@ -223,7 +231,7 @@ public class TNE extends TNELib {
     menuManager = new MenuManager();
 
     //General Variables based on configuration values
-    consoleName = configurations().getString("Core.Server.Name");
+    consoleName = configurations().getString("Core.Server.Account.Name");
     debugMode = configurations().getBoolean("Core.Debug");
     useUUID = configurations().getBoolean("Core.UUID");
 

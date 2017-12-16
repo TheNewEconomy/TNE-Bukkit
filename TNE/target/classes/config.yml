@@ -25,17 +25,23 @@ Core:
         #Whether or not to use TNE Modules
         Enabled: true
 
-    #All configurations relating to the main server account.
+    #All configurations relating to the server in general.
     Server:
 
-        #Whether or not the server account has been enabled.
-        Enabled: true
+        #Whether or not to consolidate item-based currencies automatically.
+        Consolidate: false
 
-        #The name of the server account.
-        Name: Server Account
+        #All configurations relating to the server's economy account.
+        Account:
 
-        #The starting balance for the server account.
-        Balance: 500
+            #Whether or not the server account has been enabled.
+            Enabled: true
+
+            #The name of the server account.
+            Name: Server Account
+
+            #The starting balance for the server account.
+            Balance: 500
 
         #Configurations relating to third-party support.
         ThirdParty:
@@ -57,6 +63,9 @@ Core:
 
         #Whether or not players should be able to use /balance instead of /money
         BalanceShort: true
+
+        #Whether or not players should be able to use /baltop instead of /money top
+        TopShort: true
     
     #All configurations relating to update checking
     Update:

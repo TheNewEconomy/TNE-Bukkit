@@ -56,9 +56,14 @@ public class MultiTransactionHandler {
     return TransactionChargeType.GAIN;
   }
 
+  public TransactionChargeType getInitiatorType() {
+    if(getChargeType().equals(TransactionChargeType.GAIN)) return TransactionChargeType.LOSE;
+    return TransactionChargeType.GAIN;
+  }
+
   public BigDecimal initiatorCost() {
     if(transactionType.equalsIgnoreCase("pay")) {
-      return amount.multiply(new BigDecimal(data.getAffected().size()));
+      return amount;
     }
     return new BigDecimal(0.0);
   }

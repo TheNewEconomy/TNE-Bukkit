@@ -9,10 +9,8 @@ import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -64,28 +62,26 @@ public class MoneyPayCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    Player player = getPlayer(sender);
     String world = WorldFinder.getWorld(sender);
     if(arguments.length >= 2) {
       String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
-      UUID id = IDFinder.getID(arguments[0]);
 
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
       if(parsed.contains("Messages")) {
-        Message max = new Message(parsed);
-        max.addVariable("$currency", currency.name());
-        max.addVariable("$world", world);
-        max.addVariable("$player", getPlayer(sender).getDisplayName());
-        max.translate(WorldFinder.getWorld(sender), sender);
+        Message msg = new Message(parsed);
+        msg.addVariable("$currency", currency.name());
+        msg.addVariable("$world", world);
+        msg.addVariable("$player", getPlayer(sender).getDisplayName());
+        msg.translate(WorldFinder.getWorld(sender), sender);
         return false;
       }
 
       BigDecimal value = new BigDecimal(parsed);
 
       MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
-          "pay", value, currency, world,
-          IDFinder.getID(sender));
+                                                                    "pay", value, currency, world,
+                                                                    IDFinder.getID(sender));
       handler.handle(true);
       return handler.getData().isProceed();
     }

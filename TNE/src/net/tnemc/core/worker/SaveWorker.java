@@ -30,6 +30,6 @@ public class SaveWorker extends BukkitRunnable {
 
   @Override
   public void run() {
-    TNE.saveManager().save();
+    plugin.getSaveManager().save();
   }
 }

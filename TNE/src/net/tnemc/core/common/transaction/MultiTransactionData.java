@@ -59,6 +59,13 @@ public class MultiTransactionData {
                                                          handler.getAmount(),
                                                          handler.getChargeType()));
 
+    if(handler.getInitiator() != null) {
+      transaction.setInitiatorCharge(new TransactionCharge(handler.getWorld(),
+          handler.getCurrency(),
+          handler.initiatorCost(),
+          handler.getInitiatorType()));
+    }
+
     TransactionResult result = TNE.transactionManager().perform(transaction);
     if(result.proceed()) {
       proceed = true;

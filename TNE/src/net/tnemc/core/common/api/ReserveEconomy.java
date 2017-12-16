@@ -156,6 +156,11 @@ public class ReserveEconomy implements EconomyAPI {
   }
 
   @Override
+  public boolean supportTransactions() {
+    return true;
+  }
+
+  @Override
   public TransactionResult performTransaction(Transaction transaction) {
     return null;
   }

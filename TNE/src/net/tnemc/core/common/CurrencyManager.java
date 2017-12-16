@@ -5,7 +5,6 @@ import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.event.currency.TNECurrencyLoadEvent;
@@ -155,9 +154,7 @@ public class CurrencyManager {
 
       if(currency.isItem()) {
         //ItemTier variables
-        String material = (MISCUtils.isInteger(configuration.getString(tierBase + ".Item.Material", "PAPER")))?
-                          Material.getMaterial(configuration.getInt(tierBase + ".Item.Material")).name()
-                          : configuration.getString(tierBase + ".Item.Material", "PAPER");
+        String material = configuration.getString(tierBase + ".Item.Material", "PAPER");
         short damage = (short) configuration.getInt(tierBase + ".Item.Damage", 0);
         String customName = configuration.getString(tierBase + ".Item.Name", null);
         String lore = configuration.getString(tierBase + ".Item.Lore", null);

@@ -3,21 +3,21 @@ package net.tnemc.core.common.account;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.history.AccountHistory;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -105,7 +105,7 @@ public class TNEAccount implements Account {
       TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
       TNE.debug("Currency Item: " + cur.isItem());
       if(cur.isItem()) {
-        setCurrencyItems(cur, newHoldings);
+        ItemCalculations.setItems(this, cur, newHoldings);
       }
     }
 
@@ -151,143 +151,8 @@ public class TNEAccount implements Account {
     });
   }
 
-  public void clearCurrencyItems(TNECurrency currency) {
-    TNE.debug("===== START Account.clearCurrencyItems =====");
-    Player player = IDFinder.getPlayer(id.toString());
-
-    TNE.debug("UUID: " + id.toString());
-    if(player == null) TNE.debug("Player is null");
-
-    for(TNETier tier : currency.getTNEMajorTiers().values()) {
-      MaterialUtils.removeItem(player, tier.getItemInfo());
-    }
-
-    for(TNETier tier : currency.getTNEMinorTiers().values()) {
-      MaterialUtils.removeItem(player, tier.getItemInfo());
-    }
-    TNE.debug("===== END Account.clearCurrencyItems =====");
-  }
-
-  public void setCurrencyItems(TNECurrency currency, BigDecimal amount) {
-    TNE.debug("=====START Account.setCurrencyItems =====");
-    TNE.debug("Holdings: " + amount.toPlainString());
-    if(currency.isItem()) {
-      TNE.debug("Currency is item");
-      clearCurrencyItems(currency);
-      List<ItemStack> items = new ArrayList<>();
-      setMajorItems(currency, amount);
-      setMinorItems(currency, amount);
-      giveItems(items);
-    }
-    TNE.debug("=====END Account.setCurrencyItems =====");
-  }
-
-  private void setMajorItems(TNECurrency currency, BigDecimal amount) {
-    TNE.debug("===== START setMajorItems =====");
-    Map<Integer, ItemStack> items = new HashMap<>();
-    String[] split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
-    BigInteger workingAmount = new BigInteger(split[0]);
-    for(Map.Entry<Integer, TNETier> entry : currency.getTNEMajorTiers().entrySet()) {
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
-
-      BigInteger itemAmount = workingAmount.divide(weight);
-
-      workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
-      ItemStack stack = entry.getValue().getItemInfo().toStack();
-      stack.setAmount(itemAmount.intValue());
-      items.put(entry.getKey(), stack);
-    }
-    giveItems(items.values());
-    TNE.debug("===== END setMajorItems =====");
-  }
-
-  private void setMinorItems(TNECurrency currency, BigDecimal amount) {
-    TNE.debug("===== START setMinorItems =====");
-    Map<Integer, ItemStack> items = new HashMap<>();
-    String[] split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
-    BigInteger workingAmount = new BigInteger(split[1]);
-    for(Map.Entry<Integer, TNETier> entry : currency.getTNEMinorTiers().entrySet()) {
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
-
-      BigInteger itemAmount = workingAmount.divide(weight);
-
-      workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
-      ItemStack stack = entry.getValue().getItemInfo().toStack();
-      stack.setAmount(itemAmount.intValue());
-      items.put(entry.getKey(), stack);
-    }
-    giveItems(items.values());
-    TNE.debug("===== END setMinorItems =====");
-  }
-
-  public BigDecimal getCurrencyItems(TNECurrency currency) {
-    TNE.debug("=====START Account.getCurrencyItems =====");
-    BigDecimal value = new BigDecimal(0.0);
-    if(currency.isItem()) {
-      Player player = IDFinder.getPlayer(id.toString());
-      for(TNETier tier : currency.getTNEMajorTiers().values()) {
-        value = value.add(new BigDecimal(MaterialUtils.getCount(player, tier.getItemInfo()) * tier.weight()));
-      }
-
-      for(TNETier tier : currency.getTNEMinorTiers().values()) {
-        Integer parsed = MaterialUtils.getCount(player, tier.getItemInfo()) * tier.weight();
-        String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
-        value = value.add(new BigDecimal(convert));
-      }
-    }
-    TNE.debug("=====END Account.getCurrencyItems =====");
-    return value;
-  }
-
-  public void recalculateItemHoldings(String world) {
-    TNE.debug("=====START Account.recalculateItemHoldings =====");
-    for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
-      if(currency.isItem()) {
-        recalculateCurrencyHoldings(world, currency);
-      }
-    }
-    TNE.debug("=====END Account.recalculateItemHoldings =====");
-  }
-
-  public void recalculateCurrencyHoldings(String world, TNECurrency currency) {
-    TNE.debug("=====START Account.recalculateCurrencyHoldings =====");
-    BigDecimal items = getCurrencyItems(currency);
-    clearCurrencyItems(currency);
-    setHoldings(world, currency.name(), items);
-    TNE.debug("=====END Account.recalculateCurrencyHoldings =====");
-  }
-
-  public boolean hasItems(Collection<ItemStack> items) {
-    Player player = IDFinder.getPlayer(id.toString());
-    for(ItemStack stack : items) {
-      if(!player.getInventory().contains(stack, stack.getAmount())) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  public void takeItems(Collection<ItemStack> items) {
-    Player player = IDFinder.getPlayer(id.toString());
-    for(ItemStack stack : items) {
-      player.getInventory().remove(stack);
-    }
-  }
-
-  public void giveItems(Collection<ItemStack> items) {
-    TNE.debug("=====START Account.giveItems =====");
-    Player player = IDFinder.getPlayer(id.toString());
-    List<ItemStack> leftOver = new ArrayList<>();
-    for(ItemStack stack : items) {
-      leftOver.addAll(player.getInventory().addItem(stack).values());
-    }
-
-    for(ItemStack stack : leftOver) {
-      if(stack != null) {
-        player.getWorld().dropItem(player.getLocation(), stack);
-      }
-    }
-    TNE.debug("=====END Account.giveItems =====");
+  public Player getPlayer() {
+    return IDFinder.getPlayer(identifier().toString());
   }
 
   public AccountHistory getHistory() {

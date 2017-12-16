@@ -5,6 +5,7 @@ import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
@@ -73,7 +74,7 @@ public class PlayerListener implements Listener {
       Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
       TNE.debug("Present: " + currency.isPresent());
       currency.ifPresent((cur)->{
-        Bukkit.getScheduler().scheduleSyncDelayedTask(TNE.instance(), ()->account.recalculateCurrencyHoldings(world, cur), 5L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(TNE.instance(), ()->ItemCalculations.recalculateItemHoldings(account, world, cur), 5L);
       });
       TNE.manager().addAccount(account);
     }
@@ -91,7 +92,7 @@ public class PlayerListener implements Listener {
       TNEAccount account = TNEAccount.getAccount(id.toString());
       Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, event.getItemDrop().getItemStack());
       currency.ifPresent((cur)->{
-        account.recalculateCurrencyHoldings(world, cur);
+        ItemCalculations.recalculateItemHoldings(account, world, cur);
       });
       TNE.manager().addAccount(account);
     }
@@ -108,7 +109,7 @@ public class PlayerListener implements Listener {
     if(!noEconomy) {
       TNE.debug("Account Exists: " + TNE.manager().exists(id));
       TNEAccount account = TNEAccount.getAccount(id.toString());
-      account.recalculateItemHoldings(world);
+      ItemCalculations.recalculateItemHoldings(account, world);
       TNE.manager().addAccount(account);
     }
     TNE.debug("=====END PlayerListener.onInventoryClose =====");

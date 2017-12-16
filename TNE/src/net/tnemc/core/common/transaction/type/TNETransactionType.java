@@ -57,12 +57,18 @@ public interface TNETransactionType extends TransactionType {
    * @return The {@link TransactionResult} of this {@link Transaction}.
    */
   default TransactionResult perform(Transaction transaction) {
+    TNE.debug("=====START TNETransactionType.perform =====");
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
+      TNE.debug("first if");
+      TNE.debug("Account null: " + (TNE.instance().api().getAccount(transaction.initiator()) == null));
+      TNE.debug("Transaction.initiator null: " + (transaction == null));
+      TNE.debug("Transaction.initiatorCharge null: " + (transaction.initiatorCharge() == null));
       proceed = TNE.instance().api().getAccount(transaction.initiator()).canCharge(transaction.initiatorCharge());
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
+      TNE.debug("second if");
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
         proceed = TNE.instance().api().getAccount(transaction.recipient()).canCharge(transaction.recipientCharge());
       }
@@ -70,15 +76,20 @@ public interface TNETransactionType extends TransactionType {
 
 
     if(proceed) {
+      TNE.debug("yeah, proceed");
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
+        TNE.debug("first if");
         TNE.instance().api().getAccount(transaction.initiator()).handleCharge(transaction.initiatorCharge());
       }
 
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
+        TNE.debug("second if");
         TNE.instance().api().getAccount(transaction.recipient()).handleCharge(transaction.recipientCharge());
       }
+      TNE.debug("=====ENDSUCCESS TNETransactionType.perform =====");
       return success();
     }
+    TNE.debug("=====ENDFAIL TNETransactionType.perform =====");
     return fail();
   }
 }

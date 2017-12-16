@@ -11,7 +11,6 @@ import net.tnemc.core.common.transaction.MultiTransactionHandler;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -69,7 +68,6 @@ public class MoneyGiveCommand extends TNECommand {
       String world = (arguments.length == 3) ? arguments[2] : WorldFinder.getWorld(sender);
       String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
-      UUID id = IDFinder.getID(arguments[0]);
 
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
       if(parsed.contains("Messages")) {

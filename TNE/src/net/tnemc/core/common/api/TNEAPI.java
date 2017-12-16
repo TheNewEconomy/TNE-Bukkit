@@ -38,7 +38,7 @@ import java.util.*;
  */
 public class TNEAPI extends TNELibAPI {
 
-  TNE plugin;
+  private TNE plugin;
 
   public TNEAPI(TNE plugin) {
     super(plugin);
@@ -59,7 +59,7 @@ public class TNEAPI extends TNELibAPI {
    * @return True if the currency exists, else false.
    */
   public boolean hasCurrency(String name) {
-    return hasCurrency(name, TNE.instance().defaultWorld);
+    return hasCurrency(name, plugin.defaultWorld);
   }
 
   /**
@@ -77,7 +77,7 @@ public class TNEAPI extends TNELibAPI {
    * @return The default {@link TNECurrency} for the server.
    */
   public TNECurrency getDefault() {
-    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+    return TNE.manager().currencyManager().get(plugin.defaultWorld);
   }
 
   /**
@@ -270,7 +270,7 @@ public class TNEAPI extends TNELibAPI {
    * @return The balance of the account for the specified {@link TNECurrency}.
    */
   public BigDecimal getHoldings(String identifier, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(TNE.instance().defaultWorld, currency.name());
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(plugin.defaultWorld, currency.name());
   }
 
   /**
@@ -466,7 +466,7 @@ public class TNEAPI extends TNELibAPI {
    * @return True if a call to the corresponding removeHoldings method would return true, otherwise false.
    */
   public boolean canRemoveHoldings(String identifier, BigDecimal amount) {
-    String world = TNE.instance().defaultWorld;
+    String world = plugin.defaultWorld;
     TNECurrency currency = TNE.manager().currencyManager().get(world);
     return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, world);
   }
@@ -618,7 +618,7 @@ public class TNEAPI extends TNELibAPI {
    * @return True if the {@link TNECurrency} was registered, otherwise false.
    */
   public boolean registerCurrency(TNECurrency currency) {
-    return registerCurrency(currency, TNE.instance().defaultWorld);
+    return registerCurrency(currency, plugin.defaultWorld);
   }
 
   /**
@@ -641,7 +641,7 @@ public class TNEAPI extends TNELibAPI {
    * @return True if the {@link TNETier} was registered, otherwise false.
    */
   public boolean registerTier(TNETier tier, TNECurrency currency) {
-    return registerTier(tier, currency, TNE.instance().defaultWorld);
+    return registerTier(tier, currency, plugin.defaultWorld);
   }
 
   /**
@@ -670,7 +670,7 @@ public class TNEAPI extends TNELibAPI {
    * @return The value of the configuration.
    */
   public BigDecimal getBigDecimal(String configuration) {
-    return getBigDecimal(configuration, TNE.instance().defaultWorld);
+    return getBigDecimal(configuration, plugin.defaultWorld);
   }
 
   /**

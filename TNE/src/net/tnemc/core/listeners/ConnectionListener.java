@@ -7,6 +7,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -78,7 +79,7 @@ public class ConnectionListener implements Listener {
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-        account.setCurrencyItems(TNE.manager().currencyManager().get(world, value),
+        ItemCalculations.setItems(account, TNE.manager().currencyManager().get(world, value),
             account.getHoldings(world, value));
       });
     }
@@ -131,7 +132,7 @@ public class ConnectionListener implements Listener {
 
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-        account.setCurrencyItems(TNE.manager().currencyManager().get(world, value),
+        ItemCalculations.setItems(account, TNE.manager().currencyManager().get(world, value),
             account.getHoldings(world, value));
       });
     }

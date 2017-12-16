@@ -120,7 +120,7 @@ public class EconomyManager {
 
     for(TNEAccount account : accounts.values()) {
       Double balance = account.addAll(world, currency).doubleValue();
-      List<UUID> ids = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<UUID>();
+      List<UUID> ids = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<>();
       ids.add(account.identifier());
       ordered.put(balance, ids);
     }
@@ -137,6 +137,7 @@ public class EconomyManager {
   }
 
   public Collection<TNEAccount> parsePlayerArgument(String argument) {
+    TNE.debug("EconomyManager.parsePlayerArgument: " + argument);
     argument = argument.trim();
     if(argument.equalsIgnoreCase("all")) return getAccounts().values();
 

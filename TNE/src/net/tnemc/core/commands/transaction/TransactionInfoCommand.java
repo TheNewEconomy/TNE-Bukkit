@@ -75,8 +75,6 @@ public class TransactionInfoCommand extends TNECommand {
         message.translate(world, sender);
         return false;
       }
-
-      //TODO: Fix this to be better
       TNETransaction transaction = TNE.transactionManager().get(uuid);
       Message message = new Message("Messages.Transaction.Info");
       message.addVariable("$id", arguments[0]);

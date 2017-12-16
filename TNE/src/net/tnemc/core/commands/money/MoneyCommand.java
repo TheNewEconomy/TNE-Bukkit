@@ -43,7 +43,7 @@ public class MoneyCommand extends TNECommand {
   @Override
   public String[] getAliases() {
     return new String[] {
-        "bal", "balance", "pay"
+        "bal", "balance", "pay", "baltop"
     };
   }
 
@@ -64,6 +64,13 @@ public class MoneyCommand extends TNECommand {
         arguments.length == 0) {
       arguments = new String[1];
       arguments[0] = "balance";
+    }
+
+    if(command.equalsIgnoreCase("baltop")) {
+      String[] args = new String[arguments.length + 1];
+      args[0] = "top";
+      System.arraycopy(arguments, 0, args, 1, arguments.length);
+      arguments = args;
     }
 
     if(command.equalsIgnoreCase("pay")) {
