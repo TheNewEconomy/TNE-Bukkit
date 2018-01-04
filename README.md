@@ -62,12 +62,16 @@ API
 ---------
 To acces the API import the jar file(TNE.jar) then use the following code:  
 
+```java
 TNE.instance().api();  
+```
 
 In the following example we'll get a player's balance using the API.  
 
+```java
 TNEAPI ecoAPI = TNE.instance().api();  
 ecoAPI.getBalance(player);
+```
 
 Source code for the API class can be found [here](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/tnerevival/core/api/TNEAPI.java).
 
