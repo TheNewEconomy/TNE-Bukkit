@@ -119,7 +119,7 @@ public class EconomyManager {
     TreeMap<Double, List<UUID>> ordered = new TreeMap<>(Collections.reverseOrder());
 
     for(TNEAccount account : accounts.values()) {
-      Double balance = account.addAll(world, currency).doubleValue();
+      Double balance = account.addAll(world).doubleValue();
       List<UUID> ids = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<>();
       ids.add(account.identifier());
       ordered.put(balance, ids);

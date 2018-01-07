@@ -63,7 +63,7 @@ public class TNEAccount implements Account {
     history.log(transaction);
   }
 
-  public BigDecimal addAll(String world, String currency) {
+  public BigDecimal addAll(String world) {
     BigDecimal total = BigDecimal.ZERO;
 
     if(!world.equalsIgnoreCase("all")) {
@@ -219,75 +219,38 @@ public class TNEAccount implements Account {
   }
 
   @Override
-  public boolean isAccessor(String identifier) {
-    return accessors.containsKey(IDFinder.getID(identifier));
+  public boolean isAccessor(Account account) {
+    return accessors.containsKey(IDFinder.getID(account.identifier().toString()));
   }
 
   @Override
-  public boolean isAccessor(UUID uuid) {
-    return accessors.containsKey(uuid);
-  }
-
-  @Override
-  public boolean canWithdraw(String identifier) {
-    if(isAccessor(identifier)) {
-      return accessors.get(IDFinder.getID(identifier)).canWithdraw();
+  public boolean canWithdraw(Account account) {
+    if(isAccessor(account)) {
+      return accessors.get(IDFinder.getID(account.identifier().toString())).canWithdraw();
     }
     return false;
   }
 
   @Override
-  public boolean canWithdraw(UUID uuid) {
-    if(isAccessor(uuid)) {
-      return accessors.get(uuid).canWithdraw();
+  public boolean canDeposit(Account account) {
+    if(isAccessor(account)) {
+      return accessors.get(IDFinder.getID(account.identifier().toString())).canDeposit();
     }
     return false;
   }
 
   @Override
-  public boolean canDeposit(String identifier) {
-    if(isAccessor(identifier)) {
-      return accessors.get(IDFinder.getID(identifier)).canDeposit();
+  public boolean canRemoveAccessor(Account account) {
+    if(isAccessor(account)) {
+      return accessors.get(IDFinder.getID(account.identifier().toString())).canRemoveAccessor();
     }
     return false;
   }
 
   @Override
-  public boolean canDeposit(UUID uuid) {
-    if(isAccessor(uuid)) {
-      return accessors.get(uuid).canDeposit();
-    }
-    return false;
-  }
-
-  @Override
-  public boolean canRemoveAccessor(String identifier) {
-    if(isAccessor(identifier)) {
-      return accessors.get(IDFinder.getID(identifier)).canRemoveAccessor();
-    }
-    return false;
-  }
-
-  @Override
-  public boolean canRemoveAccessor(UUID uuid) {
-    if(isAccessor(uuid)) {
-      return accessors.get(uuid).canRemoveAccessor();
-    }
-    return false;
-  }
-
-  @Override
-  public boolean canAddAccessor(String identifier) {
-    if(isAccessor(identifier)) {
-      return accessors.get(IDFinder.getID(identifier)).canAddAccessor();
-    }
-    return false;
-  }
-
-  @Override
-  public boolean canAddAccessor(UUID uuid) {
-    if(isAccessor(uuid)) {
-      return accessors.get(uuid).canAddAccessor();
+  public boolean canAddAccessor(Account account) {
+    if(isAccessor(account)) {
+      return accessors.get(IDFinder.getID(account.identifier().toString())).canAddAccessor();
     }
     return false;
   }
