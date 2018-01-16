@@ -81,7 +81,7 @@ public class MySQLProvider extends TNEDataProvider {
       Class.forName("com.mysql.jdbc.Driver");
       connection = DriverManager.getConnection("jdbc:mysql://" + manager.getHost() + ":" + manager.getPort() + "/" + manager.getDatabase() + "?useSSL=false", manager.getUser(), manager.getPassword());
       statement = connection.createStatement();
-      result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1;");
+      result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;");
       if(result.first()) {
         version = Double.valueOf(result.getString("version"));
       }
@@ -98,12 +98,12 @@ public class MySQLProvider extends TNEDataProvider {
         "`id` INTEGER NOT NULL UNIQUE," +
         "`version` VARCHAR(10)," +
         "`server_name` VARCHAR(250)" +
-        ");");
+        ") ENGINE = INNODB;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
         "`username` VARCHAR(250)," +
         "`uuid` VARCHAR(36) UNIQUE" +
-        ");");
+        ") ENGINE = INNODB;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
         "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
@@ -113,7 +113,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`account_number` INTEGER," +
         "`account_status` VARCHAR(60)," +
         "`account_player` BOOLEAN" +
-        ");");
+        ") ENGINE = INNODB;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
         "`uuid` VARCHAR(36) NOT NULL," +
@@ -122,7 +122,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`currency` VARCHAR(250) NOT NULL," +
         "`balance` VARCHAR(41)," +
         "PRIMARY KEY(uuid, server_name, world, currency)" +
-        ");");
+        ") ENGINE = INNODB;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
@@ -135,7 +135,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`trans_time` BIGINT(60) NOT NULL," +
         "`trans_voided` BOOLEAN NOT NULL," +
         "PRIMARY KEY(trans_id)" +
-        ");");
+        ") ENGINE = INNODB;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
         "`charge_transaction` VARCHAR(36) NOT NULL," +
@@ -145,7 +145,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`charge_amount` VARCHAR(41) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL," +
         "PRIMARY KEY(charge_transaction, charge_player)" +
-        ");");
+        ") ENGINE = INNODB;");
   }
 
   @Override
@@ -177,7 +177,7 @@ public class MySQLProvider extends TNEDataProvider {
   public UUID loadID(String username) {
     String table = manager.getPrefix() + "_ECOIDS";
     try {
-      int idIndex = mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE username = ?", new Object[] {
+      int idIndex = mysql().executePreparedQuery("SELECT uuid FROM " + table + " WHERE username = ? LIMIT 1", new Object[] {
           username
       });
       if(mysql().results(idIndex).next()) {
@@ -197,7 +197,7 @@ public class MySQLProvider extends TNEDataProvider {
 
     String table = manager.getPrefix() + "_ECOIDS";
     try {
-      int idIndex = mysql().executeQuery("SELECT * FROM " + table + ";");
+      int idIndex = mysql().executeQuery("SELECT username, uuid FROM " + table + ";");
       while (mysql().results(idIndex).next()) {
         ids.put(mysql().results(idIndex).getString("username"), UUID.fromString(mysql().results(idIndex).getString("uuid")));
       }
@@ -253,7 +253,7 @@ public class MySQLProvider extends TNEDataProvider {
   public TNEAccount loadAccount(UUID id) {
     String table = manager.getPrefix() + "_USERS";
     try {
-      int accountIndex = mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?", new Object[]{
+      int accountIndex = mysql().executePreparedQuery("SELECT uuid, display_name, account_number, account_status, joined_date, last_online, account_player FROM " + table + " WHERE uuid = ? LIMIT 1", new Object[]{
           id.toString()
       });
       if (mysql().results(accountIndex).next()) {
@@ -266,7 +266,7 @@ public class MySQLProvider extends TNEDataProvider {
         account.setPlayerAccount(mysql().results(accountIndex).getBoolean("account_player"));
 
         String balancesTable = manager.getPrefix() + "_BALANCES";
-        int balancesIndex = mysql().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
+        int balancesIndex = mysql().executePreparedQuery("SELECT world, currency, balance FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
         while (mysql().results(balancesIndex).next()) {
           account.setHoldings(mysql().results(balancesIndex).getString("world"), mysql().results(balancesIndex).getString("currency"), new BigDecimal(mysql().results(balancesIndex).getString("balance")));
         }
@@ -333,7 +333,7 @@ public class MySQLProvider extends TNEDataProvider {
   public TNETransaction loadTransaction(UUID id) {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     try {
-      int transIndex = mysql().executePreparedQuery("SELECT * FROM " + table + " WHERE trans_id = ?", new Object[]{
+      int transIndex = mysql().executePreparedQuery("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM " + table + " WHERE trans_id = ? LIMIT 1", new Object[]{
           id.toString()
       });
       if (mysql().results(transIndex).next()) {
@@ -345,7 +345,7 @@ public class MySQLProvider extends TNEDataProvider {
             mysql().results(transIndex).getLong("trans_time"));
 
         String chargesTable = manager.getPrefix() + "_CHARGES";
-        int chargesIndex = mysql().executePreparedQuery("SELECT * FROM " + chargesTable + " WHERE charge_transaction = ?", new Object[]{transaction.transactionID().toString()});
+        int chargesIndex = mysql().executePreparedQuery("SELECT charge_player, charge_world, charge_amount, charge_type, charge_currency FROM " + chargesTable + " WHERE charge_transaction = ?", new Object[]{transaction.transactionID().toString()});
         while (mysql().results(chargesIndex).next()) {
           String player = mysql().results(chargesIndex).getString("charge_player");
           boolean initiator = player.equalsIgnoreCase(transaction.initiator());
