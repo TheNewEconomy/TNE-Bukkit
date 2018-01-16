@@ -38,8 +38,12 @@ import java.util.*;
  * Created by Daniel on 9/7/2017.
  */
 public class H2Provider extends TNEDataProvider {
+
+  private H2 sql;
+
   public H2Provider(DataManager manager) {
     super(manager);
+    sql = new H2(manager);
   }
 
   @Override
@@ -161,7 +165,8 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public DatabaseConnector connector() {
-    return new H2(manager);
+    sql.connect(manager);
+    return sql;
   }
 
   @Override
@@ -404,7 +409,7 @@ public class H2Provider extends TNEDataProvider {
             transaction.initiator(),
             (transaction.initiatorBalance() != null)? transaction.initiatorBalance().getAmount().toPlainString() : "0.0",
             transaction.recipient(),
-            transaction.recipientBalance().getAmount().toPlainString(),
+            (transaction.recipientBalance() != null)? transaction.recipientBalance().getAmount().toPlainString() : "0.0",
             transaction.type().name(),
             transaction.getWorld(),
             transaction.time(),

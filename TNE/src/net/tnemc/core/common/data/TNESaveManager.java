@@ -47,11 +47,13 @@ public class TNESaveManager extends SaveManager {
 
   @Override
   public void load() {
+    TNE.debug("====== TNESaveManager.load =======");
     if(saveVersion < TNELib.instance().currentSaveVersion && saveVersion != 0) {
       getTNEManager().getTNEProvider().update(saveVersion);
       TNELib.instance().getLogger().info("Saved data has been updated!");
     }
     Double version = (saveVersion != 0.0) ? saveVersion : TNELib.instance().currentSaveVersion;
+    TNE.debug("Current Save Version: " + version);
     getTNEManager().getTNEProvider().load(version);
     TNELib.instance().getLogger().info("Finished loading data!");
   }

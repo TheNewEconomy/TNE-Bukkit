@@ -1,5 +1,6 @@
 package net.tnemc.mysql;
 
+import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DatabaseConnector;
 import com.github.tnerevival.core.db.sql.MySQL;
@@ -37,8 +38,12 @@ import java.util.*;
  * Created by Daniel on 9/7/2017.
  */
 public class MySQLProvider extends TNEDataProvider {
+
+  private MySQL sql;
+
   public MySQLProvider(DataManager manager) {
     super(manager);
+    sql = new MySQL(manager);
   }
 
   @Override
@@ -98,12 +103,18 @@ public class MySQLProvider extends TNEDataProvider {
         "`id` INTEGER NOT NULL UNIQUE," +
         "`version` VARCHAR(10)," +
         "`server_name` VARCHAR(250)" +
-        ") ENGINE = INNODB;");
+        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+    mysql().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?);",
+        new Object[] {
+            1,
+            TNELib.instance().currentSaveVersion,
+            TNE.instance().getServer().getName()
+        });
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
         "`username` VARCHAR(250)," +
         "`uuid` VARCHAR(36) UNIQUE" +
-        ") ENGINE = INNODB;");
+        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
         "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
@@ -113,7 +124,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`account_number` INTEGER," +
         "`account_status` VARCHAR(60)," +
         "`account_player` BOOLEAN" +
-        ") ENGINE = INNODB;");
+        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
         "`uuid` VARCHAR(36) NOT NULL," +
@@ -122,7 +133,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`currency` VARCHAR(250) NOT NULL," +
         "`balance` VARCHAR(41)," +
         "PRIMARY KEY(uuid, server_name, world, currency)" +
-        ") ENGINE = INNODB;");
+        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
@@ -135,7 +146,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`trans_time` BIGINT(60) NOT NULL," +
         "`trans_voided` BOOLEAN NOT NULL," +
         "PRIMARY KEY(trans_id)" +
-        ") ENGINE = INNODB;");
+        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
         "`charge_transaction` VARCHAR(36) NOT NULL," +
@@ -145,7 +156,9 @@ public class MySQLProvider extends TNEDataProvider {
         "`charge_amount` VARCHAR(41) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL," +
         "PRIMARY KEY(charge_transaction, charge_player)" +
-        ") ENGINE = INNODB;");
+        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+    mysql().close(manager);
   }
 
   @Override
@@ -159,7 +172,8 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public DatabaseConnector connector() {
-    return new MySQL(manager);
+    sql.connect(manager);
+    return sql;
   }
 
   @Override
@@ -197,14 +211,18 @@ public class MySQLProvider extends TNEDataProvider {
 
     String table = manager.getPrefix() + "_ECOIDS";
     try {
+      TNE.debug("MySQL Connected? " + mysql().connected(manager));
       int idIndex = mysql().executeQuery("SELECT username, uuid FROM " + table + ";");
+      TNE.debug("Predicted IDs: " + mysql().results(idIndex).getFetchSize());
       while (mysql().results(idIndex).next()) {
+        TNE.debug("Loading EcoID for " + mysql().results(idIndex).getString("username"));
         ids.put(mysql().results(idIndex).getString("username"), UUID.fromString(mysql().results(idIndex).getString("uuid")));
       }
       mysql().close(manager);
     } catch(Exception e) {
       TNE.debug(e);
     }
+    TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
     return ids;
   }
 
@@ -235,11 +253,13 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public Collection<TNEAccount> loadAccounts() {
     List<TNEAccount> accounts = new ArrayList<>();
+    TNE.debug("Loading TNE Accounts");
 
     String table = manager.getPrefix() + "_USERS";
     try {
       int accountIndex = mysql().executeQuery("SELECT uuid FROM " + table + ";");
       while (mysql().results(accountIndex).next()) {
+        TNE.debug("Loading account with UUID of " + mysql().results(accountIndex).getString("uuid"));
         TNEAccount account = loadAccount(UUID.fromString(mysql().results(accountIndex).getString("uuid")));
         if(account != null) accounts.add(account);
       }
@@ -402,7 +422,7 @@ public class MySQLProvider extends TNEDataProvider {
             transaction.initiator(),
             (transaction.initiatorBalance() != null)? transaction.initiatorBalance().getAmount().toPlainString() : "0.0",
             transaction.recipient(),
-            transaction.recipientBalance().getAmount().toPlainString(),
+            (transaction.recipientBalance() != null)? transaction.recipientBalance().getAmount().toPlainString() : "0.0",
             transaction.type().name(),
             transaction.getWorld(),
             transaction.time(),
