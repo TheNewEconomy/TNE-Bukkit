@@ -102,38 +102,38 @@ public class MySQLProvider extends TNEDataProvider {
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
         "`id` INTEGER NOT NULL UNIQUE," +
         "`version` VARCHAR(10)," +
-        "`server_name` VARCHAR(250)" +
-        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        "`server_name` VARCHAR(100)" +
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
     mysql().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?);",
         new Object[] {
             1,
             TNELib.instance().currentSaveVersion,
-            TNE.instance().getServer().getName()
+            TNE.instance().getServerName()
         });
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
-        "`username` VARCHAR(250)," +
+        "`username` VARCHAR(100)," +
         "`uuid` VARCHAR(36) UNIQUE" +
-        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
         "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
-        "`display_name` VARCHAR(250)," +
+        "`display_name` VARCHAR(100)," +
         "`joined_date` BIGINT(60)," +
         "`last_online` BIGINT(60)," +
         "`account_number` INTEGER," +
         "`account_status` VARCHAR(60)," +
         "`account_player` BOOLEAN" +
-        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
         "`uuid` VARCHAR(36) NOT NULL," +
-        "`server_name` VARCHAR(250) NOT NULL," +
+        "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
-        "`currency` VARCHAR(250) NOT NULL," +
+        "`currency` VARCHAR(100) NOT NULL," +
         "`balance` VARCHAR(41)," +
         "PRIMARY KEY(uuid, server_name, world, currency)" +
-        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
@@ -146,17 +146,17 @@ public class MySQLProvider extends TNEDataProvider {
         "`trans_time` BIGINT(60) NOT NULL," +
         "`trans_voided` BOOLEAN NOT NULL," +
         "PRIMARY KEY(trans_id)" +
-        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
         "`charge_transaction` VARCHAR(36) NOT NULL," +
         "`charge_player` VARCHAR(36) NOT NULL," +
-        "`charge_currency` VARCHAR(250) NOT NULL," +
+        "`charge_currency` VARCHAR(100) NOT NULL," +
         "`charge_world` VARCHAR(36) NOT NULL," +
         "`charge_amount` VARCHAR(41) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL," +
         "PRIMARY KEY(charge_transaction, charge_player)" +
-        ") ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().close(manager);
   }
@@ -330,7 +330,7 @@ public class MySQLProvider extends TNEDataProvider {
                 "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
             new Object[]{
                 account.identifier().toString(),
-                TNE.instance().getServer().getServerName(),
+                TNE.instance().getServerName(),
                 world,
                 currency,
                 balance.toPlainString(),

@@ -68,6 +68,7 @@ public class TNE extends TNELib {
   private ModuleLoader loader;
   public UpdateChecker updater;
   private static boolean debugMode = false;
+  private String serverName;
 
   //Economy APIs
   private Economy_TheNewEconomy vaultEconomy;
@@ -231,7 +232,8 @@ public class TNE extends TNELib {
     menuManager = new MenuManager();
 
     //General Variables based on configuration values
-    consoleName = configurations().getString("Core.Server.Account.Name");
+    serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
+    consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     debugMode = configurations().getBoolean("Core.Debug");
     useUUID = configurations().getBoolean("Core.UUID");
 
@@ -357,7 +359,9 @@ public class TNE extends TNELib {
     return (TNEUUIDManager)instance().getUuidManager();
   }
 
-
+  public String getServerName() {
+    return serverName;
+  }
 
   public void setUUIDS(Map<String, UUID> ids) {
     uuidCache.putAll(ids);

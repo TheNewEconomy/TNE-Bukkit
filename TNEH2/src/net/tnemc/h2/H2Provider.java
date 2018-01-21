@@ -1,5 +1,6 @@
 package net.tnemc.h2;
 
+import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DatabaseConnector;
 import com.github.tnerevival.core.db.sql.H2;
@@ -103,17 +104,23 @@ public class H2Provider extends TNEDataProvider {
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
         "`id` INTEGER NOT NULL UNIQUE," +
         "`version` VARCHAR(10)," +
-        "`server_name` VARCHAR(250)" +
+        "`server_name` VARCHAR(100)" +
         ");");
+    h2().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?);",
+        new Object[] {
+            1,
+            TNELib.instance().currentSaveVersion,
+            TNE.instance().getServerName()
+        });
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
-        "`username` VARCHAR(250)," +
+        "`username` VARCHAR(100)," +
         "`uuid` VARCHAR(36) UNIQUE" +
         ");");
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
         "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
-        "`display_name` VARCHAR(250)," +
+        "`display_name` VARCHAR(100)," +
         "`joined_date` BIGINT(60)," +
         "`last_online` BIGINT(60)," +
         "`account_number` INTEGER," +
@@ -123,9 +130,9 @@ public class H2Provider extends TNEDataProvider {
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
         "`uuid` VARCHAR(36) NOT NULL," +
-        "`server_name` VARCHAR(250) NOT NULL," +
+        "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
-        "`currency` VARCHAR(250) NOT NULL," +
+        "`currency` VARCHAR(100) NOT NULL," +
         "`balance` VARCHAR(41)," +
         "PRIMARY KEY(uuid, server_name, world, currency)" +
         ");");
@@ -146,7 +153,7 @@ public class H2Provider extends TNEDataProvider {
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
         "`charge_transaction` VARCHAR(36) NOT NULL," +
         "`charge_player` VARCHAR(36) NOT NULL," +
-        "`charge_currency` VARCHAR(250) NOT NULL," +
+        "`charge_currency` VARCHAR(100) NOT NULL," +
         "`charge_world` VARCHAR(36) NOT NULL," +
         "`charge_amount` VARCHAR(41) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL," +
@@ -184,7 +191,7 @@ public class H2Provider extends TNEDataProvider {
   public UUID loadID(String username) {
     String table = manager.getPrefix() + "_ECOIDS";
     try {
-      int idIndex = h2().executePreparedQuery("SELECT * FROM " + table + " WHERE username = ?", new Object[] {
+      int idIndex = h2().executePreparedQuery("SELECT uuid FROM " + table + " WHERE username = ?", new Object[] {
           username
       });
       if(h2().results(idIndex).next()) {
@@ -204,7 +211,7 @@ public class H2Provider extends TNEDataProvider {
 
     String table = manager.getPrefix() + "_ECOIDS";
     try {
-      int idIndex = h2().executeQuery("SELECT * FROM " + table + ";");
+      int idIndex = h2().executeQuery("SELECT username, uuid FROM " + table + ";");
       while (h2().results(idIndex).next()) {
         ids.put(h2().results(idIndex).getString("username"), UUID.fromString(h2().results(idIndex).getString("uuid")));
       }
@@ -260,7 +267,7 @@ public class H2Provider extends TNEDataProvider {
   public TNEAccount loadAccount(UUID id) {
     String table = manager.getPrefix() + "_USERS";
     try {
-      int accountIndex = h2().executePreparedQuery("SELECT * FROM " + table + " WHERE uuid = ?", new Object[]{
+      int accountIndex = h2().executePreparedQuery("SELECT uuid, display_name, account_number, account_status, joined_date, last_online, account_player FROM " + table + " WHERE uuid = ?", new Object[]{
           id.toString()
       });
       if (h2().results(accountIndex).next()) {
@@ -273,7 +280,7 @@ public class H2Provider extends TNEDataProvider {
         account.setPlayerAccount(h2().results(accountIndex).getBoolean("account_player"));
 
         String balancesTable = manager.getPrefix() + "_BALANCES";
-        int balancesIndex = h2().executePreparedQuery("SELECT * FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
+        int balancesIndex = h2().executePreparedQuery("SELECT world, currency, balance FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
         while (h2().results(balancesIndex).next()) {
           account.setHoldings(h2().results(balancesIndex).getString("world"), h2().results(balancesIndex).getString("currency"), new BigDecimal(h2().results(balancesIndex).getString("balance")));
         }
@@ -317,7 +324,7 @@ public class H2Provider extends TNEDataProvider {
                 "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
             new Object[]{
                 account.identifier().toString(),
-                TNE.instance().getServer().getServerName(),
+                TNE.instance().getServerName(),
                 world,
                 currency,
                 balance.toPlainString(),
@@ -340,7 +347,7 @@ public class H2Provider extends TNEDataProvider {
   public TNETransaction loadTransaction(UUID id) {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     try {
-      int transIndex = h2().executePreparedQuery("SELECT * FROM " + table + " WHERE trans_id = ?", new Object[]{
+      int transIndex = h2().executePreparedQuery("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM " + table + " WHERE trans_id = ?", new Object[]{
           id.toString()
       });
       if (h2().results(transIndex).next()) {
@@ -352,7 +359,7 @@ public class H2Provider extends TNEDataProvider {
             h2().results(transIndex).getLong("trans_time"));
 
         String chargesTable = manager.getPrefix() + "_CHARGES";
-        int chargesIndex = h2().executePreparedQuery("SELECT * FROM " + chargesTable + " WHERE charge_transaction = ?", new Object[]{transaction.transactionID().toString()});
+        int chargesIndex = h2().executePreparedQuery("SELECT charge_player, charge_world, charge_amount, charge_type, charge_currency FROM " + chargesTable + " WHERE charge_transaction = ?", new Object[]{transaction.transactionID().toString()});
         while (h2().results(chargesIndex).next()) {
           String player = h2().results(chargesIndex).getString("charge_player");
           boolean initiator = player.equalsIgnoreCase(transaction.initiator());

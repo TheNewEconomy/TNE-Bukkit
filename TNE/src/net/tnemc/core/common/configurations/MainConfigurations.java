@@ -45,9 +45,10 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Metrics", true);
     configurations.put("Core.Modules.Enabled", true);
     configurations.put("Core.Debug", false);
+    configurations.put("Core.Server.Name", "Main Server");
     configurations.put("Core.Server.Consolidate", false);
     configurations.put("Core.Server.Account.Enabled", true);
-    configurations.put("Core.Server.Account.Name", "Server Account");
+    configurations.put("Core.Server.Account.Name", "Server_Account");
     configurations.put("Core.Server.Account.Balance", 500);
     configurations.put("Core.Server.ThirdParty.Town", "town-");
     configurations.put("Core.Server.ThirdParty.Nation", "nation-");

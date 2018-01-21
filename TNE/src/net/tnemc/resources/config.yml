@@ -31,14 +31,17 @@ Core:
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
+        #The name of this server for data-related purposes. Max length is 100 characters.
+        Name: "Main Server"
+
         #All configurations relating to the server's economy account.
         Account:
 
             #Whether or not the server account has been enabled.
             Enabled: true
 
-            #The name of the server account.
-            Name: Server Account
+            #The name of the server account. Max length is 100 characters.
+            Name: "Server_Account"
 
             #The starting balance for the server account.
             Balance: 500
@@ -98,7 +101,7 @@ Core:
 
         Default:
 
-            #Configurations relating to this TNECurrency's name for formatting purposes.
+            #Configurations relating to this TNECurrency's name for formatting purposes. Max length is 100 characters.
             Name:
 
                #Configurations relating to the major name.
