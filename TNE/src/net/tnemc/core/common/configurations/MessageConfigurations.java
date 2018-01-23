@@ -58,7 +58,6 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Admin.Exists", "<red>A player with that name already exists.");
     configurations.put("Messages.Admin.Created", "<white>Successfully created account for $player.");
     configurations.put("Messages.Admin.Deleted", "<white>Successfully deleted account for $player.");
-    configurations.put("Messages.Admin.Purge", "<white>Successfully purged all economy accounts.");
     configurations.put("Messages.Admin.PurgeWorld", "<white>Successfully purged economy accounts in $world.");
     configurations.put("Messages.Admin.StatusChanged", "<white>Status for $player has been changed to <green>$status<white>.");
     configurations.put("Messages.Admin.Status", "<white>Status for $player is <green>$status<white>.");

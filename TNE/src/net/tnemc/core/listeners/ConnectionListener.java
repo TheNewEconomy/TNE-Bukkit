@@ -4,6 +4,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
@@ -23,7 +24,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -114,15 +114,15 @@ public class ConnectionListener implements Listener {
     boolean noEconomy = TNE.instance().getWorldManager(world) == null ||TNE.instance().getWorldManager(world).isEconomyDisabled();
     if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
+        WorldManager manager = TNE.instance().getWorldManager(world);
         TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("worldchange"));
-        //TODO: Grab world change amount.
-        transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world), new BigDecimal(0.0)));
+        transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, manager.getChangeFeeCurrency()), manager.getChangeFee()));
         TransactionResult result = TNE.transactionManager().perform(transaction);
         if(!result.proceed()) {
           player.teleport(event.getFrom().getSpawnLocation());
         }
         Message message = new Message(result.recipientMessage());
-        message.addVariable("$amount", CurrencyFormatter.format(WorldFinder.getWorld(player), new BigDecimal(0.0)));
+        message.addVariable("$amount", CurrencyFormatter.format(WorldFinder.getWorld(player), manager.getChangeFee()));
         message.translate(world, player);
       }
       TNEAccount.getAccount(id.toString()).initializeHoldings(world);

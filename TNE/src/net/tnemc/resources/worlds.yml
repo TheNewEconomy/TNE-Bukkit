@@ -16,9 +16,15 @@ Worlds:
 
         #Whether or not to completely disable economy features for this world
         DisableEconomy: true
-        
-        #How much it costs to enter this world if ChangeFee is enabled in the main configuration
-        ChangeFee: 10.0
+
+        #All configurations relating to World ChangeFees
+        ChangeFee:
+
+           #The currency for which the ChangeFee is of.
+           Currency: "ExampleCurrency"
+
+           #How much it costs to enter this world if ChangeFee is enabled in the main configuration
+           Amount: 10.0
 
         #Configurations related to information sharing between worlds
         Share:

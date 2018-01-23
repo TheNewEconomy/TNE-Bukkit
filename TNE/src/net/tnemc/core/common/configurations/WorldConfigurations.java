@@ -5,6 +5,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -58,6 +59,13 @@ public class WorldConfigurations extends Configuration {
         if(!configurationFile.isConfigurationSection(node) && !node.contains("Worlds." + world + ".TNECurrency")) {
           manager.setConfiguration(node, configurationFile.get(node));
         }
+      }
+
+      if(configurationFile.contains("Worlds." + world + ".ChangeFee")) {
+        String currency = configurationFile.getString("Worlds." + world + ".ChangeFee.Currency", "Default");
+        BigDecimal amount = new BigDecimal(configurationFile.getString("Worlds." + world + ".ChangeFee.Amount", "10.0"));
+        manager.setChangeFeeCurrency(currency);
+        manager.setChangeFee(amount);
       }
 
       List<String> balances = new ArrayList<>();

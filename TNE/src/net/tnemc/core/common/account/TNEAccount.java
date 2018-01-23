@@ -110,6 +110,7 @@ public class TNEAccount implements Account {
     }
 
     holdings.put(world, worldHoldings);
+    TNE.manager().addAccount(this);
     TNE.debug("=====END Account.setHoldings =====");
   }
 

@@ -10,6 +10,7 @@ import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -51,6 +52,7 @@ public class EconomyManager {
 
   public EconomyManager() {
     this.accounts.setListener(new AccountListener());
+    TNE.instance().registerEventMap(accounts);
     currencyManager = new CurrencyManager();
     transactionManager = new TransactionManager();
   }
@@ -107,11 +109,25 @@ public class EconomyManager {
   }
 
   public void purge(String world) {
-    //TODO: Data handling.
-  }
+    Iterator<TNEAccount> it = accounts.values().iterator();
 
-  public void purgeAll() {
-    //TODO: Data handling.
+    while(it.hasNext()) {
+      TNEAccount account = it.next();
+      boolean remove = true;
+
+      for(Map.Entry<String, BigDecimal> balance : account.getWorldHoldings(world).getHoldings().entrySet()) {
+        if(!balance.getValue().equals(TNE.manager().currencyManager().get(world, balance.getKey()).defaultBalance())) {
+          remove = false;
+        }
+      }
+
+      if(remove) {
+        TNE.manager().getAccounts().remove(account.identifier(), false);
+        TNE.uuidManager().remove(account.displayName());
+        TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount(account.identifier());
+        it.remove();
+      }
+    }
   }
 
   public LinkedHashSet<Object> parseTop(String currency, String world, Integer limit) {

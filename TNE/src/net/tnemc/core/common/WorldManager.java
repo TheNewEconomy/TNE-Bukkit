@@ -3,6 +3,7 @@ package net.tnemc.core.common;
 
 import net.tnemc.core.common.currency.TNECurrency;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -31,6 +32,8 @@ public class WorldManager {
   private String world;
   private String balanceWorld = null;
   private String configurationWorld = null;
+  private String changeFeeCurrency = "Default";
+  private BigDecimal changeFee = new BigDecimal(0.0);
 
   public WorldManager(String world) {
     this.world = world;
@@ -47,6 +50,10 @@ public class WorldManager {
 
   public TNECurrency getCurrency(String currency) {
     return currencies.get(currency);
+  }
+
+  public void removeCurrency(String currency) {
+    currencies.remove(currency);
   }
 
   public Collection<TNECurrency> getCurrencies() {
@@ -111,5 +118,21 @@ public class WorldManager {
 
   public void setConfigurationWorld(String configurationWorld) {
     this.configurationWorld = configurationWorld;
+  }
+
+  public String getChangeFeeCurrency() {
+    return changeFeeCurrency;
+  }
+
+  public void setChangeFeeCurrency(String changeFeeCurrency) {
+    this.changeFeeCurrency = changeFeeCurrency;
+  }
+
+  public BigDecimal getChangeFee() {
+    return changeFee;
+  }
+
+  public void setChangeFee(BigDecimal changeFee) {
+    this.changeFee = changeFee;
   }
 }

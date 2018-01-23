@@ -45,6 +45,7 @@ public class TransactionManager {
 
   public TransactionManager() {
     this.transactions.setListener(new TransactionListener());
+    TNE.instance().registerEventMap(transactions);
     loadResults();
     loadTypes();
   }

@@ -286,12 +286,22 @@ public class CurrencyManager {
     return currencies;
   }
 
-  public void rename(String world, String currency, String newName) {
-    //TODO: Data Handling.
+  public void rename(String world, String currency, String newName, boolean renameInternal) {
+    if(renameInternal && TNE.instance().getWorldManager(world).containsCurrency(currency)) {
+      TNECurrency reference = get(world, currency);
+      reference.setSingle(newName);
+      TNE.instance().getWorldManager(world).removeCurrency(currency);
+      TNE.instance().getWorldManager(world).addCurrency(reference);
+    }
+    TNE.manager().getAccounts().forEach((id, account)->{
+      account.setHoldings(world, newName, account.getHoldings(world, currency));
+      account.getWorldHoldings(world).remove(currency);
+      TNE.manager().addAccount(account);
+    });
   }
 
   public void register(net.tnemc.core.economy.currency.Currency currency) {
-    //TODO: Register currency.
+    addCurrency(TNE.instance().defaultWorld, TNECurrency.fromReserve(currency));
   }
 
   public ItemStack createNote(UUID id, String currency, String world, BigDecimal amount) {

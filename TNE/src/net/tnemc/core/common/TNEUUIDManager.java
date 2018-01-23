@@ -3,6 +3,7 @@ package net.tnemc.core.common;
 import com.github.tnerevival.core.UUIDManager;
 import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.core.utils.Utilities;
+import net.tnemc.core.TNE;
 import net.tnemc.core.listeners.collections.IDListener;
 
 import java.util.Map;
@@ -27,10 +28,11 @@ import java.util.UUID;
  */
 public class TNEUUIDManager extends UUIDManager {
 
-  EventMap<String, UUID> uuids = new EventMap<>();
+  private EventMap<String, UUID> uuids = new EventMap<>();
 
   public TNEUUIDManager() {
     uuids.setListener(new IDListener());
+    TNE.instance().registerEventMap(uuids);
   }
 
 

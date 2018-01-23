@@ -51,4 +51,8 @@ public class WorldHoldings {
     }
     return false;
   }
+
+  public void remove(String currency) {
+    holdings.remove(currency);
+  }
 }

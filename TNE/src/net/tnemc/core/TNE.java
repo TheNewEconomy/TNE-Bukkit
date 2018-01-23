@@ -325,6 +325,14 @@ public class TNE extends TNELib {
     return (TNEAPI)api;
   }
 
+  public void registerEventList(EventList list) {
+    cacheLists.add(list);
+  }
+
+  public void registerEventMap(EventMap map) {
+    cacheMaps.add(map);
+  }
+
   public Economy_TheNewEconomy vault() {
     return vaultEconomy;
   }
@@ -410,6 +418,7 @@ public class TNE extends TNELib {
     }
   }
   public static void debug(String message) {
+    //System.out.println(message);
     try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug.log"), true));
       writer.write(message + System.getProperty("line.separator"));

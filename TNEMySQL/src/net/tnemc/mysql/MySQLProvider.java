@@ -67,7 +67,7 @@ public class MySQLProvider extends TNEDataProvider {
 
 
       result = connection.getMetaData().getTables(null, null, table, null);
-
+      connection.close();
       return !result.next();
     } catch (Exception e) {
       e.printStackTrace();
@@ -172,7 +172,10 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public DatabaseConnector connector() {
-    sql.connect(manager);
+    if(!sql.connected(manager)) {
+      TNE.debug("Connecting to MySQL");
+      sql.connect(manager);
+    }
     return sql;
   }
 
@@ -301,6 +304,7 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void saveAccount(TNEAccount account) {
+    TNE.debug("Saving account: " + account.displayName());
     String table = manager.getPrefix() + "_USERS";
     mysql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, display_name, joined_date, last_online, account_number, account_status, account_player) VALUES(?, ?, ?, ?, ?, ?, ?)" +
             " ON DUPLICATE KEY UPDATE display_name = ?, joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_player = ?",

@@ -77,7 +77,7 @@ public class CurrencyRenameCommand extends TNECommand {
         return false;
       }
 
-      TNE.manager().currencyManager().rename(world, currency, newName);
+      TNE.manager().currencyManager().rename(world, currency, newName, true);
       Message m = new Message("Messages.Currency.Renamed");
       m.addVariable("$currency", currency);
       m.addVariable("$new_name", newName);
