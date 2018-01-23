@@ -62,7 +62,6 @@ Messages:
        Exists: <red>A player with that name already exists.
        Created: <white>Successfully created account for $player.
        Deleted: <white>Successfully deleted account for $player.
-       Purge: <white>Successfully purged all economy accounts.
        PurgeWorld: <white>Successfully purged economy accounts in $world.
        StatusChange: <white>Status for $player has been changed to <green>$status<white>.
        Status: <white>Status for $player is <green>$status<white>.

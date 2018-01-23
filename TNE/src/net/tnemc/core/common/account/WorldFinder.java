@@ -33,6 +33,7 @@ public class WorldFinder {
       return TNE.instance().defaultWorld;
     }
     TNE.debug("=====END WorldFinder.getWorld =====");
+    if(!TNE.configurations().getBoolean("Core.Multiworld")) return TNE.instance().defaultWorld;
     return player.getWorld().getName();
   }
 
