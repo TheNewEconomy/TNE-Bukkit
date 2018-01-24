@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -67,7 +68,7 @@ public class MoneyBalanceCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (arguments.length >= 1)? arguments[0] : WorldFinder.getWorld(sender);
+    String world = (arguments.length >= 1)? arguments[0] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     TNE.debug("MoneyBalanceCommand.execute, World: " + world);
     if(TNE.manager() == null) TNE.debug("Economy Manager is null");
     if(TNE.manager().currencyManager() == null) TNE.debug("TNECurrency Manager is null");

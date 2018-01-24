@@ -3,6 +3,7 @@ package net.tnemc.core.commands.transaction;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 import org.bukkit.command.CommandSender;
@@ -62,7 +63,7 @@ public class TransactionInfoCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String world = WorldFinder.getWorld(sender);
+      String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID uuid = null;
       try {
         uuid = UUID.fromString(arguments[0]);

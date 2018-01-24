@@ -6,6 +6,7 @@ import com.github.tnerevival.core.collection.paginate.Page;
 import com.github.tnerevival.core.collection.paginate.Paginator;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
@@ -66,7 +67,7 @@ public class TransactionAwayCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = WorldFinder.getWorld(sender);
+    String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     Player player = getPlayer(sender);
     int page = 1;
 
@@ -87,7 +88,7 @@ public class TransactionAwayCommand extends TNECommand {
       Message transactions = new Message("Messages.Transaction.Away");
       transactions.addVariable("$page", page + "");
       transactions.addVariable("$page_top", paginator.getMaxPages() + "");
-      transactions.translate(WorldFinder.getWorld(sender), sender);
+      transactions.translate(world, sender);
 
       for(Object obj : p.getElements()) {
         if(obj != null && obj instanceof UUID) {
@@ -96,7 +97,7 @@ public class TransactionAwayCommand extends TNECommand {
           Message entry = new Message("Messages.Transaction.AwayEntry");
           entry.addVariable("$id", transaction.transactionID().toString());
           entry.addVariable("$type", transaction.type().name());
-          entry.translate(WorldFinder.getWorld(sender), sender);
+          entry.translate(world, sender);
         }
       }
       return true;

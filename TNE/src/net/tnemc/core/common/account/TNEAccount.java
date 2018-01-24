@@ -2,6 +2,7 @@ package net.tnemc.core.common.account;
 
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.history.AccountHistory;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -99,7 +100,7 @@ public class TNEAccount implements Account {
     worldHoldings.setHoldings(currency, newHoldings);
 
     TNE.debug("Currency: " + currency);
-    if(!skipInventory && MISCUtils.isOnline(id) && WorldFinder.getWorld(id).equalsIgnoreCase(world)) {
+    if(!skipInventory && MISCUtils.isOnline(id) && WorldFinder.getWorld(id, WorldVariant.BALANCE).equalsIgnoreCase(world)) {
       TNE.debug("Skip: " + skipInventory);
       TNE.debug("Online: " + MISCUtils.isOnline(id));
       TNECurrency cur = TNE.manager().currencyManager().get(world, currency);

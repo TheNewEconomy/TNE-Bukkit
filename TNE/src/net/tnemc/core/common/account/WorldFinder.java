@@ -2,6 +2,7 @@ package net.tnemc.core.common.account;
 
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,7 +27,7 @@ import java.util.UUID;
  */
 public class WorldFinder {
 
-  public static String getWorld(Player player) {
+  public static String getWorld(Player player, WorldVariant variant) {
     TNE.debug("=====START WorldFinder.getWorld =====");
     if(player == null) {
       TNE.debug("Player is null");
@@ -34,24 +35,29 @@ public class WorldFinder {
     }
     TNE.debug("=====END WorldFinder.getWorld =====");
     if(!TNE.configurations().getBoolean("Core.Multiworld")) return TNE.instance().defaultWorld;
+    String actualWorld = player.getWorld().getName();
+
+    if(variant.equals(WorldVariant.BALANCE)) return TNE.instance().getWorldManager(actualWorld).getBalanceWorld();
+    if(variant.equals(WorldVariant.CONFIGURATION)) return TNE.instance().getWorldManager(actualWorld).getConfigurationWorld();
+
     return player.getWorld().getName();
   }
 
-  public static String getWorld(CommandSender sender) {
+  public static String getWorld(CommandSender sender, WorldVariant variant) {
     if(!(sender instanceof Player)) return TNE.instance().defaultWorld;
-    return getWorld((Player)sender);
+    return getWorld((Player)sender, variant);
   }
 
-  public static String getWorld(String identifier) {
-    return getWorld(IDFinder.getPlayer(identifier));
+  public static String getWorld(String identifier, WorldVariant variant) {
+    return getWorld(IDFinder.getPlayer(identifier), variant);
   }
 
-  public static String getWorld(UUID id) {
-    return getWorld(id.toString());
+  public static String getWorld(UUID id, WorldVariant variant) {
+    return getWorld(id.toString(), variant);
   }
 
   public static String getBalanceWorld(Player player) {
-    return TNE.instance().getWorldManager(getWorld(player)).getBalanceWorld();
+    return getWorld(player, WorldVariant.BALANCE);
   }
 
   public static String getBalanceWorld(String identifier) {
@@ -59,7 +65,7 @@ public class WorldFinder {
   }
 
   public static String getConfigurationWorld(Player player) {
-    return TNE.instance().getWorldManager(getWorld(player)).getConfigurationWorld();
+    return getWorld(player, WorldVariant.CONFIGURATION);
   }
 
   public static String getConfigurationWorld(String identifier) {

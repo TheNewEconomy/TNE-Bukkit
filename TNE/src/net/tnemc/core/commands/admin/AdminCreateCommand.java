@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
@@ -63,7 +64,7 @@ public class AdminCreateCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String world = WorldFinder.getWorld(sender);
+      String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID id = IDFinder.getID(arguments[0]);
       if(!TNE.manager().exists(id)) {
         BigDecimal initial = new BigDecimal(0.0);

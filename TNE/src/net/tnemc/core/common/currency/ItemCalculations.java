@@ -1,6 +1,7 @@
 package net.tnemc.core.common.currency;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MaterialUtils;
@@ -55,7 +56,7 @@ public class ItemCalculations {
       BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
       String differenceString = difference.toPlainString();
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(account.identifier()), account.identifier());
+      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(account.identifier(), WorldVariant.CONFIGURATION), account.identifier());
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
 
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");

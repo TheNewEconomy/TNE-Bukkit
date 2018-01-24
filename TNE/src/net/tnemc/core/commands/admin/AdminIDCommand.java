@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.command.CommandSender;
 
@@ -58,7 +59,7 @@ public class AdminIDCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String world = WorldFinder.getWorld(sender);
+      String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
 
       if(TNE.manager().exists(IDFinder.getID(arguments[0]))) {
         Message m = new Message("Messages.Admin.ID");

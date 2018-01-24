@@ -3,6 +3,7 @@ package net.tnemc.core.commands.config;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.command.CommandSender;
 
@@ -58,6 +59,7 @@ public class ConfigGetCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
       String node = arguments[0];
+      String world = WorldFinder.getWorld(sender, WorldVariant.CONFIGURATION);
       String configuration = (arguments.length >= 2)? arguments[1] : "all";
       boolean valid = (configuration.equalsIgnoreCase("all"))? TNE.configurations().hasNode(node,
                                                                               TNE.configurations().fromPrefix(
@@ -67,7 +69,7 @@ public class ConfigGetCommand extends TNECommand {
         Message message = new Message("Messages.Configuration.NoSuch");
         message.addVariable("$node", node);
         message.addVariable("$configuration", configuration);
-        message.translate(WorldFinder.getWorld(sender), sender);
+        message.translate(world, sender);
         return false;
       }
       Object value = (configuration.equalsIgnoreCase("all"))? TNE.configurations().getValue(node)
@@ -77,7 +79,7 @@ public class ConfigGetCommand extends TNECommand {
       message.addVariable("$node", node);
       message.addVariable("$configuration", configuration);
       message.addVariable("$value", value.toString());
-      message.translate(WorldFinder.getWorld(sender), sender);
+      message.translate(world, sender);
       return true;
     }
     help(sender);

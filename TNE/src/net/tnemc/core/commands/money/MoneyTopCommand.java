@@ -6,6 +6,7 @@ import com.github.tnerevival.core.collection.paginate.Page;
 import com.github.tnerevival.core.collection.paginate.Paginator;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.TopBalance;
@@ -68,7 +69,7 @@ public class MoneyTopCommand extends TNECommand {
 
     int page = 1;
     int limit = (parsed.containsKey("limit") && MISCUtils.isInteger(parsed.get("limit")))? Integer.valueOf(parsed.get("limit")) : 10;
-    String world = (parsed.containsKey("world"))? WorldFinder.getWorld(parsed.get("world")) : WorldFinder.getWorld(sender);
+    String world = (parsed.containsKey("world"))? WorldFinder.getWorld(parsed.get("world"), WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     String currency = (parsed.containsKey("currency") &&
         TNE.manager().currencyManager().contains(world, parsed.get("currency")) ||
         parsed.containsKey("currency") && parsed.get("currency").equalsIgnoreCase("overall")
@@ -90,7 +91,7 @@ public class MoneyTopCommand extends TNECommand {
     Message top = new Message("Messages.Money.Top");
     top.addVariable("$page", page + "");
     top.addVariable("$page_top", paginator.getMaxPages() + "");
-    top.translate(WorldFinder.getWorld(sender), sender);
+    top.translate(world, sender);
 
     for(Object o : p.getElements()) {
       TopBalance bal = (TopBalance)o;

@@ -3,6 +3,7 @@ package net.tnemc.core.listeners;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
@@ -62,7 +63,7 @@ public class PlayerListener implements Listener {
     TNE.debug("=====START PlayerListener.onPickup =====");
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
-    String world = WorldFinder.getWorld(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
 
     if(!noEconomy) {
@@ -85,7 +86,7 @@ public class PlayerListener implements Listener {
   public void onDrop(final PlayerDropItemEvent event) {
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
-    String world = WorldFinder.getWorld(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
 
     if(!noEconomy) {
@@ -103,7 +104,7 @@ public class PlayerListener implements Listener {
     TNE.debug("=====START PlayerListener.onInventoryClose =====");
     Player player = (Player)event.getPlayer();
     UUID id = IDFinder.getID(player);
-    String world = WorldFinder.getWorld(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
 
     if(!noEconomy) {
@@ -120,7 +121,7 @@ public class PlayerListener implements Listener {
     TNE.debug("=====START PlayerListener.onInteractEntityEvent =====");
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
-    String world = WorldFinder.getWorld(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     TNE.debug("World: " + world);
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
 
@@ -166,7 +167,7 @@ public class PlayerListener implements Listener {
     TNE.debug("=====START PlayerListener.onInteract =====");
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
-    String world = WorldFinder.getWorld(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     if(player.getDisplayName().toLowerCase().contains("thenetyeti")
         || player.getDisplayName().toLowerCase().contains("growlf")) {
       player.playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10f, 1f);

@@ -3,6 +3,7 @@ package net.tnemc.core.commands.currency;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.command.CommandSender;
 
@@ -57,7 +58,7 @@ public class CurrencyRenameCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
-      String world = WorldFinder.getWorld(sender);
+      String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currency = arguments[0];
       String newName = arguments[1];
 

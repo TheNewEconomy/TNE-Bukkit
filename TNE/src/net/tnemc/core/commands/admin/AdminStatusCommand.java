@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
@@ -82,7 +83,7 @@ public class AdminStatusCommand extends TNECommand {
         String message = (changed)? "Messages.Admin.StatusChange" : "Messages.Admin.Status";
 
         if(changed && Bukkit.getPlayer(target) != null && Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(target))) {
-          String world = WorldFinder.getWorld(target);
+          String world = WorldFinder.getWorld(target, WorldVariant.ACTUAL);
           Message m = new Message("Messages.Account.StatusChange");
           m.addVariable("$status", status.getName());
           m.translate(world, target);

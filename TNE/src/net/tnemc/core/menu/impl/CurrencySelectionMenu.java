@@ -2,6 +2,7 @@ package net.tnemc.core.menu.impl;
 
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.menu.Menu;
@@ -45,7 +46,7 @@ public class CurrencySelectionMenu extends Menu {
 
     TNE.debug("Player: " + player);
     TNE.debug("World: " + world);
-    if(world == null) world = WorldFinder.getWorld(player);
+    if(world == null) world = WorldFinder.getWorld(player, WorldVariant.ACTUAL);
     int i = 1;
     for(TNECurrency currency : TNE.instance().api().getCurrencies(world)) {
       icons.put(i, new CurrencyIcon(currency.name(), i, switchMenu));

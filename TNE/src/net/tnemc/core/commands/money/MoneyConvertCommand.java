@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -70,13 +71,13 @@ public class MoneyConvertCommand extends TNECommand {
     Player player = getPlayer(sender);
     if(arguments.length >= 2) {
       UUID id = IDFinder.getID(sender);
-      String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender);
+      String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
       TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
-      TNECurrency from = TNE.manager().currencyManager().get(WorldFinder.getWorld(sender));
-      String worldFrom = WorldFinder.getWorld(sender);
+      TNECurrency from = TNE.manager().currencyManager().get(WorldFinder.getWorld(sender, WorldVariant.BALANCE));
+      String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       if(arguments.length >= 3) {
-        worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : WorldFinder.getWorld(sender);
+        worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
         from = TNE.manager().currencyManager().get(worldFrom, currencyFrom);
       }
@@ -87,7 +88,7 @@ public class MoneyConvertCommand extends TNECommand {
         max.addVariable("$currency", to.name());
         max.addVariable("$world", worldTo);
         max.addVariable("$player", player.getDisplayName());
-        max.translate(WorldFinder.getWorld(sender), player);
+        max.translate(worldTo, player);
         return false;
       }
 
@@ -104,7 +105,7 @@ public class MoneyConvertCommand extends TNECommand {
       message.addVariable("$worldFrom", worldFrom);
       message.addVariable("$currencyFrom", from.name());
       message.addVariable("$amount", CurrencyFormatter.format(currencyTo, worldTo, transaction.recipientCharge().getEntry().getAmount()));
-      message.translate(WorldFinder.getWorld(sender), IDFinder.getID(sender));
+      message.translate(worldTo, IDFinder.getID(sender));
       return result.proceed();
     }
     help(sender);

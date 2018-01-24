@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.command.CommandSender;
 
@@ -61,13 +62,13 @@ public class ConfigTNEGetCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
       String node = arguments[0];
-      String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender);
+      String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.CONFIGURATION);
       String player = (arguments.length >= 3)? arguments[2] : IDFinder.getID(sender).toString();
 
       if(!TNE.configurations().hasConfiguration(node)) {
         Message message = new Message("Messages.Configuration.NoSuch");
         message.addVariable("$node", node);
-        message.translate(WorldFinder.getWorld(sender), sender);
+        message.translate(world, sender);
         return false;
       }
 
@@ -75,7 +76,7 @@ public class ConfigTNEGetCommand extends TNECommand {
       Message message = new Message("Messages.Configuration.Get");
       message.addVariable("$node", node);
       message.addVariable("$value", value.toString());
-      message.translate(WorldFinder.getWorld(sender), sender);
+      message.translate(world, sender);
       return true;
     }
     help(sender);

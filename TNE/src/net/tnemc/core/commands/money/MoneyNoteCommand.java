@@ -4,6 +4,7 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -68,7 +69,7 @@ public class MoneyNoteCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String world = WorldFinder.getWorld(sender);
+      String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
       UUID id = IDFinder.getID(sender);
@@ -79,7 +80,7 @@ public class MoneyNoteCommand extends TNECommand {
         max.addVariable("$currency", currency.name());
         max.addVariable("$world", world);
         max.addVariable("$player", getPlayer(sender).getDisplayName());
-        max.translate(WorldFinder.getWorld(sender), sender);
+        max.translate(world, sender);
         return false;
       }
 
