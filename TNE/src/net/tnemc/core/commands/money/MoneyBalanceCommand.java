@@ -14,6 +14,8 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -76,6 +78,8 @@ public class MoneyBalanceCommand extends TNECommand {
     String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
     TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
     UUID id = IDFinder.getID(sender);
+
+    Map<String, BigDecimal> balances = new HashMap<>();
 
 
     TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("inquiry"));

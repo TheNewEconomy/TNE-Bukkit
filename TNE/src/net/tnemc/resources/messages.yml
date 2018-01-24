@@ -3,7 +3,7 @@
 # License: AGPLv3
 # If you would like to contribute to the plugin
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
-# To view a commented version of this file, visit http://git.hellyard.com/TheNewEconomy/Economy/src/master/TNE/src/net/tnemc/resources/messages.yml.
+# To view a commented version of this file, visit https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/messages.yml.
 #All configurable messages in TNE
 # Colour characters are supported, just use the colour code preceded by an ampersand character('&')
 # An alternate colouring format is also viable, just oldtype out the name of the colour inside a less than and greater than symbol
@@ -37,40 +37,40 @@
 Messages:
     
     Command:
-       Unable: <red>I'm sorry, but you're not allowed to use that command.
-       None: <yellow>Command $command $arguments could not be found! Try using $command help.
-       InActive: <red>Command $command $arguments has been deactivated! Try using $command help.
-       Charge: <white>You have been charged <gold>$amount<white> for using $command.
+       Unable: "<red>I'm sorry, but you're not allowed to use that command."
+       None: "<yellow>Command $command $arguments could not be found! Try using $command help."
+       InActive: "<red>Command $command $arguments has been deactivated! Try using $command help."
+       Charge: "<white>You have been charged <gold>$amount<white> for using $command."
     
     General:
-       NoPerm: <red>I'm sorry, but you do not have permission to do that.
-       Saved: <yellow>Successfully saved all TNE Data!
-       NoPlayer: <red>Unable to locate player "$player"!
-       Disabled: <red>Economy features are currently disabled in this world!
+       NoPerm: "<red>I'm sorry, but you do not have permission to do that."
+       Saved: "<yellow>Successfully saved all TNE Data!"
+       NoPlayer: "<red>Unable to locate player \"$player\"!"
+       Disabled: "<red>Economy features are currently disabled in this world!"
 
     Item:
-      Invalid: <red>Invalid item name and/or durability combination entered.
-      InvalidAmount: <red>Invalid item amount entered.
+      Invalid: "<red>Invalid item name and/or durability combination entered."
+      InvalidAmount: "<red>Invalid item amount entered."
        
     Admin:
-       NoHoldings: <red>$player has no holdings for the world "$world"!
-       Holdings: <white>$player currently has <gold>$amount <white>for world "$world"!
-       NoTransactions: <white>$player has no transactions to display.
-       Configuration: <white>The value of $node is currently $value.
-       SetConfiguration: <white>The value of $node has been set to $value.
-       ID: <white>The UUID for $player is $id.
-       Exists: <red>A player with that name already exists.
-       Created: <white>Successfully created account for $player.
-       Deleted: <white>Successfully deleted account for $player.
-       PurgeWorld: <white>Successfully purged economy accounts in $world.
-       StatusChange: <white>Status for $player has been changed to <green>$status<white>.
-       Status: <white>Status for $player is <green>$status<white>.
-       Reset: <white>Performed an economy reset using these parameters - world = $world, TNECurrency = $currency, and player = $player.
+       NoHoldings: "<red>$player has no holdings for the world \"$world\"!"
+       Holdings: "<white>$player currently has <gold>$amount <white>for world \"$world\"!"
+       NoTransactions: "<white>$player has no transactions to display."
+       Configuration: "<white>The value of $node is currently $value."
+       SetConfiguration: "<white>The value of $node has been set to $value."
+       ID: "<white>The UUID for $player is $id."
+       Exists: "<red>A player with that name already exists."
+       Created: "<white>Successfully created account for $player."
+       Deleted: "<white>Successfully deleted account for $player."
+       PurgeWorld: "<white>Successfully purged economy accounts in $world."
+       StatusChange: "<white>Status for $player has been changed to <green>$status<white>."
+       Status: "<white>Status for $player is <green>$status<white>."
+       Reset: "<white>Performed an economy reset using these parameters - world = $world, TNECurrency = $currency, and player = $player."
 
     Account:
-       Locked: <red>You can't do that with a locked account($player)!
-       NoTransactions: <white>You have no transactions to display at this time.
-       StatusChange: <white>Your account's status has been changed to <green>$status<white>.
+       Locked: "<red>You can't do that with a locked account($player)!"
+       NoTransactions: "<white>You have no transactions to display at this time."
+       StatusChange: "<white>Your account's status has been changed to <green>$status<white>."
 
     Configuration:
        NoSuch: "The configuration node $node does not exist."
@@ -99,29 +99,31 @@ Messages:
        Unloaded: "<white>Unloaded module \"$module\"."
 
     Money:
-       Failed: <red>Unable to process your transaction at this time.
-       Given: <white>You were given <gold>$amount<white>.
-       Received: <white>You were paid <gold>$amount <white> by <white> $player.
-       Taken: <white>$player took <gold>$amount<white> from you.
-       Insufficient: <red>I'm sorry, but you do not have <gold>$amount<red>.
-       Holdings: <white>You currently have <gold>$amount<white> on you.
-       Gave: <white>Successfully gave $player <gold>$amount<white>.
-       RecipientSet: <white>Your balance has been set to <gold>$amount<white> by $player.
-       Set: <white>Successfully set $player's balance to <gold>$amount<white>.
-       Paid: <white>Successfully paid $player <gold>$amount<white>.
-       Took: <white>Successfully took <gold>$amount<white> from $player.
-       Negative: <red>Amount cannot be a negative value!
-       SelfPay: <red>You can't pay yourself!
-       NoCurrency: <red>The TNECurrency "$currency" could not be found in "$world".
-       Noted: <white>A note has been given to you in the amount of <gold>$amount<white> for currency <green>$currency<white>.
-       NoteClaimed: <white>Successfully claimed note for currency <green>$currency<white> in the amount of <gold>$amount<white>.<newline>Your new balance is <gold>$balance<white>.
-       NoteFailed: <red>I'm sorry, but your attempt to claim that currency note failed!.
-       Converted: <white>Successfully exchanged "<gold>$from_amount<white>" to "<gold>$amount<white>".
+       Failed: "<red>Unable to process your transaction at this time."
+       Given: "<white>You were given <gold>$amount<white>."
+       Received: "<white>You were paid <gold>$amount <white> by <white> $player."
+       Taken: "<white>$player took <gold>$amount<white> from you."
+       Insufficient: "<red>I'm sorry, but you do not have <gold>$amount<red>."
+       HoldingsMulti: "<white>Your current balances are: "
+       HoldingsMultiSingle: "<white>$currency: <gold>$amount"
+       Holdings: "<white>You currently have <gold>$amount<white> on you."
+       Gave: "<white>Successfully gave $player <gold>$amount<white>."
+       RecipientSet: "<white>Your balance has been set to <gold>$amount<white> by $player."
+       Set: "<white>Successfully set $player's balance to <gold>$amount<white>."
+       Paid: "<white>Successfully paid $player <gold>$amount<white>."
+       Took: "<white>Successfully took <gold>$amount<white> from $player."
+       Negative: "<red>Amount cannot be a negative value!"
+       SelfPay: "<red>You can't pay yourself!"
+       NoCurrency: "<red>The currency \"$currency\" could not be found in \"$world\"."
+       Noted: "<white>A note has been given to you in the amount of <gold>$amount<white> for currency <green>$currency<white>."
+       NoteClaimed: "<white>Successfully claimed note for currency <green>$currency<white> in the amount of <gold>$amount<white>.<newline>Your new balance is <gold>$balance<white>."
+       NoteFailed: "<red>I'm sorry, but your attempt to claim that currency note failed!."
+       Converted: "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\"."
        Top: "<white>=====[<gold>Economy Top<white>]===== $page/$page_top"
-       InvalidFormat: <red>I'm sorry, but the monetary value you've entered is wrong.
-       ExceedsCurrencyMaximum: <red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance.
-       ExceedsPlayerMaximum: <red>I'm sorry, but performing this transaction will place your balance over the maximum allowed.
-       ExceedsOtherPlayerMaximum: <red>I'm sorry, but performing this transaction will place $player's balance over the maximum allowed.
+       InvalidFormat: "<red>I'm sorry, but the monetary value you've entered is wrong."
+       ExceedsCurrencyMaximum: "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance."
+       ExceedsPlayerMaximum: "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed."
+       ExceedsOtherPlayerMaximum: "<red>I'm sorry, but performing this transaction will place $player's balance over the maximum allowed."
 
     Transaction:
        Already: "<red>The transaction with the ID of $transaction has already been voided."
@@ -183,5 +185,5 @@ Messages:
           Void: "/transaction void <uuid> - Undoes a previously completed transaction.<newline>- UUID ~ The id of the transaction."
 
     World:
-       Change: <red>You have been charged <gold> $amount<red> for changing worlds.
-       ChangeFailed: <red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.
+       Change: "<red>You have been charged <gold> $amount<red> for changing worlds."
+       ChangeFailed: "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds."

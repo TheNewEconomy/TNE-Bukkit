@@ -95,6 +95,8 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Money.Received", "<white>You were paid <gold>$amount <white> by <white> $player.");
     configurations.put("Messages.Money.Taken", "<white>$player took <gold>$amount<white> from you.");
     configurations.put("Messages.Money.Insufficient", "<red>I'm sorry, but you do not have <gold>$amount<red>.");
+    configurations.put("Messages.Money.HoldingsMulti", "<white>Your current balances are: ");
+    configurations.put("Messages.Money.HoldingsMultiSingle", "<white>$currency: <gold>$amount");
     configurations.put("Messages.Money.Holdings", "<white>You currently have <gold>$amount<white> on you.");
     configurations.put("Messages.Money.Gave", "<white>Successfully gave $player <gold>$amount<white>.");
     configurations.put("Messages.Money.RecipientSet", "<white>Your balance has been set to <gold>$amount<white>.");
