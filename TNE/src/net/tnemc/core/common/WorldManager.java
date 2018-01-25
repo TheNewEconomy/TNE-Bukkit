@@ -1,6 +1,7 @@
 package net.tnemc.core.common;
 
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.TNECurrency;
 
 import java.math.BigDecimal;
@@ -42,10 +43,12 @@ public class WorldManager {
   }
 
   public void addCurrency(TNECurrency currency) {
+    TNE.debug("WorldManager.addCurrency: " + currency.name() + " Size: " + currencies.size());
     if(currency.isItem()) {
       itemCurrencies.add(currency.name());
     }
     currencies.put(currency.name(), currency);
+    TNE.debug("WorldManager.addCurrency: " + currency.name() + " Size: " + currencies.size());
   }
 
   public TNECurrency getCurrency(String currency) {
@@ -57,6 +60,7 @@ public class WorldManager {
   }
 
   public Collection<TNECurrency> getCurrencies() {
+    TNE.debug("WorldManager.getCurrencies: " + currencies.values().toString());
     return currencies.values();
   }
 

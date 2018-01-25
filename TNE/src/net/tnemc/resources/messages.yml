@@ -65,7 +65,7 @@ Messages:
        PurgeWorld: "<white>Successfully purged economy accounts in $world."
        StatusChange: "<white>Status for $player has been changed to <green>$status<white>."
        Status: "<white>Status for $player is <green>$status<white>."
-       Reset: "<white>Performed an economy reset using these parameters - world = $world, TNECurrency = $currency, and player = $player."
+       Reset: "<white>Performed an economy reset using these parameters - world = $world, currency = $currency, and player = $player."
 
     Account:
        Locked: "<red>You can't do that with a locked account($player)!"
@@ -86,8 +86,8 @@ Messages:
 
     Currency:
        List: "<white>The current currencies for $world are: $currencies."
-       Tiers: "<white>The TNECurrency \"$currency\" currently has these tiers;<newline>Major: $major_tiers<newline>Minor: $minor_tiers"
-       AlreadyExists: "<white>A TNECurrency with the name $currency already exists in world $world."
+       Tiers: "<white>The currency \"$currency\" currently has these tiers;<newline>Major: $major_tiers<newline>Minor: $minor_tiers"
+       AlreadyExists: "<white>A currency with the name $currency already exists in world $world."
        Renamed: "<white>Successfully renamed $currency in world $world to $new_Name."
 
     Module:
@@ -104,7 +104,7 @@ Messages:
        Received: "<white>You were paid <gold>$amount <white> by <white> $player."
        Taken: "<white>$player took <gold>$amount<white> from you."
        Insufficient: "<red>I'm sorry, but you do not have <gold>$amount<red>."
-       HoldingsMulti: "<white>Your current balances are: "
+       HoldingsMulti: "<white>Your current balances for world \"$world\" are: "
        HoldingsMultiSingle: "<white>$currency: <gold>$amount"
        Holdings: "<white>You currently have <gold>$amount<white> on you."
        Gave: "<white>Successfully gave $player <gold>$amount<white>."
@@ -140,7 +140,7 @@ Messages:
     Commands:
        Admin:
           Backup: "/tne backup - Creates a backup of all server data."
-          Balance: "/tne balance <player> [world] [TNECurrency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- TNECurrency ~ The TNECurrency to retrieve the balance of."
+          Balance: "/tne balance <player> [world] [currency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- currency ~ The currency to retrieve the balance of."
           Caveats: "/tne caveats - Displays all known caveats for this version of TNE."
           Create: "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account."
           Delete: "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner."
@@ -160,9 +160,9 @@ Messages:
           TNEGet: "/tnec tneget <node> [world] [player] - Returns the value of a configuration after TNE takes into account player & world configurations.<newline>- Node ~ The configuration node to use.<newline>- World ~ The name of the world to use for parsing.<newline>- Player ~ The name of the world to use for parsing."
           Undo: "/tnec undo [configuration/all] - Undoes modifications made to configurations.<newline>- Configuration ~ The configuration identifier to retrieve the value from. This may be retrieved automatically."
        Currency:
-          Rename: "/TNECurrency rename <TNECurrency> <new name> - Renames a TNECurrency to a different name."
-          List: "/TNECurrency list [world] - Displays the currencies available for a world.<newline> - World ~ The world to use."
-          Tiers: "/TNECurrency tiers [TNECurrency] [world] - Displays the tiers for a currency.<newline>- TNECurrency ~ The Currency to check.<newline>- World ~ The world that the Currency belongs to."
+          Rename: "/currency rename <currency> <new name> - Renames a currency to a different name."
+          List: "/currency list [world] - Displays the currencies available for a world.<newline> - World ~ The world to use."
+          Tiers: "/currency tiers [currency] [world] - Displays the tiers for a currency.<newline>- currency ~ The Currency to check.<newline>- World ~ The world that the Currency belongs to."
        Module:
           Info: "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up."
           List: "/tnem list - Lists all loaded TNE modules."
@@ -170,14 +170,14 @@ Messages:
           Reload: "/tnem reload <module> - Reloads a module from the modules directory.<newline>- Module ~ The module to reload."
           Unload: "/tnem unload <module> - Unload a module from the server.<newline>- Module ~ The module to unload."
        Money:
-          Balance: "/money balance [world] [TNECurrency] - Displays your current holdings."
-          Convert: "/money convert <amount> <to TNECurrency[:world]> [from TNECurrency[:world]] - Convert some of your holdings to another currency."
-          Give: "/money give <player> <amount> [world] [TNECurrency] - Adds money into your economy, and gives it to a player."
-          Note: "/money note <amount> [TNECurrency] - Makes your virtual TNECurrency physical, for storage/trading purposes."
-          Pay: "/money pay <player> <amount> [TNECurrency] - Use some of your holdings to pay another player."
-          Set: "/money set <player> <amount> [world] [TNECurrency] - Set the holdings of a player."
-          Take: "/money take <player> <amount> [world] [TNECurrency] - Removes money from your economy, specifically from a player's balance."
-          Top: "/money top [page] [TNECurrency:name] [world:world] [limit:#] - A list of players with the highest balances.<newline>[page] - The page number to view. Defaults to 1.<newline>[Currency] - The name of the Currency to get balances from. Defaults to world default. Use overall for all currencies.<newline>[world] - The world name you wish to filter, or all for every world. Defaults to current world. Use overall for all worlds.<newline>[limit] - Limit changes how many players are displayed. Defaults to 10."
+          Balance: "/money balance [world] [currency] - Displays your current holdings."
+          Convert: "/money convert <amount> <to currency[:world]> [from currency[:world]] - Convert some of your holdings to another currency."
+          Give: "/money give <player> <amount> [world] [currency] - Adds money into your economy, and gives it to a player."
+          Note: "/money note <amount> [currency] - Makes your virtual currency physical, for storage/trading purposes."
+          Pay: "/money pay <player> <amount> [currency] - Use some of your holdings to pay another player."
+          Set: "/money set <player> <amount> [world] [currency] - Set the holdings of a player."
+          Take: "/money take <player> <amount> [world] [currency] - Removes money from your economy, specifically from a player's balance."
+          Top: "/money top [page] [currency:name] [world:world] [limit:#] - A list of players with the highest balances.<newline>[page] - The page number to view. Defaults to 1.<newline>[Currency] - The name of the Currency to get balances from. Defaults to world default. Use overall for all currencies.<newline>[world] - The world name you wish to filter, or all for every world. Defaults to current world. Use overall for all worlds.<newline>[limit] - Limit changes how many players are displayed. Defaults to 10."
        Transaction:
           Away: "/transaction away [page #] - Displays transactions that you missed since the last time you were on."
           History: "/transaction history [page:#] [world:name/all] - See a detailed break down of your transaction history.<newline>- Page ~ The page number you wish to view.<newline>- World ~ The world name you wish to filter, or all for every world. Defaults to current world."

@@ -418,14 +418,14 @@ public class TNE extends TNELib {
     }
   }
   public static void debug(String message) {
-    //System.out.println(message);
-    try {
+    System.out.println(message);
+    /*try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug.log"), true));
       writer.write(message + System.getProperty("line.separator"));
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
   }
 
   @Override

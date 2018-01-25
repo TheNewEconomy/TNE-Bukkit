@@ -52,7 +52,7 @@ public class CurrencyRenameCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "Messages.Commands.currency.Rename";
+    return "Messages.Commands.Currency.Rename";
   }
 
   @Override

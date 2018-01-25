@@ -14,9 +14,7 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -71,30 +69,57 @@ public class MoneyBalanceCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     String world = (arguments.length >= 1)? arguments[0] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+    world = TNE.instance().getWorldManager(world).getBalanceWorld();
     TNE.debug("MoneyBalanceCommand.execute, World: " + world);
     if(TNE.manager() == null) TNE.debug("Economy Manager is null");
     if(TNE.manager().currencyManager() == null) TNE.debug("TNECurrency Manager is null");
     if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
     String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
-    TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
     UUID id = IDFinder.getID(sender);
+    String username = IDFinder.ecoToUsername(id);
+    TNE.debug("World: " + world);
+    TNE.debug("Args Length: " + arguments.length);
 
     Map<String, BigDecimal> balances = new HashMap<>();
 
+    List<TNECurrency> currencies = new ArrayList<>();
+    if(arguments.length >= 2) {
+      currencies.add(TNE.manager().currencyManager().get(world, currencyName));
+    } else {
+      currencies.addAll(TNE.instance().getWorldManager(world).getCurrencies());
+    }
+    TNE.debug("Pre transactions of MoneyBalanceCommand");
+    TransactionResult result = null;
 
-    TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("inquiry"));
-    transaction.setRecipientCharge(new TransactionCharge(world, currency, new BigDecimal(0.0)));
-    TransactionResult result = TNE.transactionManager().perform(transaction);
+    for(TNECurrency cur : currencies) {
+      TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("inquiry"));
+      transaction.setRecipientCharge(new TransactionCharge(world, cur, new BigDecimal(0.0)));
+      result = TNE.transactionManager().perform(transaction);
+      balances.put(cur.name(), transaction.recipientBalance().getAmount());
+    }
 
-    TNE.debug("Result: " + result.name());
-    TNE.debug("Transaction Success: " + result.proceed());
-    TNE.debug("Result Message: " + result.recipientMessage());
+    TNE.debug("Balances Size: " + balances.size());
+    TNE.debug("Post transactions of MoneyBalanceCommand");
+    if(balances.size() > 1) {
+      final String w = world;
+      Message message = new Message("Messages.Money.HoldingsMulti");
+      message.addVariable("$player", username);
+      message.addVariable("$world", world);
+      message.translate(world, sender, id.toString());
+      balances.forEach((curName, balance)->{
+        Message m = new Message("Messages.Money.HoldingsMultiSingle");
+        m.addVariable("$currency", curName);
+        m.addVariable("$amount", balance.toPlainString());
+        m.translate(w, sender, id.toString());
+      });
+      return result.proceed();
+    }
     Message message = new Message(result.recipientMessage());
-    message.addVariable("$player", IDFinder.ecoToUsername(IDFinder.getID(transaction.recipient())));
+    message.addVariable("$player", username);
     message.addVariable("$world", world);
     message.addVariable("$currency", currencyName);
-    message.addVariable("$amount", CurrencyFormatter.format(transaction.recipientBalance().getCurrency(), world, transaction.recipientBalance().getAmount()));
-    message.translate(world, sender);
+    message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName)));
+    message.translate(world, sender, id.toString());
     return result.proceed();
   }
 }

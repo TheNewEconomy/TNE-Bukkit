@@ -3,7 +3,7 @@
 # License: AGPLv3
 # If you would like to contribute to the plugin
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
-# To view a commented version of this file, visit http://git.hellyard.com/TheNewEconomy/Economy/src/master/TNE/src/net/tnemc/resources/players.yml.
+# To view a commented version of this file, visit https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/players.yml.
 #Used for per-player configurations.
 Players:
 

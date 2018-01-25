@@ -62,22 +62,18 @@ public class MoneyCommand extends TNECommand {
     if(command.equalsIgnoreCase("balance") ||
         command.equalsIgnoreCase("bal") ||
         arguments.length == 0) {
-      arguments = new String[1];
-      arguments[0] = "balance";
+      TNECommand sub = FindSub("balance");
+      return sub.execute(sender, command, arguments);
     }
 
     if(command.equalsIgnoreCase("baltop")) {
-      String[] args = new String[arguments.length + 1];
-      args[0] = "top";
-      System.arraycopy(arguments, 0, args, 1, arguments.length);
-      arguments = args;
+      TNECommand sub = FindSub("top");
+      return sub.execute(sender, command, arguments);
     }
 
     if(command.equalsIgnoreCase("pay")) {
-      String[] args = new String[arguments.length + 1];
-      args[0] = "pay";
-      System.arraycopy(arguments, 0, args, 1, arguments.length);
-      arguments = args;
+      TNECommand sub = FindSub("pay");
+      return sub.execute(sender, command, arguments);
     }
     return super.execute(sender, command, arguments);
   }

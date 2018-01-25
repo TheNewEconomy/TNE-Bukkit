@@ -95,7 +95,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Money.Received", "<white>You were paid <gold>$amount <white> by <white> $player.");
     configurations.put("Messages.Money.Taken", "<white>$player took <gold>$amount<white> from you.");
     configurations.put("Messages.Money.Insufficient", "<red>I'm sorry, but you do not have <gold>$amount<red>.");
-    configurations.put("Messages.Money.HoldingsMulti", "<white>Your current balances are: ");
+    configurations.put("Messages.Money.HoldingsMulti", "<white>Your current balances for world \"$world\" are: ");
     configurations.put("Messages.Money.HoldingsMultiSingle", "<white>$currency: <gold>$amount");
     configurations.put("Messages.Money.Holdings", "<white>You currently have <gold>$amount<white> on you.");
     configurations.put("Messages.Money.Gave", "<white>Successfully gave $player <gold>$amount<white>.");
@@ -127,7 +127,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Transaction.Voided", "<white>Successfully voided the transaction with the ID of <green>$transaction<white>.");
 
     configurations.put("Messages.Commands.Admin.Backup", "/tne backup - Creates a backup of all server data.");
-    configurations.put("Messages.Commands.Admin.Balance", "/tne balance <player> [world] [currency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- TNECurrency ~ The currency to retrieve the balance of.");
+    configurations.put("Messages.Commands.Admin.Balance", "/tne balance <player> [world] [currency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- currency ~ The currency to retrieve the balance of.");
     configurations.put("Messages.Commands.Admin.Caveats", "/tne caveats - Displays all known caveats for this version of TNE.");
     configurations.put("Messages.Commands.Admin.Create", "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account.");
     configurations.put("Messages.Commands.Admin.Delete", "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner.");
@@ -149,7 +149,7 @@ public class MessageConfigurations extends Configuration {
 
     configurations.put("Messages.Commands.Currency.Rename", "/currency rename <currency> <new name> - Renames a currency to a different name.");
     configurations.put("Messages.Commands.Currency.List", "/currency list [world] - Displays the currencies available for a world.<newline> - World ~ The world to use.");
-    configurations.put("Messages.Commands.Currency.Tiers", "/currency tiers <currency> [world] - Displays the tiers for a currency.<newline>- TNECurrency ~ The currency to check.<newline>- World ~ The world that the currency belongs to.");
+    configurations.put("Messages.Commands.Currency.Tiers", "/currency tiers <currency> [world] - Displays the tiers for a currency.<newline>- currency ~ The currency to check.<newline>- World ~ The world that the currency belongs to.");
 
     configurations.put("Messages.Commands.Module.Info", "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up.");
     configurations.put("Messages.Commands.Module.List", "/tnem list - Lists all loaded TNE modules.");

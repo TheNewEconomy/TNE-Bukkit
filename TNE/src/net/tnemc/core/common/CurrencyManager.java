@@ -196,12 +196,14 @@ public class CurrencyManager {
   public void addCurrency(String world, TNECurrency currency) {
     TNE.debug("[Add]Loading Currency: " + currency.name() + " for world: " + world);
     if(world.equalsIgnoreCase(TNE.instance().defaultWorld)) {
-      globalCurrencies.put(world, currency);
+      globalCurrencies.put(currency.name(), currency);
     } else {
-      if(TNE.instance().getWorldManager(world) != null) {
+      WorldManager manager = TNE.instance().getWorldManager(world);
+      if (manager != null) {
         TNE.debug("[Add]Adding Currency: " + currency.name() + " for world: " + world);
-        TNE.instance().getWorldManager(world).addCurrency(currency);
+        manager.addCurrency(currency);
       }
+      TNE.instance().addWorldManager(manager);
     }
   }
 
@@ -219,15 +221,17 @@ public class CurrencyManager {
       TNE.instance().addWorldManager(manager);
     }
     loadCurrency(TNE.instance().worldConfiguration(), true, world);
+    WorldManager manager = TNE.instance().getWorldManager(world);
     for(TNECurrency currency : globalCurrencies.values()) {
       if(!globalDisabled.contains(currency.name())) {
-        if(TNE.instance().getWorldManager(world) == null) {
+        if(manager == null) {
           TNE.debug("World Manager for world: " + world + " is null. Skipping.");
           break;
         }
-        TNE.instance().getWorldManager(world).addCurrency(currency);
+        manager.addCurrency(currency);
       }
     }
+    TNE.instance().addWorldManager(manager);
   }
 
   public TNECurrency get(String world) {
@@ -242,6 +246,7 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world, String name) {
+    TNE.debug("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
     if(TNE.instance().getWorldManager(world).containsCurrency(name)) {
       TNE.debug("Returning Currency " + name + " for world " + world);
       return TNE.instance().getWorldManager(world).getCurrency(name);
@@ -274,6 +279,7 @@ public class CurrencyManager {
   public Collection<TNECurrency> getWorldCurrencies(String world) {
     TNE.debug("=====START CurrencyManager =====");
     TNE.debug("World: " + world);
+    world = TNE.instance().getWorldManager(world).getBalanceWorld();
     return TNE.instance().getWorldManager(world).getCurrencies();
   }
 

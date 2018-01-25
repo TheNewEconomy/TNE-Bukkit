@@ -40,7 +40,7 @@ public class WorldFinder {
     if(variant.equals(WorldVariant.BALANCE)) return TNE.instance().getWorldManager(actualWorld).getBalanceWorld();
     if(variant.equals(WorldVariant.CONFIGURATION)) return TNE.instance().getWorldManager(actualWorld).getConfigurationWorld();
 
-    return player.getWorld().getName();
+    return actualWorld;
   }
 
   public static String getWorld(CommandSender sender, WorldVariant variant) {
