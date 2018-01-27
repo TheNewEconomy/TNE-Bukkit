@@ -71,6 +71,7 @@ public class TNE extends TNELib {
   private ModuleLoader loader;
   public UpdateChecker updater;
   private static boolean debugMode = false;
+  public static boolean consoleDebug = false;
   private String serverName;
 
   //Economy APIs
@@ -123,7 +124,7 @@ public class TNE extends TNELib {
 
     //Create Debug Log
     try {
-      new File(getDataFolder(), "debug.log").createNewFile();
+      new File(getDataFolder(), "debug.txt").createNewFile();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -431,14 +432,17 @@ public class TNE extends TNELib {
     int second = now.getSecond();
     int mil = now.get(ChronoField.MILLI_OF_SECOND);
     String time = "[" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + mil + "] ";
-    //System.out.println(message);
-    try {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug.log"), true));
-      writer.write(time + message + System.getProperty("line.separator"));
+    if(consoleDebug) {
+      System.out.println(message);
+    } else {
+      try {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug.txt"), true));
+        writer.write(time + message + System.getProperty("line.separator"));
 
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
+        writer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -536,5 +540,9 @@ public class TNE extends TNELib {
 
   public Collection<WorldManager> getWorldManagers() {
     return worldManagers.values();
+  }
+
+  public Map<String, WorldManager> getWorldManagersMap() {
+    return worldManagers;
   }
 }

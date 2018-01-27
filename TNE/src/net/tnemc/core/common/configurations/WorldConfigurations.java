@@ -89,12 +89,18 @@ public class WorldConfigurations extends Configuration {
       TNE.instance().addWorldManager(manager);
     }
 
-    TNE.instance().getWorldManagers().forEach((manager)->{
-      if(balanceShare.containsKey(manager.getWorld()))
+    TNE.instance().getWorldManagersMap().keySet().forEach((world)->{
+      WorldManager manager = TNE.instance().getWorldManager(world);
+      if(balanceShare.containsKey(manager.getWorld())) {
+        TNE.debug("Setting balance share for " + manager.getWorld() + " to " + balanceShare.get(manager.getWorld()));
         manager.setBalanceWorld(balanceShare.get(manager.getWorld()));
+      }
 
-      if(configurationShare.containsKey(manager.getWorld()))
+      if(configurationShare.containsKey(manager.getWorld())) {
+        TNE.debug("Setting config share for " + manager.getWorld() + " to " + configurationShare.get(manager.getWorld()));
         manager.setConfigurationWorld(configurationShare.get(manager.getWorld()));
+      }
+      TNE.instance().addWorldManager(manager);
     });
 
     super.load(configurationFile);

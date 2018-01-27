@@ -2,6 +2,7 @@ package net.tnemc.core.commands.dev;
 
 import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import org.bukkit.command.CommandSender;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -20,17 +21,15 @@ import net.tnemc.core.TNE;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Created by Daniel on 1/27/2018.
  */
-public class DeveloperCommand extends TNECommand {
+public class DeveloperDebugCommand extends TNECommand {
 
-  public DeveloperCommand(TNE plugin) {
+  public DeveloperDebugCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new DeveloperDebugCommand(plugin));
-    subCommands.add(new DeveloperWorldCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "tnedev";
+    return "debug";
   }
 
   @Override
@@ -45,10 +44,29 @@ public class DeveloperCommand extends TNECommand {
 
   @Override
   public boolean console() {
+    return false;
+  }
+
+  @Override
+  public boolean developer() {
     return true;
   }
 
-  public boolean developer() {
-    return true;
+  @Override
+  public String getHelp() {
+    return "/tnedev debug <console/log> - Display the configuration, or balance sharing worlds for this world.";
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(arguments.length >= 1) {
+      boolean console = arguments[0].equalsIgnoreCase("console");
+
+      TNE.consoleDebug = console;
+      sender.sendMessage("The debug configuration has been changed to " + arguments[0]);
+      return true;
+    }
+    help(sender);
+    return false;
   }
 }
