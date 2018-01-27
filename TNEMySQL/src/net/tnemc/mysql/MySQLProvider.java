@@ -123,6 +123,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`last_online` BIGINT(60)," +
         "`account_number` INTEGER," +
         "`account_status` VARCHAR(60)," +
+        "`account_language` VARCHAR(10) NOT NULL DEFAULT 'default'," +
         "`account_player` BOOLEAN" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
