@@ -88,6 +88,12 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Currency.AlreadyExists", "<white>A currency with the name $currency already exists in world $world.");
     configurations.put("Messages.Currency.Renamed", "<white>Successfully renamed $currency in world $world to $new_Name.");
 
+    configurations.put("Messages.Language.Current", "<white>Your language is currently set as $language.");
+    configurations.put("Messages.Language.List", "<white>The available languages are $languages.");
+    configurations.put("Messages.Language.None", "<red>There is no language with the name \"$language\".");
+    configurations.put("Messages.Language.Reload", "<white>Successfully reloaded all language files.");
+    configurations.put("Messages.Language.Set", "<white>Successfully set your language to $language.");
+
     configurations.put("Messages.Module.Info", "<white>==== Module Info for $module ====<newline>Author: $author<newline>Version: $version");
     configurations.put("Messages.Module.Invalid", "<red>Unable to find a module with the name of \"$module\".");
     configurations.put("Messages.Module.List", "<white>This server is currently uses these TNE Modules: $modules.");
@@ -155,6 +161,11 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Currency.Rename", "/currency rename <currency> <new name> - Renames a currency to a different name.");
     configurations.put("Messages.Commands.Currency.List", "/currency list [world] - Displays the currencies available for a world.<newline> - World ~ The world to use.");
     configurations.put("Messages.Commands.Currency.Tiers", "/currency tiers <currency> [world] - Displays the tiers for a currency.<newline>- currency ~ The currency to check.<newline>- World ~ The world that the currency belongs to.");
+
+    configurations.put("Messages.Commands.Language.Current", "/language current - Displays your current language as set for your account.");
+    configurations.put("Messages.Commands.Language.List", "/language list - Lists available languages on this server.");
+    configurations.put("Messages.Commands.Language.Reload", "/language reload - Reloads all language files.");
+    configurations.put("Messages.Commands.Language.Set", "/language set <name> - Sets your current language to the one specified.");
 
     configurations.put("Messages.Commands.Module.Info", "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up.");
     configurations.put("Messages.Commands.Module.List", "/tnem list - Lists all loaded TNE modules.");

@@ -94,6 +94,7 @@ Messages:
        Current: "<white>Your language is currently set as $language."
        List: "<white>The available languages are $languages."
        None: "<red>There is no language with the name \"$language\"."
+       Reload: "<white>Successfully reloaded all language files."
        Set: "<white>Successfully set your language to $language."
 
     Module:
@@ -172,6 +173,7 @@ Messages:
        Language:
           Current: "/language current - Displays your current language as set for your account."
           List: "/language list - Lists available languages on this server."
+          Reload: "/language reload - Reloads all language files."
           Set: "/language set <name> - Sets your current language to the one specified."
        Module:
           Info: "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up."

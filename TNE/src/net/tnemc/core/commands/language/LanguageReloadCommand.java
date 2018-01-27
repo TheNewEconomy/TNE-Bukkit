@@ -1,7 +1,11 @@
 package net.tnemc.core.commands.language;
 
 import com.github.tnerevival.commands.TNECommand;
+import net.tnemc.core.Message;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.WorldFinder;
+import org.bukkit.command.CommandSender;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -20,35 +24,42 @@ import net.tnemc.core.TNE;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Created by Daniel on 1/27/2018.
  */
-public class LanguageCommand extends TNECommand {
+public class LanguageReloadCommand extends TNECommand {
 
-  public LanguageCommand(TNE plugin) {
+  public LanguageReloadCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new LanguageCurrentCommand(plugin));
-    subCommands.add(new LanguageListCommand(plugin));
-    subCommands.add(new LanguageReloadCommand(plugin));
-    subCommands.add(new LanguageSetCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "language";
+    return "reload";
   }
 
   @Override
   public String[] getAliases() {
-    return new String[] {
-        "lang"
-    };
+    return new String[0];
   }
 
   @Override
   public String getNode() {
-    return "tne.language";
+    return "tne.language.reload";
   }
 
   @Override
   public boolean console() {
     return false;
+  }
+
+  @Override
+  public String getHelp() {
+    return "Messages.Commands.Language.Reload";
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.instance().messages().loadLanguages();
+    Message message = new Message("Messages.Language.Reload");
+    message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);
+    return true;
   }
 }
