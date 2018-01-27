@@ -3,6 +3,7 @@ package net.tnemc.vaults.command;
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.vaults.VaultsModule;
 import org.bukkit.command.CommandSender;
@@ -51,7 +52,7 @@ public class VaultPeekCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender);
+    String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
     VaultsModule.instance().manager().open(IDFinder.getID(sender), IDFinder.getID(arguments[0]), world, 1, true);
 
     return true;

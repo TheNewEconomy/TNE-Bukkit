@@ -68,6 +68,7 @@ public class AdminBalanceCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.debug("===START AdminBalanceCommand  ===");
     if(arguments.length >= 1 && arguments.length <= 3) {
 
       UUID id = IDFinder.getID(arguments[0]);
@@ -83,9 +84,11 @@ public class AdminBalanceCommand extends TNECommand {
       message.addVariable("$world", world);
       message.addVariable("$amount", CurrencyFormatter.format(transaction.recipientBalance().getCurrency(), world, transaction.recipientBalance().getAmount()));
       message.translate(world, IDFinder.getID(sender));
+      TNE.debug("===END AdminBalanceCommand  ===");
       return result.proceed();
     }
     help(sender);
+    TNE.debug("===END AdminBalanceCommand  ===");
     return false;
   }
 }

@@ -68,6 +68,7 @@ public class MoneyBalanceCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.debug("===START MoneyBalanceCommand  ===");
     String world = (arguments.length >= 1)? arguments[0] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
     TNE.debug("MoneyBalanceCommand.execute, World: " + world);
@@ -112,6 +113,7 @@ public class MoneyBalanceCommand extends TNECommand {
         m.addVariable("$amount", balance.toPlainString());
         m.translate(w, sender, id.toString());
       });
+      TNE.debug("===END MoneyBalanceCommand ===");
       return result.proceed();
     }
     Message message = new Message(result.recipientMessage());
@@ -120,6 +122,7 @@ public class MoneyBalanceCommand extends TNECommand {
     message.addVariable("$currency", currencyName);
     message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName)));
     message.translate(world, sender, id.toString());
+    TNE.debug("===END MoneyBalanceCommand ===");
     return result.proceed();
   }
 }

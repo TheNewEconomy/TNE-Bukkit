@@ -65,6 +65,7 @@ public class MoneyGiveCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.debug("===START MoneyGiveCommand ===");
     if(arguments.length >= 2) {
       String world = (arguments.length == 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
@@ -77,6 +78,7 @@ public class MoneyGiveCommand extends TNECommand {
         max.addVariable("$world", world);
         max.addVariable("$player", getPlayer(sender).getDisplayName());
         max.translate(world, sender);
+        TNE.debug("===END MoneyGiveCommand ===");
         return false;
       }
 
@@ -86,9 +88,11 @@ public class MoneyGiveCommand extends TNECommand {
                                                                     "give", value, currency, world,
                                                                     IDFinder.getID(sender));
       handler.handle(true);
+      TNE.debug("===END MoneyGiveCommand ===");
       return handler.getData().isProceed();
     }
     help(sender);
+    TNE.debug("===END MoneyGiveCommand ===");
     return false;
   }
 }

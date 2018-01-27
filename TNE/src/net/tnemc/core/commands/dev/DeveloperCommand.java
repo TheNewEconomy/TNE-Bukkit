@@ -1,12 +1,7 @@
-package net.tnemc.vaults.command;
+package net.tnemc.core.commands.dev;
 
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.vaults.VaultsModule;
-import org.bukkit.command.CommandSender;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -23,40 +18,36 @@ import org.bukkit.command.CommandSender;
  * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * Created by Daniel on 11/10/2017.
+ * Created by Daniel on 1/27/2018.
  */
-public class VaultViewCommand extends TNECommand {
-  public VaultViewCommand(TNE plugin) {
+public class DeveloperCommand extends TNECommand {
+
+  public DeveloperCommand(TNE plugin) {
     super(plugin);
+    subCommands.add(new DeveloperWorldCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "view";
+    return "tnedev";
   }
 
   @Override
   public String[] getAliases() {
-    return new String[] {
-        "open"
-    };
+    return new String[0];
   }
 
   @Override
   public String getNode() {
-    return "tne.vault.view";
+    return "";
   }
 
   @Override
   public boolean console() {
-    return false;
+    return true;
   }
 
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-    VaultsModule.instance().manager().open(IDFinder.getID(sender), IDFinder.getID(arguments[0]), world, 1, false);
-
+  public boolean developer() {
     return true;
   }
 }

@@ -63,6 +63,7 @@ public class MoneyPayCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.debug("===START MoneyPayCommand ===");
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     if(arguments.length >= 2) {
       String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
@@ -75,6 +76,7 @@ public class MoneyPayCommand extends TNECommand {
         msg.addVariable("$world", world);
         msg.addVariable("$player", getPlayer(sender).getDisplayName());
         msg.translate(world, sender);
+        TNE.debug("===END MoneyPayCommand ===");
         return false;
       }
 
@@ -84,9 +86,11 @@ public class MoneyPayCommand extends TNECommand {
                                                                     "pay", value, currency, world,
                                                                     IDFinder.getID(sender));
       handler.handle(true);
+      TNE.debug("===END MoneyPayCommand ===");
       return handler.getData().isProceed();
     }
     help(sender);
+    TNE.debug("===END MoneyPayCommand ===");
     return false;
   }
 }

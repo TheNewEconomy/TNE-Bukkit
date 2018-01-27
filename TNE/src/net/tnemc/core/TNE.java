@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.tnemc.core.commands.admin.AdminCommand;
 import net.tnemc.core.commands.config.ConfigCommand;
 import net.tnemc.core.commands.currency.CurrencyCommand;
+import net.tnemc.core.commands.dev.DeveloperCommand;
 import net.tnemc.core.commands.module.ModuleCommand;
 import net.tnemc.core.commands.money.MoneyCommand;
 import net.tnemc.core.commands.transaction.TransactionCommand;
@@ -39,6 +40,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -207,6 +210,7 @@ public class TNE extends TNELib {
 
     //Commands
     registerCommand(new String[] { "tne" }, new AdminCommand(this));
+    registerCommand(new String[] { "tnedev" }, new DeveloperCommand(this));
     registerCommand(new String[] { "tneconfig", "tnec" }, new ConfigCommand(this));
     registerCommand(new String[] { "currency", "cur" }, new CurrencyCommand(this));
     registerCommand(new String[] { "tnemodule", "tnem" }, new ModuleCommand(this));
@@ -418,14 +422,24 @@ public class TNE extends TNELib {
     }
   }
   public static void debug(String message) {
-    System.out.println(message);
-    /*try {
+    LocalDateTime now = LocalDateTime.now();
+    int year = now.getYear();
+    int month = now.getMonthValue();
+    int day = now.getDayOfMonth();
+    int hour = now.getHour();
+    int minute = now.getMinute();
+    int second = now.getSecond();
+    int mil = now.get(ChronoField.MILLI_OF_SECOND);
+    String time = "[" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + mil + "] ";
+    //System.out.println(message);
+    try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug.log"), true));
-      writer.write(message + System.getProperty("line.separator"));
+      writer.write(time + message + System.getProperty("line.separator"));
+
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
-    }*/
+    }
   }
 
   @Override
