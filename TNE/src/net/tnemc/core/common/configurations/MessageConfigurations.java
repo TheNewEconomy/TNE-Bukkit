@@ -190,6 +190,8 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.World.Change", "<white>You have been charged <gold> $amount<white> for changing worlds.");
     configurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
 
+    loadLanguages();
+
     super.load(configurationFile);
   }
 

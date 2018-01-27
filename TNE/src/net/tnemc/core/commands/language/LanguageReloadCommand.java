@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.language;
 
 import com.github.tnerevival.commands.TNECommand;
-import net.tnemc.core.Message;
+import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;

@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.language;
 
 import com.github.tnerevival.commands.TNECommand;
-import net.tnemc.core.Message;
+import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -58,7 +58,7 @@ public class LanguageListCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Message message = new Message("Messages.Language.List");
-    message.addVariable("$languages", String.join(",", TNE.instance().messages().getLanguages().keySet()));
+    message.addVariable("$languages", String.join(",", TNE.instance().messages().getLanguages().keySet()) + " and Default");
     message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);
     return true;
   }

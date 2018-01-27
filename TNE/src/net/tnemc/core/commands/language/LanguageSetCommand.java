@@ -1,8 +1,8 @@
 package net.tnemc.core.commands.language;
 
 import com.github.tnerevival.commands.TNECommand;
+import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
-import net.tnemc.core.Message;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
@@ -63,7 +63,7 @@ public class LanguageSetCommand extends TNECommand {
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
       String language = arguments[0];
 
-      if(TNE.instance().messages().getLanguages().containsKey(language)) {
+      if(TNE.instance().messages().getLanguages().containsKey(language) || language.equalsIgnoreCase("default")) {
         TNEAccount account = TNE.manager().getAccount(IDFinder.getID(sender));
         account.setLanguage(language);
         TNE.manager().addAccount(account);
