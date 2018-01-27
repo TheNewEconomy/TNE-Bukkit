@@ -10,6 +10,7 @@ import net.tnemc.core.commands.admin.AdminCommand;
 import net.tnemc.core.commands.config.ConfigCommand;
 import net.tnemc.core.commands.currency.CurrencyCommand;
 import net.tnemc.core.commands.dev.DeveloperCommand;
+import net.tnemc.core.commands.language.LanguageCommand;
 import net.tnemc.core.commands.module.ModuleCommand;
 import net.tnemc.core.commands.money.MoneyCommand;
 import net.tnemc.core.commands.transaction.TransactionCommand;
@@ -210,6 +211,7 @@ public class TNE extends TNELib {
     }
 
     //Commands
+    registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
     registerCommand(new String[] { "tne" }, new AdminCommand(this));
     registerCommand(new String[] { "tnedev" }, new DeveloperCommand(this));
     registerCommand(new String[] { "tneconfig", "tnec" }, new ConfigCommand(this));

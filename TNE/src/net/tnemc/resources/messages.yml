@@ -90,6 +90,12 @@ Messages:
        AlreadyExists: "<white>A currency with the name $currency already exists in world $world."
        Renamed: "<white>Successfully renamed $currency in world $world to $new_Name."
 
+    Language:
+       Current: "<white>Your language is currently set as $language."
+       List: "<white>The available languages are $languages."
+       None: "<red>There is no language with the name \"$language\"."
+       Set: "<white>Successfully set your language to $language."
+
     Module:
        Info: "<white>==== Module Info for $module ====<newline>Author: $author<newline>Version: $version"
        Invalid: "<red>Unable to find a module with the name of \"$module\"."
@@ -163,6 +169,10 @@ Messages:
           Rename: "/currency rename <currency> <new name> - Renames a currency to a different name."
           List: "/currency list [world] - Displays the currencies available for a world.<newline> - World ~ The world to use."
           Tiers: "/currency tiers [currency] [world] - Displays the tiers for a currency.<newline>- currency ~ The Currency to check.<newline>- World ~ The world that the Currency belongs to."
+       Language:
+          Current: "/language current - Displays your current language as set for your account."
+          List: "/language list - Lists available languages on this server."
+          Set: "/language set <name> - Sets your current language to the one specified."
        Module:
           Info: "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up."
           List: "/tnem list - Lists all loaded TNE modules."

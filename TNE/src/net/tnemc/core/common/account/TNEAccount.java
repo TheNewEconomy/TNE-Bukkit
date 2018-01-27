@@ -46,6 +46,7 @@ public class TNEAccount implements Account {
   private UUID id;
   private String displayName;
   private AccountStatus status;
+  private String language;
   private boolean player;
   private long joined;
   private long lastOnline;
@@ -54,6 +55,7 @@ public class TNEAccount implements Account {
     this.id = id;
     this.displayName = displayName;
     this.status = AccountStatus.NORMAL;
+    this.language = "Default";
     this.player = true;
     this.joined = new Date().getTime();
     this.lastOnline = new Date().getTime();
@@ -187,6 +189,14 @@ public class TNEAccount implements Account {
 
   public void setPlayerAccount(boolean player) {
     this.player = player;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 
   public long getJoined() {

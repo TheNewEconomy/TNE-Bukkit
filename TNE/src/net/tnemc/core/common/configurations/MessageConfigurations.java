@@ -1,11 +1,13 @@
 package net.tnemc.core.common.configurations;
 
 import com.github.tnerevival.core.configurations.Configuration;
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.util.*;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -25,6 +27,9 @@ import java.util.List;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MessageConfigurations extends Configuration {
+
+  private Map<String, Language> languages = new HashMap<>();
+
   @Override
   public FileConfiguration getConfiguration() {
     return TNE.instance().messageConfiguration();
@@ -175,5 +180,52 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.World.ChangeFailed", "<red>I'm sorry, but you need at least <gold>$amount<red> to change worlds.");
 
     super.load(configurationFile);
+  }
+
+  public void loadLanguages() {
+    File directory = new File(TNE.instance().getDataFolder(), "languages");
+    directory.mkdir();
+    File[] langFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+
+    if(langFiles != null) {
+      for (File langFile : langFiles) {
+        String name = langFile.getName().replace(".yml", "");
+        FileConfiguration configuration = YamlConfiguration.loadConfiguration(langFile);
+
+        Language lang = new Language(name, configuration);
+
+        Iterator it = configurations.entrySet().iterator();
+
+        while(it.hasNext()) {
+          Map.Entry<String, Object> entry = (Map.Entry)it.next();
+          if (getConfiguration().contains(entry.getKey())) {
+            if(configuration.contains(entry.getKey())) {
+              lang.addTranslation(entry.getKey(), configuration.getString(entry.getKey()));
+            }
+          }
+        }
+        TNE.debug("Loaded language: " + lang);
+        languages.put(name, lang);
+      }
+    }
+  }
+
+  public Map<String, Language> getLanguages() {
+    return languages;
+  }
+
+  @Override
+  public Object getValue(String node, String world, String player) {
+    TNE.debug("Checking for translation in languages.");
+    String language = TNE.manager().getAccount(IDFinder.getID(player)).getLanguage();
+
+    if(languages.containsKey(language)) {
+      Language lang = languages.get(language);
+      if(lang.hasTranslation(node)) {
+        TNE.debug("Returning translation for language  \"" + language + "\".");
+        return lang.getTranslation(node);
+      }
+    }
+    return super.getValue(node, world, player);
   }
 }

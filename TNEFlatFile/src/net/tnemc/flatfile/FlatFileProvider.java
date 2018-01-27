@@ -181,6 +181,7 @@ public class FlatFileProvider extends TNEDataProvider {
       account.setAccountNumber(configuration.getInt("Account.Number"));
       account.setId(UUID.fromString(configuration.getString("Account.ID")));
       account.setStatus(AccountStatus.fromName(configuration.getString("Account.Status")));
+      account.setLanguage(configuration.getString("Account.Language"));
       account.setPlayerAccount(configuration.getBoolean("Account.Player"));
       account.setJoined(configuration.getLong("Account.Joined"));
       account.setLastOnline(configuration.getLong("Account.LastOnline"));
@@ -221,6 +222,7 @@ public class FlatFileProvider extends TNEDataProvider {
     configuration.set("Account.ID", account.identifier().toString());
     configuration.set("Account.Display", account.displayName());
     configuration.set("Account.Status", account.getStatus().getName());
+    configuration.set("Account.Language", account.getLanguage());
     configuration.set("Account.Player", account.playerAccount());
     configuration.set("Account.Joined", account.getJoined());
     configuration.set("Account.LastOnline", account.getLastOnline());

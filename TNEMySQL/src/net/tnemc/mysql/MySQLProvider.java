@@ -277,7 +277,7 @@ public class MySQLProvider extends TNEDataProvider {
   public TNEAccount loadAccount(UUID id) {
     String table = manager.getPrefix() + "_USERS";
     try {
-      int accountIndex = mysql().executePreparedQuery("SELECT uuid, display_name, account_number, account_status, joined_date, last_online, account_player FROM " + table + " WHERE uuid = ? LIMIT 1", new Object[]{
+      int accountIndex = mysql().executePreparedQuery("SELECT uuid, display_name, account_number, account_status, account_language, joined_date, last_online, account_player FROM " + table + " WHERE uuid = ? LIMIT 1", new Object[]{
           id.toString()
       });
       if (mysql().results(accountIndex).next()) {
@@ -285,6 +285,7 @@ public class MySQLProvider extends TNEDataProvider {
                                             mysql().results(accountIndex).getString("display_name"));
         account.setAccountNumber(mysql().results(accountIndex).getInt("account_number"));
         account.setStatus(AccountStatus.fromName(mysql().results(accountIndex).getString("account_status")));
+        account.setLanguage(mysql().results(accountIndex).getString("account_language"));
         account.setJoined(mysql().results(accountIndex).getLong("joined_date"));
         account.setLastOnline(mysql().results(accountIndex).getLong("last_online"));
         account.setPlayerAccount(mysql().results(accountIndex).getBoolean("account_player"));
@@ -307,8 +308,8 @@ public class MySQLProvider extends TNEDataProvider {
   public void saveAccount(TNEAccount account) {
     TNE.debug("Saving account: " + account.displayName());
     String table = manager.getPrefix() + "_USERS";
-    mysql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, display_name, joined_date, last_online, account_number, account_status, account_player) VALUES(?, ?, ?, ?, ?, ?, ?)" +
-            " ON DUPLICATE KEY UPDATE display_name = ?, joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_player = ?",
+    mysql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, display_name, joined_date, last_online, account_number, account_status, account_language, account_player) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
+            " ON DUPLICATE KEY UPDATE display_name = ?, joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, account_player = ?",
         new Object[]{
             account.identifier().toString(),
             account.displayName(),
@@ -316,12 +317,14 @@ public class MySQLProvider extends TNEDataProvider {
             account.getLastOnline(),
             account.getAccountNumber(),
             account.getStatus().getName(),
+            account.getLanguage(),
             account.playerAccount(),
             account.displayName(),
             account.getJoined(),
             account.getLastOnline(),
             account.getAccountNumber(),
             account.getStatus().getName(),
+            account.getLanguage(),
             account.playerAccount(),
         }
     );
