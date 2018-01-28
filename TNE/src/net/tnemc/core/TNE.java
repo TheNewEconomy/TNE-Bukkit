@@ -72,7 +72,7 @@ public class TNE extends TNELib {
   private ModuleLoader loader;
   public UpdateChecker updater;
   private static boolean debugMode = false;
-  public static boolean consoleDebug = false;
+  public static boolean consoleDebug = true;
   private String serverName;
 
   //Economy APIs
@@ -527,6 +527,9 @@ public class TNE extends TNELib {
   }
 
   public void addWorldManager(WorldManager manager) {
+    TNE.debug("Adding World Manager for world " + manager.getWorld());
+    TNE.debug("Configuration World: " + manager.getConfigurationWorld());
+    TNE.debug("Balance World: " + manager.getBalanceWorld());
     worldManagers.put(manager.getWorld(), manager);
   }
 
