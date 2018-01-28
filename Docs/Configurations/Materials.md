@@ -1,0 +1,71 @@
+Material Configurations
+=========================
+
+File
+--------------
+materials.yml
+
+Configuration
+--------------
+```YAML
+Materials:
+
+    Enabled: false
+        
+    #All configurations relating to items
+    Items:
+        
+        #Whether or not a message should be sent even if the charge is 0
+        ZeroMessage: false
+    
+        #For reference purposes
+        Example:
+            
+            #The base cost to buy from the global shop
+            Buy: 20.00
+            
+            #The base cost to sell to the global shop
+            Sell: 15.00
+        
+            #The cost to use this item(use negative amount to give money)
+            Use: 0.00
+            
+            #The cost to craft this item(use negative amount to give money)
+            Crafting: 5.00
+            
+            #The cost to enchant this item(use negative amount to give money)
+            Enchant: 2.00
+            
+            #The cost to smelt this item(use negative amount to give money)
+            Smelt: 4.00
+            
+            #The cost to consume this item
+            Consume: 5.00
+   
+    #All configurations relating to blocks
+    Blocks:
+        
+        #Whether or not a message should be sent even if the charge is 0
+        ZeroMessage: false
+    
+        #For reference purposes
+        Example:
+            
+            #The base cost to buy from the global shop
+            Buy: 20.00
+            
+            #The base cost to sell to the global shop
+            Sell: 15.00
+            
+            #The cost to craft this block(use negative amount to give money). Only applies to certain blocks
+            Crafting: 5.00
+            
+            #The cost to place this block(use negative amount to give money)
+            Place: 5.00
+            
+            #The cost to mine this block(use negative amount to give money)
+            Mine: 2.00
+            
+            #The cost to smelt this block(use negative amount to give money)
+            Smelt: 4.00
+```
