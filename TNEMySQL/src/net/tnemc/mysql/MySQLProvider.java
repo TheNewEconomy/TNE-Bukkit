@@ -260,16 +260,24 @@ public class MySQLProvider extends TNEDataProvider {
     TNE.debug("Loading TNE Accounts");
 
     String table = manager.getPrefix() + "_USERS";
+    List<UUID> userIDS = new ArrayList<>();
     try {
+      TNE.debug("MySQL Connected? " + mysql().connected(manager));
       int accountIndex = mysql().executeQuery("SELECT uuid FROM " + table + ";");
       while (mysql().results(accountIndex).next()) {
         TNE.debug("Loading account with UUID of " + mysql().results(accountIndex).getString("uuid"));
-        TNEAccount account = loadAccount(UUID.fromString(mysql().results(accountIndex).getString("uuid")));
-        if(account != null) accounts.add(account);
+        userIDS.add(UUID.fromString(mysql().results(accountIndex).getString("uuid")));
       }
+      mysql().close(manager);
+
+      userIDS.forEach((id)->{
+        TNEAccount account = loadAccount(id);
+        if(account != null) accounts.add(account);
+      });
     } catch(Exception e) {
       TNE.debug(e);
     }
+    TNE.debug("Finished loading Accounts. Total: " + accounts.size());
     return accounts;
   }
 
@@ -408,12 +416,17 @@ public class MySQLProvider extends TNEDataProvider {
     List<TNETransaction> transactions = new ArrayList<>();
 
     String table = manager.getPrefix() + "_TRANSACTIONS";
+    List<UUID> transactionIDS = new ArrayList<>();
     try {
       int accountIndex = mysql().executeQuery("SELECT trans_id FROM " + table + ";");
       while (mysql().results(accountIndex).next()) {
-        TNETransaction transaction = loadTransaction(UUID.fromString(mysql().results(accountIndex).getString("trans_id")));
-        if(transaction != null) transactions.add(transaction);
+        transactionIDS.add(UUID.fromString(mysql().results(accountIndex).getString("trans_id")));
       }
+      mysql().close(manager);
+      transactionIDS.forEach((id)->{
+        TNETransaction transaction = loadTransaction(id);
+        if(transaction != null) transactions.add(transaction);
+      });
     } catch(Exception e) {
       TNE.debug(e);
     }

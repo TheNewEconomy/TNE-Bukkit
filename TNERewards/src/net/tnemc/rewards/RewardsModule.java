@@ -3,6 +3,7 @@ package net.tnemc.rewards;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.module.Module;
@@ -123,8 +124,8 @@ public class RewardsModule extends Module {
     TNE.debug("TNEObjectInteractionEvent called");
 
     String id = IDFinder.getID(event.getPlayer()).toString();
-    String world = WorldFinder.getWorld(event.getPlayer());
-    BigDecimal cost = event.getType().getCost(event.getIdentifier(), WorldFinder.getWorld(event.getPlayer()), IDFinder.getID(event.getPlayer()).toString());
+    String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
+    BigDecimal cost = event.getType().getCost(event.getIdentifier(), WorldFinder.getWorld(event.getPlayer(), WorldVariant.CONFIGURATION), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
 
     if(cost.compareTo(BigDecimal.ZERO) != 0 && !event.isCancelled()) {

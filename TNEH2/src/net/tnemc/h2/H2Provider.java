@@ -252,12 +252,17 @@ public class H2Provider extends TNEDataProvider {
     List<TNEAccount> accounts = new ArrayList<>();
 
     String table = manager.getPrefix() + "_USERS";
+    List<UUID> userIDS = new ArrayList<>();
     try {
       int accountIndex = h2().executeQuery("SELECT uuid FROM " + table + ";");
       while (h2().results(accountIndex).next()) {
-        TNEAccount account = loadAccount(UUID.fromString(h2().results(accountIndex).getString("uuid")));
-        if(account != null) accounts.add(account);
+        userIDS.add(UUID.fromString(h2().results(accountIndex).getString("uuid")));
       }
+      h2().close(manager);
+      userIDS.forEach((id)->{
+        TNEAccount account = loadAccount(id);
+        if(account != null) accounts.add(account);
+      });
     } catch(Exception e) {
       TNE.debug(e);
     }
@@ -398,12 +403,17 @@ public class H2Provider extends TNEDataProvider {
     List<TNETransaction> transactions = new ArrayList<>();
 
     String table = manager.getPrefix() + "_TRANSACTIONS";
+    List<UUID> transactionIDS = new ArrayList<>();
     try {
       int accountIndex = h2().executeQuery("SELECT trans_id FROM " + table + ";");
       while (h2().results(accountIndex).next()) {
-        TNETransaction transaction = loadTransaction(UUID.fromString(h2().results(accountIndex).getString("trans_id")));
-        if(transaction != null) transactions.add(transaction);
+        transactionIDS.add(UUID.fromString(h2().results(accountIndex).getString("trans_id")));
       }
+      h2().close(manager);
+      transactionIDS.forEach((id)->{
+        TNETransaction transaction = loadTransaction(id);
+        if(transaction != null) transactions.add(transaction);
+      });
     } catch(Exception e) {
       TNE.debug(e);
     }

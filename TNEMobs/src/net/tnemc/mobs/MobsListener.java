@@ -3,6 +3,7 @@ package net.tnemc.mobs;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.module.ModuleListener;
@@ -52,7 +53,7 @@ public class MobsListener implements ModuleListener {
       //Permissions Check
       if (killer.hasPermission("tne.general.mob")) {
 
-        String world = WorldFinder.getWorld(killer);
+        String world = WorldFinder.getWorld(killer, WorldVariant.CONFIGURATION);
         String id = IDFinder.getID(killer).toString();
         String mob = entity.getCustomName();
         BigDecimal reward = MobsModule.instance().mobReward("Default", world, id);
@@ -144,8 +145,8 @@ public class MobsListener implements ModuleListener {
             if (result.proceed() && TNE.instance().api().getBoolean("Mobs.Message")) {
               Message mobKilled = new Message(messageNode);
               mobKilled.addVariable("$mob", formatted.replace(".", " "));
-              mobKilled.addVariable("$reward", CurrencyFormatter.format(WorldFinder.getWorld(killer), currency, reward));
-              mobKilled.translate(WorldFinder.getWorld(killer), killer);
+              mobKilled.addVariable("$reward", CurrencyFormatter.format(world, currency, reward));
+              mobKilled.translate(world, killer);
             }
           }
         }

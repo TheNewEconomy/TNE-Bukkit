@@ -71,7 +71,6 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  private static boolean debugMode = false;
   public static boolean consoleDebug = false;
   private String serverName;
 
@@ -241,7 +240,6 @@ public class TNE extends TNELib {
     //General Variables based on configuration values
     serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
-    debugMode = configurations().getBoolean("Core.Debug");
     useUUID = configurations().getBoolean("Core.UUID");
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(

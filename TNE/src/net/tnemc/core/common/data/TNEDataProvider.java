@@ -63,8 +63,12 @@ public abstract class TNEDataProvider extends DataProvider {
     if(!supportUpdate() || manager.isCacheData()) {
       TNE.debug("Inside !supportUpdate() || manager.isCacheData()");
       Collection<TNEAccount> accounts = loadAccounts();
+      TNE.debug("loadAccounts() size: " + accounts.size());
 
-      accounts.forEach((acc)-> TNE.manager().addAccount(acc));
+      accounts.forEach((acc)-> {
+        TNE.manager().addAccount(acc);
+        TNE.debug("Loading account with ID of: " + acc.identifier() + " and username of: " + acc.displayName());
+      });
 
       Map<String, UUID> ids = loadEconomyIDS();
       ids.forEach((key, value)->{

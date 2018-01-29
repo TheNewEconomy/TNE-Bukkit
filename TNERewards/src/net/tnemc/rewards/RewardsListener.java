@@ -2,6 +2,7 @@ package net.tnemc.rewards;
 
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.rewards.event.InteractionType;
@@ -52,12 +53,12 @@ public class RewardsListener implements ModuleListener {
 
   @EventHandler
   public void onEnchant(final EnchantItemEvent event) {
-    if (TNE.instance().api().getBoolean("Materials.Enabled", WorldFinder.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()))) {
+    if (TNE.instance().api().getBoolean("Materials.Enabled", WorldFinder.getWorld(event.getEnchanter(), WorldVariant.CONFIGURATION), IDFinder.getID(event.getEnchanter()))) {
       if (event.getItem() != null && !event.getItem().getType().equals(Material.AIR)) {
 
         ItemStack result = event.getItem();
         String name = result.getType().name();
-        BigDecimal cost = InteractionType.ENCHANT.getCost(name, WorldFinder.getWorld(event.getEnchanter()), IDFinder.getID(event.getEnchanter()).toString());
+        BigDecimal cost = InteractionType.ENCHANT.getCost(name, WorldFinder.getWorld(event.getEnchanter(), WorldVariant.CONFIGURATION), IDFinder.getID(event.getEnchanter()).toString());
 
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.WHITE + "Enchanting Cost: " + ChatColor.GOLD + cost);
@@ -133,9 +134,9 @@ public class RewardsListener implements ModuleListener {
     if(event.getInventory().getResult() != null) {
       Player player = (Player)event.getView().getPlayer();
 
-      if (TNE.instance().api().getBoolean("Materials.Enabled", WorldFinder.getWorld(player), IDFinder.getID(player))) {
+      if (TNE.instance().api().getBoolean("Materials.Enabled", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player))) {
         String name = event.getInventory().getResult().getType().name();
-        BigDecimal cost = InteractionType.CRAFTING.getCost(name, WorldFinder.getWorld(player), IDFinder.getID(player).toString());
+        BigDecimal cost = InteractionType.CRAFTING.getCost(name, WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString());
 
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.WHITE + "Crafting Cost: " + ChatColor.GOLD + cost);
@@ -154,7 +155,7 @@ public class RewardsListener implements ModuleListener {
 
     Player player = (Player) event.getWhoClicked();
 
-    if (TNE.instance().api().getBoolean("Materials.Enabled", WorldFinder.getWorld(player), IDFinder.getID(player))) {
+    if (TNE.instance().api().getBoolean("Materials.Enabled", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player))) {
 
       String name = event.getInventory().getResult().getType().name();
       ItemStack result = event.getCurrentItem().clone();
