@@ -114,13 +114,13 @@ public class TNE extends TNELib {
     }
 
     reserveEconomy = new ReserveEconomy(this);
+    if(getServer().getPluginManager().getPlugin("Reserve") != null) {
+      setupReserve();
+    }
   }
 
   public void onEnable() {
     super.onEnable();
-    if(getServer().getPluginManager().getPlugin("Reserve") != null) {
-      setupReserve();
-    }
 
     //Create Debug Log
     try {

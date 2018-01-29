@@ -8,7 +8,7 @@ notice.
 #### How can the issue be reproduced?(i.e. the steps to make the issue occur again)
 #### TNE version?(exact version number), and whether or not you've made modification to it.
 #### Modules Loaded?(exact version number), and whether or not you've made modification to it.
-#### debug.log?(use http://paste.ubuntu.com)
+#### debug.txt?(use http://paste.ubuntu.com)
 #### Spigot/Bukkit version?
 #### Is your server run in online mode?
 #### The exact command you ran w/ arguments?
