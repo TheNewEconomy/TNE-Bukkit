@@ -203,11 +203,12 @@ public class ItemCalculations {
         value = value.add(new BigDecimal(convert));
       }
     }
+    TNE.debug("Value: " + value.toPlainString());
     TNE.debug("=====END Account.getCurrencyItems =====");
     return value;
   }
 
-  public static void recalculateItemHoldings(TNEAccount account, String world) {
+  /*public static void recalculateItemHoldings(TNEAccount account, String world) {
     TNE.debug("=====START Account.recalculateItemHoldings =====");
     for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
       if(currency.isItem()) {
@@ -225,7 +226,7 @@ public class ItemCalculations {
     account.setHoldings(world, currency.name(), items);
     TNE.manager().addAccount(account);
     TNE.debug("=====END Account.recalculateCurrencyHoldings =====");
-  }
+  }*/
 
   public static boolean hasItem(TNEAccount account, ItemStack stack) {
     Player player = account.getPlayer();
@@ -244,14 +245,14 @@ public class ItemCalculations {
   public static void giveItems(TNEAccount account, Collection<ItemStack> items) {
     TNE.debug("=====START Account.giveItems =====");
     Player player = account.getPlayer();
-    List<ItemStack> leftOver = new ArrayList<>();
     for(ItemStack stack : items) {
-      leftOver.addAll(player.getInventory().addItem(stack).values());
-    }
+      Map<Integer, ItemStack> left = player.getInventory().addItem(stack);
 
-    for(ItemStack stack : leftOver) {
-      if(stack != null) {
-        player.getWorld().dropItem(player.getLocation(), stack);
+      if(left.size() > 0) {
+        TNE.debug("Some left overs of item: " + stack.getType());
+        left.forEach((key, item)->{
+          player.getWorld().dropItemNaturally(player.getLocation(), item);
+        });
       }
     }
     TNE.debug("=====END Account.giveItems =====");

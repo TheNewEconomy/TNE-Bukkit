@@ -301,7 +301,7 @@ public class MySQLProvider extends TNEDataProvider {
         String balancesTable = manager.getPrefix() + "_BALANCES";
         int balancesIndex = mysql().executePreparedQuery("SELECT world, currency, balance FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
         while (mysql().results(balancesIndex).next()) {
-          account.setHoldings(mysql().results(balancesIndex).getString("world"), mysql().results(balancesIndex).getString("currency"), new BigDecimal(mysql().results(balancesIndex).getString("balance")));
+          account.setHoldings(mysql().results(balancesIndex).getString("world"), mysql().results(balancesIndex).getString("currency"), new BigDecimal(mysql().results(balancesIndex).getString("balance")), true);
         }
         mysql().close(manager);
         return account;
