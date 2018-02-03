@@ -85,7 +85,7 @@ public class TransactionManager {
     types.put("pay", new TransactionPay());
     types.put("set", new TransactionSet());
     types.put("take", new TransactionTake());
-    types.put("worldcharge", new TransactionWorldChange());
+    types.put("worldchange", new TransactionWorldChange());
 
     TNE.loader().getModules().forEach((key, value)->{
       value.getModule().registerTypes().forEach((k, v)->{

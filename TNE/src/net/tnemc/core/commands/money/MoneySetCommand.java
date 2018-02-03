@@ -69,11 +69,10 @@ public class MoneySetCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 2) {
-      String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      String currencyName = (arguments.length >= 4)? arguments[3] : TNE.manager().currencyManager().get(world).name();
+      String world = (arguments.length == 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+      String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
       UUID id = IDFinder.getID(arguments[0]);
 
-      TNE.debug("MoneySetCommand Currency: " + currencyName);
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
       if (parsed.contains("Messages")) {

@@ -24,7 +24,7 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 public class TransactionSet implements TNETransactionType {
   @Override
   public String name() {
-    return "Set";
+    return "set";
   }
 
   @Override

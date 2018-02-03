@@ -71,7 +71,7 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = true;
+  public static boolean consoleDebug = false;
   private String serverName;
 
   //Economy APIs

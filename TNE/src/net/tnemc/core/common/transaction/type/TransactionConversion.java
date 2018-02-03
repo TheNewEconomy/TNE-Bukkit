@@ -25,7 +25,7 @@ public class TransactionConversion implements TNETransactionType {
 
   @Override
   public String name() {
-    return "Conversion";
+    return "conversion";
   }
 
   @Override

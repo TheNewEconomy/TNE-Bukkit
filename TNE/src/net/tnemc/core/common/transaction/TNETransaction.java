@@ -71,7 +71,6 @@ public class TNETransaction implements Transaction {
     if(recipientCharge != null) TNE.debug("Recipient Charge: " + recipientCharge.getAmount());
     CurrencyEntry recipientInitial = null;
     if(recipientCharge != null) {
-      TNE.debug("recipientCharge != null");
       recipientInitial = this.recipientCharge().getEntry().copy(
           TNE.instance().api().getHoldings(
               this.recipient(),
@@ -80,7 +79,6 @@ public class TNETransaction implements Transaction {
           )
       );
       this.setRecipientBalance(recipientInitial);
-      TNE.debug("setRecipientBalance: " + recipientBalance.getAmount() + " in Currency: " + recipientBalance.getCurrency().name());
       if (recipientCharge != null) TNE.debug("Recipient Charge: " + recipientCharge.getAmount());
     }
 

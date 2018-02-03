@@ -377,7 +377,7 @@ public class MySQLProvider extends TNEDataProvider {
             mysql().results(transIndex).getString("trans_initiator"),
             mysql().results(transIndex).getString("trans_recipient"),
             mysql().results(transIndex).getString("trans_world"),
-            TNE.transactionManager().getType(mysql().results(transIndex).getString("trans_type")),
+            TNE.transactionManager().getType(mysql().results(transIndex).getString("trans_type").toLowerCase()),
             mysql().results(transIndex).getLong("trans_time"));
 
         String chargesTable = manager.getPrefix() + "_CHARGES";
@@ -444,7 +444,7 @@ public class MySQLProvider extends TNEDataProvider {
             (transaction.initiatorBalance() != null)? transaction.initiatorBalance().getAmount().toPlainString() : "0.0",
             transaction.recipient(),
             (transaction.recipientBalance() != null)? transaction.recipientBalance().getAmount().toPlainString() : "0.0",
-            (transaction.type().name() != null)? transaction.type().name() : "Unknown",
+            transaction.type().name(),
             transaction.getWorld(),
             transaction.time(),
             transaction.voided(),

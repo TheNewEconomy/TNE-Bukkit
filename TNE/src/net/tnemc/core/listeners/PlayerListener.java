@@ -4,13 +4,16 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -20,8 +23,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
@@ -50,6 +56,64 @@ public class PlayerListener implements Listener {
 
   public PlayerListener(TNE plugin) {
     this.plugin = plugin;
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onPickup(final PlayerPickupItemEvent event) {
+    TNE.debug("=====START PlayerListener.onPickup =====");
+    Player player = event.getPlayer();
+    UUID id = IDFinder.getID(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+
+    if(!noEconomy) {
+      TNEAccount account = TNEAccount.getAccount(id.toString());
+      TNE.debug("Account ID: " + account.identifier().toString());
+      ItemStack stack = event.getItem().getItemStack();
+      TNE.debug("Stack: " + stack.toString());
+
+      Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
+      TNE.debug("Present: " + currency.isPresent());
+      currency.ifPresent((cur)->{
+        Bukkit.getScheduler().scheduleSyncDelayedTask(TNE.instance(), ()->ItemCalculations.recalculateItemHoldings(account, world, cur), 5L);
+      });
+      TNE.manager().addAccount(account);
+    }
+    TNE.debug("=====END PlayerListener.onPickup =====");
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onDrop(final PlayerDropItemEvent event) {
+    Player player = event.getPlayer();
+    UUID id = IDFinder.getID(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+
+    if(!noEconomy) {
+      TNEAccount account = TNEAccount.getAccount(id.toString());
+      Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, event.getItemDrop().getItemStack());
+      currency.ifPresent((cur)->{
+        ItemCalculations.recalculateItemHoldings(account, world, cur);
+      });
+      TNE.manager().addAccount(account);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onInventoryClose(final InventoryCloseEvent event) {
+    TNE.debug("=====START PlayerListener.onInventoryClose =====");
+    Player player = (Player)event.getPlayer();
+    UUID id = IDFinder.getID(player);
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+
+    if(!noEconomy) {
+      TNE.debug("Account Exists: " + TNE.manager().exists(id));
+      TNEAccount account = TNEAccount.getAccount(id.toString());
+      ItemCalculations.recalculateItemHoldings(account, world);
+      TNE.manager().addAccount(account);
+    }
+    TNE.debug("=====END PlayerListener.onInventoryClose =====");
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

@@ -93,11 +93,8 @@ public class MoneyBalanceCommand extends TNECommand {
     TransactionResult result = null;
 
     for(TNECurrency cur : currencies) {
-      TNE.debug("BalanceCommand Currency Loop.. Currency: " + cur.name());
       TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("inquiry"));
       transaction.setRecipientCharge(new TransactionCharge(world, cur, new BigDecimal(0.0)));
-      TNE.debug("BalanceCommand RecipientChargeCurrency: " + transaction.recipientCharge().getCurrency().name());
-      TNE.debug("BalanceCommand RecipientCharge: " + transaction.recipientCharge().getAmount().toPlainString());
       result = TNE.transactionManager().perform(transaction);
       balances.put(cur.name(), transaction.recipientBalance().getAmount());
     }

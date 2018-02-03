@@ -24,7 +24,7 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 public class TransactionHasFunds implements TNETransactionType {
   @Override
   public String name() {
-    return "HasFunds";
+    return "hasfunds";
   }
 
   @Override

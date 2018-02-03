@@ -2,8 +2,6 @@ package net.tnemc.core.common.utils;
 
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
@@ -70,13 +68,6 @@ public class MISCUtils {
 
   public static Boolean isOnline(UUID id) {
    return IDFinder.getPlayer(id.toString()) != null;
-  }
-
-  public static Boolean isOnline(UUID id, String world) {
-    if(IDFinder.getPlayer(id.toString()) != null) {
-      return WorldFinder.getWorld(id, WorldVariant.BALANCE).equalsIgnoreCase(world);
-    }
-    return false;
   }
 
   public static Boolean isDouble(String value, String world) {

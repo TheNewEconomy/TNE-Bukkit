@@ -260,8 +260,7 @@ public class TNEAPI extends TNELibAPI {
    * @return The balance of the account.
    */
   public BigDecimal getHoldings(String identifier, String world, TNECurrency currency) {
-    TNE.debug("getHoldings World: " + world + " Currency: " + currency.name());
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(world, currency);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(world, currency.name());
   }
 
   /**

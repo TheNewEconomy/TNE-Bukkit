@@ -2,6 +2,7 @@ package net.tnemc.core.commands.config;
 
 import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -73,7 +74,7 @@ public class ConfigGetCommand extends TNECommand {
         return false;
       }
       Object value = (configuration.equalsIgnoreCase("all"))? TNE.configurations().getValue(node)
-                                                                       : TNE.configurations().getValue(node, configuration);
+                                                                       : TNE.configurations().getValue(node, configuration, world, IDFinder.getID(sender).toString());
 
       Message message = new Message("Messages.Configuration.Get");
       message.addVariable("$node", node);

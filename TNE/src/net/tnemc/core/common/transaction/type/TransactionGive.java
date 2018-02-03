@@ -24,7 +24,7 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 public class TransactionGive implements TNETransactionType {
   @Override
   public String name() {
-    return "Give";
+    return "give";
   }
 
   @Override

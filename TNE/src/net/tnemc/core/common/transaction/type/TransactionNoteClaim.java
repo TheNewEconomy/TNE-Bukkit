@@ -24,7 +24,7 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 public class TransactionNoteClaim implements TNETransactionType {
   @Override
   public String name() {
-    return "NoteClaim";
+    return "noteclaim";
   }
 
   @Override
