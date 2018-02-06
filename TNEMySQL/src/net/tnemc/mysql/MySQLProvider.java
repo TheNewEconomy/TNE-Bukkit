@@ -444,7 +444,7 @@ public class MySQLProvider extends TNEDataProvider {
             (transaction.initiatorBalance() != null)? transaction.initiatorBalance().getAmount().toPlainString() : "0.0",
             transaction.recipient(),
             (transaction.recipientBalance() != null)? transaction.recipientBalance().getAmount().toPlainString() : "0.0",
-            transaction.type().name(),
+            transaction.type().name().toLowerCase(),
             transaction.getWorld(),
             transaction.time(),
             transaction.voided(),

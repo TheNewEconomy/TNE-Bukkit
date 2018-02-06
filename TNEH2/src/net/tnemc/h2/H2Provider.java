@@ -289,7 +289,7 @@ public class H2Provider extends TNEDataProvider {
         String balancesTable = manager.getPrefix() + "_BALANCES";
         int balancesIndex = h2().executePreparedQuery("SELECT world, currency, balance FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
         while (h2().results(balancesIndex).next()) {
-          account.setHoldings(h2().results(balancesIndex).getString("world"), h2().results(balancesIndex).getString("currency"), new BigDecimal(h2().results(balancesIndex).getString("balance")));
+          account.setHoldings(h2().results(balancesIndex).getString("world"), h2().results(balancesIndex).getString("currency"), new BigDecimal(h2().results(balancesIndex).getString("balance")), true);
         }
         h2().close(manager);
         return account;

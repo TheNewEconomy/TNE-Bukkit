@@ -16,12 +16,6 @@ Core:
     #what TNE version, java version, etc.
     Metrics: true
 
-    #All configurations relating to TNE Modules
-    Modules:
-
-        #Whether or not to use TNE Modules
-        Enabled: true
-
     #All configurations relating to the server in general.
     Server:
 

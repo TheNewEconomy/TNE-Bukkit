@@ -23,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 import java.util.Date;
@@ -81,7 +82,7 @@ public class ConnectionListener implements Listener {
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
         ItemCalculations.setItems(account, TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value));
+            account.getHoldings(world, value, true));
       });
     }
 
@@ -99,9 +100,22 @@ public class ConnectionListener implements Listener {
     UUID id = IDFinder.getID(player);
     if(TNE.manager().exists(id)) {
       TNEAccount account = TNEAccount.getAccount(id.toString());
+      account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
       account.setLastOnline(new Date().getTime());
       account.getHistory().clearAway();
       TNE.manager().addAccount(account);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onTeleport(final PlayerTeleportEvent event) {
+    String fromWorld = event.getFrom().getWorld().getName();
+    fromWorld = TNE.instance().getWorldManager(fromWorld).getBalanceWorld();
+    String toWorld = event.getTo().getWorld().getName();
+    toWorld = TNE.instance().getWorldManager(toWorld).getBalanceWorld();
+
+    if(!fromWorld.equals(toWorld)) {
+      TNE.manager().getAccount(IDFinder.getID(event.getPlayer())).saveItemCurrency(fromWorld);
     }
   }
 
@@ -110,10 +124,10 @@ public class ConnectionListener implements Listener {
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
     TNEAccount account = TNEAccount.getAccount(id.toString());
-    String world = player.getWorld().getName();
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
 
-    boolean noEconomy = TNE.instance().getWorldManager(world) == null ||TNE.instance().getWorldManager(world).isEconomyDisabled();
-    if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
+    boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null ||TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
+    if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         WorldManager manager = TNE.instance().getWorldManager(world);
         TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("worldchange"));
@@ -127,7 +141,7 @@ public class ConnectionListener implements Listener {
         message.translate(world, player);
       }
       TNEAccount.getAccount(id.toString()).initializeHoldings(world);
-    } else if(!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", world, IDFinder.getID(player).toString())) {
+    } else if(!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
       TNEAccount.getAccount(id.toString()).initializeHoldings(world);
     }
 

@@ -5,6 +5,7 @@ import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.collection.EventList;
 import com.github.tnerevival.core.collection.EventMap;
+import com.github.tnerevival.user.IDFinder;
 import net.milkbowl.vault.economy.Economy;
 import net.tnemc.core.commands.admin.AdminCommand;
 import net.tnemc.core.commands.config.ConfigCommand;
@@ -19,6 +20,7 @@ import net.tnemc.core.common.EconomyManager;
 import net.tnemc.core.common.TNEUUIDManager;
 import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
@@ -302,6 +304,17 @@ public class TNE extends TNELib {
     if(configurations().getBoolean("Core.Metrics")) {
       new Metrics(this);
       getLogger().info("Sending plugin statistics.");
+    }
+
+    if(api.getBoolean("Core.Server.Account.Enabled")) {
+      String world = worldManagers.get(defaultWorld).getBalanceWorld();
+      UUID id = IDFinder.getID(consoleName);
+
+      if(!manager.exists(id)) {
+        TNEAccount account = manager.getAccount(id);
+        account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("Core.Server.Account.Balance"), true);
+        getLogger().info("Created server economy account.");
+      }
     }
 
     getLogger().info("The New Economy has been enabled!");

@@ -3,8 +3,11 @@ package net.tnemc.core.common.data;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DataProvider;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -85,7 +88,13 @@ public abstract class TNEDataProvider extends DataProvider {
   public void save(Double version) {
     TNE.debug("TNEDataProvider.save");
     preSave(version);
-    TNE.manager().getAccounts().forEach((id, account)->saveAccount(account));
+    TNE.manager().getAccounts().forEach((id, account)->{
+      if(MISCUtils.isOnline(id)) {
+        String world = WorldFinder.getWorld(id, WorldVariant.BALANCE);
+        account.saveItemCurrency(world);
+      }
+      saveAccount(account);
+    });
     TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
     TNE.uuidManager().getUuids().forEach((username, id)->{
       TNE.debug("Saving Offline id: " + username + ", " + id.toString());

@@ -43,7 +43,6 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
     configurations.put("Core.Metrics", true);
-    configurations.put("Core.Modules.Enabled", true);
     configurations.put("Core.Server.Name", "Main Server");
     configurations.put("Core.Server.Consolidate", false);
     configurations.put("Core.Server.Account.Enabled", true);
