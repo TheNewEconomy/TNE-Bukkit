@@ -63,6 +63,8 @@ public abstract class TNEDataProvider extends DataProvider {
   @Override
   public void load(Double version) {
     preLoad(version);
+
+    System.out.println("Supports update? " + supportUpdate());
     if(!supportUpdate()) {
       TNE.debug("Inside !supportUpdate() || manager.isCacheData()");
       Collection<TNEAccount> accounts = loadAccounts();
@@ -74,6 +76,7 @@ public abstract class TNEDataProvider extends DataProvider {
       });
 
       Map<String, UUID> ids = loadEconomyIDS();
+      TNE.debug("loadEconomyIDS() size: " + ids.size());
       ids.forEach((key, value)->{
         TNE.debug("Loading id: " + value.toString() + " for username: " + key);
         TNE.uuidManager().addUUID(key, value);

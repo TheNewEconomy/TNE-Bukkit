@@ -319,6 +319,8 @@ public class TNE extends TNELib {
 
       if(!manager.exists(id)) {
         TNEAccount account = manager.getAccount(id);
+        TNE.debug("Account Null? " + (account == null));
+        TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));
         account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("Core.Server.Account.Balance"), true);
         getLogger().info("Created server economy account.");
       }
@@ -456,7 +458,7 @@ public class TNE extends TNELib {
       System.out.println(message);
     } else {
       try {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + day + month + year + ".txt"), true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt"), true));
         writer.write(time + message + System.getProperty("line.separator"));
 
         writer.close();

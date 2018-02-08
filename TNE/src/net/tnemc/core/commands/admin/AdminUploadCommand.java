@@ -2,15 +2,14 @@ package net.tnemc.core.commands.admin;
 
 import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.time.LocalDateTime;
-
-import static com.google.common.net.HttpHeaders.USER_AGENT;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -73,17 +72,8 @@ public class AdminUploadCommand extends TNECommand {
     int month = now.getMonthValue();
     int day = now.getDayOfMonth();
 
-    final String base = "https://pastebin.com/api/api_post.php";
-    final String devKey = "b73948f0d7d8cb449085dc90168a5deb";
-    final String format = "txt";
-    final String expiration = "N";
-    final String privateCode = "1";
-
     StringBuilder content = new StringBuilder();
     String name = "";
-    String parameters = "api_option=paste&api_paste_private=" + privateCode +
-                        "&api_expire_date=" + expiration +
-                        "&api_dev_key=" + devKey;
 
     name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-server.txt";
     try (BufferedReader br = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(),"../../logs/latest.log")))){
@@ -94,7 +84,7 @@ public class AdminUploadCommand extends TNECommand {
     } catch (Exception e) {
       TNE.debug(e);
     }
-    serverLog = sendPostRequest(base, parameters + "&api_paste_name=" + name + "&api_paste_code=" + content.toString());
+    serverLog = MISCUtils.pastebinUpload(name, content);
 
     content = new StringBuilder();
     name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-debug.txt";
@@ -106,7 +96,7 @@ public class AdminUploadCommand extends TNECommand {
     } catch (Exception e) {
       TNE.debug(e);
     }
-    debugLog = sendPostRequest(base, parameters + "&api_paste_name=" + name + "&api_paste_code=" + content.toString());
+    debugLog = MISCUtils.pastebinUpload(name, content);
 
     succeeded = serverLog.contains("pastebin.com") || debugLog.contains("pastebin.com");
 
@@ -118,35 +108,5 @@ public class AdminUploadCommand extends TNECommand {
     }
     sender.sendMessage(ChatColor.RED + "Something went wrong while uploading the files to pastebin!");
     return false;
-  }
-
-  private static String sendPostRequest(String URL, String parameters) {
-    StringBuilder builder = new StringBuilder();
-    try {
-      HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
-      connection.setRequestMethod("POST");
-      connection.setRequestProperty("User-Agent", USER_AGENT);
-      connection.setDoOutput(true);
-      OutputStream os = connection.getOutputStream();
-      os.write(parameters.getBytes());
-      os.flush();
-      os.close();
-
-      int responseCode = connection.getResponseCode();
-      System.out.println("POST Response Code :: " + responseCode);
-
-      if(responseCode == HttpURLConnection.HTTP_OK) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String response;
-        while ((response = reader.readLine()) != null) {
-          builder.append(response);
-        }
-        reader.close();
-      }
-    } catch (Exception e) {
-      TNE.debug(e);
-    }
-    System.out.println("POST Final Response: " + builder.toString());
-    return builder.toString();
   }
 }

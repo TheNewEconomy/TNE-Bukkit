@@ -6,7 +6,14 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.Bukkit;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.UUID;
+
+import static com.google.common.net.HttpHeaders.USER_AGENT;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -98,5 +105,47 @@ public class MISCUtils {
     } catch(Exception e) {
       return false;
     }
+  }
+
+  public static String pastebinUpload(String name, StringBuilder content) {
+    final String base = "https://pastebin.com/api/api_post.php";
+    final String devKey = "b73948f0d7d8cb449085dc90168a5deb";
+    final String format = "txt";
+    final String expiration = "N";
+    final String privateCode = "1";
+
+    String parameters = "api_option=paste&api_paste_private=" + privateCode +
+        "&api_expire_date=" + expiration +
+        "&api_dev_key=" + devKey;
+
+    return sendPostRequest(base, parameters + "&api_paste_name=" + name + "&api_paste_code=" + content.toString());
+  }
+
+  private static String sendPostRequest(String URL, String parameters) {
+    StringBuilder builder = new StringBuilder();
+    try {
+      HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+      connection.setRequestMethod("POST");
+      connection.setRequestProperty("User-Agent", USER_AGENT);
+      connection.setDoOutput(true);
+      OutputStream os = connection.getOutputStream();
+      os.write(parameters.getBytes());
+      os.flush();
+      os.close();
+
+      int responseCode = connection.getResponseCode();
+
+      if(responseCode == HttpURLConnection.HTTP_OK) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String response;
+        while ((response = reader.readLine()) != null) {
+          builder.append(response);
+        }
+        reader.close();
+      }
+    } catch (Exception e) {
+      TNE.debug(e);
+    }
+    return builder.toString();
   }
 }

@@ -143,12 +143,14 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Admin.Caveats", "/tne caveats - Displays all known caveats for this version of TNE.");
     configurations.put("Messages.Commands.Admin.Create", "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account.");
     configurations.put("Messages.Commands.Admin.Delete", "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner.");
+    configurations.put("Messages.Commands.Admin.Extract", "/tne extract - Extracts all player balances with their username attached for database-related debugging.");
     configurations.put("Messages.Commands.Admin.ID", "/tne id <player> - Retrieves a player's TNE UUID.<newline>- Player ~ The player you wish to discover the UUID of.");
     configurations.put("Messages.Commands.Admin.Menu", "/tne menu <player> - Opens a GUI for performing basic transactions on the specified player.<newline>-Player ~ The name/uuid of the player you wish to perform transactions with in the GUI.");
     configurations.put("Messages.Commands.Admin.Purge", "/tne purge - Deletes all player accounts that have the default balance");
     configurations.put("Messages.Commands.Admin.Recreate", "/tne recreate - Attempts to recreate database tables. WARNING: This will delete all data in the database.");
     configurations.put("Messages.Commands.Admin.Reload", "/tne reload <configuration> - Saves modifications made via command, and reloads a configuration file.<newline>- Configuration ~ The identifier of the configuration to reload. Default is all.");
-    configurations.put("Messages.Commands.Admin.Report", "/tne report <report> - File a bug report.<newline>- Report ~ The link to the pastebin with the bug report, use the following format: https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Report%20Format.md.");
+    configurations.put("Messages.Commands.Admin.Reset", "/tne reset - Deletes all economy-related data from the database.");
+    configurations.put("Messages.Commands.Admin.Restore", "/tne restore - Restores all balances that are located in extracted.yml after /tne extract.");
     configurations.put("Messages.Commands.Admin.Save", "/tne save - Force saves all TNE data.");
     configurations.put("Messages.Commands.Admin.Status", "/tne status <player> [status] - Displays, or sets, the current account status of an account.<newline>- Player ~ The account owner.");
     configurations.put("Messages.Commands.Admin.Upload", "/tne upload - Uploads the TNE debug & latest server log to pastebin.com, and provides a link to each.");

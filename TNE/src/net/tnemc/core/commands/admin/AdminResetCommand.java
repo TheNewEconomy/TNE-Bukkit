@@ -2,6 +2,7 @@ package net.tnemc.core.commands.admin;
 
 import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import org.bukkit.command.CommandSender;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -18,34 +19,17 @@ import net.tnemc.core.TNE;
  * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * Created by Daniel on 7/10/2017.
+ * Created by Daniel on 2/8/2018.
  */
-public class AdminCommand extends TNECommand {
+public class AdminResetCommand extends TNECommand {
 
-  public AdminCommand(TNE plugin) {
+  public AdminResetCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new AdminBackupCommand(plugin));
-    subCommands.add(new AdminBalanceCommand(plugin));
-    subCommands.add(new AdminBuildCommand(plugin));
-    subCommands.add(new AdminCaveatsCommand(plugin));
-    subCommands.add(new AdminCreateCommand(plugin));
-    subCommands.add(new AdminDeleteCommand(plugin));
-    subCommands.add(new AdminExtractCommand(plugin));
-    subCommands.add(new AdminIDCommand(plugin));
-    subCommands.add(new AdminMenuCommand(plugin));
-    subCommands.add(new AdminPurgeCommand(plugin));
-    subCommands.add(new AdminReloadCommand(plugin));
-    subCommands.add(new AdminResetCommand(plugin));
-    subCommands.add(new AdminRestoreCommand(plugin));
-    subCommands.add(new AdminSaveCommand(plugin));
-    subCommands.add(new AdminStatusCommand(plugin));
-    subCommands.add(new AdminUploadCommand(plugin));
-    subCommands.add(new AdminVersionCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "tne";
+    return "reset";
   }
 
   @Override
@@ -55,11 +39,23 @@ public class AdminCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.admin";
+    return "tne.admin.reset";
   }
 
   @Override
   public boolean console() {
+    return true;
+  }
+
+  @Override
+  public String getHelp() {
+    return "Messages.Commands.Admin.Reset";
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.saveManager().getTNEManager().getTNEProvider().delete(TNE.instance().currentSaveVersion);
+    sender.sendMessage("All data has been reset.");
     return true;
   }
 }
