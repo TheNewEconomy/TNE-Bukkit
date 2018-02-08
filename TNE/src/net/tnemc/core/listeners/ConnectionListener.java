@@ -68,7 +68,9 @@ public class ConnectionListener implements Listener {
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     TNE.debug(id + "");
     boolean first = !TNE.manager().exists(id);
-    TNEAccount account = TNEAccount.getAccount(id.toString());
+    TNEAccount account = (first)? TNEAccount.getAccount(id.toString())
+                         : TNE.saveManager().getTNEManager().getTNEProvider().loadAccount(id);
+    TNE.manager().addAccount(account);
     if(first) account.initializeHoldings(world);
     if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
       String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
@@ -104,6 +106,7 @@ public class ConnectionListener implements Listener {
       account.setLastOnline(new Date().getTime());
       account.getHistory().clearAway();
       TNE.manager().addAccount(account);
+      TNE.manager().removeAccount(id);
     }
   }
 

@@ -59,13 +59,6 @@ public class MoneyCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    if(command.equalsIgnoreCase("balance") ||
-        command.equalsIgnoreCase("bal") ||
-        arguments.length == 0) {
-      TNECommand sub = FindSub("balance");
-      return sub.execute(sender, command, arguments);
-    }
-
     if(command.equalsIgnoreCase("baltop")) {
       TNECommand sub = FindSub("top");
       return sub.execute(sender, command, arguments);
@@ -73,6 +66,13 @@ public class MoneyCommand extends TNECommand {
 
     if(command.equalsIgnoreCase("pay")) {
       TNECommand sub = FindSub("pay");
+      return sub.execute(sender, command, arguments);
+    }
+
+    if(command.equalsIgnoreCase("balance") ||
+        command.equalsIgnoreCase("bal") ||
+        arguments.length == 0) {
+      TNECommand sub = FindSub("balance");
       return sub.execute(sender, command, arguments);
     }
     return super.execute(sender, command, arguments);

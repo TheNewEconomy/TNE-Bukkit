@@ -1,6 +1,5 @@
 package net.tnemc.core.common.transaction;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
@@ -69,7 +68,7 @@ public class MultiTransactionData {
     TransactionResult result = TNE.transactionManager().perform(transaction);
     if(result.proceed()) {
       proceed = true;
-      succeed.add(IDFinder.getUsername(account.identifier().toString()));
+      succeed.add(account.displayName());
       messages.put(account.identifier(), result.recipientMessage());
       messages.put(handler.getInitiator(), result.initiatorMessage());
     }

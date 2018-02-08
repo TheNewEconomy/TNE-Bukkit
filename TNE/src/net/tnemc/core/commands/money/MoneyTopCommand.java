@@ -4,7 +4,6 @@ import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.collection.paginate.Page;
 import com.github.tnerevival.core.collection.paginate.Paginator;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -95,7 +94,7 @@ public class MoneyTopCommand extends TNECommand {
 
     for(Object o : p.getElements()) {
       TopBalance bal = (TopBalance)o;
-      sender.sendMessage(IDFinder.ecoToUsername(bal.getId()) + " has " + bal.getBalance());
+      sender.sendMessage(bal.getUsername() + " has " + bal.getBalance());
     }
     return true;
   }

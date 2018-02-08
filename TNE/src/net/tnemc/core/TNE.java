@@ -126,7 +126,12 @@ public class TNE extends TNELib {
 
     //Create Debug Log
     try {
-      new File(getDataFolder(), "debug.txt").createNewFile();
+      LocalDateTime now = LocalDateTime.now();
+      int year = now.getYear();
+      int month = now.getMonthValue();
+      int day = now.getDayOfMonth();
+      new File(getDataFolder(), "debug/").mkdir();
+      new File(getDataFolder(), "debug/debug-" + day + month + year + ".txt").createNewFile();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -449,7 +454,7 @@ public class TNE extends TNELib {
       System.out.println(message);
     } else {
       try {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug.txt"), true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + day + month + year + ".txt"), true));
         writer.write(time + message + System.getProperty("line.separator"));
 
         writer.close();
@@ -529,12 +534,12 @@ public class TNE extends TNELib {
 
   private void setupVault() {
     getServer().getServicesManager().register(Economy.class, vaultEconomy, this, ServicePriority.Highest);
-    debug("Hooked into Vault");
+    getLogger().info("Hooked into Vault");
   }
 
   private void setupReserve() {
     Reserve.instance().registerProvider(reserveEconomy);
-    debug("Hooked into Reserve");
+    getLogger().info("Hooked into Reserve");
   }
 
   public void addWorldManager(WorldManager manager) {

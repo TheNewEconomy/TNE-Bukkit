@@ -63,7 +63,7 @@ public abstract class TNEDataProvider extends DataProvider {
   @Override
   public void load(Double version) {
     preLoad(version);
-    if(!supportUpdate() || manager.isCacheData()) {
+    if(!supportUpdate()) {
       TNE.debug("Inside !supportUpdate() || manager.isCacheData()");
       Collection<TNEAccount> accounts = loadAccounts();
       TNE.debug("loadAccounts() size: " + accounts.size());

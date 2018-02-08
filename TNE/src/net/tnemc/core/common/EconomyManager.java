@@ -82,6 +82,10 @@ public class EconomyManager {
     return accounts.get(id);
   }
 
+  public void removeAccount(UUID id) {
+    accounts.remove(id, false);
+  }
+
   public void deleteAccount(UUID id) {
     if(exists(id)) {
       accounts.remove(id);
@@ -132,21 +136,21 @@ public class EconomyManager {
 
   public LinkedHashSet<Object> parseTop(String currency, String world, Integer limit) {
     LinkedHashSet<Object> finalBalances = new LinkedHashSet<>();
-    TreeMap<Double, List<UUID>> ordered = new TreeMap<>(Collections.reverseOrder());
+    TreeMap<Double, List<String>> ordered = new TreeMap<>(Collections.reverseOrder());
 
     for(TNEAccount account : accounts.values()) {
       Double balance = account.addAll(world).doubleValue();
-      List<UUID> ids = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<>();
-      ids.add(account.identifier());
-      ordered.put(balance, ids);
+      List<String> usernames = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<>();
+      usernames.add(account.displayName());
+      ordered.put(balance, usernames);
     }
 
     parse:
-    for(Map.Entry<Double, List<UUID>> entry : ordered.entrySet()) {
+    for(Map.Entry<Double, List<String>> entry : ordered.entrySet()) {
       if(finalBalances.size() >= limit) break;
-      for(UUID id : entry.getValue()) {
+      for(String username : entry.getValue()) {
         if(finalBalances.size() >= limit) break parse;
-        finalBalances.add(new TopBalance(id, entry.getKey()));
+        finalBalances.add(new TopBalance(username, entry.getKey()));
       }
     }
     return finalBalances;

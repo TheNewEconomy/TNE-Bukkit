@@ -1,7 +1,5 @@
 package net.tnemc.core.common.utils;
 
-import java.util.UUID;
-
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -20,20 +18,20 @@ import java.util.UUID;
  * Created by Daniel on 7/16/2017.
  */
 public class TopBalance {
-  private UUID id;
+  private String username;
   private double balance;
 
-  public TopBalance(UUID id, double balance) {
-    this.id = id;
+  public TopBalance(String username, double balance) {
+    this.username = username;
     this.balance = balance;
   }
 
-  public UUID getId() {
-    return id;
+  public String getUsername() {
+    return username;
   }
 
-  public void setId(UUID id) {
-    this.id = id;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   public double getBalance() {

@@ -70,6 +70,7 @@ public class MoneyBalanceCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     TNE.debug("===START MoneyBalanceCommand  ===");
     String world = (arguments.length >= 1)? arguments[0] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+    if(TNE.instance().getWorldManager(world) == null) world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
     TNE.debug("MoneyBalanceCommand.execute, World: " + world);
     if(TNE.manager() == null) TNE.debug("Economy Manager is null");
