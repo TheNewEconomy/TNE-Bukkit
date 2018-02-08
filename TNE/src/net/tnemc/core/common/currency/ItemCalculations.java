@@ -189,7 +189,7 @@ public class ItemCalculations {
   }
 
   public static BigDecimal getCurrencyItems(TNEAccount account, TNECurrency currency) {
-    TNE.debug("=====START Account.getCurrencyItems =====");
+    TNE.debug("=====START ItemCalculations.getCurrencyItems =====");
     BigDecimal value = new BigDecimal(0.0);
     if(currency.isItem()) {
       Player player = account.getPlayer();
@@ -204,7 +204,7 @@ public class ItemCalculations {
       }
     }
     TNE.debug("Value: " + value.toPlainString());
-    TNE.debug("=====END Account.getCurrencyItems =====");
+    TNE.debug("=====END ItemCalculations.getCurrencyItems =====");
     return value;
   }
 

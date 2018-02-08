@@ -19,29 +19,29 @@ import org.bukkit.command.CommandSender;
  * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * Created by Daniel on 7/10/2017.
+ * Created by Daniel on 2/7/2018.
  */
-public class AdminVersionCommand extends TNECommand {
+public class AdminBuildCommand extends TNECommand {
 
-  public AdminVersionCommand(TNE plugin) {
+  public AdminBuildCommand(TNE plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "version";
+    return "build";
   }
 
   @Override
   public String[] getAliases() {
     return new String[] {
-        "v"
+        "b"
     };
   }
 
   @Override
   public String getNode() {
-    return "tne.admin.version";
+    return "tne.admin.build";
   }
 
   @Override
@@ -51,12 +51,12 @@ public class AdminVersionCommand extends TNECommand {
 
   @Override
   public String getHelp() {
-    return "Messages.Commands.Admin.Version";
+    return "Messages.Commands.Admin.Build";
   }
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    sender.sendMessage("You're currently running TNE version " + TNE.instance().getDescription().getVersion());
+    sender.sendMessage("You're currently running TNE build " + TNE.build);
     return true;
   }
 }

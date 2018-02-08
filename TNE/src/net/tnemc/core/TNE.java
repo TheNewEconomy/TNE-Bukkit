@@ -100,6 +100,8 @@ public class TNE extends TNELib {
   private SaveWorker saveWorker;
   private CacheWorker cacheWorker;
 
+  public static final String build = "19prebeta1";
+
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
   private List<EventMap> cacheMaps = new ArrayList<>();
@@ -131,7 +133,7 @@ public class TNE extends TNELib {
       int month = now.getMonthValue();
       int day = now.getDayOfMonth();
       new File(getDataFolder(), "debug/").mkdir();
-      new File(getDataFolder(), "debug/debug-" + day + month + year + ".txt").createNewFile();
+      new File(getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt").createNewFile();
     } catch (IOException e) {
       e.printStackTrace();
     }

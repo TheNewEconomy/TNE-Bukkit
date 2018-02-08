@@ -139,6 +139,7 @@ public class MessageConfigurations extends Configuration {
 
     configurations.put("Messages.Commands.Admin.Backup", "/tne backup - Creates a backup of all server data.");
     configurations.put("Messages.Commands.Admin.Balance", "/tne balance <player> [world] [currency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- currency ~ The currency to retrieve the balance of.");
+    configurations.put("Messages.Commands.Admin.Build", "//tne build - Displays the version of TNE currently running.");
     configurations.put("Messages.Commands.Admin.Caveats", "/tne caveats - Displays all known caveats for this version of TNE.");
     configurations.put("Messages.Commands.Admin.Create", "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account.");
     configurations.put("Messages.Commands.Admin.Delete", "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner.");
@@ -150,6 +151,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Admin.Report", "/tne report <report> - File a bug report.<newline>- Report ~ The link to the pastebin with the bug report, use the following format: https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Report%20Format.md.");
     configurations.put("Messages.Commands.Admin.Save", "/tne save - Force saves all TNE data.");
     configurations.put("Messages.Commands.Admin.Status", "/tne status <player> [status] - Displays, or sets, the current account status of an account.<newline>- Player ~ The account owner.");
+    configurations.put("Messages.Commands.Admin.Upload", "/tne upload - Uploads the TNE debug & latest server log to pastebin.com, and provides a link to each.");
     configurations.put("Messages.Commands.Admin.Version", "/tne version - Displays the version of TNE currently running.");
 
     configurations.put("Messages.Commands.Config.Get", "/tnec get <node> [configuration] - Returns the value of a configuration.<newline>- Node ~ The configuration node to use.<newline>- Configuration ~ The configuration identifier to retrieve the value from. This may be retrieved automatically.");
