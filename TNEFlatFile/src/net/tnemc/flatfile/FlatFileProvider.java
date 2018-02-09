@@ -70,6 +70,11 @@ public class FlatFileProvider extends TNEDataProvider {
   }
 
   @Override
+  public void delete(Double version) {
+
+  }
+
+  @Override
   public UUID loadID(String username) {
     UUID id = null;
     File file = new File(directory, "ids.yml");

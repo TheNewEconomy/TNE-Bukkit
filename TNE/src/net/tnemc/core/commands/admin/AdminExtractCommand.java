@@ -75,13 +75,13 @@ public class AdminExtractCommand extends TNECommand {
     }
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
     Map<String, UUID> ids = TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS();
-    System.out.println("Accounts Length: " + ids.size());
+    TNE.debug("Accounts Length: " + ids.size());
 
     ids.forEach((username, id)->{
       TNEAccount account = TNE.manager().getAccount(id);
-      System.out.println("Extracting Account: " + username);
-      System.out.println("Account null? " + (account == null));
-      System.out.println("WorldHoldings null? " + (account.getWorldHoldings()));
+      TNE.debug("Extracting Account: " + username);
+      TNE.debug("Account null? " + (account == null));
+      TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
       account.getWorldHoldings().forEach((world, holdings)->{
         holdings.getHoldings().forEach((currency, amount)->{
           configuration.set("Accounts." + username + ".Balances." + world + "." + currency, amount.toPlainString());

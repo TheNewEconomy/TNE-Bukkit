@@ -184,6 +184,15 @@ public class H2Provider extends TNEDataProvider {
   }
 
   @Override
+  public void delete(Double version) {
+    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
+    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
+    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
+    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
+    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
+  }
+
+  @Override
   public Boolean backupData() {
     return false;
   }

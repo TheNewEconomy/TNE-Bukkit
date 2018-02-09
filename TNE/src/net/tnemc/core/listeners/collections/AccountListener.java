@@ -50,8 +50,8 @@ public class AccountListener implements MapListener {
   public Object get(Object key) {
     TNEAccount account = TNE.saveManager().getTNEManager().getTNEProvider().loadAccount((UUID)key);
 
-    System.out.println("AccountListener ID? " + ((UUID)key).toString());
-    System.out.println("AccountListener Account null? " + (account == null));
+    TNE.debug("AccountListener ID? " + ((UUID)key).toString());
+    TNE.debug("AccountListener Account null? " + (account == null));
 
     return account;
   }

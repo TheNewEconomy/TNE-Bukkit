@@ -77,8 +77,6 @@ public class AdminRestoreCommand extends TNECommand {
           Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
           currencies.forEach((currency)->{
             String balance = original.getString("Accounts." + username + ".Balances." + world + "." + currency);
-            System.out.println("Currency: " + currency);
-            System.out.println("Balance: " + balance);
             account.setHoldings(world, currency, new BigDecimal(balance));
           });
         });

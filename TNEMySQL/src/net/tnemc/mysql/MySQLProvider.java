@@ -187,6 +187,15 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
+  public void delete(Double version) {
+    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
+    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
+    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
+    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
+    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
+  }
+
+  @Override
   public Boolean backupData() {
     return false;
   }
@@ -283,12 +292,14 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public TNEAccount loadAccount(UUID id) {
+    System.out.println("MySQLProvider.loadAccount ID: " + id.toString());
     String table = manager.getPrefix() + "_USERS";
     try {
       int accountIndex = mysql().executePreparedQuery("SELECT uuid, display_name, account_number, account_status, account_language, joined_date, last_online, account_player FROM " + table + " WHERE uuid = ? LIMIT 1", new Object[]{
           id.toString()
       });
       if (mysql().results(accountIndex).next()) {
+        System.out.println("Loading account with ID: " + id.toString());
         TNEAccount account = new TNEAccount(UUID.fromString(mysql().results(accountIndex).getString("uuid")),
                                             mysql().results(accountIndex).getString("display_name"));
         account.setAccountNumber(mysql().results(accountIndex).getInt("account_number"));
@@ -303,7 +314,9 @@ public class MySQLProvider extends TNEDataProvider {
         while (mysql().results(balancesIndex).next()) {
           account.setHoldings(mysql().results(balancesIndex).getString("world"), mysql().results(balancesIndex).getString("currency"), new BigDecimal(mysql().results(balancesIndex).getString("balance")), true);
         }
+        System.out.println("Preparing to return account with name of " + account.displayName());
         mysql().close(manager);
+        System.out.println("Preparing to return account with name of " + account.displayName());
         return account;
       }
     } catch(Exception e) {

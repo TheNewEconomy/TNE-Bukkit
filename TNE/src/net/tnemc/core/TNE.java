@@ -289,12 +289,12 @@ public class TNE extends TNELib {
     //Bukkit Runnables & Workers
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
-      saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
+      saveWorker.runTaskTimerAsynchronously(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
     }
 
     if(saveManager().getTNEManager().getTNEProvider().supportUpdate() && saveManager().getTNEManager().isCacheData()) {
       cacheWorker = new CacheWorker(this, cacheLists, cacheMaps);
-      cacheWorker.runTaskTimer(this, saveManager().getTNEManager().getUpdate() * 20,
+      cacheWorker.runTaskTimerAsynchronously(this, saveManager().getTNEManager().getUpdate() * 20,
                                saveManager().getTNEManager().getUpdate() * 20);
     }
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
@@ -455,7 +455,6 @@ public class TNE extends TNELib {
     int mil = now.get(ChronoField.MILLI_OF_SECOND);
     String time = "[" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + mil + "] ";
     if(consoleDebug) {
-      System.out.println(message);
     } else {
       try {
         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt"), true));
