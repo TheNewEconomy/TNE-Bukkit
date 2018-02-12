@@ -68,8 +68,7 @@ public class ConnectionListener implements Listener {
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     TNE.debug(id + "");
     boolean first = !TNE.manager().exists(id);
-    TNEAccount account = (first)? TNEAccount.getAccount(id.toString())
-                         : TNE.saveManager().getTNEManager().getTNEProvider().loadAccount(id);
+    TNEAccount account = TNEAccount.getAccount(id.toString());
     TNE.manager().addAccount(account);
     if(first) account.initializeHoldings(world);
     if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {

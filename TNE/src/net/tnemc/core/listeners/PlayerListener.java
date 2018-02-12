@@ -4,23 +4,23 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -182,8 +182,39 @@ public class PlayerListener implements Listener {
     if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
       Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
       currency.ifPresent((cur)->{
+        UUID id = IDFinder.getID(event.getPlayer());
+        TNE.saveManager().addSkip(id);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
+          @Override
+          public void run() {
+            TNEAccount account = TNE.manager().getAccount(id);
+            account.setHoldings(world, cur.name(), ItemCalculations.getCurrencyItems(account, cur));
+            TNE.manager().addAccount(account);
+            TNE.saveManager().removeSkip(id);
+          }
+        }, 5L);
         event.setCancelled(true);
       });
     }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onDrop(final PlayerDropItemEvent event) {
+    final ItemStack stack = event.getItemDrop().getItemStack();
+    final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
+    Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
+    currency.ifPresent((cur)->{
+      UUID id = IDFinder.getID(event.getPlayer());
+      TNE.saveManager().addSkip(id);
+      Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
+        @Override
+        public void run() {
+          TNEAccount account = TNE.manager().getAccount(id);
+          account.setHoldings(world, cur.name(), ItemCalculations.getCurrencyItems(account, cur));
+          TNE.manager().addAccount(account);
+          TNE.saveManager().removeSkip(id);
+        }
+      }, 5L);
+    });
   }
 }

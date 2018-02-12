@@ -2,6 +2,7 @@ package net.tnemc.core.commands.admin;
 
 import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -54,7 +55,12 @@ public class AdminSaveCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    TNE.saveManager().save();
+    Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
+      @Override
+      public void run() {
+        TNE.saveManager().save();
+      }
+    }, 20L);
     sender.sendMessage("Successfully saved all TNE Data!");
     return true;
   }

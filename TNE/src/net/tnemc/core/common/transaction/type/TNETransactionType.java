@@ -1,10 +1,17 @@
 package net.tnemc.core.common.transaction.type;
 
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.Transaction;
 import net.tnemc.core.economy.transaction.TransactionAffected;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
+import org.bukkit.Bukkit;
+
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -79,11 +86,33 @@ public interface TNETransactionType extends TransactionType {
       TNE.debug("yeah, proceed");
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
         TNE.debug("first if");
+        UUID id = IDFinder.getID(transaction.initiator());
+        if(MISCUtils.isOnline(id)) {
+          TNE.saveManager().addSkip(id);
+          Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
+            @Override
+            public void run() {
+              TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
+              TNE.saveManager().removeSkip(id);
+            }
+          }, 5L);
+        }
         TNE.instance().api().getAccount(transaction.initiator()).handleCharge(transaction.initiatorCharge());
       }
 
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
         TNE.debug("second if");
+        UUID id = IDFinder.getID(transaction.recipient());
+        if(MISCUtils.isOnline(id)) {
+          TNE.saveManager().addSkip(id);
+          Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
+            @Override
+            public void run() {
+              TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
+              TNE.saveManager().removeSkip(id);
+            }
+          }, 5L);
+        }
         TNE.instance().api().getAccount(transaction.recipient()).handleCharge(transaction.recipientCharge());
       }
       TNE.debug("=====ENDSUCCESS TNETransactionType.perform =====");

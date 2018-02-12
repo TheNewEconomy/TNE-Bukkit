@@ -40,12 +40,8 @@ public class CacheWorker extends BukkitRunnable {
 
   @Override
   public void run() {
-    for(EventList list : cacheLists) {
-      list.update();
-    }
-
-    for(EventMap map : cacheMaps) {
-      map.update();
-    }
+    TNE.uuidManager().getUuids().update();
+    TNE.transactionManager().getTransactions().update();
+    TNE.manager().getAccounts().update();
   }
 }

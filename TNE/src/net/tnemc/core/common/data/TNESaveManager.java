@@ -5,6 +5,10 @@ import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.TNE;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -23,8 +27,23 @@ import net.tnemc.core.TNE;
  * Created by Daniel on 8/29/2017.
  */
 public class TNESaveManager extends SaveManager {
+
+  private List<UUID> skip = new ArrayList<>();
+
   public TNESaveManager(DataManager manager) {
     super(manager);
+  }
+
+  public void addSkip(UUID id) {
+    skip.add(id);
+  }
+
+  public boolean skip(UUID id) {
+    return skip.contains(id);
+  }
+
+  public void removeSkip(UUID id) {
+    skip.remove(id);
   }
 
   @Override

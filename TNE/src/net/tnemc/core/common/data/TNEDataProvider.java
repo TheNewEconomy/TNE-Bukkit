@@ -91,11 +91,15 @@ public abstract class TNEDataProvider extends DataProvider {
     TNE.debug("TNEDataProvider.save");
     preSave(version);
     TNE.manager().getAccounts().forEach((id, account)->{
-      if(MISCUtils.isOnline(id)) {
-        String world = WorldFinder.getWorld(id, WorldVariant.BALANCE);
-        account.saveItemCurrency(world);
+      if(!TNE.saveManager().skip(id)) {
+        if (MISCUtils.isOnline(id)) {
+          String world = WorldFinder.getWorld(id, WorldVariant.BALANCE);
+          account.saveItemCurrency(world);
+        }
+        saveAccount(TNE.manager().getAccount(id));
+      } else {
+        TNE.saveManager().removeSkip(id);
       }
-      saveAccount(account);
     });
     TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
     TNE.uuidManager().getUuids().forEach((username, id)->{

@@ -28,7 +28,8 @@ public class AccountListener implements MapListener {
 
   @Override
   public void update() {
-    changed.values().forEach((account)-> TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(account));
+    Map<UUID, TNEAccount> copy = changed;
+    copy.values().forEach((account)-> TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(account));
   }
 
   @Override
