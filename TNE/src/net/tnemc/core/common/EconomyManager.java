@@ -86,10 +86,12 @@ public class EconomyManager {
     accounts.remove(id, false);
   }
 
-  public void deleteAccount(UUID id) {
+  public boolean deleteAccount(UUID id) {
     if(exists(id)) {
       accounts.remove(id);
+      return true;
     }
+    return false;
   }
 
   public boolean createAccount(UUID id, String displayName) {

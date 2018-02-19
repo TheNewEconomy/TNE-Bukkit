@@ -47,10 +47,10 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
-        <repository>
+        <!--<repository>
             <id>reserve-repo</id>
             <url>https://dl.bintray.com/theneweconomy/java/</url>
-        </repository>
+        </repository>-->
     </repositories>
 
     <dependencies>
@@ -59,12 +59,12 @@
             <artifactId>mongodb-driver</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
             <version>0.1.0.1</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>

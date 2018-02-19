@@ -548,7 +548,7 @@ public class TNEAPI extends TNELibAPI {
    * @return A {@link Set} of {@link TransactionType} objects.
    */
   public Set<TransactionType> getTransactionTypes() {
-    return null;
+    return new HashSet<>(TNE.transactionManager().getTypes());
   }
 
   /**
@@ -598,7 +598,8 @@ public class TNEAPI extends TNELibAPI {
    * @return True if the {@link TransactionType type} was registered.
    */
   public boolean registerTransactionType(TransactionType type) {
-    return false;
+    TNE.transactionManager().addType(type);
+    return true;
   }
 
   /**

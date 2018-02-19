@@ -12,6 +12,7 @@ import net.tnemc.core.event.transaction.TNEPreTransaction;
 import net.tnemc.core.listeners.collections.TransactionListener;
 import org.bukkit.Bukkit;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -158,6 +159,14 @@ public class TransactionManager {
       id = UUID.randomUUID();
     }
     return id;
+  }
+
+  public void addType(TransactionType type) {
+    types.put(type.name(), type);
+  }
+
+  public Collection<TransactionType> getTypes() {
+    return types.values();
   }
 
   public boolean isValid(UUID id) {

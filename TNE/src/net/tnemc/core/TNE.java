@@ -35,7 +35,6 @@ import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.menu.MenuManager;
-import net.tnemc.core.worker.CacheWorker;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -73,7 +72,7 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = false;
+  public static boolean consoleDebug = true;
   private String serverName;
 
   //Economy APIs
@@ -98,9 +97,8 @@ public class TNE extends TNELib {
 
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
-  private CacheWorker cacheWorker;
 
-  public static final String build = "19prebeta1";
+  public static final String build = "24prebeta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -292,11 +290,6 @@ public class TNE extends TNELib {
       saveWorker.runTaskTimerAsynchronously(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
     }
 
-    if(saveManager().getTNEManager().getTNEProvider().supportUpdate() && saveManager().getTNEManager().isCacheData()) {
-      cacheWorker = new CacheWorker(this, cacheLists, cacheMaps);
-      cacheWorker.runTaskTimerAsynchronously(this, saveManager().getTNEManager().getUpdate() * 20,
-                               saveManager().getTNEManager().getUpdate() * 20);
-    }
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
     getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
     loader.getModules().forEach((key, value)->{

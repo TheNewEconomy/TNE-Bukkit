@@ -8,17 +8,21 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
 import org.bukkit.*;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -26,6 +30,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,9 +70,16 @@ public class PlayerListener implements Listener {
 
     if(!noEconomy && event.getRightClicked() instanceof Player) {
 
-      TNE.menuManager().open("main", player);
-      TNE.menuManager().setViewerData(id, "action_player", IDFinder.getID((Player)event.getRightClicked()));
-      TNE.menuManager().setViewerData(id, "action_world", world);
+      Material actionMaterial = MaterialHelper.getMaterial(TNE.instance().api().getString("Core.Server.MenuMaterial"));
+      Material material = player.getInventory().getItemInMainHand().getType();
+
+      if(actionMaterial == null && material == null
+         || material == null && actionMaterial.equals(Material.AIR)
+         || material.equals(actionMaterial)) {
+        TNE.menuManager().open("main", player);
+        TNE.menuManager().setViewerData(id, "action_player", IDFinder.getID((Player)event.getRightClicked()));
+        TNE.menuManager().setViewerData(id, "action_world", world);
+      }
 
       if(((Player)event.getRightClicked()).getDisplayName().toLowerCase().contains("thenetyeti")) {
         player.sendMessage(ChatColor.GREEN + "Congratulations you have found the Yediot.");
@@ -216,5 +228,30 @@ public class PlayerListener implements Listener {
         }
       }, 5L);
     });
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onDeath(EntityDeathEvent event) {
+    if(TNE.instance().api().getBoolean("Core.Server.MobDrop")) {
+      LivingEntity entity = event.getEntity();
+      Player player = entity.getKiller();
+      String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+
+      if (player != null && entity instanceof Creature && !player.hasPermission("tne.override.mobdrop")) {
+        Iterator<ItemStack> it = event.getDrops().iterator();
+
+        while (it.hasNext()) {
+          ItemStack stack = it.next();
+
+          if (stack != null) {
+            Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
+
+            if (currency.isPresent()) {
+              it.remove();
+            }
+          }
+        }
+      }
+    }
   }
 }

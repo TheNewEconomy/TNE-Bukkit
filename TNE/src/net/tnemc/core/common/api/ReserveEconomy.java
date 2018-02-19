@@ -1,5 +1,6 @@
 package net.tnemc.core.common.api;
 
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -106,18 +107,18 @@ public class ReserveEconomy implements EconomyAPI {
   }
 
   @Override
-  public boolean hasAccount(UUID uuid) {
-    return false;
+  public boolean hasAccount(UUID identifier) {
+    return TNE.instance().api().hasAccount(identifier);
   }
 
   @Override
   public Account getAccount(String identifier) {
-    return null;
+    return TNE.instance().api().getAccount(identifier);
   }
 
   @Override
-  public Account getAccount(UUID uuid) {
-    return null;
+  public Account getAccount(UUID identifier) {
+    return TNE.instance().api().getAccount(identifier);
   }
 
   @Override
@@ -126,18 +127,35 @@ public class ReserveEconomy implements EconomyAPI {
   }
 
   @Override
-  public boolean createAccount(UUID uuid) {
-    return false;
+  public boolean createAccount(UUID identifier) {
+    return TNE.instance().api().createAccount(identifier);
+  }
+
+  @Override
+  public boolean deleteAccount(String identifier) {
+    return TNE.manager().deleteAccount(IDFinder.getID(identifier));
+  }
+
+  @Override
+  public boolean deleteAccount(UUID identifier) {
+    return TNE.manager().deleteAccount(identifier);
   }
 
   @Override
   public Account createIfNotExists(String identifier) {
-    return null;
+    if(!hasAccount(identifier)) createAccount(identifier);
+    return getAccount(identifier);
   }
 
   @Override
   public Account createIfNotExists(UUID uuid) {
-    return null;
+    if(!hasAccount(uuid)) createAccount(uuid);
+    return getAccount(uuid);
+  }
+
+  @Override
+  public String format(BigDecimal amount) {
+    return TNE.instance().api().format(amount, TNE.instance().defaultWorld);
   }
 
   @Override

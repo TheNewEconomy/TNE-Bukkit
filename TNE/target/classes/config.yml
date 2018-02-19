@@ -19,6 +19,12 @@ Core:
     #All configurations relating to the server in general.
     Server:
 
+        #The material to use to activate the TNE Action Menu.
+        MenuMaterial: "GOLD_INGOT"
+
+        #Whether or not mob drops that are a currency item should be disabled.
+        MobDrop: true
+
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
