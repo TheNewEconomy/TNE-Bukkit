@@ -2,12 +2,12 @@ package net.tnemc.core.common.data;
 
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DataProvider;
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.common.utils.MISCUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -90,16 +90,10 @@ public abstract class TNEDataProvider extends DataProvider {
   public void save(Double version) {
     TNE.debug("TNEDataProvider.save");
     preSave(version);
-    TNE.manager().getAccounts().forEach((id, account)->{
-      if(!TNE.saveManager().skip(id)) {
-        if (MISCUtils.isOnline(id)) {
-          String world = WorldFinder.getWorld(id, WorldVariant.BALANCE);
-          account.saveItemCurrency(world);
-        }
-        saveAccount(TNE.manager().getAccount(id));
-      } else {
-        TNE.saveManager().removeSkip(id);
-      }
+
+    TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
+      UUID id = IDFinder.getID(player);
+      TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
     });
     TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
     TNE.uuidManager().getUuids().forEach((username, id)->{

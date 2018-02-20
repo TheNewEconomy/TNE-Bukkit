@@ -363,7 +363,7 @@ public class CurrencyManager {
     BigDecimal value = new BigDecimal(amount);
     TNE.debug("Value: " + value.toPlainString());
 
-    TNETransaction transaction = new TNETransaction("", id.toString(), world, TNE.transactionManager().getType("noteclaim"));
+    TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(id), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("noteclaim"));
     transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency),
         value, TransactionChargeType.GAIN)
     );

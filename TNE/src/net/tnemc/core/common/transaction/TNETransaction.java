@@ -1,6 +1,7 @@
 package net.tnemc.core.common.transaction;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.economy.currency.CurrencyEntry;
 import net.tnemc.core.economy.transaction.Transaction;
@@ -31,10 +32,10 @@ import java.util.UUID;
 public class TNETransaction implements Transaction {
 
   private UUID uuid;
-  private String initiator;
+  private TNEAccount initiator;
   private CurrencyEntry initiatorBalance;
   private TransactionCharge initiatorCharge;
-  private String recipient;
+  private TNEAccount recipient;
   private CurrencyEntry recipientBalance;
   private TransactionCharge recipientCharge;
   private TransactionType type;
@@ -43,19 +44,11 @@ public class TNETransaction implements Transaction {
 
   private boolean voided;
 
-  public TNETransaction(UUID initiator, UUID recipient, String world, TransactionType type) {
-    this(TNE.transactionManager().generateTransactionID(), initiator.toString(), recipient.toString(), world, type, new Date().getTime());
-  }
-
-  public TNETransaction(String initiator, String recipient, String world, TransactionType type) {
+  public TNETransaction(TNEAccount initiator, TNEAccount recipient, String world, TransactionType type) {
     this(TNE.transactionManager().generateTransactionID(), initiator, recipient, world, type, new Date().getTime());
   }
 
-  public TNETransaction(UUID id, UUID initiator, UUID recipient, String world, TransactionType type, long time) {
-    this(id, initiator.toString(), recipient.toString(), world, type, time);
-  }
-
-  public TNETransaction(UUID id, String initiator, String recipient, String world, TransactionType type, long time) {
+  public TNETransaction(UUID id, TNEAccount initiator, TNEAccount recipient, String world, TransactionType type, long time) {
     this.uuid = id;
     this.initiator = initiator;
     this.recipient = recipient;
@@ -73,11 +66,7 @@ public class TNETransaction implements Transaction {
     if(recipientCharge != null) {
       TNE.debug("recipientCharge != null");
       recipientInitial = this.recipientCharge().getEntry().copy(
-          TNE.instance().api().getHoldings(
-              this.recipient(),
-              recipientCharge.getWorld(),
-              TNECurrency.fromReserve(recipientCharge.getCurrency())
-          )
+          getRecipient().getHoldings(recipientCharge.getWorld(), TNECurrency.fromReserve(recipientCharge.getCurrency()))
       );
       this.setRecipientBalance(recipientInitial);
       TNE.debug("setRecipientBalance: " + recipientBalance.getAmount() + " in Currency: " + recipientBalance.getCurrency().name());
@@ -87,11 +76,7 @@ public class TNETransaction implements Transaction {
     CurrencyEntry initiatorInitial = null;
     if(initiatorCharge != null) {
       initiatorInitial = this.initiatorCharge().getEntry().copy(
-          TNE.instance().api().getHoldings(
-              this.initiator(),
-              initiatorCharge.getWorld(),
-              TNECurrency.fromReserve(initiatorCharge.getCurrency())
-          )
+          getInitiator().getHoldings(initiatorCharge.getWorld(), TNECurrency.fromReserve(initiatorCharge.getCurrency()))
       );
       this.setInitiatorBalance(initiatorInitial);
       if (initiatorCharge != null) TNE.debug("Initiator Charge: " + initiatorCharge.getAmount());
@@ -106,15 +91,22 @@ public class TNETransaction implements Transaction {
     return this.type().perform(this);
   }
 
+  public TNEAccount getInitiator() {
+    return initiator;
+  }
+
+  public TNEAccount getRecipient() {
+    return recipient;
+  }
 
   @Override
   public String initiator() {
-    return initiator;
+    return initiator.identifier().toString();
   }
 
   @Override
   public String recipient() {
-    return recipient;
+    return recipient.identifier().toString();
   }
 
   @Override

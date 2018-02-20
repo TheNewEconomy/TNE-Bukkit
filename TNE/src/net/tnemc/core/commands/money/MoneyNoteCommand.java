@@ -5,6 +5,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -73,6 +74,7 @@ public class MoneyNoteCommand extends TNECommand {
       String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
       UUID id = IDFinder.getID(sender);
+      TNEAccount account = TNE.manager().getAccount(id);
 
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
       if(parsed.contains("Messages")) {
@@ -86,7 +88,7 @@ public class MoneyNoteCommand extends TNECommand {
 
       BigDecimal value = new BigDecimal(parsed);
 
-      TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("note"));
+      TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("note"));
       transaction.setRecipientCharge(new TransactionCharge(world, currency, value, TransactionChargeType.LOSE));
       TransactionResult result = TNE.transactionManager().perform(transaction);
 

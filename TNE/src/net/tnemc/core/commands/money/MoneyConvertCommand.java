@@ -5,6 +5,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -71,6 +72,7 @@ public class MoneyConvertCommand extends TNECommand {
     Player player = getPlayer(sender);
     if(arguments.length >= 2) {
       UUID id = IDFinder.getID(sender);
+      TNEAccount account = TNE.manager().getAccount(id);
       String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
       TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
@@ -93,7 +95,7 @@ public class MoneyConvertCommand extends TNECommand {
       }
 
       BigDecimal value = new BigDecimal(parsed);
-      TNETransaction transaction = new TNETransaction(IDFinder.getID(sender), id, worldFrom, TNE.transactionManager().getType("conversion"));
+      TNETransaction transaction = new TNETransaction(account, account, worldFrom, TNE.transactionManager().getType("conversion"));
       transaction.setInitiatorCharge(new TransactionCharge(worldFrom, from, value, TransactionChargeType.LOSE));
       transaction.setRecipientCharge(new TransactionCharge(worldTo, to, value, TransactionChargeType.GAIN));
       TransactionResult result = TNE.transactionManager().perform(transaction);

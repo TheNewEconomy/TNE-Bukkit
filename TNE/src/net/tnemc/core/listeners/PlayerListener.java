@@ -4,9 +4,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
@@ -14,7 +12,9 @@ import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -190,24 +190,11 @@ public class PlayerListener implements Listener {
   public void onPickUp(final PlayerPickupItemEvent event) {
     final ItemStack stack = event.getItem().getItemStack();
     final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
-
-    if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-      Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
-      currency.ifPresent((cur)->{
-        UUID id = IDFinder.getID(event.getPlayer());
-        TNE.saveManager().addSkip(id);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
-          @Override
-          public void run() {
-            TNEAccount account = TNE.manager().getAccount(id);
-            account.setHoldings(world, cur.name(), ItemCalculations.getCurrencyItems(account, cur));
-            TNE.manager().addAccount(account);
-            TNE.saveManager().removeSkip(id);
-          }
-        }, 5L);
-        event.setCancelled(true);
-      });
-    }
+    Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
+    currency.ifPresent((cur)->{
+      UUID id = IDFinder.getID(event.getPlayer());
+      TNE.manager().getAccount(id).saveItemCurrency(world);
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -217,16 +204,7 @@ public class PlayerListener implements Listener {
     Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
     currency.ifPresent((cur)->{
       UUID id = IDFinder.getID(event.getPlayer());
-      TNE.saveManager().addSkip(id);
-      Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
-        @Override
-        public void run() {
-          TNEAccount account = TNE.manager().getAccount(id);
-          account.setHoldings(world, cur.name(), ItemCalculations.getCurrencyItems(account, cur));
-          TNE.manager().addAccount(account);
-          TNE.saveManager().removeSkip(id);
-        }
-      }, 5L);
+      TNE.manager().getAccount(id).saveItemCurrency(world);
     });
   }
 

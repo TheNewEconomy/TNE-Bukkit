@@ -9,7 +9,6 @@ import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -35,9 +34,9 @@ public class MultiTransactionHandler {
   private BigDecimal amount;
   private TNECurrency currency;
   private String world;
-  private UUID initiator;
+  private TNEAccount initiator;
 
-  public MultiTransactionHandler(Collection<TNEAccount> affected, String transactionType, BigDecimal amount, TNECurrency currency, String world, UUID initiator) {
+  public MultiTransactionHandler(Collection<TNEAccount> affected, String transactionType, BigDecimal amount, TNECurrency currency, String world, TNEAccount initiator) {
     this.data = new MultiTransactionData(affected);
     this.transactionType = transactionType.toLowerCase().trim();
     this.amount = amount;
@@ -71,8 +70,8 @@ public class MultiTransactionHandler {
   public void sendMessages() {
     data.getMessages().forEach((uuid, message)->{
       if(IDFinder.getPlayer(uuid.toString()) != null) {
-        String playerVariable = (uuid.equals(getInitiator()))? String.join(", ", data.getSucceed())
-                                : IDFinder.getUsername(getInitiator().toString());
+        String playerVariable = (uuid.equals(getInitiator().identifier()))? String.join(", ", data.getSucceed())
+                                : getInitiator().displayName();
         Message msg = new Message(message);
         msg.addVariable("$player", playerVariable);
         msg.addVariable("$world", world);
@@ -123,11 +122,11 @@ public class MultiTransactionHandler {
     this.world = world;
   }
 
-  public UUID getInitiator() {
+  public TNEAccount getInitiator() {
     return initiator;
   }
 
-  public void setInitiator(UUID initiator) {
+  public void setInitiator(TNEAccount initiator) {
     this.initiator = initiator;
   }
 }

@@ -259,7 +259,7 @@ public class TNE extends TNELib {
         configurations().getString("Core.Database.Prefix"),
         new File(getDataFolder(), configurations().getString("Core.Database.File")).getAbsolutePath(),
         configurations().getBoolean("Core.Database.Transactions.Use"),
-        configurations().getBoolean("Core.Database.Transactions.Cache"),
+        false,
         configurations().getInt("Core.Database.Transactions.Update"),
         true
     ));

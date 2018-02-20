@@ -132,7 +132,7 @@ public class ConnectionListener implements Listener {
     if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         WorldManager manager = TNE.instance().getWorldManager(world);
-        TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("worldchange"));
+        TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("worldchange"));
         transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, manager.getChangeFeeCurrency()), manager.getChangeFee()));
         TransactionResult result = TNE.transactionManager().perform(transaction);
         if(!result.proceed()) {

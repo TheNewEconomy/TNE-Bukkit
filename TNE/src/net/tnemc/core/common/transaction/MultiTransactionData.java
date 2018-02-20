@@ -39,7 +39,7 @@ public class MultiTransactionData {
   public void handle(MultiTransactionHandler handler) {
     if(!TNE.instance().api().hasHoldings(handler.getInitiator().toString(),
        handler.initiatorCost(), handler.getCurrency(), handler.getWorld())) {
-      messages.put(handler.getInitiator(), TNE.transactionManager().getResult("failed").initiatorMessage());
+      messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
       return;
     }
 
@@ -49,7 +49,7 @@ public class MultiTransactionData {
   }
 
   private void handleTransaction(TNEAccount account, MultiTransactionHandler handler) {
-    TNETransaction transaction = new TNETransaction(handler.getInitiator(), account.identifier(),
+    TNETransaction transaction = new TNETransaction(handler.getInitiator(), account,
                                                     handler.getWorld(),
                                                     TNE.transactionManager().getType(handler.getTransactionType()));
 
@@ -70,7 +70,7 @@ public class MultiTransactionData {
       proceed = true;
       succeed.add(account.displayName());
       messages.put(account.identifier(), result.recipientMessage());
-      messages.put(handler.getInitiator(), result.initiatorMessage());
+      messages.put(handler.getInitiator().identifier(), result.initiatorMessage());
     }
   }
 

@@ -92,7 +92,7 @@ public class MoneySetCommand extends TNECommand {
 
       BigDecimal newBalance = (type.equals(TransactionChargeType.GAIN))? value.subtract(balance) : balance.subtract(value);
 
-      TNETransaction transaction = new TNETransaction(IDFinder.getID(sender), id, world, TNE.transactionManager().getType("set"));
+      TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("set"));
       transaction.setRecipientCharge(new TransactionCharge(world, currency, newBalance, type));
       TransactionResult result = TNE.transactionManager().perform(transaction);
 

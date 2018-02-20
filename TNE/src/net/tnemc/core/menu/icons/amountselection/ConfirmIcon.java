@@ -52,7 +52,7 @@ public class ConfirmIcon extends Icon {
     TNE.debug("recipient Null: " + (recipient == null));
     TNE.debug("ID Null: " + (id == null));
     TNE.debug("World Null: " + (world == null));
-    TNETransaction transaction = new TNETransaction(id, recipient, world, TNE.transactionManager().getType(type));
+    TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(id), TNE.manager().getAccount(recipient), world, TNE.transactionManager().getType(type));
     TransactionCharge recipientCharge = new TransactionCharge(world, cur, amount);
     if(type.equalsIgnoreCase("pay")) {
       transaction.setInitiatorCharge(new TransactionCharge(world, cur, amount));

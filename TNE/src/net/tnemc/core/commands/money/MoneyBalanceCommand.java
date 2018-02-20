@@ -5,6 +5,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -78,7 +79,7 @@ public class MoneyBalanceCommand extends TNECommand {
     if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
     String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
     UUID id = IDFinder.getID(sender);
-    String username = IDFinder.ecoToUsername(id);
+    TNEAccount account = TNE.manager().getAccount(id);
     TNE.debug("World: " + world);
     TNE.debug("Args Length: " + arguments.length);
 
@@ -95,7 +96,7 @@ public class MoneyBalanceCommand extends TNECommand {
 
     for(TNECurrency cur : currencies) {
       TNE.debug("BalanceCommand Currency Loop.. Currency: " + cur.name());
-      TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("inquiry"));
+      TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("inquiry"));
       transaction.setRecipientCharge(new TransactionCharge(world, cur, new BigDecimal(0.0)));
       TNE.debug("BalanceCommand RecipientChargeCurrency: " + transaction.recipientCharge().getCurrency().name());
       TNE.debug("BalanceCommand RecipientCharge: " + transaction.recipientCharge().getAmount().toPlainString());
@@ -108,7 +109,7 @@ public class MoneyBalanceCommand extends TNECommand {
     if(balances.size() > 1) {
       final String w = world;
       Message message = new Message("Messages.Money.HoldingsMulti");
-      message.addVariable("$player", username);
+      message.addVariable("$player", account.displayName());
       message.addVariable("$world", world);
       message.translate(world, sender, id.toString());
       balances.forEach((curName, balance)->{
@@ -121,7 +122,7 @@ public class MoneyBalanceCommand extends TNECommand {
       return result.proceed();
     }
     Message message = new Message(result.recipientMessage());
-    message.addVariable("$player", username);
+    message.addVariable("$player", account.displayName());
     message.addVariable("$world", world);
     message.addVariable("$currency", currencyName);
     message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName)));

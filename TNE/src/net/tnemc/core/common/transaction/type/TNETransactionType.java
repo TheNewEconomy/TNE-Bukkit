@@ -1,17 +1,11 @@
 package net.tnemc.core.common.transaction.type;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.Transaction;
 import net.tnemc.core.economy.transaction.TransactionAffected;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
-import org.bukkit.Bukkit;
-
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -32,25 +26,25 @@ import java.util.UUID;
  */
 public interface TNETransactionType extends TransactionType {
 
-  default boolean voidTransaction(Transaction transaction) {
+  default boolean voidTransaction(TNETransaction transaction) {
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
-      proceed = TNE.instance().reserve().getAccount(transaction.initiator()).canCharge(transaction.initiatorCharge().copy(true));
+      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true));
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = TNE.instance().reserve().getAccount(transaction.recipient()).canCharge(transaction.recipientCharge().copy(true));
+        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true));
       }
     }
 
 
     if(proceed) {
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
-        TNE.instance().reserve().getAccount(transaction.initiator()).handleCharge(transaction.initiatorCharge().copy(true));
+        transaction.getInitiator().handleCharge(transaction.initiatorCharge().copy(true));
       }
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
-        TNE.instance().reserve().getAccount(transaction.recipient()).handleCharge(transaction.recipientCharge().copy(true));
+        transaction.getRecipient().handleCharge(transaction.recipientCharge().copy(true));
       }
       return true;
     }
@@ -63,21 +57,21 @@ public interface TNETransactionType extends TransactionType {
    * @param transaction The {@link Transaction} to perform.
    * @return The {@link TransactionResult} of this {@link Transaction}.
    */
-  default TransactionResult perform(Transaction transaction) {
+  default TransactionResult perform(TNETransaction transaction) {
     TNE.debug("=====START TNETransactionType.perform =====");
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
       TNE.debug("first if");
-      TNE.debug("Account null: " + (TNE.instance().api().getAccount(transaction.initiator()) == null));
+      TNE.debug("Account null: " + (transaction.getInitiator() == null));
       TNE.debug("Transaction.initiator null: " + (transaction == null));
       TNE.debug("Transaction.initiatorCharge null: " + (transaction.initiatorCharge() == null));
-      proceed = TNE.instance().api().getAccount(transaction.initiator()).canCharge(transaction.initiatorCharge());
+      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge());
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       TNE.debug("second if");
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = TNE.instance().api().getAccount(transaction.recipient()).canCharge(transaction.recipientCharge());
+        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge());
       }
     }
 
@@ -86,34 +80,12 @@ public interface TNETransactionType extends TransactionType {
       TNE.debug("yeah, proceed");
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
         TNE.debug("first if");
-        UUID id = IDFinder.getID(transaction.initiator());
-        if(MISCUtils.isOnline(id)) {
-          TNE.saveManager().addSkip(id);
-          Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
-            @Override
-            public void run() {
-              TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
-              TNE.saveManager().removeSkip(id);
-            }
-          }, 5L);
-        }
-        TNE.instance().api().getAccount(transaction.initiator()).handleCharge(transaction.initiatorCharge());
+        transaction.getInitiator().handleCharge(transaction.initiatorCharge());
       }
 
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
         TNE.debug("second if");
-        UUID id = IDFinder.getID(transaction.recipient());
-        if(MISCUtils.isOnline(id)) {
-          TNE.saveManager().addSkip(id);
-          Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), new Runnable() {
-            @Override
-            public void run() {
-              TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
-              TNE.saveManager().removeSkip(id);
-            }
-          }, 5L);
-        }
-        TNE.instance().api().getAccount(transaction.recipient()).handleCharge(transaction.recipientCharge());
+        transaction.getRecipient().handleCharge(transaction.recipientCharge());
       }
       TNE.debug("=====ENDSUCCESS TNETransactionType.perform =====");
       return success();
