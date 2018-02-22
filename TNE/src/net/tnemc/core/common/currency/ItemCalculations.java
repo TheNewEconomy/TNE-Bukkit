@@ -70,11 +70,11 @@ public class ItemCalculations {
       TNE.debug("MajorChange: " + majorChange.toString());
       TNE.debug("MinorChange: " + minorChange.toString());
       if(!consolidate && !add) {
-        if(majorChange.compareTo(new BigInteger("0")) > 0) {
+        if(majorChange.compareTo(BigInteger.ZERO) > 0) {
           setMajor(account, currency, majorChange, true);
         }
 
-        if(minorChange.compareTo(new BigInteger("0")) > 0) {
+        if(minorChange.compareTo(BigInteger.ZERO) > 0) {
           setMajor(account, currency, minorChange, true);
         }
       }
@@ -97,7 +97,7 @@ public class ItemCalculations {
       items.put(entry.getKey(), stack);
     }
     giveItems(account, items.values());
-    return new BigInteger("0");
+    return BigInteger.ZERO;
   }
 
   public static BigInteger setMinorConsolidate(TNEAccount account, TNECurrency currency, BigInteger amount) {
@@ -114,17 +114,18 @@ public class ItemCalculations {
       items.put(entry.getKey(), stack);
     }
     giveItems(account, items.values());
-    return new BigInteger("0");
+    return BigInteger.ZERO;
   }
 
   public static BigInteger setMajor(TNEAccount account, TNECurrency currency, BigInteger amount, boolean add) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
-    BigInteger actualAmount = new BigInteger("0");
+    BigInteger actualAmount = BigInteger.ZERO;
     NavigableMap<Integer, TNETier> values = (add)? currency.getTNEMajorTiers() :
                                                 currency.getTNEMajorTiers().descendingMap();
     String additional = "0";
     for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
+      if(entry.getKey() <= 0) continue;
       BigInteger weight = BigInteger.valueOf(entry.getKey());
 
       TNE.debug("Weight: " + weight.toString());
@@ -156,16 +157,17 @@ public class ItemCalculations {
       TNE.debug("return actual sub: " + actualAmount.subtract(amount).toString());
       return actualAmount.subtract(amount);
     }
-    return new BigInteger("0");
+    return BigInteger.ZERO;
   }
 
   public static BigInteger setMinor(TNEAccount account, TNECurrency currency, BigInteger amount, boolean add) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
-    BigInteger actualAmount = new BigInteger("0");
+    BigInteger actualAmount = BigInteger.ZERO;
     Set<Map.Entry<Integer, TNETier>> values = (add)? currency.getTNEMinorTiers().entrySet() :
                                                      currency.getTNEMinorTiers().descendingMap().entrySet();
     for(Map.Entry<Integer, TNETier> entry : values) {
+      if(entry.getKey() <= 0) continue;
       BigInteger weight = BigInteger.valueOf(entry.getKey());
 
       BigInteger itemAmount = workingAmount.divide(weight);
@@ -185,12 +187,12 @@ public class ItemCalculations {
     if(actualAmount.compareTo(amount) > 0) {
       return actualAmount.subtract(amount);
     }
-    return new BigInteger("0");
+    return BigInteger.ZERO;
   }
 
   public static BigDecimal getCurrencyItems(TNEAccount account, TNECurrency currency) {
     TNE.debug("=====START ItemCalculations.getCurrencyItems =====");
-    BigDecimal value = new BigDecimal(0.0);
+    BigDecimal value = BigDecimal.ZERO;
     if(currency.isItem()) {
       Player player = account.getPlayer();
       for(TNETier tier : currency.getTNEMajorTiers().values()) {
@@ -247,17 +249,19 @@ public class ItemCalculations {
 
       if(first == -1) {
         ItemStack helmet = player.getInventory().getHelmet();
-        int amount = helmet.getAmount();
-        if(helmet.isSimilar(stack)) {
-          if(amount <= left) {
-            left -= amount;
-            player.getInventory().setHelmet(null);
-          } else {
-            helmet.setAmount(amount - left);
-            player.getInventory().setHelmet(helmet);
-            left = 0;
+        if(helmet != null) {
+          int amount = helmet.getAmount();
+          if (helmet.isSimilar(stack)) {
+            if (amount <= left) {
+              left -= amount;
+              player.getInventory().setHelmet(null);
+            } else {
+              helmet.setAmount(amount - left);
+              player.getInventory().setHelmet(helmet);
+              left = 0;
+            }
+            return left;
           }
-          return left;
         } else {
           return left;
         }

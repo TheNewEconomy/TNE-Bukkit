@@ -310,7 +310,6 @@ Core:
 
         #The file to which all the data will be saved if using a file-based database
         File: Economy
-
             
         #All configurations relating to the MySQL Database
         MySQL:

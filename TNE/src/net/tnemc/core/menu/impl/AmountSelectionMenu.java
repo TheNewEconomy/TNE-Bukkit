@@ -46,7 +46,7 @@ public class AmountSelectionMenu extends Menu {
     String currency = (String)TNE.menuManager().getViewerData(viewer, "action_currency");
 
     if(TNE.menuManager().getViewerData(viewer, "action_amount") == null) {
-      TNE.menuManager().setViewerData(viewer, "action_amount", new BigDecimal(0.0));
+      TNE.menuManager().setViewerData(viewer, "action_amount", BigDecimal.ZERO);
     }
 
     BigDecimal amount = (BigDecimal)TNE.menuManager().getViewerData(viewer, "action_amount");
@@ -61,7 +61,7 @@ public class AmountSelectionMenu extends Menu {
     icons.put(18, new AddIcon(18, Material.GOLD_BLOCK, new BigDecimal("100"), getName()));
     icons.put(19, new AddIcon(19, Material.GOLD_PLATE, new BigDecimal("20"), getName()));
     icons.put(20, new AddIcon(20, Material.GOLD_INGOT, new BigDecimal("5"), getName()));
-    icons.put(21, new AddIcon(21, Material.GOLD_NUGGET, new BigDecimal("1"), getName()));
+    icons.put(21, new AddIcon(21, Material.GOLD_NUGGET, BigDecimal.ONE, getName()));
 
     //Minor Icons
     icons.put(23, new AddIcon(23, Material.IRON_NUGGET, new BigDecimal(".01"), getName()));

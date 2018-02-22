@@ -215,10 +215,8 @@ public class MessageConfigurations extends Configuration {
 
         while(it.hasNext()) {
           Map.Entry<String, Object> entry = (Map.Entry)it.next();
-          if (getConfiguration().contains(entry.getKey())) {
-            if(configuration.contains(entry.getKey())) {
-              lang.addTranslation(entry.getKey(), configuration.getString(entry.getKey()));
-            }
+          if (getConfiguration().contains(entry.getKey()) && configuration.contains(entry.getKey())) {
+            lang.addTranslation(entry.getKey(), configuration.getString(entry.getKey()));
           }
         }
         TNE.debug("Loaded language: " + lang);

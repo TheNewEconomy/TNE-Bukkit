@@ -71,10 +71,8 @@ public class TransactionAwayCommand extends TNECommand {
     Player player = getPlayer(sender);
     int page = 1;
 
-    if(arguments.length >= 1) {
-      if(MISCUtils.isInteger(arguments[0])) {
-        page = Integer.parseInt(arguments[0]);
-      }
+    if(arguments.length >= 1 && MISCUtils.isInteger(arguments[0])) {
+      page = Integer.parseInt(arguments[0]);
     }
 
     List<UUID> away = TNE.manager().getAccount(IDFinder.getID(sender)).getHistory().getAway();

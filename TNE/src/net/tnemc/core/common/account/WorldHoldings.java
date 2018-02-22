@@ -25,7 +25,7 @@ public class WorldHoldings {
   }
 
   protected BigDecimal getHoldings(String currency) {
-    BigDecimal current = new BigDecimal(0.0);
+    BigDecimal current = BigDecimal.ZERO;
     if(holdings.containsKey(currency)) {
       current = holdings.get(currency);
     }
@@ -39,6 +39,7 @@ public class WorldHoldings {
   }
 
   protected void setHoldings(String currency, BigDecimal newHoldings) {
+    System.out.println("Currency: " + currency + " Balance: " + newHoldings.toPlainString());
     holdings.put(currency, newHoldings);
   }
 

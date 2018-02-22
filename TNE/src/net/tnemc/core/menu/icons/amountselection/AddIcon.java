@@ -45,7 +45,7 @@ public class AddIcon extends Icon {
     UUID id = IDFinder.getID(player);
     BigDecimal current = (TNE.menuManager().getViewerData(id, "action_amount") != null)?
         (BigDecimal)TNE.menuManager().getViewerData(id, "action_amount") :
-        new BigDecimal(0.0);
+        BigDecimal.ZERO;
 
     current = current.add(amount);
     TNE.menuManager().setViewerData(id, "action_amount", current);

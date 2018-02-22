@@ -76,10 +76,8 @@ public class TransactionHistoryCommand extends TNECommand {
     String type = "all";
     int page = 1;
 
-    if(parsed.containsKey("page")) {
-      if(MISCUtils.isInteger(parsed.get("page"))) {
-        page = Integer.parseInt(parsed.get("page"));
-      }
+    if(parsed.containsKey("page") && MISCUtils.isInteger(parsed.get("page"))) {
+      page = Integer.parseInt(parsed.get("page"));
     }
 
     if(parsed.containsKey("world")) {

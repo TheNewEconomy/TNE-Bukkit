@@ -32,7 +32,7 @@ public class CancelIcon extends Icon {
 
   @Override
   public void onClick(String menu, Player player) {
-    TNE.menuManager().setViewerData(IDFinder.getID(player), "action_amount", new BigDecimal(0.0));
+    TNE.menuManager().setViewerData(IDFinder.getID(player), "action_amount", BigDecimal.ZERO);
     super.onClick(menu, player);
   }
 }

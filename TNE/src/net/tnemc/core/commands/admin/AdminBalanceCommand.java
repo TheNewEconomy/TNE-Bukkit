@@ -77,7 +77,7 @@ public class AdminBalanceCommand extends TNECommand {
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
       TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("inquiry"));
-      transaction.setRecipientCharge(new TransactionCharge(world, currency, new BigDecimal(0.0)));
+      transaction.setRecipientCharge(new TransactionCharge(world, currency, BigDecimal.ZERO));
       TransactionResult result = transaction.perform();
       Message message = new Message(result.initiatorMessage());
       message.addVariable("$player", arguments[0]);

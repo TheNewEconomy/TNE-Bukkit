@@ -39,10 +39,8 @@ public class MaterialHelper {
 
   public static String getShopName(Material material) {
     for(MaterialNameHelper helper : validNames) {
-      if(helper.getMaterial().equals(material)) {
-        if(helper.getShopName() != null) {
-          return helper.getShopName();
-        }
+      if(helper.getMaterial().equals(material) && helper.getShopName() != null) {
+        return helper.getShopName();
       }
     }
     return MaterialUtils.formatMaterialName(material);

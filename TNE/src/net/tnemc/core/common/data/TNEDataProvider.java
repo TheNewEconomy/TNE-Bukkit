@@ -101,7 +101,8 @@ public abstract class TNEDataProvider extends DataProvider {
       Map<String, UUID> ids = new HashMap<>();
 
       TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
-        UUID id = IDFinder.getID(player);
+        System.out.println("Saving Account for " + player.getName());
+        UUID id = IDFinder.getID(player.getName());
         TNEAccount account = TNE.manager().getAccount(id);
         account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), false);
         accounts.add(account);

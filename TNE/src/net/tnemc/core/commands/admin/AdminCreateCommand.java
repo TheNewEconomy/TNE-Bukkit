@@ -67,7 +67,7 @@ public class AdminCreateCommand extends TNECommand {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID id = IDFinder.getID(arguments[0]);
       if(!TNE.manager().exists(id)) {
-        BigDecimal initial = new BigDecimal(0.0);
+        BigDecimal initial = BigDecimal.ZERO;
         if(arguments.length >= 2) {
           try {
             initial = new BigDecimal(arguments[1]);
@@ -77,7 +77,7 @@ public class AdminCreateCommand extends TNECommand {
         }
         TNEAccount acc = new TNEAccount(id, IDFinder.getUsername(arguments[0]));
         acc.initializeHoldings(world);
-        if(initial.compareTo(new BigDecimal(0.0)) > 0) {
+        if(initial.compareTo(BigDecimal.ZERO) > 0) {
           acc.setHoldings(world, TNE.manager().currencyManager().get(world).name(), initial);
         }
         TNE.manager().addAccount(acc);

@@ -76,10 +76,8 @@ public class MoneyTopCommand extends TNECommand {
 
     Paginator paginator = new Paginator(Arrays.asList(TNE.manager().parseTop(currency, world, limit).toArray()), 10);
 
-    if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0))) {
-      if(MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {
-        page = Integer.valueOf(parsed.get(String.valueOf(0)));
-      }
+    if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0)) && MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {
+      page = Integer.valueOf(parsed.get(String.valueOf(0)));
     }
 
     if(page > paginator.getMaxPages()) page = paginator.getMaxPages();

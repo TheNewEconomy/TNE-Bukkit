@@ -34,7 +34,7 @@ public class WorldManager {
   private String balanceWorld = null;
   private String configurationWorld = null;
   private String changeFeeCurrency = "Default";
-  private BigDecimal changeFee = new BigDecimal(0.0);
+  private BigDecimal changeFee = BigDecimal.ZERO;
 
   public WorldManager(String world) {
     this.world = world;

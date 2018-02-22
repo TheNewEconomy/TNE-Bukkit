@@ -64,7 +64,7 @@ public class MultiTransactionHandler {
     if(transactionType.equalsIgnoreCase("pay")) {
       return amount;
     }
-    return new BigDecimal(0.0);
+    return BigDecimal.ZERO;
   }
 
   public void sendMessages() {

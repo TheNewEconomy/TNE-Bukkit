@@ -72,7 +72,7 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = true;
+  public static boolean consoleDebug = false;
   private String serverName;
 
   //Economy APIs
@@ -448,6 +448,7 @@ public class TNE extends TNELib {
     int mil = now.get(ChronoField.MILLI_OF_SECOND);
     String time = "[" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + mil + "] ";
     if(consoleDebug) {
+      System.out.println(message);
     } else {
       try {
         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt"), true));

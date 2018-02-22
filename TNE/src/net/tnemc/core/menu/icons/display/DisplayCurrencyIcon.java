@@ -54,7 +54,7 @@ public class DisplayCurrencyIcon extends Icon {
     TNE.debug("ID Null: " + (id == null));
     TNE.debug("World Null: " + (world == null));
     TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(initiatorID), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("inquiry"));
-    transaction.setRecipientCharge(new TransactionCharge(world, cur, new BigDecimal(0.0)));
+    transaction.setRecipientCharge(new TransactionCharge(world, cur, BigDecimal.ZERO));
     TransactionResult result = transaction.perform();
     Message m = new Message(result.initiatorMessage());
     m.addVariable("$player", IDFinder.getUsername(id.toString()));

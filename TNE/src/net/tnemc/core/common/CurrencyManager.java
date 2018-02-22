@@ -267,7 +267,7 @@ public class CurrencyManager {
 
   public BigDecimal convert(double fromRate, double toRate, BigDecimal amount) {
     double rate = fromRate - toRate;
-    BigDecimal difference = amount.multiply(new BigDecimal(rate));
+    BigDecimal difference = amount.multiply(new BigDecimal(rate + ""));
 
     return amount.add(difference);
   }
@@ -374,11 +374,9 @@ public class CurrencyManager {
 
   public Optional<TNECurrency> currencyFromItem(String world, ItemStack stack) {
     for(TNECurrency currency : TNE.instance().getWorldManager(world).getCurrencies()) {
-      if(currency.isItem()) {
-        if(isMajorItem(world, currency.name(), stack) ||
-            isMinorItem(world, currency.name(), stack)) {
-          return Optional.of(currency);
-        }
+      if(currency.isItem() && (isMajorItem(world, currency.name(), stack) ||
+          isMinorItem(world, currency.name(), stack))) {
+        return Optional.of(currency);
       }
     }
     return Optional.empty();
@@ -386,10 +384,8 @@ public class CurrencyManager {
 
   public boolean isMajorItem(String world, String currency, ItemStack stack) {
     for(Object tier : TNE.instance().getWorldManager(world).getCurrency(currency).getTNEMajorTiers().values()) {
-      if(tier instanceof TNETier) {
-        if (((TNETier)tier).getItemInfo().toStack().equals(stack)) {
-          return true;
-        }
+      if((tier instanceof TNETier) && ((TNETier)tier).getItemInfo().toStack().equals(stack)) {
+        return true;
       }
     }
     return false;
@@ -397,10 +393,8 @@ public class CurrencyManager {
 
   public boolean isMinorItem(String world, String currency, ItemStack stack) {
     for(Object tier : TNE.instance().getWorldManager(world).getCurrency(currency).getTNEMinorTiers().values()) {
-      if(tier instanceof TNETier) {
-        if (((TNETier)tier).getItemInfo().toStack().equals(stack)) {
-          return true;
-        }
+      if((tier instanceof TNETier) && ((TNETier)tier).getItemInfo().toStack().equals(stack)) {
+        return true;
       }
     }
     return false;

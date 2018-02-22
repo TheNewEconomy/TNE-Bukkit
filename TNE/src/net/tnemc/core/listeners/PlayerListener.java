@@ -24,10 +24,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Iterator;
@@ -124,50 +122,49 @@ public class PlayerListener implements Listener {
     }
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
 
-    if(!noEconomy) {
-      if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-        ItemStack stack = event.getItem();
+    if(!noEconomy && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+      ItemStack stack = event.getItem();
 
-        if(stack != null && stack.getType().equals(Material.PAPER) && stack.hasItemMeta()) {
-          if(stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Currency Note")) {
-            Optional<TNETransaction> transaction = TNE.manager().currencyManager().claimNote(id, stack);
-            if(transaction == null) TNE.debug("Transaction is null");
-            if(!transaction.isPresent()) TNE.debug("Transaction is empty");
-            TransactionResult result = null;
-            if(transaction.isPresent()) result = transaction.get().perform();
-            boolean proceed = result != null && result.proceed();
-            String message = (proceed)? "Messages.Money.NoteClaimed" : "Messages.Money.NoteFailed";
+      if(stack != null && stack.getType().equals(Material.PAPER) && stack.hasItemMeta()
+          && stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Currency Note")) {
+        if(stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Currency Note")) {
+          Optional<TNETransaction> transaction = TNE.manager().currencyManager().claimNote(id, stack);
+          if(transaction == null) TNE.debug("Transaction is null");
+          if(!transaction.isPresent()) TNE.debug("Transaction is empty");
+          TransactionResult result = null;
+          if(transaction.isPresent()) result = transaction.get().perform();
+          boolean proceed = result != null && result.proceed();
+          String message = (proceed)? "Messages.Money.NoteClaimed" : "Messages.Money.NoteFailed";
 
-            Message note = new Message(message);
-            if(proceed) {
-              TNE.debug("=====START PlayerListener.onInteract->proceed");
-              TNETransaction trans = transaction.get();
-              TNE.debug("World: " + trans.getWorld());
-              TNE.debug("RAW: " + trans.recipientCharge().toString());
-              TNE.debug("Currency: " + trans.recipientCharge().getCurrency().name());
-              TNE.debug("Amount: " + trans.recipientCharge().getAmount().toPlainString());
-              note.addVariable("$world", trans.getWorld());
-              note.addVariable("$currency", trans.recipientCharge().getCurrency().name());
-              note.addVariable("$amount", trans.recipientCharge().getAmount().toPlainString());
-              note.addVariable("$balance", TNE.instance().api().getHoldings(id.toString(),
-                  trans.getWorld(), TNECurrency.fromReserve(trans.recipientCharge().getCurrency())).toPlainString()
-              );
-              player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
-              if(stack.getAmount() > 1) {
-                stack.setAmount(stack.getAmount() - 1);
+          Message note = new Message(message);
+          if(proceed) {
+            TNE.debug("=====START PlayerListener.onInteract->proceed");
+            TNETransaction trans = transaction.get();
+            TNE.debug("World: " + trans.getWorld());
+            TNE.debug("RAW: " + trans.recipientCharge().toString());
+            TNE.debug("Currency: " + trans.recipientCharge().getCurrency().name());
+            TNE.debug("Amount: " + trans.recipientCharge().getAmount().toPlainString());
+            note.addVariable("$world", trans.getWorld());
+            note.addVariable("$currency", trans.recipientCharge().getCurrency().name());
+            note.addVariable("$amount", trans.recipientCharge().getAmount().toPlainString());
+            note.addVariable("$balance", TNE.instance().api().getHoldings(id.toString(),
+                trans.getWorld(), TNECurrency.fromReserve(trans.recipientCharge().getCurrency())).toPlainString()
+            );
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
+            if(stack.getAmount() > 1) {
+              stack.setAmount(stack.getAmount() - 1);
+            } else {
+              if(player.getInventory().getItemInOffHand() != null
+                  && !player.getInventory().getItemInOffHand().getType().equals(Material.AIR)
+                  && MaterialUtils.itemsEqual(stack, player.getInventory().getItemInOffHand())) {
+                player.getInventory().setItemInOffHand(null);
               } else {
-                if(player.getInventory().getItemInOffHand() != null
-                   && !player.getInventory().getItemInOffHand().getType().equals(Material.AIR)
-                   && MaterialUtils.itemsEqual(stack, player.getInventory().getItemInOffHand())) {
-                  player.getInventory().setItemInOffHand(null);
-                } else {
-                  player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
-                }
+                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
               }
-              TNE.debug("=====END PlayerListener.onInteract->proceed");
             }
-            note.translate(world, id);
+            TNE.debug("=====END PlayerListener.onInteract->proceed");
           }
+          note.translate(world, id);
         }
       }
     }
@@ -184,28 +181,6 @@ public class PlayerListener implements Listener {
 
       menu.click((Player)event.getWhoClicked(), slot);
     }
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onPickUp(final PlayerPickupItemEvent event) {
-    final ItemStack stack = event.getItem().getItemStack();
-    final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
-    Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
-    currency.ifPresent((cur)->{
-      UUID id = IDFinder.getID(event.getPlayer());
-      TNE.manager().getAccount(id).saveItemCurrency(world);
-    });
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onDrop(final PlayerDropItemEvent event) {
-    final ItemStack stack = event.getItemDrop().getItemStack();
-    final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
-    Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
-    currency.ifPresent((cur)->{
-      UUID id = IDFinder.getID(event.getPlayer());
-      TNE.manager().getAccount(id).saveItemCurrency(world);
-    });
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
