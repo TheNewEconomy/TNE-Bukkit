@@ -258,9 +258,9 @@ public class TNE extends TNELib {
         configurations().getString("Core.Database.MySQL.Password"),
         configurations().getString("Core.Database.Prefix"),
         new File(getDataFolder(), configurations().getString("Core.Database.File")).getAbsolutePath(),
-        configurations().getBoolean("Core.Database.Transactions.Use"),
+        true,
         false,
-        configurations().getInt("Core.Database.Transactions.Update"),
+        600,
         true
     ));
     setSaveManager(sManager);
@@ -287,7 +287,7 @@ public class TNE extends TNELib {
     //Bukkit Runnables & Workers
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
-      saveWorker.runTaskTimerAsynchronously(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
+      saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
     }
 
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);

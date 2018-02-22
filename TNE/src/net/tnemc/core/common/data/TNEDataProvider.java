@@ -9,9 +9,7 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -39,11 +37,17 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract Boolean backupData();
   public abstract UUID loadID(String username);
   public abstract Map<String, UUID> loadEconomyIDS();
+  public void saveIDS(Map<String, UUID> ids) {
+
+  }
   public abstract void saveID(String username, UUID id);
   public abstract void removeID(String username);
   public abstract void removeID(UUID id);
   public abstract Collection<TNEAccount> loadAccounts();
   public abstract TNEAccount loadAccount(UUID id);
+  public void saveAccounts(List<TNEAccount> accounts) {
+
+  }
   public abstract void saveAccount(TNEAccount account);
   public abstract void deleteAccount(UUID id);
   public abstract TNETransaction loadTransaction(UUID id);
@@ -90,16 +94,33 @@ public abstract class TNEDataProvider extends DataProvider {
   public void save(Double version) {
     TNE.debug("TNEDataProvider.save");
     preSave(version);
+    long start = System.nanoTime();
 
-    TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
-      UUID id = IDFinder.getID(player);
-      TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
-    });
-    TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
-    TNE.uuidManager().getUuids().forEach((username, id)->{
-      TNE.debug("Saving Offline id: " + username + ", " + id.toString());
-      saveID(username, id);
-    });
-    TNE.transactionManager().getTransactions().forEach((id, transaction)->saveTransaction(transaction));
+    if(supportUpdate()) {
+      List<TNEAccount> accounts = new ArrayList<>();
+      Map<String, UUID> ids = new HashMap<>();
+
+      TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
+        UUID id = IDFinder.getID(player);
+        TNEAccount account = TNE.manager().getAccount(id);
+        account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), false);
+        accounts.add(account);
+        ids.put(account.displayName(), account.identifier());
+      });
+    } else {
+      TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
+        UUID id = IDFinder.getID(player);
+        TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
+      });
+
+      TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
+      TNE.uuidManager().getUuids().forEach((username, id)->{
+        TNE.debug("Saving Offline id: " + username + ", " + id.toString());
+        saveID(username, id);
+      });
+      TNE.transactionManager().getTransactions().forEach((id, transaction)->saveTransaction(transaction));
+    }
+    long end = System.nanoTime();
+    System.out.println("Saving data finished in milis: " + ((end - start) / 1e6));
   }
 }

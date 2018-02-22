@@ -70,9 +70,6 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Database.Prefix", "TNE");
     configurations.put("Core.Database.Backup", true);
     configurations.put("Core.Database.File", "economy.db");
-    configurations.put("Core.Database.Transactions.Use", true);
-    configurations.put("Core.Database.Transactions.Cache", true);
-    configurations.put("Core.Database.Transactions.Update", 600);
     configurations.put("Core.Database.MySQL.Host", "localhost");
     configurations.put("Core.Database.MySQL.Port", 3306);
     configurations.put("Core.Database.MySQL.Database", "TheNewEconomy");

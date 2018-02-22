@@ -370,8 +370,8 @@ public class H2Provider extends TNEDataProvider {
       });
       if (h2().results(transIndex).next()) {
         TNETransaction transaction = new TNETransaction(UUID.fromString(h2().results(transIndex).getString("trans_id")),
-            h2().results(transIndex).getString("trans_initiator"),
-            h2().results(transIndex).getString("trans_recipient"),
+            TNE.manager().getAccount(UUID.fromString(h2().results(transIndex).getString("trans_initiator"))),
+            TNE.manager().getAccount(UUID.fromString(h2().results(transIndex).getString("trans_recipient"))),
             h2().results(transIndex).getString("trans_world"),
             TNE.transactionManager().getType(h2().results(transIndex).getString("trans_type")),
             h2().results(transIndex).getLong("trans_time"));

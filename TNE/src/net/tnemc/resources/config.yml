@@ -311,18 +311,6 @@ Core:
         #The file to which all the data will be saved if using a file-based database
         File: Economy
 
-        #All configurations relating to direct SQL transactions
-        Transactions:
-
-            #Whether or not to use direct SQL transactions to keep your database updated.
-            Use: true
-
-            #Whether or not to cache data
-            Cache: true
-
-            #How long(in seconds) until the cached data should be stored
-            Update: 600
-
             
         #All configurations relating to the MySQL Database
         MySQL:

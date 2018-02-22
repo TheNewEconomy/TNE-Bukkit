@@ -5,9 +5,11 @@ import com.github.tnerevival.core.api.TNELibAPI;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.EconomyAPI;
 import net.tnemc.core.economy.currency.Tier;
@@ -261,7 +263,11 @@ public class TNEAPI extends TNELibAPI {
    */
   public BigDecimal getHoldings(String identifier, String world, TNECurrency currency) {
     TNE.debug("getHoldings World: " + world + " Currency: " + currency.name());
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(world, currency);
+    UUID id = IDFinder.getID(identifier);
+    if(MISCUtils.isOnline(id) && currency.isItem()) {
+      return ItemCalculations.getCurrencyItems(TNE.manager().getAccount(id), currency);
+    }
+    return TNE.manager().getAccount(id).getHoldings(world, currency);
   }
 
   /**
@@ -271,7 +277,11 @@ public class TNEAPI extends TNELibAPI {
    * @return The balance of the account for the specified {@link TNECurrency}.
    */
   public BigDecimal getHoldings(String identifier, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(plugin.defaultWorld, currency.name());
+    UUID id = IDFinder.getID(identifier);
+    if(MISCUtils.isOnline(id) && currency.isItem()) {
+      return ItemCalculations.getCurrencyItems(TNE.manager().getAccount(id), currency);
+    }
+    return TNE.manager().getAccount(id).getHoldings(plugin.defaultWorld, currency.name());
   }
 
   /**

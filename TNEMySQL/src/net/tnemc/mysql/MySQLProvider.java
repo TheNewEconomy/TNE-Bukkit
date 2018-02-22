@@ -7,6 +7,7 @@ import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.currency.CurrencyEntry;
@@ -14,10 +15,7 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -38,6 +36,28 @@ import java.util.*;
  * Created by Daniel on 9/7/2017.
  */
 public class MySQLProvider extends TNEDataProvider {
+
+  private String prefix = manager.getPrefix();
+
+  private final String ID_LOAD = "SELECT uuid FROM " + prefix + "_ECOIDS WHERE username = ? LIMIT 1";
+  private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
+  private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
+  private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
+                                      "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
+                                      "uuid = ? LIMIT 1";
+  private final String ACCOUNT_SAVE = "INSERT INTO " + prefix + "_USERS (uuid, display_name, joined_date, " +
+                                      "last_online, account_number, account_status, account_language, account_player) " +
+                                      "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
+                                      "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
+                                      "account_player = ?";
+  private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
+  private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
+  private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
+                                      "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
+  private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
+  private final String TRANSACTION_LOAD = "";
+  private final String TRANSACTION_SAVE = "";
+  private final String TRANSACTIONS_DELETE = "";
 
   private MySQL sql;
 
@@ -202,14 +222,13 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public UUID loadID(String username) {
-    String table = manager.getPrefix() + "_ECOIDS";
     try {
-      int idIndex = mysql().executePreparedQuery("SELECT uuid FROM " + table + " WHERE username = ? LIMIT 1", new Object[] {
+      int idIndex = mysql().executePreparedQuery(ID_LOAD, new Object[] {
           username
       });
       if(mysql().results(idIndex).next()) {
         UUID id = UUID.fromString(mysql().results(idIndex).getString("uuid"));
-        mysql().close(manager);
+        mysql().closeResult(idIndex);
         return id;
       }
     } catch(Exception e) {
@@ -231,7 +250,7 @@ public class MySQLProvider extends TNEDataProvider {
         TNE.debug("Loading EcoID for " + mysql().results(idIndex).getString("username"));
         ids.put(mysql().results(idIndex).getString("username"), UUID.fromString(mysql().results(idIndex).getString("uuid")));
       }
-      mysql().close(manager);
+      mysql().closeResult(idIndex);
     } catch(Exception e) {
       TNE.debug(e);
     }
@@ -240,27 +259,40 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
+  public void saveIDS(Map<String, UUID> ids) {
+    PreparedStatement statement = null;
+    try {
+      statement = mysql().connection(manager).prepareStatement(ID_SAVE);
+      for(Map.Entry<String, UUID> entry : ids.entrySet()) {
+        statement.setString(1, entry.getKey());
+        statement.setString(2, entry.getValue().toString());
+        statement.setString(3, entry.getKey());
+        statement.addBatch();
+      }
+      statement.executeBatch();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
   public void saveID(String username, UUID id) {
-    String table = manager.getPrefix() + "_ECOIDS";
-    mysql().executePreparedUpdate("INSERT INTO `" + table + "` (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?",
+    mysql().executePreparedUpdate(ID_SAVE,
         new Object[] {
             username,
             id.toString(),
             username
         });
-    mysql().close(manager);
   }
 
   @Override
   public void removeID(String username) {
     mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE username = ?", new Object[] { username });
-    mysql().close(manager);
   }
 
   @Override
   public void removeID(UUID id) {
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE uuid = ?", new Object[] { id.toString() });
-    mysql().close(manager);
+    mysql().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
   }
 
   @Override
@@ -277,7 +309,7 @@ public class MySQLProvider extends TNEDataProvider {
         TNE.debug("Loading account with UUID of " + mysql().results(accountIndex).getString("uuid"));
         userIDS.add(UUID.fromString(mysql().results(accountIndex).getString("uuid")));
       }
-      mysql().close(manager);
+      mysql().closeResult(accountIndex);
 
       userIDS.forEach((id)->{
         TNEAccount account = loadAccount(id);
@@ -292,16 +324,15 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public TNEAccount loadAccount(UUID id) {
-    System.out.println("MySQLProvider.loadAccount ID: " + id.toString());
-    String table = manager.getPrefix() + "_USERS";
+    TNEAccount account = null;
     try {
-      int accountIndex = mysql().executePreparedQuery("SELECT uuid, display_name, account_number, account_status, account_language, joined_date, last_online, account_player FROM " + table + " WHERE uuid = ? LIMIT 1", new Object[]{
+      int accountIndex = mysql().executePreparedQuery(ACCOUNT_LOAD, new Object[]{
           id.toString()
       });
       if (mysql().results(accountIndex).next()) {
-        System.out.println("Loading account with ID: " + id.toString());
-        TNEAccount account = new TNEAccount(UUID.fromString(mysql().results(accountIndex).getString("uuid")),
+        account = new TNEAccount(UUID.fromString(mysql().results(accountIndex).getString("uuid")),
                                             mysql().results(accountIndex).getString("display_name"));
+
         account.setAccountNumber(mysql().results(accountIndex).getInt("account_number"));
         account.setStatus(AccountStatus.fromName(mysql().results(accountIndex).getString("account_status")));
         account.setLanguage(mysql().results(accountIndex).getString("account_language"));
@@ -309,28 +340,67 @@ public class MySQLProvider extends TNEDataProvider {
         account.setLastOnline(mysql().results(accountIndex).getLong("last_online"));
         account.setPlayerAccount(mysql().results(accountIndex).getBoolean("account_player"));
 
-        String balancesTable = manager.getPrefix() + "_BALANCES";
-        int balancesIndex = mysql().executePreparedQuery("SELECT world, currency, balance FROM " + balancesTable + " WHERE uuid = ?", new Object[]{account.identifier().toString()});
+        int balancesIndex = mysql().executePreparedQuery(BALANCE_LOAD, new Object[]{account.identifier().toString()});
         while (mysql().results(balancesIndex).next()) {
           account.setHoldings(mysql().results(balancesIndex).getString("world"), mysql().results(balancesIndex).getString("currency"), new BigDecimal(mysql().results(balancesIndex).getString("balance")), true);
         }
-        System.out.println("Preparing to return account with name of " + account.displayName());
-        mysql().close(manager);
-        System.out.println("Preparing to return account with name of " + account.displayName());
-        return account;
+        mysql().closeResult(balancesIndex);
       }
+      mysql().closeResult(accountIndex);
     } catch(Exception e) {
       TNE.debug(e);
     }
-    return null;
+    return account;
+  }
+
+  @Override
+  public void saveAccounts(List<TNEAccount> accounts) {
+    PreparedStatement accountStatement = null;
+    PreparedStatement balanceStatement = null;
+    try {
+      accountStatement = mysql().connection(manager).prepareStatement(ACCOUNT_SAVE);
+      balanceStatement = mysql().connection(manager).prepareStatement(BALANCE_SAVE);
+      for(TNEAccount account : accounts) {
+        accountStatement.setString(1, account.identifier().toString());
+        accountStatement.setString(2, account.displayName());
+        accountStatement.setLong(3, account.getJoined());
+        accountStatement.setLong(4, account.getLastOnline());
+        accountStatement.setInt(5, account.getAccountNumber());
+        accountStatement.setString(6, account.getStatus().getName());
+        accountStatement.setString(7, account.getLanguage());
+        accountStatement.setBoolean(8, account.playerAccount());
+        accountStatement.setString(9, account.displayName());
+        accountStatement.setLong(10, account.getJoined());
+        accountStatement.setLong(11, account.getLastOnline());
+        accountStatement.setInt(12, account.getAccountNumber());
+        accountStatement.setString(13, account.getStatus().getName());
+        accountStatement.setString(14, account.getLanguage());
+        accountStatement.setBoolean(15, account.playerAccount());
+        accountStatement.addBatch();
+
+        for(Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
+          for(Map.Entry<String, BigDecimal> entry : holdingsEntry.getValue().getHoldings().entrySet()) {
+            balanceStatement.setString(1, account.identifier().toString());
+            balanceStatement.setString(2, TNE.instance().getServerName());
+            balanceStatement.setString(3, holdingsEntry.getKey());
+            balanceStatement.setString(4, entry.getKey());
+            balanceStatement.setString(5, entry.getValue().toString());
+            balanceStatement.setString(6, entry.getValue().toString());
+            balanceStatement.addBatch();
+          }
+        }
+      }
+      balanceStatement.executeBatch();
+      accountStatement.executeBatch();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void saveAccount(TNEAccount account) {
     TNE.debug("Saving account: " + account.displayName());
-    String table = manager.getPrefix() + "_USERS";
-    mysql().executePreparedUpdate("INSERT INTO `" + table + "` (uuid, display_name, joined_date, last_online, account_number, account_status, account_language, account_player) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" +
-            " ON DUPLICATE KEY UPDATE display_name = ?, joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, account_player = ?",
+    mysql().executePreparedUpdate(ACCOUNT_SAVE,
         new Object[]{
             account.identifier().toString(),
             account.displayName(),
@@ -350,13 +420,10 @@ public class MySQLProvider extends TNEDataProvider {
         }
     );
 
-    final String balTable = manager.getPrefix() + "_BALANCES";
-
     account.getWorldHoldings().forEach((world, holdings)->{
 
       holdings.getHoldings().forEach((currency, balance)->{
-        mysql().executePreparedUpdate("INSERT INTO `" + balTable + "` (uuid, server_name, world, currency, balance) " +
-                "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?",
+        mysql().executePreparedUpdate(BALANCE_SAVE,
             new Object[]{
                 account.identifier().toString(),
                 TNE.instance().getServerName(),
@@ -372,10 +439,9 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void deleteAccount(UUID id) {
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE uuid = ?", new Object[] { id.toString() });
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_USERS WHERE uuid = ? ", new Object[] { id.toString() });
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_BALANCES WHERE uuid = ? ", new Object[] { id.toString() });
-    mysql().close(manager);
+    mysql().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
+    mysql().executePreparedUpdate(ACCOUNT_DELETE, new Object[] { id.toString() });
+    mysql().executePreparedUpdate(BALANCE_DELETE, new Object[] { id.toString() });
   }
 
   @Override
@@ -387,8 +453,8 @@ public class MySQLProvider extends TNEDataProvider {
       });
       if (mysql().results(transIndex).next()) {
         TNETransaction transaction = new TNETransaction(UUID.fromString(mysql().results(transIndex).getString("trans_id")),
-            mysql().results(transIndex).getString("trans_initiator"),
-            mysql().results(transIndex).getString("trans_recipient"),
+            TNE.manager().getAccount(UUID.fromString(mysql().results(transIndex).getString("trans_initiator"))),
+            TNE.manager().getAccount(UUID.fromString(mysql().results(transIndex).getString("trans_recipient"))),
             mysql().results(transIndex).getString("trans_world"),
             TNE.transactionManager().getType(mysql().results(transIndex).getString("trans_type").toLowerCase()),
             mysql().results(transIndex).getLong("trans_time"));
@@ -415,7 +481,8 @@ public class MySQLProvider extends TNEDataProvider {
                 new BigDecimal(mysql().results(transIndex).getString("trans_recipient_balance"))));
           }
         }
-        mysql().close(manager);
+        mysql().closeResult(transIndex);
+        mysql().closeResult(chargesIndex);
         return transaction;
       }
     } catch(Exception e) {
@@ -435,7 +502,7 @@ public class MySQLProvider extends TNEDataProvider {
       while (mysql().results(accountIndex).next()) {
         transactionIDS.add(UUID.fromString(mysql().results(accountIndex).getString("trans_id")));
       }
-      mysql().close(manager);
+      mysql().closeResult(accountIndex);
       transactionIDS.forEach((id)->{
         TNETransaction transaction = loadTransaction(id);
         if(transaction != null) transactions.add(transaction);
@@ -501,7 +568,6 @@ public class MySQLProvider extends TNEDataProvider {
           }
       );
     }
-    mysql().close(manager);
   }
 
   @Override

@@ -217,7 +217,7 @@ public class ItemCalculations {
     TNE.debug("=====START Account.takeItems =====");
     Player player = account.getPlayer();
     for(ItemStack stack : items) {
-      player.getInventory().removeItem(stack);
+      removeItem(player, stack);
     }
     TNE.debug("=====END Account.takeItems =====");
   }
@@ -236,5 +236,60 @@ public class ItemCalculations {
       }
     }
     TNE.debug("=====END Account.giveItems =====");
+  }
+
+  public static Integer removeItem(Player player, ItemStack stack) {
+    int left = stack.getAmount();
+
+    while(true) {
+
+      int first = first(player, stack);
+
+      if(first == -1) {
+        ItemStack helmet = player.getInventory().getHelmet();
+        int amount = helmet.getAmount();
+        if(helmet.isSimilar(stack)) {
+          if(amount <= left) {
+            left -= amount;
+            player.getInventory().setHelmet(null);
+          } else {
+            helmet.setAmount(amount - left);
+            player.getInventory().setHelmet(helmet);
+            left = 0;
+          }
+          return left;
+        } else {
+          return left;
+        }
+      } else {
+        ItemStack found = player.getInventory().getItem(first);
+        int amount = found.getAmount();
+        System.out.println("Found itemstack with amt of " + amount);
+
+        if(amount <= left) {
+          left -= amount;
+          player.getInventory().setItem(first, null);
+        } else {
+          found.setAmount(amount - left);
+          player.getInventory().setItem(first, found);
+          left = 0;
+        }
+      }
+
+      if(left <= 0) break;
+    }
+    return left;
+  }
+
+  public static int first(Player player, ItemStack stack) {
+    if(stack == null) return -1;
+    ItemStack[] items = player.getInventory().getStorageContents();
+
+    for(int i = 0; i < items.length; i++) {
+      if(items[i] == null) continue;
+
+      if(stack.isSimilar(items[i])) return i;
+    }
+    return -1;
   }
 }

@@ -169,6 +169,10 @@ public class TNEAccount implements Account {
   }
 
   public void saveItemCurrency(String world) {
+    saveItemCurrency(world, true);
+  }
+
+  public void saveItemCurrency(String world, boolean save) {
     List<String> currencies = TNE.instance().getWorldManager(world).getItemCurrencies();
     WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
 
@@ -177,7 +181,7 @@ public class TNEAccount implements Account {
       worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(this, cur));
     });
     holdings.put(world, worldHoldings);
-    TNE.manager().addAccount(this);
+    if(save) TNE.manager().addAccount(this);
   }
 
   public Map<String, WorldHoldings> getWorldHoldings() {
