@@ -33,6 +33,7 @@ import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
+import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
@@ -287,6 +288,10 @@ public class TNE extends TNELib {
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
       saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
+    }
+
+    if(instance.api().getBoolean("Core.Server.McMMORewards")) {
+      getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
