@@ -6,7 +6,7 @@ import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.economy.Account;
-import net.tnemc.core.economy.EconomyAPI;
+import net.tnemc.core.economy.ExtendedEconomyAPI;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
 import net.tnemc.core.economy.transaction.Transaction;
@@ -33,7 +33,7 @@ import java.util.*;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Created by Daniel on 8/17/2017.
  */
-public class ReserveEconomy implements EconomyAPI {
+public class ReserveEconomy implements ExtendedEconomyAPI {
 
   private TNE plugin;
 
@@ -84,6 +84,19 @@ public class ReserveEconomy implements EconomyAPI {
   @Override
   public Set<Currency> getCurrencies(String world) {
     return new HashSet<>(TNE.instance().getWorldManager(world).getCurrencies());
+  }
+
+  @Override
+  public Currency getCurrency(String currency) {
+    for(TNECurrency cur : TNE.manager().currencyManager().getCurrencies()) {
+      if(cur.name().equalsIgnoreCase(currency)) return cur;
+    }
+    return null;
+  }
+
+  @Override
+  public Currency getCurrency(String currency, String world) {
+    return TNE.manager().currencyManager().get(world, currency);
   }
 
   @Override

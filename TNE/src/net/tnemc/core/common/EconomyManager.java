@@ -75,7 +75,9 @@ public class EconomyManager {
 
   public TNEAccount getAccount(UUID id) {
     if(!exists(id) && !createAccount(id, IDFinder.getUsername(id.toString()))) {
-      return null;
+      if(!createAccount(id, IDFinder.getUsername(id.toString()))) {
+        return null;
+      }
     }
     return accounts.get(id);
   }

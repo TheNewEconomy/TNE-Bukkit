@@ -268,7 +268,7 @@ public class ItemCalculations {
       } else {
         ItemStack found = player.getInventory().getItem(first);
         int amount = found.getAmount();
-        System.out.println("Found itemstack with amt of " + amount);
+        TNE.debug("Found itemstack with amt of " + amount);
 
         if(amount <= left) {
           left -= amount;

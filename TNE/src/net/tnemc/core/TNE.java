@@ -43,7 +43,6 @@ import org.bukkit.plugin.ServicePriority;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -98,7 +97,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "24prebeta1";
+  public static final String build = "31prebeta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -311,6 +310,8 @@ public class TNE extends TNELib {
       UUID id = IDFinder.getID(consoleName);
 
       if(!manager.exists(id)) {
+        special.add(id);
+        manager.createAccount(id, consoleName);
         TNEAccount account = manager.getAccount(id);
         TNE.debug("Account Null? " + (account == null));
         TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));
@@ -438,7 +439,7 @@ public class TNE extends TNELib {
     }
   }
   public static void debug(String message) {
-    LocalDateTime now = LocalDateTime.now();
+    /*LocalDateTime now = LocalDateTime.now();
     int year = now.getYear();
     int month = now.getMonthValue();
     int day = now.getDayOfMonth();
@@ -458,7 +459,7 @@ public class TNE extends TNELib {
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }
+    }*/
   }
 
   @Override

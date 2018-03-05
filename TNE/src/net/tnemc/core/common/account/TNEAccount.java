@@ -173,12 +173,12 @@ public class TNEAccount implements Account {
   }
 
   public void saveItemCurrency(String world, boolean save) {
-    System.out.println("saveItemCurrency for world : " + world + " Save: " + save);
+    TNE.debug("saveItemCurrency for world : " + world + " Save: " + save);
     List<String> currencies = TNE.instance().getWorldManager(world).getItemCurrencies();
     WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
 
     currencies.forEach((currency)->{
-      System.out.println("Currency: " + currency);
+      TNE.debug("Currency: " + currency);
       TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
       worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(this, cur));
     });

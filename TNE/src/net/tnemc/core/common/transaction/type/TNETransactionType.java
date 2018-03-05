@@ -57,21 +57,23 @@ public interface TNETransactionType extends TransactionType {
    * @param transaction The {@link Transaction} to perform.
    * @return The {@link TransactionResult} of this {@link Transaction}.
    */
-  default TransactionResult perform(TNETransaction transaction) {
+  @Override
+  default TransactionResult perform(Transaction transaction) {
+    TNETransaction tneTransaction = (TNETransaction)transaction;
     TNE.debug("=====START TNETransactionType.perform =====");
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
       TNE.debug("first if");
-      TNE.debug("Account null: " + (transaction.getInitiator() == null));
-      TNE.debug("Transaction.initiator null: " + (transaction == null));
-      TNE.debug("Transaction.initiatorCharge null: " + (transaction.initiatorCharge() == null));
-      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge());
+      TNE.debug("Account null: " + (tneTransaction.getInitiator() == null));
+      TNE.debug("Transaction.initiator null: " + (tneTransaction == null));
+      TNE.debug("Transaction.initiatorCharge null: " + (tneTransaction.initiatorCharge() == null));
+      proceed = tneTransaction.getInitiator().canCharge(tneTransaction.initiatorCharge());
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       TNE.debug("second if");
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge());
+        proceed = tneTransaction.getRecipient().canCharge(tneTransaction.recipientCharge());
       }
     }
 
@@ -80,12 +82,12 @@ public interface TNETransactionType extends TransactionType {
       TNE.debug("yeah, proceed");
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
         TNE.debug("first if");
-        transaction.getInitiator().handleCharge(transaction.initiatorCharge());
+        tneTransaction.getInitiator().handleCharge(tneTransaction.initiatorCharge());
       }
 
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
         TNE.debug("second if");
-        transaction.getRecipient().handleCharge(transaction.recipientCharge());
+        tneTransaction.getRecipient().handleCharge(tneTransaction.recipientCharge());
       }
       TNE.debug("=====ENDSUCCESS TNETransactionType.perform =====");
       return success();

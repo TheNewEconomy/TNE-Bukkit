@@ -101,13 +101,14 @@ public abstract class TNEDataProvider extends DataProvider {
       Map<String, UUID> ids = new HashMap<>();
 
       TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
-        System.out.println("Saving Account for " + player.getName());
         UUID id = IDFinder.getID(player.getName());
         TNEAccount account = TNE.manager().getAccount(id);
         account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), false);
         accounts.add(account);
         ids.put(account.displayName(), account.identifier());
       });
+      saveIDS(ids);
+      saveAccounts(accounts);
     } else {
       TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
         UUID id = IDFinder.getID(player);
@@ -122,6 +123,6 @@ public abstract class TNEDataProvider extends DataProvider {
       TNE.transactionManager().getTransactions().forEach((id, transaction)->saveTransaction(transaction));
     }
     long end = System.nanoTime();
-    System.out.println("Saving data finished in milis: " + ((end - start) / 1e6));
+    TNE.debug("Saving data finished in milis: " + ((end - start) / 1e6));
   }
 }

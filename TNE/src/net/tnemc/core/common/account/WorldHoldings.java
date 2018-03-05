@@ -39,7 +39,7 @@ public class WorldHoldings {
   }
 
   protected void setHoldings(String currency, BigDecimal newHoldings) {
-    System.out.println("Currency: " + currency + " Balance: " + newHoldings.toPlainString());
+    TNE.debug("Currency: " + currency + " Balance: " + newHoldings.toPlainString());
     holdings.put(currency, newHoldings);
   }
 
