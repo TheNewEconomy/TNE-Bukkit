@@ -98,7 +98,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "31prebeta1";
+  public static final String build = "33prebeta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -290,7 +290,7 @@ public class TNE extends TNELib {
       saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
     }
 
-    if(instance.api().getBoolean("Core.Server.McMMORewards")) {
+    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && instance.api().getBoolean("Core.Server.McMMORewards")) {
       getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
@@ -443,6 +443,13 @@ public class TNE extends TNELib {
       e.printStackTrace();
     }
   }
+
+  public static void debug(StackTraceElement[] stack) {
+    for(StackTraceElement element : stack) {
+      debug(element.toString());
+    }
+  }
+
   public static void debug(String message) {
     /*LocalDateTime now = LocalDateTime.now();
     int year = now.getYear();
@@ -465,6 +472,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
+    //System.out.println(message);
   }
 
   @Override

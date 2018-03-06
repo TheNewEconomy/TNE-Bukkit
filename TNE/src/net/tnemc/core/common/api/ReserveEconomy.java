@@ -57,6 +57,26 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
+  public String currencyDefaultPlural() {
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
+  }
+
+  @Override
+  public String currencyDefaultSingular() {
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
+  }
+
+  @Override
+  public String currencyDefaultPlural(String world) {
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
+  }
+
+  @Override
+  public String currencyDefaultSingular(String world) {
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
+  }
+
+  @Override
   public boolean hasCurrency(String name) {
     return TNE.instance().api().hasCurrency(name);
   }
@@ -174,6 +194,16 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   @Override
   public String format(BigDecimal amount, String world) {
     return TNE.instance().api().format(amount, world);
+  }
+
+  @Override
+  public boolean purgeAccounts() {
+    return false;
+  }
+
+  @Override
+  public boolean purgeAccountsUnder(BigDecimal bigDecimal) {
+    return false;
   }
 
   @Override

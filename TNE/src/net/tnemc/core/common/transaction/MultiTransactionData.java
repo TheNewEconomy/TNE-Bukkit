@@ -37,7 +37,7 @@ public class MultiTransactionData {
   }
 
   public void handle(MultiTransactionHandler handler) {
-    if(!TNE.instance().api().hasHoldings(handler.getInitiator().toString(),
+    if(!TNE.instance().api().hasHoldings(handler.getInitiator().identifier().toString(),
        handler.initiatorCost(), handler.getCurrency(), handler.getWorld())) {
       messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
       return;

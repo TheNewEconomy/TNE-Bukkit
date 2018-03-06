@@ -25,6 +25,9 @@ Core:
         #Whether or not mob drops that are a currency item should be disabled.
         MobDrop: true
 
+        #Whether or not mcmmo skill rewards that are a currency item should be disabled.
+        McMMORewards: true
+
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
