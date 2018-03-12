@@ -20,19 +20,10 @@ import java.util.*;
 
 /**
  * The New Economy Minecraft Server Plugin
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 9/7/2017.
  */
 public class MySQLProvider extends TNEDataProvider {
@@ -574,5 +565,62 @@ public class MySQLProvider extends TNEDataProvider {
   public void deleteTransaction(UUID id) {
     mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
     mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_CHARGES WHERE charge_transaction = ? ", new Object[] { id.toString() });
+  }
+
+  @Override
+  public String nullAccounts() {
+    String userTable = manager.getPrefix() + "_USERS";
+    String idTable = manager.getPrefix() + "_ECOIDS";
+    int index = mysql().executeQuery("SELECT count(*) FROM " + userTable + " WHERE display_name is null;");
+    int userIndex = mysql().executeQuery("SELECT count(*) FROM " + idTable + " WHERE username is null;");
+
+    String counts = "";
+    try {
+      while(mysql().results(index).next()) {
+        counts += " Accounts: " + mysql().results(index).getInt(1);
+      }
+      mysql().closeResult(index);
+      while(mysql().results(userIndex).next()) {
+        counts += " IDS: " + mysql().results(userIndex).getInt(1);
+      }
+      mysql().closeResult(userIndex);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return counts;
+  }
+
+  @Override
+  public int idsLength() {
+    String idTable = manager.getPrefix() + "_ECOIDS";
+    int index = mysql().executeQuery("SELECT count(*) FROM " + idTable + ";");
+
+    int count = 0;
+    try {
+      while(mysql().results(index).next()) {
+        count = mysql().results(index).getInt(1);
+      }
+      mysql().closeResult(index);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return count;
+  }
+
+  @Override
+  public int usersLength() {
+    String userTable = manager.getPrefix() + "_USERS";
+    int index = mysql().executeQuery("SELECT count(*) FROM " + userTable + ";");
+
+    int count = 0;
+    try {
+      while(mysql().results(index).next()) {
+        count = mysql().results(index).getInt(1);
+      }
+      mysql().closeResult(index);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return count;
   }
 }

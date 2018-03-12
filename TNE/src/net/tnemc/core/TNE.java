@@ -36,6 +36,7 @@ import net.tnemc.core.listeners.ConnectionListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.menu.MenuManager;
+import net.tnemc.core.worker.MismatchWorker;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -49,19 +50,10 @@ import java.util.logging.Logger;
 
 /**
  * The New Economy Minecraft Server Plugin
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
 public class TNE extends TNELib {
@@ -97,8 +89,9 @@ public class TNE extends TNELib {
 
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
+  private MismatchWorker mismatchWorker;
 
-  public static final String build = "33prebeta1";
+  public static final String build = "35prebeta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -287,7 +280,9 @@ public class TNE extends TNELib {
     //Bukkit Runnables & Workers
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
+      mismatchWorker = new MismatchWorker(this);
       saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
+      mismatchWorker.runTaskTimer(this, (configurations().getLong("Core.AutoSaver.Interval") + 2) * 20, (configurations().getLong("Core.AutoSaver.Interval") + 2) * 20);
     }
 
     if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && instance.api().getBoolean("Core.Server.McMMORewards")) {
@@ -446,7 +441,7 @@ public class TNE extends TNELib {
 
   public static void debug(StackTraceElement[] stack) {
     for(StackTraceElement element : stack) {
-      debug(element.toString());
+      logger().warning(element.toString());
     }
   }
 

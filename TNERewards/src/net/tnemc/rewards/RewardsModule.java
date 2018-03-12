@@ -4,6 +4,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.module.Module;
@@ -24,22 +25,14 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * All rights reserved.
  **/
 @ModuleInfo(
@@ -123,7 +116,8 @@ public class RewardsModule extends Module {
     if(event.isCancelled()) return;
     TNE.debug("TNEObjectInteractionEvent called");
 
-    String id = IDFinder.getID(event.getPlayer()).toString();
+    UUID id = IDFinder.getID(event.getPlayer());
+    TNEAccount account = TNE.manager().getAccount(id);
     String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
     BigDecimal cost = event.getType().getCost(event.getIdentifier(), WorldFinder.getWorld(event.getPlayer(), WorldVariant.CONFIGURATION), IDFinder.getID(event.getPlayer()).toString());
     String message = event.getType().getCharged();
@@ -133,7 +127,7 @@ public class RewardsModule extends Module {
       if(cost.compareTo(BigDecimal.ZERO) > 0) {
         type = TransactionChargeType.GAIN;
       }
-      TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("give"));
+      TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
       transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world), cost, type));
       TransactionResult result = TNE.transactionManager().perform(transaction);
 

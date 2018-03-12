@@ -4,6 +4,7 @@ import com.github.tnerevival.core.Message;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.module.ModuleListener;
@@ -17,22 +18,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 10/21/2017.
  */
 public class MobsListener implements ModuleListener {
@@ -54,9 +47,10 @@ public class MobsListener implements ModuleListener {
       if (killer.hasPermission("tne.general.mob")) {
 
         String world = WorldFinder.getWorld(killer, WorldVariant.CONFIGURATION);
-        String id = IDFinder.getID(killer).toString();
+        UUID id = IDFinder.getID(killer);
+        TNEAccount account = TNE.manager().getAccount(id);
         String mob = entity.getCustomName();
-        BigDecimal reward = MobsModule.instance().mobReward("Default", world, id);
+        BigDecimal reward = MobsModule.instance().mobReward("Default", world, id.toString());
         String messageNode = "Mobs.Messages.Killed";
         Boolean player = false;
         TNE.debug("Mobs Location: " + MobsModule.instance().mobs.getAbsolutePath());
@@ -77,7 +71,7 @@ public class MobsListener implements ModuleListener {
             } else if (entity.getType().equals(EntityType.PLAYER)) {
               Player p = (Player) entity;
               if (p.getUniqueId() != null) {
-                if (MobsModule.instance().playerEnabled(p.getUniqueId(), world, id)) {
+                if (MobsModule.instance().playerEnabled(p.getUniqueId(), world, id.toString())) {
                   mob = p.getUniqueId().toString();
                   player = true;
                 }
@@ -86,10 +80,10 @@ public class MobsListener implements ModuleListener {
           }
           mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? "Custom.Entries." + event.getEntityType().toString() : mob;
 
-          if (entity.getCustomName() != null && MobsModule.instance().mobEnabled(entity.getCustomName(), world, id))
+          if (entity.getCustomName() != null && MobsModule.instance().mobEnabled(entity.getCustomName(), world, id.toString()))
             mob = "Custom.Entries." + entity.getCustomName();
 
-          if (MobsModule.instance().mobAge(world, id)) {
+          if (MobsModule.instance().mobAge(world, id.toString())) {
             if (entity instanceof Ageable) {
               Ageable e = (Ageable) entity;
               if (!e.isAdult()) {
@@ -118,7 +112,7 @@ public class MobsListener implements ModuleListener {
                 tier = ((Slime) entity).getSize() + "";
                 break;
             }
-            if (MobsModule.instance().mobEnabled(mob + "." + tier, world, id)) {
+            if (MobsModule.instance().mobEnabled(mob + "." + tier, world, id.toString())) {
               mob = mob + "." + tier;
             }
           }
@@ -126,9 +120,9 @@ public class MobsListener implements ModuleListener {
           if (!MobsModule.instance().fileConfiguration.contains("Mobs." + mob)) mob = "Default";
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))
             mob = "Custom.Entries." + entity.getCustomName();
-          String currency = MobsModule.instance().mobCurrency(mob, world, id);
-          reward = (player) ? MobsModule.instance().playerReward(mob, world, id) : MobsModule.instance().mobReward(mob, world, id);
-          reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().getRewardMultiplier(mob, world, id)));
+          String currency = MobsModule.instance().mobCurrency(mob, world, id.toString());
+          reward = (player) ? MobsModule.instance().playerReward(mob, world, id.toString()) : MobsModule.instance().mobReward(mob, world, id.toString());
+          reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().getRewardMultiplier(mob, world, id.toString())));
           String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? event.getEntityType().toString() : mob;
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))
             formatted = entity.getCustomName();
@@ -138,8 +132,8 @@ public class MobsListener implements ModuleListener {
           messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Mobs.Messages.KilledVowel" : "Mobs.Messages.Killed";
           if (TNE.instance().messageConfiguration().contains("Mobs.Messages.Custom." + formatted.replaceAll(" ", "")))
             messageNode = TNE.instance().messageConfiguration().getString("Mobs.Messages.Custom." + formatted.replaceAll(" ", ""));
-          if (MobsModule.instance().mobEnabled(mob, world, id)) {
-            TNETransaction transaction = new TNETransaction(id, id, world, TNE.transactionManager().getType("give"));
+          if (MobsModule.instance().mobEnabled(mob, world, id.toString())) {
+            TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
             transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), reward, TransactionChargeType.GAIN));
             TransactionResult result = TNE.transactionManager().perform(transaction);
             if (result.proceed() && TNE.instance().api().getBoolean("Mobs.Message")) {

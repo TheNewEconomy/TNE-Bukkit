@@ -1,26 +1,19 @@
 package net.tnemc.signs;
 
-import com.github.tnerevival.commands.CommandManager;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.configurations.MainConfigurations;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.*;
 
 /**
  * The New Economy Minecraft Server Plugin
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * All rights reserved.
  **/
 @ModuleInfo(
@@ -30,8 +23,20 @@ import net.tnemc.core.common.module.ModuleInfo;
 )
 public class SignsModule extends Module {
 
+
+  File signs;
+  FileConfiguration fileConfiguration;
+  SignConfiguration configuration;
+
+  private SignsManager manager;
+
+  private static SignsModule instance;
+
   @Override
   public void load(TNE tne, String version) {
+    listeners.add(new SignsListener(tne));
+    instance = this;
+    manager = new SignsManager();
     tne.logger().info("Signs Module loaded!");
   }
 
@@ -41,31 +46,47 @@ public class SignsModule extends Module {
   }
 
   @Override
-  public void registerMainConfigurations(MainConfigurations configuration) {
-    configuration.configurations.put("Core.Signs.Balance.Enabled", true);
-    configuration.configurations.put("Core.Signs.Balance.TNECurrency", "Default");
-    configuration.configurations.put("Core.Signs.Balance.Place", 20.0);
-    configuration.configurations.put("Core.Signs.Balance.Use", 20.0);
-    configuration.configurations.put("Core.Signs.Bank.Enabled", true);
-    configuration.configurations.put("Core.Signs.Bank.Place", 20.0);
-    configuration.configurations.put("Core.Signs.Bank.Use", 20.0);
-    configuration.configurations.put("Core.Signs.Vault.Enabled", true);
-    configuration.configurations.put("Core.Signs.Vault.Place", 20.0);
-    configuration.configurations.put("Core.Signs.Vault.Use", 20.0);
-    configuration.configurations.put("Core.Signs.Shop.Enabled", true);
-    configuration.configurations.put("Core.Signs.Shop.Place", 20.0);
-    configuration.configurations.put("Core.Signs.Shop.Use", 20.0);
-    configuration.configurations.put("Core.Signs.Item.Enabled", true);
-    configuration.configurations.put("Core.Signs.Item.Place", 20.0);
-    configuration.configurations.put("Core.Signs.Item.Use", 20.0);
-    configuration.configurations.put("Core.Signs.Item.Max", 10);
-    configuration.configurations.put("Core.Signs.Item.Multiple", true);
-    configuration.configurations.put("Core.Signs.Item.MaxOffers", 9);
-    configuration.configurations.put("Core.Signs.Item.EnderChest", true);
+  public void initializeConfigurations() {
+    super.initializeConfigurations();
+    signs = new File(TNE.instance().getDataFolder(), "signs.yml");
+    fileConfiguration = YamlConfiguration.loadConfiguration(signs);
   }
 
   @Override
-  public void registerCommands(CommandManager manager) {
-    super.registerCommands(manager);
+  public void loadConfigurations() {
+    super.loadConfigurations();
+    fileConfiguration.options().copyDefaults(true);
+    configuration = new SignConfiguration();
+    configurations.put(configuration, "Signs");
+  }
+
+  @Override
+  public void saveConfigurations() {
+    super.saveConfigurations();
+    if(!signs.exists()) {
+      Reader mobsStream = null;
+      try {
+        mobsStream = new InputStreamReader(TNE.instance().getResource("signs.yml"), "UTF8");
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
+      if (mobsStream != null) {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
+        fileConfiguration.setDefaults(config);
+      }
+    }
+    try {
+      fileConfiguration.save(signs);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  static SignsModule instance() {
+    return instance;
+  }
+
+  public static SignsManager manager() {
+    return instance.manager;
   }
 }

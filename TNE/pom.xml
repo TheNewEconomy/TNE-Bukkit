@@ -39,6 +39,26 @@
         </plugins>
     </build>
 
+    <organization>
+        <name>The New Economy</name>
+        <url>https://tnemc.net</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>creatorfromhell</id>
+            <name>Daniel "creatorfromhell" Vidmar</name>
+            <email>daniel.viddy@gmail.com</email>
+            <url>https://creatorfromhell.com</url>
+            <organization>The New Economy</organization>
+            <organizationUrl>https://tnemc.net</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>America/New_York</timezone>
+        </developer>
+    </developers>
+
     <repositories>
         <repository>
             <id>mcmmo-repo</id>
@@ -73,7 +93,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
-            <version>0.1.0.5</version>
+            <version>0.1.0.10</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
