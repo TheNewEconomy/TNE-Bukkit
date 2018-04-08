@@ -39,7 +39,9 @@ public class MoneySetCommand extends TNECommand {
 
   @Override
   public String[] getAliases() {
-    return new String[0];
+    return new String[] {
+        "="
+    };
   }
 
   @Override

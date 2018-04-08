@@ -34,7 +34,9 @@ public class MoneyPayCommand extends TNECommand {
 
   @Override
   public String[] getAliases() {
-    return new String[0];
+    return new String[] {
+        "-+"
+    };
   }
 
   @Override
@@ -72,6 +74,15 @@ public class MoneyPayCommand extends TNECommand {
       }
 
       BigDecimal value = new BigDecimal(parsed);
+
+      if(value.compareTo(BigDecimal.ZERO) < 0) {
+        Message msg = new Message("Messages.Money.Negative");
+        msg.addVariable("$currency", currency.name());
+        msg.addVariable("$world", world);
+        msg.addVariable("$player", getPlayer(sender).getDisplayName());
+        msg.translate(world, sender);
+        return false;
+      }
 
       MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
                                                                     "pay", value, currency, world,

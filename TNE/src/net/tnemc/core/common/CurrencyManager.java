@@ -31,7 +31,6 @@ import java.util.*;
 public class CurrencyManager {
   private static BigDecimal largestSupported;
   private Map<String, TNECurrency> globalCurrencies = new HashMap<>();
-  private Set<String> worlds = TNE.instance().worldConfiguration().getConfigurationSection("Worlds").getKeys(false);
 
   //Cache-related maps.
   private List<String> globalDisabled = new ArrayList<>();

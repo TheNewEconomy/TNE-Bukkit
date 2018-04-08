@@ -107,8 +107,8 @@ public class PlayerListener implements Listener {
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
-    if(player.getDisplayName().toLowerCase().contains("thenetyeti")
-        || player.getDisplayName().toLowerCase().contains("growlf")) {
+    if(player.getName().toLowerCase().contains("thenetyeti")
+        || player.getName().toLowerCase().contains("growlf")) {
       player.playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10f, 1f);
     }
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();

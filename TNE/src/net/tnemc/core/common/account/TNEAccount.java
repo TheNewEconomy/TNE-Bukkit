@@ -13,6 +13,7 @@ import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.entity.Player;
+import org.javalite.activejdbc.Model;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -25,7 +26,8 @@ import java.util.*;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 12/7/2017.
  */
-public class TNEAccount implements Account {
+
+public class TNEAccount extends Model implements Account {
   private Map<UUID, AccountAccessor> accessors = new HashMap<>();
   private Map<String, WorldHoldings> holdings = new HashMap<>();
   private AccountHistory history;
