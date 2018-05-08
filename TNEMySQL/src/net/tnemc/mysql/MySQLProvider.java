@@ -255,6 +255,10 @@ public class MySQLProvider extends TNEDataProvider {
     try {
       statement = mysql().connection(manager).prepareStatement(ID_SAVE);
       for(Map.Entry<String, UUID> entry : ids.entrySet()) {
+        if(entry.getKey() == null) {
+          System.out.println("Attempted saving id with null display name.");
+          continue;
+        }
         statement.setString(1, entry.getKey());
         statement.setString(2, entry.getValue().toString());
         statement.setString(3, entry.getKey());
@@ -268,6 +272,10 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void saveID(String username, UUID id) {
+    if(username == null) {
+      System.out.println("Attempted saving id with null display name.");
+      return;
+    }
     mysql().executePreparedUpdate(ID_SAVE,
         new Object[] {
             username,
@@ -352,6 +360,10 @@ public class MySQLProvider extends TNEDataProvider {
       accountStatement = mysql().connection(manager).prepareStatement(ACCOUNT_SAVE);
       balanceStatement = mysql().connection(manager).prepareStatement(BALANCE_SAVE);
       for(TNEAccount account : accounts) {
+        if(account.displayName() == null) {
+          System.out.println("Attempted saving account with null display name.");
+          continue;
+        }
         accountStatement.setString(1, account.identifier().toString());
         accountStatement.setString(2, account.displayName());
         accountStatement.setLong(3, account.getJoined());
@@ -390,6 +402,10 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void saveAccount(TNEAccount account) {
+    if(account.displayName() == null) {
+      System.out.println("Attempted saving account with null display name.");
+      return;
+    }
     TNE.debug("Saving account: " + account.displayName());
     mysql().executePreparedUpdate(ACCOUNT_SAVE,
         new Object[]{

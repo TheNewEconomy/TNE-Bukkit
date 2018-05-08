@@ -1,17 +1,13 @@
 package net.tnemc.core.commands.admin;
 
 import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -56,24 +52,12 @@ public class AdminRestoreCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
     if(file.exists()) {
-      YamlConfiguration original = YamlConfiguration.loadConfiguration(file);
-      YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-      Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
-
-      accounts.forEach((username)->{
-        UUID id = IDFinder.getID(username);
-        TNEAccount account = new TNEAccount(id, username);
-        Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);
-        worlds.forEach((world)->{
-          Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
-          currencies.forEach((currency)->{
-            String balance = original.getString("Accounts." + username + ".Balances." + world + "." + currency);
-            account.setHoldings(world, currency, new BigDecimal(balance));
-          });
-        });
-        TNE.manager().addAccount(account);
+      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), new Runnable() {
+        @Override
+        public void run() {
+          MISCUtils.restore(sender);
+        }
       });
-      sender.sendMessage(ChatColor.WHITE + "Restoring accounts from extracted.yml.");
       return true;
     }
     sender.sendMessage(ChatColor.RED + "Unable to locate extracted.yml file for restoration.");

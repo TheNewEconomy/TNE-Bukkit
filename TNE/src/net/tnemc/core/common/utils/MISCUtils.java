@@ -3,15 +3,20 @@ package net.tnemc.core.common.utils;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 
@@ -96,6 +101,186 @@ public class MISCUtils {
     } catch(Exception e) {
       return false;
     }
+  }
+
+  public static void restore(CommandSender sender) {
+    File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
+    YamlConfiguration original = YamlConfiguration.loadConfiguration(file);
+    YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+    Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
+
+    accounts.forEach((username) -> {
+      UUID id = IDFinder.getID(username);
+      TNEAccount account = new TNEAccount(id, username);
+      Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);
+      worlds.forEach((world) -> {
+        Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
+        currencies.forEach((currency) -> {
+          String balance = original.getString("Accounts." + username + ".Balances." + world + "." + currency);
+          account.setHoldings(world, currency, new BigDecimal(balance));
+        });
+      });
+      TNE.manager().addAccount(account);
+    });
+
+    sender.sendMessage(ChatColor.WHITE + "Restored accounts from extracted.yml.");
+  }
+
+  public static boolean hasAccount(UUID id) {
+    for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
+      System.out.println(id.toString() + " == " + tneAccount.identifier().toString());
+      if(tneAccount.identifier().toString().equalsIgnoreCase(id.toString())) return true;
+    }
+    return false;
+  }
+
+  public static boolean hasAccount(String name) {
+    for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
+      if(tneAccount.displayName().equalsIgnoreCase(name)) return true;
+    }
+    return false;
+  }
+
+  public static void idExtract(CommandSender sender) {
+    LocalDateTime now = LocalDateTime.now();
+    int year = now.getYear();
+    int month = now.getMonthValue();
+    int day = now.getDayOfMonth();
+
+    StringBuilder content = new StringBuilder();
+
+    content.append("---------------------- ID Portion -------------------------------" + System.getProperty("line.separator"));
+    TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().forEach((username, id)->{
+          content.append("Username: " + username + " UUID: " + id.toString() + System.getProperty("line.separator"));
+    });
+
+    content.append("---------------------- Account Portion -------------------------------" + System.getProperty("line.separator"));
+    TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts().forEach((account ->{
+      content.append("Username: " + account.displayName() + " UUID: " + account.identifier().toString() + System.getProperty("line.separator"));
+    }));
+
+    String name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-idextracted";
+    String pasteURL = MISCUtils.pastebinUpload(name, content);
+
+    String result = "Successfully extracted ECOIDS data." + ((pasteURL.contains("pastebin.com"))? " Uploaded backup to " + pasteURL : "");
+    sender.sendMessage(result);
+  }
+
+  public static void extract(CommandSender sender) {
+    File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
+    if(!file.exists()) {
+      try {
+        file.createNewFile();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+    Map<String, UUID> ids = TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS();
+    TNE.debug("Accounts Length: " + ids.size());
+
+    ids.forEach((username, id)->{
+      TNEAccount account = TNE.manager().getAccount(id);
+      if(account != null) {
+        TNE.debug("Extracting Account: " + username);
+        TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
+        account.getWorldHoldings().forEach((world, holdings) -> {
+          holdings.getHoldings().forEach((currency, amount) -> {
+            configuration.set("Accounts." + username + ".Balances." + world + "." + currency, amount.toPlainString());
+          });
+        });
+      }
+    });
+    try {
+      configuration.save(file);
+    } catch (IOException e) {
+      TNE.debug(e);
+    }
+
+    LocalDateTime now = LocalDateTime.now();
+    int year = now.getYear();
+    int month = now.getMonthValue();
+    int day = now.getDayOfMonth();
+
+    StringBuilder content = new StringBuilder();
+
+    String name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-extracted.yml";
+    try (BufferedReader br = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(),"extracted.yml")))){
+      String line;
+      while ((line = br.readLine()) != null) {
+        content.append(line + System.getProperty("line.separator"));
+      }
+    } catch (Exception e) {
+      TNE.debug(e);
+    }
+    String pasteURL = MISCUtils.pastebinUpload(name, content);
+
+    String result = "Successfully extracted player balance data." + ((pasteURL.contains("pastebin.com"))? " Uploaded backup to " + pasteURL : "");
+    sender.sendMessage(result);
+  }
+
+  public static void idTest(Player player, CommandSender sender) {
+    StringBuilder builder = new StringBuilder();
+
+    builder.append("Getting ID by player instance." + System.getProperty("line.separator"));
+    for(int i = 0; i < 40; i++) {
+      builder.append(IDFinder.getID(player).toString() + System.getProperty("line.separator"));
+    }
+
+    builder.append("Getting ID by sender instance." + System.getProperty("line.separator"));
+    for(int i = 0; i < 40; i++) {
+      builder.append(IDFinder.getID(sender).toString() + System.getProperty("line.separator"));
+    }
+
+    builder.append("Getting ID by username." + System.getProperty("line.separator"));
+    for(int i = 0; i < 40; i++) {
+      builder.append(IDFinder.getID(player.getName()).toString() + System.getProperty("line.separator"));
+    }
+    player.sendMessage("IDFinder Test Results: " + pastebinUpload("IDFinder Test", builder));
+  }
+
+  public static void commandTest(Player player) {
+    String username = player.getName();
+    String[] ids = new String[7];
+    ids[0] = IDFinder.getID(player).toString();
+    player.performCommand("money give " + username + " 2000");
+    ids[1] = IDFinder.getID(player).toString();
+    player.performCommand("money take " + username + " 2000");
+    ids[2] = IDFinder.getID(player).toString();
+    player.performCommand("money set " + username + " 2000");
+    ids[3] = IDFinder.getID(player).toString();
+    player.performCommand("money set " + username + " 0");
+    ids[4] = IDFinder.getID(player).toString();
+    player.performCommand("baltop");
+    ids[5] = IDFinder.getID(player).toString();
+    player.performCommand("bal");
+    ids[6] = IDFinder.getID(player).toString();
+
+    player.sendMessage("Results of tests: " + String.join(", ", ids));
+  }
+
+  public static List<String> serverBlacklist() {
+    List<String> list = new ArrayList<>();
+    boolean failed = false;
+    try {
+      URL url = new URL("https://creatorfromhell.com/tne/blacklist.txt");
+      Scanner s = new Scanner(url.openStream());
+
+      String line;
+      while(s.hasNext()) {
+        line = s.nextLine();
+        if(line.trim().equalsIgnoreCase("")) continue;
+        list.add(line);
+      }
+    }
+    catch(IOException ex) {
+      failed = true;
+    }
+    if(failed) {
+      List<String> blacklist = new ArrayList<>();
+      return blacklist;
+    }
+    return list;
   }
 
   public static String pastebinUpload(String name, StringBuilder content) {

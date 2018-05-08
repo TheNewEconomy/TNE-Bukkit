@@ -13,7 +13,6 @@ import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.entity.Player;
-import org.javalite.activejdbc.Model;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -27,7 +26,7 @@ import java.util.*;
  * Created by Daniel on 12/7/2017.
  */
 
-public class TNEAccount extends Model implements Account {
+public class TNEAccount implements Account {
   private Map<UUID, AccountAccessor> accessors = new HashMap<>();
   private Map<String, WorldHoldings> holdings = new HashMap<>();
   private AccountHistory history;
@@ -123,7 +122,7 @@ public class TNEAccount extends Model implements Account {
         return holdings.get(world).hasHoldings(currency);
       }
     } else {
-      return ItemCalculations.getCurrencyItems(this, cur).compareTo(new BigDecimal("0.0")) > 0;
+      return ItemCalculations.getCurrencyItems(this, cur).compareTo(BigDecimal.ZERO) > 0;
     }
     return false;
   }
@@ -139,7 +138,7 @@ public class TNEAccount extends Model implements Account {
     TNE.debug("Account: " + identifier());
     TNE.debug("Currency: " + currency);
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-    BigDecimal current = new BigDecimal("0.0");
+    BigDecimal current = BigDecimal.ZERO;
 
     if(database || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
       TNE.debug("Grabbing virtual holdings...");
@@ -193,8 +192,8 @@ public class TNEAccount extends Model implements Account {
 
   public void initializeHoldings(String world) {
     TNE.manager().currencyManager().getWorldCurrencies(world).forEach((currency)->{
-      if(currency.defaultBalance().compareTo(new BigDecimal("0.0")) > 0 &&!hasHoldings(world, currency.name())) {
-        setHoldings(world, currency.name(), currency.defaultBalance());
+      if(currency.defaultBalance().compareTo(BigDecimal.ZERO) > 0 &&!hasHoldings(world, currency.name())) {
+        addHoldings(currency.defaultBalance(), currency, world);
       }
     });
   }

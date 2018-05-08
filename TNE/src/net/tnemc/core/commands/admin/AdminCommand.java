@@ -23,6 +23,7 @@ public class AdminCommand extends TNECommand {
     subCommands.add(new AdminDeleteCommand(plugin));
     subCommands.add(new AdminExtractCommand(plugin));
     subCommands.add(new AdminIDCommand(plugin));
+    subCommands.add(new AdminIDExportCommand(plugin));
     subCommands.add(new AdminMenuCommand(plugin));
     subCommands.add(new AdminPurgeCommand(plugin));
     subCommands.add(new AdminReloadCommand(plugin));
@@ -30,6 +31,7 @@ public class AdminCommand extends TNECommand {
     subCommands.add(new AdminRestoreCommand(plugin));
     subCommands.add(new AdminSaveCommand(plugin));
     subCommands.add(new AdminStatusCommand(plugin));
+    subCommands.add(new AdminTestCommand(plugin));
     subCommands.add(new AdminUploadCommand(plugin));
     subCommands.add(new AdminVersionCommand(plugin));
   }

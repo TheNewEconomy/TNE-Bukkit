@@ -186,6 +186,7 @@ public class PlayerListener implements Listener {
 
         while (it.hasNext()) {
           ItemStack stack = it.next();
+          System.out.println("Material: " + stack.getType().name());
 
           if (stack != null) {
             Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);

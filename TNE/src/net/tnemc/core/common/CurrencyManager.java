@@ -184,7 +184,7 @@ public class CurrencyManager {
   }
 
   public void addCurrency(String world, TNECurrency currency) {
-    TNE.debug("[Add]Loading Currency: " + currency.name() + " for world: " + world);
+    TNE.debug("[Add]Loading Currency: " + currency.name() + " for world: " + world + " with default balance of " + currency.defaultBalance());
     if(world.equalsIgnoreCase(TNE.instance().defaultWorld)) {
       globalCurrencies.put(currency.name(), currency);
     } else {
@@ -363,9 +363,11 @@ public class CurrencyManager {
   }
 
   public Optional<TNECurrency> currencyFromItem(String world, ItemStack stack) {
+    ItemStack clone = stack;
+    clone.setAmount(1);
     for(TNECurrency currency : TNE.instance().getWorldManager(world).getCurrencies()) {
-      if(currency.isItem() && (isMajorItem(world, currency.name(), stack) ||
-          isMinorItem(world, currency.name(), stack))) {
+      if(currency.isItem() && (isMajorItem(world, currency.name(), clone) ||
+          isMinorItem(world, currency.name(), clone))) {
         return Optional.of(currency);
       }
     }

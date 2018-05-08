@@ -47,10 +47,5 @@
             <version>1.12-pre5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>net.tnemc</groupId>
-            <artifactId>TNE</artifactId>
-            <version>0.0.5.6-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>

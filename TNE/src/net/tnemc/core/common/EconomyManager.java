@@ -62,6 +62,7 @@ public class EconomyManager {
 
   public void addAccount(TNEAccount account) {
     accounts.put(account.identifier(), account);
+    TNE.instance().getUuidManager().addUUID(account.displayName(), account.identifier());
   }
 
   public TNEAccount getAccount(UUID id) {
@@ -97,6 +98,7 @@ public class EconomyManager {
       return false;
     }
     accounts.put(account.identifier(), event.getAccount());
+    TNE.instance().getUuidManager().addUUID(account.displayName(), account.identifier());
     TNE.debug("=====END EconomyManager.createAccount =====");
     return true;
   }

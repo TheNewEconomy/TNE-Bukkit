@@ -30,6 +30,7 @@ import net.tnemc.core.common.configurations.WorldConfigurations;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.module.ModuleLoader;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
@@ -91,13 +92,21 @@ public class TNE extends TNELib {
   private SaveWorker saveWorker;
   private MismatchWorker mismatchWorker;
 
-  public static final String build = "38prebeta1";
+  public static final String build = "45PB1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
   private List<EventMap> cacheMaps = new ArrayList<>();
 
+  private boolean blacklisted = false;
+
   public void onLoad() {
+    if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
+      blacklisted = true;
+      getLogger().info("Unable to load The New Economy as this server has been blacklisted.");
+      return;
+    }
+
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
     instance = this;
     api = new TNEAPI(this);
@@ -115,6 +124,9 @@ public class TNE extends TNELib {
   }
 
   public void onEnable() {
+    if(blacklisted) {
+      return;
+    }
     super.onEnable();
 
     //Create Debug Log
