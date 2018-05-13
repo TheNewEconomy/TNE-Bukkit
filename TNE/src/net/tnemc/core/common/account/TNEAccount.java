@@ -268,6 +268,10 @@ public class TNEAccount implements Account {
     return displayName;
   }
 
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
   @Override
   public boolean playerAccount() {
     return player;
