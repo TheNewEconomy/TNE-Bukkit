@@ -72,7 +72,7 @@ public class ItemCalculations {
         }
 
         if(minorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMajor(account, currency, minorChange, true);
+          setMinor(account, currency, minorChange, true);
         }
       }
     }
@@ -229,9 +229,9 @@ public class ItemCalculations {
 
       if(left.size() > 0) {
         TNE.debug("Some left overs of item: " + stack.getType());
-        left.forEach((key, item)->{
-          player.getWorld().dropItemNaturally(player.getLocation(), item);
-        });
+        for(Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
+          player.getWorld().dropItemNaturally(player.getLocation(), entry.getValue());
+        }
       }
     }
     TNE.debug("=====END Account.giveItems =====");
