@@ -1,5 +1,6 @@
 package net.tnemc.core.configuration;
 
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.configuration.utils.FileMgmt;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -129,9 +130,83 @@ public class ConfigurationManager {
     return getRootFolder() + FileMgmt.fileSeparator() + "data";
   }
 
+  public static IConfigNode stringToNode(String file, String node) {
+    if(configurations.containsKey(file)) {
+      for (IConfigNode iNode : configurations.get(file).getNodes()) {
+        if(iNode.getNode().equalsIgnoreCase(node)) return iNode;
+      }
+    }
+    return null;
+  }
+
+  public static String translate(String node, String world, String player) {
+    if(configurations.get("players.yml").getOldConfig().contains(node)) {
+      return configurations.get("players.yml").getOldConfig().getString(node);
+    }
+
+    if(configurations.get("worlds.yml").getOldConfig().contains(node)) {
+      return configurations.get("worlds.yml").getOldConfig().getString(node);
+    }
+
+    String language = (player.trim().equalsIgnoreCase(""))? "Default" : TNE.manager().getAccount(IDFinder.getID(player)).getLanguage();
+
+    if(TNE.instance().getLanguages().containsKey(language)) {
+      if(TNE.instance().getLanguage(language).hasTranslation(node)) {
+        return TNE.instance().getLanguage(language).getTranslation(node);
+      }
+    }
+    return null;
+  }
+
+  public static Object getConfiguration(String file, IConfigNode node, String world, String player) {
+    if(configurations.get("players.yml").getOldConfig().contains(node.getNode())) {
+      return configurations.get("players.yml").getOldConfig().get(node.getNode());
+    }
+
+    if(configurations.get("worlds.yml").getOldConfig().contains(node.getNode())) {
+      return configurations.get("worlds.yml").getOldConfig().get(node.getNode());
+    }
+
+    if(configurations.containsKey(file)) {
+      return configurations.get(file).getOldConfig().get(node.getNode(), node.getDefaultValue());
+    }
+    return node.getDefaultValue();
+  }
+
+  public static String getString(String file, String node, boolean translatable, String world, String player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (translatable)? translate(node, world, player) : (String)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
+  public static Boolean getBoolean(String file, String node, String world, String player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (boolean)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
+  public static Double getDouble(String file, String node, String world, String player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (double)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
+  public static Integer getInteger(String file, String node, String world, String player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (int)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
 
   public static String getString(String file, IConfigNode node) {
-
     return configurations.get(file).getOldConfig().getString(node.getNode().toLowerCase(), node.getDefaultValue());
 
   }

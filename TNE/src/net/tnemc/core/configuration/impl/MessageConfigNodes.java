@@ -740,10 +740,430 @@ public enum MessageConfigNodes implements IConfigNode {
     }
   },
 
+  MESSAGE_MONEY_FAILED {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Failed";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>Unable to process your transaction at this time.";
+    }
+  },
+
+  MESSAGE_MONEY_GIVEN {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Given";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>You were given <gold>$amount<white>.";
+    }
+  },
+
+  MESSAGE_MONEY_RECEIVED {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Received";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>You were paid <gold>$amount <white> by <white> $player.";
+    }
+  },
+
+  MESSAGE_MONEY_TAKEN {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Taken";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>$player took <gold>$amount<white> from you.";
+    }
+  },
+
+  MESSAGE_MONEY_INSUFFICIENT {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Insufficient";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>I'm sorry, but you do not have <gold>$amount<red>.";
+    }
+  },
+
+  MESSAGE_MONEY_HOLDINGSMULTI {
+    @Override
+    public String getNode() {
+      return "Messages.Money.HoldingsMulti";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Your current balances for world \"$world\" are: ";
+    }
+  },
+
+  MESSAGE_MONEY_HOLDINGSMULTISINGLE {
+    @Override
+    public String getNode() {
+      return "Messages.Money.HoldingsMultiSingle";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>$currency: <gold>$amount";
+    }
+  },
+
+  MESSAGE_MONEY_HOLDINGS {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Holdings";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>You currently have <gold>$amount<white> on you.";
+    }
+  },
+
+  MESSAGE_MONEY_GAVE {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Gave";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully gave $player <gold>$amount<white>.";
+    }
+  },
+
+  MESSAGE_MONEY_RECIPIENTSET {
+    @Override
+    public String getNode() {
+      return "Messages.Money.RecipientSet";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Your balance has been set to <gold>$amount<white> by $player.";
+    }
+  },
+
+  MESSAGE_MONEY_SET {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Set";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully set $player's balance to <gold>$amount<white>.";
+    }
+  },
+
+  MESSAGE_MONEY_PAID {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Paid";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully paid $player <gold>$amount<white>.";
+    }
+  },
+
+  MESSAGE_MONEY_TOOK {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Took";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully took <gold>$amount<white> from $player.";
+    }
+  },
+
+  MESSAGE_MONEY_NEGATIVE {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Negative";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>Amount cannot be a negative value!";
+    }
+  },
+
+  MESSAGE_MONEY_SELFPAY {
+    @Override
+    public String getNode() {
+      return "Messages.Money.SelfPay";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>You can't pay yourself!";
+    }
+  },
+
+  MESSAGE_MONEY_NOCURRENCY {
+    @Override
+    public String getNode() {
+      return "Messages.Money.NoCurrency";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>The currency \"$currency\" could not be found in \"$world\".";
+    }
+  },
+
+  MESSAGE_MONEY_NOTED {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Noted";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>A note has been given to you in the amount of <gold>$amount<white> for currency <green>$currency<white>.";
+    }
+  },
+
+  MESSAGE_MONEY_NOTECLAIMED {
+    @Override
+    public String getNode() {
+      return "Messages.Money.NoteClaimed";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully claimed note for currency <green>$currency<white> in the amount of <gold>$amount<white>.<newline>Your new balance is <gold>$balance<white>.";
+    }
+  },
+
+  MESSAGE_MONEY_NOTEFAILED {
+    @Override
+    public String getNode() {
+      return "Messages.Money.NoteFailed";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>I'm sorry, but your attempt to claim that currency note failed!.";
+    }
+  },
+
+  MESSAGE_MONEY_CONVERTED {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Converted";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\".";
+    }
+  },
+
+  MESSAGE_MONEY_TOP {
+    @Override
+    public String getNode() {
+      return "Messages.Money.Top";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>=====[<gold>Economy Top<white>]===== $page/$page_top";
+    }
+  },
+
+  MESSAGE_MONEY_INVALIDFORMAT {
+    @Override
+    public String getNode() {
+      return "Messages.Money.InvalidFormat";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>I'm sorry, but the monetary value you've entered is wrong.";
+    }
+  },
+
+  MESSAGE_MONEY_EXCEEDSCURRENCYMAXIMUM {
+    @Override
+    public String getNode() {
+      return "Messages.Money.ExceedsCurrencyMaximum";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance.";
+    }
+  },
+
+  MESSAGE_MONEY_EXCEEDSPLAYERMAXIMUM {
+    @Override
+    public String getNode() {
+      return "Messages.Money.ExceedsPlayerMaximum";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed.";
+    }
+  },
+
+  MESSAGE_MONEY_EXCEEDSOTHERPLAYERMAXIMUM {
+    @Override
+    public String getNode() {
+      return "Messages.Money.ExceedsOtherPlayerMaximum";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>I'm sorry, but performing this transaction will place $player's balance over the maximum allowed.";
+    }
+  },
+
   MESSAGE_TRANSACTION_HEADER {
     @Override
     public String getNode() {
       return "Messages.Transaction";
+    }
+  },
+
+  MESSAGE_TRANSACTION_ALREADY {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.Already";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>The transaction with the ID of $transaction has already been voided.";
+    }
+  },
+
+  MESSAGE_TRANSACTION_AWAY {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.Away";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>=====[<green>Missed Transactions<white>]===== $page/$page_top<newline>ID | Type";
+    }
+  },
+
+  MESSAGE_TRANSACTION_AWAYENTRY {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.AwayEntry";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<green>$id <white>| <green>$type";
+    }
+  },
+
+  MESSAGE_TRANSACTION_AWAYNONE {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.AwayNone";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>No transactions occured while you were offline.";
+    }
+  },
+
+  MESSAGE_TRANSACTION_HISTORY {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.History";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>=====[<green>Transactions<white>]===== $page/$page_top<newline>ID | Type | Initiator | Recipient";
+    }
+  },
+
+  MESSAGE_TRANSACTION_HISTORYENTRY {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.HistoryEntry";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<green>$id <white>| <green>$type <white>| <green>$initiator <white>| <green>$recipient";
+    }
+  },
+
+  MESSAGE_TRANSACTION_INFO {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.Info";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Transaction Information:<newline><white>ID: <green>$id<newline><white>Type: <green>$type";
+    }
+  },
+
+  MESSAGE_TRANSACTION_INVALID {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.Invalid";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>There is no transaction with the ID of $transaction.";
+    }
+  },
+
+  MESSAGE_TRANSACTION_UNABLE {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.Unable";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<red>Unable to void that transaction at this time.";
+    }
+  },
+
+  MESSAGE_TRANSACTION_VOIDED {
+    @Override
+    public String getNode() {
+      return "Messages.Transaction.Voided";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "<white>Successfully voided the transaction with the ID of <green>$transaction<white>.";
     }
   },
 

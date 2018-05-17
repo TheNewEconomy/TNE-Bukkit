@@ -25,6 +25,7 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
+import net.tnemc.core.common.configurations.Language;
 import net.tnemc.core.common.configurations.MainConfigurations;
 import net.tnemc.core.common.configurations.MessageConfigurations;
 import net.tnemc.core.common.configurations.WorldConfigurations;
@@ -32,6 +33,7 @@ import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.configuration.impl.MessageConfigNodes;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
@@ -71,6 +73,7 @@ import java.util.logging.Logger;
  */
 public class TNE extends TNELib {
   private Map<String, WorldManager> worldManagers = new HashMap<>();
+  private Map<String, Language> languages = new HashMap<>();
 
   private EconomyManager manager;
   private MenuManager menuManager;
@@ -361,6 +364,31 @@ public class TNE extends TNELib {
     getLogger().info("The New Economy has been disabled!");
   }
 
+  public void loadLanguages() {
+    File directory = new File(TNE.instance().getDataFolder(), "languages");
+    directory.mkdir();
+    File[] langFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+
+    if(langFiles != null) {
+      for (File langFile : langFiles) {
+        String name = langFile.getName().replace(".yml", "");
+        FileConfiguration configuration = YamlConfiguration.loadConfiguration(langFile);
+
+        Language lang = new Language(name, configuration);
+
+        for (MessageConfigNodes node : MessageConfigNodes.values()) {
+          if(!node.getDefaultValue().trim().equalsIgnoreCase("")) {
+            if(configuration.contains(node.getNode())) {
+              lang.addTranslation(node.getNode(), configuration.getString(node.getNode()));
+            }
+          }
+        }
+        TNE.debug("Loaded language: " + lang);
+        languages.put(name, lang);
+      }
+    }
+  }
+
   public boolean customCommand(CommandSender sender, String label, String[] arguments){
     TNECommand ecoCommand = commandManager.Find(label);
     if(ecoCommand != null) {
@@ -599,6 +627,14 @@ public class TNE extends TNELib {
       }
     }
     return null;
+  }
+
+  public Map<String, Language> getLanguages() {
+    return languages;
+  }
+
+  public Language getLanguage(String name) {
+    return languages.get(name);
   }
 
   public Collection<WorldManager> getWorldManagers() {

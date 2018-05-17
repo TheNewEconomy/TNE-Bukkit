@@ -356,6 +356,26 @@ public enum CoreConfigNodes implements IConfigNode {
     }
   },
 
+  COMMANDS_TRIGGERS {
+    @Override
+    public String getNode() {
+      return "Core.Commands.Triggers";
+    }
+
+    @Override
+    public String getDefaultValue() {
+      return "/";
+    }
+
+    @Override
+    public String[] getComments() {
+      return new String[] {
+          "The command trigger(s) used to identify what is and isn't a command.",
+          "To use multiple triggers, separate with comma, i.e. /,! will allow /command and !command."
+      };
+    }
+  },
+
   COMMANDS_PAYSHORT {
     @Override
     public String getNode() {
