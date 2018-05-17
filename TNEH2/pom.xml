@@ -59,5 +59,10 @@
             <version>1.4.196</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.tnemc</groupId>
+            <artifactId>TNE</artifactId>
+            <version>0.1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

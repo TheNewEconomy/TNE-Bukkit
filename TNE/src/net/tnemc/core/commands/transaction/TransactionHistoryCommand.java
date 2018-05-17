@@ -10,6 +10,7 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,6 +67,18 @@ public class TransactionHistoryCommand extends TNECommand {
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     String type = "all";
     int page = 1;
+
+    if(parsed.containsKey("player") && sender.hasPermission("tne.transactions.historyother")) {
+      if(Bukkit.getPlayer(parsed.get("player")) != null) {
+        player = Bukkit.getPlayer(parsed.get("player"));
+      }
+    }
+
+    if(player == null) {
+      Message noPlayer = new Message("Messages.General.NoPlayer");
+      noPlayer.addVariable("$player", parsed.getOrDefault("player", "console"));
+      return false;
+    }
 
     if(parsed.containsKey("page") && MISCUtils.isInteger(parsed.get("page"))) {
       page = Integer.parseInt(parsed.get("page"));
