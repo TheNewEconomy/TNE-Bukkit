@@ -25,9 +25,6 @@ Core:
         #Whether or not mob drops that are a currency item should be disabled.
         MobDrop: true
 
-        #Whether or not mcmmo skill rewards that are a currency item should be disabled.
-        McMMORewards: true
-
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
@@ -58,6 +55,9 @@ Core:
             #The prefix used by the Factions plugin to denote faction UUIDs
             Faction: "faction-"
 
+            #Whether or not mcmmo skill rewards that are a currency item should be disabled.
+            McMMORewards: true
+
     #All configurations relating to TNE commands
     Commands:
 
@@ -79,6 +79,7 @@ Core:
         #Whether or not admins(anyone with perm. node tne.admin) should be notified on login if TNE is outdated.
         Notify: true
 
+    #All configurations relating to the transaction system.
     Transactions:
 
         #The time format to use when displaying transaction history data.
@@ -121,6 +122,9 @@ Core:
 
                   #The plural form of this TNECurrency's name.
                   Plural: "Cents"
+
+            #Whether or not this currency is enabled.
+            Disabled: false
 
             #The format to use when outputting this TNECurrency into chat.
             #The variables you're able to use here.
@@ -187,12 +191,6 @@ Core:
 
             #Would you like to use an item as the TNECurrency?
             ItemCurrency: false
-
-            #Would you like this TNECurrency to be trackable in chests attached to bank signs?
-            BankChest: true
-
-            #Would you like your item TNECurrency balances to also check the player's vault?
-            Vault: true
 
             #Would you like your item TNECurrency balances to also check the player's ender chest?
             EnderChest: true
@@ -302,8 +300,8 @@ Core:
     #All configurations relating to the database
     Database:
 
-        #The database type to use. Current options: FlatFile, MySQL, H2.
-        Type: flatfile
+        #The database type to use. Current options: MySQL, H2.
+        Type: h2
             
         #The prefix to use for TheNewEconomy MySQL and H2 Tables
         Prefix: TNE
