@@ -2,6 +2,7 @@ package net.tnemc.core;
 
 import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
+import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.collection.EventList;
 import com.github.tnerevival.core.collection.EventMap;
@@ -40,13 +41,24 @@ import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.MismatchWorker;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -347,6 +359,18 @@ public class TNE extends TNELib {
     });
     super.onDisable();
     getLogger().info("The New Economy has been disabled!");
+  }
+
+  public boolean customCommand(CommandSender sender, String label, String[] arguments){
+    TNECommand ecoCommand = commandManager.Find(label);
+    if(ecoCommand != null) {
+      if(!ecoCommand.canExecute(sender)) {
+        sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
+        return false;
+      }
+      return ecoCommand.execute(sender, label, arguments);
+    }
+    return false;
   }
 
   public static TNE instance() {

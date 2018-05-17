@@ -24,11 +24,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -197,6 +201,18 @@ public class PlayerListener implements Listener {
           }
         }
       }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onChat(AsyncPlayerChatEvent event) {
+    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.instance().api().getString("Core.Server.MobDrop").split(",")));
+
+    if(triggers.contains(event.getMessage().charAt(0) + "")) {
+      String[] parsed = event.getMessage().split(" ");
+      String[] arguments = (parsed.length > 1)? Arrays.copyOfRange(parsed, 1, parsed.length) : new String[0];
+      TNE.instance().customCommand(event.getPlayer(), parsed[0].substring(1), arguments);
+      event.setCancelled(true);
     }
   }
 }

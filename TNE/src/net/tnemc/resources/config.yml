@@ -61,6 +61,10 @@ Core:
     #All configurations relating to TNE commands
     Commands:
 
+        #The command trigger(s) used to identify what is and isn't a command.
+        #To use multiple triggers, separate with comma, i.e. /,!.
+        Triggers: "/,!"
+
         #Whether or not players should be able to use /pay instead of /money pay
         PayShort: true
 
