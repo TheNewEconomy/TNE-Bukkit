@@ -1,9 +1,8 @@
 package net.tnemc.core.common.module;
 
-import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.SaveManager;
-import com.github.tnerevival.core.configurations.Configuration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.module.injectors.ModuleInjector;
 import net.tnemc.core.configuration.IConfigNode;
@@ -28,11 +27,6 @@ import java.util.Map;
  * The base class for all TNE Modules.
  */
 public abstract class Module {
-
-  protected Map<Configuration, String> configurations = new HashMap<>();
-  protected Map<String, Object> mainConfigurations = new HashMap<>();
-  protected Map<String, String> messages = new HashMap<>();
-
   protected List<TNECommand> commands = new ArrayList<>();
   protected List<ModuleListener> listeners = new ArrayList<>();
 

@@ -1,7 +1,7 @@
 package net.tnemc.core.common.currency;
 
-import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.Message;
 import net.tnemc.core.economy.currency.Currency;
 
 import java.math.BigDecimal;

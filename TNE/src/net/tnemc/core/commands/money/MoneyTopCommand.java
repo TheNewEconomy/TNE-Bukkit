@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.money;
 
-import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

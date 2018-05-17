@@ -2,12 +2,13 @@ package net.tnemc.core;
 
 import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
-import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.collection.EventList;
 import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.user.IDFinder;
 import net.milkbowl.vault.economy.Economy;
+import net.tnemc.core.commands.CommandManager;
+import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.commands.admin.AdminCommand;
 import net.tnemc.core.commands.config.ConfigCommand;
 import net.tnemc.core.commands.currency.CurrencyCommand;
@@ -46,6 +47,7 @@ import net.tnemc.core.worker.MismatchWorker;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -99,6 +101,7 @@ public class TNE extends TNELib {
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
   private List<EventMap> cacheMaps = new ArrayList<>();
+  private CommandManager commandManager;
 
   private boolean blacklisted = false;
 
@@ -132,6 +135,7 @@ public class TNE extends TNELib {
       return;
     }
     super.onEnable();
+    commandManager = new CommandManager();
     addConfiguration(new ConfigurationEntry(CoreConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "config.yml")));
     addConfiguration(new ConfigurationEntry(MessageConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "messages.yml")));
     addConfiguration(new ConfigurationEntry(PlayersConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "players.yml")));
@@ -188,9 +192,9 @@ public class TNE extends TNELib {
     }
 
     int size = 1;
-    boolean payShort = configurations().getBoolean("Core.Commands.PayShort");
-    boolean balShort = configurations().getBoolean("Core.Commands.BalanceShort");
-    boolean topShort = configurations().getBoolean("Core.Commands.TopShort");
+    boolean payShort = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Commands.PayShort");
+    boolean balShort = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Commands.BalanceShort");
+    boolean topShort = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Commands.TopShort");
 
     if(payShort) size += 1;
     if(balShort) size += 2;
@@ -247,19 +251,19 @@ public class TNE extends TNELib {
     menuManager = new MenuManager();
 
     //General Variables based on configuration values
-    serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
-    consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
-    useUUID = configurations().getBoolean("Core.UUID");
+    serverName = (net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Name") : "Main Server";
+    consoleName = (net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Account.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Account.Name") : "Server_Account";
+    useUUID = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.UUID");
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
-        configurations().getString("Core.Database.Type").toLowerCase(),
-        configurations().getString("Core.Database.MySQL.Host"),
-        configurations().getInt("Core.Database.MySQL.Port"),
-        configurations().getString("Core.Database.MySQL.Database"),
-        configurations().getString("Core.Database.MySQL.User"),
-        configurations().getString("Core.Database.MySQL.Password"),
-        configurations().getString("Core.Database.Prefix"),
-        new File(getDataFolder(), configurations().getString("Core.Database.File")).getAbsolutePath(),
+        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Type").toLowerCase(),
+        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.Host"),
+        net.tnemc.core.configuration.ConfigurationManager.getInt("config.yml", CoreConfigNodes.DATABASE_PORT),
+        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.Database"),
+        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.User"),
+        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.Password"),
+        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Prefix"),
+        new File(getDataFolder(), net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.File")).getAbsolutePath(),
         true,
         false,
         600,
@@ -270,7 +274,7 @@ public class TNE extends TNELib {
     saveManager().getTNEManager().loadProviders();
     TNE.debug("Finished loading providers");
 
-    TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
+    TNE.debug("Setting format: " + net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
     saveManager().addVersion(10.0, true);
@@ -290,11 +294,11 @@ public class TNE extends TNELib {
     if(net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
       mismatchWorker = new MismatchWorker(this);
-      saveWorker.runTaskTimer(this, net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
-      mismatchWorker.runTaskTimer(this, (net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20, (configurations().getLong("Core.AutoSaver.Interval") + 2) * 20);
+      saveWorker.runTaskTimer(this, net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") * 20, net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") * 20);
+      mismatchWorker.runTaskTimer(this, (net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20, (net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20);
     }
 
-    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && instance.api().getBoolean("Core.Server.McMMORewards")) {
+    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Server.McMMORewards")) {
       getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
@@ -387,7 +391,6 @@ public class TNE extends TNELib {
     return (TNE)instance;
   }
 
-  @Override
   public net.tnemc.core.common.api.TNEAPI api() {
     return api;
   }
@@ -446,6 +449,30 @@ public class TNE extends TNELib {
     for(StackTraceElement element : stack) {
       logger().warning(element.toString());
     }
+  }
+
+  public CommandManager getCommandManager() {
+    return commandManager;
+  }
+
+  public void registerCommand(String[] accessors, TNECommand command) {
+    commandManager.commands.put(accessors, command);
+    commandManager.registerCommands();
+  }
+
+
+  public void registerCommands(Map<String[], TNECommand> commands) {
+    commandManager.commands = commands;
+    commandManager.registerCommands();
+  }
+
+  public void unregisterCommand(String[] accessors) {
+    commandManager.unregister(accessors);
+  }
+
+  @Override
+  public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments) {
+    return customCommand(sender, label, arguments);
   }
 
   public static void debug(String message) {

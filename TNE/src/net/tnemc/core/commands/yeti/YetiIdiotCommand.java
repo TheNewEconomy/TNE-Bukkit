@@ -1,8 +1,8 @@
 package net.tnemc.core.commands.yeti;
 
-import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

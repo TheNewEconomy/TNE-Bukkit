@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.admin;
 
-import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

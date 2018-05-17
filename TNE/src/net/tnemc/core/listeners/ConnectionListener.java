@@ -1,9 +1,9 @@
 package net.tnemc.core.listeners;
 
-import com.github.tnerevival.core.Message;
 import com.github.tnerevival.core.version.ReleaseType;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;

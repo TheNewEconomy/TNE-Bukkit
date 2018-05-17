@@ -1,7 +1,6 @@
 package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
-import com.github.tnerevival.core.api.TNELibAPI;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyFormatter;
@@ -35,12 +34,11 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 8/3/2017.
  */
-public class TNEAPI extends TNELibAPI {
+public class TNEAPI {
 
   private TNE plugin;
 
   public TNEAPI(TNE plugin) {
-    super(plugin);
     this.plugin = plugin;
   }
 

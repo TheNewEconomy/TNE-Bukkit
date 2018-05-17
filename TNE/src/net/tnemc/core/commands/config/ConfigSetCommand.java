@@ -1,11 +1,7 @@
 package net.tnemc.core.commands.config;
 
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.commands.TNECommand;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -49,7 +45,7 @@ public class ConfigSetCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    if(arguments.length >= 2) {
+    /*if(arguments.length >= 2) {
       String node = arguments[0];
       String configuration = (arguments.length >= 3)? arguments[2] :
                                                       TNE.configurations().fromPrefix(
@@ -80,7 +76,8 @@ public class ConfigSetCommand extends TNECommand {
       message.addVariable("$value", newValue.toString());
       message.translate(world, sender);
       return true;
-    }
+    }*/
+    //TODO: Fix this with commented configuration
     help(sender);
     return true;
   }

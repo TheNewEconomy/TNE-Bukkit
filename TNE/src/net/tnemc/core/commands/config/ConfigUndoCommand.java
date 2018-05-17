@@ -1,10 +1,7 @@
 package net.tnemc.core.commands.config;
 
-import com.github.tnerevival.commands.TNECommand;
-import com.github.tnerevival.core.Message;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.commands.TNECommand;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -50,7 +47,7 @@ public class ConfigUndoCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String configuration = (arguments.length >= 1)? arguments[0] : "all";
+    /*String configuration = (arguments.length >= 1)? arguments[0] : "all";
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     if(configuration.equalsIgnoreCase("all")) {
       TNE.configurations().undoAll();
@@ -69,7 +66,8 @@ public class ConfigUndoCommand extends TNECommand {
     TNE.configurations().configurations.get(configuration).modified.clear();
     Message message = new Message("Messages.Configuration.Undone");
     message.addVariable("$modified", configuration);
-    message.translate(world, sender);
+    message.translate(world, sender);*/
+    //TODO: Fix this with commented configuration
     return true;
   }
 }

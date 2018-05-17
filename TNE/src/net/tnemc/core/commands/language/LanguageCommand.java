@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.language;
 
-import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 
 /**
  * The New Economy Minecraft Server Plugin
