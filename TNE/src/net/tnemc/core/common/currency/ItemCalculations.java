@@ -5,12 +5,18 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.configuration.ConfigurationManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -47,7 +53,7 @@ public class ItemCalculations {
       BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
       String differenceString = difference.toPlainString();
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(account.identifier(), WorldVariant.CONFIGURATION), account.identifier());
+      boolean consolidate = ConfigurationManager.getBoolean("config.yml", "Core.Server.Consolidate", WorldFinder.getWorld(account.identifier(), WorldVariant.CONFIGURATION), account.identifier().toString());
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
 
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");

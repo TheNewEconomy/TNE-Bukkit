@@ -9,6 +9,7 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.configuration.ConfigurationManager;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
@@ -63,7 +64,7 @@ public class PlayerListener implements Listener {
 
     if(!noEconomy && event.getRightClicked() instanceof Player) {
 
-      Material actionMaterial = MaterialHelper.getMaterial(TNE.instance().api().getString("Core.Server.MenuMaterial"));
+      Material actionMaterial = MaterialHelper.getMaterial(ConfigurationManager.getString("config.yml", "Core.Server.MenuMaterial", false, world, id.toString()));
       Material material = player.getInventory().getItemInMainHand().getType();
 
       if(actionMaterial == null && material == null
@@ -180,7 +181,7 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onDeath(EntityDeathEvent event) {
-    if(TNE.instance().api().getBoolean("Core.Server.MobDrop")) {
+    if(ConfigurationManager.getBoolean("config.yml", "Core.Server.MobDrop")) {
       LivingEntity entity = event.getEntity();
       Player player = entity.getKiller();
       String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
@@ -206,7 +207,7 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.MONITOR)
   public void onChat(AsyncPlayerChatEvent event) {
-    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.instance().api().getString("Core.Server.MobDrop").split(",")));
+    List<String> triggers = new ArrayList<>(Arrays.asList(ConfigurationManager.getString("config.yml", "Core.Server.MobDrop", false, event.getPlayer().getWorld().getName(), "").split(",")));
 
     if(triggers.contains(event.getMessage().charAt(0) + "")) {
       String[] parsed = event.getMessage().split(" ");

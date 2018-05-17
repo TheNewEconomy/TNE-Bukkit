@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static java.util.logging.Level.SEVERE;
 
@@ -21,11 +22,11 @@ public class ConfigurationManager {
   }
 
 
-  protected static boolean loadSettings() {
+  public static boolean loadSettings() {
     return loadSettings(false);
   }
 
-  protected static boolean loadSettings(boolean modulesOnly) {
+  public static boolean loadSettings(boolean modulesOnly) {
     try {
       FileMgmt.checkFolders(new String[]{ getRootFolder() });
 
@@ -41,6 +42,10 @@ public class ConfigurationManager {
       return false;
     }
     return true;
+  }
+
+  public static CommentedConfiguration getConfigurationFile(String file) {
+    return configurations.get(file).getNewConfig();
   }
 
   public static void addConfiguration(ConfigurationEntry entry) {
@@ -140,12 +145,12 @@ public class ConfigurationManager {
   }
 
   public static String translate(String node, String world, String player) {
-    if(configurations.get("players.yml").getOldConfig().contains(node)) {
-      return configurations.get("players.yml").getOldConfig().getString(node);
+    if(configurations.get("players.yml").getOldConfig().contains(player + "." + node)) {
+      return configurations.get("players.yml").getOldConfig().getString(player + "." + node);
     }
 
-    if(configurations.get("worlds.yml").getOldConfig().contains(node)) {
-      return configurations.get("worlds.yml").getOldConfig().getString(node);
+    if(configurations.get("worlds.yml").getOldConfig().contains(world + "." + node)) {
+      return configurations.get("worlds.yml").getOldConfig().getString(world + "." + node);
     }
 
     String language = (player.trim().equalsIgnoreCase(""))? "Default" : TNE.manager().getAccount(IDFinder.getID(player)).getLanguage();
@@ -158,25 +163,61 @@ public class ConfigurationManager {
     return null;
   }
 
+  public static void setConfiguration(String file, String node, Object value) {
+    if(configurations.containsKey(file)) {
+      configurations.get(file).getOldConfig().set(node, value);
+      configurations.get(file).getOldConfig().save();
+    }
+  }
+
   public static Object getConfiguration(String file, IConfigNode node, String world, String player) {
-    if(configurations.get("players.yml").getOldConfig().contains(node.getNode())) {
-      return configurations.get("players.yml").getOldConfig().get(node.getNode());
+    Object value = getConfiguration(file, node.getNode(), world, player);
+    return (value != null)? value : node.getDefaultValue();
+  }
+
+  public static Object getConfiguration(String file, String node, String world, String player) {
+    if(configurations.get("players.yml").getOldConfig().contains(player + "." + node)) {
+      return configurations.get("players.yml").getOldConfig().get(player + "." + node);
     }
 
-    if(configurations.get("worlds.yml").getOldConfig().contains(node.getNode())) {
-      return configurations.get("worlds.yml").getOldConfig().get(node.getNode());
+    if(configurations.get("worlds.yml").getOldConfig().contains(world + "." + node)) {
+      return configurations.get("worlds.yml").getOldConfig().get(world + "." + node);
     }
 
     if(configurations.containsKey(file)) {
-      return configurations.get(file).getOldConfig().get(node.getNode(), node.getDefaultValue());
+      return configurations.get(file).getOldConfig().get(node, null);
     }
-    return node.getDefaultValue();
+    return null;
+  }
+
+  public static String getString(String file, String node) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (String)getConfiguration(file, configNode, "", "");
+    }
+    return null;
   }
 
   public static String getString(String file, String node, boolean translatable, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
       return (translatable)? translate(node, world, player) : (String)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
+  public static String getString(String file, String node, boolean translatable, String world, UUID player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (translatable)? translate(node, world, player.toString()) : (String)getConfiguration(file, configNode, world, player.toString());
+    }
+    return null;
+  }
+
+  public static Boolean getBoolean(String file, String node) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (boolean)getConfiguration(file, configNode, "", "");
     }
     return null;
   }
@@ -189,10 +230,34 @@ public class ConfigurationManager {
     return null;
   }
 
+  public static Boolean getBoolean(String file, String node, String world, UUID player) {
+    return getBoolean(file, node, world, player.toString());
+  }
+
+  public static Double getDouble(String file, String node) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (double)getConfiguration(file, configNode, "", "");
+    }
+    return null;
+  }
+
   public static Double getDouble(String file, String node, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
       return (double)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
+  public static Double getDouble(String file, String node, String world, UUID player) {
+    return getDouble(file, node, world, player.toString());
+  }
+
+  public static Integer getInteger(String file, String node) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (int)getConfiguration(file, configNode, "", "");
     }
     return null;
   }
@@ -203,6 +268,30 @@ public class ConfigurationManager {
       return (int)getConfiguration(file, configNode, world, player);
     }
     return null;
+  }
+
+  public static Integer getInteger(String file, String node, String world, UUID player) {
+    return getInteger(file, node, world, player.toString());
+  }
+
+  public static Long getLong(String file, String node) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (long)getConfiguration(file, configNode, "", "");
+    }
+    return null;
+  }
+
+  public static Long getLong(String file, String node, String world, String player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return (long)getConfiguration(file, configNode, world, player);
+    }
+    return null;
+  }
+
+  public static Long getLong(String file, String node, String world, UUID player) {
+    return getLong(file, node, world, player.toString());
   }
 
 

@@ -54,7 +54,7 @@ public class LanguageSetCommand extends TNECommand {
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
       String language = arguments[0];
 
-      if(TNE.instance().messages().getLanguages().containsKey(language) || language.equalsIgnoreCase("default")) {
+      if(TNE.instance().getLanguages().containsKey(language) || language.equalsIgnoreCase("default")) {
         TNEAccount account = TNE.manager().getAccount(IDFinder.getID(sender));
         account.setLanguage(language);
         TNE.manager().addAccount(account);

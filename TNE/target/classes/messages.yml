@@ -4,7 +4,7 @@
 # If you would like to contribute to the plugin
 # you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
 # To view a commented version of this file, visit https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/messages.yml.
-#All configurable messages in TNE
+# All configurable messages in TNE
 # Colour characters are supported, just use the colour code preceded by an ampersand character('&')
 # An alternate colouring format is also viable, just oldtype out the name of the colour inside a less than and greater than symbol
 # 
@@ -33,7 +33,6 @@
 #  &r   |  <reset>
 #  &m   |  <strike>
 #  &n   |  <underline>
-
 Messages:
     
     Command:
@@ -158,7 +157,6 @@ Messages:
           Purge: "/tne purge - Deletes all player accounts that have the default balance"
           Recreate: "/tne recreate - Attempts to recreate database tables. WARNING: This will delete all data in the database."
           Reload: "/tne reload <configuration> - Saves modifications made via command, and reloads a configuration file.<newline>- Configuration ~ The identifier of the configuration to reload. Default is all."
-          Report: "/tne report <report> - File a bug report.<newline>- Report ~ The link to the pastebin with the bug report, use the following format: https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Report%20Format.md."
           Reset: "/tne reset - Deletes all economy-related data from the database."
           Restore: "/tne restore - Restores all balances that are located in extracted.yml after /tne extract."
           Save: "/tne save - Force saves all TNE data."

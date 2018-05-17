@@ -6,11 +6,17 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.module.ModuleEntry;
+import net.tnemc.core.configuration.ConfigurationEntry;
+import net.tnemc.core.configuration.utils.FileMgmt;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+
+import static net.tnemc.core.configuration.ConfigurationManager.addConfiguration;
+import static net.tnemc.core.configuration.ConfigurationManager.getRootFolder;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -71,17 +77,16 @@ public class ModuleLoadCommand extends TNECommand {
       String author = module.getInfo().author();
       String version = module.getInfo().version();
 
-      module.getModule().initializeConfigurations();
-      module.getModule().loadConfigurations();
-      module.getModule().getMainConfigurations().forEach((node, defaultValue)->{
-        TNE.instance().main().configurations.put(node, defaultValue);
+      //Configurations
+
+      TNE.loader().getModules().forEach((key, value)->{
+        value.getModule().registerConfigurations().forEach((file, nodes)->{
+          addConfiguration(new ConfigurationEntry(nodes, new File(getRootFolder() + FileMgmt.fileSeparator() + file), true, value.getInfo().name()));
+        });
       });
-      module.getModule().getMessages().forEach((message, defaultValue)->{
-        TNE.instance().messages().configurations.put(message, defaultValue);
-      });
-      module.getModule().getConfigurations().forEach((configuration, identifier)->{
-        TNE.configurations().add(configuration, identifier);
-      });
+      if (!net.tnemc.core.configuration.ConfigurationManager.loadSettings(true)){
+        TNE.logger().info("Unable to load some module configurations!");
+      }
       module.getModule().getCommands().forEach((com)->{
         List<String> accessors = Arrays.asList(com.getAliases());
         accessors.add(com.getName());

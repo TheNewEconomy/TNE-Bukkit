@@ -1,4 +1,4 @@
-package net.tnemc.core.common.configurations;
+package net.tnemc.core.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

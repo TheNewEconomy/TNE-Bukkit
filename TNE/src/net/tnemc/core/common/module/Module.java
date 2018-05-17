@@ -6,6 +6,7 @@ import com.github.tnerevival.core.configurations.Configuration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.module.injectors.ModuleInjector;
+import net.tnemc.core.configuration.IConfigNode;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
 
@@ -95,46 +96,11 @@ public abstract class Module {
   }
 
   /**
-   * Used to initialize any configuration files this module may use.
+   * @return A map of configurations that this module wishes to use.
+   * The format is File Name.yml, Nodes
    */
-  public void initializeConfigurations() {
-
-  }
-
-  /**
-   * Used to load any configuration files this module may use.
-   * This step is for initializing. the File, and YamlConfigurations classes.
-   */
-  public void loadConfigurations() {
-
-  }
-
-  /**
-   * Used to save any configuration files this module may use.
-   */
-  public void saveConfigurations() {
-
-  }
-
-  /**
-   * Returns a map of values that should be added to the MainConfigurations class.
-   */
-  public Map<String, Object> getMainConfigurations() {
-    return mainConfigurations;
-  }
-
-  /**
-   * Returns a map of values that should be added to the MessageConfigurations class.
-   */
-  public Map<String, String> getMessages() {
-    return messages;
-  }
-
-  /**
-   * Returns a map configuration files this module may use.
-   */
-  public Map<Configuration, String> getConfigurations() {
-    return configurations;
+  public Map<String, IConfigNode[]> registerConfigurations() {
+    return new HashMap<>();
   }
 
   /**

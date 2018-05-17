@@ -18,7 +18,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -210,7 +217,7 @@ public class CurrencyManager {
       WorldManager manager = new WorldManager(world);
       TNE.instance().addWorldManager(manager);
     }
-    loadCurrency(TNE.instance().worldConfiguration(), true, world);
+    loadCurrency(net.tnemc.core.configuration.ConfigurationManager.getConfigurationFile("worlds.yml"), true, world);
     WorldManager manager = TNE.instance().getWorldManager(world);
     for(TNECurrency currency : globalCurrencies.values()) {
       if(!globalDisabled.contains(currency.name())) {

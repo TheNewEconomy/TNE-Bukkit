@@ -5,18 +5,29 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.configuration.ConfigurationManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 
@@ -85,7 +96,7 @@ public class MISCUtils {
   public static Boolean isDouble(String value, String world) {
     try {
       TNE.debug("MISCUtils.isDouble(" + value + "," + world + ")");
-      Double.valueOf(value.replace(TNE.instance().api().getString("Core.currency.Decimal", world), "."));
+      Double.valueOf(value.replace(ConfigurationManager.getString("config.yml", "Core.currency.Decimal", false, world, ""), "."));
       TNE.debug("Double confirmed");
       return true;
     } catch(Exception e) {

@@ -10,6 +10,7 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.configuration.ConfigurationManager;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.EconomyAPI;
 import net.tnemc.core.economy.currency.Tier;
@@ -19,7 +20,12 @@ import net.tnemc.core.economy.transaction.type.TransactionType;
 import org.bukkit.World;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -672,8 +678,8 @@ public class TNEAPI extends TNELibAPI {
    * @param configuration The configuration node.
    * @return The value of the configuration.
    */
-  public BigDecimal getBigDecimal(String configuration) {
-    return getBigDecimal(configuration, plugin.defaultWorld);
+  public BigDecimal getBigDecimal(String file, String configuration) {
+    return getBigDecimal(file, configuration, plugin.defaultWorld);
   }
 
   /**
@@ -682,8 +688,8 @@ public class TNEAPI extends TNELibAPI {
    * @param world The name of the world to use.
    * @return The value of the configuration.
    */
-  public BigDecimal getBigDecimal(String configuration, String world) {
-    String value = getConfiguration(configuration, world, "").toString();
+  public BigDecimal getBigDecimal(String file, String configuration, String world) {
+    String value = getConfiguration(file, configuration, world, "").toString();
     return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
@@ -694,8 +700,8 @@ public class TNEAPI extends TNELibAPI {
    * @param uuid The uuid of the player to use.
    * @return The value of the configuration.
    */
-  public BigDecimal getBigDecimal(String configuration, String world, UUID uuid) {
-    String value = getConfiguration(configuration, world, uuid).toString();
+  public BigDecimal getBigDecimal(String file, String configuration, String world, UUID uuid) {
+    String value = getConfiguration(file, configuration, world, uuid).toString();
     return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
@@ -706,8 +712,8 @@ public class TNEAPI extends TNELibAPI {
    * @param player The identifier of the player to use.
    * @return The value of the configuration.
    */
-  public BigDecimal getBigDecimal(String configuration, String world, String player) {
-    String value = getConfiguration(configuration, world, player).toString();
+  public BigDecimal getBigDecimal(String file, String configuration, String world, String player) {
+    String value = getConfiguration(file, configuration, world, player).toString();
     return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
@@ -718,78 +724,78 @@ public class TNEAPI extends TNELibAPI {
   /*
    * Configuration-related Methods.
    */
-  public String getString(String configuration) {
-    return (String)getConfiguration(configuration, TNELib.instance().defaultWorld);
+  public String getString(String file, String configuration) {
+    return (String)getConfiguration(file, configuration, TNELib.instance().defaultWorld);
   }
 
-  public String getString(String configuration, String world) {
-    return (String)getConfiguration(configuration, world, "");
+  public String getString(String file, String configuration, String world) {
+    return (String)getConfiguration(file, configuration, world, "");
   }
 
-  public String getString(String configuration, String world, UUID uuid) {
-    return (String)getConfiguration(configuration, world, uuid.toString());
+  public String getString(String file, String configuration, String world, UUID uuid) {
+    return (String)getConfiguration(file, configuration, world, uuid.toString());
   }
 
-  public String getString(String configuration, String world, String player) {
-    return (String)getConfiguration(configuration, world, player);
+  public String getString(String file, String configuration, String world, String player) {
+    return (String)getConfiguration(file, configuration, world, player);
   }
 
-  public Boolean getBoolean(String configuration) {
-    return (Boolean)getConfiguration(configuration, TNELib.instance().defaultWorld);
+  public Boolean getBoolean(String file, String configuration) {
+    return (Boolean)getConfiguration(file, configuration, TNELib.instance().defaultWorld);
   }
 
-  public Boolean getBoolean(String configuration, String world) {
-    return (Boolean)getConfiguration(configuration, world, "");
+  public Boolean getBoolean(String file, String configuration, String world) {
+    return (Boolean)getConfiguration(file, configuration, world, "");
   }
 
-  public Boolean getBoolean(String configuration, String world, UUID uuid) {
-    return (Boolean)getConfiguration(configuration, world, uuid.toString());
+  public Boolean getBoolean(String file, String configuration, String world, UUID uuid) {
+    return (Boolean)getConfiguration(file, configuration, world, uuid.toString());
   }
 
-  public Boolean getBoolean(String configuration, String world, String player) {
-    return (Boolean)getConfiguration(configuration, world, player);
+  public Boolean getBoolean(String file, String configuration, String world, String player) {
+    return (Boolean)getConfiguration(file, configuration, world, player);
   }
 
-  public Integer getInteger(String configuration) {
-    return (Integer)getConfiguration(configuration, TNELib.instance().defaultWorld);
+  public Integer getInteger(String file, String configuration) {
+    return (Integer)getConfiguration(file, configuration, TNELib.instance().defaultWorld);
   }
 
-  public Integer getInteger(String configuration, String world) {
-    return (Integer)getConfiguration(configuration, world, "");
+  public Integer getInteger(String file, String configuration, String world) {
+    return (Integer)getConfiguration(file, configuration, world, "");
   }
 
-  public Integer getInteger(String configuration, String world, UUID uuid) {
-    return (Integer)getConfiguration(configuration, world, uuid.toString());
+  public Integer getInteger(String file, String configuration, String world, UUID uuid) {
+    return (Integer)getConfiguration(file, configuration, world, uuid.toString());
   }
 
-  public Integer getInteger(String configuration, String world, String player) {
-    return (Integer)getConfiguration(configuration, world, player);
+  public Integer getInteger(String file, String configuration, String world, String player) {
+    return (Integer)getConfiguration(file, configuration, world, player);
   }
 
-  public boolean hasConfiguration(String configuration) {
+  public boolean hasConfiguration(String file, String configuration) {
     if(configuration.toLowerCase().contains("database")) return false;
-    return TNELib.configurations().hasConfiguration(configuration);
+    return ConfigurationManager.getConfiguration(file, configuration, "", "") != null;
   }
 
-  public Object getConfiguration(String configuration) {
-    return getConfiguration(configuration, TNELib.instance().defaultWorld);
+  public Object getConfiguration(String file, String configuration) {
+    return ConfigurationManager.getConfiguration(file, configuration, TNE.instance().defaultWorld, "");
   }
 
-  public Object getConfiguration(String configuration, String world) {
-    return getConfiguration(configuration, world, "");
+  public Object getConfiguration(String file, String configuration, String world) {
+    return ConfigurationManager.getConfiguration(file, configuration, world, "");
   }
 
-  public Object getConfiguration(String configuration, String world, UUID uuid) {
-    return getConfiguration(configuration, world, uuid.toString());
+  public Object getConfiguration(String file, String configuration, String world, UUID uuid) {
+    return ConfigurationManager.getConfiguration(file,configuration, world, uuid.toString());
   }
 
-  public Object getConfiguration(String configuration, String world, String player) {
+  public Object getConfiguration(String file, String configuration, String world, String player) {
     if(configuration.toLowerCase().contains("database")) return "";
-    return TNELib.configurations().getConfiguration(configuration, world, player);
+    return ConfigurationManager.getConfiguration(file,configuration, world, player);
   }
 
-  public void setConfiguration(String configuration, Object value) {
+  public void setConfiguration(String file, String configuration, Object value) {
     if(configuration.toLowerCase().contains("database")) return;
-    TNELib.configurations().setConfiguration(configuration, value);
+    ConfigurationManager.setConfiguration(file, configuration, value);
   }
 }
