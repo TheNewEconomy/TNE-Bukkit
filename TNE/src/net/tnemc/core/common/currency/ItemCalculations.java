@@ -5,6 +5,7 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MaterialUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -229,7 +230,9 @@ public class ItemCalculations {
       if(left.size() > 0) {
         TNE.debug("Some left overs of item: " + stack.getType());
         for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
-          player.getWorld().dropItemNaturally(player.getLocation(), entry.getValue());
+          Bukkit.getScheduler().scheduleSyncDelayedTask(TNE.instance(), ()->{
+            player.getWorld().dropItemNaturally(player.getLocation(), entry.getValue());
+          }, 0);
         }
       }
     }

@@ -88,8 +88,9 @@ public class MySQLProvider extends TNEDataProvider {
 
 
       result = connection.getMetaData().getTables(null, null, table, null);
+      boolean first = !result.next();
       connection.close();
-      return !result.next();
+      return first;
     } catch (Exception e) {
       e.printStackTrace();
     }
