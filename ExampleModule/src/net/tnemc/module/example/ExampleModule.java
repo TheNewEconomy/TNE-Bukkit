@@ -21,11 +21,9 @@ public class ExampleModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
-    TNE.logger().info("Example Module loaded!");
   }
 
   @Override
   public void unload(TNE tne) {
-    TNE.logger().info("Example Module unloaded!");
   }
 }

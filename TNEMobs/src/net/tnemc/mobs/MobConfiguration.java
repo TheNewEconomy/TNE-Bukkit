@@ -1,6 +1,5 @@
 package net.tnemc.mobs;
 
-import com.github.tnerevival.core.configurations.Configuration;
 import net.tnemc.core.TNE;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Ageable;

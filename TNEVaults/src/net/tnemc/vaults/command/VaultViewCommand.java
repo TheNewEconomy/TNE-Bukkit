@@ -1,8 +1,8 @@
 package net.tnemc.vaults.command;
 
-import com.github.tnerevival.commands.TNECommand;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.vaults.VaultsModule;
