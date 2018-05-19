@@ -15,7 +15,11 @@ import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -140,6 +144,9 @@ public class TNEAccount implements Account {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
     BigDecimal current = BigDecimal.ZERO;
 
+    TNE.debug("Database: " + database);
+    TNE.debug("Item Currency: " + cur.isItem());
+    TNE.debug("Is Online: " + MISCUtils.isOnline(id, world));
     if(database || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
       TNE.debug("Grabbing virtual holdings...");
       WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);

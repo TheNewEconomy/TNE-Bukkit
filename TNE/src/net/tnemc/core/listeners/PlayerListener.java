@@ -205,9 +205,9 @@ public class PlayerListener implements Listener {
     }
   }
 
-  @EventHandler(priority = EventPriority.MONITOR)
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onChat(AsyncPlayerChatEvent event) {
-    List<String> triggers = new ArrayList<>(Arrays.asList(ConfigurationManager.getString("config.yml", "Core.Server.MobDrop", false, event.getPlayer().getWorld().getName(), "").split(",")));
+    List<String> triggers = new ArrayList<>(Arrays.asList(ConfigurationManager.getString("config.yml", "Core.Commands.Triggers", false, event.getPlayer().getWorld().getName(), "").split(",")));
 
     if(triggers.contains(event.getMessage().charAt(0) + "")) {
       String[] parsed = event.getMessage().split(" ");

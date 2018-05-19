@@ -105,7 +105,6 @@ public class CurrencyFormatter {
   }
 
   private static BigDecimal parseWeight(TNECurrency currency, BigDecimal decimal) {
-    TNE.debug("Currency  decimal: " + currency.getDecimal());
     String[] amountStr = (decimal.toPlainString() + (decimal.toPlainString().contains(".")? "" : ".00")).split("\\.");
     BigInteger major = new BigInteger(amountStr[0]);
     BigInteger minor = new BigInteger(String.format("%1$-2s", Integer.valueOf(amountStr[1])).replace(' ', '0'));
@@ -159,6 +158,7 @@ public class CurrencyFormatter {
 
   public static BigDecimal translateBigDecimal(String value, String currency, String world) {
     String decimal = (TNE.manager().currencyManager().get(world, currency)).getDecimal();
+    TNE.debug("translateBigDecimal.decimal: " + decimal);
     return new BigDecimal(value.replace(decimal, "."));
   }
 }

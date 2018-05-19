@@ -986,7 +986,7 @@ public enum CoreConfigNodes implements IConfigNode {
 
     @Override
     public String getDefaultValue() {
-      return "false";
+      return "true";
     }
 
     @Override
