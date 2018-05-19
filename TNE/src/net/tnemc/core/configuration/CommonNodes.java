@@ -17,7 +17,7 @@ public enum CommonNodes implements IConfigNode {
     @Override
     public String[] getComments() {
       return new String[] {
-          "This is the current version of TheNewBasics.  Please do not edit."
+          "This is the current version of TheNewEconomy.  Please do not edit."
       };
     }
   },

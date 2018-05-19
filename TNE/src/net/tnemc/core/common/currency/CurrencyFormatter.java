@@ -105,7 +105,8 @@ public class CurrencyFormatter {
   }
 
   private static BigDecimal parseWeight(TNECurrency currency, BigDecimal decimal) {
-    String[] amountStr = (String.valueOf(decimal) + (String.valueOf(decimal).contains(".")? "" : ".00")).split("\\.");
+    TNE.debug("Currency  decimal: " + currency.getDecimal());
+    String[] amountStr = (decimal.toPlainString() + (decimal.toPlainString().contains(".")? "" : ".00")).split("\\.");
     BigInteger major = new BigInteger(amountStr[0]);
     BigInteger minor = new BigInteger(String.format("%1$-2s", Integer.valueOf(amountStr[1])).replace(' ', '0'));
     BigInteger majorConversion = minor;
@@ -113,13 +114,15 @@ public class CurrencyFormatter {
     major = major.add(majorConversion);
     minor = minor.mod(new BigInteger(currency.getMinorWeight() + ""));
 
+    TNE.debug(major.toString() + currency.getDecimal() + minor.toString());
+
     return new BigDecimal(major.toString() + currency.getDecimal() + minor.toString());
   }
 
   private static String shorten(TNECurrency currency, BigDecimal balance) {
     String prefixes = currency.getPrefixes();
     BigInteger wholeNum = balance.toBigInteger();
-    if (wholeNum.compareTo(new BigInteger("1000")) < 0) {
+    if (wholeNum.compareTo(new BigInteger("999")) < 0) {
       return "" + wholeNum.toString();
     }
     String whole = wholeNum.toString();

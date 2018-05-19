@@ -6,6 +6,7 @@ import net.tnemc.core.configuration.utils.FileMgmt;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class ConfigurationManager {
       FileMgmt.checkFolders(new String[]{ getRootFolder() });
 
       configurations.forEach((file, entry)->{
-        if(!modulesOnly || modulesOnly && entry.isModule()) {
+        if(!modulesOnly || entry.isModule()) {
           String version = (entry.isModule()) ? TNE.loader().getModule(entry.getOwner()).getInfo().version() :
               plugin.getDescription().getVersion();
           loadConfig(entry, version);
@@ -87,7 +88,7 @@ public class ConfigurationManager {
       } else if (node.getNode().equals(CommonNodes.LAST_RUN_VERSION.getNode())) {
         setNewProperty(entry, node.getNode(), getLastRunVersion(entry.getFile(), version));
       } else {
-        setNewProperty(entry, node.getNode(), (entry.getOldConfig().get(node.getNode().toLowerCase()) != null) ? entry.getOldConfig().get(node.getNode().toLowerCase()) : node.getDefaultValue());
+        setNewProperty(entry, node.getNode(), (entry.getOldConfig().get(node.getNode()) != null) ? entry.getOldConfig().get(node.getNode()) : node.getDefaultValue());
       }
     }
     entry.setOldConfig(entry.getNewConfig());
@@ -95,16 +96,16 @@ public class ConfigurationManager {
   }
 
   private static void addComment(ConfigurationEntry entry, String root, String... comments) {
-    entry.getNewConfig().addComment(root.toLowerCase(), comments);
+    entry.getNewConfig().addComment(root, comments);
   }
 
   private static void setNewProperty(ConfigurationEntry entry, String root, Object value) {
 
     if (value == null) {
-      // System.out.print("value is null for " + root.toLowerCase());
+      // System.out.print("value is null for " + root);
       value = "";
     }
-    entry.getNewConfig().set(root.toLowerCase(), value.toString());
+    entry.getNewConfig().set(root, value.toString());
   }
 
   private static String getLastRunVersion(String file, String currentVersion) {
@@ -114,9 +115,9 @@ public class ConfigurationManager {
 
   private static String getString(String file, String root, String def) {
 
-    String data = configurations.get(file).getOldConfig().getString(root.toLowerCase(), def);
+    String data = configurations.get(file).getOldConfig().getString(root, def);
     if (data == null) {
-      sendError(root.toLowerCase() + " from " + file);
+      sendError(root + " from " + file);
       return "";
     }
     return data;
@@ -198,6 +199,13 @@ public class ConfigurationManager {
     return null;
   }
 
+  public static String getString(String file, IConfigNode node, boolean translatable, String world, String player) {
+    if(node != null) {
+      return (translatable)? translate(node.getNode(), world, player) : (String)getConfiguration(file, node, world, player);
+    }
+    return null;
+  }
+
   public static String getString(String file, String node, boolean translatable, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
@@ -217,7 +225,7 @@ public class ConfigurationManager {
   public static Boolean getBoolean(String file, String node) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (boolean)getConfiguration(file, configNode, "", "");
+      return Boolean.parseBoolean(getString(file, configNode, false, "", ""));
     }
     return null;
   }
@@ -225,7 +233,7 @@ public class ConfigurationManager {
   public static Boolean getBoolean(String file, String node, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (boolean)getConfiguration(file, configNode, world, player);
+      return Boolean.parseBoolean(getString(file, configNode, false, world, player));
     }
     return null;
   }
@@ -234,10 +242,30 @@ public class ConfigurationManager {
     return getBoolean(file, node, world, player.toString());
   }
 
+  public static BigDecimal getBigDecimal(String file, String node) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return new BigDecimal(getString(file, configNode, false, "", ""));
+    }
+    return null;
+  }
+
+  public static BigDecimal getBigDecimal(String file, String node, String world, String player) {
+    IConfigNode configNode = stringToNode(file, node);
+    if(configNode != null) {
+      return new BigDecimal(getString(file, configNode, false, world, player));
+    }
+    return null;
+  }
+
+  public static BigDecimal getBigDecimal(String file, String node, String world, UUID player) {
+    return getBigDecimal(file, node, world, player.toString());
+  }
+
   public static Double getDouble(String file, String node) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (double)getConfiguration(file, configNode, "", "");
+      return Double.parseDouble(getString(file, configNode, false, "", ""));
     }
     return null;
   }
@@ -245,7 +273,7 @@ public class ConfigurationManager {
   public static Double getDouble(String file, String node, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (double)getConfiguration(file, configNode, world, player);
+      return Double.parseDouble(getString(file, configNode, false, world, player));
     }
     return null;
   }
@@ -257,7 +285,7 @@ public class ConfigurationManager {
   public static Integer getInteger(String file, String node) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (int)getConfiguration(file, configNode, "", "");
+      return Integer.parseInt(getString(file, configNode, false, "", ""));
     }
     return null;
   }
@@ -265,7 +293,7 @@ public class ConfigurationManager {
   public static Integer getInteger(String file, String node, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (int)getConfiguration(file, configNode, world, player);
+      return Integer.parseInt(getString(file, configNode, false, world, player));
     }
     return null;
   }
@@ -277,7 +305,7 @@ public class ConfigurationManager {
   public static Long getLong(String file, String node) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (long)getConfiguration(file, configNode, "", "");
+      return Long.parseLong(getString(file, configNode, false, "", ""));
     }
     return null;
   }
@@ -285,7 +313,7 @@ public class ConfigurationManager {
   public static Long getLong(String file, String node, String world, String player) {
     IConfigNode configNode = stringToNode(file, node);
     if(configNode != null) {
-      return (long)getConfiguration(file, configNode, world, player);
+      return Long.parseLong(getString(file, configNode, false, world, player));
     }
     return null;
   }
@@ -296,21 +324,21 @@ public class ConfigurationManager {
 
 
   public static String getString(String file, IConfigNode node) {
-    return configurations.get(file).getOldConfig().getString(node.getNode().toLowerCase(), node.getDefaultValue());
+    return configurations.get(file).getOldConfig().getString(node.getNode(), node.getDefaultValue());
 
   }
 
   public static boolean getBoolean(String file, IConfigNode node) {
 
-    return Boolean.parseBoolean(configurations.get(file).getOldConfig().getString(node.getNode().toLowerCase(), node.getDefaultValue()));
+    return Boolean.parseBoolean(configurations.get(file).getOldConfig().getString(node.getNode(), node.getDefaultValue()));
   }
 
   public static double getDouble(String file, IConfigNode node) {
 
     try {
-      return Double.parseDouble(configurations.get(file).getOldConfig().getString(node.getNode().toLowerCase(), node.getDefaultValue()).trim());
+      return Double.parseDouble(configurations.get(file).getOldConfig().getString(node.getNode(), node.getDefaultValue()).trim());
     } catch (NumberFormatException e) {
-      sendError(node.getNode().toLowerCase() + " from " + file);
+      sendError(node.getNode() + " from " + file);
       return 0.0;
     }
   }
@@ -318,9 +346,9 @@ public class ConfigurationManager {
   public static int getInt(String file, IConfigNode node) {
 
     try {
-      return Integer.parseInt(configurations.get(file).getOldConfig().getString(node.getNode().toLowerCase(), node.getDefaultValue()).trim());
+      return Integer.parseInt(configurations.get(file).getOldConfig().getString(node.getNode(), node.getDefaultValue()).trim());
     } catch (NumberFormatException e) {
-      sendError(node.getNode().toLowerCase() + " from " + file);
+      sendError(node.getNode() + " from " + file);
       return 0;
     }
   }

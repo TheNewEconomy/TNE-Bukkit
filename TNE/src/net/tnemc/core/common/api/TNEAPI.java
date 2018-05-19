@@ -687,7 +687,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public BigDecimal getBigDecimal(String file, String configuration, String world) {
-    String value = getConfiguration(file, configuration, world, "").toString();
+    String value = getString(file, configuration, world, "");
     return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
@@ -699,7 +699,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public BigDecimal getBigDecimal(String file, String configuration, String world, UUID uuid) {
-    String value = getConfiguration(file, configuration, world, uuid).toString();
+    String value = getString(file, configuration, world, uuid);
     return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
@@ -711,7 +711,7 @@ public class TNEAPI {
    * @return The value of the configuration.
    */
   public BigDecimal getBigDecimal(String file, String configuration, String world, String player) {
-    String value = getConfiguration(file, configuration, world, player).toString();
+    String value = getString(file, configuration, world, player);
     return CurrencyFormatter.translateBigDecimal(value, world);
   }
 
@@ -739,35 +739,51 @@ public class TNEAPI {
   }
 
   public Boolean getBoolean(String file, String configuration) {
-    return (Boolean)getConfiguration(file, configuration, TNELib.instance().defaultWorld);
+    return Boolean.parseBoolean(getString(file, configuration, TNELib.instance().defaultWorld));
   }
 
   public Boolean getBoolean(String file, String configuration, String world) {
-    return (Boolean)getConfiguration(file, configuration, world, "");
+    return Boolean.parseBoolean(getString(file, configuration, world, ""));
   }
 
   public Boolean getBoolean(String file, String configuration, String world, UUID uuid) {
-    return (Boolean)getConfiguration(file, configuration, world, uuid.toString());
+    return Boolean.parseBoolean(getString(file, configuration, world, uuid.toString()));
   }
 
   public Boolean getBoolean(String file, String configuration, String world, String player) {
-    return (Boolean)getConfiguration(file, configuration, world, player);
+    return Boolean.parseBoolean(getString(file, configuration, world, player));
   }
 
   public Integer getInteger(String file, String configuration) {
-    return (Integer)getConfiguration(file, configuration, TNELib.instance().defaultWorld);
+    return Integer.parseInt(getString(file, configuration, TNELib.instance().defaultWorld));
   }
 
   public Integer getInteger(String file, String configuration, String world) {
-    return (Integer)getConfiguration(file, configuration, world, "");
+    return Integer.parseInt(getString(file, configuration, world, ""));
   }
 
   public Integer getInteger(String file, String configuration, String world, UUID uuid) {
-    return (Integer)getConfiguration(file, configuration, world, uuid.toString());
+    return Integer.parseInt(getString(file, configuration, world, uuid.toString()));
   }
 
-  public Integer getInteger(String file, String configuration, String world, String player) {
-    return (Integer)getConfiguration(file, configuration, world, player);
+  public Long getInteger(String file, String configuration, String world, String player) {
+    return Long.parseLong(getString(file, configuration, world, player));
+  }
+
+  public Long getLong(String file, String configuration) {
+    return Long.parseLong(getString(file, configuration, TNELib.instance().defaultWorld));
+  }
+
+  public Long getLong(String file, String configuration, String world) {
+    return Long.parseLong(getString(file, configuration, world, ""));
+  }
+
+  public Long getLong(String file, String configuration, String world, UUID uuid) {
+    return Long.parseLong(getString(file, configuration, world, uuid.toString()));
+  }
+
+  public Long getLong(String file, String configuration, String world, String player) {
+    return Long.parseLong(getString(file, configuration, world, player));
   }
 
   public boolean hasConfiguration(String file, String configuration) {
@@ -789,7 +805,7 @@ public class TNEAPI {
 
   public Object getConfiguration(String file, String configuration, String world, String player) {
     if(configuration.toLowerCase().contains("database")) return "";
-    return ConfigurationManager.getConfiguration(file,configuration, world, player);
+    return ConfigurationManager.getConfiguration(file, configuration, world, player);
   }
 
   public void setConfiguration(String file, String configuration, Object value) {

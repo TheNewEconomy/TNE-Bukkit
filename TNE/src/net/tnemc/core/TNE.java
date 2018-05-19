@@ -96,7 +96,7 @@ public class TNE extends TNELib {
   private SaveWorker saveWorker;
   private MismatchWorker mismatchWorker;
 
-  public static final String build = "46PB1";
+  public static final String build = "47PB1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -141,7 +141,7 @@ public class TNE extends TNELib {
     addConfiguration(new ConfigurationEntry(PlayersConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "players.yml")));
     addConfiguration(new ConfigurationEntry(WorldsConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "worlds.yml")));
 
-    if (!ConfigurationManager.loadSettings()){
+    if (!net.tnemc.core.configuration.ConfigurationManager.loadSettings()){
       logger().info("Unable to load configuration!");
     }
 
@@ -192,9 +192,9 @@ public class TNE extends TNELib {
     }
 
     int size = 1;
-    boolean payShort = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Commands.PayShort");
-    boolean balShort = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Commands.BalanceShort");
-    boolean topShort = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Commands.TopShort");
+    boolean payShort = api.getBoolean("config.yml", "Core.Commands.PayShort");
+    boolean balShort = api.getBoolean("config.yml", "Core.Commands.BalanceShort");
+    boolean topShort = api.getBoolean("config.yml", "Core.Commands.TopShort");
 
     if(payShort) size += 1;
     if(balShort) size += 2;
@@ -251,9 +251,9 @@ public class TNE extends TNELib {
     menuManager = new MenuManager();
 
     //General Variables based on configuration values
-    serverName = (net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Name") : "Main Server";
-    consoleName = (net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Account.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Account.Name") : "Server_Account";
-    useUUID = net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.UUID");
+    serverName = (api.getString("config.yml", "Core.Server.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Name") : "Main Server";
+    consoleName = (api.getString("config.yml", "Core.Server.Account.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Account.Name") : "Server_Account";
+    useUUID = api.getBoolean("config.yml", "Core.UUID");
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Type").toLowerCase(),
@@ -291,14 +291,14 @@ public class TNE extends TNELib {
     saveManager().load();
 
     //Bukkit Runnables & Workers
-    if(net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.AutoSaver.Enabled")) {
+    if(api.getBoolean("config.yml", "Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
       mismatchWorker = new MismatchWorker(this);
-      saveWorker.runTaskTimer(this, net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") * 20, net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") * 20);
-      mismatchWorker.runTaskTimer(this, (net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20, (net.tnemc.core.configuration.ConfigurationManager.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20);
+      saveWorker.runTaskTimer(this, api.getLong("config.yml", "Core.AutoSaver.Interval") * 20, api.getLong("config.yml", "Core.AutoSaver.Interval") * 20);
+      mismatchWorker.runTaskTimer(this, (api.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20, (api.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20);
     }
 
-    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Server.McMMORewards")) {
+    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api.getBoolean("config.yml", "Core.Server.McMMORewards")) {
       getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
@@ -313,7 +313,7 @@ public class TNE extends TNELib {
 
 
     //Metrics
-    if(net.tnemc.core.configuration.ConfigurationManager.getBoolean("config.yml", "Core.Metrics")) {
+    if(api.getBoolean("config.yml", "Core.Metrics")) {
       new Metrics(this);
       getLogger().info("Sending plugin statistics.");
     }
@@ -497,7 +497,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    //System.out.println(message);
+    System.out.println(message);
   }
 
   private void setupVault() {

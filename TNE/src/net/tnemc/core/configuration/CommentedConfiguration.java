@@ -45,6 +45,7 @@ public class CommentedConfiguration extends YamlConfiguration {
       this.load(file);
     } catch (InvalidConfigurationException | IOException e) {
       loaded = false;
+      e.printStackTrace();
     }
 
     return loaded;

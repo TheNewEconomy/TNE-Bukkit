@@ -540,7 +540,7 @@ public enum CoreConfigNodes implements IConfigNode {
   AUTOSAVER_HEADER {
     @Override
     public String getNode() {
-      return "Core.AutoSave";
+      return "Core.AutoSaver";
     }
 
     @Override
@@ -554,7 +554,7 @@ public enum CoreConfigNodes implements IConfigNode {
   AUTOSAVER_ENABLED {
     @Override
     public String getNode() {
-      return "Core.AutoSave.Enabled";
+      return "Core.AutoSaver.Enabled";
     }
 
     @Override
@@ -947,7 +947,7 @@ public enum CoreConfigNodes implements IConfigNode {
 
     @Override
     public String getDefaultValue() {
-      return ".";
+      return ",";
     }
 
     @Override

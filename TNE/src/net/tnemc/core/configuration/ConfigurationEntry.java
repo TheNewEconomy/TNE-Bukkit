@@ -32,12 +32,13 @@ public class ConfigurationEntry {
     int length = nodes.length + net.tnemc.core.configuration.CommonNodes.values().length;
     IConfigNode[] nodeArray = new IConfigNode[length];
     int index = 0;
-    for(IConfigNode node : net.tnemc.core.configuration.CommonNodes.values()) {
+
+    for(IConfigNode node : nodes) {
       nodeArray[index] = node;
       index++;
     }
 
-    for(IConfigNode node : nodes) {
+    for(IConfigNode node : net.tnemc.core.configuration.CommonNodes.values()) {
       nodeArray[index] = node;
       index++;
     }
