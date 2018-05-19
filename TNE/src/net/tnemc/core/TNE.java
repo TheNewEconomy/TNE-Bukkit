@@ -43,7 +43,6 @@ import net.tnemc.core.listeners.ConnectionListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.menu.MenuManager;
-import net.tnemc.core.worker.MismatchWorker;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -94,7 +93,6 @@ public class TNE extends TNELib {
 
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
-  private MismatchWorker mismatchWorker;
 
   public static final String build = "47PB1";
 
@@ -293,9 +291,7 @@ public class TNE extends TNELib {
     //Bukkit Runnables & Workers
     if(api.getBoolean("config.yml", "Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
-      mismatchWorker = new MismatchWorker(this);
       saveWorker.runTaskTimer(this, api.getLong("config.yml", "Core.AutoSaver.Interval") * 20, api.getLong("config.yml", "Core.AutoSaver.Interval") * 20);
-      mismatchWorker.runTaskTimer(this, (api.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20, (api.getLong("config.yml", "Core.AutoSaver.Interval") + 2) * 20);
     }
 
     if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api.getBoolean("config.yml", "Core.Server.McMMORewards")) {

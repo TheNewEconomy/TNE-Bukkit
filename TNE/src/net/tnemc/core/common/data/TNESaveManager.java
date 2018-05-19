@@ -53,7 +53,6 @@ public class TNESaveManager extends SaveManager {
   @Override
   public void save() {
     getTNEManager().getTNEProvider().save(TNELib.instance().currentSaveVersion);
-    TNELib.instance().getLogger().info("Null Account Count: " + getTNEManager().getTNEProvider().nullAccounts());
     TNELib.instance().getLogger().info("Finished saving data!");
   }
 
