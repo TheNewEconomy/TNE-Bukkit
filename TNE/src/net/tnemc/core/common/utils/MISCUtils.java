@@ -120,8 +120,9 @@ public class MISCUtils {
     Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
 
     accounts.forEach((username) -> {
-      UUID id = IDFinder.getID(username);
-      TNEAccount account = new TNEAccount(id, username);
+      String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
+      UUID id = IDFinder.getID(reformattedUsername);
+      TNEAccount account = new TNEAccount(id, reformattedUsername);
       Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);
       worlds.forEach((world) -> {
         Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
@@ -196,7 +197,7 @@ public class MISCUtils {
         TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
         account.getWorldHoldings().forEach((world, holdings) -> {
           holdings.getHoldings().forEach((currency, amount) -> {
-            configuration.set("Accounts." + username + ".Balances." + world + "." + currency, amount.toPlainString());
+            configuration.set("Accounts." + username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%") + ".Balances." + world + "." + currency, amount.toPlainString());
           });
         });
       }
