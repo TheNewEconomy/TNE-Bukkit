@@ -5,7 +5,6 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.configuration.ConfigurationManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -96,7 +95,7 @@ public class MISCUtils {
   public static Boolean isDouble(String value, String world) {
     try {
       TNE.debug("MISCUtils.isDouble(" + value + "," + world + ")");
-      Double.valueOf(value.replace(ConfigurationManager.getString("config.yml", "Core.currency.Decimal", false, world, ""), "."));
+      Double.valueOf(value.replace(TNE.instance().api().getString("Core.currency.Decimal", world), "."));
       TNE.debug("Double confirmed");
       return true;
     } catch(Exception e) {

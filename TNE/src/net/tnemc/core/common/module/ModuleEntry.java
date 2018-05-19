@@ -28,6 +28,15 @@ public class ModuleEntry {
       accessors.add(command.getName());
       TNE.instance().unregisterCommand((String[])accessors.toArray());
     });
+    module.getMainConfigurations().forEach((node, defaultValue)->{
+      TNE.instance().main().configurations.remove(node);
+    });
+    module.getMessages().forEach((message, defaultValue)->{
+      TNE.instance().messages().configurations.remove(message);
+    });
+    module.getConfigurations().forEach((configuration, identifier)->{
+      TNE.configurations().configurations.remove(identifier);
+    });
     TNE.debug("=====END ModuleEntry.unload =====");
   }
 

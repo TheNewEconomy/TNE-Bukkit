@@ -2,6 +2,9 @@ package net.tnemc.core.commands.config;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.Message;
+import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.WorldFinder;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -45,10 +48,10 @@ public class ConfigSaveCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    /*String configuration = (arguments.length >= 1)? arguments[0] : "all";
+    String configuration = (arguments.length >= 1)? arguments[0] : "all";
     String world = WorldFinder.getWorld(sender, WorldVariant.CONFIGURATION);
     if(configuration.equalsIgnoreCase("all")) {
-      //saveall
+      TNE.configurations().saveAll();
       Message message = new Message("Messages.Configuration.SavedAll");
       message.translate(world, sender);
       return true;
@@ -64,8 +67,7 @@ public class ConfigSaveCommand extends TNECommand {
     TNE.configurations().save(TNE.configurations().configurations.get(configuration));
     Message message = new Message("Messages.Configuration.Saved");
     message.addVariable("$configuration", configuration);
-    message.translate(world, sender);*/
-    //TODO: Fix this with commented configurations
+    message.translate(world, sender);
     return true;
   }
 }

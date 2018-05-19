@@ -26,17 +26,13 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
+import net.tnemc.core.common.configurations.MainConfigurations;
+import net.tnemc.core.common.configurations.MessageConfigurations;
+import net.tnemc.core.common.configurations.WorldConfigurations;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.configuration.ConfigurationEntry;
-import net.tnemc.core.configuration.Language;
-import net.tnemc.core.configuration.impl.CoreConfigNodes;
-import net.tnemc.core.configuration.impl.MessageConfigNodes;
-import net.tnemc.core.configuration.impl.PlayersConfigNodes;
-import net.tnemc.core.configuration.impl.WorldsConfigNodes;
-import net.tnemc.core.configuration.utils.FileMgmt;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
@@ -54,17 +50,18 @@ import org.bukkit.plugin.ServicePriority;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
-
-import static net.tnemc.core.configuration.ConfigurationManager.addConfiguration;
-import static net.tnemc.core.configuration.ConfigurationManager.getRootFolder;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -76,10 +73,11 @@ import static net.tnemc.core.configuration.ConfigurationManager.getRootFolder;
  */
 public class TNE extends TNELib {
   private Map<String, WorldManager> worldManagers = new HashMap<>();
-  private Map<String, Language> languages = new HashMap<>();
 
   private EconomyManager manager;
   private MenuManager menuManager;
+  private static net.tnemc.core.common.configurations.ConfigurationManager configurations;
+  protected CommandManager commandManager;
 
   private ModuleLoader loader;
   public UpdateChecker updater;
@@ -89,7 +87,22 @@ public class TNE extends TNELib {
   //Economy APIs
   private Economy_TheNewEconomy vaultEconomy;
   private ReserveEconomy reserveEconomy;
-  private net.tnemc.core.common.api.TNEAPI api;
+  private TNEAPI api;
+
+  // Files & Custom Configuration Files
+  private File items;
+  private File messagesFile;
+  private File players;
+  private File worlds;
+
+  private FileConfiguration itemConfigurations;
+  private FileConfiguration messageConfigurations;
+  private FileConfiguration playerConfigurations;
+  private FileConfiguration worldConfigurations;
+
+  private MainConfigurations main;
+  private MessageConfigurations messages;
+  private WorldConfigurations world;
 
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
@@ -99,7 +112,6 @@ public class TNE extends TNELib {
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
   private List<EventMap> cacheMaps = new ArrayList<>();
-  private CommandManager commandManager;
 
   private boolean blacklisted = false;
 
@@ -109,8 +121,6 @@ public class TNE extends TNELib {
       getLogger().info("Unable to load The New Economy as this server has been blacklisted.");
       return;
     }
-
-    net.tnemc.core.configuration.ConfigurationManager.initialize(this);
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
     instance = this;
@@ -133,15 +143,9 @@ public class TNE extends TNELib {
       return;
     }
     super.onEnable();
-    commandManager = new CommandManager();
-    addConfiguration(new ConfigurationEntry(CoreConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "config.yml")));
-    addConfiguration(new ConfigurationEntry(MessageConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "messages.yml")));
-    addConfiguration(new ConfigurationEntry(PlayersConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "players.yml")));
-    addConfiguration(new ConfigurationEntry(WorldsConfigNodes.class, new File(getRootFolder() + FileMgmt.fileSeparator() + "worlds.yml")));
 
-    if (!net.tnemc.core.configuration.ConfigurationManager.loadSettings()){
-      logger().info("Unable to load configuration!");
-    }
+    configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
+    commandManager = new CommandManager();
 
     //Create Debug Log
     try {
@@ -179,20 +183,35 @@ public class TNE extends TNELib {
     });
 
     //Configurations
-
+    initializeConfigurations();
+    loadConfigurations();
+    main = new MainConfigurations();
+    messages = new MessageConfigurations();
+    world = new WorldConfigurations();
     loader.getModules().forEach((key, value)->{
-      value.getModule().registerConfigurations().forEach((file, nodes)->{
-        addConfiguration(new ConfigurationEntry(nodes, new File(getRootFolder() + FileMgmt.fileSeparator() + file), true, value.getInfo().name()));
+      value.getModule().getMainConfigurations().forEach((node, defaultValue)->{
+        main.configurations.put(node, defaultValue);
       });
     });
-    if (!net.tnemc.core.configuration.ConfigurationManager.loadSettings(true)){
-      logger().info("Unable to load some module configurations!");
-    }
+    loader.getModules().forEach((key, value)->{
+      value.getModule().getMessages().forEach((message, defaultValue)->{
+        messages.configurations.put(message, defaultValue);
+      });
+    });
+    loader.getModules().forEach((key, value)->{
+      value.getModule().getConfigurations().forEach((configuration, identifier)->{
+        configurations().add(configuration, identifier);
+      });
+    });
+    configurations().add(main, "main");
+    configurations().add(messages, "messages");
+    configurations().add(world, "world");
+    configurations().loadAll();
 
     int size = 1;
-    boolean payShort = api.getBoolean("config.yml", "Core.Commands.PayShort");
-    boolean balShort = api.getBoolean("config.yml", "Core.Commands.BalanceShort");
-    boolean topShort = api.getBoolean("config.yml", "Core.Commands.TopShort");
+    boolean payShort = configurations().getBoolean("Core.Commands.PayShort");
+    boolean balShort = configurations().getBoolean("Core.Commands.BalanceShort");
+    boolean topShort = configurations().getBoolean("Core.Commands.TopShort");
 
     if(payShort) size += 1;
     if(balShort) size += 2;
@@ -249,19 +268,19 @@ public class TNE extends TNELib {
     menuManager = new MenuManager();
 
     //General Variables based on configuration values
-    serverName = (api.getString("config.yml", "Core.Server.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Name") : "Main Server";
-    consoleName = (api.getString("config.yml", "Core.Server.Account.Name").length() <= 100)? net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Server.Account.Name") : "Server_Account";
-    useUUID = api.getBoolean("config.yml", "Core.UUID");
+    serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
+    consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
+    useUUID = configurations().getBoolean("Core.UUID");
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
-        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Type").toLowerCase(),
-        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.Host"),
-        net.tnemc.core.configuration.ConfigurationManager.getInt("config.yml", CoreConfigNodes.DATABASE_PORT),
-        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.Database"),
-        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.User"),
-        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.MySQL.Password"),
-        net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Prefix"),
-        new File(getDataFolder(), net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.File")).getAbsolutePath(),
+        configurations().getString("Core.Database.Type").toLowerCase(),
+        configurations().getString("Core.Database.MySQL.Host"),
+        configurations().getInt("Core.Database.MySQL.Port"),
+        configurations().getString("Core.Database.MySQL.Database"),
+        configurations().getString("Core.Database.MySQL.User"),
+        configurations().getString("Core.Database.MySQL.Password"),
+        configurations().getString("Core.Database.Prefix"),
+        new File(getDataFolder(), configurations().getString("Core.Database.File")).getAbsolutePath(),
         true,
         false,
         600,
@@ -272,7 +291,7 @@ public class TNE extends TNELib {
     saveManager().getTNEManager().loadProviders();
     TNE.debug("Finished loading providers");
 
-    TNE.debug("Setting format: " + net.tnemc.core.configuration.ConfigurationManager.getString("config.yml", "Core.Database.Type").toLowerCase());
+    TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
     saveManager().addVersion(10.0, true);
@@ -289,12 +308,12 @@ public class TNE extends TNELib {
     saveManager().load();
 
     //Bukkit Runnables & Workers
-    if(api.getBoolean("config.yml", "Core.AutoSaver.Enabled")) {
+    if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
-      saveWorker.runTaskTimer(this, api.getLong("config.yml", "Core.AutoSaver.Interval") * 20, api.getLong("config.yml", "Core.AutoSaver.Interval") * 20);
+      saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
     }
 
-    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api.getBoolean("config.yml", "Core.Server.McMMORewards")) {
+    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.McMMORewards")) {
       getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
@@ -309,12 +328,12 @@ public class TNE extends TNELib {
 
 
     //Metrics
-    if(api.getBoolean("config.yml", "Core.Metrics")) {
+    if(configurations().getBoolean("Core.Metrics")) {
       new Metrics(this);
       getLogger().info("Sending plugin statistics.");
     }
 
-    if(api.getBoolean("config.yml", "Core.Server.Account.Enabled")) {
+    if(api.getBoolean("Core.Server.Account.Enabled")) {
       String world = worldManagers.get(defaultWorld).getBalanceWorld();
       UUID id = IDFinder.getID(consoleName);
 
@@ -323,8 +342,8 @@ public class TNE extends TNELib {
         manager.createAccount(id, consoleName);
         TNEAccount account = manager.getAccount(id);
         TNE.debug("Account Null? " + (account == null));
-        TNE.debug("Balance Config Null? " + (api.getBigDecimal("config.yml", "Core.Server.Account.Balance") == null));
-        account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("config.yml", "Core.Server.Account.Balance"), true);
+        TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));
+        account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("Core.Server.Account.Balance"), true);
         getLogger().info("Created server economy account.");
       }
     }
@@ -346,32 +365,42 @@ public class TNE extends TNELib {
     getLogger().info("The New Economy has been disabled!");
   }
 
-  public void loadLanguages() {
-    File directory = new File(TNE.instance().getDataFolder(), "languages");
-    directory.mkdir();
-    File[] langFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
-
-    if(langFiles != null) {
-      for (File langFile : langFiles) {
-        String name = langFile.getName().replace(".yml", "");
-        FileConfiguration configuration = YamlConfiguration.loadConfiguration(langFile);
-
-        Language lang = new Language(name, configuration);
-
-        for (MessageConfigNodes node : MessageConfigNodes.values()) {
-          if(!node.getDefaultValue().trim().equalsIgnoreCase("")) {
-            if(configuration.contains(node.getNode())) {
-              lang.addTranslation(node.getNode(), configuration.getString(node.getNode()));
-            }
-          }
-        }
-        TNE.debug("Loaded language: " + lang);
-        languages.put(name, lang);
-      }
-    }
+  public static TNE instance() {
+    return (TNE)instance;
   }
 
-  public boolean customCommand(CommandSender sender, String label, String[] arguments){
+  public TNEAPI api() {
+    return api;
+  }
+
+  public CommandManager getCommandManager() {
+    return commandManager;
+  }
+
+  public void registerCommand(String[] accessors, TNECommand command) {
+    commandManager.commands.put(accessors, command);
+    commandManager.registerCommands();
+  }
+
+  public void registerCommands(Map<String[], TNECommand> commands) {
+    commandManager.commands = commands;
+    commandManager.registerCommands();
+  }
+
+  public void unregisterCommand(String[] accessors) {
+    commandManager.unregister(accessors);
+  }
+
+  @Override
+  public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments) {
+    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.configurations().getString( "Core.Commands.Triggers", "main", "", "").split(",")));
+
+    if(!triggers.contains("/")) return false;
+    return customCommand(sender, label, arguments);
+  }
+
+  public boolean customCommand(CommandSender sender, String label, String[] arguments) {
+
     TNECommand ecoCommand = commandManager.Find(label);
     if(ecoCommand != null) {
       if(!ecoCommand.canExecute(sender)) {
@@ -383,12 +412,8 @@ public class TNE extends TNELib {
     return false;
   }
 
-  public static TNE instance() {
-    return (TNE)instance;
-  }
-
-  public net.tnemc.core.common.api.TNEAPI api() {
-    return api;
+  public static net.tnemc.core.common.configurations.ConfigurationManager configurations() {
+    return configurations;
   }
 
   public void registerEventList(EventList list) {
@@ -441,34 +466,53 @@ public class TNE extends TNELib {
     uuidCache.putAll(ids);
   }
 
+  public MainConfigurations main() {
+    return main;
+  }
+
+  public MessageConfigurations messages() {
+    return messages;
+  }
+
+  public FileConfiguration messageConfiguration() {
+    return messageConfigurations;
+  }
+
+  public FileConfiguration itemConfiguration() {
+    return itemConfigurations;
+  }
+
+  public FileConfiguration playerConfiguration() {
+    return playerConfigurations;
+  }
+
+  public FileConfiguration worldConfiguration() {
+    return worldConfigurations;
+  }
+
+  private void initializeConfigurations() {
+    items = new File(getDataFolder(), "items.yml");
+    messagesFile = new File(getDataFolder(), "messages.yml");
+    players = new File(getDataFolder(), "players.yml");
+    worlds = new File(getDataFolder(), "worlds.yml");
+    itemConfigurations = YamlConfiguration.loadConfiguration(items);
+    messageConfigurations = YamlConfiguration.loadConfiguration(messagesFile);
+    playerConfigurations = YamlConfiguration.loadConfiguration(players);
+    worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
+    loader.getModules().forEach((key, value)->{
+      value.getModule().initializeConfigurations();
+    });
+    try {
+      setConfigurationDefaults();
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+  }
+
   public static void debug(StackTraceElement[] stack) {
     for(StackTraceElement element : stack) {
       logger().warning(element.toString());
     }
-  }
-
-  public CommandManager getCommandManager() {
-    return commandManager;
-  }
-
-  public void registerCommand(String[] accessors, TNECommand command) {
-    commandManager.commands.put(accessors, command);
-    commandManager.registerCommands();
-  }
-
-
-  public void registerCommands(Map<String[], TNECommand> commands) {
-    commandManager.commands = commands;
-    commandManager.registerCommands();
-  }
-
-  public void unregisterCommand(String[] accessors) {
-    commandManager.unregister(accessors);
-  }
-
-  @Override
-  public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments) {
-    return customCommand(sender, label, arguments);
   }
 
   public static void debug(String message) {
@@ -493,7 +537,73 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    System.out.println(message);
+    //System.out.println(message);
+  }
+
+  public void loadConfigurations() {
+    loader.getModules().forEach((key, value)->{
+      value.getModule().loadConfigurations();
+    });
+    this.saveDefaultConfig();
+    if(!new File(getDataFolder(), "config.yml").exists()) {
+      getConfig().options().copyDefaults(true);
+    }
+    itemConfigurations.options().copyDefaults(true);
+    messageConfigurations.options().copyDefaults(true);
+    playerConfigurations.options().copyDefaults(true);
+    worldConfigurations.options().copyDefaults(true);
+    saveConfigurations(false);
+  }
+
+  private void saveConfigurations(boolean check) {
+    if(!check || !new File(getDataFolder(), "config.yml").exists() || configurations().changed.contains("config.yml")) {
+      saveConfig();
+    }
+    try {
+      loader.getModules().forEach((key, value)->{
+        value.getModule().saveConfigurations();
+      });
+      if(!check || !items.exists() || configurations().changed.contains(itemConfigurations.getName())) {
+        itemConfigurations.save(items);
+      }
+      if(!check || !messagesFile.exists() || configurations().changed.contains(messageConfigurations.getName())) {
+        messageConfigurations.save(messagesFile);
+      }
+      if(!check || !players.exists() || configurations().changed.contains(playerConfigurations.getName())) {
+        playerConfigurations.save(players);
+      }
+      if(!check || !worlds.exists() || configurations().changed.contains(worldConfigurations.getName())) {
+        worldConfigurations.save(worlds);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void setConfigurationDefaults() throws UnsupportedEncodingException {
+    Reader itemsStream = new InputStreamReader(this.getResource("items.yml"), "UTF8");
+    Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
+    Reader playersStream = new InputStreamReader(this.getResource("players.yml"), "UTF8");
+    Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
+    if (itemsStream != null && !items.exists()) {
+      YamlConfiguration config = YamlConfiguration.loadConfiguration(itemsStream);
+      itemConfigurations.setDefaults(config);
+    }
+
+    if (messagesStream != null && !messagesFile.exists()) {
+      YamlConfiguration config = YamlConfiguration.loadConfiguration(messagesStream);
+      messageConfigurations.setDefaults(config);
+    }
+
+    if (playersStream != null && !players.exists()) {
+      YamlConfiguration config = YamlConfiguration.loadConfiguration(playersStream);
+      playerConfigurations.setDefaults(config);
+    }
+
+    if (worldsStream != null && !worlds.exists()) {
+      YamlConfiguration config = YamlConfiguration.loadConfiguration(worldsStream);
+      worldConfigurations.setDefaults(config);
+    }
   }
 
   private void setupVault() {
@@ -521,14 +631,6 @@ public class TNE extends TNELib {
       }
     }
     return null;
-  }
-
-  public Map<String, Language> getLanguages() {
-    return languages;
-  }
-
-  public Language getLanguage(String name) {
-    return languages.get(name);
   }
 
   public Collection<WorldManager> getWorldManagers() {

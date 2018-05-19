@@ -217,7 +217,7 @@ public class CurrencyManager {
       WorldManager manager = new WorldManager(world);
       TNE.instance().addWorldManager(manager);
     }
-    loadCurrency(net.tnemc.core.configuration.ConfigurationManager.getConfigurationFile("worlds.yml"), true, world);
+    loadCurrency(TNE.instance().worldConfiguration(), true, world);
     WorldManager manager = TNE.instance().getWorldManager(world);
     for(TNECurrency currency : globalCurrencies.values()) {
       if(!globalDisabled.contains(currency.name())) {

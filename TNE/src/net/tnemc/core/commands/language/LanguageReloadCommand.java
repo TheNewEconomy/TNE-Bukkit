@@ -48,7 +48,7 @@ public class LanguageReloadCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    TNE.instance().loadLanguages();
+    TNE.instance().messages().loadLanguages();
     Message message = new Message("Messages.Language.Reload");
     message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);
     return true;

@@ -5,7 +5,6 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MaterialUtils;
-import net.tnemc.core.configuration.ConfigurationManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,7 +52,7 @@ public class ItemCalculations {
       BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
       String differenceString = difference.toPlainString();
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean consolidate = ConfigurationManager.getBoolean("config.yml", "Core.Server.Consolidate", WorldFinder.getWorld(account.identifier(), WorldVariant.CONFIGURATION), account.identifier().toString());
+      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(account.identifier(), WorldVariant.CONFIGURATION), account.identifier());
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
 
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
@@ -229,7 +228,7 @@ public class ItemCalculations {
 
       if(left.size() > 0) {
         TNE.debug("Some left overs of item: " + stack.getType());
-        for(Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
+        for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
           player.getWorld().dropItemNaturally(player.getLocation(), entry.getValue());
         }
       }

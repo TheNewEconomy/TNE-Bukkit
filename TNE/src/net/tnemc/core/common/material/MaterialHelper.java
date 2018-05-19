@@ -1,5 +1,6 @@
 package net.tnemc.core.common.material;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Material;
 
@@ -20,9 +21,9 @@ public class MaterialHelper {
 
   static {
     for(Material mat : Material.values()) {
-     //TODO: List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : new ArrayList<String>();
-      //String[] names = nameList.toArray(new String[nameList.size()]);
-      //validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
+      List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : new ArrayList<String>();
+      String[] names = nameList.toArray(new String[nameList.size()]);
+      validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
     }
     //TNE.debug("Materials Using: " + validNames.size());
   }

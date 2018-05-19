@@ -5,7 +5,6 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.configuration.ConfigurationManager;
 import org.bukkit.event.Listener;
 
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class MCMMOListener implements Listener {
   }
 
   public void onFishReward(final McMMOPlayerFishingTreasureEvent event) {
-    if(ConfigurationManager.getBoolean("config.yml", "Core.Server.McMMORewards")) {
+    if(TNE.instance().api().getBoolean("Core.Server.McMMORewards")) {
       String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
       Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, event.getTreasure());
       if (currency.isPresent()) event.setCancelled(true);

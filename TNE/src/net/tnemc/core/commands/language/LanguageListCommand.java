@@ -49,7 +49,7 @@ public class LanguageListCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Message message = new Message("Messages.Language.List");
-    message.addVariable("$languages", String.join(",", TNE.instance().getLanguages().keySet()) + " and Default");
+    message.addVariable("$languages", String.join(",", TNE.instance().messages().getLanguages().keySet()) + " and Default");
     message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);
     return true;
   }

@@ -1,7 +1,7 @@
 package net.tnemc.core.common;
 
 import com.github.tnerevival.user.IDFinder;
-import net.tnemc.core.configuration.ConfigurationManager;
+import net.tnemc.core.TNE;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -76,7 +76,7 @@ public class Message {
 
   public String grab(String world, CommandSender sender) {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
-    String found = ConfigurationManager.getString("messages.yml", this.node, true, world, id);
+    String found = TNE.instance().api().getString(this.node, world, id);
 
     String message = (found == null)? this.node : found;
     Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
@@ -109,7 +109,7 @@ public class Message {
   }
 
   public String[] format(String world, CommandSender sender, String id) {
-    String found = ConfigurationManager.getString("messages.yml", this.node, true, world, id);
+    String found = TNE.instance().api().getString(this.node, world, id);
 
     String[] message = (found == null)? new String[] { this.node } : found.split("<newline>");
     String[] formatted = new String[message.length];

@@ -11,7 +11,6 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.configuration.ConfigurationManager;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
@@ -71,7 +70,7 @@ public class ConnectionListener implements Listener {
 
     TNE.manager().addAccount(account);
     if(first) account.initializeHoldings(world);
-    if(ConfigurationManager.getBoolean("config.yml", "Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
+    if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
       String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
       if(TNE.instance().updater.getRelease().equals(ReleaseType.PRERELEASE)) {
         message = ChatColor.GREEN + "[TNE] Prerelease! Thank you for testing TNE Build: " + TNE.instance().updater.getCurrentBuild() + ".";
@@ -129,7 +128,7 @@ public class ConnectionListener implements Listener {
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
 
     boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null ||TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
-    if(!noEconomy && ConfigurationManager.getBoolean("config.yml", "Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
+    if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         WorldManager manager = TNE.instance().getWorldManager(world);
         TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("worldchange"));
@@ -143,7 +142,7 @@ public class ConnectionListener implements Listener {
         message.translate(world, player);
       }
       TNEAccount.getAccount(id.toString()).initializeHoldings(world);
-    } else if(!noEconomy && !ConfigurationManager.getBoolean("config.yml", "Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
+    } else if(!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
       TNEAccount.getAccount(id.toString()).initializeHoldings(world);
     }
 

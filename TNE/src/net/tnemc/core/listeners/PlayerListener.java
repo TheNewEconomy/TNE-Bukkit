@@ -9,7 +9,6 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
-import net.tnemc.core.configuration.ConfigurationManager;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
@@ -64,7 +63,7 @@ public class PlayerListener implements Listener {
 
     if(!noEconomy && event.getRightClicked() instanceof Player) {
 
-      Material actionMaterial = MaterialHelper.getMaterial(ConfigurationManager.getString("config.yml", "Core.Server.MenuMaterial", false, world, id.toString()));
+      Material actionMaterial = MaterialHelper.getMaterial(TNE.instance().api().getString("Core.Server.MenuMaterial"));
       Material material = player.getInventory().getItemInMainHand().getType();
 
       if(actionMaterial == null && material == null
@@ -181,7 +180,7 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onDeath(EntityDeathEvent event) {
-    if(ConfigurationManager.getBoolean("config.yml", "Core.Server.MobDrop")) {
+    if(TNE.instance().api().getBoolean("Core.Server.MobDrop")) {
       LivingEntity entity = event.getEntity();
       Player player = entity.getKiller();
       String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
@@ -207,7 +206,7 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onChat(AsyncPlayerChatEvent event) {
-    List<String> triggers = new ArrayList<>(Arrays.asList(ConfigurationManager.getString("config.yml", "Core.Commands.Triggers", false, event.getPlayer().getWorld().getName(), "").split(",")));
+    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.instance().api().getString( "Core.Commands.Triggers", event.getPlayer().getWorld().getName(), event.getPlayer().getUniqueId()).split(",")));
 
     if(triggers.contains(event.getMessage().charAt(0) + "")) {
       String[] parsed = event.getMessage().split(" ");

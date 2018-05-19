@@ -3,7 +3,6 @@ package net.tnemc.core.common.account;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.configuration.ConfigurationManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,7 +25,7 @@ public class WorldFinder {
       return TNE.instance().defaultWorld;
     }
     TNE.debug("=====END WorldFinder.getWorld =====");
-    if(!ConfigurationManager.getBoolean("config.yml", "Core.Multiworld")) return TNE.instance().defaultWorld;
+    if(!TNE.configurations().getBoolean("Core.Multiworld")) return TNE.instance().defaultWorld;
     String actualWorld = player.getWorld().getName();
 
     if(variant.equals(WorldVariant.BALANCE)) return TNE.instance().getWorldManager(actualWorld).getBalanceWorld();

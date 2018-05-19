@@ -3,9 +3,9 @@ package net.tnemc.core.common.module;
 import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.module.injectors.ModuleInjector;
-import net.tnemc.core.configuration.IConfigNode;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
 
@@ -27,6 +27,11 @@ import java.util.Map;
  * The base class for all TNE Modules.
  */
 public abstract class Module {
+
+  protected Map<Configuration, String> configurations = new HashMap<>();
+  protected Map<String, Object> mainConfigurations = new HashMap<>();
+  protected Map<String, String> messages = new HashMap<>();
+
   protected List<TNECommand> commands = new ArrayList<>();
   protected List<ModuleListener> listeners = new ArrayList<>();
 
@@ -90,11 +95,46 @@ public abstract class Module {
   }
 
   /**
-   * @return A map of configurations that this module wishes to use.
-   * The format is File Name.yml, Nodes
+   * Used to initialize any configuration files this module may use.
    */
-  public Map<String, IConfigNode[]> registerConfigurations() {
-    return new HashMap<>();
+  public void initializeConfigurations() {
+
+  }
+
+  /**
+   * Used to load any configuration files this module may use.
+   * This step is for initializing. the File, and YamlConfigurations classes.
+   */
+  public void loadConfigurations() {
+
+  }
+
+  /**
+   * Used to save any configuration files this module may use.
+   */
+  public void saveConfigurations() {
+
+  }
+
+  /**
+   * Returns a map of values that should be added to the MainConfigurations class.
+   */
+  public Map<String, Object> getMainConfigurations() {
+    return mainConfigurations;
+  }
+
+  /**
+   * Returns a map of values that should be added to the MessageConfigurations class.
+   */
+  public Map<String, String> getMessages() {
+    return messages;
+  }
+
+  /**
+   * Returns a map configuration files this module may use.
+   */
+  public Map<Configuration, String> getConfigurations() {
+    return configurations;
   }
 
   /**
