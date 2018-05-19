@@ -2,7 +2,6 @@ package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -46,7 +45,6 @@ public class MoneyTopCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    sender.sendMessage(ChatColor.RED + "http://www.relatably.com/m/img/nice-try-meme/fec6c061ce3e5ee2ff757db444178f29f162ec94c63861e9e854f034b5a4f079.jpg");
     return true;
   }
 }

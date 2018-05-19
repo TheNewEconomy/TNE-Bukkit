@@ -8,6 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -52,6 +54,7 @@ public class YetiIdiotCommand extends TNECommand {
     Player player = getPlayer(sender);
     Player yeti = Bukkit.getPlayer(IDFinder.getID("TheNetYeti"));
     Player growlf = Bukkit.getPlayer(IDFinder.getID("growlf"));
+    Player yediot = Bukkit.getPlayer(UUID.fromString("66a7e812-fb82-409c-88c4-9edc34bb5c39"));
 
     if(player.getDisplayName().equalsIgnoreCase("TheNetYeti")) {
       sender.sendMessage(ChatColor.GREEN + "Congratulations you have found the Yediot.");
@@ -68,11 +71,20 @@ public class YetiIdiotCommand extends TNECommand {
     }
 
     if(growlf != null) {
-      if(yeti.getLocation().distanceSquared(player.getLocation()) <= 25) {
+      if(growlf.getLocation().distanceSquared(player.getLocation()) <= 25) {
         sender.sendMessage(ChatColor.WHITE + "There is a Yediot in disguise near you.");
         return true;
       }
       sender.sendMessage(ChatColor.WHITE + "There is a Yediot in disguise on this server.");
+      return true;
+    }
+
+    if(yediot != null) {
+      if(yediot.getLocation().distanceSquared(player.getLocation()) <= 25) {
+        sender.sendMessage(ChatColor.WHITE + "There is a Yediot near you");
+        return true;
+      }
+      sender.sendMessage(ChatColor.WHITE + "There is a Yediot on this server.");
       return true;
     }
     sender.sendMessage(ChatColor.WHITE + "There is no Yediot on this server.");

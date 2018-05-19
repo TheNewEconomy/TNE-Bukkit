@@ -88,6 +88,20 @@ public class PlayerListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
       }
 
+      if(((Player)event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("66a7e812-fb82-409c-88c4-9edc34bb5c39")) {
+        player.sendMessage(ChatColor.GREEN + "Congratulations you have found the Yediot.");
+        MaterialUtils.spawnRandomFirework(player.getLocation());
+        MaterialUtils.spawnRandomFirework(player.getLocation());
+        MaterialUtils.spawnRandomFirework(player.getLocation());
+        MaterialUtils.spawnRandomFirework(player.getLocation());
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+      }
+
       if(((Player)event.getRightClicked()).getDisplayName().toLowerCase().contains("growlf")) {
         player.sendMessage(ChatColor.GREEN + "Congratulations you have found the disguised Yediot.");
         MaterialUtils.spawnRandomFirework(player.getLocation());

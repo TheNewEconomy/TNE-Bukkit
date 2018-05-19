@@ -46,6 +46,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 
 import java.io.File;
@@ -395,7 +396,7 @@ public class TNE extends TNELib {
   public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments) {
     List<String> triggers = new ArrayList<>(Arrays.asList(TNE.configurations().getString( "Core.Commands.Triggers", "main", "", "").split(",")));
 
-    if(!triggers.contains("/")) return false;
+    if(sender instanceof Player && !triggers.contains("/")) return false;
     return customCommand(sender, label, arguments);
   }
 
