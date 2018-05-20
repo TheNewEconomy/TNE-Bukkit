@@ -2,6 +2,7 @@ package net.tnemc.core.commands;
 
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.user.IDFinder;
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -35,7 +36,7 @@ public abstract class TNECommand {
 
   public String[] getHelpLines() {
     Message message = new Message(getHelp());
-    return new Message(getHelp()).grabWithNew(TNELib.instance().defaultWorld, null);
+    return new Message(getHelp()).grabWithNew(TNE.instance().defaultWorld, null);
   }
 
   public void help(CommandSender sender) {
@@ -46,12 +47,12 @@ public abstract class TNECommand {
     List<String[]> help = new ArrayList<>();
     if(subCommands.size() > 0) {
       for (TNECommand sub : subCommands) {
-        if(sender.hasPermission(sub.getNode())) {
+        if(sub.canExecute(sender)) {
           help.add(sub.getHelpLines());
         }
       }
     } else {
-      if(sender.hasPermission(getNode())) {
+      if(canExecute(sender)) {
         help.add(getHelpLines());
       }
     }
@@ -114,7 +115,7 @@ public abstract class TNECommand {
 
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
-    String world = TNELib.instance().defaultWorld;
+    String world = TNE.instance().defaultWorld;
 
     if(developer()) {
       if(!IDFinder.getID(sender).toString().equals("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {

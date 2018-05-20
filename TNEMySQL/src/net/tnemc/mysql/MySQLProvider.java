@@ -618,10 +618,10 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
-  public int idsLength() {
-    String idTable = manager.getPrefix() + "_ECOIDS";
-    int index = mysql().executeQuery("SELECT count(*) FROM " + idTable + ";");
-
+  public int balanceCount(String world, String currency, int limit) {
+    String balanceTable = manager.getPrefix() + "_BALANCES";
+    int index = mysql().executePreparedQuery("SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;",
+        new Object[] { world, currency });
     int count = 0;
     try {
       while(mysql().results(index).next()) {
@@ -630,24 +630,36 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(index);
     } catch (SQLException e) {
       e.printStackTrace();
+    }
+    if(count > 0) {
+      return (int)Math.ceil(count / limit);
     }
     return count;
   }
 
+  //Page 1 = 1 -> 10
+  //Page 2 = 11 -> 20
+  //Page 3 = 21 -> 30
+  //Page 4 = 30 -> 39
   @Override
-  public int usersLength() {
-    String userTable = manager.getPrefix() + "_USERS";
-    int index = mysql().executeQuery("SELECT count(*) FROM " + userTable + ";");
+  public Map<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) {
+    Map<UUID, BigDecimal> balances = new HashMap<>();
 
-    int count = 0;
+    String balanceTable = manager.getPrefix() + "_BALANCES";
+
+    int start = (page == 1)? 1 : ((page - 1) * limit) + 1;
+
+    int index = mysql().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;",
+        new Object[] { world, currency, start, limit });
     try {
-      while(mysql().results(index).next()) {
-        count = mysql().results(index).getInt(1);
+      while (mysql().results(index).next()) {
+        balances.put(UUID.fromString(mysql().results(index).getString("uuid")), new BigDecimal(mysql().results(index).getString("balance")));
       }
       mysql().closeResult(index);
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return count;
+
+    return balances;
   }
 }
