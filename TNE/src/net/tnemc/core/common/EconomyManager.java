@@ -1,10 +1,9 @@
 package net.tnemc.core.common;
 
 import com.github.tnerevival.core.collection.EventMap;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.utils.TopBalance;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
@@ -13,12 +12,9 @@ import org.bukkit.Bukkit;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.UUID;
 
 /**
@@ -135,28 +131,6 @@ public class EconomyManager {
         it.remove();
       }
     }
-  }
-
-  public LinkedHashSet<Object> parseTop(String currency, String world, Integer limit, Integer page) {
-    LinkedHashSet<Object> finalBalances = new LinkedHashSet<>();
-    TreeMap<Double, List<String>> ordered = new TreeMap<>(Collections.reverseOrder());
-
-    for(TNEAccount account : accounts.values()) {
-      Double balance = account.addAll(world).doubleValue();
-      List<String> usernames = (ordered.containsKey(balance))? ordered.get(balance) : new ArrayList<>();
-      usernames.add(account.displayName());
-      ordered.put(balance, usernames);
-    }
-
-    parse:
-    for(Map.Entry<Double, List<String>> entry : ordered.entrySet()) {
-      if(finalBalances.size() >= limit) break;
-      for(String username : entry.getValue()) {
-        if(finalBalances.size() >= limit) break parse;
-        finalBalances.add(new TopBalance(username, entry.getKey()));
-      }
-    }
-    return finalBalances;
   }
 
   public Collection<TNEAccount> parsePlayerArgument(String argument) {

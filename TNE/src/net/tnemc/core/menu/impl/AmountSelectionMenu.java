@@ -1,7 +1,7 @@
 package net.tnemc.core.menu.impl;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.icons.Icon;
 import net.tnemc.core.menu.icons.amountselection.AddIcon;

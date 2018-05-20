@@ -1,6 +1,5 @@
 package net.tnemc.core.commands.admin;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
@@ -8,6 +7,7 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 

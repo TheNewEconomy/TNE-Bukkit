@@ -1,10 +1,10 @@
 package net.tnemc.core.listeners;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
@@ -204,7 +204,7 @@ public class PlayerListener implements Listener {
 
         while (it.hasNext()) {
           ItemStack stack = it.next();
-          System.out.println("Material: " + stack.getType().name());
+          TNE.debug("Material: " + stack.getType().name());
 
           if (stack != null) {
             Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);

@@ -1,7 +1,7 @@
 package net.tnemc.core.common.configurations;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.api.IDFinder;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

@@ -1,9 +1,9 @@
 package net.tnemc.core.commands;
 
 import com.github.tnerevival.TNELib;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
+import net.tnemc.core.common.api.IDFinder;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

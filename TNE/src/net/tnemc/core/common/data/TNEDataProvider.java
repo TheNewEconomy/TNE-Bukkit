@@ -2,17 +2,18 @@ package net.tnemc.core.common.data;
 
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DataProvider;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -54,8 +55,12 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract void saveTransaction(TNETransaction transaction);
   public abstract void deleteTransaction(UUID id);
   public abstract String nullAccounts();
+  //balances
   public abstract int balanceCount(String world, String currency, int limit);
-  public abstract Map<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page);
+  public abstract LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page);
+  //transactions
+  public abstract int transactionCount(UUID recipient, String world, String type, String time, int limit);
+  public abstract LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page);
 
   public void preLoad(Double version) {
 

@@ -1,6 +1,5 @@
 package net.tnemc.core.common.api;
 
-import com.github.tnerevival.user.IDFinder;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.tnemc.core.TNE;

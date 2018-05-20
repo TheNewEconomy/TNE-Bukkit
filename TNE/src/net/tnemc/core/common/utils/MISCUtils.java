@@ -1,10 +1,10 @@
 package net.tnemc.core.common.utils;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -141,7 +141,7 @@ public class MISCUtils {
 
   public static boolean hasAccount(UUID id) {
     for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
-      System.out.println(id.toString() + " == " + tneAccount.identifier().toString());
+      TNE.debug(id.toString() + " == " + tneAccount.identifier().toString());
       if(tneAccount.identifier().toString().equalsIgnoreCase(id.toString())) return true;
     }
     return false;

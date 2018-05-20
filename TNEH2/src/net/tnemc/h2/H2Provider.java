@@ -24,6 +24,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -642,14 +644,15 @@ public class H2Provider extends TNEDataProvider {
   //Page 3 = 21 -> 30
   //Page 4 = 30 -> 39
   @Override
-  public Map<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) {
-    Map<UUID, BigDecimal> balances = new HashMap<>();
+  public LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) {
+    LinkedHashMap<UUID, BigDecimal> balances = new LinkedHashMap<>();
 
     String balanceTable = manager.getPrefix() + "_BALANCES";
 
-    int start = (page == 1)? 1 : ((page - 1) * limit) + 1;
+    int start = 1;
+    if(page > 1) start = ((page - 1) * limit) + 1;
 
-    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;",
+    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance + 0 DESC LIMIT ?,?;",
         new Object[] { world, currency, start, limit });
     try {
       while (h2().results(index).next()) {
@@ -669,5 +672,86 @@ public class H2Provider extends TNEDataProvider {
       h2().executeUpdate(table);
     });
     h2().close(manager);
+  }
+
+  @Override
+  public int transactionCount(UUID recipient, String world, String type, String time, int limit) {
+    StringBuilder queryBuilder = new StringBuilder();
+    LinkedList<Object> values = new LinkedList<>();
+    queryBuilder.append("SELECT count(*) FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_recipient = ?");
+    values.add(recipient.toString());
+    if(!world.equalsIgnoreCase("all")) {
+      queryBuilder.append(" AND trans_world = ?");
+      values.add(world);
+    }
+
+    if(!type.equalsIgnoreCase("all") && TNE.transactionManager().getType(type.toLowerCase()) != null) {
+      queryBuilder.append(" AND trans_type = ?");
+      values.add(type);
+    }
+
+    if(!time.equalsIgnoreCase("all")) {
+      queryBuilder.append(" AND trans_time >= ?");
+      values.add(time);
+    }
+
+    int index = h2().executePreparedQuery(queryBuilder.toString(), values.toArray());
+    int count = 0;
+    try {
+      while(h2().results(index).next()) {
+        count = h2().results(index).getInt(1);
+      }
+      h2().closeResult(index);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    if(count > 0) {
+      return (int)Math.ceil(count / limit);
+    }
+    return count;
+  }
+
+  @Override
+  public LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page) {
+    LinkedHashMap<UUID, TNETransaction> transactions = new LinkedHashMap<>();
+
+    StringBuilder queryBuilder = new StringBuilder();
+    LinkedList<Object> values = new LinkedList<>();
+    queryBuilder.append("SELECT trans_id FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_recipient = ?");
+    values.add(recipient.toString());
+    if(!world.equalsIgnoreCase("all")) {
+      queryBuilder.append(" AND trans_world = ?");
+      values.add(world);
+    }
+
+    if(!type.equalsIgnoreCase("all") && TNE.transactionManager().getType(type.toLowerCase()) != null) {
+      queryBuilder.append(" AND trans_type = ?");
+      values.add(type);
+    }
+
+    if(!time.equalsIgnoreCase("all")) {
+      queryBuilder.append(" AND trans_time >= ?");
+      values.add(time);
+    }
+
+
+    int start = 1;
+    if(page > 1) start = ((page - 1) * limit) + 1;
+    queryBuilder.append(" ORDER BY trans_time DESC LIMIT ?,?;");
+    values.add(start);
+    values.add(limit);
+
+    int index = h2().executePreparedQuery(queryBuilder.toString(), values.toArray());
+    try {
+      while (h2().results(index).next()) {
+        UUID id = UUID.fromString(h2().results(index).getString("trans_id"));
+        transactions.put(id, loadTransaction(id));
+      }
+      h2().closeResult(index);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return transactions;
   }
 }

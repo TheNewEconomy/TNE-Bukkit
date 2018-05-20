@@ -5,7 +5,6 @@ import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.collection.EventList;
 import com.github.tnerevival.core.collection.EventMap;
-import com.github.tnerevival.user.IDFinder;
 import net.milkbowl.vault.economy.Economy;
 import net.tnemc.core.commands.CommandManager;
 import net.tnemc.core.commands.TNECommand;
@@ -24,6 +23,7 @@ import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.Economy_TheNewEconomy;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
 import net.tnemc.core.common.configurations.MainConfigurations;
@@ -540,7 +540,7 @@ public class TNE extends TNELib {
     int mil = now.get(ChronoField.MILLI_OF_SECOND);
     String time = "[" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + mil + "] ";
     if(consoleDebug) {
-      System.out.println(message);
+      TNE.debug(message);
     } else {
       try {
         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt"), true));
@@ -551,7 +551,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    //System.out.println(message);
+    //TNE.debug(message);
   }
 
   public void loadConfigurations() {

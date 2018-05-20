@@ -3,7 +3,11 @@ package net.tnemc.core.common.account.history;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.transaction.TNETransaction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -44,10 +48,11 @@ public class AccountHistory {
   }
 
   public void populateAway(long time) {
-    worldHistory.forEach((world, history)-> {
-      history.getTransactions().forEach((id)->{
-        final TNETransaction trans = TNE.transactionManager().get(id);
-        if(trans.time() > time) logAway(id);
+
+    worldHistory.forEach((world, history)->{
+      int count = TNE.saveManager().getTNEManager().getTNEProvider().transactionCount(id, world, "all", time + "", 10);
+      TNE.saveManager().getTNEManager().getTNEProvider().transactionHistory(id, world, "all", time + "", count * 10, 1).forEach((id, transaction)->{
+        logAway(id);
       });
     });
   }

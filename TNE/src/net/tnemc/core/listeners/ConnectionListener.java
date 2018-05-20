@@ -1,13 +1,13 @@
 package net.tnemc.core.listeners;
 
 import com.github.tnerevival.core.version.ReleaseType;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.transaction.TNETransaction;

@@ -1,9 +1,9 @@
 package net.tnemc.core.menu.impl;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.icons.curselection.CurrencyIcon;

@@ -1,8 +1,8 @@
 package net.tnemc.core.menu.icons;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
+import net.tnemc.core.common.api.IDFinder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

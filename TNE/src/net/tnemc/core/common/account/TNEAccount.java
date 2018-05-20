@@ -1,8 +1,8 @@
 package net.tnemc.core.common.account;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.history.AccountHistory;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.module.injectors.InjectMethod;

@@ -8,10 +8,11 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -68,18 +69,20 @@ public class MoneyTopCommand extends TNECommand {
     }
     
     int max = TNE.saveManager().getTNEManager().getTNEProvider().balanceCount(world, currency.name(), limit);
+    if(max == 0) max = 1;
 
     if(page > max) page = max;
     TNE.debug("MoneyTopCommand.java(87): Max Pages - " + max);
 
-    Map<UUID, BigDecimal> values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
+    LinkedHashMap<UUID, BigDecimal> values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
 
     Message top = new Message("Messages.Money.Top");
     top.addVariable("$page", page + "");
     top.addVariable("$page_top", max + "");
     top.translate(world, sender);
-    for (Map.Entry<UUID, BigDecimal> entry : values.entrySet()) {
-      String username = (Bukkit.getOfflinePlayer(entry.getKey()) != null)? Bukkit.getOfflinePlayer(entry.getKey()).getName() : TNE.manager().getAccount(entry.getKey()).displayName();
+    Iterator<Map.Entry<UUID, BigDecimal>> it = values.entrySet().iterator();
+    while(it.hasNext()) {
+      Map.Entry<UUID, BigDecimal> entry = it.next();
       sender.sendMessage(TNE.manager().getAccount(entry.getKey()).displayName() + " has " + CurrencyFormatter.format(currency, world, entry.getValue()));
     }
     return true;

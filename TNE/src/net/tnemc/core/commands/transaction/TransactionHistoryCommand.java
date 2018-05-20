@@ -1,21 +1,18 @@
 package net.tnemc.core.commands.transaction;
 
-import com.github.tnerevival.core.collection.paginate.Page;
-import com.github.tnerevival.core.collection.paginate.Paginator;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -92,35 +89,33 @@ public class TransactionHistoryCommand extends TNECommand {
       type = parsed.get("type");
     }
     UUID id = IDFinder.getID(player);
-    List<UUID> history = TNE.manager().getAccount(IDFinder.getID(player)).getHistory().getHistroy(world);
-    if(history.size() > 0) {
-      Paginator paginator = new Paginator(new ArrayList<>(history), 5);
+    int max = TNE.saveManager().getTNEManager().getTNEProvider().transactionCount(id, world, type, "all", 10);
+    if(max == 0) max = 1;
+    if (page > max) page = max;
+    LinkedHashMap<UUID, TNETransaction> history = TNE.saveManager().getTNEManager().getTNEProvider().transactionHistory(id, world, type, "all", 10, page);
 
-      if (page > paginator.getMaxPages()) page = paginator.getMaxPages();
-      Page p = paginator.getPage(page);
-
-      Message transactions = new Message("Messages.Transaction.History");
-      transactions.addVariable("$page", page + "");
-      transactions.addVariable("$page_top", paginator.getMaxPages() + "");
-      transactions.translate(world, sender);
-
-      for(Object obj : p.getElements()) {
-        if(obj != null && obj instanceof UUID) {
-          TNETransaction transaction = TNE.transactionManager().get((UUID)obj);
-          String initiator = (transaction.initiator() == null)? "N/A" : IDFinder.getUsername(transaction.initiator());
-          String recipient = (transaction.recipient() == null)? "N/A" : IDFinder.getUsername(transaction.recipient());
-
-          Message entry = new Message("Messages.Transaction.HistoryEntry");
-          entry.addVariable("$id", transaction.transactionID().toString());
-          entry.addVariable("$type", transaction.type().name());
-          entry.addVariable("$initiator", initiator);
-          entry.addVariable("$recipient", recipient);
-          entry.translate(world, sender);
-        }
-      }
-      return true;
+    if(history.size() == 0) {
+      new Message("Messages.Account.NoTransactions").translate(world, sender);
+      return false;
     }
-    new Message("Messages.Account.NoTransactions").translate(world, player);
-    return false;
+
+
+    Message transactions = new Message("Messages.Transaction.History");
+    transactions.addVariable("$page", page + "");
+    transactions.addVariable("$page_top", max + "");
+    transactions.translate(world, sender);
+
+    for(TNETransaction transaction : history.values()) {
+      String initiator = (transaction.initiator() == null || IDFinder.getUsername(transaction.initiator()) == null)? "N/A" : IDFinder.getUsername(transaction.initiator());
+      String recipient = (transaction.recipient() == null || IDFinder.getUsername(transaction.recipient()) == null)? "N/A" : IDFinder.getUsername(transaction.recipient());
+
+      Message entry = new Message("Messages.Transaction.HistoryEntry");
+      entry.addVariable("$id", transaction.transactionID().toString());
+      entry.addVariable("$type", transaction.type().name());
+      entry.addVariable("$initiator", initiator);
+      entry.addVariable("$recipient", recipient);
+      entry.translate(world, sender);
+    }
+    return true;
   }
 }

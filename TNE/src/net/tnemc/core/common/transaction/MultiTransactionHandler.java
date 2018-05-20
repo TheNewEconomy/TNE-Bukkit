@@ -1,8 +1,8 @@
 package net.tnemc.core.common.transaction;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
@@ -60,7 +60,8 @@ public class MultiTransactionHandler {
 
   public void sendMessages() {
     data.getMessages().forEach((uuid, message)->{
-      if(IDFinder.getPlayer(uuid.toString()) != null) {
+      if(uuid.toString().equalsIgnoreCase(getInitiator().identifier().toString()) ||
+         IDFinder.getPlayer(uuid.toString()) != null) {
         String playerVariable = (uuid.equals(getInitiator().identifier()))? String.join(", ", data.getSucceed())
                                 : getInitiator().displayName();
         Message msg = new Message(message);

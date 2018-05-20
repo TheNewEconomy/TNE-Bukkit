@@ -1,7 +1,7 @@
 package net.tnemc.core.menu.icons.amountselection;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,6 +1,5 @@
 package net.tnemc.core.common.api;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -14,7 +13,11 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
