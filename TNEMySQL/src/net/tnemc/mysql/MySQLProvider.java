@@ -282,6 +282,14 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
+  public void createTables(List<String> tables) {
+    tables.forEach((table)->{
+      mysql().executeUpdate(table);
+    });
+    mysql().close(manager);
+  }
+
+  @Override
   public void saveID(String username, UUID id) {
     if(username == null) {
       System.out.println("Attempted saving id with null display name.");

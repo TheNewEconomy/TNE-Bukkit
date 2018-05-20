@@ -662,4 +662,12 @@ public class H2Provider extends TNEDataProvider {
 
     return balances;
   }
+
+  @Override
+  public void createTables(List<String> tables) {
+    tables.forEach((table)->{
+      h2().executeUpdate(table);
+    });
+    h2().close(manager);
+  }
 }

@@ -37,6 +37,8 @@ public abstract class TNEDataProvider extends DataProvider {
   public void saveIDS(Map<String, UUID> ids) {
 
   }
+
+  public abstract void createTables(List<String> tables);
   public abstract void saveID(String username, UUID id);
   public abstract void removeID(String username);
   public abstract void removeID(UUID id);

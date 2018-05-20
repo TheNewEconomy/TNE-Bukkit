@@ -300,6 +300,10 @@ public class TNE extends TNELib {
     TNE.debug("Initializing Save Manager.");
     saveManager().initialize();
 
+    loader.getModules().forEach((key, value)->{
+      value.getModule().getTables().forEach((type, tables)->saveManager().registerTables(type, tables));
+    });
+
     TNE.debug("Calling Modules.enableSave");
     loader.getModules().forEach((key, value)->{
       value.getModule().enableSave(saveManager());
@@ -326,6 +330,15 @@ public class TNE extends TNELib {
         TNE.debug("Registering Listener");
       });
     });
+
+    loader.getModules().forEach((key, value)->
+        value.getModule().postLoad(this)
+    );
+    loader.getModules().forEach((key, value)->
+        value.getModule().registerMenus(this).forEach((name, menu)->{
+          menuManager.menus.put(name, menu);
+        })
+    );
 
 
     //Metrics

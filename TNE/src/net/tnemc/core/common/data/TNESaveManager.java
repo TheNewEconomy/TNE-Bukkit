@@ -5,6 +5,11 @@ import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.TNE;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -14,6 +19,8 @@ import net.tnemc.core.TNE;
  * Created by Daniel on 8/29/2017.
  */
 public class TNESaveManager extends SaveManager {
+
+  private Map<String, List<String>> dataTables = new HashMap<>();
 
   public TNESaveManager(DataManager manager) {
     super(manager);
@@ -31,6 +38,9 @@ public class TNESaveManager extends SaveManager {
       manager.getDb().initialize();
       return;
     }
+
+    getTNEManager().getTNEProvider().createTables(getTables(getTNEManager().getTNEProvider().identifier()));
+
     TNE.debug("Manager Version Null: " + (manager.getDb().version() == null));
     saveVersion = manager.getDb().version();
     TNE.instance().getLogger().info("Save file of version: " + saveVersion + " detected.");
@@ -55,6 +65,17 @@ public class TNESaveManager extends SaveManager {
     getTNEManager().getTNEProvider().save(TNELib.instance().currentSaveVersion);
     TNELib.instance().getLogger().info("Null Account Count: " + getTNEManager().getTNEProvider().nullAccounts());
     TNELib.instance().getLogger().info("Finished saving data!");
+  }
+
+  public void registerTables(String type, List<String> tables) {
+    dataTables.put(type, tables);
+  }
+
+  public List<String> getTables(String type) {
+    if(dataTables.containsKey(type)) {
+      return dataTables.get(type);
+    }
+    return new ArrayList<>();
   }
 
   public TNEDataManager getTNEManager() {

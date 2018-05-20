@@ -8,6 +8,7 @@ import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.module.injectors.ModuleInjector;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
+import net.tnemc.core.menu.Menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,6 +150,18 @@ public abstract class Module {
    */
   public List<ModuleListener> getListeners(TNE pluginInstance) {
     return listeners;
+  }
+
+  /**
+   * @return Returns a list of tables that this module requires.
+   * Format is <Database Type, List of table creation queries.
+   */
+  public Map<String, List<String>> getTables() {
+    return new HashMap<>();
+  }
+
+  public Map<String, Menu> registerMenus(TNE pluginInstance) {
+    return new HashMap<>();
   }
 
   /**
