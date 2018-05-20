@@ -9,7 +9,13 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -46,8 +52,8 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract void saveTransaction(TNETransaction transaction);
   public abstract void deleteTransaction(UUID id);
   public abstract String nullAccounts();
-  public abstract int idsLength();
-  public abstract int usersLength();
+  public abstract int balanceCount(String world, String currency, int limit);
+  public abstract Map<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page);
 
   public void preLoad(Double version) {
 

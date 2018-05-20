@@ -11,7 +11,15 @@ import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -129,7 +137,7 @@ public class EconomyManager {
     }
   }
 
-  public LinkedHashSet<Object> parseTop(String currency, String world, Integer limit) {
+  public LinkedHashSet<Object> parseTop(String currency, String world, Integer limit, Integer page) {
     LinkedHashSet<Object> finalBalances = new LinkedHashSet<>();
     TreeMap<Double, List<String>> ordered = new TreeMap<>(Collections.reverseOrder());
 

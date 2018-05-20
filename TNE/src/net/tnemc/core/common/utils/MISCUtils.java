@@ -121,14 +121,16 @@ public class MISCUtils {
 
     accounts.forEach((username) -> {
       String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
+      if(reformattedUsername.equalsIgnoreCase("server account")) reformattedUsername = TNE.instance().consoleName;
       UUID id = IDFinder.getID(reformattedUsername);
       TNEAccount account = new TNEAccount(id, reformattedUsername);
       Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);
       worlds.forEach((world) -> {
         Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
         currencies.forEach((currency) -> {
+          String finalCurrency = (currency.equalsIgnoreCase("default"))? TNE.manager().currencyManager().get(world).name() : currency;
           String balance = original.getString("Accounts." + username + ".Balances." + world + "." + currency);
-          account.setHoldings(world, currency, new BigDecimal(balance));
+          account.setHoldings(world, finalCurrency, new BigDecimal(balance));
         });
       });
       TNE.manager().addAccount(account);
