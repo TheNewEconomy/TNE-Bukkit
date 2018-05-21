@@ -652,7 +652,7 @@ public class H2Provider extends TNEDataProvider {
     int start = 1;
     if(page > 1) start = ((page - 1) * limit) + 1;
 
-    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance + 0 DESC LIMIT ?,?;",
+    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY cast(balance as number) DESC LIMIT ?,?;",
         new Object[] { world, currency, start, limit });
     try {
       while (h2().results(index).next()) {
