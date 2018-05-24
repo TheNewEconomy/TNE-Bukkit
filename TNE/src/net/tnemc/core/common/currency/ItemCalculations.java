@@ -8,6 +8,7 @@ import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -188,12 +189,16 @@ public class ItemCalculations {
   }
 
   public static BigDecimal getCurrencyItems(TNEAccount account, TNECurrency currency) {
+    return getCurrencyItems(account, currency, null);
+  }
+
+  public static BigDecimal getCurrencyItems(TNEAccount account, TNECurrency currency, PlayerInventory inventory) {
     TNE.debug("=====START ItemCalculations.getCurrencyItems =====");
     BigDecimal value = BigDecimal.ZERO;
     if(currency.isItem()) {
       Player player = account.getPlayer();
       for(TNETier tier : currency.getTNEMajorTiers().values()) {
-        value = value.add(new BigDecimal(MaterialUtils.getCount(player, tier.getItemInfo()) * tier.weight()));
+        value = value.add(new BigDecimal(MaterialUtils.getCount(player, tier.getItemInfo(), inventory) * tier.weight()));
       }
 
       for(TNETier tier : currency.getTNEMinorTiers().values()) {

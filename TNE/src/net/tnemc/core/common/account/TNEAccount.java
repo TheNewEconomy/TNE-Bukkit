@@ -13,6 +13,7 @@ import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -169,6 +170,10 @@ public class TNEAccount implements Account {
   }
 
   public void saveItemCurrency(String world, boolean save) {
+    saveItemCurrency(world, save, null);
+  }
+
+  public void saveItemCurrency(String world, boolean save, PlayerInventory inventory) {
     TNE.debug("saveItemCurrency for world : " + world + " Save: " + save);
     List<String> currencies = TNE.instance().getWorldManager(world).getItemCurrencies();
     WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
@@ -176,7 +181,7 @@ public class TNEAccount implements Account {
     currencies.forEach((currency)->{
       TNE.debug("Currency: " + currency);
       TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-      worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(this, cur));
+      worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(this, cur, inventory));
     });
     holdings.put(world, worldHoldings);
     if(save) TNE.manager().addAccount(this);

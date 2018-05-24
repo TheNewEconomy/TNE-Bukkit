@@ -10,7 +10,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -129,6 +131,23 @@ public class MaterialUtils {
 
     Integer value = 0;
     for(ItemStack stack : player.getInventory().getContents()) {
+      if(itemsEqual(info.toStack(), stack)) {
+        value += stack.getAmount();
+      }
+    }
+    TNE.debug("===== END MaterialUtils.getCount =====");
+    return value;
+  }
+
+  public static Integer getCount(Player player, ItemTier info, PlayerInventory inventory) {
+    TNE.debug("===== START MaterialUtils.getCount =====");
+    if(player == null) TNE.debug("Player is null");
+    if(info == null) TNE.debug("info is null");
+    Inventory inv = (inventory == null)? player.getInventory() : inventory;
+    if(inv == null) TNE.debug("Player Inventory is null");
+
+    Integer value = 0;
+    for(ItemStack stack : inv.getContents()) {
       if(itemsEqual(info.toStack(), stack)) {
         value += stack.getAmount();
       }
