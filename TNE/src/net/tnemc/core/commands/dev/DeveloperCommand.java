@@ -16,7 +16,6 @@ public class DeveloperCommand extends TNECommand {
   public DeveloperCommand(TNE plugin) {
     super(plugin);
     subCommands.add(new DeveloperDebugCommand(plugin));
-    subCommands.add(new DeveloperWorldCommand(plugin));
   }
 
   @Override
