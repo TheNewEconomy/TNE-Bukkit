@@ -1,9 +1,15 @@
 package net.tnemc.conversion;
 
-import com.github.tnerevival.user.IDFinder;
-import net.tnemc.conversion.impl.*;
+import net.tnemc.conversion.impl.BConomy;
+import net.tnemc.conversion.impl.BOSEconomy;
+import net.tnemc.conversion.impl.CraftConomy;
+import net.tnemc.conversion.impl.Essentials;
+import net.tnemc.conversion.impl.FeConomy;
+import net.tnemc.conversion.impl.MineConomy;
+import net.tnemc.conversion.impl.iConomy;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,7 +38,7 @@ public class ConversionModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
-    tne.logger().info("Conversion Module loaded!");
+    tne.getLogger().info("Conversion Module loaded!");
     mainConfigurations.put("Core.Conversion.Convert", false);
     mainConfigurations.put("Core.Conversion.Name", "iConomy");
     mainConfigurations.put("Core.Conversion.Format", "MySQL");

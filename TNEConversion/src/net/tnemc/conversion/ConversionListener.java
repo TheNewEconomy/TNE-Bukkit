@@ -1,8 +1,8 @@
 package net.tnemc.conversion;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import org.bukkit.event.EventHandler;
