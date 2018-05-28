@@ -1,11 +1,37 @@
 package net.tnemc.conversion;
 
+import net.tnemc.conversion.impl.AdvancedEconomy;
 import net.tnemc.conversion.impl.BConomy;
+import net.tnemc.conversion.impl.BEconomy;
 import net.tnemc.conversion.impl.BOSEconomy;
+import net.tnemc.conversion.impl.BasicEconomy;
+import net.tnemc.conversion.impl.Blings;
 import net.tnemc.conversion.impl.CraftConomy;
+import net.tnemc.conversion.impl.DevCoinSystem;
+import net.tnemc.conversion.impl.ECEconomy;
+import net.tnemc.conversion.impl.EasyCoins;
+import net.tnemc.conversion.impl.EcoPlugin;
+import net.tnemc.conversion.impl.EcoSystem;
+import net.tnemc.conversion.impl.EconomyAPI;
 import net.tnemc.conversion.impl.Essentials;
 import net.tnemc.conversion.impl.FeConomy;
+import net.tnemc.conversion.impl.FeatherEconomy;
+import net.tnemc.conversion.impl.GemsEconomy;
+import net.tnemc.conversion.impl.Meep;
+import net.tnemc.conversion.impl.Meller;
+import net.tnemc.conversion.impl.MineCoin;
+import net.tnemc.conversion.impl.MineCoinsYML;
 import net.tnemc.conversion.impl.MineConomy;
+import net.tnemc.conversion.impl.MinetopiaEconomy;
+import net.tnemc.conversion.impl.MoConomy;
+import net.tnemc.conversion.impl.RealEconomy;
+import net.tnemc.conversion.impl.SQLConomy;
+import net.tnemc.conversion.impl.SaneEconomy;
+import net.tnemc.conversion.impl.SimpleConomy;
+import net.tnemc.conversion.impl.SimplisticEconomy;
+import net.tnemc.conversion.impl.SwiftEconomy;
+import net.tnemc.conversion.impl.TokensEconomy;
+import net.tnemc.conversion.impl.XConomy;
 import net.tnemc.conversion.impl.iConomy;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
@@ -71,20 +97,72 @@ public class ConversionModule extends Module {
     String name = TNE.configurations().getString("Core.Conversion.Name").toLowerCase();
 
     switch(name) {
-      case "iconomy":
-        return new iConomy();
+      case "advancedeconomy":
+        return new AdvancedEconomy();
+      case "basiceconomy":
+        return new BasicEconomy();
       case "bconomy":
         return new BConomy();
+      case "beconomy":
+        return new BEconomy();
+      case "blings":
+        return new Blings();
       case "boseconomy":
         return new BOSEconomy();
-      case "essentials":
-        return new Essentials();
       case "craftconomy":
         return new CraftConomy();
-      case "mineconomy":
-        return new MineConomy();
+      case "devcoinsystem":
+        return new DevCoinSystem();
+      case "easycoins":
+        return new EasyCoins();
+      case "ececonomy":
+        return new ECEconomy();
+      case "economyapi":
+        return new EconomyAPI();
+      case "ecoplugin":
+        return new EcoPlugin();
+      case "ecosystem":
+        return new EcoSystem();
+      case "essentials":
+        return new Essentials();
+      case "feathereconomy":
+        return new FeatherEconomy();
       case "feconomy":
         return new FeConomy();
+      case "gemseconomy":
+        return new GemsEconomy();
+      case "iconomy":
+        return new iConomy();
+      case "meep":
+        return new Meep();
+      case "meller":
+        return new Meller();
+      case "minecoin":
+        return new MineCoin();
+      case "minecoinsyml":
+        return new MineCoinsYML();
+      case "mineconomy":
+        return new MineConomy();
+      case "minetopia":
+        return new MinetopiaEconomy();
+      case "moconomy":
+        return new MoConomy();
+      case "realeconomy":
+        return new RealEconomy();
+      case "saneeconomy":
+        return new SaneEconomy();
+      case "simpleconomy":
+        return new SimpleConomy();
+      case "simplisticeconomy":
+        return new SimplisticEconomy();
+      case "sqlconomy":
+        return new SQLConomy();
+      case "swifteconomy":
+        return new SwiftEconomy();
+      case "tokenseconomy":
+        return new TokensEconomy();
+      case "xconomy":
+        return new XConomy();
     }
     return null;
   }

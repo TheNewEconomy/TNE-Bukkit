@@ -72,6 +72,9 @@ public abstract class Converter {
         case "mini":
           flatfile();
           break;
+        case "json":
+          json();
+          break;
         case "yaml":
           yaml();
           break;
@@ -109,6 +112,11 @@ public abstract class Converter {
 
   public void yaml() throws InvalidDatabaseImport {
     throw new InvalidDatabaseImport("YAML", name());
+  }
+
+  //This is the dumbest trend ever.
+  public void json() throws InvalidDatabaseImport {
+    throw new InvalidDatabaseImport("JSON", name());
   }
 
   //iConomy Specific

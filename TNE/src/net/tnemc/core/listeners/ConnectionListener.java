@@ -100,6 +100,7 @@ public class ConnectionListener implements Listener {
     UUID id = IDFinder.getID(player);
     if(TNE.manager().exists(id)) {
       TNEAccount account = TNEAccount.getAccount(id.toString());
+      if(player == null) TNE.debug("Player is null");
       account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), true, player.getInventory());
       account.setLastOnline(new Date().getTime());
       account.getHistory().clearAway();
