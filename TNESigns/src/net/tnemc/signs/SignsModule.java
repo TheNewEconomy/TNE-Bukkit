@@ -6,7 +6,11 @@ import net.tnemc.core.common.module.ModuleInfo;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -34,7 +38,6 @@ public class SignsModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
-    listeners.add(new SignsListener(tne));
     instance = this;
     manager = new SignsManager();
     tne.logger().info("Signs Module loaded!");

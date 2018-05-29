@@ -1,83 +1,102 @@
 package net.tnemc.signs;
 
-import com.github.tnerevival.user.IDFinder;
+import com.github.tnerevival.core.collection.MapListener;
+import com.github.tnerevival.serializable.SerializableLocation;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.module.ModuleListener;
-import net.tnemc.signs.impl.TNESign;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import net.tnemc.signs.signs.TNESign;
 
-import java.util.UUID;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * The New Economy Minecraft Server Plugin
- *
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
- * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by Daniel on 2/13/2018.
- */
-public class SignsListener implements ModuleListener {
+ * Created by creatorfromhell on 11/8/2016.
+ **/
+public class SignsListener implements MapListener {
+  Map<SerializableLocation, TNESign> changed = new HashMap<>();
 
-  private TNE plugin;
-
-  public SignsListener(TNE plugin) {
-    this.plugin = plugin;
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onChange(final SignChangeEvent event) {
-    String type = SignsManager.getSignType(event.getLine(0));
-    if (!type.equalsIgnoreCase("invalid")) {
-      Player player = event.getPlayer();
-      UUID id = IDFinder.getID(player);
-      String world = event.getBlock().getWorld().getName();
-      TNESign sign = TNESign.instance(type, id, event.getBlock().getLocation());
-
-      if(sign != null) {
-
-        if(!sign.onCreate(player)) {
-          event.setCancelled(true);
-        } else {
-          switch(type) {
-            case "item":
-              break;
-            case "safe":
-              break;
-          }
-        }
-      }
+  @Override
+  public void update() {
+    for(TNESign sign : changed.values()) {
+      TNE.instance().saveManager.versionInstance.saveSign(sign);
     }
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onClick(final PlayerInteractEvent event) {
-    Action action = event.getAction();
-    Player player = event.getPlayer();
-    UUID id = IDFinder.getID(player);
-    Block block = event.getClickedBlock();
-    Material heldMaterial = event.getItem().getType();
+  @Override
+  public Map<SerializableLocation, TNESign> changed() {
+    return changed;
+  }
 
-    if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
-      if(SignsModule.manager().isAwaitingStep(id)) {
+  @Override
+  public void clearChanged() {
+    changed.clear();
+  }
 
-      } else {
-        if (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN_POST)) {
-        }
-      }
-    } else if(action.equals(Action.LEFT_CLICK_BLOCK)) {
-      if(SignsModule.manager().isAwaitingStep(id)) {
+  @Override
+  public void put(Object key, Object value) {
+    TNE.instance().saveManager.versionInstance.saveSign((TNESign)value);
+  }
 
-      } else {
-        if (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN_POST)) {
-        }
-      }
+  @Override
+  public Object get(Object key) {
+    return TNE.instance().saveManager.versionInstance.loadSign(((SerializableLocation)key).toString());
+  }
+
+  @Override
+  public Collection<TNESign> values() {
+    return TNE.instance().saveManager.versionInstance.loadSigns();
+  }
+
+  @Override
+  public int size() {
+    return values().size();
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return size() == 0;
+  }
+
+  @Override
+  public boolean containsKey(Object key) {
+    return get(key) != null;
+  }
+
+  @Override
+  public boolean containsValue(Object value) {
+    return false;
+  }
+
+  @Override
+  public void preRemove(Object key, Object value) {
+    TNE.instance().saveManager.versionInstance.deleteSign((TNESign)value);
+  }
+
+  @Override
+  public Set<SerializableLocation> keySet() {
+    Set<SerializableLocation> keys = new HashSet<>();
+
+    for(TNESign sign : values()) {
+      keys.add(sign.getLocation());
     }
+
+    return keys;
+  }
+
+  @Override
+  public Set<Map.Entry<SerializableLocation, TNESign>> entrySet() {
+    Map<SerializableLocation, TNESign> signMap = new HashMap<>();
+
+    for(TNESign sign : values()) {
+      signMap.put(sign.getLocation(), sign);
+    }
+
+    return signMap.entrySet();
+  }
+
+  @Override
+  public void remove(Object key) {
   }
 }

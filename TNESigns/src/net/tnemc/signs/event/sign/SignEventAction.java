@@ -1,4 +1,4 @@
-package net.tnemc.signs.event;
+package net.tnemc.signs.event.sign;
 
 public enum SignEventAction {
   CREATED,

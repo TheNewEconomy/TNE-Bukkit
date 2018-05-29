@@ -1,6 +1,6 @@
 package net.tnemc.signs;
 
-import com.github.tnerevival.core.configurations.Configuration;
+import net.tnemc.core.common.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Arrays;

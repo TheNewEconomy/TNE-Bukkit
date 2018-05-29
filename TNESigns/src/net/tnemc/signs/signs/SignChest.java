@@ -1,6 +1,6 @@
-package net.tnemc.signs.impl;
+package net.tnemc.signs.signs;
 
-import net.tnemc.core.common.utils.MISCUtils;
+import com.github.tnerevival.utils.MISCUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 

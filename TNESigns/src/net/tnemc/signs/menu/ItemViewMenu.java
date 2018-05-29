@@ -1,5 +1,6 @@
 package net.tnemc.signs.menu;
 
+
 import net.tnemc.core.menu.Menu;
 
 /**

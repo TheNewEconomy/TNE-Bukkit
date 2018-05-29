@@ -1,6 +1,6 @@
-package net.tnemc.signs.event;
+package net.tnemc.signs.event.sign;
 
-import net.tnemc.signs.impl.TNESign;
+import net.tnemc.signs.signs.TNESign;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
