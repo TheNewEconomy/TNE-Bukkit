@@ -1,85 +1,62 @@
 package net.tnemc.signs.signs;
 
-import net.tnemc.core.TNE;
+import net.tnemc.core.menu.Menu;
+import org.bukkit.block.Sign;
 
-import java.math.BigDecimal;
+import java.util.UUID;
 
-public enum SignType {
+/**
+ * The New Economy Minecraft Server Plugin
+ * <p>
+ * Created by Daniel on 5/28/2018.
+ * <p>
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+ * Created by creatorfromhell on 06/30/2017.
+ */
+public interface SignType {
 
-  UNKNOWN("unknown", "", "", ""),
-  VAULT("vault", "tne.place.vault", "tne.use.vault", "Signs.Vault"),
-  ITEM("item", "tne.place.item", "tne.use.item", "Signs.Item"),
-  BALANCE("balance", "tne.place.balance", "tne.use.balance", "Signs.Balance");
+  /**
+   * @return The name of this sign type.
+   */
+  String name();
 
-  private String name;
-  private String placePermission;
-  private String usePermission;
-  private String configuration;
+  /**
+   * @return The permission node required to use this sign.
+   */
+  String usePermission();
 
-  SignType(String name, String placePermission, String usePermission, String configuration) {
-    this.name = name;
-    this.placePermission = placePermission;
-    this.usePermission = usePermission;
-    this.configuration = configuration;
+  /**
+   * @return The permission node required to create this sign.
+   */
+  String createPermission();
+
+  default Menu getMenu() {
+    return null;
   }
 
-  public static SignType fromName(String name) {
-    for(SignType type : values()) {
-      if(type.getName().equalsIgnoreCase(name.trim())) {
-        return type;
-      }
-    }
-    return UNKNOWN;
+  default boolean hasMenu() {
+    return getMenu() != null;
   }
 
-  public String getName() {
-    return name;
+  default boolean onSignCreate(final Sign sign, final UUID player) {
+    return true;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  default boolean onSignInteract(final Sign sign, final UUID player, final boolean rightClick, final boolean shifting) {
+    return true;
   }
 
-  public String getPlacePermission() {
-    return placePermission;
+  default boolean onSignDestroy(final Sign sign, final UUID player) {
+    return true;
   }
 
-  public void setPlacePermission(String placePermission) {
-    this.placePermission = placePermission;
+  default boolean onMenuOpen(final Sign sign, final UUID player) {
+    return true;
   }
 
-  public String getUsePermission() {
-    return usePermission;
-  }
-
-  public void setUsePermission(String usePermission) {
-    this.usePermission = usePermission;
-  }
-
-  public String getConfiguration() {
-    return configuration;
-  }
-
-  public void setConfiguration(String configuration) {
-    this.configuration = configuration;
-  }
-
-  public Boolean enabled(String world, String player) {
-    return TNE.instance().api().getBoolean(configuration + ".Enabled", world, player);
-  }
-
-  public BigDecimal place(String world, String player) {
-    return TNE.instance().api().getBigDecimal(configuration + ".Place", world, player);
-  }
-
-  public BigDecimal use(String world, String player) {
-    return TNE.instance().api().getBigDecimal(configuration + ".Use", world, player);
-  }
-
-  public Integer max(String world, String player) {
-    if(TNE.instance().api().hasConfiguration(configuration + ".Max")) {
-      return TNE.instance().api().getInteger(configuration + ".Max", world, player);
-    }
-    return -1;
+  default boolean onMenuClose(final Sign sign, final UUID player) {
+    return true;
   }
 }

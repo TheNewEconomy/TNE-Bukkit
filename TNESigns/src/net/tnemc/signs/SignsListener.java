@@ -1,9 +1,8 @@
 package net.tnemc.signs;
 
 import com.github.tnerevival.core.collection.MapListener;
-import com.github.tnerevival.serializable.SerializableLocation;
-import net.tnemc.core.TNE;
 import net.tnemc.signs.signs.TNESign;
+import org.bukkit.Location;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,17 +14,17 @@ import java.util.Set;
  * Created by creatorfromhell on 11/8/2016.
  **/
 public class SignsListener implements MapListener {
-  Map<SerializableLocation, TNESign> changed = new HashMap<>();
+  Map<Location, TNESign> changed = new HashMap<>();
 
   @Override
   public void update() {
     for(TNESign sign : changed.values()) {
-      TNE.instance().saveManager.versionInstance.saveSign(sign);
+      SignsModule.manager().saveSign(sign);
     }
   }
 
   @Override
-  public Map<SerializableLocation, TNESign> changed() {
+  public Map<Location, TNESign> changed() {
     return changed;
   }
 
@@ -36,17 +35,17 @@ public class SignsListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.instance().saveManager.versionInstance.saveSign((TNESign)value);
+    SignsModule.manager().saveSign((TNESign)value);
   }
 
   @Override
   public Object get(Object key) {
-    return TNE.instance().saveManager.versionInstance.loadSign(((SerializableLocation)key).toString());
+    return SignsModule.manager().loadSign(((Location)key));
   }
 
   @Override
   public Collection<TNESign> values() {
-    return TNE.instance().saveManager.versionInstance.loadSigns();
+    return SignsModule.manager().loadSigns();
   }
 
   @Override
@@ -71,12 +70,12 @@ public class SignsListener implements MapListener {
 
   @Override
   public void preRemove(Object key, Object value) {
-    TNE.instance().saveManager.versionInstance.deleteSign((TNESign)value);
+    SignsModule.manager().deleteSign((Location)key);
   }
 
   @Override
-  public Set<SerializableLocation> keySet() {
-    Set<SerializableLocation> keys = new HashSet<>();
+  public Set<Location> keySet() {
+    Set<Location> keys = new HashSet<>();
 
     for(TNESign sign : values()) {
       keys.add(sign.getLocation());
@@ -86,8 +85,8 @@ public class SignsListener implements MapListener {
   }
 
   @Override
-  public Set<Map.Entry<SerializableLocation, TNESign>> entrySet() {
-    Map<SerializableLocation, TNESign> signMap = new HashMap<>();
+  public Set<Map.Entry<Location, TNESign>> entrySet() {
+    Map<Location, TNESign> signMap = new HashMap<>();
 
     for(TNESign sign : values()) {
       signMap.put(sign.getLocation(), sign);

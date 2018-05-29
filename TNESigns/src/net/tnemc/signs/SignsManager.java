@@ -2,7 +2,15 @@ package net.tnemc.signs;
 
 import com.github.tnerevival.core.collection.EventMap;
 import com.github.tnerevival.serializable.SerializableLocation;
+import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.TNESign;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -16,6 +24,7 @@ import net.tnemc.signs.signs.TNESign;
  */
 public class SignsManager {
   private EventMap<SerializableLocation, TNESign> signs = new EventMap<>();
+  private Map<String, SignType> signTypes = new HashMap<>();
 
   public SignsManager() {
     signs.setListener(new SignsListener());
@@ -29,7 +38,36 @@ public class SignsManager {
     this.signs = signs;
   }
 
+  public static boolean blockAttachedSign(final Block block) {
+
+    return false;
+  }
+
+  public static boolean validSign(final Sign sign) {
+    return false;
+  }
+
   public void saveSign(TNESign sign) {
 
+  }
+
+  public TNESign loadSign(Location location) {
+    return null;
+  }
+
+  public Collection<TNESign> loadSigns() {
+    return null;
+  }
+
+  public void deleteSign(Location location) {
+
+  }
+
+  public Map<String, SignType> getSignTypes() {
+    return signTypes;
+  }
+
+  public void setSignTypes(Map<String, SignType> signTypes) {
+    this.signTypes = signTypes;
   }
 }
