@@ -82,15 +82,12 @@ public class CoreHoldingsHandler implements HoldingsHandler {
   @Override
   public BigDecimal removeHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount) {
     TNEAccount tneAccount = TNE.manager().getAccount(account);
-    BigDecimal current = BigDecimal.ZERO;
-    world = TNE.instance().getWorldManager(world).getBalanceWorld();
-    if(!currency.isItem() || !MISCUtils.isOnline(account, world)) {
-      WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
-          tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);
-      current = worldHoldings.getHoldings(currency.name());
-    } else {
-      current = ItemCalculations.getCurrencyItems(currency, tneAccount.getPlayer().getInventory());
+    BigDecimal holdings = tneAccount.getHoldings(world, currency.name(), true, false);
+    if(holdings.compareTo(amount) < 0) {
+      tneAccount.setHoldings(world, currency.name(), BigDecimal.ZERO);
+      return amount.subtract(holdings);
     }
-    return current;
+    tneAccount.setHoldings(world, currency.name(), amount.subtract(holdings));
+    return BigDecimal.ZERO;
   }
 }

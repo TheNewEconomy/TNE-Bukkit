@@ -55,16 +55,18 @@ public class ItemCalculations {
     return value;
   }
 
-  public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory) {
+  public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove) {
     TNE.debug("=====START Account.setItems =====");
     TNE.debug("Holdings: " + amount.toPlainString());
     if(currency.isItem()) {
       BigDecimal old = getCurrencyItems(currency, inventory);
       BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
+      if(remove) difference = amount;
       String differenceString = difference.toPlainString();
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
       boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), "");
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
+      if(remove) add = false;
 
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
 

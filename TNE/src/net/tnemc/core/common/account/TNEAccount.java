@@ -114,7 +114,7 @@ public class TNEAccount implements Account {
       TNE.debug("Online: " + MISCUtils.isOnline(id, world));
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
-        ItemCalculations.setItems(cur, newHoldings, getPlayer().getInventory());
+        ItemCalculations.setItems(cur, newHoldings, getPlayer().getInventory(), false);
       }
     }
     TNE.debug("=====END Account.setHoldings =====");
