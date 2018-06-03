@@ -1,6 +1,7 @@
 package net.tnemc.core.common.account;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.account.history.AccountHistory;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
@@ -113,13 +114,24 @@ public class TNEAccount implements Account {
       TNE.debug("Online: " + MISCUtils.isOnline(id, world));
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
-        ItemCalculations.setItems(this, cur, newHoldings);
+        ItemCalculations.setItems(cur, newHoldings, getPlayer().getInventory());
       }
     }
     TNE.debug("=====END Account.setHoldings =====");
   }
 
-  public boolean hasHoldings(String world, String currency) {
+  public void removeHoldings(BigDecimal amount, String world, String currency, boolean core) {
+    BigDecimal leftOver = amount;
+    for(Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
+      for (HoldingsHandler handler : entry.getValue()) {
+        if(!core || handler.coreHandler()) {
+          leftOver = leftOver.subtract(handler.removeHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), leftOver));
+        }
+      }
+    }
+  }
+
+  private boolean hasHoldings(String world, String currency) {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
     if(!cur.isItem() || !MISCUtils.isOnline(id, world)) {
@@ -127,42 +139,21 @@ public class TNEAccount implements Account {
         return holdings.get(world).hasHoldings(currency);
       }
     } else {
-      return ItemCalculations.getCurrencyItems(this, cur).compareTo(BigDecimal.ZERO) > 0;
+      return ItemCalculations.getCurrencyItems(cur, getPlayer().getInventory()).compareTo(BigDecimal.ZERO) > 0;
     }
     return false;
   }
 
-  public BigDecimal getHoldings(String world, String currency) {
-    return getHoldings(world, currency, false);
-  }
-
-  public BigDecimal getHoldings(String world, String currency, boolean database) {
-
-    world = TNE.instance().getWorldManager(world).getBalanceWorld();
-    TNE.debug("=====START Account.getHoldings =====");
-    TNE.debug("Account: " + identifier());
-    TNE.debug("Currency: " + currency);
-    TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-    BigDecimal current = BigDecimal.ZERO;
-
-    if(database || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
-      TNE.debug("Grabbing virtual holdings...");
-      WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
-      current = worldHoldings.getHoldings(currency);
-    } else {
-      TNE.debug("Grabbing physical holdings...");
-      current = ItemCalculations.getCurrencyItems(this, cur);
+  public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
+    BigDecimal holdings = BigDecimal.ZERO;
+    for(Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
+      for (HoldingsHandler handler : entry.getValue()) {
+        if(!core || handler.coreHandler()) {
+          holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
+        }
+      }
     }
-
-    InjectMethod injector = new InjectMethod("TNEAccount.getHoldings", new HashMap<>());
-    injector.setParameter("currency", currency);
-    injector.setParameter("holdings", current);
-    TNE.loader().call(injector);
-    current = (BigDecimal)injector.getParameter("holdings");
-
-    TNE.debug("Holdings: " + current);
-    TNE.debug("=====END Account.getHoldings =====");
-    return current;
+    return holdings;
   }
 
   public void saveItemCurrency(String world) {
@@ -170,7 +161,7 @@ public class TNEAccount implements Account {
   }
 
   public void saveItemCurrency(String world, boolean save) {
-    saveItemCurrency(world, save, null);
+    saveItemCurrency(world, save, getPlayer().getInventory());
   }
 
   public void saveItemCurrency(String world, boolean save, PlayerInventory inventory) {
@@ -181,7 +172,7 @@ public class TNEAccount implements Account {
     currencies.forEach((currency)->{
       TNE.debug("Currency: " + currency);
       TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-      worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(this, cur, inventory));
+      worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(cur, inventory));
     });
     holdings.put(world, worldHoldings);
     if(save) TNE.manager().addAccount(this);
@@ -327,24 +318,24 @@ public class TNEAccount implements Account {
   public BigDecimal getHoldings() {
     String world = TNE.instance().defaultWorld;
     Currency currency = TNE.manager().currencyManager().get(world);
-    return getHoldings(world, currency.name());
+    return getHoldings(world, currency.name(), false, false);
   }
 
   @Override
   public BigDecimal getHoldings(String world) {
     Currency currency = TNE.manager().currencyManager().get(world);
-    return getHoldings(world, currency.name());
+    return getHoldings(world, currency.name(), false, false);
   }
 
   @Override
   public BigDecimal getHoldings(String world, Currency currency) {
     TNE.debug("=====START Account.getHoldings w/ World & Currency param =====");
-    return getHoldings(world, currency.name());
+    return getHoldings(world, currency.name(), false, false);
   }
 
   @Override
   public BigDecimal getHoldings(Currency currency) {
-    return getHoldings(TNE.instance().defaultWorld, currency.name());
+    return getHoldings(TNE.instance().defaultWorld, currency.name(), false, false);
   }
 
   @Override
@@ -450,7 +441,7 @@ public class TNEAccount implements Account {
     if(hasHoldings(amount)) {
       String world = TNE.instance().defaultWorld;
       Currency currency = TNE.manager().currencyManager().get(world);
-      setHoldings(world, currency.name(), getHoldings(world, currency).subtract(amount));
+      removeHoldings(amount, world, currency.name(), false);
       return true;
     }
     return false;
@@ -461,7 +452,7 @@ public class TNEAccount implements Account {
     if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount)) {
       Currency currency = TNE.manager().currencyManager().get(world);
-      setHoldings(world, currency.name(), getHoldings(world, currency).subtract(amount));
+      removeHoldings(amount, world, currency.name(), false);
       return true;
     }
     return false;
@@ -472,7 +463,7 @@ public class TNEAccount implements Account {
     if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount)) {
       String world = TNE.instance().defaultWorld;
-      setHoldings(world, currency.name(), getHoldings(world, currency).subtract(amount));
+      removeHoldings(amount, world, currency.name(), false);
       return true;
     }
     return false;
@@ -482,7 +473,7 @@ public class TNEAccount implements Account {
   public boolean removeHoldings(BigDecimal amount, Currency currency, String world) {
     if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount)) {
-      setHoldings(world, currency.name(), getHoldings(world, currency).subtract(amount));
+      removeHoldings(amount, world, currency.name(), false);
       return true;
     }
     return false;

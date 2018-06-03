@@ -104,7 +104,7 @@ public class IDFinder {
     return Bukkit.getOfflinePlayer(id);
   }
 
-  private static OfflinePlayer getOffline(UUID id) {
+  public static OfflinePlayer getOffline(UUID id) {
     return Bukkit.getOfflinePlayer(id);
   }
 

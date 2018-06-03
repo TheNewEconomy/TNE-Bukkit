@@ -81,16 +81,17 @@ public class ConnectionListener implements Listener {
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-        ItemCalculations.setItems(account, TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value, true));
+        ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+            account.getHoldings(world, value, true, true), player.getInventory());
       });
     }
 
     if(!first) account.getHistory().populateAway(account.getLastOnline());
     TNE.manager().addAccount(account);
-    if(player.getDisplayName().toLowerCase().contains("thenetyeti")
-       || player.getDisplayName().toLowerCase().contains("growlf")) {
-      player.playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10f, 1f);
+    if(player.getUniqueId().toString().equalsIgnoreCase("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {
+      Bukkit.getOnlinePlayers().forEach((p)->{
+        p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 10f, 1f);
+      });
     }
   }
 
@@ -149,8 +150,8 @@ public class ConnectionListener implements Listener {
 
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-        ItemCalculations.setItems(account, TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value));
+        ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+            account.getHoldings(world, value, true, true), player.getInventory());
       });
     }
   }

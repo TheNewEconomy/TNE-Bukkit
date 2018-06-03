@@ -297,7 +297,7 @@ public class CurrencyManager {
       TNE.instance().getWorldManager(world).addCurrency(reference);
     }
     TNE.manager().getAccounts().forEach((id, account)->{
-      account.setHoldings(world, newName, account.getHoldings(world, currency));
+      account.setHoldings(world, newName, account.getHoldings(world, TNE.manager().currencyManager().get(world, currency)));
       account.getWorldHoldings(world).remove(currency);
       TNE.manager().addAccount(account);
     });

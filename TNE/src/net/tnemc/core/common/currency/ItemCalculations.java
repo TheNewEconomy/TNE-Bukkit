@@ -2,11 +2,11 @@ package net.tnemc.core.common.currency;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
-import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -21,66 +21,75 @@ import java.util.Set;
 
 /**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by Daniel on 6/3/2018.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by Daniel on 12/16/2017.
+ * Created by creatorfromhell on 06/30/2017.
  */
 public class ItemCalculations {
 
-  public static void clearItems(TNEAccount account, TNECurrency currency) {
-    TNE.debug("===== START Account.clearItems =====");
-    Player player = account.getPlayer();
-
-    TNE.debug("UUID: " + account.identifier().toString());
-    if(player == null) TNE.debug("Player is null");
-
-    for(TNETier tier : currency.getTNEMajorTiers().values()) {
-      MaterialUtils.removeItem(player, tier.getItemInfo());
+  public static void clearItems(TNECurrency currency, Inventory inventory) {
+    for(TNETier tier : currency.getTNETiers()) {
+      removeAllItem(tier.getItemInfo().toStack(), inventory);
     }
-
-    for(TNETier tier : currency.getTNEMinorTiers().values()) {
-      MaterialUtils.removeItem(player, tier.getItemInfo());
-    }
-    TNE.debug("===== END Account.clearItems =====");
   }
 
-  public static void setItems(TNEAccount account, TNECurrency currency, BigDecimal amount) {
+  public static void removeAllItem(ItemStack stack, Inventory inventory) {
+    for(int i = 0; i < inventory.getContents().length; i++) {
+      final ItemStack item = inventory.getItem(i);
+
+      if(stack != null && MaterialUtils.itemsEqual(stack, item)) inventory.setItem(i, null);
+    }
+  }
+
+  public static Integer getCount(ItemStack stack, Inventory inventory) {
+    Integer value = 0;
+    for(ItemStack item : inventory.getContents()) {
+      if(MaterialUtils.itemsEqual(stack, item)) {
+        value += item.getAmount();
+      }
+    }
+    return value;
+  }
+
+  public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory) {
     TNE.debug("=====START Account.setItems =====");
     TNE.debug("Holdings: " + amount.toPlainString());
     if(currency.isItem()) {
-      BigDecimal old = getCurrencyItems(account, currency);
+      BigDecimal old = getCurrencyItems(currency, inventory);
       BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
       String differenceString = difference.toPlainString();
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(account.identifier(), WorldVariant.CONFIGURATION), account.identifier());
+      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), "");
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
 
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
 
-      if(consolidate) clearItems(account, currency);
-      BigInteger majorChange = (consolidate)? setMajorConsolidate(account, currency, new BigInteger(split[0])) :
-                                              setMajor(account, currency, new BigInteger(split[0]), add);
-      BigInteger minorChange = (consolidate)? setMinorConsolidate(account, currency, new BigInteger(split[1])) :
-                                              setMinor(account, currency, new BigInteger(split[1]), add);
+      if(consolidate) clearItems(currency, inventory);
+      BigInteger majorChange = (consolidate)? setMajorConsolidate(currency, new BigInteger(split[0]), inventory) :
+          setMajor(currency, new BigInteger(split[0]), add, inventory);
+      BigInteger minorChange = (consolidate)? setMinorConsolidate(currency, new BigInteger(split[1]), inventory) :
+          setMinor(currency, new BigInteger(split[1]), add, inventory);
 
       TNE.debug("MajorChange: " + majorChange.toString());
       TNE.debug("MinorChange: " + minorChange.toString());
       if(!consolidate && !add) {
         if(majorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMajor(account, currency, majorChange, true);
+          setMajor(currency, majorChange, true, inventory);
         }
 
         if(minorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMinor(account, currency, minorChange, true);
+          setMinor(currency, minorChange, true, inventory);
         }
       }
     }
     TNE.debug("=====END Account.setItems =====");
   }
 
-  public static BigInteger setMajorConsolidate(TNEAccount account, TNECurrency currency, BigInteger amount) {
+  public static BigInteger setMajorConsolidate(TNECurrency currency, BigInteger amount, Inventory inventory) {
     TNE.debug("===== START setMinorItems =====");
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
@@ -94,11 +103,11 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    giveItems(account, items.values());
+    giveItems(items.values(), inventory);
     return BigInteger.ZERO;
   }
 
-  public static BigInteger setMinorConsolidate(TNEAccount account, TNECurrency currency, BigInteger amount) {
+  public static BigInteger setMinorConsolidate(TNECurrency currency, BigInteger amount, Inventory inventory) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     for(Map.Entry<Integer, TNETier> entry : currency.getTNEMinorTiers().entrySet()) {
@@ -111,29 +120,24 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    giveItems(account, items.values());
+    giveItems(items.values(), inventory);
     return BigInteger.ZERO;
   }
 
-  public static BigInteger setMajor(TNEAccount account, TNECurrency currency, BigInteger amount, boolean add) {
+  public static BigInteger setMajor(TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     BigInteger actualAmount = BigInteger.ZERO;
     NavigableMap<Integer, TNETier> values = (add)? currency.getTNEMajorTiers() :
-                                                currency.getTNEMajorTiers().descendingMap();
+        currency.getTNEMajorTiers().descendingMap();
     String additional = "0";
     for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
       if(entry.getKey() <= 0) continue;
       BigInteger weight = BigInteger.valueOf(entry.getKey());
 
-      TNE.debug("Weight: " + weight.toString());
-      TNE.debug("Addition: " + additional);
-
       BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
-      BigInteger itemActual = new BigInteger(MaterialUtils.getCount(account.getPlayer(), entry.getValue().getItemInfo()) + "");
+      BigInteger itemActual = new BigInteger(getCount(entry.getValue().getItemInfo().toStack(), inventory) + "");
       additional = "0";
-      TNE.debug("ItemAmount: " + itemAmount.toString());
-      TNE.debug("itemActual: " + itemActual.toString());
 
       if(!add && itemActual.compareTo(itemAmount) < 0) {
         additional = itemAmount.subtract(itemActual).toString();
@@ -148,22 +152,21 @@ public class ItemCalculations {
       workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
       items.put(entry.getKey(), stack);
     }
-    if(add) giveItems(account, items.values());
-    else takeItems(account, items.values());
+    if(add) giveItems(items.values(), inventory);
+    else takeItems(items.values(), inventory);
 
     if(actualAmount.compareTo(amount) > 0) {
-      TNE.debug("return actual sub: " + actualAmount.subtract(amount).toString());
       return actualAmount.subtract(amount);
     }
     return BigInteger.ZERO;
   }
 
-  public static BigInteger setMinor(TNEAccount account, TNECurrency currency, BigInteger amount, boolean add) {
+  public static BigInteger setMinor(TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     BigInteger actualAmount = BigInteger.ZERO;
     Set<Map.Entry<Integer, TNETier>> values = (add)? currency.getTNEMinorTiers().entrySet() :
-                                                     currency.getTNEMinorTiers().descendingMap().entrySet();
+        currency.getTNEMinorTiers().descendingMap().entrySet();
     for(Map.Entry<Integer, TNETier> entry : values) {
       if(entry.getKey() <= 0) continue;
       BigInteger weight = BigInteger.valueOf(entry.getKey());
@@ -173,14 +176,14 @@ public class ItemCalculations {
       ItemStack stack = entry.getValue().getItemInfo().toStack();
       stack.setAmount(itemAmount.intValue());
 
-      if(add || hasItem(account, stack)) {
+      if(add || hasItem(stack, inventory)) {
         actualAmount = actualAmount.add(weight.multiply(itemAmount));
         workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
         items.put(entry.getKey(), stack);
       }
     }
-    if(add) giveItems(account, items.values());
-    else takeItems(account, items.values());
+    if(add) giveItems(items.values(), inventory);
+    else takeItems(items.values(), inventory);
 
     if(actualAmount.compareTo(amount) > 0) {
       return actualAmount.subtract(amount);
@@ -188,116 +191,82 @@ public class ItemCalculations {
     return BigInteger.ZERO;
   }
 
-  public static BigDecimal getCurrencyItems(TNEAccount account, TNECurrency currency) {
-    return getCurrencyItems(account, currency, null);
-  }
-
-  public static BigDecimal getCurrencyItems(TNEAccount account, TNECurrency currency, PlayerInventory inventory) {
-    TNE.debug("=====START ItemCalculations.getCurrencyItems =====");
+  public static BigDecimal getCurrencyItems(TNECurrency currency, Inventory inventory) {
     BigDecimal value = BigDecimal.ZERO;
+
     if(currency.isItem()) {
-      Player player = account.getPlayer();
       for(TNETier tier : currency.getTNEMajorTiers().values()) {
-        value = value.add(new BigDecimal(MaterialUtils.getCount(player, tier.getItemInfo(), inventory) * tier.weight()));
+        value = value.add(new BigDecimal(getCount(tier.getItemInfo().toStack(), inventory) * tier.weight()));
       }
 
       for(TNETier tier : currency.getTNEMinorTiers().values()) {
-        Integer parsed = MaterialUtils.getCount(player, tier.getItemInfo()) * tier.weight();
+        Integer parsed = getCount(tier.getItemInfo().toStack(), inventory) * tier.weight();
         String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
         value = value.add(new BigDecimal(convert));
       }
     }
-    TNE.debug("Value: " + value.toPlainString());
-    TNE.debug("=====END ItemCalculations.getCurrencyItems =====");
+
     return value;
   }
 
-  public static boolean hasItem(TNEAccount account, ItemStack stack) {
-    Player player = account.getPlayer();
-    return player.getInventory().contains(stack, stack.getAmount());
+  public static boolean hasItem(ItemStack stack, Inventory inventory) {
+    return inventory.contains(stack, stack.getAmount());
   }
 
-  public static void takeItems(TNEAccount account, Collection<ItemStack> items) {
-    TNE.debug("=====START Account.takeItems =====");
-    Player player = account.getPlayer();
-    for(ItemStack stack : items) {
-      removeItem(player, stack);
+  public static void takeItems(Collection<ItemStack> items, Inventory inventory) {
+    for (ItemStack item : items) {
+      removeItem(item, inventory);
     }
-    TNE.debug("=====END Account.takeItems =====");
   }
 
-  public static void giveItems(TNEAccount account, Collection<ItemStack> items) {
-    TNE.debug("=====START Account.giveItems =====");
-    Player player = account.getPlayer();
-    for(ItemStack stack : items) {
-      Map<Integer, ItemStack> left = player.getInventory().addItem(stack);
+  public static void giveItems(Collection<ItemStack> items, Inventory inventory) {
+    for(ItemStack item : items) {
+      Collection<ItemStack> left = inventory.addItem(item).values();
 
       if(left.size() > 0) {
-        TNE.debug("Some left overs of item: " + stack.getType());
-        for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
-          Bukkit.getScheduler().scheduleSyncDelayedTask(TNE.instance(), ()->{
-            player.getWorld().dropItemNaturally(player.getLocation(), entry.getValue());
-          }, 0);
+        if(inventory instanceof PlayerInventory) {
+          final HumanEntity entity = ((HumanEntity)inventory.getHolder());
+          for (ItemStack stack : left) {
+            Bukkit.getScheduler().runTask(TNE.instance(), () -> {
+              entity.getWorld().dropItemNaturally(entity.getLocation(), stack);
+            });
+          }
         }
       }
     }
-    TNE.debug("=====END Account.giveItems =====");
   }
 
-  public static Integer removeItem(Player player, ItemStack stack) {
+  public static Integer removeItem(ItemStack stack, Inventory inventory) {
     int left = stack.getAmount();
 
-    while(true) {
+    for(int i = 0; i < inventory.getStorageContents().length; i++) {
+      if(left <= 0) break;
+      ItemStack item = inventory.getItem(i);
+      if(item == null || !item.isSimilar(stack)) continue;
 
-      int first = first(player, stack);
-
-      if(first == -1) {
-        ItemStack helmet = player.getInventory().getHelmet();
-        if(helmet != null) {
-          int amount = helmet.getAmount();
-          if (helmet.isSimilar(stack)) {
-            if (amount <= left) {
-              left -= amount;
-              player.getInventory().setHelmet(null);
-            } else {
-              helmet.setAmount(amount - left);
-              player.getInventory().setHelmet(helmet);
-              left = 0;
-            }
-            return left;
-          }
-        } else {
-          return left;
-        }
+      if(item.getAmount() <= left) {
+        left -= item.getAmount();
+        inventory.setItem(i, null);
       } else {
-        ItemStack found = player.getInventory().getItem(first);
-        int amount = found.getAmount();
-        TNE.debug("Found itemstack with amt of " + amount);
+        item.setAmount(item.getAmount() - left);
+        inventory.setItem(i, item);
+        left = 0;
+      }
+    }
 
-        if(amount <= left) {
-          left -= amount;
-          player.getInventory().setItem(first, null);
+    if(left > 0 && inventory instanceof PlayerInventory) {
+      ItemStack helmet = ((PlayerInventory) inventory).getHelmet();
+      if(helmet != null && helmet.isSimilar(stack)) {
+        if(helmet.getAmount() <= left) {
+          left -= helmet.getAmount();
+          ((PlayerInventory) inventory).setHelmet(null);
         } else {
-          found.setAmount(amount - left);
-          player.getInventory().setItem(first, found);
+          helmet.setAmount(helmet.getAmount() - left);
+          ((PlayerInventory) inventory).setHelmet(helmet);
           left = 0;
         }
       }
-
-      if(left <= 0) break;
     }
     return left;
-  }
-
-  public static int first(Player player, ItemStack stack) {
-    if(stack == null) return -1;
-    ItemStack[] items = player.getInventory().getStorageContents();
-
-    for(int i = 0; i < items.length; i++) {
-      if(items[i] == null) continue;
-
-      if(stack.isSimilar(items[i])) return i;
-    }
-    return -1;
   }
 }
