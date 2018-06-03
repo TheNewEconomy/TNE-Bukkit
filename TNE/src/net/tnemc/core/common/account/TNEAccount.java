@@ -123,9 +123,14 @@ public class TNEAccount implements Account {
   public void removeHoldings(BigDecimal amount, String world, String currency, boolean core) {
     BigDecimal leftOver = amount;
     for(Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
-      for (HoldingsHandler handler : entry.getValue()) {
+      if(leftOver.compareTo(BigDecimal.ZERO) <= 0) break;
+      for(HoldingsHandler handler : entry.getValue()) {
+        if(leftOver.compareTo(BigDecimal.ZERO) <= 0) break;
         if(!core || handler.coreHandler()) {
-          leftOver = leftOver.subtract(handler.removeHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), leftOver));
+          if(!handler.userContains().equalsIgnoreCase("") ||
+              displayName().contains(handler.userContains())) {
+            leftOver = leftOver.subtract(handler.removeHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), leftOver));
+          }
         }
       }
     }
@@ -147,9 +152,12 @@ public class TNEAccount implements Account {
   public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
     BigDecimal holdings = BigDecimal.ZERO;
     for(Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
-      for (HoldingsHandler handler : entry.getValue()) {
+      for(HoldingsHandler handler : entry.getValue()) {
         if(!core || handler.coreHandler()) {
-          holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
+          if(!handler.userContains().equalsIgnoreCase("") ||
+              displayName().contains(handler.userContains())) {
+            holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
+          }
         }
       }
     }

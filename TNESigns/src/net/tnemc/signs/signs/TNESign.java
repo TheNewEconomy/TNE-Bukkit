@@ -2,6 +2,8 @@ package net.tnemc.signs.signs;
 
 import org.bukkit.Location;
 
+import java.util.UUID;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -15,11 +17,15 @@ import org.bukkit.Location;
 public class TNESign {
 
   private Location location;
+  private Location attached;
   private String type;
+  private UUID owner;
 
-  public TNESign(Location location, String type) {
+  public TNESign(Location location, Location attached, String type, UUID owner) {
     this.location = location;
+    this.attached = attached;
     this.type = type;
+    this.owner = owner;
   }
 
   public Location getLocation() {
@@ -30,11 +36,27 @@ public class TNESign {
     this.location = location;
   }
 
+  public Location getAttached() {
+    return attached;
+  }
+
+  public void setAttached(Location attached) {
+    this.attached = attached;
+  }
+
   public String getType() {
     return type;
   }
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public UUID getOwner() {
+    return owner;
+  }
+
+  public void setOwner(UUID owner) {
+    this.owner = owner;
   }
 }

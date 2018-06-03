@@ -1,7 +1,10 @@
 package net.tnemc.signs.signs;
 
 import net.tnemc.core.menu.Menu;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.SignChangeEvent;
 
 import java.util.UUID;
 
@@ -23,6 +26,13 @@ public interface SignType {
   String name();
 
   /**
+   * @return The ChatColor to set the top line to if the sign is created successfully.
+   */
+  default ChatColor success() {
+    return ChatColor.DARK_PURPLE;
+  }
+
+  /**
    * @return The permission node required to use this sign.
    */
   String usePermission();
@@ -40,13 +50,11 @@ public interface SignType {
     return getMenu() != null;
   }
 
-  default boolean onSignCreate(final Sign sign, final UUID player) {
+  default boolean onSignCreate(final SignChangeEvent event, final Block attached, final UUID player) {
     return true;
   }
 
-  default boolean onSignInteract(final Sign sign, final UUID player, final boolean rightClick, final boolean shifting) {
-    return true;
-  }
+  default void onSignInteract(final Sign sign, final UUID player, final boolean rightClick, final boolean shifting) {}
 
   default boolean onSignDestroy(final Sign sign, final UUID player) {
     return true;

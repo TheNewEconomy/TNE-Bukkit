@@ -3,14 +3,12 @@ package net.tnemc.signs;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.signs.listeners.BlockListener;
+import net.tnemc.signs.listeners.PlayerListener;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -39,6 +37,9 @@ public class SignsModule extends Module {
   @Override
   public void load(TNE tne, String version) {
     instance = this;
+    Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
+    Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
+
     manager = new SignsManager();
     tne.logger().info("Signs Module loaded!");
   }
@@ -48,7 +49,7 @@ public class SignsModule extends Module {
     tne.logger().info("Signs Module unloaded!");
   }
 
-  @Override
+  /*@Override
   public void initializeConfigurations() {
     super.initializeConfigurations();
     signs = new File(TNE.instance().getDataFolder(), "signs.yml");
@@ -83,7 +84,7 @@ public class SignsModule extends Module {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
+  }*/
 
   static SignsModule instance() {
     return instance;
