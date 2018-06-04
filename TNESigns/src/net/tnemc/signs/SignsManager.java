@@ -1,23 +1,16 @@
 package net.tnemc.signs;
 
-import com.github.tnerevival.core.collection.EventMap;
-import com.github.tnerevival.serializable.SerializableLocation;
-import net.tnemc.signs.listeners.SignsListener;
 import net.tnemc.signs.signs.SignType;
-import net.tnemc.signs.signs.TNESign;
-import net.tnemc.signs.signs.impl.ItemSign;
 import net.tnemc.signs.signs.impl.NationSign;
 import net.tnemc.signs.signs.impl.SafeSign;
 import net.tnemc.signs.signs.impl.TownSign;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -34,7 +27,6 @@ import java.util.regex.Pattern;
  */
 public class SignsManager {
 
-  private EventMap<SerializableLocation, TNESign> signs = new EventMap<>();
   private Map<String, SignType> signTypes = new HashMap<>();
   public static final Pattern signPattern = Pattern.compile("\\[(.*?)\\]");
 
@@ -43,22 +35,14 @@ public class SignsManager {
   };
 
   public SignsManager() {
-    signs.setListener(new SignsListener());
+    //signs.setListener(new SignsListener());
 
     addSignType(new SafeSign());
-    addSignType(new ItemSign());
+    //addSignType(new ItemSign());
     if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
       addSignType(new TownSign());
       addSignType(new NationSign());
     }
-  }
-
-  public EventMap<SerializableLocation, TNESign> getSigns() {
-    return signs;
-  }
-
-  public void setSigns(EventMap<SerializableLocation, TNESign> signs) {
-    this.signs = signs;
   }
 
   public static boolean blockAttachedSign(final Block block) {
@@ -90,22 +74,6 @@ public class SignsManager {
 
   public SignType getType(String identifier) {
     return signTypes.get(ChatColor.stripColor(identifier).replace("[", "").replace("]", ""));
-  }
-
-  public void saveSign(TNESign sign) {
-
-  }
-
-  public TNESign loadSign(Location location) {
-    return null;
-  }
-
-  public Collection<TNESign> loadSigns() {
-    return null;
-  }
-
-  public void deleteSign(Location location) {
-
   }
 
   public void addSignType(SignType type) {

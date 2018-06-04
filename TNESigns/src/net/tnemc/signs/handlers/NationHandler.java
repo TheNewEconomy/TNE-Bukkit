@@ -3,7 +3,7 @@ package net.tnemc.signs.handlers;
 import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.signs.SignsModule;
+import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.TNESign;
 import org.bukkit.block.Chest;
 
@@ -42,11 +42,10 @@ public class NationHandler implements HoldingsHandler {
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
     BigDecimal amount = BigDecimal.ZERO;
 
-    //TODO: Make this efficient via SQL calls to get by owner.
-    for(TNESign sign : SignsModule.manager().getSigns().values()) {
+    for(TNESign sign : SignsData.loadSigns(account.toString(), "nation")) {
       if(sign.getOwner().toString().equalsIgnoreCase(account.toString())) {
-        if(sign.getAttached().getBlock() instanceof Chest) {
-          amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock()).getBlockInventory()));
+        if(sign.getAttached().getBlock().getState() instanceof Chest) {
+          amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock().getState()).getBlockInventory()));
         }
       }
     }
@@ -67,16 +66,16 @@ public class NationHandler implements HoldingsHandler {
   @Override
   public BigDecimal removeHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount) {
     BigDecimal left = amount;
-    for(TNESign sign : SignsModule.manager().getSigns().values()) {
+    for(TNESign sign : SignsData.loadSigns(account.toString(), "nation")) {
       if(sign.getOwner().toString().equalsIgnoreCase(account.toString())) {
-        if(sign.getAttached().getBlock() instanceof Chest) {
-          BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, ((Chest)sign.getAttached().getBlock()).getBlockInventory());
+        if(sign.getAttached().getBlock().getState() instanceof Chest) {
+          BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, ((Chest)sign.getAttached().getBlock().getState()).getBlockInventory());
 
           if(holdings.compareTo(left) < 0) {
-            ItemCalculations.clearItems(currency, ((Chest)sign.getAttached().getBlock()).getBlockInventory());
+            ItemCalculations.clearItems(currency, ((Chest)sign.getAttached().getBlock().getState()).getBlockInventory());
             left = left.subtract(holdings);
           } else {
-            ItemCalculations.setItems(currency, left, ((Chest)sign.getAttached().getBlock()).getBlockInventory(), true);
+            ItemCalculations.setItems(currency, left, ((Chest)sign.getAttached().getBlock().getState()).getBlockInventory(), true);
             return BigDecimal.ZERO;
           }
         }

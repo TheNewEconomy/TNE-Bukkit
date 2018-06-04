@@ -1,7 +1,9 @@
 package net.tnemc.signs.signs.impl;
 
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.SignType;
+import net.tnemc.signs.signs.TNESign;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
@@ -48,6 +50,7 @@ public class SafeSign implements SignType {
     if(attached != null) {
       if(attached.getType().equals(Material.CHEST) || attached.getType().equals(Material.TRAPPED_CHEST)) {
         event.setLine(1, IDFinder.getUsername(player.toString()));
+        SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player));
         return true;
       }
     }

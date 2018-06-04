@@ -1,10 +1,13 @@
 package net.tnemc.signs.signs.impl;
 
+import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.SignType;
+import net.tnemc.signs.signs.TNESign;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -67,7 +70,7 @@ public class TownSign implements SignType {
         }
 
         try {
-          String name = resident.getTown().getFormattedName();
+          String name = resident.getTown().getName();
           if(name.length() <= 16) {
             event.setLine(1, name);
           } else {
@@ -75,6 +78,8 @@ public class TownSign implements SignType {
             int end = (name.length() >= 32)? 32 : name.length();
             event.setLine(1, name.substring(16, end));
           }
+          UUID owner = IDFinder.getID(TownySettings.getTownAccountPrefix() + name);
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "town", owner));
           return true;
         } catch (NotRegisteredException e) {
           //Shouldn't reach this point.

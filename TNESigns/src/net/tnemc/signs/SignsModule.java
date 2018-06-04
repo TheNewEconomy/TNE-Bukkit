@@ -3,6 +3,9 @@ package net.tnemc.signs;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.signs.handlers.NationHandler;
+import net.tnemc.signs.handlers.PlayerHandler;
+import net.tnemc.signs.handlers.TownHandler;
 import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.PlayerListener;
 import org.bukkit.Bukkit;
@@ -47,6 +50,18 @@ public class SignsModule extends Module {
   @Override
   public void unload(TNE tne) {
     tne.logger().info("Signs Module unloaded!");
+  }
+
+  /**
+   * Called at the last portion of TNE's onEnable, post initialization.
+   *
+   * @param tne An instance of the main TNE class.
+   */
+  @Override
+  public void postLoad(TNE tne) {
+    TNE.manager().registerHandler(new NationHandler());
+    TNE.manager().registerHandler(new PlayerHandler());
+    TNE.manager().registerHandler(new TownHandler());
   }
 
   /*@Override
