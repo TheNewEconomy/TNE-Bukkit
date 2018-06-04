@@ -87,7 +87,7 @@ public class CoreHoldingsHandler implements HoldingsHandler {
       tneAccount.setHoldings(world, currency.name(), BigDecimal.ZERO);
       return amount.subtract(holdings);
     }
-    tneAccount.setHoldings(world, currency.name(), amount.subtract(holdings));
+    tneAccount.setHoldings(world, currency.name(), holdings.subtract(amount));
     return BigDecimal.ZERO;
   }
 }

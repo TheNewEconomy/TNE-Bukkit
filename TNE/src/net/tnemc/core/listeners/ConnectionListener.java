@@ -59,7 +59,14 @@ public class ConnectionListener implements Listener {
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     TNE.debug(id + "");
     boolean first = !TNE.manager().exists(id);
-    TNEAccount account = TNEAccount.getAccount(id.toString());
+    TNEAccount account;
+
+    if(first) {
+      if(!TNE.manager().createAccount(id, player.getName())) {
+        TNE.debug("Unable to create player account for " + player.getName());
+      }
+    }
+    account = TNE.manager().getAccount(id);
 
     if (!first) {
       if(!account.displayName().equals(player.getName())) {
@@ -82,7 +89,7 @@ public class ConnectionListener implements Listener {
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
         ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value, true, true), player.getInventory());
+            account.getHoldings(world, value, true, true), player.getInventory(), false);
       });
     }
 
@@ -151,7 +158,7 @@ public class ConnectionListener implements Listener {
     if(!noEconomy) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
         ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value, true, true), player.getInventory());
+            account.getHoldings(world, value, true, true), player.getInventory(), false);
       });
     }
   }
