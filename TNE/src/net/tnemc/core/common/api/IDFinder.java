@@ -143,6 +143,20 @@ public class IDFinder {
       return id;
     }
 
+    if(identifier.contains("empire-")) {
+      TNELib.debug("Empire");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
+    }
+
+    if(identifier.contains("village-")) {
+      TNELib.debug("Village");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
+    }
+
     if(!TNELib.instance().useUUID) {
       TNELib.debug("ECO ID RETURNED");
       return ecoID(identifier);
