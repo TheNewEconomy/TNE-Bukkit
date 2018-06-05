@@ -10,8 +10,17 @@ import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -29,9 +38,9 @@ import java.io.File;
 public class SignsModule extends Module {
 
 
-  File signs;
-  FileConfiguration fileConfiguration;
-  SignConfiguration configuration;
+  private File signs;
+  private FileConfiguration fileConfiguration;
+  private SignsConfiguration configuration;
 
   private SignsManager manager;
 
@@ -49,6 +58,9 @@ public class SignsModule extends Module {
 
   @Override
   public void unload(TNE tne) {
+    if(!signs.exists()) {
+      configuration.save(fileConfiguration);
+    }
     tne.logger().info("Signs Module unloaded!");
   }
 
@@ -64,7 +76,7 @@ public class SignsModule extends Module {
     TNE.manager().registerHandler(new TownHandler());
   }
 
-  /*@Override
+  @Override
   public void initializeConfigurations() {
     super.initializeConfigurations();
     signs = new File(TNE.instance().getDataFolder(), "signs.yml");
@@ -75,7 +87,7 @@ public class SignsModule extends Module {
   public void loadConfigurations() {
     super.loadConfigurations();
     fileConfiguration.options().copyDefaults(true);
-    configuration = new SignConfiguration();
+    configuration = new SignsConfiguration();
     configurations.put(configuration, "Signs");
   }
 
@@ -83,14 +95,14 @@ public class SignsModule extends Module {
   public void saveConfigurations() {
     super.saveConfigurations();
     if(!signs.exists()) {
-      Reader mobsStream = null;
+      Reader stream = null;
       try {
-        mobsStream = new InputStreamReader(TNE.instance().getResource("signs.yml"), "UTF8");
+        stream = new InputStreamReader(TNE.instance().getResource("signs.yml"), "UTF8");
       } catch (UnsupportedEncodingException e) {
         e.printStackTrace();
       }
-      if (mobsStream != null) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
+      if (stream != null) {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(stream);
         fileConfiguration.setDefaults(config);
       }
     }
@@ -99,13 +111,39 @@ public class SignsModule extends Module {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }*/
+  }
 
-  static SignsModule instance() {
+  /**
+   * @return Returns a list of tables that this module requires.
+   * Format is <Database Type, List of table creation queries.
+   */
+  @Override
+  public Map<String, List<String>> getTables() {
+    Map<String, List<String>> tables = new HashMap<>();
+
+    tables.put("h2", Collections.singletonList(SignsData.SIGNS_TABLE_H2));
+    tables.put("mysql", Collections.singletonList(SignsData.SIGNS_TABLE));
+
+    return tables;
+  }
+
+  public static SignsModule instance() {
     return instance;
   }
 
   public static SignsManager manager() {
     return instance.manager;
+  }
+
+  public File getSigns() {
+    return signs;
+  }
+
+  public FileConfiguration getFileConfiguration() {
+    return fileConfiguration;
+  }
+
+  public SignsConfiguration getConfiguration() {
+    return configuration;
   }
 }

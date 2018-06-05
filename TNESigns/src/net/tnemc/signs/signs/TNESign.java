@@ -20,12 +20,16 @@ public class TNESign {
   private Location attached;
   private String type;
   private UUID owner;
+  private UUID creator;
+  private Long creationDate;
 
-  public TNESign(Location location, Location attached, String type, UUID owner) {
+  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate) {
     this.location = location;
     this.attached = attached;
     this.type = type;
     this.owner = owner;
+    this.creator = creator;
+    this.creationDate = creationDate;
   }
 
   public Location getLocation() {
@@ -58,5 +62,21 @@ public class TNESign {
 
   public void setOwner(UUID owner) {
     this.owner = owner;
+  }
+
+  public UUID getCreator() {
+    return creator;
+  }
+
+  public void setCreator(UUID creator) {
+    this.creator = creator;
+  }
+
+  public Long getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(Long creationDate) {
+    this.creationDate = creationDate;
   }
 }

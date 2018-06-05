@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -49,11 +50,22 @@ public class SafeSign implements SignType {
   public boolean onSignCreate(SignChangeEvent event, Block attached, UUID player) {
     if(attached != null) {
       if(attached.getType().equals(Material.CHEST) || attached.getType().equals(Material.TRAPPED_CHEST)) {
+
         event.setLine(1, IDFinder.getUsername(player.toString()));
-        SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player));
+        SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player, player, new Date().getTime()));
         return true;
       }
     }
     return false;
+  }
+
+  @Override
+  public boolean onChest(UUID owner, UUID player) {
+    return owner.toString().equalsIgnoreCase(player.toString());
+  }
+
+  @Override
+  public boolean onSignDestroy(UUID owner, UUID player) {
+    return owner.toString().equalsIgnoreCase(player.toString());
   }
 }

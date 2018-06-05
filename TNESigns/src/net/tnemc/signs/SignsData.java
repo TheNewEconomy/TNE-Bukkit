@@ -29,25 +29,30 @@ public class SignsData {
 
   private static final String prefix = TNE.saveManager().getTNEManager().getPrefix();
 
-  private static final String SIGNS_TABLE = "CREATE TABLE " + prefix + "_SIGNS (" +
+  public static final String SIGNS_TABLE = "CREATE TABLE IF NOT EXISTS " + prefix + "_SIGNS (" +
       "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
       "`sign_attached` VARCHAR(420)," +
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
+      "`sign_creator` VARCHAR(36) NOT NULL," +
+      "`sign_created` BIGINT(60)," +
       ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
 
-  private static final String SIGNS_TABLE_H2 = "CREATE TABLE " + prefix + "_SIGNS (" +
+  public static final String SIGNS_TABLE_H2 = "CREATE TABLE IF NOT EXISTS " + prefix + "_SIGNS (" +
       "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
       "`sign_attached` VARCHAR(420)," +
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
+      "`sign_creator` VARCHAR(36) NOT NULL," +
+      "`sign_created` BIGINT(60)," +
       ") ENGINE = INNODB;";
 
-  private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type) VALUES(?, ?, ?, ?) " +
-                                           "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?;";
-  private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
-  private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type FROM " + prefix + "_SIGNS WHERE sign_location = ?";
-  private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
+  private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created) VALUES(?, ?, ?, ?, ?, ?) " +
+                                           "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?;";
+  private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
+  private static final String SIGNS_LOAD_CREATOR = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_creator = ? AND sign_type = ?";
+  private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_location = ?";
+  private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
   private static final String SIGNS_DELETE = "DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?";
 
   public static void saveSign(TNESign sign) {
@@ -56,9 +61,13 @@ public class SignsData {
         new SerializableLocation(sign.getAttached()).toString(),
         sign.getOwner().toString(),
         sign.getType(),
+        sign.getCreator().toString(),
+        sign.getCreationDate(),
         new SerializableLocation(sign.getAttached()).toString(),
         sign.getOwner().toString(),
         sign.getType(),
+        sign.getCreator().toString(),
+        sign.getCreationDate(),
 
     });
   }
@@ -73,7 +82,9 @@ public class SignsData {
         sign = new TNESign(SerializableLocation.fromString(database().results(result).getString("sign_location")).getLocation(),
             SerializableLocation.fromString(database().results(result).getString("sign_attached")).getLocation(),
             database().results(result).getString("sign_type"),
-            UUID.fromString(database().results(result).getString("sign_owner")));
+            UUID.fromString(database().results(result).getString("sign_owner")),
+            UUID.fromString(database().results(result).getString("sign_creator")),
+            database().results(result).getLong("sign_created"));
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -95,7 +106,9 @@ public class SignsData {
         sign = new TNESign(SerializableLocation.fromString(database().results(result).getString("sign_location")).getLocation(),
             SerializableLocation.fromString(database().results(result).getString("sign_attached")).getLocation(),
             database().results(result).getString("sign_type"),
-            UUID.fromString(database().results(result).getString("sign_owner")));
+            UUID.fromString(database().results(result).getString("sign_owner")),
+            UUID.fromString(database().results(result).getString("sign_creator")),
+            database().results(result).getLong("sign_created"));
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -105,6 +118,33 @@ public class SignsData {
       }
     }
     return sign;
+  }
+
+  public static Collection<TNESign> loadSignsCreator(String creator, String type) {
+    List<TNESign> signs = new ArrayList<>();
+    int result = -1;
+
+    try {
+      result = database().executePreparedQuery(SIGNS_LOAD_CREATOR, new Object[] { creator, type });
+      while(database().results(result).next()) {
+        signs.add(
+            new TNESign(SerializableLocation.fromString(database().results(result).getString("sign_location")).getLocation(),
+                SerializableLocation.fromString(database().results(result).getString("sign_attached")).getLocation(),
+                database().results(result).getString("sign_type"),
+                UUID.fromString(database().results(result).getString("sign_owner")),
+                UUID.fromString(database().results(result).getString("sign_creator")),
+                database().results(result).getLong("sign_created"))
+        );
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    } finally {
+      if(result != -1) {
+        database().closeResult(result);
+      }
+    }
+
+    return signs;
   }
 
   public static Collection<TNESign> loadSigns(String owner, String type) {
@@ -118,7 +158,9 @@ public class SignsData {
             new TNESign(SerializableLocation.fromString(database().results(result).getString("sign_location")).getLocation(),
                 SerializableLocation.fromString(database().results(result).getString("sign_attached")).getLocation(),
                 database().results(result).getString("sign_type"),
-                UUID.fromString(database().results(result).getString("sign_owner")))
+                UUID.fromString(database().results(result).getString("sign_owner")),
+                UUID.fromString(database().results(result).getString("sign_creator")),
+                database().results(result).getLong("sign_created"))
         );
       }
     } catch(Exception e) {

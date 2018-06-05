@@ -6,6 +6,7 @@ import com.github.tnerevival.core.db.sql.H2;
 import com.github.tnerevival.core.db.sql.MySQL;
 import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -19,14 +20,33 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 06/30/2017.
  */
 public abstract class Converter {
-  protected String mysqlHost = TNE.configurations().getString("Core.Conversion.Options.Host");
-  protected Integer mysqlPort = TNE.configurations().getInt("Core.Conversion.Options.Port");
-  protected String mysqlDatabase = TNE.configurations().getString("Core.Conversion.Options.Database");
-  protected String mysqlUser = TNE.configurations().getString("Core.Conversion.Options.User");
-  protected String mysqlPassword = TNE.configurations().getString("Core.Conversion.Options.Password");
+  protected String usedFile = TNE.configurations().getString("Conversion.Options.File");
+  protected String mysqlHost = TNE.configurations().getString("Conversion.Options.Host");
+  protected Integer mysqlPort = TNE.configurations().getInt("Conversion.Options.Port");
+  protected String mysqlDatabase = TNE.configurations().getString("Conversion.Options.Database");
+  protected String mysqlUser = TNE.configurations().getString("Conversion.Options.User");
+  protected String mysqlPassword = TNE.configurations().getString("Conversion.Options.Password");
 
-  protected String type = TNE.configurations().getString("Core.Conversion.Format");
+  protected String type = TNE.configurations().getString("Conversion.Format");
   protected DatabaseConnector db;
+  protected TNEDataManager conversionManager;
+
+  public Converter() {
+    conversionManager = new TNEDataManager(
+        type.toLowerCase(),
+        mysqlHost,
+        mysqlPort,
+        mysqlDatabase,
+        mysqlUser,
+        mysqlPassword,
+        "",
+        new File(TNE.instance().getDataFolder(), usedFile).getAbsolutePath(),
+        true,
+        false,
+        600,
+        true);
+  }
+
 
   public MySQL mysqlDB() {
     return (MySQL)db;
@@ -48,7 +68,7 @@ public abstract class Converter {
 
   public void convert() {
     try {
-      new File(TNE.instance().getDataFolder(), "conversion.yml").createNewFile();
+      new File(TNE.instance().getDataFolder(), "extracted.yml").createNewFile();
     } catch(Exception e) {
       TNE.debug(e);
     }

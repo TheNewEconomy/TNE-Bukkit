@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -79,7 +80,7 @@ public class TownSign implements SignType {
             event.setLine(1, name.substring(16, end));
           }
           UUID owner = IDFinder.getID(TownySettings.getTownAccountPrefix() + name);
-          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "town", owner));
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "town", owner, player, new Date().getTime()));
           return true;
         } catch (NotRegisteredException e) {
           //Shouldn't reach this point.
@@ -87,6 +88,53 @@ public class TownSign implements SignType {
         }
       }
     }
+    return false;
+  }
+
+  @Override
+  public boolean onChest(UUID owner, UUID player) {
+
+    Resident resident = null;
+    try {
+      resident = TownyUniverse.getDataSource().getResident(IDFinder.getUsername(player.toString()));
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
+    if(resident == null) return false;
+
+    try {
+      if(resident.hasTown()) {
+        UUID townID = IDFinder.getID(TownySettings.getTownAccountPrefix() + resident.getTown().getName());
+        return owner.equals(townID);
+      }
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
+    return false;
+  }
+
+  @Override
+  public boolean onSignDestroy(UUID owner, UUID player) {
+    Resident resident = null;
+    try {
+      resident = TownyUniverse.getDataSource().getResident(IDFinder.getUsername(player.toString()));
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
+    if(resident == null) return false;
+
+    try {
+      if(resident.hasTown()) {
+        UUID townID = IDFinder.getID(TownySettings.getTownAccountPrefix() + resident.getTown().getName());
+        return owner.equals(townID);
+      }
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
     return false;
   }
 }

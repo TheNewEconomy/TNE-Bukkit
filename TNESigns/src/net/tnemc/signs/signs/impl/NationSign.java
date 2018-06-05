@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -78,8 +79,11 @@ public class NationSign implements SignType {
             int end = (name.length() >= 32)? 32 : name.length();
             event.setLine(1, name.substring(16, end));
           }
+
+
+
           UUID owner = IDFinder.getID(TownySettings.getNationAccountPrefix() + name);
-          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "nation", owner));
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "nation", owner, player, new Date().getTime()));
           return true;
         } catch (NotRegisteredException e) {
           //Shouldn't reach this point.
@@ -87,6 +91,52 @@ public class NationSign implements SignType {
         }
       }
     }
+    return false;
+  }
+
+  @Override
+  public boolean onChest(UUID owner, UUID player) {
+    Resident resident = null;
+    try {
+      resident = TownyUniverse.getDataSource().getResident(IDFinder.getUsername(player.toString()));
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
+    if(resident == null) return false;
+
+    try {
+      if(resident.hasTown() && resident.isKing()) {
+        UUID nationID = IDFinder.getID(TownySettings.getNationAccountPrefix() + resident.getTown().getNation().getName());
+        return owner.equals(nationID);
+      }
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
+    return false;
+  }
+
+  @Override
+  public boolean onSignDestroy(UUID owner, UUID player) {
+    Resident resident = null;
+    try {
+      resident = TownyUniverse.getDataSource().getResident(IDFinder.getUsername(player.toString()));
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
+    if(resident == null) return false;
+
+    try {
+      if(resident.hasTown() && resident.isKing()) {
+        UUID nationID = IDFinder.getID(TownySettings.getNationAccountPrefix() + resident.getTown().getNation().getName());
+        return owner.equals(nationID);
+      }
+    } catch (NotRegisteredException e) {
+      return false;
+    }
+
     return false;
   }
 }

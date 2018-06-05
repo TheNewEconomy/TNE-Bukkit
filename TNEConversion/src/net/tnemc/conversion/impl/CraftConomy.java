@@ -44,7 +44,7 @@ public class CraftConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
 
     try {
       int currencyIndex = mysqlDB().executeQuery("SELECT * FROM " + currencyTable + ";");
@@ -97,7 +97,7 @@ public class CraftConomy extends Converter {
 
   @Override
   public void h2() throws InvalidDatabaseImport {
-    db = new H2(TNE.saveManager().getTNEManager());
+    db = new H2(conversionManager);
 
     try {
       int currencyIndex = h2DB().executeQuery("SELECT * FROM " + currencyTable + ";");

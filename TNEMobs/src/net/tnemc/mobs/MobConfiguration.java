@@ -1,6 +1,7 @@
 package net.tnemc.mobs;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;

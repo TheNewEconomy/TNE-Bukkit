@@ -401,7 +401,7 @@ public class TNEAccount implements Account {
     if(amount.equals(BigDecimal.ZERO)) return true;
     String world = TNE.instance().defaultWorld;
     Currency currency = TNE.manager().currencyManager().get(world);
-    setHoldings(world, currency.name(), getHoldings(world, currency).add(amount));
+    setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
     return true;
   }
 
@@ -409,7 +409,7 @@ public class TNEAccount implements Account {
   public boolean addHoldings(BigDecimal amount, String world) {
     if(amount.equals(BigDecimal.ZERO)) return true;
     Currency currency = TNE.manager().currencyManager().get(world);
-    setHoldings(world, currency.name(), getHoldings(world, currency).add(amount));
+    setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
     return true;
   }
 
@@ -417,14 +417,14 @@ public class TNEAccount implements Account {
   public boolean addHoldings(BigDecimal amount, Currency currency) {
     if(amount.equals(BigDecimal.ZERO)) return true;
     String world = TNE.instance().defaultWorld;
-    setHoldings(world, currency.name(), getHoldings(world, currency).add(amount));
+    setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
     return true;
   }
 
   @Override
   public boolean addHoldings(BigDecimal amount, Currency currency, String world) {
     if(amount.equals(BigDecimal.ZERO)) return true;
-    setHoldings(world, currency.name(), getHoldings(world, currency).add(amount));
+    setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
     return true;
   }
 

@@ -108,7 +108,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "48PB1";
+  public static final String build = "2Beta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -303,6 +303,8 @@ public class TNE extends TNELib {
     loader.getModules().forEach((key, value)->{
       value.getModule().getTables().forEach((type, tables)->saveManager().registerTables(type, tables));
     });
+
+    saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
 
     TNE.debug("Calling Modules.enableSave");
     loader.getModules().forEach((key, value)->{
@@ -551,7 +553,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    System.out.println(message);
+    //System.out.println(message);
   }
 
   public void loadConfigurations() {

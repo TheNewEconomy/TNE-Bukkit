@@ -47,12 +47,7 @@ public class AdminExtractCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), new Runnable() {
-      @Override
-      public void run() {
-        MISCUtils.extract(sender);
-      }
-    });
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> MISCUtils.extract(sender));
     return true;
   }
 }

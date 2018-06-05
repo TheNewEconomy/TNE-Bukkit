@@ -32,7 +32,7 @@ public class AdvancedEconomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     try {
       String table = config.getString("table");
       int index = mysqlDB().executeQuery("SELECT UUID, BALANCE FROM `balances`." + table + ";");

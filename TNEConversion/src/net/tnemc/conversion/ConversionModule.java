@@ -1,5 +1,6 @@
 package net.tnemc.conversion;
 
+import net.tnemc.conversion.command.ConvertCommand;
 import net.tnemc.conversion.impl.AdvancedEconomy;
 import net.tnemc.conversion.impl.BConomy;
 import net.tnemc.conversion.impl.BEconomy;
@@ -34,8 +35,7 @@ import net.tnemc.conversion.impl.TokensEconomy;
 import net.tnemc.conversion.impl.XConomy;
 import net.tnemc.conversion.impl.iConomy;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,9 +43,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.UUID;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -62,39 +65,80 @@ import java.util.UUID;
 )
 public class ConversionModule extends Module {
 
+  private static ConversionModule instance;
+  private File convert;
+  private FileConfiguration fileConfiguration;
+  private ConvertConfigurations configuration;
+
   @Override
   public void load(TNE tne, String version) {
     tne.getLogger().info("Conversion Module loaded!");
-    mainConfigurations.put("Core.Conversion.Convert", false);
-    mainConfigurations.put("Core.Conversion.Name", "iConomy");
-    mainConfigurations.put("Core.Conversion.Format", "MySQL");
-    mainConfigurations.put("Core.Conversion.Options.Host", "localhost");
-    mainConfigurations.put("Core.Conversion.Options.Port", 3306);
-    mainConfigurations.put("Core.Conversion.Options.Database", "sql_eco");
-    mainConfigurations.put("Core.Conversion.Options.User", "root");
-    mainConfigurations.put("Core.Conversion.Options.Password", "Password");
-    listeners.add(new ConversionListener(tne));
-  }
-
-  @Override
-  public void postLoad(TNE tne) {
-    if(TNE.configurations().getBoolean("Core.Conversion.Convert")) {
-      if(!new File(TNE.instance().getDataFolder(), "conversion.yml").exists()) {
-        Converter converter = getConverter();
-        if(converter != null) {
-          converter.convert();
-        }
-      }
-    }
+    instance = this;
   }
 
   @Override
   public void unload(TNE tne) {
+    if(!convert.exists()) {
+      configuration.save(fileConfiguration);
+    }
     tne.logger().info("Conversion Module unloaded!");
   }
 
-  public Converter getConverter() {
-    String name = TNE.configurations().getString("Core.Conversion.Name").toLowerCase();
+  @Override
+  public void initializeConfigurations() {
+    super.initializeConfigurations();
+    convert = new File(TNE.instance().getDataFolder(), "convert.yml");
+    fileConfiguration = YamlConfiguration.loadConfiguration(convert);
+  }
+
+  @Override
+  public void loadConfigurations() {
+    super.loadConfigurations();
+    fileConfiguration.options().copyDefaults(true);
+    configuration = new ConvertConfigurations();
+    configurations.put(configuration, "Conversion");
+  }
+
+  @Override
+  public void saveConfigurations() {
+    super.saveConfigurations();
+    if(!convert.exists()) {
+      Reader stream = null;
+      try {
+        stream = new InputStreamReader(TNE.instance().getResource("convert.yml"), "UTF8");
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
+      if (stream != null) {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(stream);
+        fileConfiguration.setDefaults(config);
+      }
+    }
+    try {
+      fileConfiguration.save(convert);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public File getConvert() {
+    return convert;
+  }
+
+  public FileConfiguration getFileConfiguration() {
+    return fileConfiguration;
+  }
+
+  public ConvertConfigurations getConfiguration() {
+    return configuration;
+  }
+
+  @Override
+  public List<TNECommand> getCommands() {
+    return Collections.singletonList(new ConvertCommand(TNE.instance()));
+  }
+
+  public Converter getConverter(String name) {
 
     switch(name) {
       case "advancedeconomy":
@@ -167,56 +211,27 @@ public class ConversionModule extends Module {
     return null;
   }
 
-  public static TNEAccount convertAccount(String username) {
-    UUID id = IDFinder.getID(username);
-    TNEAccount account = TNE.manager().getAccount(id);
-    if(new File(TNE.instance().getDataFolder(), "conversion.yml").exists()) {
-      File conversionFile = new File(TNE.instance().getDataFolder(), "conversion.yml");
-      FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
-
-      if (conversion.contains("Converted." + username) || conversion.contains("Converted." + id.toString())) {
-        String base = "Converted." + ((conversion.contains("Converted." + username)) ? username : id.toString());
-
-        Set<String> worlds = conversion.getConfigurationSection(base).getKeys(false);
-
-        for (String world : worlds) {
-          String section = base + "." + world;
-
-          Set<String> currencies = conversion.getConfigurationSection(section).getKeys(false);
-
-          for(String currency : currencies) {
-            if(conversion.contains(section + "." + currency + ".Amount")) {
-              account.setHoldings(world, currency, new BigDecimal(conversion.getString(section + "." + currency + ".Amount")));
-            }
-          }
-        }
-        conversion.set(base, null);
-        try {
-          conversion.save(conversionFile);
-        } catch(Exception e) {
-          TNE.debug(e);
-        }
-      }
-      return account;
-    }
-    return null;
-  }
-
   public static void convertedAdd(String identifier, String world, String currency, BigDecimal amount) {
-    File conversionFile = new File(TNE.instance().getDataFolder(), "conversion.yml");
+    File conversionFile = new File(TNE.instance().getDataFolder(), "extracted.yml");
     FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
 
     BigDecimal starting = BigDecimal.ZERO;
 
-    if(conversion.contains("Converted." + identifier + "." + world + "." + currency + ".Amount")) {
-      starting = new BigDecimal(conversion.getString("Converted." + identifier + "." + world + "." + currency + ".Amount"));
+    String newID = identifier.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%");
+
+    if(conversion.contains("Accounts." + newID + ".Balances." + world + "." + currency)) {
+      starting = new BigDecimal(conversion.getString("Accounts." + newID + ".Balances." + world + "." + currency));
     }
 
-    conversion.set("Converted." + identifier + "." + world + "." + currency + ".Amount", (starting.add(amount).toPlainString()));
+    conversion.set("Accounts." + newID + ".Balances." + world + "." + currency, starting.add(amount).toPlainString());
     try {
       conversion.save(conversionFile);
     } catch (IOException e) {
       TNE.debug(e);
     }
+  }
+
+  public static ConversionModule instance() {
+    return instance;
   }
 }

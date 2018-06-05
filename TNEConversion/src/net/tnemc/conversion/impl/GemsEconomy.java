@@ -35,7 +35,7 @@ public class GemsEconomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     String table = config.getString("mysql.tableprefix") + "_balances";
     try {
       int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");

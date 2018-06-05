@@ -33,7 +33,7 @@ public class SimpleConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     String table = config.getString("mySqlSettings.Connection.Values.table");
     try {
       int index = mysqlDB().executeQuery("SELECT UUID, COINS FROM " + table + ";");

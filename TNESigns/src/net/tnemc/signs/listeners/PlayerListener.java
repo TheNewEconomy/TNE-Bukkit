@@ -2,10 +2,16 @@ package net.tnemc.signs.listeners;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.signs.ChestHelper;
+import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
 import net.tnemc.signs.SignsModule;
 import net.tnemc.signs.signs.SignType;
+import net.tnemc.signs.signs.TNESign;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,10 +37,11 @@ public class PlayerListener implements Listener {
     this.plugin = plugin;
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onPlayerInteract(final PlayerInteractEvent event) {
     final Action eventAction = event.getAction();
-    if(eventAction.equals(Action.LEFT_CLICK_AIR) || eventAction.equals(Action.RIGHT_CLICK_AIR)) {
+    if(eventAction.equals(Action.LEFT_CLICK_AIR) || eventAction.equals(Action.RIGHT_CLICK_AIR)
+        || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)|| event.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
       return;
     }
 
@@ -44,8 +51,25 @@ public class PlayerListener implements Listener {
       if(SignsManager.validSign(identifier)) {
         SignType type = SignsModule.manager().getType(identifier);
         if(type != null) {
-          type.onSignInteract((Sign) block.getState(), IDFinder.getID(event.getPlayer()), (eventAction.equals(Action.RIGHT_CLICK_BLOCK)), event.getPlayer().isSneaking());
-          event.setCancelled(true);
+          if(type.onSignInteract((Sign) block.getState(), IDFinder.getID(event.getPlayer()), (eventAction.equals(Action.RIGHT_CLICK_BLOCK)), event.getPlayer().isSneaking())) {
+            event.setCancelled(true);
+          }
+        }
+      }
+    } else {
+      if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getPlayer().isSneaking()) {
+        if(event.getClickedBlock().getType().equals(Material.CHEST)) {
+          if(event.getClickedBlock().getState() instanceof Chest) {
+            Sign sign = new ChestHelper((Chest)event.getClickedBlock().getState()).getSign();
+            if(sign != null) {
+              TNESign signInstance = SignsData.loadSign(sign.getBlock().getLocation());
+              if(signInstance != null) {
+                if(!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())) {
+                  event.setCancelled(true);
+                }
+              }
+            }
+          }
         }
       }
     }

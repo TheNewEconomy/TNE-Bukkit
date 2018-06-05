@@ -64,6 +64,27 @@ public class SignsManager {
     return false;
   }
 
+  public static Sign getAttachedSign(final Block block) {
+    final Block above = block.getRelative(BlockFace.UP);
+    if(above.getType() != null && above.getType().equals(Material.SIGN_POST) && validSign((Sign)above.getState())) {
+      return (Sign)above.getState();
+    }
+
+    for(BlockFace face : connectedBlocks) {
+      final Block facedBlock = block.getRelative(face);
+
+      if(facedBlock.getType() != null && facedBlock.getType().equals(Material.WALL_SIGN)) {
+        if(facedBlock.getState() != null && facedBlock.getState().getData() != null && facedBlock.getState().getData() instanceof org.bukkit.material.Sign) {
+          final Sign sign = (Sign)facedBlock.getState();
+          if(sign != null) {
+            return sign;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   public static boolean validSign(final Sign sign) {
     return validSign(sign.getLine(0));
   }

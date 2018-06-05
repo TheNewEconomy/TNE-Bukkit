@@ -1,11 +1,15 @@
 package net.tnemc.signs.signs;
 
 import net.tnemc.core.menu.Menu;
+import net.tnemc.signs.SignsData;
+import net.tnemc.signs.SignsModule;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -32,6 +36,28 @@ public interface SignType {
     return ChatColor.DARK_PURPLE;
   }
 
+  default boolean enabled() {
+    String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
+    return !SignsModule.instance().getConfiguration().hasNode("Signs." + formatted + ".Enabled")
+        || (boolean) SignsModule.instance().getConfiguration().getValue("Signs." + formatted + ".Enabled");
+  }
+
+  default int max() {
+    String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
+    if(SignsModule.instance().getConfiguration().hasNode("Signs." + formatted + ".Max")) {
+      return (int)SignsModule.instance().getConfiguration().getValue("Signs." + formatted + ".Max");
+    }
+    return 5;
+  }
+
+  default BigDecimal cost() {
+    String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
+    if(SignsModule.instance().getConfiguration().hasNode("Signs." + formatted + ".PlaceCost")) {
+      return new BigDecimal((String)SignsModule.instance().getConfiguration().getValue("Signs." + formatted + ".PlaceCost"));
+    }
+    return BigDecimal.ZERO;
+  }
+
   /**
    * @return The permission node required to use this sign.
    */
@@ -50,14 +76,33 @@ public interface SignType {
     return getMenu() != null;
   }
 
+  default boolean create(final SignChangeEvent event, final Block attached, final UUID player) {
+    if(!enabled()) {
+      Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "This sign type is not enabled.");
+      return false;
+    }
+
+    if(max() >= 0 && SignsData.loadSignsCreator(player.toString(), name()).size() >= max()) {
+      Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "You have reached your max limit for this sign type.");
+      return false;
+    }
+    return onSignCreate(event, attached, player);
+  }
+
   default boolean onSignCreate(final SignChangeEvent event, final Block attached, final UUID player) {
     return true;
   }
 
-  default void onSignInteract(final Sign sign, final UUID player, final boolean rightClick, final boolean shifting) {}
+  default boolean onSignInteract(final Sign sign, final UUID player, final boolean rightClick, final boolean shifting) {
+    return false;
+  }
 
-  default boolean onSignDestroy(final Sign sign, final UUID player) {
+  default boolean onSignDestroy(final UUID owner, final UUID player) {
     return true;
+  }
+
+  default boolean onChest(final UUID owner, final UUID player) {
+    return false;
   }
 
   default boolean onMenuOpen(final Sign sign, final UUID player) {

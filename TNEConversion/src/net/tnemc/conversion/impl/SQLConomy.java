@@ -27,7 +27,7 @@ public class SQLConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     try {
       int index = mysqlDB().executeQuery("SELECT uuid, balance FROM balances;");
 

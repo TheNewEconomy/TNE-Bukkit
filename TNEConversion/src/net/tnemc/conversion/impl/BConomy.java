@@ -34,7 +34,7 @@ public class BConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     try {
       int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
@@ -50,7 +50,7 @@ public class BConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(TNE.saveManager().getTNEManager());
+    db = new SQLite(conversionManager);
     try {
       int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 

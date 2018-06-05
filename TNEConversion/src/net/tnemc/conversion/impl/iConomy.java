@@ -35,7 +35,7 @@ public class iConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     try {
       int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 

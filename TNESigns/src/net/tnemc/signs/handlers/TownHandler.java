@@ -42,17 +42,13 @@ public class TownHandler implements HoldingsHandler {
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
     BigDecimal amount = BigDecimal.ZERO;
 
-    System.out.println("Account in Town Handler: " + account.toString());
     for(TNESign sign : SignsData.loadSigns(account.toString(), "town")) {
       if(sign.getOwner().toString().equalsIgnoreCase(account.toString())) {
-        System.out.println("Adequate sign found.");
         if(sign.getAttached().getBlock().getState() instanceof Chest) {
-          System.out.println("Adequate chest found.");
           amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock().getState()).getBlockInventory()));
         }
       }
     }
-    System.out.println("Town Handler Balance: " + amount.toPlainString());
     return amount;
   }
 
