@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -119,7 +118,7 @@ public class TNE extends TNELib {
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
       blacklisted = true;
-      getLogger().info("Unable to load The New Economy as this server has been blacklisted.");
+      getLogger().info("Unable to load The New Economy as this server has been blacklisted!");
       return;
     }
 
@@ -149,7 +148,7 @@ public class TNE extends TNELib {
     commandManager = new CommandManager();
 
     //Create Debug Log
-    try {
+    /*try {
       LocalDateTime now = LocalDateTime.now();
       int year = now.getYear();
       int month = now.getMonthValue();
@@ -158,7 +157,7 @@ public class TNE extends TNELib {
       new File(getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt").createNewFile();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
 
     currentSaveVersion = 10.0;
 
