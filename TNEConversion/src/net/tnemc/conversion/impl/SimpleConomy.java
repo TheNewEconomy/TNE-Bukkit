@@ -28,7 +28,7 @@ public class SimpleConomy extends Converter {
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
-    return "GemsEconomy";
+    return "SimpleConomy";
   }
 
   @Override

@@ -32,6 +32,7 @@ import net.tnemc.conversion.impl.SimpleConomy;
 import net.tnemc.conversion.impl.SimplisticEconomy;
 import net.tnemc.conversion.impl.SwiftEconomy;
 import net.tnemc.conversion.impl.TokensEconomy;
+import net.tnemc.conversion.impl.TownyEco;
 import net.tnemc.conversion.impl.XConomy;
 import net.tnemc.conversion.impl.iConomy;
 import net.tnemc.core.TNE;
@@ -205,6 +206,8 @@ public class ConversionModule extends Module {
         return new SwiftEconomy();
       case "tokenseconomy":
         return new TokensEconomy();
+      case "townyeco":
+        return new TownyEco();
       case "xconomy":
         return new XConomy();
     }
