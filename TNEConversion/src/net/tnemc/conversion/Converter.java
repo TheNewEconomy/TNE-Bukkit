@@ -20,14 +20,14 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 06/30/2017.
  */
 public abstract class Converter {
-  protected String usedFile = TNE.configurations().getString("Conversion.Options.File");
-  protected String mysqlHost = TNE.configurations().getString("Conversion.Options.Host");
-  protected Integer mysqlPort = TNE.configurations().getInt("Conversion.Options.Port");
-  protected String mysqlDatabase = TNE.configurations().getString("Conversion.Options.Database");
-  protected String mysqlUser = TNE.configurations().getString("Conversion.Options.User");
-  protected String mysqlPassword = TNE.configurations().getString("Conversion.Options.Password");
+  protected String usedFile = ConversionModule.instance().getFileConfiguration().getString("Conversion.File");
+  protected String mysqlHost = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Host");
+  protected Integer mysqlPort = ConversionModule.instance().getFileConfiguration().getInt("Conversion.Options.Port");
+  protected String mysqlDatabase = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Database");
+  protected String mysqlUser = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.User");
+  protected String mysqlPassword = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Password");
 
-  protected String type = TNE.configurations().getString("Conversion.Format");
+  protected String type = ConversionModule.instance().getFileConfiguration().getString("Conversion.Format");
   protected DatabaseConnector db;
   protected TNEDataManager conversionManager;
 
