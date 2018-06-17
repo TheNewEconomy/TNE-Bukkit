@@ -131,6 +131,9 @@ Core:
             #Whether or not this currency is enabled.
             Disabled: false
 
+            #The server this currency belongs to, for data saving purposes.
+            Server: "Main Server"
+
             #The format to use when outputting this TNECurrency into chat.
             #The variables you're able to use here.
             #<symbol> - The TNECurrency's symbol

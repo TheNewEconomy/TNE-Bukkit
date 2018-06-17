@@ -129,9 +129,7 @@ public class TNEAccount implements Account {
         if(!core || handler.coreHandler()) {
           if(!handler.userContains().equalsIgnoreCase("") ||
               displayName().contains(handler.userContains())) {
-            System.out.println("LeftOver 1: " + leftOver.toPlainString());
             leftOver = handler.removeHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), leftOver);
-            System.out.println("LeftOver 2: " + leftOver.toPlainString());
           }
         }
       }
@@ -156,9 +154,6 @@ public class TNEAccount implements Account {
     for(Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
       for(HoldingsHandler handler : entry.getValue()) {
         if(!core || handler.coreHandler()) {
-          System.out.println("Display: " + displayName);
-          System.out.println("Handler Contains: " + handler.userContains());
-          System.out.println("Contains?: " + displayName.contains(handler.userContains()));
           if(handler.userContains().equalsIgnoreCase("") ||
               displayName().contains(handler.userContains())) {
             holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));

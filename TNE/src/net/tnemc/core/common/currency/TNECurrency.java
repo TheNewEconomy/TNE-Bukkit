@@ -39,6 +39,7 @@ public class TNECurrency implements Currency {
   private String plural;
   private String singleMinor;
   private String pluralMinor;
+  private String server;
   private String symbol;
   private String format;
   private String prefixes;
@@ -297,6 +298,14 @@ public class TNECurrency implements Currency {
 
   public void setPluralMinor(String pluralMinor) {
     this.pluralMinor = pluralMinor;
+  }
+
+  public String getServer() {
+    return server;
+  }
+
+  public void setServer(String server) {
+    this.server = server;
   }
 
   public void setSymbol(String symbol) {

@@ -63,7 +63,6 @@ public class EconomyManager {
   public void registerHandler(HoldingsHandler handler) {
     List<HoldingsHandler> handlers = holdingsHandlers.getOrDefault(handler.priority(), new ArrayList<>());
     handlers.add(handler);
-    System.out.println("Register handler for priority: " + handler.priority() + " Length: " + handlers.size());
     holdingsHandlers.put(handler.priority(), handlers);
   }
 

@@ -61,7 +61,7 @@ public class ConvertCommand extends TNECommand {
       Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
         converter.convert();
         sender.sendMessage(ChatColor.WHITE + "Conversion has completed. Running restoration command.");
-        Bukkit.getServer().dispatchCommand(sender, "tne restore");
+        Bukkit.getScheduler().runTask(TNE.instance(), ()->Bukkit.getServer().dispatchCommand(sender, "tne restore"));
       });
       sender.sendMessage(ChatColor.WHITE + "Conversion is now in progress.");
       return true;
