@@ -43,7 +43,7 @@ Default Configurations
 Features
 ----------
 - [Features](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Features.md) 
-- [Planned](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Upcoming.md) 
+- [Possible](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Possible.md) 
 
 Requirements
 ----------
