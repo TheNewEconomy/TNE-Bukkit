@@ -35,6 +35,8 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Server.MenuMaterial", "GOLD_INGOT");
     configurations.put("Core.Server.Name", "Main Server");
     configurations.put("Core.Server.Consolidate", false);
+    configurations.put("Core.Server.CurrencyCrafting", true);
+    configurations.put("Core.Server.CurrencyTrading", true);
     configurations.put("Core.Server.MobDrop", true);
     configurations.put("Core.Server.McMMORewards", true);
     configurations.put("Core.Server.Account.Enabled", true);

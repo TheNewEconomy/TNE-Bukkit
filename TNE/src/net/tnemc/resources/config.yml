@@ -29,6 +29,12 @@ Core:
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
+        #Whether or not players are able to use their currency for crafting.
+        CurrencyCrafting: true
+
+        #Whether or not players are able to use currency in villager trades.
+        CurrencyTrading: true
+
         #The name of this server for data-related purposes. Max length is 100 characters.
         Name: "Main Server"
 

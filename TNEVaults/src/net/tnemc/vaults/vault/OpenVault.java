@@ -1,13 +1,17 @@
 package net.tnemc.vaults.vault;
 
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.item.SerialItem;
 import net.tnemc.vaults.VaultsModule;
 import net.tnemc.vaults.inventory.VaultInventoryHolder;
 import org.bukkit.inventory.Inventory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
