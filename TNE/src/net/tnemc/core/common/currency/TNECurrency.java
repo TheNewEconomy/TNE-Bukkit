@@ -348,6 +348,10 @@ public class TNECurrency implements Currency {
     this.decimalPlaces = decimalPlaces;
   }
 
+  public int getDecimalPlaces() {
+    return decimalPlaces;
+  }
+
   public boolean isInterestEnabled() {
     return interestEnabled;
   }
