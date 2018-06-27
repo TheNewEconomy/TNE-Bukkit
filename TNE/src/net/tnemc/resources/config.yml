@@ -203,6 +203,9 @@ Core:
             #The maximum amount of places is 4
             DecimalPlaces: 2
 
+            #Would you like to use experience as the currency?
+            Experience: false
+
             #Would you like to use an item as the TNECurrency?
             ItemCurrency: false
 

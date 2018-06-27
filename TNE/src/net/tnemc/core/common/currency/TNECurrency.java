@@ -28,6 +28,7 @@ public class TNECurrency implements Currency {
   private BigDecimal balance;
   private BigDecimal maxBalance;
   private boolean item;
+  private boolean xp;
   private boolean vault;
   private boolean notable;
   private boolean bankChest;
@@ -218,6 +219,7 @@ public class TNECurrency implements Currency {
 
   public void setItem(boolean item) {
     this.item = item;
+    if(item) setXp(false);
   }
 
   public boolean canVault() {
@@ -374,5 +376,14 @@ public class TNECurrency implements Currency {
 
   public void setInterestInterval(long interestInterval) {
     this.interestInterval = interestInterval;
+  }
+
+  public boolean isXp() {
+    return xp;
+  }
+
+  public void setXp(boolean xp) {
+    this.xp = xp;
+    if(xp) setItem(false);
   }
 }

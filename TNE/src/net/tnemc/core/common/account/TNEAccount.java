@@ -13,6 +13,7 @@ import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -104,7 +105,9 @@ public class TNEAccount implements Account {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
     TNE.debug("Currency: " + cur.name());
-    if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
+    if(cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
+      Bukkit.getPlayer(identifier()).setTotalExperience(newHoldings.intValue());
+    } else if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
       WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
       worldHoldings.setHoldings(currency, newHoldings);
       holdings.put(world, worldHoldings);
@@ -151,12 +154,16 @@ public class TNEAccount implements Account {
 
   public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
     BigDecimal holdings = BigDecimal.ZERO;
-    for(Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
-      for(HoldingsHandler handler : entry.getValue()) {
-        if(!core || handler.coreHandler()) {
-          if(handler.userContains().equalsIgnoreCase("") ||
-              displayName().contains(handler.userContains())) {
-            holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
+    if(TNE.manager().currencyManager().get(world, currency).isXp() && Bukkit.getPlayer(identifier()) != null) {
+      holdings = new BigDecimal(Bukkit.getPlayer(identifier()).getTotalExperience());
+    } else {
+      for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
+        for (HoldingsHandler handler : entry.getValue()) {
+          if (!core || handler.coreHandler()) {
+            if (handler.userContains().equalsIgnoreCase("") ||
+                displayName().contains(handler.userContains())) {
+              holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
+            }
           }
         }
       }

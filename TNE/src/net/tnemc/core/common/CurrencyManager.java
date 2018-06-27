@@ -85,6 +85,7 @@ public class CurrencyManager {
         Boolean worldDefault = configuration.getBoolean(base + ".Default", true);
         Double rate = configuration.getDouble(base + ".Conversion", 1.0);
         Boolean item = configuration.getBoolean(base + ".ItemCurrency");
+        Boolean experience = configuration.getBoolean(base + ".Experience");
         Boolean vault = configuration.getBoolean(base + ".Vault", true);
         Boolean notable = configuration.getBoolean(base + ".Notable", false);
         Boolean bankChest = configuration.getBoolean(base + ".BankChest", true);
@@ -115,6 +116,7 @@ public class CurrencyManager {
         currency.setWorldDefault(worldDefault);
         currency.setRate(rate);
         currency.setItem(item);
+        currency.setXp(experience);
         currency.setVault(vault);
         currency.setNotable(notable);
         currency.setBankChest(bankChest);
