@@ -19,7 +19,7 @@ public class WorldHoldings {
   private Map<String, BigDecimal> holdings = new HashMap<>();
   private String world;
 
-  WorldHoldings(String world) {
+  public WorldHoldings(String world) {
     this.world = world;
   }
 
@@ -27,7 +27,7 @@ public class WorldHoldings {
     return holdings;
   }
 
-  protected BigDecimal getHoldings(String currency) {
+  public BigDecimal getHoldings(String currency) {
     BigDecimal current = BigDecimal.ZERO;
     if(holdings.containsKey(currency)) {
       current = holdings.get(currency);
@@ -41,19 +41,16 @@ public class WorldHoldings {
     return (BigDecimal)injector.getParameter("holdings");
   }
 
-  protected void setHoldings(String currency, BigDecimal newHoldings) {
+  public void setHoldings(String currency, BigDecimal newHoldings) {
     TNE.debug("Currency: " + currency + " Balance: " + newHoldings.toPlainString());
     holdings.put(currency, newHoldings);
   }
 
-  protected boolean hasHoldings(String currency) {
+  public boolean hasHoldings(String currency) {
     return holdings.containsKey(currency);
   }
-  protected boolean hasHoldings(String currency, BigDecimal amount) {
-    if(hasHoldings(currency)) {
-      return holdings.get(currency).compareTo(amount) > -1;
-    }
-    return false;
+  public boolean hasHoldings(String currency, BigDecimal amount) {
+    return hasHoldings(currency) && holdings.get(currency).compareTo(amount) > -1;
   }
 
   public void remove(String currency) {

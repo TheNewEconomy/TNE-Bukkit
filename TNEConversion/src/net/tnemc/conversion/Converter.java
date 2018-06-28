@@ -1,19 +1,3 @@
-/*
- * The New Economy Minecraft Server Plugin
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
-
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.tnemc.conversion;
 
 import com.github.tnerevival.core.db.DatabaseConnector;
@@ -22,22 +6,47 @@ import com.github.tnerevival.core.db.sql.H2;
 import com.github.tnerevival.core.db.sql.MySQL;
 import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 
 import java.io.File;
 import java.util.logging.Level;
 
 /**
- * Created by creatorfromhell on 11/8/2016.
- **/
+ * The New Economy Minecraft Server Plugin
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+ * Created by creatorfromhell on 06/30/2017.
+ */
 public abstract class Converter {
-  protected String mysqlHost = TNE.configurations().getString("Core.Conversion.Options.Host");
-  protected Integer mysqlPort = TNE.configurations().getInt("Core.Conversion.Options.Port");
-  protected String mysqlDatabase = TNE.configurations().getString("Core.Conversion.Options.Database");
-  protected String mysqlUser = TNE.configurations().getString("Core.Conversion.Options.User");
-  protected String mysqlPassword = TNE.configurations().getString("Core.Conversion.Options.Password");
+  protected String usedFile = ConversionModule.instance().getFileConfiguration().getString("Conversion.File");
+  protected String mysqlHost = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Host");
+  protected Integer mysqlPort = ConversionModule.instance().getFileConfiguration().getInt("Conversion.Options.Port");
+  protected String mysqlDatabase = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Database");
+  protected String mysqlUser = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.User");
+  protected String mysqlPassword = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Password");
 
-  protected String type = TNE.configurations().getString("Core.Conversion.Format");
+  protected String type = ConversionModule.instance().getFileConfiguration().getString("Conversion.Format");
   protected DatabaseConnector db;
+  protected TNEDataManager conversionManager;
+
+  public Converter() {
+    conversionManager = new TNEDataManager(
+        type.toLowerCase(),
+        mysqlHost,
+        mysqlPort,
+        mysqlDatabase,
+        mysqlUser,
+        mysqlPassword,
+        "",
+        new File(TNE.instance().getDataFolder(), usedFile).getAbsolutePath(),
+        true,
+        false,
+        600,
+        true);
+  }
+
 
   public MySQL mysqlDB() {
     return (MySQL)db;
@@ -59,7 +68,7 @@ public abstract class Converter {
 
   public void convert() {
     try {
-      new File(TNE.instance().getDataFolder(), "conversion.yml").createNewFile();
+      new File(TNE.instance().getDataFolder(), "extracted.yml").createNewFile();
     } catch(Exception e) {
       TNE.debug(e);
     }
@@ -82,6 +91,9 @@ public abstract class Converter {
           break;
         case "mini":
           flatfile();
+          break;
+        case "json":
+          json();
           break;
         case "yaml":
           yaml();
@@ -120,6 +132,11 @@ public abstract class Converter {
 
   public void yaml() throws InvalidDatabaseImport {
     throw new InvalidDatabaseImport("YAML", name());
+  }
+
+  //This is the dumbest trend ever.
+  public void json() throws InvalidDatabaseImport {
+    throw new InvalidDatabaseImport("JSON", name());
   }
 
   //iConomy Specific

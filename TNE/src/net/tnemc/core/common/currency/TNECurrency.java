@@ -4,7 +4,11 @@ import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -24,6 +28,7 @@ public class TNECurrency implements Currency {
   private BigDecimal balance;
   private BigDecimal maxBalance;
   private boolean item;
+  private boolean xp;
   private boolean vault;
   private boolean notable;
   private boolean bankChest;
@@ -35,6 +40,7 @@ public class TNECurrency implements Currency {
   private String plural;
   private String singleMinor;
   private String pluralMinor;
+  private String server;
   private String symbol;
   private String format;
   private String prefixes;
@@ -48,6 +54,13 @@ public class TNECurrency implements Currency {
   private long interestInterval = 1800;
 
   //TNETier-related methods.
+  public Set<TNETier> getTNETiers() {
+    Set<TNETier> tiers = new HashSet<>();
+    tiers.addAll(majorTiers.values());
+    tiers.addAll(minorTiers.values());
+    return tiers;
+  }
+
   public TreeMap<Integer, TNETier> getTNEMajorTiers() {
     return majorTiers;
   }
@@ -206,6 +219,7 @@ public class TNECurrency implements Currency {
 
   public void setItem(boolean item) {
     this.item = item;
+    if(item) setXp(false);
   }
 
   public boolean canVault() {
@@ -288,6 +302,14 @@ public class TNECurrency implements Currency {
     this.pluralMinor = pluralMinor;
   }
 
+  public String getServer() {
+    return server;
+  }
+
+  public void setServer(String server) {
+    this.server = server;
+  }
+
   public void setSymbol(String symbol) {
     this.symbol = symbol;
   }
@@ -328,6 +350,10 @@ public class TNECurrency implements Currency {
     this.decimalPlaces = decimalPlaces;
   }
 
+  public int getDecimalPlaces() {
+    return decimalPlaces;
+  }
+
   public boolean isInterestEnabled() {
     return interestEnabled;
   }
@@ -350,5 +376,14 @@ public class TNECurrency implements Currency {
 
   public void setInterestInterval(long interestInterval) {
     this.interestInterval = interestInterval;
+  }
+
+  public boolean isXp() {
+    return xp;
+  }
+
+  public void setXp(boolean xp) {
+    this.xp = xp;
+    if(xp) setItem(false);
   }
 }

@@ -12,10 +12,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.math.BigDecimal;
 
+
 /**
- * Created by creatorfromhell on 6/10/2017.
- * All rights reserved.
- **/
+ * The New Economy Minecraft Server Plugin
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+ * Created by creatorfromhell on 06/30/2017.
+ */
 public class BConomy extends Converter {
   private File configFile = new File("plugins/BConomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -29,7 +34,7 @@ public class BConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(TNE.saveManager().getTNEManager());
+    db = new MySQL(conversionManager);
     try {
       int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
@@ -45,7 +50,7 @@ public class BConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(TNE.saveManager().getTNEManager());
+    db = new SQLite(conversionManager);
     try {
       int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 

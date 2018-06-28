@@ -38,6 +38,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>reserve-repo</id>
+            <url>https://dl.bintray.com/theneweconomy/java/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -46,6 +50,11 @@
             <artifactId>bukkit</artifactId>
             <version>1.12-pre5-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.tnemc</groupId>
+            <artifactId>TNE</artifactId>
+            <version>0.1.0.0</version>
         </dependency>
     </dependencies>
 </project>

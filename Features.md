@@ -1,49 +1,28 @@
+- Modules
+  - Ability to disable features with a command, or by simply removing a jar file.
 - Administration
   - Ability to check a player's bank
   - Ability to check a player's balance
   - Ability to give/take money from players
+- Server Account
+  - Added a new default server account name of Server_Account. This account is fully protected for online servers, and
+  no intruders will have access to it.
 - API Features
   - Vault Integration
   - Plugin Metrics
   - Standard API
   - Custom Events
-- Auctions
-  - Multiple auctions per world/global
-  - Ability to have silent auctions
-  - When an auction is silent bid and snipe time messages are not sent
-  - This gives a sense of mystery to auctions, and means players may be likely to be against their self.
-  - Lots of configuration options
-- Transaction History
+- Command Arguments
+  - Ability to use multi-player arguments by separating names with a comma.
+    - This allows things like /money pay player,player2 10  
+  - Short-hand money arguments. Example: /money give player 10k
+  - Ability to have commands use triggers other than "/", or multiple triggers.
+- Transactions
   - The ability to track transaction history
+  - Transactions are able to be voided, which resets any money transfers that occured because of said transaction
 - Auto Saving
   - Ability to enable/disable
   - Ability to set custom save interval
-- Shops
-  - Ability to create shops to sell and/or buy items.
-  - Complete control
-  - Set max shops a single player can own
-  - Give players access to shop profit sharing
-  - Ability to offer trades for all shop items
-  - Ability to access shops via signs
-  - Ability to white and/or blacklist players from your shop
-  - Ability to hide your shop to only whitelisted players
-  - Ability to have admin shops, which are able to have items with unlimited stock
-- Banks
-  - Ability to enable/disable
-  - Ability to have multiple players per bank.
-  - Ability to deposit and withdraw money
-    - Ability to store multiple currencies
-  - Ability to have bank balances gain interest
-    - Ability to enable/disable interest gaining, per currency
-    - Ability to set custom interest rates, per currency
-    - Ability to set a custom interval for interest, per currency
-- Vaults
-  - Ability to enable/disable
-  - Ability to have multiple players per vault.
-  - Ability to access via signs or a command
-  - Ability to deposit and withdraw blocks and items
-    - Saves item locations
-    - Supports Custom names, lore, and enchantments
 - Currency System
   - Singular and Plural Name Support
   - Ability to check your balance
@@ -55,18 +34,23 @@
   - Ability to create a custom currency format for chat.
   - Ability to configure custom symbols for currencies
   - Ability to configure a conversion rating
+  - Ability to have custom tiers that mimic real-world currency systems.
+  - Added ability to change weight of minor currency
+  - Added ability to separate major value every three numeric places
+    - The character used to separate is configurable. Default is “,”
+  - Revamped currency tiers from being just Major and Minor to being configurable
+    - This allows the ability to create currencies that are exactly like real-world counterparts
+  - Item-based currencies were heavily improved
+    - Ability to allow offline transactions with a player using item-based currency
+    - Item currencies are now defined by: Material, damage, custom name, lore, and/or enchantment(s)
+
 - Language Support
   - Ability to change the default TNE messages
-- Mob Rewards
-  - Ability to reward the player money for killing a certain mob
-  - Ability to enable/disable mob rewards for individual mobs
-  - Ability to specify the currency for the reward
-  - Ability to  specify custom name for messages in messages.yml
-  - Supports mobs from Minecraft Forge mods
+  - Ability to add different languages.
+  - Ability for players to set their language.
 - Multiple Database Support
   - MySQL
   - H2
-  - Regular FlatFile
 - Multi-World Support
   - Ability to set configurations per world
   - Ability to charge people to change worlds
@@ -74,20 +58,10 @@
   - Ability to have banks set per-world
 - Minecraft UUID Support
   - The New Economy keeps your users' data even if they change their username!
+- Action GUI
+  - Ability to perform transactions on players using a GUI-based system.  
 - MISC
+  - Max balance of 900 decillion
   - Update Checker
   - Ability to disable UUID support
   - Ability to allow worlds to share economy data
-  - Ability to allow the use of bank balances for transactions
-  - Ability to charge for command use
-  - Inventory Use Charging
-    - Ability to charge per use
-    - Ability to create packages to charge per second of use
-  - Ability to reward/charge for using items
-  - Ability to reward/charge for crafting
-  - Ability to reward/charge for smelting
-  - Ability to reward/charge for enchanting
-  - Ability to reward/charge for mining
-  - Added the ability to make players drop items from their bank on death.
-    - Items chosen are completely random
-    - It's also possible to include empty bank slots in the drop.

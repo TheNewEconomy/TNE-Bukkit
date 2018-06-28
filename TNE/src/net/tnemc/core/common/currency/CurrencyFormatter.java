@@ -46,24 +46,24 @@ public class CurrencyFormatter {
     amount = round(world, currency.name(), amount);
     TNE.debug(currency.name() + " World: " + world);
 
-    String shortFormat = "<symbol><short.amount>";
-    String format = currency.getFormat();
+    final String shortFormat = "<symbol><short.amount>";
+    final String format = currency.getFormat();
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
-    BigInteger major = new BigInteger(amountStr[0]);
-    BigInteger minor = new BigInteger(String.format("%1$-2s", Integer.valueOf(amountStr[1])).replace(' ', '0'));
-    String majorName = (major.compareTo(BigInteger.ONE) == 0)? currency.name() : currency.plural();
-    String minorName = (minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor();
+    final BigInteger major = new BigInteger(amountStr[0]);
+    final BigInteger minor = new BigInteger(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'));
+    final String majorName = (major.compareTo(BigInteger.ONE) == 0)? currency.name() : currency.plural();
+    final String minorName = (minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor();
 
     Map<String, String> replacements = new HashMap<>();
     replacements.put("<symbol>", currency.symbol());
     replacements.put("<decimal>", currency.getDecimal());
-    replacements.put("<major>", major + " " + majorName);
-    replacements.put("<minor>", minor + " " + minorName);
+    replacements.put("<major>", major.toString() + " " + majorName);
+    replacements.put("<minor>", minor.toString() + " " + minorName);
     replacements.put("<major.name>", majorName);
     replacements.put("<minor.name>", minorName);
-    replacements.put("<major.amount>", major + "");
-    replacements.put("<minor.amount>", minor + "");
+    replacements.put("<major.amount>", major.toString() + "");
+    replacements.put("<minor.amount>", String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(minor.toString())).replace(' ', '0'));
     replacements.put("<short.amount>", shorten(currency, amount));
     replacements.putAll(Message.colours);
 
@@ -107,13 +107,13 @@ public class CurrencyFormatter {
   private static BigDecimal parseWeight(TNECurrency currency, BigDecimal decimal) {
     String[] amountStr = (String.valueOf(decimal) + (String.valueOf(decimal).contains(".")? "" : ".00")).split("\\.");
     BigInteger major = new BigInteger(amountStr[0]);
-    BigInteger minor = new BigInteger(String.format("%1$-2s", Integer.valueOf(amountStr[1])).replace(' ', '0'));
+    BigInteger minor = new BigInteger(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'));
     BigInteger majorConversion = minor;
     majorConversion = majorConversion.divide(new BigInteger(currency.getMinorWeight() + ""));
     major = major.add(majorConversion);
     minor = minor.mod(new BigInteger(currency.getMinorWeight() + ""));
-
-    return new BigDecimal(major.toString() + currency.getDecimal() + minor.toString());
+    final String minorFinal = String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(minor.toString())).replace(' ', '0');
+    return new BigDecimal(major.toString() + currency.getDecimal() + minorFinal);
   }
 
   private static String shorten(TNECurrency currency, BigDecimal balance) {
@@ -130,8 +130,8 @@ public class CurrencyFormatter {
   private static String fromShort(TNECurrency currency, String amount) {
     int charIndex = currency.getPrefixes().indexOf(amount.charAt(amount.length() - 1)) + 1;
     String sub = amount.substring(0, amount.length() - 1);
-    String form = "%1$-" + ((charIndex * 3) + sub.length()) + "s";
-    return String.format(form, Integer.valueOf(sub)).replace(' ', '0');
+    String form = "%-" + ((charIndex * 3) + sub.length()) + "s";
+    return String.format(form, sub).replace(' ', '0');
   }
 
   public static boolean isBigDecimal(String value, String world) {

@@ -75,6 +75,7 @@ public class CurrencyManager {
         String plural = configuration.getString(base + ".Name.Major.Plural", "Dollars");
         String singleMinor = configuration.getString(base + ".Name.Minor.Single", "Cent");
         String pluralMinor = configuration.getString(base + ".Name.Minor.Plural", "Cents");
+        String server = configuration.getString(base + ".Server", "Main Server");
         BigDecimal balance = new BigDecimal(configuration.getString(base + ".Balance", "200.00"));
         String decimal = configuration.getString(base + ".Decimal", ".");
         Integer decimalPlaces = ((configuration.getInt(base + ".DecimalPlace", 2) > 4)? 4 : configuration.getInt(base + ".DecimalPlace", 2));
@@ -84,6 +85,7 @@ public class CurrencyManager {
         Boolean worldDefault = configuration.getBoolean(base + ".Default", true);
         Double rate = configuration.getDouble(base + ".Conversion", 1.0);
         Boolean item = configuration.getBoolean(base + ".ItemCurrency");
+        Boolean experience = configuration.getBoolean(base + ".Experience");
         Boolean vault = configuration.getBoolean(base + ".Vault", true);
         Boolean notable = configuration.getBoolean(base + ".Notable", false);
         Boolean bankChest = configuration.getBoolean(base + ".BankChest", true);
@@ -109,10 +111,12 @@ public class CurrencyManager {
         currency.setPlural(plural);
         currency.setSingleMinor(singleMinor);
         currency.setPluralMinor(pluralMinor);
+        currency.setServer(server);
         currency.setSymbol(symbol);
         currency.setWorldDefault(worldDefault);
         currency.setRate(rate);
         currency.setItem(item);
+        currency.setXp(experience);
         currency.setVault(vault);
         currency.setNotable(notable);
         currency.setBankChest(bankChest);
@@ -297,7 +301,7 @@ public class CurrencyManager {
       TNE.instance().getWorldManager(world).addCurrency(reference);
     }
     TNE.manager().getAccounts().forEach((id, account)->{
-      account.setHoldings(world, newName, account.getHoldings(world, currency));
+      account.setHoldings(world, newName, account.getHoldings(world, TNE.manager().currencyManager().get(world, currency)));
       account.getWorldHoldings(world).remove(currency);
       TNE.manager().addAccount(account);
     });

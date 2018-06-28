@@ -3,6 +3,9 @@ package net.tnemc.core.common;
 import com.github.tnerevival.core.collection.EventMap;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.account.handlers.CoreHoldingsHandler;
+import net.tnemc.core.common.account.handlers.EChestHandler;
+import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.event.account.TNEAccountCreationEvent;
@@ -15,6 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 /**
@@ -45,11 +49,21 @@ public class EconomyManager {
    */
   private TransactionManager transactionManager;
 
+  private TreeMap<Integer, List<HoldingsHandler>> holdingsHandlers = new TreeMap<>();
+
   public EconomyManager() {
     this.accounts.setListener(new AccountListener());
     TNE.instance().registerEventMap(accounts);
     currencyManager = new CurrencyManager();
     transactionManager = new TransactionManager();
+    registerHandler(new CoreHoldingsHandler());
+    registerHandler(new EChestHandler());
+  }
+
+  public void registerHandler(HoldingsHandler handler) {
+    List<HoldingsHandler> handlers = holdingsHandlers.getOrDefault(handler.priority(), new ArrayList<>());
+    handlers.add(handler);
+    holdingsHandlers.put(handler.priority(), handlers);
   }
 
   public CurrencyManager currencyManager() {
@@ -109,6 +123,10 @@ public class EconomyManager {
 
   public EventMap<UUID, TNEAccount> getAccounts() {
     return accounts;
+  }
+
+  public TreeMap<Integer, List<HoldingsHandler>> getHoldingsHandlers() {
+    return holdingsHandlers;
   }
 
   public void purge(String world) {

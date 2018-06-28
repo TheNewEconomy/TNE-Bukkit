@@ -13,6 +13,7 @@ notice.
 #### What is the issue/bug you're experiencing?
 #### How can the issue be reproduced?(i.e. the steps to make the issue occur again)
 #### TNE version?(exact version number), and whether or not you've made modification to it.
+#### TNE build?(/tne build), and whether or not you've made modification to it.
 #### Modules Loaded?(exact version number), and whether or not you've made modification to it.
 #### Spigot/Bukkit version?
 #### Is your server run in online mode?

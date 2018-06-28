@@ -38,6 +38,7 @@ import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
+import net.tnemc.core.listeners.TNEMessageListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
@@ -54,7 +55,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,6 +74,7 @@ import java.util.logging.Logger;
  */
 public class TNE extends TNELib {
   private Map<String, WorldManager> worldManagers = new HashMap<>();
+  private List<UUID> tnemodUsers = new ArrayList<>();
 
   private EconomyManager manager;
   private MenuManager menuManager;
@@ -108,18 +109,19 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "48PB1";
+  public static final String build = "3Beta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
   private List<EventMap> cacheMaps = new ArrayList<>();
 
   private boolean blacklisted = false;
+  public static boolean useMod = false;
 
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
       blacklisted = true;
-      getLogger().info("Unable to load The New Economy as this server has been blacklisted.");
+      getLogger().info("Unable to load The New Economy as this server has been blacklisted!");
       return;
     }
 
@@ -149,7 +151,7 @@ public class TNE extends TNELib {
     commandManager = new CommandManager();
 
     //Create Debug Log
-    try {
+    /*try {
       LocalDateTime now = LocalDateTime.now();
       int year = now.getYear();
       int month = now.getMonthValue();
@@ -158,7 +160,7 @@ public class TNE extends TNELib {
       new File(getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt").createNewFile();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
 
     currentSaveVersion = 10.0;
 
@@ -304,6 +306,8 @@ public class TNE extends TNELib {
       value.getModule().getTables().forEach((type, tables)->saveManager().registerTables(type, tables));
     });
 
+    saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
+
     TNE.debug("Calling Modules.enableSave");
     loader.getModules().forEach((key, value)->{
       value.getModule().enableSave(saveManager());
@@ -360,6 +364,13 @@ public class TNE extends TNELib {
         account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("Core.Server.Account.Balance"), true);
         getLogger().info("Created server economy account.");
       }
+    }
+
+    useMod = configurations.getBoolean("Core.Server.TNEMod");
+
+    if(useMod) {
+      Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
+      Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
     getLogger().info("The New Economy has been enabled!");
@@ -424,6 +435,18 @@ public class TNE extends TNELib {
       return ecoCommand.execute(sender, label, arguments);
     }
     return false;
+  }
+
+  public void addModUser(UUID id) {
+    tnemodUsers.add(id);
+  }
+
+  public boolean isModUser(UUID id) {
+    return tnemodUsers.contains(id);
+  }
+
+  public void removeModUser(UUID id) {
+    tnemodUsers.remove(id);
   }
 
   public static net.tnemc.core.common.configurations.ConfigurationManager configurations() {
@@ -551,7 +574,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    System.out.println(message);
+    //System.out.println(message);
   }
 
   public void loadConfigurations() {

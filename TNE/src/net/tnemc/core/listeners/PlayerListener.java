@@ -23,7 +23,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -74,7 +76,7 @@ public class PlayerListener implements Listener {
         TNE.menuManager().setViewerData(id, "action_world", world);
       }
 
-      if(((Player)event.getRightClicked()).getDisplayName().toLowerCase().contains("thenetyeti")) {
+      if((event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("5f262fab-e8db-4e35-bf2b-79f47b804095")) {
         player.sendMessage(ChatColor.GREEN + "Congratulations you have found the Yediot.");
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
@@ -88,7 +90,7 @@ public class PlayerListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
       }
 
-      if(((Player)event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("66a7e812-fb82-409c-88c4-9edc34bb5c39")) {
+      if((event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("66a7e812-fb82-409c-88c4-9edc34bb5c39")) {
         player.sendMessage(ChatColor.GREEN + "Congratulations you have found the Yediot.");
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
@@ -102,7 +104,7 @@ public class PlayerListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
       }
 
-      if(((Player)event.getRightClicked()).getDisplayName().toLowerCase().contains("growlf")) {
+      if((event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("5f1f274f-c251-410e-8c40-732ea4418ae6")) {
         player.sendMessage(ChatColor.GREEN + "Congratulations you have found the disguised Yediot.");
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
@@ -125,10 +127,6 @@ public class PlayerListener implements Listener {
     Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
-    if(player.getName().toLowerCase().contains("thenetyeti")
-        || player.getName().toLowerCase().contains("growlf")) {
-      player.playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10f, 1f);
-    }
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
 
     if(!noEconomy && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
@@ -189,6 +187,15 @@ public class PlayerListener implements Listener {
       Menu menu = ((MenuHolder)event.getInventory().getHolder()).getMenuInstance();
 
       menu.click((Player)event.getWhoClicked(), slot);
+    } else {
+      if(event.getInventory().getType().equals(InventoryType.MERCHANT) &&
+          !TNE.configurations().getBoolean("Core.Server.CurrencyTrading")) {
+        final String world = WorldFinder.getWorld(event.getWhoClicked(), WorldVariant.BALANCE);
+        if(event.getCurrentItem() != null &&
+            TNE.manager().currencyManager().currencyFromItem(world, event.getCurrentItem()).isPresent()) {
+          event.setCancelled(true);
+        }
+      }
     }
   }
 
@@ -227,6 +234,19 @@ public class PlayerListener implements Listener {
       String[] arguments = (parsed.length > 1)? Arrays.copyOfRange(parsed, 1, parsed.length) : new String[0];
       TNE.instance().customCommand(event.getPlayer(), parsed[0].substring(1), arguments);
       event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void onCraftEvent(CraftItemEvent event) {
+    if(!TNE.configurations().getBoolean("Core.Server.CurrencyCrafting")) {
+      final String world = WorldFinder.getWorld(event.getWhoClicked(), WorldVariant.BALANCE);
+      for (ItemStack item : event.getInventory().getMatrix()) {
+        if (item != null && TNE.manager().currencyManager().currencyFromItem(world, item).isPresent()) {
+          event.setCancelled(true);
+          break;
+        }
+      }
     }
   }
 }

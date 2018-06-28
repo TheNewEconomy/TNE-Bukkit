@@ -104,7 +104,7 @@ public class IDFinder {
     return Bukkit.getOfflinePlayer(id);
   }
 
-  private static OfflinePlayer getOffline(UUID id) {
+  public static OfflinePlayer getOffline(UUID id) {
     return Bukkit.getOfflinePlayer(id);
   }
 
@@ -138,6 +138,20 @@ public class IDFinder {
 
     if(identifier.contains(TNELib.instance().nationPrefix)) {
       TNELib.debug("Towny Nation");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
+    }
+
+    if(identifier.contains("empire-")) {
+      TNELib.debug("Empire");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
+    }
+
+    if(identifier.contains("village-")) {
+      TNELib.debug("Village");
       UUID id = ecoID(identifier);
       checkSpecial(id);
       return id;

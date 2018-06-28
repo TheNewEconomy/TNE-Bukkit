@@ -52,12 +52,7 @@ public class AdminRestoreCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
     if(file.exists()) {
-      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), new Runnable() {
-        @Override
-        public void run() {
-          MISCUtils.restore(sender);
-        }
-      });
+      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> MISCUtils.restore(sender));
       return true;
     }
     sender.sendMessage(ChatColor.RED + "Unable to locate extracted.yml file for restoration.");

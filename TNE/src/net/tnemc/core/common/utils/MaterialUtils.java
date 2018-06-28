@@ -144,7 +144,6 @@ public class MaterialUtils {
     if(player == null) TNE.debug("Player is null");
     if(info == null) TNE.debug("info is null");
     Inventory inv = (inventory == null)? player.getInventory() : inventory;
-    if(inv == null) TNE.debug("Player Inventory is null");
 
     Integer value = 0;
     for(ItemStack stack : inv.getContents()) {

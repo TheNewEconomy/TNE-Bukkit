@@ -396,8 +396,11 @@ public class H2Provider extends TNEDataProvider {
 
         for(Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
           for(Map.Entry<String, BigDecimal> entry : holdingsEntry.getValue().getHoldings().entrySet()) {
+            final String server = (TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()) != null)?
+                TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()).getServer() :
+                TNE.instance().getServerName();
             balanceStatement.setString(1, account.identifier().toString());
-            balanceStatement.setString(2, TNE.instance().getServerName());
+            balanceStatement.setString(2, server);
             balanceStatement.setString(3, holdingsEntry.getKey());
             balanceStatement.setString(4, entry.getKey());
             balanceStatement.setString(5, entry.getValue().toString());
@@ -443,10 +446,13 @@ public class H2Provider extends TNEDataProvider {
     account.getWorldHoldings().forEach((world, holdings)->{
 
       holdings.getHoldings().forEach((currency, balance)->{
+        final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
+            TNE.manager().currencyManager().get(world, currency).getServer() :
+            TNE.instance().getServerName();
         h2().executePreparedUpdate(BALANCE_SAVE,
             new Object[]{
                 account.identifier().toString(),
-                TNE.instance().getServerName(),
+                server,
                 world,
                 currency,
                 balance.toPlainString(),
