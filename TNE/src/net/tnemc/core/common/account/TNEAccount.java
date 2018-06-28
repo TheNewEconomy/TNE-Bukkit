@@ -142,7 +142,9 @@ public class TNEAccount implements Account {
   private boolean hasHoldings(String world, String currency) {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
-    if(!cur.isItem() || !MISCUtils.isOnline(id, world)) {
+    if(cur.isXp() && MISCUtils.isOnline(id, world)) {
+      return true;
+    } else if(!cur.isItem() || !MISCUtils.isOnline(id, world)) {
       if (holdings.containsKey(world)) {
         return holdings.get(world).hasHoldings(currency);
       }
@@ -154,7 +156,7 @@ public class TNEAccount implements Account {
 
   public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
     BigDecimal holdings = BigDecimal.ZERO;
-    if(TNE.manager().currencyManager().get(world, currency).isXp() && Bukkit.getPlayer(identifier()) != null) {
+    if(TNE.manager().currencyManager().get(world, currency).isXp() && MISCUtils.isOnline(id, world)) {
       holdings = new BigDecimal(Bukkit.getPlayer(identifier()).getTotalExperience());
     } else {
       for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {

@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerChannelEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -43,6 +44,16 @@ public class ConnectionListener implements Listener {
 
   public ConnectionListener(TNE plugin) {
     this.plugin = plugin;
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onChannel(final PlayerChannelEvent event) {
+    System.out.println("Player channel registered! Name: " + event.getChannel());
+    if(TNE.useMod) {
+      if (event.getChannel().equalsIgnoreCase("tnemod")) {
+        TNE.instance().addModUser(event.getPlayer().getUniqueId());
+      }
+    }
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -95,10 +106,39 @@ public class ConnectionListener implements Listener {
 
     if(!first) account.getHistory().populateAway(account.getLastOnline());
     TNE.manager().addAccount(account);
+
     if(player.getUniqueId().toString().equalsIgnoreCase("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {
       Bukkit.getOnlinePlayers().forEach((p)->{
         p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 10f, 1f);
       });
+    }
+    //final String uuidString = id.toString();
+
+    if(TNE.useMod) {
+      final UUID uuid = id;
+      Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), () -> {
+        //TNEMod Check
+      /*ByteArrayOutputStream bout = new ByteArrayOutputStream();
+      DataOutputStream out = new DataOutputStream(bout);
+      try {
+        out.writeByte(120);
+        out.writeInt(uuidString.length());
+        out.writeUTF(uuidString);
+      } catch(Exception e) {
+        //failed.
+      }
+      event.getPlayer().sendPluginMessage(TNE.instance(), "tnemod", bout.toByteArray());
+      System.out.println("TNEModCheck has been sent out.");*/
+        if (!TNE.instance().isModUser(uuid)) {
+          Bukkit.getScheduler().runTask(TNE.instance(), () -> {
+            event.getPlayer().kickPlayer(ChatColor.RED + "You must have the TNE Forge Mod installed.");
+          });
+        } else {
+          Bukkit.getScheduler().runTask(TNE.instance(), () -> {
+            TNE.instance().removeModUser(uuid);
+          });
+        }
+      }, 40L);
     }
   }
 

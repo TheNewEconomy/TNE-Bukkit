@@ -38,6 +38,7 @@ import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
+import net.tnemc.core.listeners.TNEMessageListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
@@ -73,6 +74,7 @@ import java.util.logging.Logger;
  */
 public class TNE extends TNELib {
   private Map<String, WorldManager> worldManagers = new HashMap<>();
+  private List<UUID> tnemodUsers = new ArrayList<>();
 
   private EconomyManager manager;
   private MenuManager menuManager;
@@ -114,6 +116,7 @@ public class TNE extends TNELib {
   private List<EventMap> cacheMaps = new ArrayList<>();
 
   private boolean blacklisted = false;
+  public static boolean useMod = false;
 
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
@@ -363,6 +366,13 @@ public class TNE extends TNELib {
       }
     }
 
+    useMod = configurations.getBoolean("Core.Server.TNEMod");
+
+    if(useMod) {
+      Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
+      Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
+    }
+
     getLogger().info("The New Economy has been enabled!");
   }
 
@@ -425,6 +435,18 @@ public class TNE extends TNELib {
       return ecoCommand.execute(sender, label, arguments);
     }
     return false;
+  }
+
+  public void addModUser(UUID id) {
+    tnemodUsers.add(id);
+  }
+
+  public boolean isModUser(UUID id) {
+    return tnemodUsers.contains(id);
+  }
+
+  public void removeModUser(UUID id) {
+    tnemodUsers.remove(id);
   }
 
   public static net.tnemc.core.common.configurations.ConfigurationManager configurations() {

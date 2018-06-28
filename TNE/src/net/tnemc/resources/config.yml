@@ -23,6 +23,9 @@ Core:
         #The material to use to activate the TNE Action Menu.
         MenuMaterial: "GOLD_INGOT"
 
+        #Whether or not to use the TNEMod. This will require users to have it installed.
+        TNEMod: false
+
         #Whether or not mob drops that are a currency item should be disabled.
         MobDrop: true
 
