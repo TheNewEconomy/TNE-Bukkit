@@ -50,7 +50,7 @@ public class WorldConfigurations extends Configuration {
 
       for(String s : configurations) {
         String node = "Worlds." + world + "." + s;
-        if(!configurationFile.isConfigurationSection(node) && !node.contains("Worlds." + world + ".TNECurrency")) {
+        if(!configurationFile.isConfigurationSection(node) && !node.contains("Worlds." + world + ".Currency")) {
           manager.setConfiguration(node, configurationFile.get(node));
         }
       }

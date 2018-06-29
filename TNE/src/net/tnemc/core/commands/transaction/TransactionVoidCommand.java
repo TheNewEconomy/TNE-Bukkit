@@ -54,6 +54,12 @@ public class TransactionVoidCommand extends TNECommand {
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID uuid = null;
+
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return false;
+      }
+
       try {
         uuid = UUID.fromString(arguments[0]);
       } catch(IllegalArgumentException exception) {

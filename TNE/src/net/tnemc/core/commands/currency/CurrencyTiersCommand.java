@@ -54,6 +54,11 @@ public class CurrencyTiersCommand extends TNECommand {
     String currencyName = (arguments.length >= 1)? arguments[0] : TNE.manager().currencyManager().get(world).name();
     TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     if(!TNE.manager().currencyManager().contains(world, currencyName)) {
       Message m = new Message("Messages.Money.NoCurrency");
       m.addVariable("$currency", currencyName);

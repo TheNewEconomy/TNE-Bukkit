@@ -69,6 +69,17 @@ public class MoneyConvertCommand extends TNECommand {
       TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
       TNECurrency from = TNE.manager().currencyManager().get(WorldFinder.getWorld(sender, WorldVariant.BALANCE));
       String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+
+      if(TNE.instance().getWorldManager(worldFrom).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(worldFrom, sender);
+        return false;
+      }
+
+      if(TNE.instance().getWorldManager(worldTo).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(worldTo, sender);
+        return false;
+      }
+
       if(arguments.length >= 3) {
         worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];

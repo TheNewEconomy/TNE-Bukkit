@@ -64,6 +64,11 @@ public class MoneyTopCommand extends TNECommand {
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     TNECurrency currency = TNE.manager().currencyManager().get(world);
 
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0)) && MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {
       page = Integer.valueOf(parsed.get(String.valueOf(0)));
     }

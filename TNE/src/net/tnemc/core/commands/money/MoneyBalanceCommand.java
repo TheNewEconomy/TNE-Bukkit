@@ -78,6 +78,11 @@ public class MoneyBalanceCommand extends TNECommand {
     TNE.debug("World: " + world);
     TNE.debug("Args Length: " + arguments.length);
 
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     Map<String, BigDecimal> balances = new HashMap<>();
 
     List<TNECurrency> currencies = new ArrayList<>();

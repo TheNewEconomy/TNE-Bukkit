@@ -62,6 +62,11 @@ public class MoneyGiveCommand extends TNECommand {
       String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return false;
+      }
+
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
       if(parsed.contains("Messages")) {
         Message max = new Message(parsed);

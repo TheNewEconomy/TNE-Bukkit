@@ -62,6 +62,11 @@ public class TransactionAwayCommand extends TNECommand {
     Player player = getPlayer(sender);
     int page = 1;
 
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     if(arguments.length >= 1 && MISCUtils.isInteger(arguments[0])) {
       page = Integer.parseInt(arguments[0]);
     }

@@ -117,18 +117,6 @@ public class ConnectionListener implements Listener {
     if(TNE.useMod) {
       final UUID uuid = id;
       Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), () -> {
-        //TNEMod Check
-      /*ByteArrayOutputStream bout = new ByteArrayOutputStream();
-      DataOutputStream out = new DataOutputStream(bout);
-      try {
-        out.writeByte(120);
-        out.writeInt(uuidString.length());
-        out.writeUTF(uuidString);
-      } catch(Exception e) {
-        //failed.
-      }
-      event.getPlayer().sendPluginMessage(TNE.instance(), "tnemod", bout.toByteArray());
-      System.out.println("TNEModCheck has been sent out.");*/
         if (!TNE.instance().isModUser(uuid)) {
           Bukkit.getScheduler().runTask(TNE.instance(), () -> {
             event.getPlayer().kickPlayer(ChatColor.RED + "You must have the TNE Forge Mod installed.");
@@ -176,7 +164,7 @@ public class ConnectionListener implements Listener {
     TNEAccount account = TNEAccount.getAccount(id.toString());
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
 
-    boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null ||TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
+    boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null || TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
     if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         WorldManager manager = TNE.instance().getWorldManager(world);

@@ -66,6 +66,11 @@ public class MoneySetCommand extends TNECommand {
       String currencyName = (arguments.length >= 4)? arguments[3] : TNE.manager().currencyManager().get(world).name();
       UUID id = IDFinder.getID(arguments[0]);
 
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return false;
+      }
+
       TNE.debug("MoneySetCommand Currency: " + currencyName);
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);

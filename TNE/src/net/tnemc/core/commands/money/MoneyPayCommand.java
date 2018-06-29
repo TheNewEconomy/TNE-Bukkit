@@ -58,6 +58,12 @@ public class MoneyPayCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     TNE.debug("===START MoneyPayCommand ===");
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     if(arguments.length >= 2) {
       String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
