@@ -48,7 +48,7 @@ public class MobConfiguration extends Configuration {
 
     for(EntityType type : EntityType.values()) {
       if(type.isAlive() && !type.equals(EntityType.PLAYER)) {
-        System.out.println("Adding Mob " + type.getEntityClass().getSimpleName());
+        System.out.println("Adding Mob " + type.name());
         String formatted = formatName(type.getName());
         configurations.put("Mobs." + formatted + ".Enabled", true);
         configurations.put("Mobs." + formatted + ".Reward", 10.00);
@@ -142,12 +142,13 @@ public class MobConfiguration extends Configuration {
   }
 
   private void addChance(FileConfiguration configurationFile, String base) {
-    TNE.debug("MobConfiguration.addChance(mobs.yml, " + base + ")");
+    System.out.println("MobConfiguration.addChance(mobs.yml, " + base + ")");
     if(configurationFile.contains(base + ".Multiplier")) {
       configurations.put(base + ".Multiplier", configurationFile.getDouble(base + ".Multiplier"));
     }
 
     if(configurationFile.contains(base + ".Chance.Min") || configurationFile.contains(base + ".Chance.Max")) {
+      System.out.println("Chance Added!");
       Double min = configurationFile.getDouble(base + ".Chance.Min", configurationFile.getDouble(base + ".Chance.Max") - 5.0);
       Double max = configurationFile.getDouble(base + ".Chance.Max", configurationFile.getDouble(base + ".Chance.Max") - 5.0);
       configurations.put(base + ".Chance.Min", min);

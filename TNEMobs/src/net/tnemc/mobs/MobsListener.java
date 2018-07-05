@@ -1,18 +1,24 @@
 package net.tnemc.mobs;
 
-import com.github.tnerevival.core.Message;
-import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -61,7 +67,7 @@ public class MobsListener implements ModuleListener {
         TNE.debug("TNE getBoolean(Mobs.Enabled) null: " + (TNE.instance().api().getBoolean("Mobs.Enabled", world, id) == null));
         if (TNE.instance().api().getBoolean("Mobs.Enabled", world, id)) {
           if (entity.getType().isAlive()) {
-            mob = MobConfiguration.formatName(entity.getType().getName());
+            mob = MobConfiguration.formatName(entity.getType().name());
 
             if (entity.getType().equals(EntityType.RABBIT)) {
               Rabbit rab = (Rabbit) entity;
@@ -78,6 +84,8 @@ public class MobsListener implements ModuleListener {
               }
             }
           }
+
+          System.out.println("Mob Name: " + mob);
           mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? "Custom.Entries." + event.getEntityType().toString() : mob;
 
           if (entity.getCustomName() != null && MobsModule.instance().mobEnabled(entity.getCustomName(), world, id.toString()))
@@ -117,7 +125,10 @@ public class MobsListener implements ModuleListener {
             }
           }
 
-          if (!MobsModule.instance().fileConfiguration.contains("Mobs." + mob)) mob = "Default";
+          System.out.println("Mob Name: " + mob);
+
+          if (!MobsModule.instance().fileConfiguration.isConfigurationSection("Mobs." + mob)) mob = "Default";
+          System.out.println("Mob Name: " + mob);
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))
             mob = "Custom.Entries." + entity.getCustomName();
           String currency = MobsModule.instance().mobCurrency(mob, world, id.toString());

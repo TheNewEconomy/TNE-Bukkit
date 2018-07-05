@@ -24,11 +24,11 @@ Mobs:
     #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
     Default:
        Enabled: true
-        #IF you want to specify a mysql for a mob specifically, it goes here.
+        #If you want to specify a multiplier for a mob specifically, it goes here.
        Multiplier: 1.0
        Reward: 10.00
         #If you want to allow a random value between two numbers use this configuration.
-       #Note: This overwards the value of Reward
+       #Note: This overrides the value of Reward
        Chance:
          #The minimum value that may be granted
          Min: 5.0

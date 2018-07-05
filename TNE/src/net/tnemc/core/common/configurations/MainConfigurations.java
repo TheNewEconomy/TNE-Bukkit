@@ -31,7 +31,6 @@ public class MainConfigurations  extends Configuration {
   public void load(FileConfiguration configurationFile) {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
-    configurations.put("Core.Metrics", true);
     configurations.put("Core.Server.MenuMaterial", "GOLD_INGOT");
     configurations.put("Core.Server.Name", "Main Server");
     configurations.put("Core.Server.TNEMod", false);

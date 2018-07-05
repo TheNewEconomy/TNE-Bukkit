@@ -6,7 +6,11 @@ import net.tnemc.core.common.module.ModuleInfo;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -131,13 +135,14 @@ public class MobsModule extends Module {
     if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Reward", world, player) == null) {
       return BigDecimal.ZERO;
     }
-    if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Chance.Min", world, player) != null
-        || TNE.instance().api().getConfiguration("Mobs." + mob + ".Chance.Max", world, player) != null) {
+
+    if(configuration.getConfiguration().contains("Mobs." + mob + ".Chance.Min") ||
+        configuration.getConfiguration().contains("Mobs." + mob + ".Chance.Max")) {
+      System.out.println("Chance found for " + mob);
       BigDecimal min = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Min", world, player);
       BigDecimal max = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Max", world, player);
       return generateRandomBigDecimal(min, max);
     }
-
     return TNE.instance().api().getBigDecimal("Mobs." + mob + ".Reward", world, player);
   }
 

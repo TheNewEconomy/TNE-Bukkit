@@ -346,10 +346,8 @@ public class TNE extends TNELib {
 
 
     //Metrics
-    if(configurations().getBoolean("Core.Metrics")) {
-      new Metrics(this);
-      getLogger().info("Sending plugin statistics.");
-    }
+    new Metrics(this);
+    getLogger().info("Sending plugin statistics.");
 
     if(api.getBoolean("Core.Server.Account.Enabled")) {
       String world = worldManagers.get(defaultWorld).getBalanceWorld();
