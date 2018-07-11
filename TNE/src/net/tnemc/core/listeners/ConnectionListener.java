@@ -48,7 +48,7 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onChannel(final PlayerChannelEvent event) {
-    System.out.println("Player channel registered! Name: " + event.getChannel());
+    //System.out.println("Player channel registered! Name: " + event.getChannel());
     if(TNE.useMod) {
       if (event.getChannel().equalsIgnoreCase("tnemod")) {
         TNE.instance().addModUser(event.getPlayer().getUniqueId());

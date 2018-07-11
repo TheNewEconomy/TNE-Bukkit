@@ -10,6 +10,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.economy.currency.CurrencyEntry;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.command.CommandSender;
@@ -72,9 +73,9 @@ public class MoneyBalanceCommand extends TNECommand {
     if(TNE.manager() == null) TNE.debug("Economy Manager is null");
     if(TNE.manager().currencyManager() == null) TNE.debug("TNECurrency Manager is null");
     if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
-    String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
-    UUID id = IDFinder.getID(sender);
-    TNEAccount account = TNE.manager().getAccount(id);
+    final String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
+    final UUID id = IDFinder.getID(sender);
+    final TNEAccount account = TNE.manager().getAccount(id);
     TNE.debug("World: " + world);
     TNE.debug("Args Length: " + arguments.length);
 
@@ -98,6 +99,7 @@ public class MoneyBalanceCommand extends TNECommand {
       TNE.debug("BalanceCommand Currency Loop.. Currency: " + cur.name());
       TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("inquiry"));
       transaction.setRecipientCharge(new TransactionCharge(world, cur, BigDecimal.ZERO));
+      transaction.setRecipientBalance(new CurrencyEntry(world, cur, account.getHoldings(world, cur)));
       TNE.debug("BalanceCommand RecipientChargeCurrency: " + transaction.recipientCharge().getCurrency().name());
       TNE.debug("BalanceCommand RecipientCharge: " + transaction.recipientCharge().getAmount().toPlainString());
       result = TNE.transactionManager().perform(transaction);
