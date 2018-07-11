@@ -6,4 +6,4 @@ author: creatorfromhell
 
 #Plugin Data
 main: net.tnemc.core.TNE
-softdepend: [Vault, Essentials, Reserve, Towny, mcMMO]
+softdepend: [Vault, Essentials, Reserve, Towny, mcMMO, GUIShop]

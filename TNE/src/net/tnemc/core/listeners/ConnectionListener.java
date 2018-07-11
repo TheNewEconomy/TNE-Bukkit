@@ -60,14 +60,14 @@ public class ConnectionListener implements Listener {
   public void onJoin(final PlayerJoinEvent event) {
     TNE.debug("=====START ConnectionListener.onJoin =====");
     TNE.debug("Player null: " + (event.getPlayer() == null));
-    Player player = event.getPlayer();
+    final Player player = event.getPlayer();
     UUID id = null;
     if(!Bukkit.getServer().getOnlineMode()) {
       id = IDFinder.ecoID(player.getName());
     } else {
       id = IDFinder.getID(player);
     }
-    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     TNE.debug(id + "");
     boolean first = !TNE.manager().exists(id);
     TNEAccount account;

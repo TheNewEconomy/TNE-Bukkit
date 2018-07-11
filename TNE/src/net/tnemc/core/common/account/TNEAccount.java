@@ -16,6 +16,7 @@ import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -117,6 +118,10 @@ public class TNEAccount implements Account {
       TNE.debug("Online: " + MISCUtils.isOnline(id, world));
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
+        final Player player = Bukkit.getPlayer(id);
+        if(player != null) {
+          player.setMetadata(world + ":" + currency, new FixedMetadataValue(TNE.instance(), newHoldings.toPlainString()));
+        }
         ItemCalculations.setItems(cur, newHoldings, getPlayer().getInventory(), false);
       }
     }
@@ -156,16 +161,12 @@ public class TNEAccount implements Account {
 
   public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
     BigDecimal holdings = BigDecimal.ZERO;
-    if(TNE.manager().currencyManager().get(world, currency).isXp() && MISCUtils.isOnline(id, world)) {
-      holdings = new BigDecimal(Bukkit.getPlayer(identifier()).getTotalExperience());
-    } else {
-      for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
-        for (HoldingsHandler handler : entry.getValue()) {
-          if (!core || handler.coreHandler()) {
-            if (handler.userContains().equalsIgnoreCase("") ||
-                displayName().contains(handler.userContains())) {
-              holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
-            }
+    for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
+      for (HoldingsHandler handler : entry.getValue()) {
+        if (!core || handler.coreHandler()) {
+          if (handler.userContains().equalsIgnoreCase("") ||
+              displayName().contains(handler.userContains())) {
+            holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
           }
         }
       }

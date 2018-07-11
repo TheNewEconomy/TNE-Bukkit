@@ -125,6 +125,12 @@ public class TNE extends TNELib {
       return;
     }
 
+    if(getServer().getPluginManager().getPlugin("GUIShop") != null) {
+      getLogger().info("Unable to load The New Economy as it is incompatible with GUIShop.");
+      blacklisted = true;
+      return;
+    }
+
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
     instance = this;
     api = new TNEAPI(this);

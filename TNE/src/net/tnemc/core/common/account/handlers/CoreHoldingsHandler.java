@@ -6,6 +6,9 @@ import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -57,14 +60,28 @@ public class CoreHoldingsHandler implements HoldingsHandler {
     TNEAccount tneAccount = TNE.manager().getAccount(account);
     BigDecimal current = BigDecimal.ZERO;
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
-    if(database || !currency.isItem() || !MISCUtils.isOnline(account, world)) {
+    if(database || !currency.isXp() || !currency.isItem() || !MISCUtils.isOnline(account, world)) {
       TNE.debug("Grabbing virtual holdings...");
       WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
                                     tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);
       current = worldHoldings.getHoldings(currency.name());
+    } else if(currency.isXp()) {
+      final Player player = Bukkit.getPlayer(account);
+      if(player != null) {
+        return new BigDecimal(player.getTotalExperience());
+      }
     } else {
       TNE.debug("Grabbing physical holdings...");
+      final Player player = Bukkit.getPlayer(account);
+      if(player != null) {
+        if(player.hasMetadata(world + ":" + currency.name())) {
+          return new BigDecimal(player.getMetadata(world + ":" + currency.name()).get(0).asString());
+        }
+      }
       current = ItemCalculations.getCurrencyItems(currency, tneAccount.getPlayer().getInventory());
+      if(player != null) {
+        player.setMetadata(world + ":" + currency, new FixedMetadataValue(TNE.instance(), current.toPlainString()));
+      }
     }
     return current;
   }
