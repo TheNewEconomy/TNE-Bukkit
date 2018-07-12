@@ -28,6 +28,9 @@ Core:
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
+        #Whether or not experience gains should be disabled. This will help for servers that use Experience as currency.
+        ExperienceGain: false
+
         #Whether or not players are able to use their currency for crafting.
         CurrencyCrafting: true
 

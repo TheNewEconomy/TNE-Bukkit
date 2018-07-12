@@ -135,6 +135,7 @@ public class MobsListener implements ModuleListener {
           reward = (player) ? MobsModule.instance().playerReward(mob, world, id.toString()) : MobsModule.instance().mobReward(mob, world, id.toString());
           reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().getRewardMultiplier(mob, world, id.toString())));
           String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? event.getEntityType().toString() : mob;
+          System.out.println("Mob Name: " + mob);
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))
             formatted = entity.getCustomName();
           formatted = (TNE.instance().messageConfiguration().contains("Mobs.Messages.Custom." + formatted)) ? TNE.instance().messageConfiguration().getString("Mobs.Messages.Custom." + formatted) : formatted;

@@ -36,6 +36,8 @@ import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
+import net.tnemc.core.listeners.ExperienceCancelListener;
+import net.tnemc.core.listeners.ExperienceListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.listeners.TNEMessageListener;
@@ -334,6 +336,11 @@ public class TNE extends TNELib {
 
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
     getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+    if(configurations().getBoolean("Core.Server.ExperienceGain")) {
+      getServer().getPluginManager().registerEvents(new ExperienceCancelListener(this), this);
+    } else {
+      getServer().getPluginManager().registerEvents(new ExperienceListener(this), this);
+    }
     loader.getModules().forEach((key, value)->{
       value.getModule().getListeners(this).forEach(listener->{
         getServer().getPluginManager().registerEvents(listener, this);

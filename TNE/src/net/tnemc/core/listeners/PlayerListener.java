@@ -13,7 +13,6 @@ import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.MenuHolder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -29,7 +28,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
@@ -255,24 +253,17 @@ public class PlayerListener implements Listener {
     }
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-  public void onExperienceGain(final PlayerExpChangeEvent event) {
-    TNE.manager().addXPGain(IDFinder.getID(event.getPlayer()));
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onLevelChange(final PlayerLevelChangeEvent event) {
-    if(TNE.manager().isXPGain(IDFinder.getID(event.getPlayer()))){
+    if(TNE.manager().isXPGain(IDFinder.getID(event.getPlayer()))) {
       TNE.manager().removeXPGain(IDFinder.getID(event.getPlayer()));
-      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-        final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
-        final TNEAccount account = TNE.manager().getAccount(IDFinder.getID(event.getPlayer()));
-        for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
-          if(currency.isXp()) {
-            account.setHoldings(world, currency.name(), new BigDecimal(event.getNewLevel()), true, false);
-          }
+      final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
+      final TNEAccount account = TNE.manager().getAccount(IDFinder.getID(event.getPlayer()));
+      for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
+        if(currency.isXp()) {
+          account.setHoldings(world, currency.name(), new BigDecimal(event.getNewLevel()), true, false);
         }
-      });
+      }
     }
   }
 }
