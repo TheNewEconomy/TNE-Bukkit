@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class GiveIcon extends Icon {
 
   public GiveIcon() {
-    super(2, Material.STAINED_GLASS_PANE, "Give Funds", (byte)13);
+    super(2, Material.GREEN_STAINED_GLASS_PANE, "Give Funds");
 
     data.put("action_type", "give");
     this.switchMenu = "cur_selection_give";

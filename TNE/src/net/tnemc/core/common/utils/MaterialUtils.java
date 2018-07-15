@@ -82,7 +82,6 @@ public class MaterialUtils {
         if (!originalMeta.hasDisplayName()) return false;
         if (!originalMeta.getDisplayName().equalsIgnoreCase(compareMeta.getDisplayName())) return false;
       }
-
       if (compareMeta.hasLore()) {
         if (!originalMeta.hasLore()) return false;
         if (!originalMeta.getLore().containsAll(compareMeta.getLore())) return false;

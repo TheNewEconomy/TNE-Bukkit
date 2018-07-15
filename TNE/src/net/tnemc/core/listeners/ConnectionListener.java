@@ -60,6 +60,7 @@ public class ConnectionListener implements Listener {
   public void onJoin(final PlayerJoinEvent event) {
     TNE.debug("=====START ConnectionListener.onJoin =====");
     TNE.debug("Player null: " + (event.getPlayer() == null));
+    long startTime = System.nanoTime();
     final Player player = event.getPlayer();
     UUID id = null;
     if(!Bukkit.getServer().getOnlineMode()) {
@@ -85,6 +86,10 @@ public class ConnectionListener implements Listener {
         TNE.instance().getUuidManager().addUUID(player.getName(), id);
       }
     }
+    long endTime = System.nanoTime();
+    long duration = (endTime - startTime);
+    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+    startTime = System.nanoTime();
 
     TNE.manager().addAccount(account);
     if(first) account.initializeHoldings(world);
@@ -95,6 +100,10 @@ public class ConnectionListener implements Listener {
       }
       player.sendMessage(message);
     }
+    endTime = System.nanoTime();
+    duration = (endTime - startTime);
+    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+    startTime = System.nanoTime();
 
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
     if(!noEconomy) {
@@ -103,6 +112,10 @@ public class ConnectionListener implements Listener {
             account.getHoldings(world, value, true, true), player.getInventory(), false);
       });
     }
+    endTime = System.nanoTime();
+    duration = (endTime - startTime);
+    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+    startTime = System.nanoTime();
 
     if(!first) account.getHistory().populateAway(account.getLastOnline());
     TNE.manager().addAccount(account);
@@ -128,6 +141,9 @@ public class ConnectionListener implements Listener {
         }
       }, 40L);
     }
+    endTime = System.nanoTime();
+    duration = (endTime - startTime);
+    System.out.println("Connection Event took " + (duration/1000000) + "ms");
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

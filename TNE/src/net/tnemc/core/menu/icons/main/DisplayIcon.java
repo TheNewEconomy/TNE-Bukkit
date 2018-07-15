@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class DisplayIcon extends Icon {
 
   public DisplayIcon() {
-    super(6, Material.STAINED_GLASS_PANE, "Display Funds");
+    super(6, Material.WHITE_STAINED_GLASS_PANE, "Display Funds");
 
     data.put("action_type", "display");
     this.switchMenu = "display";
