@@ -28,7 +28,7 @@ public class CurrencyCommand extends TNECommand {
   @Override
   public String[] getAliases() {
     return new String[] {
-        "cur"
+        "cur", "tnecur"
     };
   }
 
