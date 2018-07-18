@@ -51,6 +51,8 @@ public class EconomyManager {
 
   private TreeMap<Integer, List<HoldingsHandler>> holdingsHandlers = new TreeMap<>();
 
+  private List<UUID> expGain = new ArrayList<>();
+
   public EconomyManager() {
     this.accounts.setListener(new AccountListener());
     TNE.instance().registerEventMap(accounts);
@@ -119,6 +121,18 @@ public class EconomyManager {
     TNE.instance().getUuidManager().addUUID(account.displayName(), account.identifier());
     TNE.debug("=====END EconomyManager.createAccount =====");
     return true;
+  }
+
+  public boolean isXPGain(UUID id) {
+    return expGain.contains(id);
+  }
+
+  public void addXPGain(UUID id) {
+    expGain.add(id);
+  }
+
+  public void removeXPGain(UUID id) {
+    expGain.remove(id);
   }
 
   public EventMap<UUID, TNEAccount> getAccounts() {

@@ -37,10 +37,11 @@ public class MaterialHelper {
     return MaterialUtils.formatMaterialName(material);
   }
 
-  public static Material getMaterial(String search) {
+  public static Material getMaterial(final String search) {
     //TNE.debug("MaterialHelper.getMaterial(" + search + ")");
-    if(Material.getMaterial(search.toUpperCase()) != null && !Material.getMaterial(search.toUpperCase()).equals(Material.AIR)) {
-      return Material.getMaterial(search.toUpperCase());
+    final Material matched = Material.matchMaterial(search.toUpperCase());
+    if(matched != null && !matched.equals(Material.AIR)) {
+      return matched;
     }
 
     for(MaterialNameHelper helper : validNames) {

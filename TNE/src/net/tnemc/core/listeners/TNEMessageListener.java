@@ -16,7 +16,5 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 public class TNEMessageListener implements PluginMessageListener {
   @Override
   public synchronized void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-    System.out.println("Channel: " + channel);
-    System.out.println("Length: " + bytes.length);
   }
 }

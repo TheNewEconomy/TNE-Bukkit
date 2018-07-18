@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 public class ConfirmIcon extends Icon {
   public ConfirmIcon(Integer slot) {
-    super(slot, Material.STAINED_GLASS_PANE, "Confirm Transaction", (byte)13);
+    super(slot, Material.GREEN_STAINED_GLASS_PANE, "Confirm Transaction");
   }
 
   @Override

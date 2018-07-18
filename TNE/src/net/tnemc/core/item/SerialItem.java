@@ -1,12 +1,32 @@
 package net.tnemc.core.item;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.item.data.*;
+import net.tnemc.core.item.data.BannerData;
+import net.tnemc.core.item.data.BookData;
+import net.tnemc.core.item.data.EnchantStorageData;
+import net.tnemc.core.item.data.FireworkData;
+import net.tnemc.core.item.data.FireworkEffectData;
+import net.tnemc.core.item.data.LeatherData;
+import net.tnemc.core.item.data.MapData;
+import net.tnemc.core.item.data.SerialPotionData;
+import net.tnemc.core.item.data.ShulkerData;
+import net.tnemc.core.item.data.SkullData;
+import net.tnemc.core.item.data.SpawnEggData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,7 +196,7 @@ public class SerialItem {
            material.equals(Material.LIME_SHULKER_BOX) ||
            material.equals(Material.PINK_SHULKER_BOX) ||
            material.equals(Material.GRAY_SHULKER_BOX) ||
-           material.equals(Material.SILVER_SHULKER_BOX) ||
+           material.equals(Material.LIGHT_GRAY_SHULKER_BOX) ||
            material.equals(Material.CYAN_SHULKER_BOX) ||
            material.equals(Material.PURPLE_SHULKER_BOX) ||
            material.equals(Material.BLUE_SHULKER_BOX) ||

@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -177,6 +178,15 @@ public class MISCUtils {
 
     String result = "Successfully extracted ECOIDS data." + ((pasteURL.contains("pastebin.com"))? " Uploaded backup to " + pasteURL : "");
     sender.sendMessage(result);
+  }
+
+  public static String metadata(final Player player, final String name) {
+    for(MetadataValue value : player.getMetadata(name)) {
+      if(value.getOwningPlugin().getName().equalsIgnoreCase("theneweconomy")) {
+        return value.asString();
+      }
+    }
+    return null;
   }
 
   public static void extract(CommandSender sender) {

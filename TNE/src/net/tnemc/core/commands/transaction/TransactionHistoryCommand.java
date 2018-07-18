@@ -65,6 +65,11 @@ public class TransactionHistoryCommand extends TNECommand {
     String type = "all";
     int page = 1;
 
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     if(parsed.containsKey("player") && sender.hasPermission("tne.transactions.historyother")) {
       if(Bukkit.getPlayer(parsed.get("player")) != null) {
         player = Bukkit.getPlayer(parsed.get("player"));

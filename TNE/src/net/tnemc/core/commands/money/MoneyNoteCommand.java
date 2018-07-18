@@ -67,6 +67,11 @@ public class MoneyNoteCommand extends TNECommand {
       UUID id = IDFinder.getID(sender);
       TNEAccount account = TNE.manager().getAccount(id);
 
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return false;
+      }
+
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
       if(parsed.contains("Messages")) {
         Message max = new Message(parsed);

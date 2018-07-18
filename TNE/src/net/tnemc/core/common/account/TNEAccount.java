@@ -92,6 +92,10 @@ public class TNEAccount implements Account {
   }
 
   public void setHoldings(String world, String currency, BigDecimal newHoldings, boolean skipInventory) {
+    setHoldings(world, currency, newHoldings, skipInventory, false);
+  }
+
+  public void setHoldings(String world, String currency, BigDecimal newHoldings, boolean skipInventory, boolean skipXP) {
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
     TNE.debug("=====START Account.setHoldings(4) =====");
     TNE.debug("Holdings: " + newHoldings.toPlainString());
@@ -105,18 +109,25 @@ public class TNEAccount implements Account {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
     TNE.debug("Currency: " + cur.name());
-    if(cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
-      Bukkit.getPlayer(identifier()).setTotalExperience(newHoldings.intValue());
-    } else if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
+    if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
+      //System.out.println("virtual currency");
+      if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
+        //System.out.println("experience currency");
+        //System.out.println("Setting experience to " + newHoldings.intValue());
+        getPlayer().setLevel(newHoldings.intValue());
+      }
       WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
       worldHoldings.setHoldings(currency, newHoldings);
       holdings.put(world, worldHoldings);
       TNE.manager().addAccount(this);
     } else {
+      TNE.debug("item currency");
       TNE.debug("Skip: " + skipInventory);
       TNE.debug("Online: " + MISCUtils.isOnline(id, world));
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
+        final Player player = Bukkit.getPlayer(id);
+        //System.out.println("physical currency");
         ItemCalculations.setItems(cur, newHoldings, getPlayer().getInventory(), false);
       }
     }
@@ -156,16 +167,12 @@ public class TNEAccount implements Account {
 
   public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
     BigDecimal holdings = BigDecimal.ZERO;
-    if(TNE.manager().currencyManager().get(world, currency).isXp() && MISCUtils.isOnline(id, world)) {
-      holdings = new BigDecimal(Bukkit.getPlayer(identifier()).getTotalExperience());
-    } else {
-      for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
-        for (HoldingsHandler handler : entry.getValue()) {
-          if (!core || handler.coreHandler()) {
-            if (handler.userContains().equalsIgnoreCase("") ||
-                displayName().contains(handler.userContains())) {
-              holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
-            }
+    for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
+      for (HoldingsHandler handler : entry.getValue()) {
+        if (!core || handler.coreHandler()) {
+          if (handler.userContains().equalsIgnoreCase("") ||
+              displayName().contains(handler.userContains())) {
+            holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
           }
         }
       }
@@ -522,9 +529,9 @@ public class TNEAccount implements Account {
   @Override
   public boolean handleCharge(TransactionCharge charge) {
     if(charge.getType().equals(TransactionChargeType.LOSE)) {
-      return removeHoldings(charge.getEntry().getAmount(), charge.getCurrency(), charge.getWorld());
+      return removeHoldings(charge.getAmount(), charge.getCurrency(), charge.getWorld());
     }
-    return addHoldings(charge.getEntry().getAmount(), charge.getCurrency(), charge.getWorld());
+    return addHoldings(charge.getAmount(), charge.getCurrency(), charge.getWorld());
   }
 
   /**
@@ -535,8 +542,8 @@ public class TNEAccount implements Account {
   @Override
   public boolean canCharge(TransactionCharge charge) {
     if(charge.getType().equals(TransactionChargeType.LOSE)) {
-      return canRemoveHoldings(charge.getEntry().getAmount(), charge.getCurrency(), charge.getWorld());
+      return canRemoveHoldings(charge.getAmount(), charge.getCurrency(), charge.getWorld());
     }
-    return canAddHoldings(charge.getEntry().getAmount(), charge.getCurrency(), charge.getWorld());
+    return canAddHoldings(charge.getAmount(), charge.getCurrency(), charge.getWorld());
   }
 }

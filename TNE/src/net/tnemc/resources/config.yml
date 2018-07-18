@@ -13,24 +13,20 @@ Core:
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
 
-    #Whether or not to enable plugin metrics. This allows us to know how many servers are running TNE,
-    #what TNE version, java version, etc.
-    Metrics: true
-
     #All configurations relating to the server in general.
     Server:
 
         #The material to use to activate the TNE Action Menu.
         MenuMaterial: "GOLD_INGOT"
 
-        #Whether or not to use the TNEMod. This will require users to have it installed.
-        TNEMod: false
-
         #Whether or not mob drops that are a currency item should be disabled.
         MobDrop: true
 
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
+
+        #Whether or not experience gains should be disabled. This will help for servers that use Experience as currency.
+        ExperienceGain: false
 
         #Whether or not players are able to use their currency for crafting.
         CurrencyCrafting: true

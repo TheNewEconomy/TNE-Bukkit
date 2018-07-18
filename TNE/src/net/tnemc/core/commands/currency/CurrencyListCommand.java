@@ -52,6 +52,11 @@ public class CurrencyListCommand extends TNECommand {
     String world = (arguments.length >= 1)? arguments[0] : TNE.instance().defaultWorld;
     StringBuilder builder = new StringBuilder();
 
+    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+      new Message("Messages.General.Disabled").translate(world, sender);
+      return false;
+    }
+
     for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
       if(builder.length() > 0) builder.append(", ");
       builder.append(currency.name());

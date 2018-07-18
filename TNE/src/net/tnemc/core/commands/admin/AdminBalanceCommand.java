@@ -67,6 +67,11 @@ public class AdminBalanceCommand extends TNECommand {
       String currencyName = (arguments.length == 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return false;
+      }
+
       TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("inquiry"));
       transaction.setRecipientCharge(new TransactionCharge(world, currency, BigDecimal.ZERO));
       TransactionResult result = transaction.perform();

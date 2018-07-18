@@ -42,12 +42,12 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockBreakEvent(final BlockBreakEvent event) {
-    final TNESign sign = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+    final TNESign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
       SignsData.loadSign(event.getBlock().getLocation())
       : SignsData.loadSignAttached(event.getBlock().getLocation());
 
     if(sign != null) {
-      final Sign signBlock = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+      final Sign signBlock = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
           (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
       if(signBlock != null && !SignsModule.manager().getType(sign.getType()).onSignDestroy(sign.getOwner(), event.getPlayer().getUniqueId())) {
         event.setCancelled(true);
@@ -77,7 +77,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockBurn(final BlockBurnEvent event) {
-    final Sign sign = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+    final Sign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
         (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
 
     if(sign != null) {
@@ -87,7 +87,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockIgnite(final BlockIgniteEvent event) {
-    final Sign sign = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+    final Sign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
         (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
 
     if(sign != null) {
@@ -97,7 +97,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onPistonExtend(final BlockPistonExtendEvent event) {
-    final Sign sign = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+    final Sign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
         (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
 
     if(sign != null) {
@@ -107,7 +107,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onPistonRetract(final BlockPistonRetractEvent event) {
-    final Sign sign = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+    final Sign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
         (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
 
     if(sign != null) {
@@ -117,7 +117,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockExplode(final BlockExplodeEvent event) {
-    final Sign sign = (event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN))?
+    final Sign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
         (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
 
     if(sign != null) {

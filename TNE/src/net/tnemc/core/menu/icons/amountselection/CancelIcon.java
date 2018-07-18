@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  */
 public class CancelIcon extends Icon {
   public CancelIcon(Integer slot) {
-    super(slot, Material.STAINED_GLASS_PANE, "Cancel Transaction", (byte)14);
+    super(slot, Material.RED_STAINED_GLASS_PANE, "Cancel Transaction");
   }
 
   @Override

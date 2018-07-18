@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class SetIcon extends Icon {
 
   public SetIcon() {
-    super(3, Material.STAINED_GLASS_PANE, "Set Funds", (byte)11);
+    super(3, Material.BLUE_STAINED_GLASS_PANE, "Set Funds");
 
     data.put("action_type", "set");
     this.switchMenu = "cur_selection_set";

@@ -3,7 +3,8 @@ name: TheNewEconomy
 version: 0.1.0.0
 description: A modular feature-packed Bukkit Economy Plugin.
 author: creatorfromhell
+api-version: 1.13
 
 #Plugin Data
 main: net.tnemc.core.TNE
-softdepend: [Vault, Essentials, Reserve, Towny, mcMMO]
+softdepend: [Vault, Essentials, Reserve, Towny, mcMMO, GUIShop]

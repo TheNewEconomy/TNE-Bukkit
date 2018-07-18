@@ -53,6 +53,11 @@ public class CurrencyRenameCommand extends TNECommand {
       String currency = arguments[0];
       String newName = arguments[1];
 
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return false;
+      }
+
       if(!TNE.manager().currencyManager().contains(world, currency)) {
         Message m = new Message("Messages.Money.NoCurrency");
         m.addVariable("$currency", currency);

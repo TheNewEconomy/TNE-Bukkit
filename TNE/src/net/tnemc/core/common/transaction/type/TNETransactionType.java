@@ -50,7 +50,7 @@ public interface TNETransactionType extends TransactionType {
    */
   @Override
   default TransactionResult perform(Transaction transaction) {
-    TNETransaction tneTransaction = (TNETransaction)transaction;
+    final TNETransaction tneTransaction = (TNETransaction)transaction;
     TNE.debug("=====START TNETransactionType.perform =====");
     boolean proceed = false;
 

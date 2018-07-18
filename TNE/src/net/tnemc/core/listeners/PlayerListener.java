@@ -3,6 +3,7 @@ package net.tnemc.core.listeners;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -29,8 +30,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -82,12 +85,12 @@ public class PlayerListener implements Listener {
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
       }
 
       if((event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("66a7e812-fb82-409c-88c4-9edc34bb5c39")) {
@@ -96,12 +99,12 @@ public class PlayerListener implements Listener {
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
       }
 
       if((event.getRightClicked()).getUniqueId().toString().equalsIgnoreCase("5f1f274f-c251-410e-8c40-732ea4418ae6")) {
@@ -110,12 +113,12 @@ public class PlayerListener implements Listener {
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
         MaterialUtils.spawnRandomFirework(player.getLocation());
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10f, 1f);
       }
     }
     TNE.debug("=====END PlayerListener.onInteractEntityEvent =====");
@@ -245,6 +248,20 @@ public class PlayerListener implements Listener {
         if (item != null && TNE.manager().currencyManager().currencyFromItem(world, item).isPresent()) {
           event.setCancelled(true);
           break;
+        }
+      }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onLevelChange(final PlayerLevelChangeEvent event) {
+    if(TNE.manager().isXPGain(IDFinder.getID(event.getPlayer()))) {
+      TNE.manager().removeXPGain(IDFinder.getID(event.getPlayer()));
+      final String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
+      final TNEAccount account = TNE.manager().getAccount(IDFinder.getID(event.getPlayer()));
+      for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
+        if(currency.isXp()) {
+          account.setHoldings(world, currency.name(), new BigDecimal(event.getNewLevel()), true, false);
         }
       }
     }

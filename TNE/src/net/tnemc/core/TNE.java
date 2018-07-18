@@ -36,6 +36,8 @@ import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
+import net.tnemc.core.listeners.ExperienceCancelListener;
+import net.tnemc.core.listeners.ExperienceListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.listeners.TNEMessageListener;
@@ -122,6 +124,12 @@ public class TNE extends TNELib {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
       blacklisted = true;
       getLogger().info("Unable to load The New Economy as this server has been blacklisted!");
+      return;
+    }
+
+    if(getServer().getPluginManager().getPlugin("GUIShop") != null) {
+      getLogger().info("Unable to load The New Economy as it is incompatible with GUIShop.");
+      blacklisted = true;
       return;
     }
 
@@ -328,6 +336,11 @@ public class TNE extends TNELib {
 
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
     getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+    if(configurations().getBoolean("Core.Server.ExperienceGain")) {
+      getServer().getPluginManager().registerEvents(new ExperienceCancelListener(this), this);
+    } else {
+      getServer().getPluginManager().registerEvents(new ExperienceListener(this), this);
+    }
     loader.getModules().forEach((key, value)->{
       value.getModule().getListeners(this).forEach(listener->{
         getServer().getPluginManager().registerEvents(listener, this);
@@ -346,10 +359,8 @@ public class TNE extends TNELib {
 
 
     //Metrics
-    if(configurations().getBoolean("Core.Metrics")) {
-      new Metrics(this);
-      getLogger().info("Sending plugin statistics.");
-    }
+    new Metrics(this);
+    getLogger().info("Sending plugin statistics.");
 
     if(api.getBoolean("Core.Server.Account.Enabled")) {
       String world = worldManagers.get(defaultWorld).getBalanceWorld();

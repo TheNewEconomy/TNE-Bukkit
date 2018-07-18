@@ -6,6 +6,7 @@ import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -54,16 +55,24 @@ public class CoreHoldingsHandler implements HoldingsHandler {
    */
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
-    TNEAccount tneAccount = TNE.manager().getAccount(account);
+    final TNEAccount tneAccount = TNE.manager().getAccount(account);
     BigDecimal current = BigDecimal.ZERO;
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
+    final Player player = tneAccount.getPlayer();
     if(database || !currency.isItem() || !MISCUtils.isOnline(account, world)) {
-      TNE.debug("Grabbing virtual holdings...");
+      //System.out.println("Grabbing virtual holdings...");
+      if(currency.isXp()) {
+        //System.out.println("experience currency");
+        //System.out.println("Grabbing experience holdings...");
+        if(player != null) {
+          return new BigDecimal(player.getLevel());
+        }
+      }
       WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
                                     tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);
       current = worldHoldings.getHoldings(currency.name());
     } else {
-      TNE.debug("Grabbing physical holdings...");
+      System.out.println("Grabbing physical holdings...");
       current = ItemCalculations.getCurrencyItems(currency, tneAccount.getPlayer().getInventory());
     }
     return current;
