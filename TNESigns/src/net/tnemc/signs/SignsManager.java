@@ -47,7 +47,7 @@ public class SignsManager {
 
   public static boolean blockAttachedSign(final Block block) {
     final Block above = block.getRelative(BlockFace.UP);
-    if(above.getType() != null && above.getType().equals(Material.SIGN_POST) && validSign((Sign)above.getState())) {
+    if(above.getType() != null && above.getType().equals(Material.SIGN) && validSign((Sign)above.getState())) {
       return true;
     }
 
@@ -66,7 +66,7 @@ public class SignsManager {
 
   public static Sign getAttachedSign(final Block block) {
     final Block above = block.getRelative(BlockFace.UP);
-    if(above.getType() != null && above.getType().equals(Material.SIGN_POST) && validSign((Sign)above.getState())) {
+    if(above.getType() != null && above.getType().equals(Material.SIGN) && validSign((Sign)above.getState())) {
       return (Sign)above.getState();
     }
 
