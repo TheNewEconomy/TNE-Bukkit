@@ -196,7 +196,7 @@ public class SerialItem {
            material.equals(Material.LIME_SHULKER_BOX) ||
            material.equals(Material.PINK_SHULKER_BOX) ||
            material.equals(Material.GRAY_SHULKER_BOX) ||
-           material.equals(Material.LIGHT_GRAY_SHULKER_BOX) ||
+           material.equals(Material.SILVER_SHULKER_BOX) ||
            material.equals(Material.CYAN_SHULKER_BOX) ||
            material.equals(Material.PURPLE_SHULKER_BOX) ||
            material.equals(Material.BLUE_SHULKER_BOX) ||

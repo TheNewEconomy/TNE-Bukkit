@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class BackIcon extends Icon {
 
   public BackIcon(String menu, Integer slot) {
-    super(slot, Material.BLACK_WOOL, "Go Back");
+    super(slot, Material.WOOL, "Go Back", (byte)15);
     this.switchMenu = menu;
   }
 }

@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class TakeIcon extends Icon {
 
   public TakeIcon() {
-    super(4, Material.RED_STAINED_GLASS_PANE, "Take Funds");
+    super(4, Material.STAINED_GLASS_PANE, "Take Funds", (byte)14);
 
     data.put("action_type", "take");
     this.switchMenu = "cur_selection_take";
