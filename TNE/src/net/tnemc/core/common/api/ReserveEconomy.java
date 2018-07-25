@@ -42,7 +42,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public String version() {
-    return "0.1.0.0";
+    return "0.1.0.11";
   }
 
   @Override
@@ -274,4 +274,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   public Optional<Transaction> getTransaction(UUID uuid) {
     return TNE.instance().api().getTransaction(uuid);
   }
+
+
 }
