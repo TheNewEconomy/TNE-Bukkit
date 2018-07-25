@@ -102,13 +102,19 @@ public class MoneyConvertCommand extends TNECommand {
       transaction.setRecipientCharge(new TransactionCharge(worldTo, to, value, TransactionChargeType.GAIN));
       TransactionResult result = TNE.transactionManager().perform(transaction);
 
-      Message message = new Message(result.recipientMessage());
+      System.out.println("World To: " + worldTo);
+      System.out.println("Currency To: " + to.name());
+      System.out.println("World From: " + worldFrom);
+      System.out.println("Currency From: " + from.name());
+
+      Message message = new Message(result.initiatorMessage());
       message.addVariable("$player", arguments[0]);
       message.addVariable("$world", worldTo);
       message.addVariable("$currency", to.name());
       message.addVariable("$worldFrom", worldFrom);
-      message.addVariable("$currencyFrom", from.name());
-      message.addVariable("$amount", CurrencyFormatter.format(currencyTo, worldTo, transaction.recipientCharge().getEntry().getAmount()));
+      message.addVariable("$from_amount", from.name());
+      message.addVariable("$amount", CurrencyFormatter.format(worldTo, currencyTo, transaction.recipientCharge().getEntry().getAmount()));
+      message.addVariable("$amount", worldFrom);
       message.translate(worldTo, IDFinder.getID(sender));
       return result.proceed();
     }

@@ -247,9 +247,11 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world, String name) {
-    TNE.debug("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
+    System.out.println("Currency: " + name);
+    System.out.println("World: " + world);
+    System.out.println("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
     if(TNE.instance().getWorldManager(world).containsCurrency(name)) {
-      TNE.debug("Returning Currency " + name + " for world " + world);
+      System.out.println("Returning Currency " + name + " for world " + world);
       return TNE.instance().getWorldManager(world).getCurrency(name);
     }
     return get(world);

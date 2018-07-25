@@ -131,7 +131,11 @@ public class TNETransaction implements Transaction {
 
   @Override
   public void setInitiatorCharge(TransactionCharge transactionCharge) {
+    TNE.debug("=====START TNETransaction.setInitiatorCharge =====");
     this.initiatorCharge = transactionCharge;
+    TNE.debug("Amount: " + transactionCharge.getAmount());
+    TNE.debug("Amount: " + initiatorCharge.getAmount());
+    TNE.debug("=====END TNETransaction.setInitiatorCharge =====");
   }
 
   @Override

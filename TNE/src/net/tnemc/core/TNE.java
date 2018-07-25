@@ -585,7 +585,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    //System.out.println(message);
+    System.out.println(message);
   }
 
   public void loadConfigurations() {
