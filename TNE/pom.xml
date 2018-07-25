@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>0.1.0.0</version>
-    <packaging>pom</packaging>
+    <version>Beta-1.2-SNAPSHOT-1</version>
+    <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -16,17 +16,11 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <sourceDirectory>src/</sourceDirectory>
-        <testSourceDirectory>src/test/</testSourceDirectory>
         <resources>
             <resource>
                 <directory>src/net/tnemc/resources/</directory>
             </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -36,19 +30,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.javalite</groupId>
-                <artifactId>activejdbc-instrumentation</artifactId>
-                <version>2.0</version>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>instrument</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -85,6 +66,14 @@
             <timezone>America/New_York</timezone>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-theneweconomy-java</id>
+            <name>theneweconomy-java</name>
+            <url>https://api.bintray.com/maven/theneweconomy/java/TNE/;publish=1</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
