@@ -10,9 +10,6 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.economy.currency.CurrencyEntry;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 
 import java.math.BigDecimal;
 import java.sql.Connection;

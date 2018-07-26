@@ -71,7 +71,7 @@
         <repository>
             <id>bintray-theneweconomy-java</id>
             <name>theneweconomy-java</name>
-            <url>https://api.bintray.com/maven/theneweconomy/java/TNE/;publish=1</url>
+            <url>https://api.bintray.com/maven/theneweconomy/java/TNECore/;publish=1</url>
         </repository>
     </distributionManagement>
 
