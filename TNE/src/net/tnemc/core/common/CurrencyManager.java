@@ -236,6 +236,8 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world) {
+    if(world == null || world.trim().length() == 0)
+      return null;
     for(TNECurrency currency : TNE.instance().getWorldManager(world).getCurrencies()) {
       TNE.debug("Currency: " + currency.name() + " World: " + world + " Default? " + currency.isDefault());
       if(currency.isDefault()) {
