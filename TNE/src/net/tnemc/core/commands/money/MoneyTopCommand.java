@@ -85,10 +85,13 @@ public class MoneyTopCommand extends TNECommand {
     top.addVariable("$page", page + "");
     top.addVariable("$page_top", max + "");
     top.translate(world, sender);
+    Message topEntry = new Message("Messages.Money.TopEntry");
     Iterator<Map.Entry<UUID, BigDecimal>> it = values.entrySet().iterator();
     while(it.hasNext()) {
       Map.Entry<UUID, BigDecimal> entry = it.next();
-      sender.sendMessage(TNE.manager().getAccount(entry.getKey()).displayName() + " has " + CurrencyFormatter.format(currency, world, entry.getValue()));
+      topEntry.addVariable("$player", TNE.manager().getAccount(entry.getKey()).displayName());
+      topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue()));
+      topEntry.translate(world, sender);
     }
     return true;
   }

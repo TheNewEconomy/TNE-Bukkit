@@ -116,6 +116,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Money.NoteClaimed", "<white>Successfully claimed note for currency <green>$currency<white> in the amount of <gold>$amount<white>.<newline>Your new balance is <gold>$balance<white>.");
     configurations.put("Messages.Money.NoteFailed", "<red>I'm sorry, but your attempt to claim that currency note failed!.");
     configurations.put("Messages.Money.Top", "<white>=========[<gold>Economy Top<white>]========= Page: $page/$page_top");
+    configurations.put("Messages.Money.TopEntry", "<white>$player has $amount");
     configurations.put("Messages.Money.InvalidFormat", "<red>I'm sorry, but the monetary value you've entered is wrong.");
     configurations.put("Messages.Money.ExceedsCurrencyMaximum", "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance.");
     configurations.put("Messages.Money.ExceedsPlayerMaximum", "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed.");

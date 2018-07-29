@@ -127,6 +127,7 @@ Messages:
        NoteFailed: "<red>I'm sorry, but your attempt to claim that currency note failed!."
        Converted: "<white>Successfully exchanged \"<gold>$from_amount<white>\" to \"<gold>$amount<white>\"."
        Top: "<white>=====[<gold>Economy Top<white>]===== $page/$page_top"
+       TopEntry: "<white>$player has $amount"
        InvalidFormat: "<red>I'm sorry, but the monetary value you've entered is wrong."
        ExceedsCurrencyMaximum: "<red>I'm sorry, but the monetary value you've entered exceeds the maximum possible balance."
        ExceedsPlayerMaximum: "<red>I'm sorry, but performing this transaction will place your balance over the maximum allowed."
