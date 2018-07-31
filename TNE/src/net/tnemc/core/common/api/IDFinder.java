@@ -22,8 +22,8 @@ public class IDFinder {
   }
 
   public static UUID ecoID(String username, boolean skip) {
-    if(TNELib.instance().getUuidManager().hasID(username)) {
-      return TNELib.instance().getUuidManager().getID(username);
+    if(TNE.uuidManager().hasID(username)) {
+      return TNE.uuidManager().getID(username);
     }
     UUID eco = (skip)? genUUID() : genUUID(username);
     //TNELib.instance().getUuidManager().addUUID(username, eco);
@@ -57,7 +57,7 @@ public class IDFinder {
 
   public static UUID genUUID() {
     UUID id = UUID.randomUUID();
-    while(TNELib.instance().getUuidManager().containsUUID(id)) {
+    while(TNE.uuidManager().containsUUID(id)) {
       //This should never happen, but we'll play it safe
       id = UUID.randomUUID();
     }
@@ -65,7 +65,7 @@ public class IDFinder {
   }
 
   public static String ecoToUsername(UUID id) {
-    return (TNELib.instance().getUuidManager().containsUUID(id))? TNELib.instance().getUuidManager().getUsername(id) : getUsername(id.toString());
+    return (TNELib.instance().getUuidManager().containsUUID(id))? TNE.uuidManager().getUsername(id) : getUsername(id.toString());
   }
 
   public static UUID getID(CommandSender sender) {
@@ -89,10 +89,10 @@ public class IDFinder {
   public static Player getPlayer(String identifier) {
     UUID id = getID(identifier);
     if(!TNELib.instance().useUUID) {
-      return Bukkit.getPlayer(net.tnemc.core.common.api.IDFinder.ecoToUsername(id));
+      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
     if(!Bukkit.getServer().getOnlineMode()) {
-      return Bukkit.getPlayer(net.tnemc.core.common.api.IDFinder.ecoToUsername(id));
+      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
     return Bukkit.getPlayer(id);
   }

@@ -120,14 +120,14 @@ public class ConnectionListener implements Listener {
     if(!first) account.getHistory().populateAway(account.getLastOnline());
     TNE.manager().addAccount(account);
 
-    if(player.getUniqueId().toString().equalsIgnoreCase("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {
+    if(TNE.instance().developers.contains(player.getUniqueId().toString())) {
       Bukkit.getOnlinePlayers().forEach((p)->{
         p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 10f, 1f);
       });
     }
     //final String uuidString = id.toString();
 
-    if(TNE.useMod) {
+    /*if(TNE.useMod) {
       final UUID uuid = id;
       Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), () -> {
         if (!TNE.instance().isModUser(uuid)) {
@@ -140,7 +140,7 @@ public class ConnectionListener implements Listener {
           });
         }
       }, 40L);
-    }
+    }*/
     endTime = System.nanoTime();
     duration = (endTime - startTime);
     System.out.println("Connection Event took " + (duration/1000000) + "ms");
@@ -148,7 +148,7 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(final PlayerQuitEvent event) {
-    Player player = event.getPlayer();
+    final Player player = event.getPlayer();
     UUID id = IDFinder.getID(player);
     if(TNE.manager().exists(id)) {
       TNEAccount account = TNEAccount.getAccount(id.toString());

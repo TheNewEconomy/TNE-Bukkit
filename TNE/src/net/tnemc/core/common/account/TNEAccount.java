@@ -109,12 +109,13 @@ public class TNEAccount implements Account {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
     TNE.debug("Currency: " + cur.name());
+    final Player player = Bukkit.getPlayer(id);
     if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
       //System.out.println("virtual currency");
       if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
         //System.out.println("experience currency");
         //System.out.println("Setting experience to " + newHoldings.intValue());
-        getPlayer().setLevel(newHoldings.intValue());
+        player.setLevel(newHoldings.intValue());
       }
       WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
       worldHoldings.setHoldings(currency, newHoldings);
@@ -126,9 +127,8 @@ public class TNEAccount implements Account {
       TNE.debug("Online: " + MISCUtils.isOnline(id, world));
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
-        final Player player = Bukkit.getPlayer(id);
         //System.out.println("physical currency");
-        ItemCalculations.setItems(cur, newHoldings, getPlayer().getInventory(), false);
+        ItemCalculations.setItems(cur, newHoldings, player.getInventory(), false);
       }
     }
     TNE.debug("=====END Account.setHoldings =====");
@@ -223,7 +223,7 @@ public class TNEAccount implements Account {
   }
 
   public Player getPlayer() {
-    return IDFinder.getPlayer(displayName);
+    return IDFinder.getPlayer(identifier().toString());
   }
 
   public AccountHistory getHistory() {
@@ -521,7 +521,9 @@ public class TNEAccount implements Account {
   @Override
   public boolean canRemoveHoldings(BigDecimal amount, Currency currency, String world) {
     return hasHoldings(amount, currency, world);
-  }/**
+  }
+
+  /**
    * Used to handle an {@link TransactionCharge}. This is mostly a shorthand method.
    * @param charge The {@link TransactionCharge} to handle.
    * @return True if charge is able to be handled successfully, otherwise false.

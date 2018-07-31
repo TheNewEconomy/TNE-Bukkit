@@ -1,11 +1,16 @@
 package net.tnemc.core.common.transaction.type;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.Transaction;
 import net.tnemc.core.economy.transaction.TransactionAffected;
+import net.tnemc.core.economy.transaction.charge.TransactionCharge;
+import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
+
+import java.math.BigDecimal;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -59,12 +64,12 @@ public interface TNETransactionType extends TransactionType {
       TNE.debug("Account null: " + (tneTransaction.getInitiator() == null));
       TNE.debug("Transaction.initiator null: " + (tneTransaction == null));
       TNE.debug("Transaction.initiatorCharge null: " + (tneTransaction.initiatorCharge() == null));
-      proceed = tneTransaction.getInitiator().canCharge(tneTransaction.initiatorCharge());
+      proceed = canCharge(tneTransaction.getInitiator(), tneTransaction.initiatorBalance().getAmount(), tneTransaction.initiatorCharge().getAmount(), tneTransaction.initiatorCharge());
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       TNE.debug("second if");
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = tneTransaction.getRecipient().canCharge(tneTransaction.recipientCharge());
+        proceed = canCharge(tneTransaction.getRecipient(), tneTransaction.recipientBalance().getAmount(), tneTransaction.recipientCharge().getAmount(), tneTransaction.recipientCharge());
       }
     }
 
@@ -73,17 +78,33 @@ public interface TNETransactionType extends TransactionType {
       TNE.debug("yeah, proceed");
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
         TNE.debug("first if");
-        tneTransaction.getInitiator().handleCharge(tneTransaction.initiatorCharge());
+        handleCharge(tneTransaction.getInitiator(), tneTransaction.initiatorBalance().getAmount(), tneTransaction.initiatorCharge().getAmount(), tneTransaction.initiatorCharge());
       }
 
       if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
         TNE.debug("second if");
-        tneTransaction.getRecipient().handleCharge(tneTransaction.recipientCharge());
+        handleCharge(tneTransaction.getRecipient(), tneTransaction.recipientBalance().getAmount(), tneTransaction.recipientCharge().getAmount(), tneTransaction.recipientCharge());
       }
       TNE.debug("=====ENDSUCCESS TNETransactionType.perform =====");
       return success();
     }
     TNE.debug("=====ENDFAIL TNETransactionType.perform =====");
     return fail();
+  }
+
+  default boolean handleCharge(TNEAccount account, BigDecimal balance, BigDecimal amount, TransactionCharge charge) {
+    if(charge.getType().equals(TransactionChargeType.LOSE)) {
+      account.setHoldings(charge.getWorld(), charge.getCurrency().name(), balance.subtract(amount), false, false);
+      return true;
+    }
+    account.setHoldings(charge.getWorld(), charge.getCurrency().name(), balance.add(amount), false, false);
+    return true;
+  }
+
+  default boolean canCharge(TNEAccount account, BigDecimal balance, BigDecimal amount, TransactionCharge charge) {
+    if(charge.getType().equals(TransactionChargeType.LOSE)) {
+      return balance.compareTo(amount) >= 0;
+    }
+    return true;
   }
 }

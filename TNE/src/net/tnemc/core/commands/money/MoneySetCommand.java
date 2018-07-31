@@ -106,7 +106,7 @@ public class MoneySetCommand extends TNECommand {
 
       if(result.proceed() && transaction.recipient() != null && MISCUtils.isOnline(id, world)) {
         Message message = new Message(result.recipientMessage());
-        message.addVariable("$player", IDFinder.ecoToUsername(IDFinder.getID(sender)));
+        message.addVariable("$player", account.displayName());
         message.addVariable("$world", world);
         message.addVariable("$currency", currencyName);
         message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, value));
