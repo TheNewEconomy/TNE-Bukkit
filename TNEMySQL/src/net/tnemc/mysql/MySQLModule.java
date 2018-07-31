@@ -25,12 +25,12 @@ public class MySQLModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
-    tne.logger().info("MySQL Module loaded!");
+    TNE.logger().info("MySQL Module loaded!");
   }
 
   @Override
   public void unload(TNE tne) {
-    tne.logger().info("MySQL Module unloaded!");
+    TNE.logger().info("MySQL Module unloaded!");
   }
 
   @Override

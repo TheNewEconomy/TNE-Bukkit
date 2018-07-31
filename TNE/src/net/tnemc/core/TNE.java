@@ -60,6 +60,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ import java.util.logging.Logger;
 public class TNE extends TNELib {
   private Map<String, WorldManager> worldManagers = new HashMap<>();
   private List<UUID> tnemodUsers = new ArrayList<>();
+  public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   private EconomyManager manager;
   private MenuManager menuManager;

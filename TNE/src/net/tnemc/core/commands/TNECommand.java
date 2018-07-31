@@ -28,7 +28,7 @@ public abstract class TNECommand {
   public abstract boolean console();
   public boolean developer() {
     return false;
-  };
+  }
 
   public String getHelp() {
     return "Command help coming soon!";
@@ -118,7 +118,7 @@ public abstract class TNECommand {
     String world = TNE.instance().defaultWorld;
 
     if(developer()) {
-      if(!IDFinder.getID(sender).toString().equals("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) {
+      if(!TNE.instance().developers.contains(IDFinder.getID(sender).toString())) {
         sender.sendMessage(ChatColor.RED + "You must be a TNE developer to use this commands.");
         return false;
       }
@@ -162,9 +162,7 @@ public abstract class TNECommand {
 
   protected String[] removeSub(String[] oldArguments) {
     String[] arguments = new String[oldArguments.length - 1];
-    for(int i = 1; i < oldArguments.length; i++) {
-      arguments[i - 1] = oldArguments[i];
-    }
+    System.arraycopy(oldArguments, 1, arguments, 0, oldArguments.length - 1);
     return arguments;
   }
 
@@ -185,7 +183,7 @@ public abstract class TNECommand {
   }
 
   public Integer getPage(String pageValue) {
-    Integer page = 1;
+    Integer page;
     try {
       page = Integer.valueOf(pageValue);
     } catch(Exception e) {
@@ -196,8 +194,7 @@ public abstract class TNECommand {
 
   public boolean canExecute(CommandSender sender) {
     if(sender instanceof Player) {
-      if(IDFinder.getID(sender).toString().equals("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881")) return true;
-      return sender.hasPermission(getNode());
+      return TNE.instance().developers.contains(IDFinder.getID(sender).toString()) || sender.hasPermission(getNode());
     }
     return console();
   }
