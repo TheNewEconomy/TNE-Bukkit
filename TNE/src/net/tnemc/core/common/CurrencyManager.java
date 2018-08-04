@@ -87,7 +87,9 @@ public class CurrencyManager {
         Boolean item = configuration.getBoolean(base + ".ItemCurrency");
         Boolean experience = configuration.getBoolean(base + ".Experience");
         Boolean vault = configuration.getBoolean(base + ".Vault", true);
-        Boolean notable = configuration.getBoolean(base + ".Notable", false);
+        Boolean notable = configuration.getBoolean(base + ".Note.Notable", false);
+        BigDecimal fee = new BigDecimal(configuration.getString(base + ".Note.Fee", "0.00"));
+        BigDecimal minimum = new BigDecimal(configuration.getString(base + ".Note.Minimum", "0.00"));
         Boolean bankChest = configuration.getBoolean(base + ".BankChest", true);
         Boolean ender = configuration.getBoolean(base + ".EnderChest", true);
         Boolean separate = configuration.getBoolean(base + ".Major.Separate", true);
@@ -119,6 +121,8 @@ public class CurrencyManager {
         currency.setXp(experience);
         currency.setVault(vault);
         currency.setNotable(notable);
+        currency.setFee(fee);
+        currency.setMinimum(minimum);
         currency.setBankChest(bankChest);
         currency.setEnderChest(ender);
         currency.setSeparateMajor(separate);

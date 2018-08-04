@@ -83,9 +83,15 @@ public class MoneyNoteCommand extends TNECommand {
       }
 
       BigDecimal value = new BigDecimal(parsed);
+      if(value.compareTo(currency.getMinimum()) < 0) {
+        Message minimum = new Message(parsed);
+        minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum()));
+        minimum.translate(world, sender);
+        return false;
+      }
 
       TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("note"));
-      transaction.setRecipientCharge(new TransactionCharge(world, currency, value, TransactionChargeType.LOSE));
+      transaction.setRecipientCharge(new TransactionCharge(world, currency, value.add(currency.getFee()), TransactionChargeType.LOSE));
       TransactionResult result = TNE.transactionManager().perform(transaction);
 
 

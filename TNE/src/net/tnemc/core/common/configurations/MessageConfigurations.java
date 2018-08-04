@@ -115,6 +115,8 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Money.Noted", "<white>A note has been given to you in the amount of <gold>$amount<white> for currency <green>$currency<white>.");
     configurations.put("Messages.Money.NoteClaimed", "<white>Successfully claimed note for currency <green>$currency<white> in the amount of <gold>$amount<white>.<newline>Your new balance is <gold>$balance<white>.");
     configurations.put("Messages.Money.NoteFailed", "<red>I'm sorry, but your attempt to claim that currency note failed!.");
+    configurations.put("Messages.Money.NoteMinimum", "<red>The minimum note amount of $amount was not met.");
+    configurations.put("Messages.Money.NoteFailed", "<red>I'm sorry, but your attempt to claim that currency note failed!.");
     configurations.put("Messages.Money.Top", "<white>=========[<gold>Economy Top<white>]========= Page: $page/$page_top");
     configurations.put("Messages.Money.TopEntry", "<white>$player has $amount");
     configurations.put("Messages.Money.InvalidFormat", "<red>I'm sorry, but the monetary value you've entered is wrong.");

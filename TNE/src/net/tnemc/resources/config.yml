@@ -112,25 +112,25 @@ Core:
 
         Default:
 
-            #Configurations relating to this TNECurrency's name for formatting purposes. Max length is 100 characters.
+            #Configurations relating to this currency's name for formatting purposes. Max length is 100 characters.
             Name:
 
                #Configurations relating to the major name.
                Major:
 
-                  #The singular form of this TNECurrency's name
+                  #The singular form of this currency's name
                   Single: "Dollar"
 
-                  #The plural form of this TNECurrency's name
+                  #The plural form of this currency's name
                   Plural: "Dollars"
 
                #Configurations relating to the minor name.
                Minor:
 
-                  #The singular form of this TNECurrency's minor name.
+                  #The singular form of this currency's minor name.
                   Single: "Cent"
 
-                  #The plural form of this TNECurrency's name.
+                  #The plural form of this currency's name.
                   Plural: "Cents"
 
             #Whether or not this currency is enabled.
@@ -139,17 +139,17 @@ Core:
             #The server this currency belongs to, for data saving purposes.
             Server: "Main Server"
 
-            #The format to use when outputting this TNECurrency into chat.
+            #The format to use when outputting this currency into chat.
             #The variables you're able to use here.
-            #<symbol> - The TNECurrency's symbol
-            #<decimal> - The TNECurrency's decimal.
-            #<major> - A combination of the TNECurrency's major amount and name
-            #<minor> - A combination of the TNECurrency's minor amount and name
-            #<major.name> - The TNECurrency's major name.
-            #<minor.name> - The TNECurrency's minor name.
-            #<major.amount> - The TNECurrency's major amount.
-            #<minor.amount> - The TNECurrency's minor amount.
-            #<short.amount> - The TNECurrency's shortened amount.
+            #<symbol> - The currency's symbol
+            #<decimal> - The currency's decimal.
+            #<major> - A combination of the currency's major amount and name
+            #<minor> - A combination of the currency's minor amount and name
+            #<major.name> - The currency's major name.
+            #<minor.name> - The currency's minor name.
+            #<major.amount> - The currency's major amount.
+            #<minor.amount> - The currency's minor amount.
+            #<short.amount> - The currency's shortened amount.
             #<shorten> - Added to make the outputted value shortened
             # If shortened, it will ignore the value of Format.
             #It's also possible to include all colour variables from messages.yml
@@ -160,7 +160,7 @@ Core:
             # Maximum possible value: 900000000000000000000000000000000000
             MaxBalance: 900000000000000000000000000000000000
 
-            #The SI Prefixes used when <shorten> is used for the TNECurrency's format.
+            #The SI Prefixes used when <shorten> is used for the currency's format.
             #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
             #http://www.unitarium.com/si-prefixes along with a few addition shorts for Octillion, Nonillion,
             #and Decillion.
@@ -182,13 +182,22 @@ Core:
             #Will be used if no world-specific configurations are found if multiworld is enabled
             Balance: 200.0
 
-            #Whether or not this TNECurrency is able to be noted using the note command
-            Notable: false
+            #All configurations relating to currency notes.
+            Note:
 
-            #Whether or not this TNECurrency is the world's default.
+              #Whether or not this currency is able to be noted using the note command
+              Notable: false
+
+              #The fee to note this currency.
+              Fee: 0.00
+
+              #The minimum amount required to create a note for this currency.
+              Minimum: 0.00
+
+            #Whether or not this currency is the world's default.
             Default: true
 
-            #The conversion power of this TNECurrency to other currencies.
+            #The conversion power of this currency to other currencies.
             #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
             Conversion: 1.0
 
@@ -205,24 +214,24 @@ Core:
             #Would you like to use experience as the currency?
             Experience: false
 
-            #Would you like to use an item as the TNECurrency?
+            #Would you like to use an item as the currency?
             ItemCurrency: false
 
-            #Would you like your item TNECurrency balances to also check the player's ender chest?
+            #Would you like your item currency balances to also check the player's ender chest?
             EnderChest: true
 
-            #Configurations relating to TNECurrency tiers.
+            #Configurations relating to currency tiers.
             Tiers:
 
-               #The TNETier, this may be anything, but for organizational purposes it's best to use the singular name.
+               #The tier, this may be anything, but for organizational purposes it's best to use the singular name.
                One:
-                  #The oldtype of TNETier this is(Major, or Minor)
+                  #The oldtype of tier this is(Major, or Minor)
                   Type: 'Major'
 
-                  #The weight of the TNETier. E.X. 20USD would equal 20
+                  #The weight of the tier. E.X. 20USD would equal 20
                   Weight: 1
 
-                  #Configurations relating to if this TNETier is item-based.
+                  #Configurations relating to if this tier is item-based.
                   Item:
 
                      #The material used for this item.
@@ -237,19 +246,19 @@ Core:
                      #The lore string this item must have  in order to be considered currency.
                      Lore: 'Server Currency'
 
-                     #All configurations relating to enchantment identification for TNECurrency tiers
+                     #All configurations relating to enchantment identification for currency tiers
                      Enchantments:
 
                          #The format is Enchantment Name: Enchantment Level, or * for all levels
                          ExampleEnchantment: '*'
 
-                  #Configurations relating to the naming of this TNETier
+                  #Configurations relating to the naming of this tier
                   Name:
 
-                     #The singular name of this TNETier.
+                     #The singular name of this tier.
                      Single: 'Ones'
 
-                     #The plural name of this TNETier.
+                     #The plural name of this tier.
                      Plural: 'One'
 
                Penny:
@@ -258,7 +267,7 @@ Core:
 
                   Weight: 1
 
-                  #Configurations relating to if this TNETier is item-based.
+                  #Configurations relating to if this tier is item-based.
                   Item:
 
                      #The material used for this item.
@@ -273,7 +282,7 @@ Core:
                      #The lore string this item must have  in order to be considered currency.
                      Lore: 'Server Currency'
 
-                     #All configurations relating to enchantment identification for TNECurrency tiers
+                     #All configurations relating to enchantment identification for currency tiers
                      Enchantments:
 
                          #The format is Enchantment Name: Enchantment Level, or * for all levels
@@ -285,7 +294,7 @@ Core:
 
                       Plural: 'Pennies'
 
-            #Configurations relating to the major TNETier of TNECurrency
+            #Configurations relating to the major tier of currency
             #Example: Dollars
             Major:
 
@@ -295,7 +304,7 @@ Core:
                 #The separator to use for numeric separation.
                 Separator: ','
 
-            #Configurations relating to the minor TNETier of TNECurrency
+            #Configurations relating to the minor tier of currency
             #Example: Cents
             Minor:
 

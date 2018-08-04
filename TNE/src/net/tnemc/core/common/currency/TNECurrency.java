@@ -31,6 +31,8 @@ public class TNECurrency implements Currency {
   private boolean xp;
   private boolean vault;
   private boolean notable;
+  private BigDecimal fee;
+  private BigDecimal minimum;
   private boolean bankChest;
   private boolean enderChest;
   private boolean separateMajor;
@@ -236,6 +238,22 @@ public class TNECurrency implements Currency {
 
   public void setNotable(boolean notable) {
     this.notable = notable;
+  }
+
+  public BigDecimal getFee() {
+    return fee;
+  }
+
+  public void setFee(BigDecimal fee) {
+    this.fee = fee;
+  }
+
+  public BigDecimal getMinimum() {
+    return minimum;
+  }
+
+  public void setMinimum(BigDecimal minimum) {
+    this.minimum = minimum;
   }
 
   public boolean canBankChest() {
