@@ -12,6 +12,7 @@ import net.tnemc.core.event.currency.TNECurrencyTierLoadedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -166,9 +167,9 @@ public class CurrencyManager {
         if(configuration.isConfigurationSection(tierBase + ".Options.Enchantments")) {
           Set<String> enchants = configuration.getConfigurationSection(tierBase + ".Options.Enchantments").getKeys(false);
           for (String enchant : enchants) {
-            Enchantment parsed = Enchantment.getByName(enchant);
+            Enchantment parsed = Enchantment.getByKey(NamespacedKey.minecraft(enchant));
             if (parsed != null) {
-              item.addEnchantment(parsed.getName(), configuration.getString(tierBase + ".Options.Enchantments." + enchant, "*"));
+              item.addEnchantment(parsed.getKey().getKey(), configuration.getString(tierBase + ".Options.Enchantments." + enchant, "*"));
             }
           }
         }
