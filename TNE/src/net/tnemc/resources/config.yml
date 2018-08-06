@@ -108,208 +108,215 @@ Core:
         Interval: 600
 
     #All configurations relating to currency.
-    Currency:
+    Currencies:
 
-        Default:
+        Currency:
 
-            #Configurations relating to this currency's name for formatting purposes. Max length is 100 characters.
-            Name:
+            #Configurations relating to basic information about this currency.
+            Info:
 
-               #Configurations relating to the major name.
-               Major:
+               #The server this currency belongs to, for data saving purposes.
+               Server: "Main Server"
 
-                  #The singular form of this currency's name
-                  Single: "Dollar"
+               #The identifier of this currency used for various commands.
+               Identifier: "USD"
 
-                  #The plural form of this currency's name
-                  Plural: "Dollars"
+               #The singular form of this currency's major denomination.
+               Major_Single: "Dollar"
 
-               #Configurations relating to the minor name.
-               Minor:
+               #The plural form of this currency's major denomination.
+               Major_Plural: "Dollars"
 
-                  #The singular form of this currency's minor name.
-                  Single: "Cent"
+               #The singular form of this currency's minor denomination.
+               Minor_Single: "Dollar"
 
-                  #The plural form of this currency's name.
-                  Plural: "Cents"
+               #The plural form of this currency's minor denomination.
+               Minor_Plural: "Dollars"
+               #The SI Prefixes used when <shorten> is used for the currency's format.
+               #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
+               #http://www.unitarium.com/si-prefixes along with a few addition shorts for Octillion, Nonillion,
+               #and Decillion.
+               #The order in which the characters are:
+               #Thousand - k
+               #Million - M
+               #Billion - G
+               #Trillion - T
+               #Quadrillion - P
+               #Quintillion - E
+               #Sextillion - Z
+               #Septillion - Y
+               #Octillion - X
+               #Nonillion - W
+               #Decillion - V
+               Prefixes: 'kMGTPEZYXWV'
 
-            #Whether or not this currency is enabled.
-            Disabled: false
+               #The character to use as the symbol for this currency.
+               Symbol: '$'
 
-            #The server this currency belongs to, for data saving purposes.
-            Server: "Main Server"
+            #Various options for currencies.
+            Options:
 
-            #The format to use when outputting this currency into chat.
-            #The variables you're able to use here.
-            #<symbol> - The currency's symbol
-            #<decimal> - The currency's decimal.
-            #<major> - A combination of the currency's major amount and name
-            #<minor> - A combination of the currency's minor amount and name
-            #<major.name> - The currency's major name.
-            #<minor.name> - The currency's minor name.
-            #<major.amount> - The currency's major amount.
-            #<minor.amount> - The currency's minor amount.
-            #<short.amount> - The currency's shortened amount.
-            #<shorten> - Added to make the outputted value shortened
-            # If shortened, it will ignore the value of Format.
-            #It's also possible to include all colour variables from messages.yml
-            #Example: <major> and <minor>
-            Format: <symbol><major.amount><decimal><minor.amount>
+               #Whether or not this currency is the default currency for the world.
+               Default: true
 
-            #The maximum balance possible for this currency.
-            # Maximum possible value: 900000000000000000000000000000000000
-            MaxBalance: 900000000000000000000000000000000000
+               #Whether or not this currency is enabled.
+               Disabled: false
 
-            #The SI Prefixes used when <shorten> is used for the currency's format.
-            #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
-            #http://www.unitarium.com/si-prefixes along with a few addition shorts for Octillion, Nonillion,
-            #and Decillion.
-            #The order in which the characters are:
-            #Thousand - k
-            #Million - M
-            #Billion - G
-            #Trillion - T
-            #Quadrillion - P
-            #Quintillion - E
-            #Sextillion - Z
-            #Septillion - Y
-            #Octillion - X
-            #Nonillion - W
-            #Decillion - V
-            Prefixes: 'kMGTPEZYXWV'
+               #The format to use when outputting this currency into chat.
+               #The variables you're able to use here.
+               #<symbol> - The currency's symbol
+               #<decimal> - The currency's decimal.
+               #<major> - A combination of the currency's major amount and name
+               #<minor> - A combination of the currency's minor amount and name
+               #<major.name> - The currency's major name.
+               #<minor.name> - The currency's minor name.
+               #<major.amount> - The currency's major amount.
+               #<minor.amount> - The currency's minor amount.
+               #<short.amount> - The currency's shortened amount.
+               #<shorten> - Added to make the outputted value shortened
+               # If shortened, it will ignore the value of Format.
+               #It's also possible to include all colour variables from messages.yml
+               #Example: <major> and <minor>
+               Format: <symbol><major.amount><decimal><minor.amount>
 
-            #The initial balance for accounts.
-            #Will be used if no world-specific configurations are found if multiworld is enabled
-            Balance: 200.0
+               #The maximum balance possible for this currency.
+               # Maximum possible value: 900000000000000000000000000000000000
+               MaxBalance: 900000000000000000000000000000000000
+
+               #The initial balance for accounts.
+               #Will be used if no world-specific configurations are found if multiworld is enabled
+               Balance: 200.0
+
+               #The character to use as the decimal place holder.
+               Decimal: .
+
+               #The amount of digits to display after the decimal character.
+               #The maximum amount of places is 4
+               DecimalPlaces: 2
+
+               #Would you like to use experience as the currency?
+               Experience: false
+
+               #Would you like to use an item as the currency?
+               ItemCurrency: false
+
+               #Would you like your item currency balances to also check the player's ender chest?
+               EnderChest: true
+
+               #Whether or not the major value should be separated every three numeric places.
+               Major_Separate: true
+
+               #The separator to use for numeric separation.
+               Major_Separator: ','
+
+               #This is used to determine how many of minor it takes to make one major
+               Minor_Weight: 100
 
             #All configurations relating to currency notes.
             Note:
 
-              #Whether or not this currency is able to be noted using the note command
-              Notable: false
+               #Whether or not this currency is able to be noted using the note command
+               Notable: false
 
-              #The fee to note this currency.
-              Fee: 0.00
+               #The fee to note this currency.
+               Fee: 0.00
 
-              #The minimum amount required to create a note for this currency.
-              Minimum: 0.00
+               #The minimum amount required to create a note for this currency.
+               Minimum: 0.00
 
-            #Whether or not this currency is the world's default.
-            Default: true
+            #All configurations relating to conversion to other currencies.
+            Conversion:
 
-            #The conversion power of this currency to other currencies.
-            #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
-            Conversion: 1.0
+               #The conversion power of this currency to other currencies.
+               #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+               Rate: 1.0
 
-            #The character to use as the symbol for this currency.
-            Symbol: '$'
-
-            #The character to use as the decimal place holder.
-            Decimal: .
-
-            #The amount of digits to display after the decimal character.
-            #The maximum amount of places is 4
-            DecimalPlaces: 2
-
-            #Would you like to use experience as the currency?
-            Experience: false
-
-            #Would you like to use an item as the currency?
-            ItemCurrency: false
-
-            #Would you like your item currency balances to also check the player's ender chest?
-            EnderChest: true
-
-            #Configurations relating to currency tiers.
+            #All configurations relating to this currency's tiers.
             Tiers:
 
-               #The tier, this may be anything, but for organizational purposes it's best to use the singular name.
-               One:
-                  #The oldtype of tier this is(Major, or Minor)
-                  Type: 'Major'
+               Tier:
 
-                  #The weight of the tier. E.X. 20USD would equal 20
-                  Weight: 1
+                  #Configurations relating to basic information about this currency tier.
+                  Info:
 
-                  #Configurations relating to if this tier is item-based.
-                  Item:
+                     #This tier's type(major, or minor)
+                     Type: 'Major'
+
+                     #The singular name of this tier.
+                     Single: 'One'
+
+                     #The plural name of this tier.
+                     Plural: 'Ones'
+
+                  #Various options for this currency tier.
+                  Options:
+
+                     #The weight of the tier. E.X. 20USD would equal 20
+                     Weight: 1
 
                      #The material used for this item.
                      Material: 'PAPER'
 
                      #The damage value used for this item. Defaults to 0.
+                     #Optional.
                      Damage: 0
 
                      #The custom name this item must have in order to be considered currency.
+                     #Optional.
                      Name: 'One'
 
                      #The lore string this item must have  in order to be considered currency.
+                     #Optional.
                      Lore: 'Server Currency'
 
                      #All configurations relating to enchantment identification for currency tiers
+                     #Optional.
                      Enchantments:
 
-                         #The format is Enchantment Name: Enchantment Level, or * for all levels
-                         ExampleEnchantment: '*'
+                        #The format is Enchantment Name: Enchantment Level, or * for all levels
+                        ExampleEnchantment: '*'
 
-                  #Configurations relating to the naming of this tier
-                  Name:
+               Tier:
+
+                  #Configurations relating to basic information about this currency tier.
+                  Info:
+
+                     #This tier's type(major, or minor)
+                     Type: 'Minor'
 
                      #The singular name of this tier.
-                     Single: 'Ones'
+                     Single: 'Penny'
 
                      #The plural name of this tier.
-                     Plural: 'One'
+                     Plural: 'Pennies'
 
-               Penny:
+                  #Various options for this currency tier.
+                  Options:
 
-                  Type: 'Minor'
-
-                  Weight: 1
-
-                  #Configurations relating to if this tier is item-based.
-                  Item:
+                     #The weight of the tier. E.X. 20USD would equal 20
+                     Weight: 1
 
                      #The material used for this item.
                      Material: 'PAPER'
 
                      #The damage value used for this item. Defaults to 0.
+                     #Optional.
                      Damage: 0
 
                      #The custom name this item must have in order to be considered currency.
+                     #Optional.
                      Name: 'Penny'
 
                      #The lore string this item must have  in order to be considered currency.
+                     #Optional.
                      Lore: 'Server Currency'
 
                      #All configurations relating to enchantment identification for currency tiers
+                     #Optional.
                      Enchantments:
 
-                         #The format is Enchantment Name: Enchantment Level, or * for all levels
-                         ExampleEnchantment: '*'
-
-                  Name:
-
-                      Single: 'Penny'
-
-                      Plural: 'Pennies'
-
-            #Configurations relating to the major tier of currency
-            #Example: Dollars
-            Major:
-
-                #Whether or not the major value should be separated every three numeric places.
-                Separate: true
-
-                #The separator to use for numeric separation.
-                Separator: ','
-
-            #Configurations relating to the minor tier of currency
-            #Example: Cents
-            Minor:
-
-                #This is used to determine how many of minor it takes to make one major
-                Weight: 100
+                        #The format is Enchantment Name: Enchantment Level, or * for all levels
+                        ExampleEnchantment: '*'
             
             
     #All configurations relating to worlds
