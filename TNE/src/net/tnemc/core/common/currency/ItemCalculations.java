@@ -223,14 +223,19 @@ public class ItemCalculations {
 
   public static void giveItems(Collection<ItemStack> items, Inventory inventory) {
     for(ItemStack item : items) {
-      Collection<ItemStack> left = inventory.addItem(item).values();
+      Map<Integer, ItemStack> left = inventory.addItem(item);
 
       if(left.size() > 0) {
         if(inventory instanceof PlayerInventory) {
           final HumanEntity entity = ((HumanEntity)inventory.getHolder());
-          for (ItemStack stack : left) {
+          for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
+            final ItemStack i = entry.getValue();
             Bukkit.getScheduler().runTask(TNE.instance(), () -> {
-              entity.getWorld().dropItemNaturally(entity.getLocation(), stack);
+              try {
+                entity.getWorld().dropItemNaturally(entity.getLocation(), i);
+              } catch(Exception e) {
+                //attempted to drop air/some crazy/stupid error.
+              }
             });
           }
         }

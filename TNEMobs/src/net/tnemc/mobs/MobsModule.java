@@ -114,7 +114,7 @@ public class MobsModule extends Module {
   }
 
   public Boolean mobEnabled(String mob, String world, String player) {
-    TNE.debug("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
+    //System.out.println("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled", world, player) + "");
     if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled", world, player) == null) {
       return false;
@@ -122,14 +122,8 @@ public class MobsModule extends Module {
     return TNE.instance().api().getBoolean("Mobs." + mob + ".Enabled", world, player);
   }
 
-  public BigDecimal getRewardMultiplier(String mob, String world, String player) {
-    if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Multiplier", world, player) != null) {
-      return TNE.instance().api().getBigDecimal("Mobs." + mob + ".Multiplier", world, player);
-    }
-    return TNE.instance().api().getBigDecimal("Mobs.Multiplier", world, player);
-  }
-
   public BigDecimal mobReward(String mob, String world, String player) {
+    //System.out.println("Mob: " + mob);
     TNE.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Reward", world, player) + "");
     if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Reward", world, player) == null) {
@@ -138,7 +132,7 @@ public class MobsModule extends Module {
 
     if(configuration.getConfiguration().contains("Mobs." + mob + ".Chance.Min") ||
         configuration.getConfiguration().contains("Mobs." + mob + ".Chance.Max")) {
-      System.out.println("Chance found for " + mob);
+      //System.out.println("Chance found for " + mob);
       BigDecimal min = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Min", world, player);
       BigDecimal max = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Max", world, player);
       return generateRandomBigDecimal(min, max);
@@ -147,7 +141,7 @@ public class MobsModule extends Module {
   }
 
   public String mobCurrency(String mob, String world, String player) {
-    String currency = TNE.instance().api().getString("Mobs." + mob + ".Currency", world, player);
+    String currency = TNE.instance().api().getString("Mobs." + mob + ".RewardCurrency", world, player);
     return (currency != null)? currency : TNE.instance().api().getDefault(world).name();
   }
   

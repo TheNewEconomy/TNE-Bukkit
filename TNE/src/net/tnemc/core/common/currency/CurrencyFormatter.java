@@ -25,7 +25,7 @@ public class CurrencyFormatter {
   }
 
   public static String format(String world, String name, BigDecimal amount) {
-    System.out.println("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
+    //System.out.println("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
     return format(TNE.manager().currencyManager().get(world, name), world, amount);
   }
 

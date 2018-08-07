@@ -1,17 +1,14 @@
 package net.tnemc.core.common.currency;
 
-import net.tnemc.core.TNE;
 import net.tnemc.core.common.material.MaterialHelper;
-import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -23,7 +20,7 @@ import java.util.Map;
  */
 public class ItemTier {
 
-  private Map<String, String> enchantments = new HashMap<>();
+  private List<String> enchantments = new ArrayList<>();
 
   private String material;
   private short damage;
@@ -41,16 +38,12 @@ public class ItemTier {
     this.lore = "";
   }
 
-  public Map<String, String> getEnchantments() {
+  public List<String> getEnchantments() {
     return enchantments;
   }
 
-  public void setEnchantments(Map<String, String> enchantments) {
+  public void setEnchantments(List<String> enchantments) {
     this.enchantments = enchantments;
-  }
-
-  public void addEnchantment(String name, String level) {
-    this.enchantments.put(name, level);
   }
 
   public String getMaterial() {
@@ -92,25 +85,21 @@ public class ItemTier {
     ItemMeta meta = (stack.hasItemMeta())? stack.getItemMeta() : Bukkit.getServer().getItemFactory().getItemMeta(stack.getType());
     List<String> itemLore = (meta != null && meta.getLore() != null)? meta.getLore() : new ArrayList<>();
 
-    /*if(stack == null) TNE.debug("stack is null");
-    TNE.debug("Material: " + stack.getType().name());
-    if(meta == null) TNE.debug("meta is null");
-    if(itemLore == null) TNE.debug("itemLore is null");
-    if(name == null) TNE.debug("name is null");
-    if(lore == null) TNE.debug("lore is null");*/
-
     if(name != null && !name.trim().equals("")) meta.setDisplayName(name);
     if(lore != null && !lore.trim().equals("")) itemLore.add(lore);
     meta.setLore(itemLore);
     stack.setItemMeta(meta);
 
+
+    //System.out.println("ENCHANTMENTS SIZE: " + enchantments.size());
     if(enchantments.size() > 0) {
-      enchantments.forEach((name, level)->{
-        Enchantment enchantment = Enchantment.getByName(name);
-        if(enchantment == null || !MISCUtils.isInteger(level)) {
-          TNE.logger().info("Unable to apply enchantment to item tier: " + name);
+      enchantments.forEach((name)->{
+        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name));
+        //System.out.println("ENCHANTMENT NULL: " + (enchantment == null));
+        if(enchantment == null) {
+          //System.out.println("Unable to apply enchantment to item tier: " + name);
         } else {
-          stack.addEnchantment(enchantment, Integer.valueOf(level));
+          stack.addUnsafeEnchantment(enchantment, 1);
         }
       });
     }

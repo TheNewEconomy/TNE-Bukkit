@@ -3,10 +3,10 @@ package net.tnemc.mobs;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +27,7 @@ public class MobConfiguration extends Configuration {
 
   @Override
   public List<String> node() {
-    return Arrays.asList(new String[] { "Mobs" });
+    return Collections.singletonList("Mobs");
   }
 
   @Override
@@ -36,7 +36,6 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Enabled", true);
     configurations.put("Mobs.EnableAge", true);
     configurations.put("Mobs.Message", true);
-    configurations.put("Mobs.Multiplier", 1.0);
     configurations.put("Mobs.Default.Enabled", true);
     configurations.put("Mobs.Default.Reward", 10.00);
     configurations.put("Mobs.Custom.Enabled", true);
@@ -47,17 +46,29 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Messages.NPCTag", "<red>I'm sorry, but you cannot use a name tag on a villager");
 
     for(EntityType type : EntityType.values()) {
-      if(type.isAlive() && !type.equals(EntityType.PLAYER)) {
-        System.out.println("Adding Mob " + type.name());
-        String formatted = formatName(type.getName());
-        configurations.put("Mobs." + formatted + ".Enabled", true);
-        configurations.put("Mobs." + formatted + ".Reward", 10.00);
-        if(type.getEntityClass().isAssignableFrom(Ageable.class)) {
-          configurations.put("Mobs." + formatted + ".Baby.Enabled", true);
-          configurations.put("Mobs." + formatted + ".Baby.Reward", 5.00);
-        }
-      }
+      configurations.put("Mobs." + type.name() + ".Enabled", true);
+      configurations.put("Mobs." + type.name() + ".RewardCurrency", "Default");
+      configurations.put("Mobs." + type.name() + ".Reward", 10.00);
+      configurations.put("Mobs." + type.name() + ".Baby.Enabled", true);
+      configurations.put("Mobs." + type.name() + ".Baby.RewardCurrency", "Default");
+      configurations.put("Mobs." + type.name() + ".Baby.Reward", 5.00);
     }
+
+    for(Villager.Career career : Villager.Career.values()) {
+      configurations.put("Mobs.VILLAGER_" + career.name() + ".Enabled", true);
+      configurations.put("Mobs.VILLAGER_" + career.name() + ".RewardCurrency", "Default");
+      configurations.put("Mobs.VILLAGER_" + career.name() + ".Reward", 10.00);
+      configurations.put("Mobs.VILLAGER_" + career.name() + ".Baby.Enabled", true);
+      configurations.put("Mobs.VILLAGER_" + career.name() + ".Baby.RewardCurrency", "Default");
+      configurations.put("Mobs.VILLAGER_" + career.name() + ".Baby.Reward", 5.00);
+      configurations.put("Mobs.ZOMBIE_VILLAGER_" + career.name() + ".Enabled", true);
+      configurations.put("Mobs.ZOMBIE_VILLAGER_" + career.name() + ".RewardCurrency", "Default");
+      configurations.put("Mobs.ZOMBIE_VILLAGER_" + career.name() + ".Reward", 10.00);
+      configurations.put("Mobs.ZOMBIE_VILLAGER_" + career.name() + ".Baby.Enabled", true);
+      configurations.put("Mobs.ZOMBIE_VILLAGER_" + career.name() + ".Baby.RewardCurrency", "Default");
+      configurations.put("Mobs.ZOMBIE_VILLAGER_" + career.name() + ".Baby.Reward", 5.00);
+    }
+
 
     //Load Messages
     String base = "Mobs.Messages.Custom";
@@ -77,28 +88,23 @@ public class MobConfiguration extends Configuration {
     super.load(configurationFile);
   }
 
-  public static String formatName(String name) {
-    String[] wordsSplit = name.split("_");
-    String sReturn = "";
-    for(String w: wordsSplit) {
-      String word = w.toUpperCase().replace(w.substring(1), w.substring(1).toLowerCase());
-      sReturn += word;
-    }
-    return sReturn;
-  }
-
   private void loadExtras(FileConfiguration configurationFile) {
-    String base = "Mobs.Player.Individual";
-    Set<String> identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+    String base = "Mobs.PLAYER.Individual";
+    Set<String> identifiers;
+    if(configurationFile.contains(base)) {
+      identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
 
-    for(String s : identifiers) {
-      String temp = base + "." + s;
-      TNE.debug(temp);
-      Boolean enabled = !configurationFile.contains(temp + ".Enabled") || configurationFile.getBoolean(temp + ".Enabled");
-      Double reward = (!configurationFile.contains(temp + ".Reward"))? 10.0 : configurationFile.getDouble(temp + ".Reward");
-      addChance(configurationFile, temp);
-      configurations.put(temp + ".Enabled", enabled);
-      configurations.put(temp + ".Reward", reward);
+      for (String s : identifiers) {
+        String temp = base + "." + s;
+        TNE.debug(temp);
+        Boolean enabled = configurationFile.getBoolean(temp + ".Enabled", true);
+        String currency = configurationFile.getString(temp + ".RewardCurrency", "Default");
+        Double reward = configurationFile.getDouble(temp + ".Reward", 10.0);
+        addChance(configurationFile, temp);
+        configurations.put(temp + ".Enabled", enabled);
+        configurations.put(temp + ".RewardCurrency", currency);
+        configurations.put(temp + ".Reward", reward);
+      }
     }
 
     base = "Mobs.Custom.Entries";
@@ -109,46 +115,69 @@ public class MobConfiguration extends Configuration {
         String temp = base + "." + s;
         TNE.debug(temp);
         addChance(configurationFile, temp);
-        Boolean enabled = !configurationFile.contains(temp + ".Enabled") || configurationFile.getBoolean(temp + ".Enabled");
-        Double reward = (!configurationFile.contains(temp + ".Reward")) ? 10.0 : configurationFile.getDouble(temp + ".Reward");
+        Boolean enabled = configurationFile.getBoolean(temp + ".Enabled", true);
+        String currency = configurationFile.getString(temp + ".RewardCurrency", "Default");
+        Double reward = configurationFile.getDouble(temp + ".Reward", 10.0);
         configurations.put(temp + ".Enabled", enabled);
+        configurations.put(temp + ".RewardCurrency", currency);
         configurations.put(temp + ".Reward", reward);
 
         if (configurationFile.contains(temp + ".Baby")) {
           addChance(configurationFile, temp + ".Baby");
-          Boolean babyEnabled = !configurationFile.contains(temp + ".Baby.Enabled") || configurationFile.getBoolean(temp + ".Baby.Enabled");
-          Double babyReward = (!configurationFile.contains(temp + ".Baby.Reward")) ? 10.0 : configurationFile.getDouble(temp + ".Baby.Reward");
+          Boolean babyEnabled = configurationFile.getBoolean(temp + ".Baby.Enabled", true);
+          String babyCurrency = configurationFile.getString(temp + ".Baby.RewardCurrency", "Default");
+          Double babyReward = configurationFile.getDouble(temp + ".Baby.Reward", 10.0);
           configurations.put(temp + ".Baby.Enabled", babyEnabled);
+          configurations.put(temp + ".Baby.RewardCurrency", babyCurrency);
           configurations.put(temp + ".Baby.Reward", babyReward);
         }
       }
     }
 
-    base = "Mobs.Slime";
-    identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+    base = "Mobs.SLIME";
+    if(configurationFile.contains(base)) {
+      identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
 
-    for(String s : identifiers) {
-      if(s.equalsIgnoreCase("Enabled") || s.equalsIgnoreCase("Reward")) continue;
-      String temp = base + "." + s;
-      TNE.debug(temp);
-      addChance(configurationFile, temp);
-      Boolean enabled = !configurationFile.contains(temp + ".Enabled") || configurationFile.getBoolean(temp + ".Enabled");
-      Double reward = (!configurationFile.contains(temp + ".Reward"))? 10.0 : configurationFile.getDouble(temp + ".Reward");
-      TNE.debug("configurations.put(" + temp + ".Enabled, " + enabled + ")");
-      TNE.debug("configurations.put(" + temp + ".Reward, " + reward + ")");
-      configurations.put(temp + ".Enabled", enabled);
-      configurations.put(temp + ".Reward", reward);
+      for (String s : identifiers) {
+        if (s.equalsIgnoreCase("Enabled") || s.equalsIgnoreCase("Reward")) continue;
+        String temp = base + "." + s;
+        TNE.debug(temp);
+        addChance(configurationFile, temp);
+        Boolean enabled = configurationFile.getBoolean(temp + ".Enabled", true);
+        String currency = configurationFile.getString(temp + ".RewardCurrency", "Default");
+        Double reward = configurationFile.getDouble(temp + ".Reward", 10.0);
+        TNE.debug("configurations.put(" + temp + ".Enabled, " + enabled + ")");
+        TNE.debug("configurations.put(" + temp + ".Reward, " + reward + ")");
+        configurations.put(temp + ".Enabled", enabled);
+        configurations.put(temp + ".RewardCurrency", currency);
+        configurations.put(temp + ".Reward", reward);
+      }
+    }
+
+    base = "Mobs.MAGMA_CUBE";
+    if(configurationFile.contains(base)) {
+      identifiers = configurationFile.getConfigurationSection(base).getKeys(false);
+
+      for (String s : identifiers) {
+        if (s.equalsIgnoreCase("Enabled") || s.equalsIgnoreCase("Reward")) continue;
+        String temp = base + "." + s;
+        TNE.debug(temp);
+        addChance(configurationFile, temp);
+        Boolean enabled = configurationFile.getBoolean(temp + ".Enabled", true);
+        String currency = configurationFile.getString(temp + ".RewardCurrency", "Default");
+        Double reward = configurationFile.getDouble(temp + ".Reward", 10.0);
+        TNE.debug("configurations.put(" + temp + ".Enabled, " + enabled + ")");
+        TNE.debug("configurations.put(" + temp + ".Reward, " + reward + ")");
+        configurations.put(temp + ".Enabled", enabled);
+        configurations.put(temp + ".RewardCurrency", currency);
+        configurations.put(temp + ".Reward", reward);
+      }
     }
   }
 
   private void addChance(FileConfiguration configurationFile, String base) {
-    System.out.println("MobConfiguration.addChance(mobs.yml, " + base + ")");
-    if(configurationFile.contains(base + ".Multiplier")) {
-      configurations.put(base + ".Multiplier", configurationFile.getDouble(base + ".Multiplier"));
-    }
-
     if(configurationFile.contains(base + ".Chance.Min") || configurationFile.contains(base + ".Chance.Max")) {
-      System.out.println("Chance Added!");
+      //System.out.println("Chance Added!");
       Double min = configurationFile.getDouble(base + ".Chance.Min", configurationFile.getDouble(base + ".Chance.Max") - 5.0);
       Double max = configurationFile.getDouble(base + ".Chance.Max", configurationFile.getDouble(base + ".Chance.Max") - 5.0);
       configurations.put(base + ".Chance.Min", min);

@@ -29,15 +29,14 @@ public class TNECurrency implements Currency {
   private BigDecimal maxBalance;
   private boolean item;
   private boolean xp;
-  private boolean vault;
   private boolean notable;
   private BigDecimal fee;
   private BigDecimal minimum;
-  private boolean bankChest;
   private boolean enderChest;
   private boolean separateMajor;
   private String majorSeparator;
   private Integer minorWeight;
+  private String identifier;
   private String single;
   private String plural;
   private String singleMinor;
@@ -49,11 +48,6 @@ public class TNECurrency implements Currency {
   private double rate;
   private String decimal;
   private int decimalPlaces;
-
-  //Interest-related configurations
-  private boolean interestEnabled = false;
-  private double interestRate = 0.2;
-  private long interestInterval = 1800;
 
   //TNETier-related methods.
   public Set<TNETier> getTNETiers() {
@@ -133,6 +127,7 @@ public class TNECurrency implements Currency {
   public static TNECurrency fromReserve(Currency currency) {
     TNECurrency tneCurrency = new TNECurrency();
 
+    tneCurrency.setIdentifier(currency.name());
     tneCurrency.setSingle(currency.name());
     tneCurrency.setPlural(currency.plural());
     tneCurrency.setDecimalPlaces(currency.decimalPlaces());
@@ -153,6 +148,14 @@ public class TNECurrency implements Currency {
     }
 
     return tneCurrency;
+  }
+
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
   }
 
   @Override
@@ -184,6 +187,7 @@ public class TNECurrency implements Currency {
   public BigDecimal defaultBalance() {
     return balance;
   }
+
 
   @Override
   public TreeMap<Integer, Tier> getMajorTiers() {
@@ -224,14 +228,6 @@ public class TNECurrency implements Currency {
     if(item) setXp(false);
   }
 
-  public boolean canVault() {
-    return vault;
-  }
-
-  public void setVault(boolean vault) {
-    this.vault = vault;
-  }
-
   public boolean isNotable() {
     return notable;
   }
@@ -254,14 +250,6 @@ public class TNECurrency implements Currency {
 
   public void setMinimum(BigDecimal minimum) {
     this.minimum = minimum;
-  }
-
-  public boolean canBankChest() {
-    return bankChest;
-  }
-
-  public void setBankChest(boolean bankChest) {
-    this.bankChest = bankChest;
   }
 
   public boolean canEnderChest() {
@@ -370,30 +358,6 @@ public class TNECurrency implements Currency {
 
   public int getDecimalPlaces() {
     return decimalPlaces;
-  }
-
-  public boolean isInterestEnabled() {
-    return interestEnabled;
-  }
-
-  public void setInterestEnabled(boolean interestEnabled) {
-    this.interestEnabled = interestEnabled;
-  }
-
-  public double getInterestRate() {
-    return interestRate;
-  }
-
-  public void setInterestRate(double interestRate) {
-    this.interestRate = interestRate;
-  }
-
-  public long getInterestInterval() {
-    return interestInterval;
-  }
-
-  public void setInterestInterval(long interestInterval) {
-    this.interestInterval = interestInterval;
   }
 
   public boolean isXp() {

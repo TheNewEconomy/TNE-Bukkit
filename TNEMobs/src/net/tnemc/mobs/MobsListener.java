@@ -15,10 +15,13 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Villager;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -67,12 +70,12 @@ public class MobsListener implements ModuleListener {
         TNE.debug("TNE getBoolean(Mobs.Enabled) null: " + (TNE.instance().api().getBoolean("Mobs.Enabled", world, id) == null));
         if (TNE.instance().api().getBoolean("Mobs.Enabled", world, id)) {
           if (entity.getType().isAlive()) {
-            mob = MobConfiguration.formatName(entity.getType().name());
+            mob = entity.getType().name();
 
             if (entity.getType().equals(EntityType.RABBIT)) {
               Rabbit rab = (Rabbit) entity;
               if (rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
-                mob = "RabbitKiller";
+                mob = "RABBIT_KILLER";
               }
             } else if (entity.getType().equals(EntityType.PLAYER)) {
               Player p = (Player) entity;
@@ -85,7 +88,7 @@ public class MobsListener implements ModuleListener {
             }
           }
 
-          System.out.println("Mob Name: " + mob);
+          //System.out.println("Mob Name0: " + mob);
           mob = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? "Custom.Entries." + event.getEntityType().toString() : mob;
 
           if (entity.getCustomName() != null && MobsModule.instance().mobEnabled(entity.getCustomName(), world, id.toString()))
@@ -104,6 +107,7 @@ public class MobsListener implements ModuleListener {
               }
             }
           }
+
           if (entity.getType().equals(EntityType.SLIME)) {
             String tier = "Small";
 
@@ -125,26 +129,64 @@ public class MobsListener implements ModuleListener {
             }
           }
 
-          System.out.println("Mob Name: " + mob);
+          if (entity.getType().equals(EntityType.MAGMA_CUBE)) {
+            String tier = "Small";
 
-          if (!MobsModule.instance().fileConfiguration.isConfigurationSection("Mobs." + mob)) mob = "Default";
-          System.out.println("Mob Name: " + mob);
+            switch (((MagmaCube) entity).getSize()) {
+              case 1:
+                break;
+              case 2:
+                tier = "Medium";
+                break;
+              case 4:
+                tier = "Large";
+                break;
+              default:
+                tier = ((MagmaCube) entity).getSize() + "";
+                break;
+            }
+            if (MobsModule.instance().mobEnabled(mob + "." + tier, world, id.toString())) {
+              mob = mob + "." + tier;
+            }
+          }
+
+          if(entity instanceof Villager) {
+            final String career = ((Villager)entity).getCareer().name().toUpperCase();
+            if(MobsModule.instance().fileConfiguration.contains("Mobs." + mob + "_" + career)) {
+              mob = mob + "_" + career;
+            }
+          }
+
+          if(entity instanceof ZombieVillager) {
+            final String career = ((ZombieVillager)entity).getVillagerProfession().name().toUpperCase();
+            if(MobsModule.instance().fileConfiguration.contains("Mobs." + mob + "_" + career)) {
+              mob = mob + "_" + career;
+            }
+          }
+
+          //System.out.println("Mob Name1: " + mob);
+
+          if (!MobsModule.instance().fileConfiguration.contains("Mobs." + mob)) mob = "Default";
+          //System.out.println("Mob Name2: " + mob);
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))
             mob = "Custom.Entries." + entity.getCustomName();
           String currency = MobsModule.instance().mobCurrency(mob, world, id.toString());
           reward = (player) ? MobsModule.instance().playerReward(mob, world, id.toString()) : MobsModule.instance().mobReward(mob, world, id.toString());
-          reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().getRewardMultiplier(mob, world, id.toString())));
+          //reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().getRewardMultiplier(mob, world, id.toString())));
           String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? event.getEntityType().toString() : mob;
-          System.out.println("Mob Name: " + mob);
+          //System.out.println("Mob Name3: " + mob);
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))
             formatted = entity.getCustomName();
           formatted = (TNE.instance().messageConfiguration().contains("Mobs.Messages.Custom." + formatted)) ? TNE.instance().messageConfiguration().getString("Mobs.Messages.Custom." + formatted) : formatted;
           TNE.debug(formatted);
           Character firstChar = formatted.charAt(0);
           messageNode = (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u') ? "Mobs.Messages.KilledVowel" : "Mobs.Messages.Killed";
+          //System.out.println("Mob: " + mob);
           if (TNE.instance().messageConfiguration().contains("Mobs.Messages.Custom." + formatted.replaceAll(" ", "")))
             messageNode = TNE.instance().messageConfiguration().getString("Mobs.Messages.Custom." + formatted.replaceAll(" ", ""));
+          //System.out.println("Enabled: " + MobsModule.instance().mobEnabled(mob, world, id.toString()));
           if (MobsModule.instance().mobEnabled(mob, world, id.toString())) {
+            //System.out.println("Mob: " + mob);
             TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
             transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), reward, TransactionChargeType.GAIN));
             TransactionResult result = TNE.transactionManager().perform(transaction);

@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -57,52 +56,54 @@ public class CurrencyManager {
   }
 
   private void loadCurrency(FileConfiguration configuration, boolean world, String worldName) {
-    String curBase = ((world)? "Worlds." + worldName : "Core") + ".Currency";
+    String curBase = ((world)? "Worlds." + worldName : "Core") + ".Currencies";
     if(configuration.contains(curBase)) {
 
       Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);
       TNE.debug(currencies.toArray().toString());
 
       for(String cur : currencies) {
-        if (configuration.contains("Core.Currency." + cur + ".Disabled") &&
-            configuration.getBoolean("Core.Currency." + cur + ".Disabled")) {
+        if (configuration.contains("Core.Currencies." + cur + ".Options.Disabled") &&
+            configuration.getBoolean("Core.Currencies." + cur + ".Options.Disabled")) {
               return;
         }
 
         TNE.debug("[Loop]Loading Currency: " + cur + " for world: " + worldName);
         String base = curBase + "." + cur;
-        String single = configuration.getString(base + ".Name.Major.Single", "Dollar");
-        String plural = configuration.getString(base + ".Name.Major.Plural", "Dollars");
-        String singleMinor = configuration.getString(base + ".Name.Minor.Single", "Cent");
-        String pluralMinor = configuration.getString(base + ".Name.Minor.Plural", "Cents");
-        String server = configuration.getString(base + ".Server", "Main Server");
-        BigDecimal balance = new BigDecimal(configuration.getString(base + ".Balance", "200.00"));
-        String decimal = configuration.getString(base + ".Decimal", ".");
-        Integer decimalPlaces = ((configuration.getInt(base + ".DecimalPlace", 2) > 4)? 4 : configuration.getInt(base + ".DecimalPlace", 2));
-        BigDecimal maxBalance = ((new BigDecimal(configuration.getString(base + ".MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance", largestSupported.toPlainString())));
-        String format = configuration.getString(base + ".Format", "<symbol><major.amount><decimal><minor.amount>").trim();
-        String prefixes = configuration.getString(base + ".Prefixes", "kMGTPEZYXWV").trim();
-        Boolean worldDefault = configuration.getBoolean(base + ".Default", true);
-        Double rate = configuration.getDouble(base + ".Conversion", 1.0);
-        Boolean item = configuration.getBoolean(base + ".ItemCurrency");
-        Boolean experience = configuration.getBoolean(base + ".Experience");
-        Boolean vault = configuration.getBoolean(base + ".Vault", true);
-        Boolean notable = configuration.getBoolean(base + ".Note.Notable", false);
-        BigDecimal fee = new BigDecimal(configuration.getString(base + ".Note.Fee", "0.00"));
-        BigDecimal minimum = new BigDecimal(configuration.getString(base + ".Note.Minimum", "0.00"));
-        Boolean bankChest = configuration.getBoolean(base + ".BankChest", true);
-        Boolean ender = configuration.getBoolean(base + ".EnderChest", true);
-        Boolean separate = configuration.getBoolean(base + ".Major.Separate", true);
-        String separator = configuration.getString(base + ".Major.Separator", ",");
-        String symbol = configuration.getString(base + ".Symbol", "$");
-        Integer minorWeight = configuration.getInt(base + ".Minor.Weight", 100);
 
-        //Interest-related configurations
-        Boolean interestEnabled = configuration.getBoolean(base + ".Interest.Enabled", false);
-        Double interestRate = configuration.getDouble(base + ".Interest.Rate", 0.2);
-        Long interestInterval = configuration.getLong(base + ".Interest.Interval", 1800) * 1000;
+        //Currency Info Configurations.
+        final String server = configuration.getString(base + ".Info.Server", "Main Server");
+        final String single = configuration.getString(base + ".Info.Major_Single", "Dollar");
+        final String plural = configuration.getString(base + ".Info.Major_Plural", "Dollars");
+        final String singleMinor = configuration.getString(base + ".Info.Minor_Single", "Cent");
+        final String pluralMinor = configuration.getString(base + ".Info.Minor_Plural", "Cents");
+        final String prefixes = configuration.getString(base + ".Info.Prefixes", "kMGTPEZYXWV").trim();
+        final String symbol = configuration.getString(base + ".Info.Symbol", "$");
+
+        //Currency Options Configurations.
+        final Boolean worldDefault = configuration.getBoolean(base + ".Options.Default", true);
+        final String format = configuration.getString(base + ".Options.Format", "<symbol><major.amount><decimal><minor.amount>").trim();
+        final BigDecimal maxBalance = ((new BigDecimal(configuration.getString(base + ".Options.MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance", largestSupported.toPlainString())));
+        final BigDecimal balance = new BigDecimal(configuration.getString(base + ".Options.Balance", "200.00"));
+        final String decimal = configuration.getString(base + ".Options.Decimal", ".");
+        final Integer decimalPlaces = ((configuration.getInt(base + ".Options.DecimalPlace", 2) > 4)? 4 : configuration.getInt(base + ".DecimalPlace", 2));
+        final Boolean experience = configuration.getBoolean(base + ".Options.Experience");
+        final Boolean item = configuration.getBoolean(base + ".Options.ItemCurrency");
+        final Boolean ender = configuration.getBoolean(base + ".Options.EnderChest", true);
+        final Boolean separate = configuration.getBoolean(base + ".Options.Major_Separate", true);
+        final String separator = configuration.getString(base + ".Options.Major_Separator", ",");
+        final Integer minorWeight = configuration.getInt(base + ".Options.Minor_Weight", 100);
+
+        //Currency Note Configurations
+        final Boolean notable = configuration.getBoolean(base + ".Note.Notable", false);
+        final BigDecimal fee = new BigDecimal(configuration.getString(base + ".Note.Fee", "0.00"));
+        final BigDecimal minimum = new BigDecimal(configuration.getString(base + ".Note.Minimum", "0.00"));
+
+        //Currency Conversion Configurations.
+        final Double rate = configuration.getDouble(base + ".Conversion.Rate", 1.0);
 
         TNECurrency currency = new TNECurrency();
+        currency.setIdentifier(configuration.getString(base + ".Info.Identifier"));
         currency.setMaxBalance(maxBalance);
         currency.setBalance(balance);
         currency.setDecimal(decimal);
@@ -119,20 +120,13 @@ public class CurrencyManager {
         currency.setRate(rate);
         currency.setItem(item);
         currency.setXp(experience);
-        currency.setVault(vault);
         currency.setNotable(notable);
         currency.setFee(fee);
         currency.setMinimum(minimum);
-        currency.setBankChest(bankChest);
         currency.setEnderChest(ender);
         currency.setSeparateMajor(separate);
         currency.setMajorSeparator(separator);
         currency.setMinorWeight(minorWeight);
-
-        //Interest-related configurations
-        currency.setInterestEnabled(interestEnabled);
-        currency.setInterestRate(interestRate);
-        currency.setInterestInterval(interestInterval);
 
         loadTiers(worldName, currency, configuration, base + ".Tiers");
 
@@ -151,31 +145,26 @@ public class CurrencyManager {
       String tierBase = baseNode + "." + tierName;
 
       //Normal TNETier variables
-      String single = configuration.getString(tierBase + ".Name.Single", "Dollar");
-      String plural = configuration.getString(tierBase + ".Name.Plural", "Dollars");
-      String type = configuration.getString(tierBase + ".Type", "Major");
-      Integer weight = configuration.getInt(tierBase + ".Weight", 1);
+      String type = configuration.getString(tierBase + ".Info.Type", "Major");
+      String single = configuration.getString(tierBase + ".Info.Single", "Dollar");
+      String plural = configuration.getString(tierBase + ".Info.Plural", "Dollars");
+      Integer weight = configuration.getInt(tierBase + ".Options.Weight", 1);
       ItemTier item = null;
 
       if(currency.isItem()) {
         //ItemTier variables
-        String material = configuration.getString(tierBase + ".Item.Material", "PAPER");
-        short damage = (short) configuration.getInt(tierBase + ".Item.Damage", 0);
-        String customName = configuration.getString(tierBase + ".Item.Name", null);
-        String lore = configuration.getString(tierBase + ".Item.Lore", null);
+        String material = configuration.getString(tierBase + ".Options.Material", "PAPER");
+        short damage = (short) configuration.getInt(tierBase + ".Options.Damage", 0);
+        String customName = configuration.getString(tierBase + ".Options.Name", null);
+        String lore = configuration.getString(tierBase + ".Options.Lore", null);
 
         item = new ItemTier(material, damage);
         item.setName(customName);
         item.setLore(lore);
 
-        if(configuration.isConfigurationSection(tierBase + ".Item.Enchantments")) {
-          Set<String> enchants = configuration.getConfigurationSection(tierBase + ".Item.Enchantments").getKeys(false);
-          for (String enchant : enchants) {
-            Enchantment parsed = Enchantment.getByName(enchant);
-            if (parsed != null) {
-              item.addEnchantment(parsed.getName(), configuration.getString(tierBase + ".Item.Enchantments." + enchant, "*"));
-            }
-          }
+        if(configuration.contains(tierBase + ".Options.Enchantments")) {
+          //System.out.println("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());
+          item.setEnchantments(configuration.getStringList(tierBase + ".Options.Enchantments"));
         }
       }
 
@@ -251,11 +240,11 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world, String name) {
-    System.out.println("Currency: " + name);
-    System.out.println("World: " + world);
-    System.out.println("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
+    //System.out.println("Currency: " + name);
+    //System.out.println("World: " + world);
+    //System.out.println("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
     if(TNE.instance().getWorldManager(world).containsCurrency(name)) {
-      System.out.println("Returning Currency " + name + " for world " + world);
+      //System.out.println("Returning Currency " + name + " for world " + world);
       return TNE.instance().getWorldManager(world).getCurrency(name);
     }
     return get(world);
