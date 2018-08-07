@@ -5,6 +5,7 @@ import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -21,7 +22,7 @@ public class MaterialHelper {
 
   static {
     for(Material mat : Material.values()) {
-      List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : new ArrayList<String>();
+      List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
       String[] names = nameList.toArray(new String[nameList.size()]);
       validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
     }
@@ -39,7 +40,7 @@ public class MaterialHelper {
 
   public static Material getMaterial(final String search) {
     //TNE.debug("MaterialHelper.getMaterial(" + search + ")");
-    final Material matched = Material.matchMaterial(search.toUpperCase());
+    final Material matched = Material.getMaterial(search.toUpperCase());
     if(matched != null && !matched.equals(Material.AIR)) {
       return matched;
     }
@@ -49,6 +50,7 @@ public class MaterialHelper {
         return helper.getMaterial();
       }
     }
+    //System.out.println("Material Helper returning air.");
     return Material.AIR;
   }
 }

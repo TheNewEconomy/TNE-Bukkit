@@ -72,7 +72,7 @@ public class CoreHoldingsHandler implements HoldingsHandler {
                                     tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);
       current = worldHoldings.getHoldings(currency.name());
     } else {
-      System.out.println("Grabbing physical holdings...");
+      //System.out.println("Grabbing physical holdings...");
       current = ItemCalculations.getCurrencyItems(currency, tneAccount.getPlayer().getInventory());
     }
     return current;

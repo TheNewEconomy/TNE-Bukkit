@@ -113,7 +113,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "3Beta1";
+  public static final String build = "6Beta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -587,7 +587,7 @@ public class TNE extends TNELib {
         e.printStackTrace();
       }
     }*/
-    System.out.println(message);
+    //System.out.println(message);
   }
 
   public void loadConfigurations() {

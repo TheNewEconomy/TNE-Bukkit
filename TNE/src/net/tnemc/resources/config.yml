@@ -1,4 +1,4 @@
-# The New Economy v0.1.0.0
+# The New Economy v0.1.1.1
 # Author: creatorfromhell
 # License: http://creativecommons.org/licenses/by-nc-nd/4.0/
 # If you would like to contribute to the plugin
@@ -110,7 +110,7 @@ Core:
     #All configurations relating to currency.
     Currencies:
 
-        Currency:
+        USD:
 
             #Configurations relating to basic information about this currency.
             Info:
@@ -234,7 +234,7 @@ Core:
             #All configurations relating to this currency's tiers.
             Tiers:
 
-               Tier:
+               One:
 
                   #Configurations relating to basic information about this currency tier.
                   Info:
@@ -273,10 +273,10 @@ Core:
                      #Optional.
                      Enchantments:
 
-                        #The format is Enchantment Name: Enchantment Level, or * for all levels
-                        ExampleEnchantment: '*'
+                        #The format is - enchantment name
+                        - example_enchant
 
-               Tier:
+               Penny:
 
                   #Configurations relating to basic information about this currency tier.
                   Info:
@@ -315,8 +315,8 @@ Core:
                      #Optional.
                      Enchantments:
 
-                        #The format is Enchantment Name: Enchantment Level, or * for all levels
-                        ExampleEnchantment: '*'
+                        #The format is - enchantment name
+                        - example_enchant
             
             
     #All configurations relating to worlds

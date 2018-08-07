@@ -12,9 +12,7 @@ import net.tnemc.core.event.currency.TNECurrencyTierLoadedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -164,14 +162,9 @@ public class CurrencyManager {
         item.setName(customName);
         item.setLore(lore);
 
-        if(configuration.isConfigurationSection(tierBase + ".Options.Enchantments")) {
-          Set<String> enchants = configuration.getConfigurationSection(tierBase + ".Options.Enchantments").getKeys(false);
-          for (String enchant : enchants) {
-            Enchantment parsed = Enchantment.getByKey(NamespacedKey.minecraft(enchant));
-            if (parsed != null) {
-              item.addEnchantment(parsed.getKey().getKey(), configuration.getString(tierBase + ".Options.Enchantments." + enchant, "*"));
-            }
-          }
+        if(configuration.contains(tierBase + ".Options.Enchantments")) {
+          //System.out.println("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());
+          item.setEnchantments(configuration.getStringList(tierBase + ".Options.Enchantments"));
         }
       }
 
@@ -247,11 +240,11 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world, String name) {
-    System.out.println("Currency: " + name);
-    System.out.println("World: " + world);
-    System.out.println("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
+    //System.out.println("Currency: " + name);
+    //System.out.println("World: " + world);
+    //System.out.println("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
     if(TNE.instance().getWorldManager(world).containsCurrency(name)) {
-      System.out.println("Returning Currency " + name + " for world " + world);
+      //System.out.println("Returning Currency " + name + " for world " + world);
       return TNE.instance().getWorldManager(world).getCurrency(name);
     }
     return get(world);
