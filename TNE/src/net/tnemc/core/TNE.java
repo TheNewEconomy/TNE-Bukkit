@@ -33,6 +33,7 @@ import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
@@ -45,14 +46,18 @@ import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -386,6 +391,12 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
+    try {
+      writeMobs();
+      writeItems();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     getLogger().info("The New Economy has been enabled!");
   }
 
@@ -401,6 +412,52 @@ public class TNE extends TNELib {
     });
     super.onDisable();
     getLogger().info("The New Economy has been disabled!");
+  }
+
+  private void writeMobs() throws IOException {
+    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(getDataFolder(), "mobs.txt")));
+    final String newLine = System.getProperty("line.separator");
+    writer.write("Mobs:" + newLine);
+    for(EntityType type : EntityType.values()) {
+      writer.write(newLine);
+      writer.write("  " + type.name().toUpperCase() + ":" + newLine);
+      writer.write("    #Whether or not this entity drops money on death." + newLine);
+      writer.write("    Enabled: true" + newLine + newLine);
+      writer.write("    #The currency to use for the money dropped by this entity" + newLine);
+      writer.write("    RewardCurrency: Default" + newLine + newLine);
+      writer.write("    #The amount of money this mob should drop." + newLine);
+      writer.write("    #Negative will take money from player" + newLine);
+      writer.write("    Reward: 10.00" + newLine + newLine);
+      writer.write("    #Configurations relating to baby versions of this entity." + newLine);
+      writer.write("    Baby:" + newLine);
+      writer.write("      #Whether or not to enable separate configurations for baby versions of this entity." + newLine);
+      writer.write("      Enabled: true" + newLine + newLine);
+      writer.write("      #The currency to use for the money dropped by this entity" + newLine);
+      writer.write("      RewardCurrency: Default" + newLine + newLine);
+      writer.write("      #The amount of money this mob should drop." + newLine);
+      writer.write("      #Negative will take money from player" + newLine);
+      writer.write("      Reward: 10.00" + newLine);
+    }
+  }
+
+  private void writeItems() throws IOException {
+    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(getDataFolder(), "items.txt")));
+    final String newLine = System.getProperty("line.separator");
+    writer.write("Items:" + newLine);
+    for(Material material : Material.values()) {
+      writer.write(newLine);
+      writer.write("  " + material.name().toUpperCase() + ":" + newLine);
+      writer.write("    #The permission node required to create a shop sign with this item" + newLine);
+      writer.write("    Sign: tne.item." + material.name().toLowerCase() + ".sign" + newLine + newLine);
+      writer.write("    #The permission node required to buy this item" + newLine);
+      writer.write("    Buy: tne.item." + material.name().toLowerCase() + ".buy" + newLine + newLine);
+      writer.write("    #The permission node required to sell this item" + newLine);
+      writer.write("    Sell: tne.item." + material.name().toLowerCase() + ".sell" + newLine + newLine);
+      writer.write("    #The names supported by shop signs" + newLine);
+      writer.write("    Names:" + newLine);
+      writer.write("      - " + MaterialUtils.formatMaterialName(material) + newLine);
+      writer.write("      - " + MaterialUtils.formatMaterialNameWithSpace(material) + newLine);
+    }
   }
 
   public static TNE instance() {
