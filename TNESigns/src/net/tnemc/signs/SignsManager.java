@@ -1,6 +1,7 @@
 package net.tnemc.signs;
 
 import net.tnemc.signs.signs.SignType;
+import net.tnemc.signs.signs.impl.ItemSign;
 import net.tnemc.signs.signs.impl.NationSign;
 import net.tnemc.signs.signs.impl.SafeSign;
 import net.tnemc.signs.signs.impl.TownSign;
@@ -38,7 +39,7 @@ public class SignsManager {
     //signs.setListener(new SignsListener());
 
     addSignType(new SafeSign());
-    //addSignType(new ItemSign());
+    addSignType(new ItemSign());
     if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
       addSignType(new TownSign());
       addSignType(new NationSign());

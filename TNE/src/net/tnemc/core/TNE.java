@@ -69,6 +69,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -391,12 +392,12 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
-    try {
+    /*try {
       writeMobs();
-      writeItems();
+      //writeItems();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
     getLogger().info("The New Economy has been enabled!");
   }
 
@@ -418,7 +419,12 @@ public class TNE extends TNELib {
     BufferedWriter writer = new BufferedWriter(new FileWriter(new File(getDataFolder(), "mobs.txt")));
     final String newLine = System.getProperty("line.separator");
     writer.write("Mobs:" + newLine);
-    for(EntityType type : EntityType.values()) {
+    TreeMap<String, EntityType> entities = new TreeMap<>();
+
+    for (EntityType entityType : EntityType.values()) {
+      entities.put(entityType.name(), entityType);
+    }
+    for(EntityType type : entities.values()) {
       writer.write(newLine);
       writer.write("  " + type.name().toUpperCase() + ":" + newLine);
       writer.write("    #Whether or not this entity drops money on death." + newLine);
