@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -111,6 +112,20 @@ public class MobsModule extends Module {
   public Boolean mobAge(String world, String player) {
     TNE.debug("ConfigurationManager.mobAge(" + world + "," + player + ")");
     return TNE.instance().api().getBoolean("Mobs.EnableAge", world, player);
+  }
+
+  public BigDecimal multiplier(String material, String world, String player) {
+    if(TNE.instance().api().getConfiguration("Mobs.Multipliers." + material + ".Chance", world, player) == null
+        || TNE.instance().api().getConfiguration("Mobs.Multipliers." + material + ".Multiplier", world, player) == null) {
+      return BigDecimal.ONE;
+    }
+    final int chance = TNE.instance().api().getInteger("Mobs.Multipliers." + material + ".Chance", world, player);
+    if(chance > 0) {
+      if(new Random().nextFloat() <= (chance/100)) {
+        return TNE.instance().api().getBigDecimal("Mobs.Multipliers." + material + ".Multiplier", world, player);
+      }
+    }
+    return BigDecimal.ONE;
   }
 
   public Boolean mobEnabled(String mob, String world, String player) {

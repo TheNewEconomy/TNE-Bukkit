@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -188,6 +189,12 @@ public class TNE extends TNELib {
     loader = new ModuleLoader();
     loader.load();
 
+    if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
+      new File(getDataFolder(), "modules").mkdir();
+      ModuleLoader.downloadModule("h2");
+      loader.load("H2");
+    }
+
     //Load modules
     loader.getModules().forEach((key, value)->{
       TNEModuleLoadEvent event = new TNEModuleLoadEvent(key, value.getInfo().version());
@@ -290,6 +297,11 @@ public class TNE extends TNELib {
     serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     useUUID = configurations().getBoolean("Core.UUID");
+
+
+    if(!loader.hasModuleWithoutCase(configurations().getString("Core.Database.Type"))) {
+      getLogger().log(Level.SEVERE, "Unable to locate module with specified database type.");
+    }
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Core.Database.Type").toLowerCase(),

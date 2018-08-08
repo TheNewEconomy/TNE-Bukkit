@@ -20,12 +20,19 @@ Mobs:
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.
   Multipliers:
-    DIAMOND_SWORD:
+    EXAMPLE_ITEM:
       #The chance to get this multiplier. Value must be between 0 and 100
       Chance: 10
 
       #The multiplier that is applied when killing an entity with this item.
       Multiplier: 10.00
+
+    FIST:
+      #The chance to get this multiplier. Value must be between 0 and 100
+      Chance: 100
+
+      #The multiplier that is applied when killing an entity with this item.
+      Multiplier: 1
 
   #Reward configurations for individual mobs
   #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit

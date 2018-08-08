@@ -180,6 +180,21 @@ public class TNEAccount implements Account {
     return holdings;
   }
 
+  public BigDecimal getNonCoreHoldings(String world, String currency, boolean database) {
+    BigDecimal holdings = BigDecimal.ZERO;
+    for (Map.Entry<Integer, List<HoldingsHandler>> entry : TNE.manager().getHoldingsHandlers().descendingMap().entrySet()) {
+      for (HoldingsHandler handler : entry.getValue()) {
+        if (!handler.coreHandler()) {
+          if (handler.userContains().equalsIgnoreCase("") ||
+              displayName().contains(handler.userContains())) {
+            holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
+          }
+        }
+      }
+    }
+    return holdings;
+  }
+
   public void saveItemCurrency(String world) {
     saveItemCurrency(world, true);
   }

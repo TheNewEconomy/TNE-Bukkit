@@ -28,9 +28,6 @@ Core:
         #Whether or not experience gains should be disabled. This will help for servers that use Experience as currency.
         ExperienceGain: false
 
-        #Whether or not players are able to use their currency for crafting.
-        CurrencyCrafting: true
-
         #Whether or not players are able to use currency in villager trades.
         CurrencyTrading: true
 

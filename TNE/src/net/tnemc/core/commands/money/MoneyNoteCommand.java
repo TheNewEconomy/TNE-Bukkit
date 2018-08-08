@@ -72,6 +72,11 @@ public class MoneyNoteCommand extends TNECommand {
         return false;
       }
 
+      if(!currency.isNotable()) {
+        new Message("Messages.Money.NoteFailed").translate(world, sender);
+        return false;
+      }
+
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
       if(parsed.contains("Messages")) {
         Message max = new Message(parsed);
@@ -96,7 +101,7 @@ public class MoneyNoteCommand extends TNECommand {
 
 
       if(result.proceed()) {
-        ItemStack stack = TNE.manager().currencyManager().createNote(id, currency.name(), world, value);
+        ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
         getPlayer(sender).getInventory().addItem(stack);
         Message message = new Message(result.recipientMessage());
         message.addVariable("$player", arguments[0]);
