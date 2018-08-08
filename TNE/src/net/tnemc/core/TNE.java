@@ -189,6 +189,12 @@ public class TNE extends TNELib {
     loader = new ModuleLoader();
     loader.load();
 
+    if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
+      new File(getDataFolder(), "modules").mkdir();
+      ModuleLoader.downloadModule("h2");
+      loader.load("H2");
+    }
+
     //Load modules
     loader.getModules().forEach((key, value)->{
       TNEModuleLoadEvent event = new TNEModuleLoadEvent(key, value.getInfo().version());
@@ -197,11 +203,6 @@ public class TNE extends TNELib {
         value.getModule().load(this, loader.getLastVersion(value.getInfo().name()));
       }
     });
-
-    if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
-      getLogger().log(Level.SEVERE, "Unable to load TNE. No H2, or MySQL module found.");
-      return;
-    }
 
     getServer().getWorlds().forEach(world->{
       worldManagers.put(world.getName(), new WorldManager(world.getName()));
@@ -296,6 +297,11 @@ public class TNE extends TNELib {
     serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     useUUID = configurations().getBoolean("Core.UUID");
+
+
+    if(!loader.hasModuleWithoutCase(configurations().getString("Core.Database.Type"))) {
+      getLogger().log(Level.SEVERE, "Unable to locate module with specified database type.");
+    }
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Core.Database.Type").toLowerCase(),

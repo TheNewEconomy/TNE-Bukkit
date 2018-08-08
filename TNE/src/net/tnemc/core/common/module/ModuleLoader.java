@@ -94,6 +94,13 @@ public class ModuleLoader {
     return modules.containsKey(moduleName);
   }
 
+  public boolean hasModuleWithoutCase(String moduleName) {
+    for (String key : modules.keySet()) {
+      if(key.equalsIgnoreCase(moduleName)) return true;
+    }
+    return false;
+  }
+
   public ModuleEntry getModule(String moduleName) {
     return modules.get(moduleName);
   }
@@ -273,7 +280,7 @@ public class ModuleLoader {
           FileOutputStream out = new FileOutputStream(TNE.instance().getDataFolder() + File.separator + "modules" + File.separator + fileName);
 
           int bytesRead = -1;
-          byte[] buffer = new byte[in.available()];
+          byte[] buffer = new byte[4096];
           while ((bytesRead = in.read(buffer)) != -1) {
             out.write(buffer, 0, bytesRead);
           }
