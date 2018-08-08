@@ -56,6 +56,16 @@
   - Ability to charge people to change worlds
   - Ability to have balances set per-world
   - Ability to have banks set per-world
+- Mob Rewards(Beta 1.1.1+)
+  - Ability to reward the player money for killing a certain mob
+  - Ability to enable/disable mob rewards for individual mobs
+  - Ability to specify the currency for the reward
+  - Ability to  specify custom name for messages in messages.yml
+  - Supports mobs from Minecraft Forge mods
+  - Supports baby versions of mobs.
+  - Supports multiplier based on item used to kill mobs
+  - Supports Slime & Magma Cube sizes
+  - Supports Villager/Zombie Villager types(blacksmith, cleric, etc)
 - Minecraft UUID Support
   - The New Economy keeps your users' data even if they change their username!
 - Action GUI
