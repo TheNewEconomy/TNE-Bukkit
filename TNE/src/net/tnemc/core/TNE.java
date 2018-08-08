@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -197,9 +198,9 @@ public class TNE extends TNELib {
       }
     });
 
-    if(!loader.hasModule("mysql") && !loader.hasModule("h2")) {
-      new File(getDataFolder(), "modules").mkdir();
-      ModuleLoader.downloadModule("h2");
+    if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
+      getLogger().log(Level.SEVERE, "Unable to load TNE. No H2, or MySQL module found.");
+      return;
     }
 
     getServer().getWorlds().forEach(world->{
@@ -295,11 +296,6 @@ public class TNE extends TNELib {
     serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     useUUID = configurations().getBoolean("Core.UUID");
-
-
-    if(!loader.hasModule(configurations().getString("Core.Database.Type").toLowerCase().trim())) {
-      ModuleLoader.downloadModule(configurations().getString("Core.Database.Type").toLowerCase().trim());
-    }
 
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Core.Database.Type").toLowerCase(),

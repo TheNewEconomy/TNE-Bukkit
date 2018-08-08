@@ -72,6 +72,11 @@ public class MoneyNoteCommand extends TNECommand {
         return false;
       }
 
+      if(!currency.isNotable()) {
+        new Message("Messages.Money.NoteFailed").translate(world, sender);
+        return false;
+      }
+
       String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
       if(parsed.contains("Messages")) {
         Message max = new Message(parsed);

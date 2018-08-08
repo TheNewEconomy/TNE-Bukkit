@@ -6,6 +6,7 @@ import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.module.ModuleLoader;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -62,7 +63,7 @@ public class ModuleDownloadCommand extends TNECommand {
         message.translate(world, sender);
         return false;
       }
-      ModuleLoader.downloadModule(moduleName);
+      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->ModuleLoader.downloadModule(moduleName));
       Message message = new Message("Messages.Module.Downloaded");
       message.addVariable("$module", moduleName);
       message.translate(world, sender);

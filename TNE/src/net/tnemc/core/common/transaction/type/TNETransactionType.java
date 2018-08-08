@@ -64,12 +64,12 @@ public interface TNETransactionType extends TransactionType {
       TNE.debug("Account null: " + (tneTransaction.getInitiator() == null));
       TNE.debug("Transaction.initiator null: " + (tneTransaction == null));
       TNE.debug("Transaction.initiatorCharge null: " + (tneTransaction.initiatorCharge() == null));
-      proceed = canCharge(tneTransaction.getInitiator(), tneTransaction.initiatorBalance().getAmount(), tneTransaction.initiatorCharge().getAmount(), tneTransaction.initiatorCharge());
+      proceed = canCharge(tneTransaction.initiatorBalance().getAmount(), tneTransaction.initiatorCharge().getAmount(), tneTransaction.initiatorCharge());
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       TNE.debug("second if");
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = canCharge(tneTransaction.getRecipient(), tneTransaction.recipientBalance().getAmount(), tneTransaction.recipientCharge().getAmount(), tneTransaction.recipientCharge());
+        proceed = canCharge(tneTransaction.recipientBalance().getAmount(), tneTransaction.recipientCharge().getAmount(), tneTransaction.recipientCharge());
       }
     }
 
@@ -93,15 +93,16 @@ public interface TNETransactionType extends TransactionType {
   }
 
   default boolean handleCharge(TNEAccount account, BigDecimal balance, BigDecimal amount, TransactionCharge charge) {
+    if(amount.compareTo(BigDecimal.ZERO) == 0) return true;
     if(charge.getType().equals(TransactionChargeType.LOSE)) {
-      account.setHoldings(charge.getWorld(), charge.getCurrency().name(), balance.subtract(amount), false, false);
+      account.removeHoldings(amount, charge.getCurrency(), charge.getWorld());
       return true;
     }
-    account.setHoldings(charge.getWorld(), charge.getCurrency().name(), balance.add(amount), false, false);
+    account.setHoldings(charge.getWorld(), charge.getCurrency().name(), balance.subtract(account.getNonCoreHoldings(charge.getWorld(), charge.getCurrency().name(), false)).add(amount));
     return true;
   }
 
-  default boolean canCharge(TNEAccount account, BigDecimal balance, BigDecimal amount, TransactionCharge charge) {
+  default boolean canCharge(BigDecimal balance, BigDecimal amount, TransactionCharge charge) {
     if(charge.getType().equals(TransactionChargeType.LOSE)) {
       return balance.compareTo(amount) >= 0;
     }

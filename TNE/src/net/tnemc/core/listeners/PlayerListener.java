@@ -24,7 +24,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -237,19 +236,6 @@ public class PlayerListener implements Listener {
       String[] arguments = (parsed.length > 1)? Arrays.copyOfRange(parsed, 1, parsed.length) : new String[0];
       TNE.instance().customCommand(event.getPlayer(), parsed[0].substring(1), arguments);
       event.setCancelled(true);
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-  public void onCraftEvent(CraftItemEvent event) {
-    if(!TNE.configurations().getBoolean("Core.Server.CurrencyCrafting")) {
-      final String world = WorldFinder.getWorld(event.getWhoClicked(), WorldVariant.BALANCE);
-      for (ItemStack item : event.getInventory().getMatrix()) {
-        if (item != null && TNE.manager().currencyManager().currencyFromItem(world, item).isPresent()) {
-          event.setCancelled(true);
-          break;
-        }
-      }
     }
   }
 
