@@ -96,7 +96,7 @@ public class MoneyNoteCommand extends TNECommand {
 
 
       if(result.proceed()) {
-        ItemStack stack = TNE.manager().currencyManager().createNote(id, currency.name(), world, value);
+        ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
         getPlayer(sender).getInventory().addItem(stack);
         Message message = new Message(result.recipientMessage());
         message.addVariable("$player", arguments[0]);

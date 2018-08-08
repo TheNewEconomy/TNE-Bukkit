@@ -39,6 +39,10 @@ public abstract class Module {
   public Module() {
   }
 
+  public String updateURL() {
+    return "";
+  }
+
   /**
    * @return a list of the classes that contain {@link net.tnemc.core.common.module.injectors.ModuleInjector module injectors} for this module.
    */

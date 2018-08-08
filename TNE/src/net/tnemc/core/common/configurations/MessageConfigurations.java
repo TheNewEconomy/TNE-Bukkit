@@ -88,6 +88,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Language.Reload", "<white>Successfully reloaded all language files.");
     configurations.put("Messages.Language.Set", "<white>Successfully set your language to $language.");
 
+    configurations.put("Messages.Module.Downloaded", "$module has been downloaded successfully.");
     configurations.put("Messages.Module.Info", "<white>==== Module Info for $module ====<newline>Author: $author<newline>Version: $version");
     configurations.put("Messages.Module.Invalid", "<red>Unable to find a module with the name of \"$module\".");
     configurations.put("Messages.Module.List", "<white>This server is currently uses these TNE Modules: $modules.");
@@ -168,6 +169,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Language.Reload", "/language reload - Reloads all language files.");
     configurations.put("Messages.Commands.Language.Set", "/language set <name> - Sets your current language to the one specified.");
 
+    configurations.put("Messages.Commands.Module.Download", "/tnem dl <module> - Attempts to download the specified module.");
     configurations.put("Messages.Commands.Module.Info", "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up.");
     configurations.put("Messages.Commands.Module.List", "/tnem list - Lists all loaded TNE modules.");
     configurations.put("Messages.Commands.Module.Load", "/tnem load <module> - Load a module from the modules directory.<newline>- Module ~ The module to load.");

@@ -8,8 +8,14 @@ import net.tnemc.core.common.module.injectors.ModuleInjectorWrapper;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,6 +37,15 @@ import java.util.jar.JarFile;
  * This class loads all modules from the modules directory, and loads the main class based on @Module.
  **/
 public class ModuleLoader {
+
+  public static Map<String, String> modulePaths = new HashMap<>();
+
+  static {
+    modulePaths.put("conversion", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Conversion/Conversion.jar");
+    modulePaths.put("h2", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/H2/H2.jar");
+    modulePaths.put("mobs", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Mobs/Mobs.jar");
+    modulePaths.put("mysql", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/mysql/MySQL.jar");
+  }
 
   private File modulesYAML;
   private FileConfiguration moduleConfigurations;
@@ -100,7 +115,7 @@ public class ModuleLoader {
   public void unload(String moduleName) {
     if(hasModule(moduleName)) {
       ModuleEntry entry = getModule(moduleName);
-      entry.getModule().getListeners(TNE.instance()).forEach(value->value.unregister());
+      entry.getModule().getListeners(TNE.instance()).forEach(ModuleListener::unregister);
       entry.getModule().unload(TNE.instance());
       entry.unload();
 
@@ -178,12 +193,8 @@ public class ModuleLoader {
       mainClass = urlClassLoader.loadClass(moduleMain);
       moduleClass = mainClass.asSubclass(Module.class);
       module = moduleClass.newInstance();
-      module.moduleInjectors().forEach(value->registerInjectors(value));
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InstantiationException e) {
+      module.moduleInjectors().forEach(this::registerInjectors);
+    } catch (MalformedURLException | IllegalAccessException | InstantiationException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
       TNE.logger().info("Unable to locate module main class for file " + file.getName());
@@ -246,5 +257,43 @@ public class ModuleLoader {
 
   public String getLastVersion(String name) {
     return moduleConfigurations.getString("Modules.DONTMODIFY." + name, modules.get(name).getInfo().version());
+  }
+
+  public static void downloadModule(String module) {
+    if(modulePaths.containsKey(module)) {
+      try {
+        final String fileURL = modulePaths.get(module);
+        final URL url = new URL(fileURL);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        int responseCode = httpConn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+          String fileName = "";
+          String disposition = httpConn.getHeaderField("Content-Disposition");
+          if(disposition != null) {
+            int index = disposition.indexOf("filename=");
+            if(index > 0) {
+              fileName = disposition.substring(index + 10,
+                  disposition.length() - 1);
+            }
+          } else {
+            fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+          }
+
+          InputStream in = httpConn.getInputStream();
+          FileOutputStream out = new FileOutputStream(TNE.instance().getDataFolder() + File.separator + "modules" + File.separator + fileName);
+
+          int bytesRead = -1;
+          byte[] buffer = new byte[in.available()];
+          while ((bytesRead = in.read(buffer)) != -1) {
+            out.write(buffer, 0, bytesRead);
+          }
+
+          out.close();
+          in.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

@@ -306,7 +306,7 @@ public class CurrencyManager {
     addCurrency(TNE.instance().defaultWorld, TNECurrency.fromReserve(currency));
   }
 
-  public ItemStack createNote(UUID id, String currency, String world, BigDecimal amount) {
+  public ItemStack createNote(String currency, String world, BigDecimal amount) {
     ItemStack stack = new ItemStack(Material.PAPER, 1);
 
     ItemMeta meta = stack.getItemMeta();
