@@ -12,6 +12,7 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.Material;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -25,6 +26,7 @@ import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -165,6 +167,8 @@ public class MobsListener implements ModuleListener {
           }
 
           //System.out.println("Mob Name1: " + mob);
+          final ItemStack tool =  event.getEntity().getKiller().getInventory().getItemInMainHand();
+          final String material = (tool != null && tool.getType() != null && !tool.getType().equals(Material.AIR))? tool.getType().name() : "FIST";
 
           if (!MobsModule.instance().fileConfiguration.contains("Mobs." + mob)) mob = "Default";
           //System.out.println("Mob Name2: " + mob);
@@ -172,7 +176,7 @@ public class MobsListener implements ModuleListener {
             mob = "Custom.Entries." + entity.getCustomName();
           String currency = MobsModule.instance().mobCurrency(mob, world, id.toString());
           reward = (player) ? MobsModule.instance().playerReward(mob, world, id.toString()) : MobsModule.instance().mobReward(mob, world, id.toString());
-          //reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().getRewardMultiplier(mob, world, id.toString())));
+          reward = CurrencyFormatter.round(world, currency, reward.multiply(MobsModule.instance().multiplier(material, world, id.toString())));
           String formatted = (mob.equalsIgnoreCase("Default") && event.getEntityType().toString() != null) ? event.getEntityType().toString() : mob;
           //System.out.println("Mob Name3: " + mob);
           if (entity.getCustomName() != null && MobsModule.instance().fileConfiguration.contains("Mobs.Custom.Entries." + entity.getCustomName()))

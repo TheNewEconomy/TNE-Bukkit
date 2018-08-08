@@ -45,6 +45,14 @@ public class MobConfiguration extends Configuration {
     configurations.put("Mobs.Messages.KilledVowel", "<white>You received $reward <white>for killing an <green>$mob<white>.");
     configurations.put("Mobs.Messages.NPCTag", "<red>I'm sorry, but you cannot use a name tag on a villager");
 
+    if(configurationFile.contains("Mobs.Multipliers")) {
+      Set<String> keys = configurationFile.getConfigurationSection("Mobs.Multipliers").getKeys(false);
+      for(String material : keys) {
+        configurations.put("Mobs.Multipliers." + material + ".Chance", 100);
+        configurations.put("Mobs.Multipliers." + material + ".Multiplier", 1);
+      }
+    }
+
     for(EntityType type : EntityType.values()) {
       configurations.put("Mobs." + type.name() + ".Enabled", true);
       configurations.put("Mobs." + type.name() + ".RewardCurrency", "Default");
