@@ -68,6 +68,7 @@ public class TNESaveManager extends SaveManager {
   }
 
   public void registerTables(String type, List<String> tables) {
+    if(dataTables.containsKey(type)) tables.addAll(dataTables.get(type));
     dataTables.put(type, tables);
   }
 

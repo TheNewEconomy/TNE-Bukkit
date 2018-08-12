@@ -334,7 +334,9 @@ public class TNE extends TNELib {
       value.getModule().getTables().forEach((type, tables)->saveManager().registerTables(type, tables));
     });
 
-    saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
+    if(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()).size() > 0) {
+      saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
+    }
 
     TNE.debug("Calling Modules.enableSave");
     loader.getModules().forEach((key, value)->{

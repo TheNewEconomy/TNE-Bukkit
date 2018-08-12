@@ -98,6 +98,8 @@ Messages:
        Set: "<white>Successfully set your language to $language."
 
     Module:
+       Downloaded: "$module has been downloaded successfully."
+       FailedDownload: "$module couldn't be downloaded successfully."
        Info: "<white>==== Module Info for $module ====<newline>Author: $author<newline>Version: $version"
        Invalid: "<red>Unable to find a module with the name of \"$module\"."
        List: "<white>This server is currently uses these TNE Modules: $modules."

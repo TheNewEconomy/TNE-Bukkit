@@ -17,6 +17,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -224,6 +227,14 @@ public class PlayerListener implements Listener {
           }
         }
       }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void onNetherPortal(EntityPortalEvent event) {
+    if(event.getEntityType().equals(EntityType.DROPPED_ITEM)) {
+      final String world = TNE.instance().getWorldManager(event.getEntity().getWorld().getName()).getBalanceWorld();
+      if(TNE.manager().currencyManager().currencyFromItem(world, ((Item)event.getEntity()).getItemStack()).isPresent()) event.setCancelled(true);
     }
   }
 

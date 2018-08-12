@@ -63,10 +63,14 @@ public class ModuleDownloadCommand extends TNECommand {
         message.translate(world, sender);
         return false;
       }
-      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->ModuleLoader.downloadModule(moduleName));
-      Message message = new Message("Messages.Module.Downloaded");
-      message.addVariable("$module", moduleName);
-      message.translate(world, sender);
+      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+        final boolean downloaded = ModuleLoader.downloadModule(moduleName);
+        final String messageNode = (downloaded)? "Messages.Module.Downloaded" : "Messages.Module.FailedDownload";
+
+        Message message = new Message(messageNode);
+        message.addVariable("$module", moduleName);
+        message.translate(world, sender);
+      });
       return true;
     }
     help(sender);

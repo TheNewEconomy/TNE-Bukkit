@@ -78,6 +78,7 @@ public class ModuleLoader {
       for (File jar : jars) {
         Module module = getModuleClass(jar.getAbsolutePath());
         if(module == null || module.getClass() == null) continue;
+        if(jar.getName().contains("outdated-")) continue;
         if (!module.getClass().isAnnotationPresent(ModuleInfo.class)) {
           TNE.instance().getLogger().info("Invalid module format! Module File: " + jar.getName());
           continue;
@@ -266,7 +267,7 @@ public class ModuleLoader {
     return moduleConfigurations.getString("Modules.DONTMODIFY." + name, modules.get(name).getInfo().version());
   }
 
-  public static void downloadModule(String module) {
+  public static boolean downloadModule(String module) {
     if(modulePaths.containsKey(module)) {
       try {
         final String fileURL = modulePaths.get(module);
@@ -277,7 +278,15 @@ public class ModuleLoader {
           String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
 
           InputStream in = httpConn.getInputStream();
-          FileOutputStream out = new FileOutputStream(TNE.instance().getDataFolder() + File.separator + "modules" + File.separator + fileName);
+          File file = new File(TNE.instance().getDataFolder() + File.separator + "modules", fileName);
+
+          if(file.exists()) {
+            if(!file.renameTo(new File(TNE.instance().getDataFolder() + File.separator + "modules", "outdated-" + fileName))) {
+              return false;
+            }
+          }
+
+          FileOutputStream out = new FileOutputStream(file);
 
           int bytesRead = -1;
           byte[] buffer = new byte[4096];
@@ -289,8 +298,10 @@ public class ModuleLoader {
           in.close();
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        return false;
       }
+      return true;
     }
+    return false;
   }
 }
