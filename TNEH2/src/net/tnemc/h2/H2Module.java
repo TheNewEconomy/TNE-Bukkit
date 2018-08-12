@@ -19,7 +19,7 @@ import java.util.Map;
 @ModuleInfo(
     name = "H2",
     author = "creatorfromhell",
-    version = "0.1.0"
+    version = "0.1.1"
 )
 public class H2Module extends Module {
 

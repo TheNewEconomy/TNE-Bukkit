@@ -58,6 +58,7 @@ public class MySQLProvider extends TNEDataProvider {
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
                                       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
+  private final String HISTORY_SAVE = "INSERT INTO " + prefix + "_BALANCES_HISTORY (uuid, server_name, world, currency, balance) VALUES(?, ?, ?, ?, ?)";
   private final String TRANSACTION_LOAD = "";
   private final String TRANSACTION_SAVE = "";
   private final String TRANSACTIONS_DELETE = "";
@@ -181,6 +182,15 @@ public class MySQLProvider extends TNEDataProvider {
         "`charge_amount` VARCHAR(41) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL," +
         "PRIMARY KEY(charge_transaction, charge_player)" +
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+        "`id` INTEGER NOT NULL AUTO_INCREMENT," +
+        "`uuid` VARCHAR(36) NOT NULL," +
+        "`server_name` VARCHAR(100) NOT NULL," +
+        "`world` VARCHAR(50) NOT NULL," +
+        "`currency` VARCHAR(100) NOT NULL," +
+        "`balance` VARCHAR(41)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().close(manager);
@@ -377,9 +387,11 @@ public class MySQLProvider extends TNEDataProvider {
   public void saveAccounts(List<TNEAccount> accounts) {
     PreparedStatement accountStatement = null;
     PreparedStatement balanceStatement = null;
+    PreparedStatement historyStatement = null;
     try {
       accountStatement = mysql().connection(manager).prepareStatement(ACCOUNT_SAVE);
       balanceStatement = mysql().connection(manager).prepareStatement(BALANCE_SAVE);
+      historyStatement = mysql().connection(manager).prepareStatement(HISTORY_SAVE);
       for(TNEAccount account : accounts) {
         if(account.displayName() == null) {
           System.out.println("Attempted saving account with null display name.");
@@ -414,10 +426,20 @@ public class MySQLProvider extends TNEDataProvider {
             balanceStatement.setString(5, entry.getValue().toString());
             balanceStatement.setString(6, entry.getValue().toString());
             balanceStatement.addBatch();
+
+            //history
+            historyStatement.setString(1, account.identifier().toString());
+            historyStatement.setString(2, server);
+            historyStatement.setString(3, holdingsEntry.getKey());
+            historyStatement.setString(4, entry.getKey());
+            historyStatement.setString(5, entry.getValue().toString());
+            historyStatement.setString(6, entry.getValue().toString());
+            historyStatement.addBatch();
           }
         }
       }
       balanceStatement.executeBatch();
+      historyStatement.executeBatch();
       accountStatement.executeBatch();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -458,6 +480,16 @@ public class MySQLProvider extends TNEDataProvider {
             TNE.manager().currencyManager().get(world, currency).getServer() :
             TNE.instance().getServerName();
         mysql().executePreparedUpdate(BALANCE_SAVE,
+            new Object[]{
+                account.identifier().toString(),
+                server,
+                world,
+                currency,
+                balance.toPlainString(),
+                balance.toPlainString()
+            }
+        );
+        mysql().executePreparedUpdate(HISTORY_SAVE,
             new Object[]{
                 account.identifier().toString(),
                 server,
