@@ -199,6 +199,18 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public void update(Double version) {
     //Nothing to convert(?)
+    if(version == 10.0) {
+
+      mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+          "`id` INTEGER NOT NULL AUTO_INCREMENT," +
+          "`uuid` VARCHAR(36) NOT NULL," +
+          "`server_name` VARCHAR(100) NOT NULL," +
+          "`world` VARCHAR(50) NOT NULL," +
+          "`currency` VARCHAR(100) NOT NULL," +
+          "`balance` VARCHAR(41)" +
+          ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+      mysql().close(manager);
+    }
   }
 
   public MySQL mysql() {
@@ -433,7 +445,6 @@ public class MySQLProvider extends TNEDataProvider {
             historyStatement.setString(3, holdingsEntry.getKey());
             historyStatement.setString(4, entry.getKey());
             historyStatement.setString(5, entry.getValue().toString());
-            historyStatement.setString(6, entry.getValue().toString());
             historyStatement.addBatch();
           }
         }
@@ -495,7 +506,6 @@ public class MySQLProvider extends TNEDataProvider {
                 server,
                 world,
                 currency,
-                balance.toPlainString(),
                 balance.toPlainString()
             }
         );

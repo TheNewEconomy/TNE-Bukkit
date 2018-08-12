@@ -209,6 +209,7 @@ public class MISCUtils {
         TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
         account.getWorldHoldings().forEach((world, holdings) -> {
           holdings.getHoldings().forEach((currency, amount) -> {
+            if(amount.compareTo(BigDecimal.ZERO) == 0) return;
             configuration.set("Accounts." + username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%") + ".Balances." + world + "." + currency, amount.toPlainString());
           });
         });
