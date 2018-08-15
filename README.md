@@ -29,8 +29,8 @@ Basic Information
 ----------
 Some basic information you might want to look over.
 - [Bugs/Feature Requests/Suggestions](https://github.com/TheNewEconomy/TNE-Bukkit/issues)
-- [Permission Nodes](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Docs/Permissions.md)
-- [Commands](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/Docs/Commands.md)
+- [Permission Nodes](https://github.com/TheNewEconomy/TNEDocumentation/blob/master/Permissions.md)
+- [Commands](https://github.com/TheNewEconomy/TNEDocumentation/blob/master/Commands.md)
 
 Default Configurations
 ----------
