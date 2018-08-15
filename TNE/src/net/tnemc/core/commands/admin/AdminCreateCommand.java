@@ -62,7 +62,7 @@ public class AdminCreateCommand extends TNECommand {
         if(arguments.length >= 2) {
           try {
             initial = new BigDecimal(arguments[1]);
-          } catch(Exception e) {
+          } catch(Exception ex) {
             TNE.debug("Invalid amount: " + arguments[1]);
           }
         }
