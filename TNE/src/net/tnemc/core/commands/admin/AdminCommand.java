@@ -43,7 +43,9 @@ public class AdminCommand extends TNECommand {
 
   @Override
   public String[] getAliases() {
-    return new String[0];
+    return new String[] {
+        "eco", "theneweconomy"
+    };
   }
 
   @Override

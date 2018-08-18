@@ -267,8 +267,8 @@ public class TNE extends TNELib {
 
     //Commands
     registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
-    registerCommand(new String[] { "tne" }, new AdminCommand(this));
-    registerCommand(new String[] { "tnedev" }, new DeveloperCommand(this));
+    registerCommand(new String[] { "tne", "theneweconomy", "eco" }, new AdminCommand(this));
+    registerCommand(new String[] { "tnedev", "theneweconomydev" }, new DeveloperCommand(this));
     registerCommand(new String[] { "tneconfig", "tnec" }, new ConfigCommand(this));
     registerCommand(new String[] { "currency", "cur" }, new CurrencyCommand(this));
     registerCommand(new String[] { "tnemodule", "tnem" }, new ModuleCommand(this));

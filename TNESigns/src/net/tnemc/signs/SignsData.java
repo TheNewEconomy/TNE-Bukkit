@@ -35,7 +35,7 @@ public class SignsData {
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
       "`sign_creator` VARCHAR(36) NOT NULL," +
-      "`sign_created` BIGINT(60)," +
+      "`sign_created` BIGINT(60)" +
       ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
 
   public static final String SIGNS_TABLE_H2 = "CREATE TABLE IF NOT EXISTS " + prefix + "_SIGNS (" +
@@ -44,7 +44,7 @@ public class SignsData {
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
       "`sign_creator` VARCHAR(36) NOT NULL," +
-      "`sign_created` BIGINT(60)," +
+      "`sign_created` BIGINT(60)" +
       ") ENGINE = INNODB;";
 
   private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created) VALUES(?, ?, ?, ?, ?, ?) " +
