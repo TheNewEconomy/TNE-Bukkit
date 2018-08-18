@@ -64,6 +64,12 @@ public class MoneyCommand extends TNECommand {
       return sub.execute(sender, command, arguments);
     }
 
+    if(command.equalsIgnoreCase("takemoney") ||
+        command.equalsIgnoreCase("takebal")) {
+      TNECommand sub = FindSub("take");
+      return sub.execute(sender, command, arguments);
+    }
+
     if(command.equalsIgnoreCase("baltop")) {
       TNECommand sub = FindSub("top");
       return sub.execute(sender, command, arguments);
