@@ -234,8 +234,7 @@ public class TNE extends TNELib {
     configurations().add(world, "world");
     configurations().loadAll();
 
-    List<String> moneyArguments = new ArrayList<>();
-    moneyArguments.addAll(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
+    List<String> moneyArguments = Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal");
     if(configurations().getBoolean("Core.Commands.PayShort")) {
       moneyArguments.add("pay");
     }
