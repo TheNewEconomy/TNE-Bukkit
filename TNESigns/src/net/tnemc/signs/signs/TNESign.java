@@ -32,6 +32,16 @@ public class TNESign {
     this.creationDate = creationDate;
   }
 
+  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, String data) {
+    this.location = location;
+    this.attached = attached;
+    this.type = type;
+    this.owner = owner;
+    this.creator = creator;
+    this.creationDate = creationDate;
+    loadExtraData(data);
+  }
+
   public Location getLocation() {
     return location;
   }
@@ -78,5 +88,13 @@ public class TNESign {
 
   public void setCreationDate(Long creationDate) {
     this.creationDate = creationDate;
+  }
+
+  public String saveExtraData() {
+    return "";
+  }
+
+  public void loadExtraData(String data) {
+
   }
 }

@@ -35,24 +35,26 @@ public class SignsData {
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
       "`sign_creator` VARCHAR(36) NOT NULL," +
-      "`sign_created` BIGINT(60)" +
+      "`sign_created` BIGINT(60)," +
+      "`sign_data` TEXT NOT NULL" +
       ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
 
   public static final String SIGNS_TABLE_H2 = "CREATE TABLE IF NOT EXISTS " + prefix + "_SIGNS (" +
       "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
-      "`sign_attached` VARCHAR(420)," +
-      "`sign_owner` VARCHAR(36) NOT NULL," +
+      "`sign_chest` VARCHAR(420)," +
+      "`sign_offer` TEXT NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
       "`sign_creator` VARCHAR(36) NOT NULL," +
-      "`sign_created` BIGINT(60)" +
+      "`sign_created` BIGINT(60)," +
+      "`sign_data` TEXT NOT NULL" +
       ") ENGINE = INNODB;";
 
-  private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created) VALUES(?, ?, ?, ?, ?, ?) " +
-                                           "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?;";
-  private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
-  private static final String SIGNS_LOAD_CREATOR = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_creator = ? AND sign_type = ?";
-  private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_location = ?";
-  private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
+  private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_data) VALUES(?, ?, ?, ?, ?, ?, ?) " +
+                                           "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?, sign_data = ?;";
+  private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_data FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
+  private static final String SIGNS_LOAD_CREATOR = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_data FROM " + prefix + "_SIGNS WHERE sign_creator = ? AND sign_type = ?";
+  private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_data FROM " + prefix + "_SIGNS WHERE sign_location = ?";
+  private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_data FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
   private static final String SIGNS_DELETE = "DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?";
 
   public static void saveSign(TNESign sign) {
@@ -63,12 +65,13 @@ public class SignsData {
         sign.getType(),
         sign.getCreator().toString(),
         sign.getCreationDate(),
+        sign.saveExtraData(),
         new SerializableLocation(sign.getAttached()).toString(),
         sign.getOwner().toString(),
         sign.getType(),
         sign.getCreator().toString(),
         sign.getCreationDate(),
-
+        sign.saveExtraData()
     });
   }
 
@@ -85,6 +88,7 @@ public class SignsData {
             UUID.fromString(database().results(result).getString("sign_owner")),
             UUID.fromString(database().results(result).getString("sign_creator")),
             database().results(result).getLong("sign_created"));
+        sign.loadExtraData(database().results(result).getString("sign_data"));
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -109,6 +113,7 @@ public class SignsData {
             UUID.fromString(database().results(result).getString("sign_owner")),
             UUID.fromString(database().results(result).getString("sign_creator")),
             database().results(result).getLong("sign_created"));
+        sign.loadExtraData(database().results(result).getString("sign_data"));
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -133,7 +138,8 @@ public class SignsData {
                 database().results(result).getString("sign_type"),
                 UUID.fromString(database().results(result).getString("sign_owner")),
                 UUID.fromString(database().results(result).getString("sign_creator")),
-                database().results(result).getLong("sign_created"))
+                database().results(result).getLong("sign_created"),
+                database().results(result).getString("sign_data"))
         );
       }
     } catch(Exception e) {
@@ -160,7 +166,8 @@ public class SignsData {
                 database().results(result).getString("sign_type"),
                 UUID.fromString(database().results(result).getString("sign_owner")),
                 UUID.fromString(database().results(result).getString("sign_creator")),
-                database().results(result).getLong("sign_created"))
+                database().results(result).getLong("sign_created"),
+                database().results(result).getString("sign_data"))
         );
       }
     } catch(Exception e) {
