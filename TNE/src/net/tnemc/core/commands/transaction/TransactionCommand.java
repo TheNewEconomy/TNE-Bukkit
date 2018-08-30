@@ -35,7 +35,7 @@ public class TransactionCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.transaction";
+    return "";
   }
 
   @Override

@@ -42,7 +42,7 @@ public class MoneyCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.money";
+    return "";
   }
 
   @Override

@@ -34,7 +34,7 @@ public class CurrencyCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.currency";
+    return "";
   }
 
   @Override

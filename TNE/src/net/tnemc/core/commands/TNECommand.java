@@ -194,6 +194,7 @@ public abstract class TNECommand {
 
   public boolean canExecute(CommandSender sender) {
     if(sender instanceof Player) {
+      if(getNode().equalsIgnoreCase("")) return true;
       return TNE.instance().developers.contains(IDFinder.getID(sender).toString()) || sender.hasPermission(getNode());
     }
     return console();

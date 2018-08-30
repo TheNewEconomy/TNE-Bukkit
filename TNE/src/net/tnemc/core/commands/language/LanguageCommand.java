@@ -35,7 +35,7 @@ public class LanguageCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.language";
+    return "";
   }
 
   @Override
