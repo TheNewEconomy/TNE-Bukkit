@@ -31,7 +31,7 @@ public class YetiCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.yediot";
+    return "";
   }
 
   @Override
