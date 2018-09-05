@@ -120,7 +120,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "6Beta1";
+  public static final String build = "7Beta113";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -234,45 +234,28 @@ public class TNE extends TNELib {
     configurations().add(world, "world");
     configurations().loadAll();
 
-    int size = 1;
-    boolean payShort = configurations().getBoolean("Core.Commands.PayShort");
-    boolean balShort = configurations().getBoolean("Core.Commands.BalanceShort");
-    boolean topShort = configurations().getBoolean("Core.Commands.TopShort");
-
-    if(payShort) size += 1;
-    if(balShort) size += 2;
-    if(topShort) size += 1;
-
-    int index = 0;
-
-    String[] moneyArgs = new String[size];
-    moneyArgs[index] = "money";
-    index++;
-
-    if(payShort) {
-      moneyArgs[index] = "pay";
-      index++;
+    List<String> moneyArguments = Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal");
+    if(configurations().getBoolean("Core.Commands.PayShort")) {
+      moneyArguments.add("pay");
     }
 
-    if(balShort) {
-      moneyArgs[index] = "bal";
-      index++;
-      moneyArgs[index] = "balance";
-      index++;
+    if(configurations().getBoolean("Core.Commands.BalanceShort")) {
+      moneyArguments.add("bal");
+      moneyArguments.add("balance");
     }
 
-    if(topShort) {
-      moneyArgs[index] = "baltop";
+    if(configurations().getBoolean("Core.Commands.TopShort")) {
+      moneyArguments.add("baltop");
     }
 
     //Commands
     registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
-    registerCommand(new String[] { "tne" }, new AdminCommand(this));
-    registerCommand(new String[] { "tnedev" }, new DeveloperCommand(this));
+    registerCommand(new String[] { "tne", "theneweconomy", "eco" }, new AdminCommand(this));
+    registerCommand(new String[] { "tnedev", "theneweconomydev" }, new DeveloperCommand(this));
     registerCommand(new String[] { "tneconfig", "tnec" }, new ConfigCommand(this));
     registerCommand(new String[] { "currency", "cur" }, new CurrencyCommand(this));
     registerCommand(new String[] { "tnemodule", "tnem" }, new ModuleCommand(this));
-    registerCommand(moneyArgs, new MoneyCommand(this));
+    registerCommand(moneyArguments.toArray(new String[moneyArguments.size()]), new MoneyCommand(this));
     registerCommand(new String[] { "transaction", "trans" }, new TransactionCommand(this));
     registerCommand(new String[] { "yediot" }, new YetiCommand(this));
     loader.getModules().forEach((key, value)->{
@@ -381,8 +364,11 @@ public class TNE extends TNELib {
 
 
     //Metrics
-    new Metrics(this);
-    getLogger().info("Sending plugin statistics.");
+
+    if(api.getBoolean("Core.Server.ThirdParty.Stats")) {
+      new Metrics(this);
+      getLogger().info("Sending plugin statistics.");
+    }
 
     if(api.getBoolean("Core.Server.Account.Enabled")) {
       String world = worldManagers.get(defaultWorld).getBalanceWorld();

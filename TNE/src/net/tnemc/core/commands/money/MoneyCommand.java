@@ -34,13 +34,15 @@ public class MoneyCommand extends TNECommand {
   @Override
   public String[] getAliases() {
     return new String[] {
-        "bal", "balance", "pay", "baltop"
+        "bal", "balance", "pay", "baltop",
+        "givemoney", "givebal", "setbal",
+        "setmoney", "takemoney", "takebal"
     };
   }
 
   @Override
   public String getNode() {
-    return "tne.money";
+    return "";
   }
 
   @Override
@@ -50,6 +52,24 @@ public class MoneyCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(command.equalsIgnoreCase("givemoney") ||
+        command.equalsIgnoreCase("givebal")) {
+      TNECommand sub = FindSub("give");
+      return sub.execute(sender, command, arguments);
+    }
+
+    if(command.equalsIgnoreCase("setmoney") ||
+        command.equalsIgnoreCase("setbal")) {
+      TNECommand sub = FindSub("set");
+      return sub.execute(sender, command, arguments);
+    }
+
+    if(command.equalsIgnoreCase("takemoney") ||
+        command.equalsIgnoreCase("takebal")) {
+      TNECommand sub = FindSub("take");
+      return sub.execute(sender, command, arguments);
+    }
+
     if(command.equalsIgnoreCase("baltop")) {
       TNECommand sub = FindSub("top");
       return sub.execute(sender, command, arguments);

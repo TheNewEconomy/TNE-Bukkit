@@ -157,16 +157,16 @@ public class MySQLProvider extends TNEDataProvider {
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` VARCHAR(41)," +
+        "`balance` VARCHAR(50)," +
         "PRIMARY KEY(uuid, server_name, world, currency)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
         "`trans_initiator` VARCHAR(36)," +
-        "`trans_initiator_balance` VARCHAR(41)," +
+        "`trans_initiator_balance` VARCHAR(50)," +
         "`trans_recipient` VARCHAR(36) NOT NULL," +
-        "`trans_recipient_balance` VARCHAR(41)," +
+        "`trans_recipient_balance` VARCHAR(50)," +
         "`trans_type` VARCHAR(36) NOT NULL," +
         "`trans_world` VARCHAR(36) NOT NULL," +
         "`trans_time` BIGINT(60) NOT NULL," +
@@ -179,7 +179,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`charge_player` VARCHAR(36) NOT NULL," +
         "`charge_currency` VARCHAR(100) NOT NULL," +
         "`charge_world` VARCHAR(36) NOT NULL," +
-        "`charge_amount` VARCHAR(41) NOT NULL," +
+        "`charge_amount` VARCHAR(50) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL," +
         "PRIMARY KEY(charge_transaction, charge_player)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
@@ -190,7 +190,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` VARCHAR(41)" +
+        "`balance` VARCHAR(50)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().close(manager);

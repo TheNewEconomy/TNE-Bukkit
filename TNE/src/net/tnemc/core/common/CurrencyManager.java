@@ -46,7 +46,7 @@ public class CurrencyManager {
   }
 
   public void loadCurrencies() {
-    largestSupported = new BigDecimal("900000000000000000000000000000000000");
+    largestSupported = new BigDecimal("900000000000000000000000000000000000000000000");
 
     loadCurrency(TNE.instance().getConfig(), false, TNE.instance().defaultWorld);
     for(WorldManager manager : TNE.instance().getWorldManagers()) {
@@ -77,7 +77,7 @@ public class CurrencyManager {
         final String plural = configuration.getString(base + ".Info.Major_Plural", "Dollars");
         final String singleMinor = configuration.getString(base + ".Info.Minor_Single", "Cent");
         final String pluralMinor = configuration.getString(base + ".Info.Minor_Plural", "Cents");
-        final String prefixes = configuration.getString(base + ".Info.Prefixes", "kMGTPEZYXWV").trim();
+        final String prefixes = configuration.getString(base + ".Info.Prefixes", "kMGTPEZYXWVUN₮").trim();
         final String symbol = configuration.getString(base + ".Info.Symbol", "$");
 
         //Currency Options Configurations.

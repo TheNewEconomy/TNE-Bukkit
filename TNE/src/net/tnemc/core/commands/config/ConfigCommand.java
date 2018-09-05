@@ -36,7 +36,7 @@ public class ConfigCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.config";
+    return "";
   }
 
   @Override
