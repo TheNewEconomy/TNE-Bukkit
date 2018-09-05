@@ -49,6 +49,9 @@ Core:
         #Configurations relating to third-party support.
         ThirdParty:
 
+            #Whether or not bstats should be enabled.
+            Stats: true
+
             #The prefix used by the Towny plugin to denote town UUIDs
             Town: "town-"
 

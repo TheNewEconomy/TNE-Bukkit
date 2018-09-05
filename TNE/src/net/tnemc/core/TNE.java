@@ -120,7 +120,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "6Beta1";
+  public static final String build = "7Beta113";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -364,8 +364,11 @@ public class TNE extends TNELib {
 
 
     //Metrics
-    new Metrics(this);
-    getLogger().info("Sending plugin statistics.");
+
+    if(api.getBoolean("Core.Server.ThirdParty.Stats")) {
+      new Metrics(this);
+      getLogger().info("Sending plugin statistics.");
+    }
 
     if(api.getBoolean("Core.Server.Account.Enabled")) {
       String world = worldManagers.get(defaultWorld).getBalanceWorld();
