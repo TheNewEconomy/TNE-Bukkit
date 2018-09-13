@@ -90,7 +90,7 @@ public class MoneyPayCommand extends TNECommand {
         return false;
       }
 
-      MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
+      MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0], true),
                                                                     "pay", value, currency, world,
                                                                     TNE.manager().getAccount(IDFinder.getID(sender)));
       handler.handle(true);

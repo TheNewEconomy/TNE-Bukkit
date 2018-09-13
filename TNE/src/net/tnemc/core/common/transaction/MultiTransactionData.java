@@ -52,9 +52,17 @@ public class MultiTransactionData {
     for(TNEAccount account : affected) {
       handleTransaction(account, handler);
     }
+
+    if(succeed.size() == 0) {
+      messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
+      return;
+    }
   }
 
   private void handleTransaction(TNEAccount account, MultiTransactionHandler handler) {
+    if(account == null) {
+      return;
+    }
     TNETransaction transaction = new TNETransaction(handler.getInitiator(), account,
                                                     handler.getWorld(),
                                                     TNE.transactionManager().getType(handler.getTransactionType()));

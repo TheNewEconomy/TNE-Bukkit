@@ -166,6 +166,10 @@ public class EconomyManager {
   }
 
   public Collection<TNEAccount> parsePlayerArgument(String argument) {
+    return parsePlayerArgument(argument, false);
+  }
+
+  public Collection<TNEAccount> parsePlayerArgument(String argument, boolean existing) {
     TNE.debug("EconomyManager.parsePlayerArgument: " + argument);
     argument = argument.trim();
     if(argument.equalsIgnoreCase("all")) return getAccounts().values();
@@ -182,6 +186,7 @@ public class EconomyManager {
       return accounts;
     }
     UUID id = IDFinder.getID(argument);
+    if(existing && !exists(id)) return null;
     Account account = TNE.instance().api().getOrCreate(id);
     if(account != null) {
       accounts.add(getAccount(id));
