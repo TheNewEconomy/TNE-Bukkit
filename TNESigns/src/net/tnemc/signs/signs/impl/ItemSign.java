@@ -1,5 +1,6 @@
 package net.tnemc.signs.signs.impl;
 
+import net.tnemc.core.menu.Menu;
 import net.tnemc.signs.signs.SignType;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
@@ -43,8 +44,13 @@ public class ItemSign implements SignType {
 
   @Override
   public boolean onSignCreate(SignChangeEvent event, Block attached, UUID player) {
-    event.setLine(1, "Right click");
-    event.setLine(2, "with item.");
+    event.setLine(1, "Step 1");
+    event.setLine(2, "Shop Setup");
     return true;
+  }
+
+  @Override
+  public Menu getMenu() {
+    return null;
   }
 }

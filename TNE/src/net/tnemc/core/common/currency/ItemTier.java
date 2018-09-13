@@ -2,6 +2,7 @@ package net.tnemc.core.common.currency;
 
 import net.tnemc.core.common.material.MaterialHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -85,8 +86,8 @@ public class ItemTier {
     ItemMeta meta = (stack.hasItemMeta())? stack.getItemMeta() : Bukkit.getServer().getItemFactory().getItemMeta(stack.getType());
     List<String> itemLore = (meta != null && meta.getLore() != null)? meta.getLore() : new ArrayList<>();
 
-    if(name != null && !name.trim().equals("")) meta.setDisplayName(name);
-    if(lore != null && !lore.trim().equals("")) itemLore.add(lore);
+    if(name != null && !name.trim().equals("")) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+    if(lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
     meta.setLore(itemLore);
     stack.setItemMeta(meta);
 

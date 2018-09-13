@@ -36,7 +36,7 @@ public class YetiIdiotCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.yeti.idiot";
+    return "";
   }
 
   @Override

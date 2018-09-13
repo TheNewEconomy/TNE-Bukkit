@@ -25,7 +25,9 @@ public class DeveloperCommand extends TNECommand {
 
   @Override
   public String[] getAliases() {
-    return new String[0];
+    return new String[] {
+        "theneweconomydev"
+    };
   }
 
   @Override

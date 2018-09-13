@@ -43,6 +43,7 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Server.Account.Enabled", true);
     configurations.put("Core.Server.Account.Name", "Server_Account");
     configurations.put("Core.Server.Account.Balance", 500);
+    configurations.put("Core.Server.ThirdParty.Stats", true);
     configurations.put("Core.Server.ThirdParty.Town", "town-");
     configurations.put("Core.Server.ThirdParty.Nation", "nation-");
     configurations.put("Core.Server.ThirdParty.Faction", "faction-");

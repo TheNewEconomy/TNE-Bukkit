@@ -37,7 +37,7 @@ public class ModuleCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.module";
+    return "";
   }
 
   @Override

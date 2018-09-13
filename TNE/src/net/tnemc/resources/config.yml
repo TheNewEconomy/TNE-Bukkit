@@ -49,6 +49,9 @@ Core:
         #Configurations relating to third-party support.
         ThirdParty:
 
+            #Whether or not bstats should be enabled.
+            Stats: true
+
             #The prefix used by the Towny plugin to denote town UUIDs
             Town: "town-"
 
@@ -131,8 +134,7 @@ Core:
                Minor_Plural: "Dollars"
                #The SI Prefixes used when <shorten> is used for the currency's format.
                #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
-               #http://www.unitarium.com/si-prefixes along with a few addition shorts for Octillion, Nonillion,
-               #and Decillion.
+               #http://www.unitarium.com/si-prefixes along with a few addition shorts for above Nonillion.
                #The order in which the characters are:
                #Thousand - k
                #Million - M
@@ -145,7 +147,10 @@ Core:
                #Octillion - X
                #Nonillion - W
                #Decillion - V
-               Prefixes: 'kMGTPEZYXWV'
+               #Undecillion - U
+               #Nondecillion - N
+               #Nonvigintillion - ₮
+               Prefixes: 'kMGTPEZYXWVUN₮'
 
                #The character to use as the symbol for this currency.
                Symbol: '$'
@@ -177,8 +182,8 @@ Core:
                Format: <symbol><major.amount><decimal><minor.amount>
 
                #The maximum balance possible for this currency.
-               # Maximum possible value: 900000000000000000000000000000000000
-               MaxBalance: 900000000000000000000000000000000000
+               # Maximum possible value: 900000000000000000000000000000000000000000000
+               MaxBalance: 900000000000000000000000000000000000000000000
 
                #The initial balance for accounts.
                #Will be used if no world-specific configurations are found if multiworld is enabled
