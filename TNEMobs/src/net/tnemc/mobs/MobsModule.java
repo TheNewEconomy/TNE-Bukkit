@@ -101,6 +101,9 @@ public class MobsModule extends Module {
 
   public Boolean playerEnabled(UUID id, String world, String player) {
     TNE.debug("ConfigurationManager.playerEnabled(" + id.toString() + ", " + world + "," + player + ")");
+    if(TNE.instance().api().getConfiguration("Mobs.Player.Individual." + id.toString() + ".Enabled", world, player) == null) {
+      return false;
+    }
     return TNE.instance().api().getBoolean("Mobs.Player.Individual." + id.toString() + ".Enabled", world, player);
   }
 

@@ -5,7 +5,11 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -32,6 +36,17 @@ public class MultiTransactionData {
        handler.initiatorCost(), handler.getCurrency(), handler.getWorld())) {
       messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
       return;
+    }
+
+    if(handler.getTransactionType().equalsIgnoreCase("pay")) {
+      if(handler.getInitiator() != null) {
+        for (TNEAccount affect : affected) {
+          if(affect.identifier().toString().equalsIgnoreCase(handler.getInitiator().identifier().toString())) {
+            messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
+            return;
+          }
+        }
+      }
     }
 
     for(TNEAccount account : affected) {

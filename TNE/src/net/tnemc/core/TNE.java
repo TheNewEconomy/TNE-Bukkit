@@ -22,6 +22,7 @@ import net.tnemc.core.common.TNEUUIDManager;
 import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.api.EconomyPlaceholders;
 import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.api.ReserveEconomy;
@@ -120,7 +121,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "6Beta1";
+  public static final String build = "8Beta1";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();
@@ -379,6 +380,9 @@ public class TNE extends TNELib {
         })
     );
 
+    if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      new EconomyPlaceholders().register();
+    }
 
     //Metrics
     new Metrics(this);
