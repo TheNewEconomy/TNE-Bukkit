@@ -58,7 +58,7 @@ public class H2Provider extends TNEDataProvider {
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
-  //private final String HISTORY_SAVE = "INSERT INTO " + prefix + "_BALANCES_HISTORY (uuid, server_name, world, currency, balance) VALUES(?, ?, ?, ?, ?)";
+  private final String HISTORY_SAVE = "INSERT INTO " + prefix + "_BALANCES_HISTORY (uuid, server_name, world, currency, balance) VALUES(?, ?, ?, ?, ?)";
   private final String TRANSACTION_LOAD = "";
   private final String TRANSACTION_SAVE = "";
   private final String TRANSACTIONS_DELETE = "";
@@ -157,16 +157,16 @@ public class H2Provider extends TNEDataProvider {
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` VARCHAR(41)" +
+        "`balance` VARCHAR(50)" +
         ") ENGINE = INNODB;");
     h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ADD PRIMARY KEY(uuid, server_name, world, currency);");
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
         "`trans_initiator` VARCHAR(36)," +
-        "`trans_initiator_balance` VARCHAR(41)," +
+        "`trans_initiator_balance` VARCHAR(50)," +
         "`trans_recipient` VARCHAR(36) NOT NULL," +
-        "`trans_recipient_balance` VARCHAR(41)," +
+        "`trans_recipient_balance` VARCHAR(50)," +
         "`trans_type` VARCHAR(36) NOT NULL," +
         "`trans_world` VARCHAR(36) NOT NULL," +
         "`trans_time` BIGINT(60) NOT NULL," +
@@ -179,18 +179,18 @@ public class H2Provider extends TNEDataProvider {
         "`charge_player` VARCHAR(36) NOT NULL," +
         "`charge_currency` VARCHAR(100) NOT NULL," +
         "`charge_world` VARCHAR(36) NOT NULL," +
-        "`charge_amount` VARCHAR(41) NOT NULL," +
+        "`charge_amount` VARCHAR(50) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL" +
         ") ENGINE = INNODB;");
 
-    /*h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+    h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
         "`id` INTEGER NOT NULL auto_increment," +
         "`uuid` VARCHAR(36) NOT NULL," +
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` VARCHAR(41)" +
-        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");*/
+        "`balance` VARCHAR(50)" +
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
     h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
 
     h2().close(manager);
@@ -207,7 +207,7 @@ public class H2Provider extends TNEDataProvider {
           "`server_name` VARCHAR(100) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(100) NOT NULL," +
-          "`balance` VARCHAR(41)" +
+          "`balance` VARCHAR(50)" +
           ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
       h2().close(manager);
     }
@@ -391,11 +391,11 @@ public class H2Provider extends TNEDataProvider {
   public void saveAccounts(List<TNEAccount> accounts) {
     PreparedStatement accountStatement = null;
     PreparedStatement balanceStatement = null;
-    //PreparedStatement historyStatement = null;
+    PreparedStatement historyStatement = null;
     try {
       accountStatement = h2().connection(manager).prepareStatement(ACCOUNT_SAVE);
       balanceStatement = h2().connection(manager).prepareStatement(BALANCE_SAVE);
-      //historyStatement = h2().connection(manager).prepareStatement(BALANCE_SAVE);
+      historyStatement = h2().connection(manager).prepareStatement(BALANCE_SAVE);
       for(TNEAccount account : accounts) {
         if(account.displayName() == null) {
           System.out.println("Attempted saving account with null display name.");
@@ -432,16 +432,16 @@ public class H2Provider extends TNEDataProvider {
             balanceStatement.addBatch();
 
             //history
-            /*historyStatement.setString(1, account.identifier().toString());
+            historyStatement.setString(1, account.identifier().toString());
             historyStatement.setString(2, server);
             historyStatement.setString(3, holdingsEntry.getKey());
             historyStatement.setString(4, entry.getKey());
             historyStatement.setString(5, entry.getValue().toString());
-            historyStatement.addBatch();*/
+            historyStatement.addBatch();
           }
         }
       }
-      //historyStatement.executeBatch();
+      historyStatement.executeBatch();
       balanceStatement.executeBatch();
       accountStatement.executeBatch();
     } catch (SQLException e) {
@@ -492,7 +492,7 @@ public class H2Provider extends TNEDataProvider {
                 balance.toPlainString()
             }
         );
-        /*h2().executePreparedUpdate(HISTORY_SAVE,
+        h2().executePreparedUpdate(HISTORY_SAVE,
             new Object[]{
                 account.identifier().toString(),
                 server,
@@ -500,7 +500,7 @@ public class H2Provider extends TNEDataProvider {
                 currency,
                 balance.toPlainString()
             }
-        );*/
+        );
       });
     });
   }

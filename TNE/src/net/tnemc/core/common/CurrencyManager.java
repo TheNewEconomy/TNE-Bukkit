@@ -46,8 +46,7 @@ public class CurrencyManager {
   }
 
   public void loadCurrencies() {
-    //1.1.4 -> largestSupported = new BigDecimal("900000000000000000000000000000000000000000000");
-    largestSupported = new BigDecimal("900000000000000000000000000000000000");
+    largestSupported = new BigDecimal("900000000000000000000000000000000000000000000");
 
     loadCurrency(TNE.instance().getConfig(), false, TNE.instance().defaultWorld);
     for(WorldManager manager : TNE.instance().getWorldManagers()) {

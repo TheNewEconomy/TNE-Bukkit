@@ -147,7 +147,10 @@ Core:
                #Octillion - X
                #Nonillion - W
                #Decillion - V
-               Prefixes: 'kMGTPEZYXWV'
+               #Undecillion - U
+               #Nondecillion - N
+               #Nonvigintillion - ₮
+               Prefixes: 'kMGTPEZYXWVUN₮'
 
                #The character to use as the symbol for this currency.
                Symbol: '$'
