@@ -121,7 +121,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "7Beta113";
+  public static final String build = "1Beta114";
 
   //Cache-related collections
   private List<EventList> cacheLists = new ArrayList<>();

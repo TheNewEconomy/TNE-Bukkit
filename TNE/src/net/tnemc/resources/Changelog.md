@@ -1,5 +1,10 @@
 Changelog
 ========================
+### Beta 1.1.4
+- Max balance is now 900 Nonvigintillion
+- Player logout balance history logging.
+  - This allows tracking possible dupe glitches/mysterious balance increases.
+
 
 ### Beta 1.1.3
 - Major Bug Patch
@@ -15,6 +20,3 @@ Changelog
   - tne_world_worldname - returns player's balance for specific world.
   - tne_currency_currencyname - returns player's balance for specific currency.
   - tne_wcur_worldname_currencyname - returns player's balance for specific world and currency.
-
-### Beta 1.1.4
-- Max balance is now 900 Nonvigintillion
