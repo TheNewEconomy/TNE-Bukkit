@@ -5,9 +5,16 @@ Changelog
 - Major Bug Patch
 - Added configuration to disable bStats
 - Ability to add colour codes to currency item names and lore.
-- Max balance is now 900 Nonvigintillion
 - Added eco alias to /tne
 - We no longer export accounts with a balance of 0.
 - Added /givemoney, /givebal, /setmoney, /setbal, /takemoney, and /takebal shortcut commands.
 - Allow every player to access the yediot command set.
 - Remove the need for parent permission nodes.(i.e. tne.money, etc)
+- Placeholder API support.
+  - tne_balance - returns player's balance
+  - tne_world_worldname - returns player's balance for specific world.
+  - tne_currency_currencyname - returns player's balance for specific currency.
+  - tne_wcur_worldname_currencyname - returns player's balance for specific world and currency.
+
+### Beta 1.1.4
+- Max balance is now 900 Nonvigintillion
