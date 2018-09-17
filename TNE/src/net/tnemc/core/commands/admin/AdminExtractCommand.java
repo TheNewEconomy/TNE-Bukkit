@@ -6,6 +6,8 @@ import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -47,7 +49,13 @@ public class AdminExtractCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> MISCUtils.extract(sender));
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> {
+      try {
+        MISCUtils.extract(sender);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
     return true;
   }
 }

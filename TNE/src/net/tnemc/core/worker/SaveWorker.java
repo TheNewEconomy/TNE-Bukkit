@@ -3,6 +3,8 @@ package net.tnemc.core.worker;
 import net.tnemc.core.TNE;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -21,6 +23,10 @@ public class SaveWorker extends BukkitRunnable {
 
   @Override
   public void run() {
-    plugin.getSaveManager().save();
+    try {
+      plugin.getSaveManager().save();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

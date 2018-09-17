@@ -4,7 +4,14 @@ import com.github.tnerevival.core.collection.MapListener;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.transaction.TNETransaction;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -19,7 +26,13 @@ public class TransactionListener implements MapListener {
 
   @Override
   public void update() {
-    changed.forEach((id, transaction)->TNE.saveManager().getTNEManager().getTNEProvider().saveTransaction(transaction));
+    changed.forEach((id, transaction) -> {
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveTransaction(transaction);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   @Override
@@ -34,17 +47,31 @@ public class TransactionListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.saveManager().getTNEManager().getTNEProvider().saveTransaction((TNETransaction)value);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().saveTransaction((TNETransaction)value);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public Object get(Object key) {
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadTransaction((UUID)key);
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadTransaction((UUID)key);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
   public Collection<TNETransaction> values() {
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadTransactions();
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadTransactions();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return new ArrayList<>();
   }
 
   @Override
@@ -88,6 +115,10 @@ public class TransactionListener implements MapListener {
 
   @Override
   public void remove(Object key) {
-    TNE.saveManager().getTNEManager().getTNEProvider().deleteTransaction((UUID)key);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().deleteTransaction((UUID)key);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

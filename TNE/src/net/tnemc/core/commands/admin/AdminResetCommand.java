@@ -4,6 +4,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import org.bukkit.command.CommandSender;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -45,7 +47,11 @@ public class AdminResetCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    TNE.saveManager().getTNEManager().getTNEProvider().delete(TNE.instance().currentSaveVersion);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().delete(TNE.instance().currentSaveVersion);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     sender.sendMessage("All data has been reset.");
     return true;
   }

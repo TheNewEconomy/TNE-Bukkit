@@ -10,6 +10,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,46 +34,46 @@ public abstract class TNEDataProvider extends DataProvider {
   }
 
   public abstract Boolean backupData();
-  public abstract UUID loadID(String username);
-  public abstract Map<String, UUID> loadEconomyIDS();
-  public void saveIDS(Map<String, UUID> ids) {
+  public abstract UUID loadID(String username) throws SQLException;
+  public abstract Map<String, UUID> loadEconomyIDS() throws SQLException;
+  public void saveIDS(Map<String, UUID> ids) throws SQLException {
 
   }
 
-  public abstract void createTables(List<String> tables);
-  public abstract void saveID(String username, UUID id);
-  public abstract void removeID(String username);
-  public abstract void removeID(UUID id);
-  public abstract Collection<TNEAccount> loadAccounts();
-  public abstract TNEAccount loadAccount(UUID id);
-  public void saveAccounts(List<TNEAccount> accounts) {
+  public abstract void createTables(List<String> tables) throws SQLException;
+  public abstract void saveID(String username, UUID id) throws SQLException;
+  public abstract void removeID(String username) throws SQLException;
+  public abstract void removeID(UUID id) throws SQLException;
+  public abstract Collection<TNEAccount> loadAccounts() throws SQLException;
+  public abstract TNEAccount loadAccount(UUID id) throws SQLException;
+  public void saveAccounts(List<TNEAccount> accounts) throws SQLException {
 
   }
-  public abstract void saveAccount(TNEAccount account);
-  public abstract void deleteAccount(UUID id);
-  public abstract TNETransaction loadTransaction(UUID id);
-  public abstract Collection<TNETransaction> loadTransactions();
-  public abstract void saveTransaction(TNETransaction transaction);
-  public abstract void deleteTransaction(UUID id);
-  public abstract String nullAccounts();
+  public abstract void saveAccount(TNEAccount account) throws SQLException;
+  public abstract void deleteAccount(UUID id) throws SQLException;
+  public abstract TNETransaction loadTransaction(UUID id) throws SQLException;
+  public abstract Collection<TNETransaction> loadTransactions() throws SQLException;
+  public abstract void saveTransaction(TNETransaction transaction) throws SQLException;
+  public abstract void deleteTransaction(UUID id) throws SQLException;
+  public abstract String nullAccounts() throws SQLException;
   //balances
-  public abstract int balanceCount(String world, String currency, int limit);
-  public abstract LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page);
+  public abstract int balanceCount(String world, String currency, int limit) throws SQLException;
+  public abstract LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) throws SQLException;
   //transactions
-  public abstract int transactionCount(UUID recipient, String world, String type, String time, int limit);
-  public abstract LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page);
+  public abstract int transactionCount(UUID recipient, String world, String type, String time, int limit) throws SQLException;
+  public abstract LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page) throws SQLException;
 
-  public void preLoad(Double version) {
+  public void preLoad(Double version) throws SQLException {
 
   }
 
-  public void preSave(Double version) {
+  public void preSave(Double version) throws SQLException {
 
   }
 
 
   @Override
-  public void load(Double version) {
+  public void load(Double version) throws SQLException {
     preLoad(version);
 
     if(!supportUpdate()) {
@@ -98,7 +99,7 @@ public abstract class TNEDataProvider extends DataProvider {
   }
 
   @Override
-  public void save(Double version) {
+  public void save(Double version) throws SQLException {
     TNE.debug("TNEDataProvider.save");
     preSave(version);
     long start = System.nanoTime();
@@ -123,11 +124,13 @@ public abstract class TNEDataProvider extends DataProvider {
       });
 
       TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
-      TNE.uuidManager().getUuids().forEach((username, id)->{
-        TNE.debug("Saving Offline id: " + username + ", " + id.toString());
-        saveID(username, id);
-      });
-      TNE.transactionManager().getTransactions().forEach((id, transaction)->saveTransaction(transaction));
+      for(Map.Entry<String, UUID> entry : TNE.uuidManager().getUuids().entrySet()) {
+        TNE.debug("Saving Offline id: " + entry.getKey() + ", " + entry.getValue().toString());
+        saveID(entry.getKey(), entry.getValue());
+      }
+      for(TNETransaction transaction : TNE.transactionManager().getTransactions().values()) {
+        saveTransaction(transaction);
+      }
     }
     long end = System.nanoTime();
     TNE.debug("Saving data finished in milis: " + ((end - start) / 1e6));

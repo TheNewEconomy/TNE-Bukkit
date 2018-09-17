@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -117,7 +118,13 @@ public class ConnectionListener implements Listener {
     System.out.println("Connection Event took " + (duration/1000000) + "ms");
     startTime = System.nanoTime();
 
-    if(!first) account.getHistory().populateAway(account.getLastOnline());
+    if(!first) {
+      try {
+        account.getHistory().populateAway(account.getLastOnline());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
     TNE.manager().addAccount(account);
 
     if(TNE.instance().developers.contains(player.getUniqueId().toString())) {

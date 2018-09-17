@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -94,10 +95,20 @@ public class TransactionHistoryCommand extends TNECommand {
       type = parsed.get("type");
     }
     UUID id = IDFinder.getID(player);
-    int max = TNE.saveManager().getTNEManager().getTNEProvider().transactionCount(id, world, type, "all", 10);
+    int max = 0;
+    try {
+      max = TNE.saveManager().getTNEManager().getTNEProvider().transactionCount(id, world, type, "all", 10);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     if(max == 0) max = 1;
     if (page > max) page = max;
-    LinkedHashMap<UUID, TNETransaction> history = TNE.saveManager().getTNEManager().getTNEProvider().transactionHistory(id, world, type, "all", 10, page);
+    LinkedHashMap<UUID, TNETransaction> history = new LinkedHashMap<>();
+    try {
+      history = TNE.saveManager().getTNEManager().getTNEProvider().transactionHistory(id, world, type, "all", 10, page);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     if(history.size() == 0) {
       new Message("Messages.Account.NoTransactions").translate(world, sender);

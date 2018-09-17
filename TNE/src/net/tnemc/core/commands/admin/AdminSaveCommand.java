@@ -4,6 +4,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import org.bukkit.command.CommandSender;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -45,7 +47,11 @@ public class AdminSaveCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    TNE.saveManager().save();
+    try {
+      TNE.saveManager().save();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     sender.sendMessage("Successfully saved all TNE Data!");
     return true;
   }

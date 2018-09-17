@@ -11,6 +11,7 @@ import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -72,14 +73,24 @@ public class MoneyTopCommand extends TNECommand {
     if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0)) && MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {
       page = Integer.valueOf(parsed.get(String.valueOf(0)));
     }
-    
-    int max = TNE.saveManager().getTNEManager().getTNEProvider().balanceCount(world, currency.name(), limit);
+
+    int max = 0;
+    try {
+      max = TNE.saveManager().getTNEManager().getTNEProvider().balanceCount(world, currency.name(), limit);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     if(max == 0) max = 1;
 
     if(page > max) page = max;
     TNE.debug("MoneyTopCommand.java(87): Max Pages - " + max);
 
-    LinkedHashMap<UUID, BigDecimal> values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
+    LinkedHashMap<UUID, BigDecimal> values = new LinkedHashMap<>();
+    try {
+      values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     Message top = new Message("Messages.Money.Top");
     top.addVariable("$page", page + "");

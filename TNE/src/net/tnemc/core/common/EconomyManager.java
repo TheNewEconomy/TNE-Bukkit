@@ -13,6 +13,7 @@ import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -159,7 +160,11 @@ public class EconomyManager {
       if(remove) {
         TNE.manager().getAccounts().remove(account.identifier(), false);
         TNE.uuidManager().remove(account.displayName());
-        TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount(account.identifier());
+        try {
+          TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount(account.identifier());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
         it.remove();
       }
     }

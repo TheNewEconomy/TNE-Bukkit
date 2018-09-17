@@ -3,6 +3,7 @@ package net.tnemc.core.common.account.history;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.transaction.TNETransaction;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,14 +48,14 @@ public class AccountHistory {
     return away;
   }
 
-  public void populateAway(long time) {
+  public void populateAway(long time) throws SQLException {
 
-    worldHistory.forEach((world, history)->{
+    for(String world : worldHistory.keySet()) {
       int count = TNE.saveManager().getTNEManager().getTNEProvider().transactionCount(id, world, "all", time + "", 10);
       TNE.saveManager().getTNEManager().getTNEProvider().transactionHistory(id, world, "all", time + "", count * 10, 1).forEach((id, transaction)->{
         logAway(id);
       });
-    });
+    }
   }
 
   public void log(TNETransaction transaction) {

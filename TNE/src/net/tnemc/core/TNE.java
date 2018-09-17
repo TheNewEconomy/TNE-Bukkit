@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -312,14 +313,22 @@ public class TNE extends TNELib {
     saveManager().addVersion(10.0, true);
 
     TNE.debug("Initializing Save Manager.");
-    saveManager().initialize();
+    try {
+      saveManager().initialize();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     loader.getModules().forEach((key, value)->{
       value.getModule().getTables().forEach((type, tables)->saveManager().registerTables(type, tables));
     });
 
     if(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()).size() > 0) {
-      saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
+      try {
+        saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
 
     TNE.debug("Calling Modules.enableSave");
@@ -328,7 +337,11 @@ public class TNE extends TNELib {
     });
 
     TNE.debug("Loading data.");
-    saveManager().load();
+    try {
+      saveManager().load();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     //Bukkit Runnables & Workers
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
@@ -405,7 +418,11 @@ public class TNE extends TNELib {
   }
 
   public void onDisable() {
-    saveManager().save();
+    try {
+      saveManager().save();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     loader.getModules().forEach((key, value)->{
       value.getModule().disableSave(saveManager());
     });

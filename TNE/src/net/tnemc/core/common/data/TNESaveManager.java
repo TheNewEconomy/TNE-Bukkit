@@ -5,6 +5,7 @@ import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.TNE;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class TNESaveManager extends SaveManager {
   }
 
   @Override
-  public void initialize() {
+  public void initialize() throws SQLException {
     TNE.debug("Format: " + manager.getFormat());
     TNE.debug("Manager providers size: " + manager.getProviders().size());
     TNE.debug("Manager providers size: " + manager.getProviders().keySet().toString());
@@ -48,7 +49,7 @@ public class TNESaveManager extends SaveManager {
   }
 
   @Override
-  public void load() {
+  public void load() throws SQLException {
     TNE.debug("====== TNESaveManager.load =======");
     if(saveVersion < TNELib.instance().currentSaveVersion && saveVersion != 0) {
       getTNEManager().getTNEProvider().update(saveVersion);
@@ -61,7 +62,7 @@ public class TNESaveManager extends SaveManager {
   }
 
   @Override
-  public void save() {
+  public void save() throws SQLException {
     getTNEManager().getTNEProvider().save(TNELib.instance().currentSaveVersion);
     TNELib.instance().getLogger().info("Null Account Count: " + getTNEManager().getTNEProvider().nullAccounts());
     TNELib.instance().getLogger().info("Finished saving data!");

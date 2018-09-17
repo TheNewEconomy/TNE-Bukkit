@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,21 +142,29 @@ public class MISCUtils {
   }
 
   public static boolean hasAccount(UUID id) {
-    for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
-      TNE.debug(id.toString() + " == " + tneAccount.identifier().toString());
-      if(tneAccount.identifier().toString().equalsIgnoreCase(id.toString())) return true;
+    try {
+      for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
+        TNE.debug(id.toString() + " == " + tneAccount.identifier().toString());
+        if(tneAccount.identifier().toString().equalsIgnoreCase(id.toString())) return true;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     return false;
   }
 
   public static boolean hasAccount(String name) {
-    for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
-      if(tneAccount.displayName().equalsIgnoreCase(name)) return true;
+    try {
+      for (TNEAccount tneAccount : TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts()) {
+        if(tneAccount.displayName().equalsIgnoreCase(name)) return true;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     return false;
   }
 
-  public static void idExtract(CommandSender sender) {
+  public static void idExtract(CommandSender sender) throws SQLException {
     LocalDateTime now = LocalDateTime.now();
     int year = now.getYear();
     int month = now.getMonthValue();
@@ -189,7 +198,7 @@ public class MISCUtils {
     return null;
   }
 
-  public static void extract(CommandSender sender) {
+  public static void extract(CommandSender sender) throws SQLException {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
     if(!file.exists()) {
       try {

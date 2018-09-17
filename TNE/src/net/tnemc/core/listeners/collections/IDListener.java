@@ -3,7 +3,14 @@ package net.tnemc.core.listeners.collections;
 import com.github.tnerevival.core.collection.MapListener;
 import net.tnemc.core.TNE;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -18,7 +25,13 @@ public class IDListener implements MapListener {
 
   @Override
   public void update() {
-    changed.forEach((username, id)->TNE.saveManager().getTNEManager().getTNEProvider().saveID(username, id));
+    changed.forEach((username, id) -> {
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveID(username, id);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   @Override
@@ -34,18 +47,32 @@ public class IDListener implements MapListener {
   @Override
   public void put(Object key, Object value) {
     TNE.debug("IDListener.put");
-    TNE.saveManager().getTNEManager().getTNEProvider().saveID((String)key, (UUID)value);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().saveID((String)key, (UUID)value);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public Object get(Object key) {
     TNE.debug("IDListener.get");
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadID((String)key);
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadID((String)key);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
   public Collection values() {
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().values();
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().values();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return new ArrayList();
   }
 
   @Override
@@ -74,16 +101,30 @@ public class IDListener implements MapListener {
 
   @Override
   public Set<String> keySet() {
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().keySet();
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().keySet();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return new HashSet<>();
   }
 
   @Override
   public Set<Map.Entry<String, UUID>> entrySet() {
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().entrySet();
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().entrySet();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return new HashSet<>();
   }
 
   @Override
   public void remove(Object key) {
-    TNE.saveManager().getTNEManager().getTNEProvider().removeID((String)key);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().removeID((String)key);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -4,7 +4,14 @@ import com.github.tnerevival.core.collection.MapListener;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -20,7 +27,13 @@ public class AccountListener implements MapListener {
   @Override
   public void update() {
     Map<UUID, TNEAccount> copy = changed;
-    copy.values().forEach((account)-> TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(account));
+    for(TNEAccount account : copy.values()) {
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(account);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override
@@ -35,12 +48,21 @@ public class AccountListener implements MapListener {
 
   @Override
   public void put(Object key, Object value) {
-    TNE.saveManager().getTNEManager().getTNEProvider().saveAccount((TNEAccount)value);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().saveAccount((TNEAccount)value);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public Object get(Object key) {
-    TNEAccount account = TNE.saveManager().getTNEManager().getTNEProvider().loadAccount((UUID)key);
+    TNEAccount account = null;
+    try {
+      account = TNE.saveManager().getTNEManager().getTNEProvider().loadAccount((UUID)key);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     TNE.debug("AccountListener ID? " + ((UUID)key).toString());
     TNE.debug("AccountListener Account null? " + (account == null));
@@ -50,7 +72,12 @@ public class AccountListener implements MapListener {
 
   @Override
   public Collection<TNEAccount> values() {
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts();
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return new ArrayList<>();
   }
 
   @Override
@@ -94,6 +121,10 @@ public class AccountListener implements MapListener {
 
   @Override
   public void remove(Object key) {
-    TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount((UUID)key);
+    try {
+      TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount((UUID)key);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
