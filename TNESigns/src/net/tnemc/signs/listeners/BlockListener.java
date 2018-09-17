@@ -22,6 +22,8 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -42,20 +44,24 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockBreakEvent(final BlockBreakEvent event) {
-    final TNESign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
-      SignsData.loadSign(event.getBlock().getLocation())
-      : SignsData.loadSignAttached(event.getBlock().getLocation());
+    try {
+      final TNESign sign = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN)) ?
+          SignsData.loadSign(event.getBlock().getLocation())
+          : SignsData.loadSignAttached(event.getBlock().getLocation());
 
-    if(sign != null) {
-      final Sign signBlock = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN))?
-          (Sign)event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
-      if(signBlock != null && !SignsModule.manager().getType(sign.getType()).onSignDestroy(sign.getOwner(), event.getPlayer().getUniqueId())) {
-        event.setCancelled(true);
-      } else {
-        if(signBlock != null) {
-          SignsData.deleteSign(signBlock.getBlock().getLocation());
+      if (sign != null) {
+        final Sign signBlock = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN)) ?
+            (Sign) event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
+        if (signBlock != null && !SignsModule.manager().getType(sign.getType()).onSignDestroy(sign.getOwner(), event.getPlayer().getUniqueId())) {
+          event.setCancelled(true);
+        } else {
+          if (signBlock != null) {
+            SignsData.deleteSign(signBlock.getBlock().getLocation());
+          }
         }
       }
+    } catch(SQLException e) {
+      e.printStackTrace();
     }
   }
 

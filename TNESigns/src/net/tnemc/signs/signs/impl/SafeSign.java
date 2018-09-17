@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,7 +53,11 @@ public class SafeSign implements SignType {
       if(attached.getType().equals(Material.CHEST) || attached.getType().equals(Material.TRAPPED_CHEST)) {
 
         event.setLine(1, IDFinder.getUsername(player.toString()));
-        SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player, player, new Date().getTime()));
+        try {
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player, player, new Date().getTime()));
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
         return true;
       }
     }

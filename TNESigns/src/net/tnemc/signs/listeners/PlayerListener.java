@@ -19,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -62,7 +64,12 @@ public class PlayerListener implements Listener {
           if(event.getClickedBlock().getState() instanceof Chest) {
             Sign sign = new ChestHelper((Chest)event.getClickedBlock().getState()).getSign();
             if(sign != null) {
-              TNESign signInstance = SignsData.loadSign(sign.getBlock().getLocation());
+              TNESign signInstance = null;
+              try {
+                signInstance = SignsData.loadSign(sign.getBlock().getLocation());
+              } catch (SQLException e) {
+                e.printStackTrace();
+              }
               if(signInstance != null) {
                 if(!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())) {
                   event.setCancelled(true);

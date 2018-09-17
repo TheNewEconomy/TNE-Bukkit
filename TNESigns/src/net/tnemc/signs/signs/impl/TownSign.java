@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -85,6 +86,8 @@ public class TownSign implements SignType {
         } catch (NotRegisteredException e) {
           //Shouldn't reach this point.
           return false;
+        } catch (SQLException e) {
+          e.printStackTrace();
         }
       }
     }

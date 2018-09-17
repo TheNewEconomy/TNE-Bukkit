@@ -6,6 +6,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.signs.signs.TNESign;
 import org.bukkit.Location;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +58,7 @@ public class SignsData {
   private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_data FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
   private static final String SIGNS_DELETE = "DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?";
 
-  public static void saveSign(TNESign sign) {
+  public static void saveSign(TNESign sign) throws SQLException {
     database().executePreparedUpdate(SIGNS_SAVE, new Object[] {
         new SerializableLocation(sign.getLocation()).toString(),
         new SerializableLocation(sign.getAttached()).toString(),
@@ -73,9 +74,10 @@ public class SignsData {
         sign.getCreationDate(),
         sign.saveExtraData()
     });
+    database().close(TNE.saveManager().getTNEManager(), true);
   }
 
-  public static TNESign loadSign(Location location) {
+  public static TNESign loadSign(Location location) throws SQLException {
     TNESign sign = null;
     int result = -1;
 
@@ -93,14 +95,12 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     } finally {
-      if(result != -1) {
-        database().closeResult(result);
-      }
+      database().close(TNE.saveManager().getTNEManager(), true);
     }
     return sign;
   }
 
-  public static TNESign loadSignAttached(Location location) {
+  public static TNESign loadSignAttached(Location location) throws SQLException {
     TNESign sign = null;
     int result = -1;
 
@@ -119,13 +119,13 @@ public class SignsData {
       TNE.debug(e);
     } finally {
       if(result != -1) {
-        database().closeResult(result);
+        database().close(TNE.saveManager().getTNEManager(), true);
       }
     }
     return sign;
   }
 
-  public static Collection<TNESign> loadSignsCreator(String creator, String type) {
+  public static Collection<TNESign> loadSignsCreator(String creator, String type) throws SQLException {
     List<TNESign> signs = new ArrayList<>();
     int result = -1;
 
@@ -145,15 +145,13 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     } finally {
-      if(result != -1) {
-        database().closeResult(result);
-      }
+      database().close(TNE.saveManager().getTNEManager(), true);
     }
 
     return signs;
   }
 
-  public static Collection<TNESign> loadSigns(String owner, String type) {
+  public static Collection<TNESign> loadSigns(String owner, String type) throws SQLException {
     List<TNESign> signs = new ArrayList<>();
     int result = -1;
 
@@ -173,19 +171,17 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     } finally {
-      if(result != -1) {
-        database().closeResult(result);
-      }
+      database().close(TNE.saveManager().getTNEManager(), true);
     }
 
     return signs;
   }
 
-  public static void deleteSign(Location location) {
+  public static void deleteSign(Location location) throws SQLException {
     database().executePreparedUpdate(SIGNS_DELETE, new Object[] { new SerializableLocation(location).toString()});
   }
 
-  public static SQLDatabase database() {
+  public static SQLDatabase database() throws SQLException {
     SQLDatabase db = ((SQLDatabase)TNE.saveManager().getTNEManager().getTNEProvider().connector());
     if(!db.connected(TNE.saveManager().getTNEManager())) {
       db.connect(TNE.saveManager().getTNEManager());

@@ -10,6 +10,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.SignChangeEvent;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -82,9 +83,13 @@ public interface SignType {
       return false;
     }
 
-    if(max() >= 0 && SignsData.loadSignsCreator(player.toString(), name()).size() >= max()) {
-      Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "You have reached your max limit for this sign type.");
-      return false;
+    try {
+      if(max() >= 0 && SignsData.loadSignsCreator(player.toString(), name()).size() >= max()) {
+        Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "You have reached your max limit for this sign type.");
+        return false;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     return onSignCreate(event, attached, player);
   }

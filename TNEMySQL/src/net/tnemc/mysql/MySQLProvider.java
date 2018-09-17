@@ -123,7 +123,7 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
-  public void initialize() {
+  public void initialize() throws SQLException {
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
         "`id` INTEGER NOT NULL UNIQUE," +
         "`version` VARCHAR(10)," +
@@ -193,11 +193,11 @@ public class MySQLProvider extends TNEDataProvider {
         "`balance` VARCHAR(50)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-    mysql().close(manager);
+    close();
   }
 
   @Override
-  public void update(Double version) {
+  public void update(Double version) throws SQLException {
     //Nothing to convert(?)
     if(version == 10.0) {
 
@@ -209,16 +209,22 @@ public class MySQLProvider extends TNEDataProvider {
           "`currency` VARCHAR(100) NOT NULL," +
           "`balance` VARCHAR(41)" +
           ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-      mysql().close(manager);
+      close();
     }
   }
 
-  public MySQL mysql() {
+  public MySQL mysql() throws SQLException {
     return ((MySQL)connector());
   }
 
+  public void close() {
+    if(sql != null) {
+      sql.close(manager, true);
+    }
+  }
+
   @Override
-  public DatabaseConnector connector() {
+  public DatabaseConnector connector() throws SQLException {
     if(!sql.connected(manager)) {
       TNE.debug("Connecting to MySQL");
       sql.connect(manager);
@@ -227,18 +233,20 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
-  public void save(Double version) {
+  public void save(Double version) throws SQLException {
     mysql().executePreparedUpdate("Update " + manager.getPrefix() + "_INFO SET version = ? WHERE id = 1;", new Object[] { String.valueOf(version) });
+    close();
     super.save(version);
   }
 
   @Override
-  public void delete(Double version) {
+  public void delete(Double version) throws SQLException {
     mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
     mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
     mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
     mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
     mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
+    close();
   }
 
   @Override
@@ -259,6 +267,8 @@ public class MySQLProvider extends TNEDataProvider {
       }
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      close();
     }
     return null;
   }
@@ -279,6 +289,8 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(idIndex);
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      close();
     }
     TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
     return ids;
@@ -302,19 +314,21 @@ public class MySQLProvider extends TNEDataProvider {
       statement.executeBatch();
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
   }
 
   @Override
-  public void createTables(List<String> tables) {
-    tables.forEach((table)->{
+  public void createTables(List<String> tables) throws SQLException {
+    for(String table : tables) {
       mysql().executeUpdate(table);
-    });
-    mysql().close(manager);
+    }
+    close();
   }
 
   @Override
-  public void saveID(String username, UUID id) {
+  public void saveID(String username, UUID id) throws SQLException {
     if(username == null) {
       System.out.println("Attempted saving id with null display name.");
       return;
@@ -325,16 +339,19 @@ public class MySQLProvider extends TNEDataProvider {
             id.toString(),
             username
         });
+    close();
   }
 
   @Override
-  public void removeID(String username) {
+  public void removeID(String username) throws SQLException {
     mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE username = ?", new Object[] { username });
+    close();
   }
 
   @Override
-  public void removeID(UUID id) {
+  public void removeID(UUID id) throws SQLException {
     mysql().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
+    close();
   }
 
   @Override
@@ -359,6 +376,8 @@ public class MySQLProvider extends TNEDataProvider {
       });
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      close();
     }
     TNE.debug("Finished loading Accounts. Total: " + accounts.size());
     return accounts;
@@ -391,6 +410,8 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(accountIndex);
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      close();
     }
     return account;
   }
@@ -454,11 +475,13 @@ public class MySQLProvider extends TNEDataProvider {
       accountStatement.executeBatch();
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
   }
 
   @Override
-  public void saveAccount(TNEAccount account) {
+  public void saveAccount(TNEAccount account) throws SQLException {
     if(account.displayName() == null) {
       System.out.println("Attempted saving account with null display name.");
       return;
@@ -484,40 +507,41 @@ public class MySQLProvider extends TNEDataProvider {
         }
     );
 
-    account.getWorldHoldings().forEach((world, holdings)->{
-
-      holdings.getHoldings().forEach((currency, balance)->{
-        final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
-            TNE.manager().currencyManager().get(world, currency).getServer() :
+    for(Map.Entry<String, WorldHoldings> entry : account.getWorldHoldings().entrySet()) {
+      for(Map.Entry<String, BigDecimal> curEntry : entry.getValue().getHoldings().entrySet()) {
+        final String server = (TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()) != null)?
+            TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()).getServer() :
             TNE.instance().getServerName();
         mysql().executePreparedUpdate(BALANCE_SAVE,
             new Object[]{
                 account.identifier().toString(),
                 server,
-                world,
-                currency,
-                balance.toPlainString(),
-                balance.toPlainString()
+                entry.getKey(),
+                curEntry.getKey(),
+                curEntry.getValue().toPlainString(),
+                curEntry.getValue().toPlainString()
             }
         );
         mysql().executePreparedUpdate(HISTORY_SAVE,
             new Object[]{
                 account.identifier().toString(),
                 server,
-                world,
-                currency,
-                balance.toPlainString()
+                entry.getKey(),
+                curEntry.getKey(),
+                curEntry.getValue().toPlainString()
             }
         );
-      });
-    });
+      }
+    }
+    close();
   }
 
   @Override
-  public void deleteAccount(UUID id) {
+  public void deleteAccount(UUID id) throws SQLException {
     mysql().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
     mysql().executePreparedUpdate(ACCOUNT_DELETE, new Object[] { id.toString() });
     mysql().executePreparedUpdate(BALANCE_DELETE, new Object[] { id.toString() });
+    close();
   }
 
   @Override
@@ -563,6 +587,8 @@ public class MySQLProvider extends TNEDataProvider {
       }
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      close();
     }
     return null;
   }
@@ -585,12 +611,14 @@ public class MySQLProvider extends TNEDataProvider {
       });
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      close();
     }
     return transactions;
   }
 
   @Override
-  public void saveTransaction(TNETransaction transaction) {
+  public void saveTransaction(TNETransaction transaction) throws SQLException {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     mysql().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_initiator_balance, trans_recipient, trans_recipient_balance, trans_type, trans_world, trans_time, trans_voided) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE trans_recipient = ?, trans_world = ?, trans_voided = ?",
@@ -644,16 +672,18 @@ public class MySQLProvider extends TNEDataProvider {
           }
       );
     }
+    close();
   }
 
   @Override
-  public void deleteTransaction(UUID id) {
+  public void deleteTransaction(UUID id) throws SQLException {
     mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
     mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_CHARGES WHERE charge_transaction = ? ", new Object[] { id.toString() });
+    close();
   }
 
   @Override
-  public String nullAccounts() {
+  public String nullAccounts() throws SQLException {
     String userTable = manager.getPrefix() + "_USERS";
     String idTable = manager.getPrefix() + "_ECOIDS";
     int index = mysql().executeQuery("SELECT count(*) FROM " + userTable + " WHERE display_name is null;");
@@ -671,12 +701,14 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(userIndex);
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
     return counts;
   }
 
   @Override
-  public int balanceCount(String world, String currency, int limit) {
+  public int balanceCount(String world, String currency, int limit) throws SQLException {
     String balanceTable = manager.getPrefix() + "_BALANCES";
     int index = mysql().executePreparedQuery("SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;",
         new Object[] { world, currency });
@@ -688,6 +720,8 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(index);
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
     if(count > 0) {
       return (int)Math.ceil(count / limit);
@@ -700,7 +734,7 @@ public class MySQLProvider extends TNEDataProvider {
   //Page 3 = 21 -> 30
   //Page 4 = 30 -> 39
   @Override
-  public LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) {
+  public LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) throws SQLException {
     LinkedHashMap<UUID, BigDecimal> balances = new LinkedHashMap<>();
 
     String balanceTable = manager.getPrefix() + "_BALANCES";
@@ -716,13 +750,14 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(index);
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
-
     return balances;
   }
 
   @Override
-  public int transactionCount(UUID recipient, String world, String type, String time, int limit) {
+  public int transactionCount(UUID recipient, String world, String type, String time, int limit) throws SQLException {
     StringBuilder queryBuilder = new StringBuilder();
     LinkedList<Object> values = new LinkedList<>();
     queryBuilder.append("SELECT count(*) FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_recipient = ?");
@@ -751,6 +786,8 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(index);
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
     if(count > 0) {
       return (int)Math.ceil(count / limit);
@@ -759,7 +796,7 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   @Override
-  public LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page) {
+  public LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page) throws SQLException {
     LinkedHashMap<UUID, TNETransaction> transactions = new LinkedHashMap<>();
 
     StringBuilder queryBuilder = new StringBuilder();
@@ -796,8 +833,9 @@ public class MySQLProvider extends TNEDataProvider {
       mysql().closeResult(index);
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      close();
     }
-
     return transactions;
   }
 }
