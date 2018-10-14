@@ -219,16 +219,17 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   public void close() {
-    if(sql != null) {
-      sql.close(manager, true);
-    }
   }
 
   @Override
   public DatabaseConnector connector() throws SQLException {
     if(!sql.connected(manager)) {
       TNE.debug("Connecting to MySQL");
-      sql.connect(manager);
+      try {
+        sql.connect(manager);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
     return sql;
   }

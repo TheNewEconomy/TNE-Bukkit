@@ -81,9 +81,6 @@ public class H2Provider extends TNEDataProvider {
   }
 
   public void close() {
-    if(sql != null) {
-      sql.close(manager, true);
-    }
   }
 
   @Override
@@ -235,7 +232,11 @@ public class H2Provider extends TNEDataProvider {
   public DatabaseConnector connector() throws SQLException {
     if(!sql.connected(manager)) {
       TNE.debug("Connecting to H2");
-      sql.connect(manager);
+      try {
+        sql.connect(manager);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
     return sql;
   }
