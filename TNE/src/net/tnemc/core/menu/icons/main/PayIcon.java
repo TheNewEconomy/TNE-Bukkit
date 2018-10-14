@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class PayIcon extends Icon {
 
   public PayIcon() {
-    super(5, Material.YELLOW_STAINED_GLASS_PANE, "Pay Funds");
+    super(5, Material.STAINED_GLASS_PANE, "Pay Funds", (byte)4);
 
     data.put("action_type", "pay");
     this.switchMenu = "cur_selection_pay";

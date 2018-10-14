@@ -3,7 +3,6 @@ package net.tnemc.core.common.currency;
 import net.tnemc.core.common.material.MaterialHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -95,7 +94,7 @@ public class ItemTier {
     //System.out.println("ENCHANTMENTS SIZE: " + enchantments.size());
     if(enchantments.size() > 0) {
       enchantments.forEach((name)->{
-        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name));
+        Enchantment enchantment = Enchantment.getByName(name);
         //System.out.println("ENCHANTMENT NULL: " + (enchantment == null));
         if(enchantment == null) {
           //System.out.println("Unable to apply enchantment to item tier: " + name);

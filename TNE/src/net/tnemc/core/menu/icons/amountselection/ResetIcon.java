@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  */
 public class ResetIcon extends Icon {
   public ResetIcon(Integer slot, String menu) {
-    super(slot, Material.WHITE_STAINED_GLASS_PANE, "ResetAmount");
+    super(slot, Material.STAINED_GLASS_PANE, "ResetAmount", (byte)0);
 
     this.switchMenu = menu;
   }
