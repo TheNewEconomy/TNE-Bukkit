@@ -31,7 +31,7 @@ public class MenuManager {
   private static ItemStack border;
 
   public MenuManager() {
-    border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+    border = new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte)15);
     ItemMeta setMeta = border.getItemMeta();
     setMeta.setDisplayName(ChatColor.WHITE + "'member borders?");
     border.setItemMeta(setMeta);
