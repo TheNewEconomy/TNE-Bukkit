@@ -181,7 +181,7 @@ public class TNE extends TNELib {
       e.printStackTrace();
     }*/
 
-    currentSaveVersion = 11.0;
+    currentSaveVersion = 1114.0;
 
     setUuidManager(new TNEUUIDManager());
 
