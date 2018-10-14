@@ -190,7 +190,8 @@ public class MySQLProvider extends TNEDataProvider {
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` DECIMAL(49,4)" +
+        "`balance` DECIMAL(49,4)," +
+        "PRIMARY KEY(id)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     close();

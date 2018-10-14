@@ -205,6 +205,7 @@ public class H2Provider extends TNEDataProvider {
         "`balance` DECIMAL(49,4)" +
         ") ENGINE = INNODB;");
     h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
+    h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
 
     close();
   }
