@@ -125,8 +125,10 @@ public class MISCUtils {
     Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
 
     accounts.forEach((username) -> {
+      System.out.println("Raw Username: " + username);
       String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
       if(reformattedUsername.equalsIgnoreCase("server account")) reformattedUsername = TNE.instance().consoleName;
+      System.out.println("Restoring Username: " + reformattedUsername);
       UUID id = IDFinder.getID(reformattedUsername);
       TNEAccount account = new TNEAccount(id, reformattedUsername);
       Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);

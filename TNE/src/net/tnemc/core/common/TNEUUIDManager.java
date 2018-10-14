@@ -2,7 +2,6 @@ package net.tnemc.core.common;
 
 import com.github.tnerevival.core.UUIDManager;
 import com.github.tnerevival.core.collection.EventMap;
-import com.github.tnerevival.core.utils.Utilities;
 import net.tnemc.core.TNE;
 import net.tnemc.core.listeners.collections.IDListener;
 
@@ -59,12 +58,18 @@ public class TNEUUIDManager extends UUIDManager {
 
   @Override
   public String getUsername(UUID uuid) {
-    return (String)Utilities.getKey(uuids, uuid);
+    for(Map.Entry<String, UUID> entry : uuids.entrySet()) {
+      if(entry.getValue().toString().equalsIgnoreCase(uuid.toString())) return entry.getKey();
+    }
+    return null;
   }
 
   @Override
   public String getUsername(String identifier) {
-    return (String)Utilities.getKey(uuids, UUID.fromString(identifier));
+    for(Map.Entry<String, UUID> entry : uuids.entrySet()) {
+      if(entry.getValue().toString().equalsIgnoreCase(identifier)) return entry.getKey();
+    }
+    return null;
   }
 
   @Override
