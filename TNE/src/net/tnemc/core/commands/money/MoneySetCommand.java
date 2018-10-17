@@ -15,6 +15,7 @@ import net.tnemc.core.economy.currency.CurrencyEntry;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -63,65 +64,67 @@ public class MoneySetCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    if(arguments.length >= 2) {
-      String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      final String currencyName = (arguments.length >= 4)? arguments[3] : TNE.manager().currencyManager().get(world).name();
-      final UUID id = IDFinder.getID(arguments[0]);
-      final TNEAccount account = TNE.manager().getAccount(id);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      if(arguments.length >= 2) {
+        String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        final String currencyName = (arguments.length >= 4)? arguments[3] : TNE.manager().currencyManager().get(world).name();
+        final UUID id = IDFinder.getID(arguments[0]);
+        final TNEAccount account = TNE.manager().getAccount(id);
 
-      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
-        new Message("Messages.General.Disabled").translate(world, sender);
-        return false;
-      }
+        if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+          new Message("Messages.General.Disabled").translate(world, sender);
+          return;
+        }
 
-      TNE.debug("MoneySetCommand Currency: " + currencyName);
-      final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
-      final String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
-      if (parsed.contains("Messages")) {
-        Message max = new Message(parsed);
-        max.addVariable("$currency", currency.name());
-        max.addVariable("$world", world);
-        max.addVariable("$player", getPlayer(sender).getDisplayName());
-        max.translate(world, sender);
-        return false;
-      }
+        TNE.debug("MoneySetCommand Currency: " + currencyName);
+        final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+        final String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
+        if (parsed.contains("Messages")) {
+          Message max = new Message(parsed);
+          max.addVariable("$currency", currency.name());
+          max.addVariable("$world", world);
+          max.addVariable("$player", getPlayer(sender).getDisplayName());
+          max.translate(world, sender);
+          return;
+        }
 
-      final BigDecimal value = new BigDecimal(parsed);
-      TNE.debug("Value: " + value.toPlainString());
-      final BigDecimal balance = account.getHoldings(world, currency);
-      TNE.debug("Balance: " + balance.toPlainString());
-      final TransactionChargeType type = (balance.compareTo(value) >= 0)? TransactionChargeType.LOSE
-                                                                  : TransactionChargeType.GAIN;
-      TNE.debug("ChargeType: " + type.name());
+        final BigDecimal value = new BigDecimal(parsed);
+        TNE.debug("Value: " + value.toPlainString());
+        final BigDecimal balance = account.getHoldings(world, currency);
+        TNE.debug("Balance: " + balance.toPlainString());
+        final TransactionChargeType type = (balance.compareTo(value) >= 0)? TransactionChargeType.LOSE
+            : TransactionChargeType.GAIN;
+        TNE.debug("ChargeType: " + type.name());
 
-      final BigDecimal newBalance = (type.equals(TransactionChargeType.GAIN))? value.subtract(balance) : balance.subtract(value);
+        final BigDecimal newBalance = (type.equals(TransactionChargeType.GAIN))? value.subtract(balance) : balance.subtract(value);
 
-      TNE.debug("New Balance: " + newBalance.toPlainString());
+        TNE.debug("New Balance: " + newBalance.toPlainString());
 
-      TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), account, world, TNE.transactionManager().getType("set"));
-      transaction.setRecipientCharge(new TransactionCharge(world, currency, newBalance, type));
-      transaction.setRecipientBalance(new CurrencyEntry(world, currency, balance));
-      final TransactionResult result = TNE.transactionManager().perform(transaction);
+        TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), account, world, TNE.transactionManager().getType("set"));
+        transaction.setRecipientCharge(new TransactionCharge(world, currency, newBalance, type));
+        transaction.setRecipientBalance(new CurrencyEntry(world, currency, balance));
+        final TransactionResult result = TNE.transactionManager().perform(transaction);
 
 
-      if(result.proceed() && transaction.recipient() != null && MISCUtils.isOnline(id, world)) {
-        Message message = new Message(result.recipientMessage());
-        message.addVariable("$player", account.displayName());
+        if(result.proceed() && transaction.recipient() != null && MISCUtils.isOnline(id, world)) {
+          Message message = new Message(result.recipientMessage());
+          message.addVariable("$player", account.displayName());
+          message.addVariable("$world", world);
+          message.addVariable("$currency", currencyName);
+          message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, value));
+          message.translate(world, id);
+        }
+
+        Message message = new Message(result.initiatorMessage());
+        message.addVariable("$player", arguments[0]);
         message.addVariable("$world", world);
         message.addVariable("$currency", currencyName);
         message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, value));
-        message.translate(world, id);
+        message.translate(world, IDFinder.getID(sender));
+        return;
       }
-
-      Message message = new Message(result.initiatorMessage());
-      message.addVariable("$player", arguments[0]);
-      message.addVariable("$world", world);
-      message.addVariable("$currency", currencyName);
-      message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, value));
-      message.translate(world, IDFinder.getID(sender));
-      return result.proceed();
-    }
-    help(sender);
-    return false;
+      help(sender);
+    });
+    return true;
   }
 }

@@ -9,6 +9,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -56,49 +57,51 @@ public class MoneyPayCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    TNE.debug("===START MoneyPayCommand ===");
-    String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      TNE.debug("===START MoneyPayCommand ===");
+      String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 
-    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
-      new Message("Messages.General.Disabled").translate(world, sender);
-      return false;
-    }
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return;
+      }
 
-    if(arguments.length >= 2) {
-      String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
-      TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+      if(arguments.length >= 2) {
+        String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
+        TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
-      String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
-      if(parsed.contains("Messages")) {
-        Message msg = new Message(parsed);
-        msg.addVariable("$currency", currency.name());
-        msg.addVariable("$world", world);
-        msg.addVariable("$player", getPlayer(sender).getDisplayName());
-        msg.translate(world, sender);
+        String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
+        if(parsed.contains("Messages")) {
+          Message msg = new Message(parsed);
+          msg.addVariable("$currency", currency.name());
+          msg.addVariable("$world", world);
+          msg.addVariable("$player", getPlayer(sender).getDisplayName());
+          msg.translate(world, sender);
+          TNE.debug("===END MoneyPayCommand ===");
+          return;
+        }
+
+        BigDecimal value = new BigDecimal(parsed);
+
+        if(value.compareTo(BigDecimal.ZERO) < 0) {
+          Message msg = new Message("Messages.Money.Negative");
+          msg.addVariable("$currency", currency.name());
+          msg.addVariable("$world", world);
+          msg.addVariable("$player", getPlayer(sender).getDisplayName());
+          msg.translate(world, sender);
+          return;
+        }
+
+        MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0], true),
+            "pay", value, currency, world,
+            TNE.manager().getAccount(IDFinder.getID(sender)));
+        handler.handle(true);
         TNE.debug("===END MoneyPayCommand ===");
-        return false;
+        return;
       }
-
-      BigDecimal value = new BigDecimal(parsed);
-
-      if(value.compareTo(BigDecimal.ZERO) < 0) {
-        Message msg = new Message("Messages.Money.Negative");
-        msg.addVariable("$currency", currency.name());
-        msg.addVariable("$world", world);
-        msg.addVariable("$player", getPlayer(sender).getDisplayName());
-        msg.translate(world, sender);
-        return false;
-      }
-
-      MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0], true),
-                                                                    "pay", value, currency, world,
-                                                                    TNE.manager().getAccount(IDFinder.getID(sender)));
-      handler.handle(true);
+      help(sender);
       TNE.debug("===END MoneyPayCommand ===");
-      return handler.getData().isProceed();
-    }
-    help(sender);
-    TNE.debug("===END MoneyPayCommand ===");
-    return false;
+    });
+    return true;
   }
 }

@@ -13,6 +13,7 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,62 +61,65 @@ public class MoneyNoteCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    if(arguments.length >= 1) {
-      String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
-      TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
-      UUID id = IDFinder.getID(sender);
-      TNEAccount account = TNE.manager().getAccount(id);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      if(arguments.length >= 1) {
+        final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        final String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
+        final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+        final UUID id = IDFinder.getID(sender);
+        final TNEAccount account = TNE.manager().getAccount(id);
 
-      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
-        new Message("Messages.General.Disabled").translate(world, sender);
-        return false;
-      }
+        if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+          new Message("Messages.General.Disabled").translate(world, sender);
+          return;
+        }
 
-      if(!currency.isNotable()) {
-        new Message("Messages.Money.NoteFailed").translate(world, sender);
-        return false;
-      }
+        if(!currency.isNotable()) {
+          new Message("Messages.Money.NoteFailed").translate(world, sender);
+          return;
+        }
 
-      String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
-      if(parsed.contains("Messages")) {
-        Message max = new Message(parsed);
-        max.addVariable("$currency", currency.name());
-        max.addVariable("$world", world);
-        max.addVariable("$player", getPlayer(sender).getDisplayName());
-        max.translate(world, sender);
-        return false;
-      }
+        final String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
+        if(parsed.contains("Messages")) {
+          Message max = new Message(parsed);
+          max.addVariable("$currency", currency.name());
+          max.addVariable("$world", world);
+          max.addVariable("$player", getPlayer(sender).getDisplayName());
+          max.translate(world, sender);
+          return;
+        }
 
-      BigDecimal value = new BigDecimal(parsed);
-      if(value.compareTo(currency.getMinimum()) < 0) {
-        Message minimum = new Message(parsed);
-        minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum()));
-        minimum.translate(world, sender);
-        return false;
-      }
+        final BigDecimal value = new BigDecimal(parsed);
+        if(value.compareTo(currency.getMinimum()) < 0) {
+          Message minimum = new Message(parsed);
+          minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum()));
+          minimum.translate(world, sender);
+          return;
+        }
 
-      TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("note"));
-      transaction.setRecipientCharge(new TransactionCharge(world, currency, value.add(currency.getFee()), TransactionChargeType.LOSE));
-      TransactionResult result = TNE.transactionManager().perform(transaction);
+        TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("note"));
+        transaction.setRecipientCharge(new TransactionCharge(world, currency, value.add(currency.getFee()), TransactionChargeType.LOSE));
+        final TransactionResult result = TNE.transactionManager().perform(transaction);
 
 
-      if(result.proceed()) {
-        ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
-        getPlayer(sender).getInventory().addItem(stack);
+        if(result.proceed()) {
+          ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
+          Bukkit.getScheduler().runTask(plugin,()->getPlayer(sender).getInventory().addItem(stack));
+          Message message = new Message(result.recipientMessage());
+          message.addVariable("$player", arguments[0]);
+          message.addVariable("$world", world);
+          message.addVariable("$currency", currencyName);
+          message.addVariable("$amount", CurrencyFormatter.format(transaction.recipientCharge().getEntry().getCurrency(), world, value));
+          message.translate(world, sender);
+          return;
+        }
         Message message = new Message(result.recipientMessage());
-        message.addVariable("$player", arguments[0]);
-        message.addVariable("$world", world);
-        message.addVariable("$currency", currencyName);
-        message.addVariable("$amount", CurrencyFormatter.format(transaction.recipientCharge().getEntry().getCurrency(), world, value));
         message.translate(world, sender);
-        return true;
+        return;
       }
-      Message message = new Message(result.recipientMessage());
-      message.translate(world, sender);
-      return false;
-    }
-    help(sender);
-    return false;
+      help(sender);
+      return;
+    });
+    return true;
   }
 }

@@ -5,6 +5,7 @@ import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.TNE;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +52,11 @@ public class TNESaveManager extends SaveManager {
   @Override
   public void load() throws SQLException {
     TNE.debug("====== TNESaveManager.load =======");
-    if(saveVersion < TNELib.instance().currentSaveVersion && saveVersion != 0) {
+    if(saveVersion.compareTo(BigDecimal.ZERO) > 0 && saveVersion.compareTo(TNELib.instance().currentSaveVersion) < 0) {
       getTNEManager().getTNEProvider().update(saveVersion);
       TNELib.instance().getLogger().info("Saved data has been updated!");
     }
-    Double version = (saveVersion != 0.0) ? saveVersion : TNELib.instance().currentSaveVersion;
+    BigDecimal version = (saveVersion.compareTo(BigDecimal.ZERO) > 0) ? saveVersion : TNELib.instance().currentSaveVersion;
     TNE.debug("Current Save Version: " + version);
     getTNEManager().getTNEProvider().load(version);
     TNELib.instance().getLogger().info("Finished loading data!");

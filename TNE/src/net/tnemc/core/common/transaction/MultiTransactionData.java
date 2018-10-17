@@ -41,6 +41,7 @@ public class MultiTransactionData {
     if(handler.getTransactionType().equalsIgnoreCase("pay")) {
       if(handler.getInitiator() != null) {
         for (TNEAccount affect : affected) {
+          if(affect == null || affect.identifier() == null) continue;
           if(affect.identifier().toString().equalsIgnoreCase(handler.getInitiator().identifier().toString())) {
             messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
             return;
