@@ -181,7 +181,7 @@ public class TNE extends TNELib {
       e.printStackTrace();
     }*/
 
-    currentSaveVersion = 11.0;
+    currentSaveVersion = 1114.0;
 
     setUuidManager(new TNEUUIDManager());
 
@@ -310,7 +310,7 @@ public class TNE extends TNELib {
     TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
-    saveManager().addVersion(10.0, true);
+    saveManager().addVersion(1114.0, true);
 
     TNE.debug("Initializing Save Manager.");
     try {
