@@ -8,12 +8,14 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -58,52 +60,60 @@ public class MoneyTopCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    Map<String, String> parsed = getArguments(arguments);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      final Map<String, String> parsed = getArguments(arguments);
 
-    int page = 1;
-    int limit = (parsed.containsKey("limit") && MISCUtils.isInteger(parsed.get("limit")))? Integer.valueOf(parsed.get("limit")) : 10;
-    String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-    TNECurrency currency = TNE.manager().currencyManager().get(world);
+      int page = 1;
+      int limit = (parsed.containsKey("limit") && MISCUtils.isInteger(parsed.get("limit")))? Integer.valueOf(parsed.get("limit")) : 10;
+      final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+      final TNECurrency currency = TNE.manager().currencyManager().get(world);
 
-    if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
-      new Message("Messages.General.Disabled").translate(world, sender);
-      return false;
-    }
+      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+        new Message("Messages.General.Disabled").translate(world, sender);
+        return;
+      }
 
-    if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0)) && MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {
-      page = Integer.valueOf(parsed.get(String.valueOf(0)));
-    }
+      if(arguments.length >= 1 && parsed.containsKey(String.valueOf(0)) && MISCUtils.isInteger(parsed.get(String.valueOf(0)))) {
+        page = Integer.valueOf(parsed.get(String.valueOf(0)));
+      }
 
-    int max = 0;
-    try {
-      max = TNE.saveManager().getTNEManager().getTNEProvider().balanceCount(world, currency.name(), limit);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    if(max == 0) max = 1;
+      int max = 0;
+      try {
+        max = TNE.saveManager().getTNEManager().getTNEProvider().balanceCount(world, currency.name(), limit);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      if(max == 0) max = 1;
 
-    if(page > max) page = max;
-    TNE.debug("MoneyTopCommand.java(87): Max Pages - " + max);
+      if(page > max) page = max;
+      TNE.debug("MoneyTopCommand.java(87): Max Pages - " + max);
 
-    LinkedHashMap<UUID, BigDecimal> values = new LinkedHashMap<>();
-    try {
-      values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+      LinkedHashMap<UUID, BigDecimal> values = new LinkedHashMap<>();
+      try {
+        values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
 
-    Message top = new Message("Messages.Money.Top");
-    top.addVariable("$page", page + "");
-    top.addVariable("$page_top", max + "");
-    top.translate(world, sender);
-    Message topEntry = new Message("Messages.Money.TopEntry");
-    Iterator<Map.Entry<UUID, BigDecimal>> it = values.entrySet().iterator();
-    while(it.hasNext()) {
-      Map.Entry<UUID, BigDecimal> entry = it.next();
-      topEntry.addVariable("$player", TNE.manager().getAccount(entry.getKey()).displayName());
-      topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue()));
-      topEntry.translate(world, sender);
-    }
+      LinkedList<String[]> message = new LinkedList<>();
+
+      Message top = new Message("Messages.Money.Top");
+      top.addVariable("$page", page + "");
+      top.addVariable("$page_top", max + "");
+      message.add(top.grabWithNew(world, sender));
+      Message topEntry = new Message("Messages.Money.TopEntry");
+      Iterator<Map.Entry<UUID, BigDecimal>> it = values.entrySet().iterator();
+      while(it.hasNext()) {
+        Map.Entry<UUID, BigDecimal> entry = it.next();
+        topEntry.addVariable("$player", TNE.manager().getAccount(entry.getKey()).displayName());
+        topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue()));
+        message.add(topEntry.grabWithNew(world, sender));
+      }
+
+      for(String[] s : message) {
+        sender.sendMessage(s);
+      }
+    });
     return true;
   }
 }

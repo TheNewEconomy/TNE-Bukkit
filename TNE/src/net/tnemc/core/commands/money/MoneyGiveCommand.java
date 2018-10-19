@@ -9,6 +9,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -56,39 +57,41 @@ public class MoneyGiveCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    TNE.debug("===START MoneyGiveCommand ===");
-    if(arguments.length >= 2) {
-      String world = (arguments.length == 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
-      TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      TNE.debug("===START MoneyGiveCommand ===");
+      if(arguments.length >= 2) {
+        final String world = (arguments.length == 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        final String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
+        final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
-      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
-        new Message("Messages.General.Disabled").translate(world, sender);
-        return false;
-      }
+        if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+          new Message("Messages.General.Disabled").translate(world, sender);
+          return;
+        }
 
-      String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
-      if(parsed.contains("Messages")) {
-        Message max = new Message(parsed);
-        max.addVariable("$currency", currency.name());
-        max.addVariable("$world", world);
-        max.addVariable("$player", getPlayer(sender).getDisplayName());
-        max.translate(world, sender);
+        String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
+        if(parsed.contains("Messages")) {
+          Message max = new Message(parsed);
+          max.addVariable("$currency", currency.name());
+          max.addVariable("$world", world);
+          max.addVariable("$player", getPlayer(sender).getDisplayName());
+          max.translate(world, sender);
+          TNE.debug("===END MoneyGiveCommand ===");
+          return;
+        }
+
+        final BigDecimal value = new BigDecimal(parsed);
+
+        final MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
+            "give", value, currency, world,
+            TNE.manager().getAccount(IDFinder.getID(sender)));
+        handler.handle(true);
         TNE.debug("===END MoneyGiveCommand ===");
-        return false;
+        return;
       }
-
-      BigDecimal value = new BigDecimal(parsed);
-
-      MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
-                                                                    "give", value, currency, world,
-                                                                    TNE.manager().getAccount(IDFinder.getID(sender)));
-      handler.handle(true);
+      help(sender);
       TNE.debug("===END MoneyGiveCommand ===");
-      return handler.getData().isProceed();
-    }
-    help(sender);
-    TNE.debug("===END MoneyGiveCommand ===");
-    return false;
+    });
+    return true;
   }
 }

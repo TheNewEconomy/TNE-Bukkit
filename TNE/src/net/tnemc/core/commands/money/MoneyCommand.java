@@ -55,36 +55,48 @@ public class MoneyCommand extends TNECommand {
     if(command.equalsIgnoreCase("givemoney") ||
         command.equalsIgnoreCase("givebal")) {
       TNECommand sub = FindSub("give");
-      return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
     }
 
     if(command.equalsIgnoreCase("setmoney") ||
         command.equalsIgnoreCase("setbal")) {
       TNECommand sub = FindSub("set");
-      return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
     }
 
     if(command.equalsIgnoreCase("takemoney") ||
         command.equalsIgnoreCase("takebal")) {
       TNECommand sub = FindSub("take");
-      return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
     }
 
     if(command.equalsIgnoreCase("baltop")) {
       TNECommand sub = FindSub("top");
-      return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
     }
 
     if(command.equalsIgnoreCase("pay")) {
       TNECommand sub = FindSub("pay");
-      return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
     }
 
     if(command.equalsIgnoreCase("balance") ||
         command.equalsIgnoreCase("bal") ||
         arguments.length == 0) {
       TNECommand sub = FindSub("balance");
-      return sub.execute(sender, command, arguments);
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
     }
     return super.execute(sender, command, arguments);
   }

@@ -175,7 +175,7 @@ public class ConnectionListener implements Listener {
     String toWorld = event.getTo().getWorld().getName();
     toWorld = TNE.instance().getWorldManager(toWorld).getBalanceWorld();
 
-    if(!fromWorld.equals(toWorld)) {
+    if(!fromWorld.equals(toWorld) && TNE.instance().api().getBoolean("Core.Multiworld")) {
       TNE.manager().getAccount(IDFinder.getID(event.getPlayer())).saveItemCurrency(fromWorld);
     }
   }
@@ -206,7 +206,8 @@ public class ConnectionListener implements Listener {
       TNEAccount.getAccount(id.toString()).initializeHoldings(world);
     }
 
-    if(!noEconomy) {
+    if(!noEconomy && TNE.instance().api().getBoolean("Core.Multiworld") &&
+        !TNE.instance().getWorldManager(event.getFrom().getName()).getBalanceWorld().equalsIgnoreCase(world)) {
       TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
         ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
             account.getHoldings(world, value, true, true), player.getInventory(), false);

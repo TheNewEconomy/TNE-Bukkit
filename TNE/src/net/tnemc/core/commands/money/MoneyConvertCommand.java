@@ -13,6 +13,7 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -60,64 +61,66 @@ public class MoneyConvertCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    Player player = getPlayer(sender);
-    if(arguments.length >= 2) {
-      UUID id = IDFinder.getID(sender);
-      TNEAccount account = TNE.manager().getAccount(id);
-      String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
-      TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
-      TNECurrency from = TNE.manager().currencyManager().get(WorldFinder.getWorld(sender, WorldVariant.BALANCE));
-      String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      final Player player = getPlayer(sender);
+      if(arguments.length >= 2) {
+        final UUID id = IDFinder.getID(sender);
+        final TNEAccount account = TNE.manager().getAccount(id);
+        final String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        final String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
+        final TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
+        TNECurrency from = TNE.manager().currencyManager().get(WorldFinder.getWorld(sender, WorldVariant.BALANCE));
+        String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 
-      if(TNE.instance().getWorldManager(worldFrom).isEconomyDisabled()) {
-        new Message("Messages.General.Disabled").translate(worldFrom, sender);
-        return false;
+        if(TNE.instance().getWorldManager(worldFrom).isEconomyDisabled()) {
+          new Message("Messages.General.Disabled").translate(worldFrom, sender);
+          return;
+        }
+
+        if(TNE.instance().getWorldManager(worldTo).isEconomyDisabled()) {
+          new Message("Messages.General.Disabled").translate(worldTo, sender);
+          return;
+        }
+
+        if(arguments.length >= 3) {
+          worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+          String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
+          from = TNE.manager().currencyManager().get(worldFrom, currencyFrom);
+        }
+
+        String parsed = CurrencyFormatter.parseAmount(to, worldTo, arguments[0]);
+        if(parsed.contains("Messages")) {
+          Message max = new Message(parsed);
+          max.addVariable("$currency", to.name());
+          max.addVariable("$world", worldTo);
+          max.addVariable("$player", player.getDisplayName());
+          max.translate(worldTo, player);
+          return;
+        }
+
+        BigDecimal value = new BigDecimal(parsed);
+        TNETransaction transaction = new TNETransaction(account, account, worldFrom, TNE.transactionManager().getType("conversion"));
+        transaction.setInitiatorCharge(new TransactionCharge(worldFrom, from, value, TransactionChargeType.LOSE));
+        transaction.setRecipientCharge(new TransactionCharge(worldTo, to, value, TransactionChargeType.GAIN));
+        TransactionResult result = TNE.transactionManager().perform(transaction);
+
+        //System.out.println("World To: " + worldTo);
+        //System.out.println("Currency To: " + to.name());
+        //System.out.println("World From: " + worldFrom);
+        //System.out.println("Currency From: " + from.name());
+
+        Message message = new Message(result.initiatorMessage());
+        message.addVariable("$player", arguments[0]);
+        message.addVariable("$world", worldTo);
+        message.addVariable("$currency", to.name());
+        message.addVariable("$worldFrom", worldFrom);
+        message.addVariable("$from_amount", CurrencyFormatter.format(worldFrom, from.name(), value));
+        message.addVariable("$amount", CurrencyFormatter.format(worldTo, currencyTo, transaction.recipientCharge().getEntry().getAmount()));
+        message.translate(worldTo, IDFinder.getID(sender));
+        return;
       }
-
-      if(TNE.instance().getWorldManager(worldTo).isEconomyDisabled()) {
-        new Message("Messages.General.Disabled").translate(worldTo, sender);
-        return false;
-      }
-
-      if(arguments.length >= 3) {
-        worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-        String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
-        from = TNE.manager().currencyManager().get(worldFrom, currencyFrom);
-      }
-
-      String parsed = CurrencyFormatter.parseAmount(to, worldTo, arguments[0]);
-      if(parsed.contains("Messages")) {
-        Message max = new Message(parsed);
-        max.addVariable("$currency", to.name());
-        max.addVariable("$world", worldTo);
-        max.addVariable("$player", player.getDisplayName());
-        max.translate(worldTo, player);
-        return false;
-      }
-
-      BigDecimal value = new BigDecimal(parsed);
-      TNETransaction transaction = new TNETransaction(account, account, worldFrom, TNE.transactionManager().getType("conversion"));
-      transaction.setInitiatorCharge(new TransactionCharge(worldFrom, from, value, TransactionChargeType.LOSE));
-      transaction.setRecipientCharge(new TransactionCharge(worldTo, to, value, TransactionChargeType.GAIN));
-      TransactionResult result = TNE.transactionManager().perform(transaction);
-
-      //System.out.println("World To: " + worldTo);
-      //System.out.println("Currency To: " + to.name());
-      //System.out.println("World From: " + worldFrom);
-      //System.out.println("Currency From: " + from.name());
-
-      Message message = new Message(result.initiatorMessage());
-      message.addVariable("$player", arguments[0]);
-      message.addVariable("$world", worldTo);
-      message.addVariable("$currency", to.name());
-      message.addVariable("$worldFrom", worldFrom);
-      message.addVariable("$from_amount", CurrencyFormatter.format(worldFrom, from.name(), value));
-      message.addVariable("$amount", CurrencyFormatter.format(worldTo, currencyTo, transaction.recipientCharge().getEntry().getAmount()));
-      message.translate(worldTo, IDFinder.getID(sender));
-      return result.proceed();
-    }
-    help(sender);
-    return false;
+      help(sender);
+    });
+    return true;
   }
 }
