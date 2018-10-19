@@ -68,7 +68,7 @@ public class MobConfiguration extends Configuration {
       configurations.put("Mobs." + type.name() + ".Baby.Reward", 5.00);
     }
 
-    for(Villager.Career career : Villager.Career.values()) {
+    for(Villager.Profession career : Villager.Profession.values()) {
       configurations.put("Mobs.VILLAGER_" + career.name() + ".Enabled", true);
       configurations.put("Mobs.VILLAGER_" + career.name() + ".RewardCurrency", "Default");
       configurations.put("Mobs.VILLAGER_" + career.name() + ".Reward", 10.00);
