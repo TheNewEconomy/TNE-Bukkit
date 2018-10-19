@@ -48,13 +48,8 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13-pre7-R0.1-SNAPSHOT</version>
+            <version>1.12-pre5-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.tnemc</groupId>
-            <artifactId>TNE</artifactId>
-            <version>1.1.4.2</version>
         </dependency>
     </dependencies>
 </project>

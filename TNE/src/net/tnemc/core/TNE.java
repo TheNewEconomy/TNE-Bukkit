@@ -408,12 +408,12 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
-    try {
+    /*try {
       writeMobs();
       writeItems();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
     getLogger().info("The New Economy has been enabled!");
   }
 
