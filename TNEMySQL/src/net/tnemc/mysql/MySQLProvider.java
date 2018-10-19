@@ -113,7 +113,7 @@ public class MySQLProvider extends TNEDataProvider {
       statement = connection.createStatement();
       result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;");
       if(result.first()) {
-        version = Double.valueOf(result.getString("version"));
+        version = Double.parseDouble(result.getString("version"));
       }
       connection.close();
     } catch(Exception e) {
@@ -129,11 +129,12 @@ public class MySQLProvider extends TNEDataProvider {
         "`version` VARCHAR(10)," +
         "`server_name` VARCHAR(100)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    mysql().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?);",
+    mysql().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
         new Object[] {
             1,
             TNELib.instance().currentSaveVersion,
-            TNE.instance().getServerName()
+            TNE.instance().getServerName(),
+            TNELib.instance().currentSaveVersion,
         });
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
@@ -185,7 +186,7 @@ public class MySQLProvider extends TNEDataProvider {
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
     mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
-        "`id` INTEGER NOT NULL AUTO_INCREMENT," +
+        "`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE," +
         "`uuid` VARCHAR(36) NOT NULL," +
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
@@ -200,17 +201,21 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public void update(Double version) throws SQLException {
     //Nothing to convert(?)
-    if(version == 11.0) {
+    if(version < TNE.instance().currentSaveVersion) {
 
       mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
-          "`id` INTEGER NOT NULL AUTO_INCREMENT," +
+          "`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE," +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`server_name` VARCHAR(100) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(100) NOT NULL," +
           "`balance` DECIMAL(49,4)" +
           ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-      close();
+
+      mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` MODIFY COLUMN `balance` DECIMAL(49,4)");
+      mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_initiator_balance` DECIMAL(49,4)");
+      mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_recipient_balance` DECIMAL(49,4)");
+      mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` MODIFY COLUMN `charge_amount` DECIMAL(49,4)");
     }
   }
 

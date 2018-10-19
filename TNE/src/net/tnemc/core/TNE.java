@@ -63,7 +63,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,7 +181,7 @@ public class TNE extends TNELib {
       e.printStackTrace();
     }*/
 
-    currentSaveVersion = new BigDecimal("1114.0");
+    currentSaveVersion = 1114.0;
 
     setUuidManager(new TNEUUIDManager());
 
@@ -311,7 +310,7 @@ public class TNE extends TNELib {
     TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
-    saveManager().addVersion(currentSaveVersion, true);
+    saveManager().addVersion(1114.0, true);
 
     TNE.debug("Initializing Save Manager.");
     try {
@@ -409,12 +408,12 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
-    /*try {
+    try {
       writeMobs();
-      //writeItems();
+      writeItems();
     } catch (IOException e) {
       e.printStackTrace();
-    }*/
+    }
     getLogger().info("The New Economy has been enabled!");
   }
 

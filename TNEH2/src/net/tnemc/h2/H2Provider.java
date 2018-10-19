@@ -120,7 +120,7 @@ public class H2Provider extends TNEDataProvider {
       statement = connection.createStatement();
       result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;");
       if(result.first()) {
-        version = Double.valueOf(result.getString("version"));
+        version = Double.parseDouble(result.getString("version"));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -139,11 +139,12 @@ public class H2Provider extends TNEDataProvider {
         "`version` VARCHAR(10)," +
         "`server_name` VARCHAR(100)" +
         ") ENGINE = INNODB;");
-    h2().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?);",
+    h2().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
         new Object[] {
             1,
             TNELib.instance().currentSaveVersion,
-            TNE.instance().getServerName()
+            TNE.instance().getServerName(),
+            TNELib.instance().currentSaveVersion,
         });
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
@@ -210,7 +211,7 @@ public class H2Provider extends TNEDataProvider {
   @Override
   public void update(Double version) throws SQLException {
     //Nothing to convert(?)
-    if(version == 10.0) {
+    if(version < TNE.instance().currentSaveVersion) {
 
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
           "`id` INTEGER NOT NULL AUTO_INCREMENT," +
@@ -219,8 +220,13 @@ public class H2Provider extends TNEDataProvider {
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(100) NOT NULL," +
           "`balance` DECIMAL(49,4)" +
-          ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-      close();
+          ") ENGINE = INNODB;");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
+
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ALTER COLUMN `balance` DECIMAL(49,4)");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_initiator_balance` DECIMAL(49,4)");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_recipient_balance` DECIMAL(49,4)");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
     }
   }
 

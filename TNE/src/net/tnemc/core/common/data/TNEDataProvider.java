@@ -63,17 +63,17 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract int transactionCount(UUID recipient, String world, String type, String time, int limit) throws SQLException;
   public abstract LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page) throws SQLException;
 
-  public void preLoad(BigDecimal version) throws SQLException {
+  public void preLoad(Double version) throws SQLException {
 
   }
 
-  public void preSave(BigDecimal version) throws SQLException {
+  public void preSave(Double version) throws SQLException {
 
   }
 
 
   @Override
-  public void load(BigDecimal version) throws SQLException {
+  public void load(Double version) throws SQLException {
     preLoad(version);
 
     if(!supportUpdate()) {
@@ -99,7 +99,7 @@ public abstract class TNEDataProvider extends DataProvider {
   }
 
   @Override
-  public void save(BigDecimal version) throws SQLException {
+  public void save(Double version) throws SQLException {
     TNE.debug("TNEDataProvider.save");
     preSave(version);
     long start = System.nanoTime();

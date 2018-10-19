@@ -52,6 +52,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>reserve-repo</id>
+            <url>https://dl.bintray.com/theneweconomy/java/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -61,11 +65,6 @@
             <version>1.12-pre5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>net.tnemc</groupId>
-            <artifactId>TNE</artifactId>
-            <version>0.0.5.6-SNAPSHOT</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -74,9 +73,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.tnemc</groupId>
-            <artifactId>TNE</artifactId>
-            <version>1.1.4.2</version>
+            <groupId>com.github</groupId>
+            <artifactId>TNELib</artifactId>
+            <version>0.1.1.5</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
