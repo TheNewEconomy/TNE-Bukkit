@@ -81,9 +81,6 @@ public class H2Provider extends TNEDataProvider {
   }
 
   public void close() {
-    if(sql != null) {
-      sql.close(manager, true);
-    }
   }
 
   @Override
@@ -123,7 +120,7 @@ public class H2Provider extends TNEDataProvider {
       statement = connection.createStatement();
       result = statement.executeQuery("SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;");
       if(result.first()) {
-        version = Double.valueOf(result.getString("version"));
+        version = Double.parseDouble(result.getString("version"));
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -142,11 +139,12 @@ public class H2Provider extends TNEDataProvider {
         "`version` VARCHAR(10)," +
         "`server_name` VARCHAR(100)" +
         ") ENGINE = INNODB;");
-    h2().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?);",
+    h2().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
         new Object[] {
             1,
             TNELib.instance().currentSaveVersion,
-            TNE.instance().getServerName()
+            TNE.instance().getServerName(),
+            TNELib.instance().currentSaveVersion,
         });
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
@@ -170,16 +168,16 @@ public class H2Provider extends TNEDataProvider {
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` VARCHAR(50)" +
+        "`balance` DECIMAL(49,4)," +
         ") ENGINE = INNODB;");
     h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ADD PRIMARY KEY(uuid, server_name, world, currency);");
 
     h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
         "`trans_initiator` VARCHAR(36)," +
-        "`trans_initiator_balance` VARCHAR(50)," +
+        "`trans_initiator_balance` DECIMAL(49,4)," +
         "`trans_recipient` VARCHAR(36) NOT NULL," +
-        "`trans_recipient_balance` VARCHAR(50)," +
+        "`trans_recipient_balance` DECIMAL(49,4)," +
         "`trans_type` VARCHAR(36) NOT NULL," +
         "`trans_world` VARCHAR(36) NOT NULL," +
         "`trans_time` BIGINT(60) NOT NULL," +
@@ -192,7 +190,7 @@ public class H2Provider extends TNEDataProvider {
         "`charge_player` VARCHAR(36) NOT NULL," +
         "`charge_currency` VARCHAR(100) NOT NULL," +
         "`charge_world` VARCHAR(36) NOT NULL," +
-        "`charge_amount` VARCHAR(50) NOT NULL," +
+        "`charge_amount` DECIMAL(49,4) NOT NULL," +
         "`charge_type` VARCHAR(20) NOT NULL" +
         ") ENGINE = INNODB;");
 
@@ -202,9 +200,10 @@ public class H2Provider extends TNEDataProvider {
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
         "`currency` VARCHAR(100) NOT NULL," +
-        "`balance` VARCHAR(50)" +
-        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        "`balance` DECIMAL(49,4)" +
+        ") ENGINE = INNODB;");
     h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
+    h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
 
     close();
   }
@@ -212,7 +211,7 @@ public class H2Provider extends TNEDataProvider {
   @Override
   public void update(Double version) throws SQLException {
     //Nothing to convert(?)
-    if(version == 10.0) {
+    if(version < TNE.instance().currentSaveVersion) {
 
       h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
           "`id` INTEGER NOT NULL AUTO_INCREMENT," +
@@ -220,9 +219,14 @@ public class H2Provider extends TNEDataProvider {
           "`server_name` VARCHAR(100) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(100) NOT NULL," +
-          "`balance` VARCHAR(50)" +
-          ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-      close();
+          "`balance` DECIMAL(49,4)" +
+          ") ENGINE = INNODB;");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
+
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ALTER COLUMN `balance` DECIMAL(49,4)");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_initiator_balance` DECIMAL(49,4)");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_recipient_balance` DECIMAL(49,4)");
+      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
     }
   }
 
@@ -234,7 +238,11 @@ public class H2Provider extends TNEDataProvider {
   public DatabaseConnector connector() throws SQLException {
     if(!sql.connected(manager)) {
       TNE.debug("Connecting to H2");
-      sql.connect(manager);
+      try {
+        sql.connect(manager);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
     return sql;
   }
@@ -399,7 +407,7 @@ public class H2Provider extends TNEDataProvider {
 
         int balancesIndex = h2().executePreparedQuery(BALANCE_LOAD, new Object[]{account.identifier().toString()});
         while (h2().results(balancesIndex).next()) {
-          account.setHoldings(h2().results(balancesIndex).getString("world"), h2().results(balancesIndex).getString("currency"), new BigDecimal(h2().results(balancesIndex).getString("balance")), true);
+          account.setHoldings(h2().results(balancesIndex).getString("world"), h2().results(balancesIndex).getString("currency"), h2().results(balancesIndex).getBigDecimal("balance"), true);
         }
         h2().closeResult(balancesIndex);
       }
@@ -452,8 +460,8 @@ public class H2Provider extends TNEDataProvider {
             balanceStatement.setString(2, server);
             balanceStatement.setString(3, holdingsEntry.getKey());
             balanceStatement.setString(4, entry.getKey());
-            balanceStatement.setString(5, entry.getValue().toString());
-            balanceStatement.setString(6, entry.getValue().toString());
+            balanceStatement.setBigDecimal(5, entry.getValue());
+            balanceStatement.setBigDecimal(6, entry.getValue());
             balanceStatement.addBatch();
 
             //history
@@ -461,7 +469,7 @@ public class H2Provider extends TNEDataProvider {
             historyStatement.setString(2, server);
             historyStatement.setString(3, holdingsEntry.getKey());
             historyStatement.setString(4, entry.getKey());
-            historyStatement.setString(5, entry.getValue().toString());
+            historyStatement.setBigDecimal(5, entry.getValue());
             historyStatement.addBatch();
           }
         }
@@ -514,8 +522,8 @@ public class H2Provider extends TNEDataProvider {
                 server,
                 entry.getKey(),
                 curEntry.getKey(),
-                curEntry.getValue().toPlainString(),
-                curEntry.getValue().toPlainString()
+                curEntry.getValue(),
+                curEntry.getValue()
             }
         );
         h2().executePreparedUpdate(HISTORY_SAVE,
@@ -524,7 +532,7 @@ public class H2Provider extends TNEDataProvider {
                 server,
                 entry.getKey(),
                 curEntry.getKey(),
-                curEntry.getValue().toPlainString()
+                curEntry.getValue()
             }
         );
       }
@@ -561,7 +569,7 @@ public class H2Provider extends TNEDataProvider {
           String player = h2().results(chargesIndex).getString("charge_player");
           boolean initiator = player.equalsIgnoreCase(transaction.initiator());
           String world = h2().results(chargesIndex).getString("charge_world");
-          BigDecimal amount = new BigDecimal(h2().results(chargesIndex).getString("charge_amount"));
+          BigDecimal amount = h2().results(chargesIndex).getBigDecimal("charge_amount");
           String chargeType = h2().results(chargesIndex).getString("charge_type");
           String currency = h2().results(chargesIndex).getString("charge_currency");
 
@@ -570,11 +578,11 @@ public class H2Provider extends TNEDataProvider {
           if(initiator) {
             transaction.setInitiatorCharge(charge);
             transaction.setInitiatorBalance(new CurrencyEntry(world, TNE.manager().currencyManager().get(world, currency),
-                new BigDecimal(h2().results(transIndex).getString("trans_initiator_balance"))));
+                h2().results(transIndex).getBigDecimal("trans_initiator_balance")));
           } else {
             transaction.setRecipientCharge(charge);
             transaction.setRecipientBalance(new CurrencyEntry(world, TNE.manager().currencyManager().get(world, currency),
-                new BigDecimal(h2().results(transIndex).getString("trans_recipient_balance"))));
+                h2().results(transIndex).getBigDecimal("trans_recipient_balance")));
           }
         }
         h2().closeResult(transIndex);
@@ -621,9 +629,9 @@ public class H2Provider extends TNEDataProvider {
         new Object[]{
             transaction.transactionID().toString(),
             transaction.initiator(),
-            (transaction.initiatorBalance() != null)? transaction.initiatorBalance().getAmount().toPlainString() : "0.0",
+            (transaction.initiatorBalance() != null)? transaction.initiatorBalance().getAmount() : BigDecimal.ZERO,
             transaction.recipient(),
-            (transaction.recipientBalance() != null)? transaction.recipientBalance().getAmount().toPlainString() : "0.0",
+            (transaction.recipientBalance() != null)? transaction.recipientBalance().getAmount() : BigDecimal.ZERO,
             transaction.type().name().toLowerCase(),
             transaction.getWorld(),
             transaction.time(),
@@ -643,10 +651,10 @@ public class H2Provider extends TNEDataProvider {
               transaction.initiator(),
               transaction.initiatorCharge().getCurrency().name(),
               transaction.initiatorCharge().getWorld(),
-              transaction.initiatorCharge().getAmount().toPlainString(),
+              transaction.initiatorCharge().getAmount(),
               transaction.initiatorCharge().getType().name(),
               transaction.initiatorCharge().getWorld(),
-              transaction.initiatorCharge().getAmount().toPlainString(),
+              transaction.initiatorCharge().getAmount(),
               transaction.initiatorCharge().getType().name()
           }
       );
@@ -660,10 +668,10 @@ public class H2Provider extends TNEDataProvider {
               transaction.recipient(),
               transaction.recipientCharge().getCurrency().name(),
               transaction.recipientCharge().getWorld(),
-              transaction.recipientCharge().getAmount().toPlainString(),
+              transaction.recipientCharge().getAmount(),
               transaction.recipientCharge().getType().name(),
               transaction.recipientCharge().getWorld(),
-              transaction.recipientCharge().getAmount().toPlainString(),
+              transaction.recipientCharge().getAmount(),
               transaction.recipientCharge().getType().name()
           }
       );
@@ -738,7 +746,7 @@ public class H2Provider extends TNEDataProvider {
     int start = 1;
     if(page > 1) start = ((page - 1) * limit) + 1;
 
-    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY cast(balance as number) DESC LIMIT ?,?;",
+    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;",
         new Object[] { world, currency, start, limit });
     try {
       while (h2().results(index).next()) {

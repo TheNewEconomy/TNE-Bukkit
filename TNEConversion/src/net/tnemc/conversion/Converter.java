@@ -1,7 +1,6 @@
 package net.tnemc.conversion;
 
 import com.github.tnerevival.core.db.DatabaseConnector;
-import com.github.tnerevival.core.db.FlatFile;
 import com.github.tnerevival.core.db.sql.H2;
 import com.github.tnerevival.core.db.sql.MySQL;
 import com.github.tnerevival.core.db.sql.SQLite;
@@ -58,10 +57,6 @@ public abstract class Converter {
 
   public H2 h2DB() {
     return (H2)db;
-  }
-
-  public FlatFile flatfileDB() {
-    return (FlatFile)db;
   }
 
   public abstract String name();
