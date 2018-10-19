@@ -41,10 +41,10 @@ public class ModuleLoader {
   public static Map<String, String> modulePaths = new HashMap<>();
 
   static {
-    modulePaths.put("conversion", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Conversion/Conversion.jar");
-    modulePaths.put("h2", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/H2/H2.jar");
-    modulePaths.put("mobs", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Mobs/Mobs.jar");
-    modulePaths.put("mysql", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/mysql/MySQL.jar");
+    modulePaths.put("conversion", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Conversion-1.12/Conversion.jar");
+    modulePaths.put("h2", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/H2-1.12/H2.jar");
+    modulePaths.put("mobs", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Mobs-1.12/Mobs.jar");
+    modulePaths.put("mysql", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/MySQL-1.12/MySQL.jar");
   }
 
   private File modulesYAML;
