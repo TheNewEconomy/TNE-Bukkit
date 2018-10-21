@@ -733,9 +733,9 @@ public class H2Provider extends TNEDataProvider {
     return count;
   }
 
-  //Page 1 = 1 -> 10
-  //Page 2 = 11 -> 20
-  //Page 3 = 21 -> 30
+  //Page 1 = 0 -> 9
+  //Page 2 = 10 -> 19
+  //Page 3 = 20 -> 29
   //Page 4 = 30 -> 39
   @Override
   public LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) throws SQLException {
@@ -743,14 +743,23 @@ public class H2Provider extends TNEDataProvider {
 
     String balanceTable = manager.getPrefix() + "_BALANCES";
 
-    int start = 1;
-    if(page > 1) start = ((page - 1) * limit) + 1;
+    int start = 0;
+    if(page > 1) start = ((page - 1) * limit);
 
-    int index = h2().executePreparedQuery("SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;",
+    final String join = "SELECT uuid, display_name, balance, world, currency FROM " + balanceTable + " INNER JOIN " + manager.getPrefix() + "_USERS USING(uuid)" +
+        " WHERE world = ? AND currency = ? AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Town") + "'" +
+        " AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Nation") +
+        "' AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Faction") + "' ORDER BY balance DESC LIMIT ?,?";
+
+    final String query = (TNE.instance().api().getBoolean("Core.Server.ThirdParty.TopThirdParty"))?
+        "SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;" :
+        join;
+
+    int index = h2().executePreparedQuery(query,
         new Object[] { world, currency, start, limit });
     try {
       while (h2().results(index).next()) {
-        balances.put(UUID.fromString(h2().results(index).getString("uuid")), new BigDecimal(h2().results(index).getString("balance")));
+        balances.put(UUID.fromString(h2().results(index).getString("uuid")), h2().results(index).getBigDecimal("balance"));
       }
       h2().closeResult(index);
     } catch (SQLException e) {

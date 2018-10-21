@@ -47,6 +47,8 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Server.ThirdParty.Town", "town-");
     configurations.put("Core.Server.ThirdParty.Nation", "nation-");
     configurations.put("Core.Server.ThirdParty.Faction", "faction-");
+    configurations.put("Core.Server.ThirdParty.McMMORewards", true);
+    configurations.put("Core.Server.ThirdParty.TopThirdParty", true);
     configurations.put("Core.Commands.Triggers", "/");
     configurations.put("Core.Commands.PayShort", true);
     configurations.put("Core.Commands.BalanceShort", true);

@@ -64,6 +64,9 @@ Core:
             #Whether or not mcmmo skill rewards that are a currency item should be disabled.
             McMMORewards: true
 
+            #Whether or not baltop should contain third-party accounts.
+            TopThirdParty: true
+
     #All configurations relating to TNE commands
     Commands:
 
