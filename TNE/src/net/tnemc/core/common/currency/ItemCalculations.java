@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Set;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -167,13 +166,34 @@ public class ItemCalculations {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     BigInteger actualAmount = BigInteger.ZERO;
-    Set<Map.Entry<Integer, TNETier>> values = (add)? currency.getTNEMinorTiers().entrySet() :
-        currency.getTNEMinorTiers().descendingMap().entrySet();
-    for(Map.Entry<Integer, TNETier> entry : values) {
+    NavigableMap<Integer, TNETier> values = (add)? currency.getTNEMinorTiers() :
+        currency.getTNEMinorTiers().descendingMap();
+    String additional = "0";
+    for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
+      BigInteger weight = BigInteger.valueOf(entry.getKey());
+
+      BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
+      BigInteger itemActual = new BigInteger(getCount(entry.getValue().getItemInfo().toStack(), inventory) + "");
+      additional = "0";
+
+      if(!add && itemActual.compareTo(itemAmount) < 0) {
+        additional = itemAmount.subtract(itemActual).toString();
+        itemAmount = itemActual;
+      }
+
+      ItemStack stack = entry.getValue().getItemInfo().toStack();
+      stack.setAmount(itemAmount.intValue());
+
+
+      actualAmount = actualAmount.add(weight.multiply(itemAmount));
+      workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
+      items.put(entry.getKey(), stack);
+      /*TNE.debug("Entry: " + entry.getKey() + " Value: " + entry.getValue().singular());
       if(entry.getKey() <= 0) continue;
       BigInteger weight = BigInteger.valueOf(entry.getKey());
 
       BigInteger itemAmount = workingAmount.divide(weight);
+      TNE.debug("itemAmount: " + itemAmount.toString());
 
       ItemStack stack = entry.getValue().getItemInfo().toStack();
       stack.setAmount(itemAmount.intValue());
@@ -182,7 +202,7 @@ public class ItemCalculations {
         actualAmount = actualAmount.add(weight.multiply(itemAmount));
         workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
         items.put(entry.getKey(), stack);
-      }
+      }*/
     }
     if(add) giveItems(items.values(), inventory);
     else takeItems(items.values(), inventory);
