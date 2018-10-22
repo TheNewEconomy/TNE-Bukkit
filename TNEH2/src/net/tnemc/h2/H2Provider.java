@@ -688,27 +688,7 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public String nullAccounts() throws SQLException {
-    String userTable = manager.getPrefix() + "_USERS";
-    String idTable = manager.getPrefix() + "_ECOIDS";
-    int index = h2().executeQuery("SELECT count(*) FROM " + userTable + " WHERE display_name is null;");
-    int userIndex = h2().executeQuery("SELECT count(*) FROM " + idTable + " WHERE username is null;");
-
-    String counts = "";
-    try {
-      while(h2().results(index).next()) {
-        counts += " Accounts: " + h2().results(index).getInt(1);
-      }
-      h2().closeResult(index);
-      while(h2().results(userIndex).next()) {
-        counts += " IDS: " + h2().results(userIndex).getInt(1);
-      }
-      h2().closeResult(userIndex);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      close();
-    }
-    return counts;
+    return "0";
   }
 
   @Override

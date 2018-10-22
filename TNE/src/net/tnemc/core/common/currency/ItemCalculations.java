@@ -197,31 +197,28 @@ public class ItemCalculations {
       items.put(entry.getKey(), stack);
       TNE.debug("actualAmount: " + actualAmount);
       TNE.debug("workingAmount: " + workingAmount);
-      /*TNE.debug("Entry: " + entry.getKey() + " Value: " + entry.getValue().singular());
-      if(entry.getKey() <= 0) continue;
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
-
-      BigInteger itemAmount = workingAmount.divide(weight);
-      TNE.debug("itemAmount: " + itemAmount.toString());
-
-      ItemStack stack = entry.getValue().getItemInfo().toStack();
-      stack.setAmount(itemAmount.intValue());
-
-      if(add || hasItem(stack, inventory)) {
-        actualAmount = actualAmount.add(weight.multiply(itemAmount));
-        workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
-        items.put(entry.getKey(), stack);
-      }*/
     }
     if(add) giveItems(items.values(), inventory);
     else takeItems(items.values(), inventory);
 
-    if(workingAmount.compareTo(BigInteger.ZERO) > 0) {
+    if(!add && workingAmount.compareTo(BigInteger.ZERO) > 0) {
       TNE.debug("REMOVE 1 MAJOR!!!!!!!!!!!!!!!!!!!!");
       BigInteger minor = new BigInteger(currency.getMinorWeight() - workingAmount.intValue() + "");
       TNE.debug("Minor to add: " + minor);
       setMajor(currency, BigInteger.ONE, false, inventory);
       setMinor(currency, minor, true, inventory);
+    }
+
+    if(add) {
+      TNE.debug("ADDDING MAJOR!!!!!!!!!!!!!!!!!!!!");
+      final BigInteger minorAmount = getCurrencyItems(currency, inventory, "minor").toBigInteger();
+      TNE.debug("Minor Amount: " + minorAmount.toString());
+      if (minorAmount.intValue() >= currency.getMinorWeight()) {
+        int major = minorAmount.intValue() / currency.getMinorWeight();
+        TNE.debug("major to add: " + major);
+        setMajor(currency, BigInteger.valueOf(major), true, inventory);
+        setMinor(currency, BigInteger.valueOf(currency.getMinorWeight() * major), false, inventory);
+      }
     }
 
     if(actualAmount.compareTo(amount) > 0) {
@@ -250,6 +247,16 @@ public class ItemCalculations {
           Integer parsed = getCount(tier.getItemInfo().toStack(), inventory) * tier.weight();
           String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
           value = value.add(new BigDecimal(convert));
+        }
+        if(type.equalsIgnoreCase("minor")) {
+          final String[] split = value.toPlainString().split("\\.");
+          TNE.debug("STRING: " + value.toPlainString());
+          TNE.debug("Split Length: " + split.length);
+          TNE.debug("SPLIT2: " + split[0]);
+          if(split.length >= 2) {
+            TNE.debug("SPLIT2: " + split[1]);
+            return new BigDecimal(split[1]);
+          }
         }
       }
     }

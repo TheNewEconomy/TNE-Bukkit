@@ -691,27 +691,7 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public String nullAccounts() throws SQLException {
-    String userTable = manager.getPrefix() + "_USERS";
-    String idTable = manager.getPrefix() + "_ECOIDS";
-    int index = mysql().executeQuery("SELECT count(*) FROM " + userTable + " WHERE display_name is null;");
-    int userIndex = mysql().executeQuery("SELECT count(*) FROM " + idTable + " WHERE username is null;");
-
-    String counts = "";
-    try {
-      while(mysql().results(index).next()) {
-        counts += " Accounts: " + mysql().results(index).getInt(1);
-      }
-      mysql().closeResult(index);
-      while(mysql().results(userIndex).next()) {
-        counts += " IDS: " + mysql().results(userIndex).getInt(1);
-      }
-      mysql().closeResult(userIndex);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      close();
-    }
-    return counts;
+    return "0";
   }
 
   @Override
