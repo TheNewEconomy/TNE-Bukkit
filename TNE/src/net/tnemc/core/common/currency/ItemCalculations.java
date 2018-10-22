@@ -59,9 +59,13 @@ public class ItemCalculations {
     TNE.debug("Holdings: " + amount.toPlainString());
     if(currency.isItem()) {
       BigDecimal old = getCurrencyItems(currency, inventory);
+      TNE.debug("Old: " + old.toPlainString());
       BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
+      TNE.debug("difference: " + difference);
       if(remove) difference = amount;
+      TNE.debug("difference: " + difference);
       String differenceString = difference.toPlainString();
+      TNE.debug("differenceString: " + differenceString);
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
       boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), "");
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
@@ -165,6 +169,7 @@ public class ItemCalculations {
   public static BigInteger setMinor(TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
+    TNE.debug("workingAmount: " + workingAmount);
     BigInteger actualAmount = BigInteger.ZERO;
     NavigableMap<Integer, TNETier> values = (add)? currency.getTNEMinorTiers() :
         currency.getTNEMinorTiers().descendingMap();
@@ -174,6 +179,8 @@ public class ItemCalculations {
 
       BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
       BigInteger itemActual = new BigInteger(getCount(entry.getValue().getItemInfo().toStack(), inventory) + "");
+      TNE.debug("itemAmount: " + itemAmount);
+      TNE.debug("itemActual: " + itemActual);
       additional = "0";
 
       if(!add && itemActual.compareTo(itemAmount) < 0) {
@@ -188,6 +195,8 @@ public class ItemCalculations {
       actualAmount = actualAmount.add(weight.multiply(itemAmount));
       workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
       items.put(entry.getKey(), stack);
+      TNE.debug("actualAmount: " + actualAmount);
+      TNE.debug("workingAmount: " + workingAmount);
       /*TNE.debug("Entry: " + entry.getKey() + " Value: " + entry.getValue().singular());
       if(entry.getKey() <= 0) continue;
       BigInteger weight = BigInteger.valueOf(entry.getKey());
@@ -207,24 +216,41 @@ public class ItemCalculations {
     if(add) giveItems(items.values(), inventory);
     else takeItems(items.values(), inventory);
 
+    if(workingAmount.compareTo(BigInteger.ZERO) > 0) {
+      TNE.debug("REMOVE 1 MAJOR!!!!!!!!!!!!!!!!!!!!");
+      BigInteger minor = new BigInteger(currency.getMinorWeight() - workingAmount.intValue() + "");
+      TNE.debug("Minor to add: " + minor);
+      setMajor(currency, BigInteger.ONE, false, inventory);
+      setMinor(currency, minor, true, inventory);
+    }
+
     if(actualAmount.compareTo(amount) > 0) {
+      TNE.debug("actualAmount: " + actualAmount);
       return actualAmount.subtract(amount);
     }
     return BigInteger.ZERO;
   }
 
   public static BigDecimal getCurrencyItems(TNECurrency currency, Inventory inventory) {
+    return getCurrencyItems(currency, inventory, "all");
+  }
+
+  public static BigDecimal getCurrencyItems(TNECurrency currency, Inventory inventory, String type) {
     BigDecimal value = BigDecimal.ZERO;
 
     if(currency.isItem()) {
-      for(TNETier tier : currency.getTNEMajorTiers().values()) {
-        value = value.add(new BigDecimal(getCount(tier.getItemInfo().toStack(), inventory) * tier.weight()));
+      if(type.equalsIgnoreCase("all") || type.equalsIgnoreCase("major")) {
+        for (TNETier tier : currency.getTNEMajorTiers().values()) {
+          value = value.add(new BigDecimal(getCount(tier.getItemInfo().toStack(), inventory) * tier.weight()));
+        }
       }
 
-      for(TNETier tier : currency.getTNEMinorTiers().values()) {
-        Integer parsed = getCount(tier.getItemInfo().toStack(), inventory) * tier.weight();
-        String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
-        value = value.add(new BigDecimal(convert));
+      if(type.equalsIgnoreCase("all") || type.equalsIgnoreCase("minor")) {
+        for (TNETier tier : currency.getTNEMinorTiers().values()) {
+          Integer parsed = getCount(tier.getItemInfo().toStack(), inventory) * tier.weight();
+          String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
+          value = value.add(new BigDecimal(convert));
+        }
       }
     }
 
