@@ -3,6 +3,7 @@ package net.tnemc.conversion;
 import net.tnemc.core.common.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,11 @@ public class ConvertConfigurations extends Configuration {
   @Override
   public List<String> node() {
     return Collections.singletonList("Conversion");
+  }
+
+  @Override
+  public File getFile() {
+    return ConversionModule.instance().getConvert();
   }
 
   @Override
