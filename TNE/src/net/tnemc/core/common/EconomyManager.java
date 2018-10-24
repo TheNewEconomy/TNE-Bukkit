@@ -56,7 +56,6 @@ public class EconomyManager {
 
   public EconomyManager() {
     this.accounts.setListener(new AccountListener());
-    TNE.instance().registerEventMap(accounts);
     currencyManager = new CurrencyManager();
     transactionManager = new TransactionManager();
     registerHandler(new CoreHoldingsHandler());

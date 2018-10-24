@@ -1,9 +1,11 @@
 package net.tnemc.core.common.configurations;
 
 import com.github.tnerevival.TNELib;
+import net.tnemc.core.TNE;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +18,8 @@ public abstract class Configuration {
 
   public abstract List<String> node();
 
+  public abstract File getFile();
+
   public Map<String, Object> configurations = new HashMap<>();
   public Map<String, Object> modified = new HashMap<>();
 
@@ -26,7 +30,15 @@ public abstract class Configuration {
       java.util.Map.Entry<String, Object> entry = it.next();
       if(configurationFile.contains(entry.getKey())) {
         setValue(entry.getKey(), configurationFile.get(entry.getKey()));
+      } else {
+        configurationFile.set(entry.getKey(), entry.getValue());
       }
+    }
+
+    try {
+      configurationFile.save(getFile());
+    } catch (IOException e) {
+      TNE.debug(e);
     }
   }
 
@@ -39,6 +51,12 @@ public abstract class Configuration {
           configurationFile.set(entry.getKey(), entry.getValue());
         }
         iterator.remove();
+      }
+
+      try {
+        configurationFile.save(getFile());
+      } catch (IOException e) {
+        TNE.debug(e);
       }
     }
   }

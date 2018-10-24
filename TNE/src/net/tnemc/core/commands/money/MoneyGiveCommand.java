@@ -69,6 +69,13 @@ public class MoneyGiveCommand extends TNECommand {
           return;
         }
 
+        if(!arguments[0].contains(",") && !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Faction")) &&
+            !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Town")) &&
+            !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Nation")) && IDFinder.getPlayer(arguments[0]) == null) {
+          new Message(TNE.transactionManager().getResult("failed").initiatorMessage()).translate(world, sender);
+          return;
+        }
+
         String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
         if(parsed.contains("Messages")) {
           Message max = new Message(parsed);

@@ -4,8 +4,28 @@ import com.github.tnerevival.core.collection.EventMap;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.common.transaction.result.*;
-import net.tnemc.core.common.transaction.type.*;
+import net.tnemc.core.common.transaction.result.TransactionResultConversion;
+import net.tnemc.core.common.transaction.result.TransactionResultFailed;
+import net.tnemc.core.common.transaction.result.TransactionResultGave;
+import net.tnemc.core.common.transaction.result.TransactionResultHoldings;
+import net.tnemc.core.common.transaction.result.TransactionResultInsufficient;
+import net.tnemc.core.common.transaction.result.TransactionResultLost;
+import net.tnemc.core.common.transaction.result.TransactionResultNoteClaimed;
+import net.tnemc.core.common.transaction.result.TransactionResultNoted;
+import net.tnemc.core.common.transaction.result.TransactionResultPaid;
+import net.tnemc.core.common.transaction.result.TransactionResultSelfPay;
+import net.tnemc.core.common.transaction.result.TransactionResultSet;
+import net.tnemc.core.common.transaction.result.TransactionResultWorldChange;
+import net.tnemc.core.common.transaction.type.TransactionConversion;
+import net.tnemc.core.common.transaction.type.TransactionGive;
+import net.tnemc.core.common.transaction.type.TransactionHasFunds;
+import net.tnemc.core.common.transaction.type.TransactionInquiry;
+import net.tnemc.core.common.transaction.type.TransactionNote;
+import net.tnemc.core.common.transaction.type.TransactionNoteClaim;
+import net.tnemc.core.common.transaction.type.TransactionPay;
+import net.tnemc.core.common.transaction.type.TransactionSet;
+import net.tnemc.core.common.transaction.type.TransactionTake;
+import net.tnemc.core.common.transaction.type.TransactionWorldChange;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
 import net.tnemc.core.event.transaction.TNEPreTransaction;
@@ -37,7 +57,6 @@ public class TransactionManager {
 
   public TransactionManager() {
     this.transactions.setListener(new TransactionListener());
-    TNE.instance().registerEventMap(transactions);
     loadResults();
     loadTypes();
   }

@@ -66,6 +66,13 @@ public class MoneyPayCommand extends TNECommand {
         return;
       }
 
+      if(!arguments[0].contains(",") && !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Faction")) &&
+         !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Town")) &&
+         !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Nation")) && IDFinder.getPlayer(arguments[0]) == null) {
+        new Message(TNE.transactionManager().getResult("failed").initiatorMessage()).translate(world, sender);
+        return;
+      }
+
       if(arguments.length >= 2) {
         String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
         TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);

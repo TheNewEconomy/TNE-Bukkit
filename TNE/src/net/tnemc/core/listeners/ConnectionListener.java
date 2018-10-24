@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerChannelEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -48,6 +49,14 @@ public class ConnectionListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
+  public void onPreJoin(AsyncPlayerPreLoginEvent event) {
+    if(TNE.isDuper(event.getUniqueId().toString()) || TNE.isDuper(event.getAddress().getHostAddress())) {
+      event.setKickMessage(ChatColor.RED + "The New Economy Global Ban: You've been identified as a known currency duper. Appeal at http://discord.tnemc.net");
+      event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onChannel(final PlayerChannelEvent event) {
     //System.out.println("Player channel registered! Name: " + event.getChannel());
     if(TNE.useMod) {
@@ -63,6 +72,7 @@ public class ConnectionListener implements Listener {
     TNE.debug("Player null: " + (event.getPlayer() == null));
     long startTime = System.nanoTime();
     final Player player = event.getPlayer();
+
     UUID id = null;
     if(!Bukkit.getServer().getOnlineMode()) {
       id = IDFinder.ecoID(player.getName());
@@ -89,7 +99,7 @@ public class ConnectionListener implements Listener {
     }
     long endTime = System.nanoTime();
     long duration = (endTime - startTime);
-    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+    //System.out.println("Connection Event took " + (duration/1000000) + "ms");
     startTime = System.nanoTime();
 
     TNE.manager().addAccount(account);
@@ -103,7 +113,7 @@ public class ConnectionListener implements Listener {
     }
     endTime = System.nanoTime();
     duration = (endTime - startTime);
-    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+    //System.out.println("Connection Event took " + (duration/1000000) + "ms");
     startTime = System.nanoTime();
 
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
@@ -115,7 +125,7 @@ public class ConnectionListener implements Listener {
     }
     endTime = System.nanoTime();
     duration = (endTime - startTime);
-    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+    //System.out.println("Connection Event took " + (duration/1000000) + "ms");
     startTime = System.nanoTime();
 
     if(!first) {

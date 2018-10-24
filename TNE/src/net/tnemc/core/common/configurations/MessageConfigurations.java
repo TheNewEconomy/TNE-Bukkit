@@ -37,6 +37,11 @@ public class MessageConfigurations extends Configuration {
   }
 
   @Override
+  public File getFile() {
+    return TNE.instance().getMessagesFile();
+  }
+
+  @Override
   public void load(FileConfiguration configurationFile) {
     configurations.put("Messages.General.NoPerm", "<red>I'm sorry, but you do not have permission to do that.");
     configurations.put("Messages.General.NoPlayer", "<red>Unable to locate player \"$player\"!");

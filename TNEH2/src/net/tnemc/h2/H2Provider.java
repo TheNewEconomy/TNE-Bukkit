@@ -213,20 +213,25 @@ public class H2Provider extends TNEDataProvider {
     //Nothing to convert(?)
     if(version < TNE.instance().currentSaveVersion) {
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
-          "`id` INTEGER NOT NULL AUTO_INCREMENT," +
-          "`uuid` VARCHAR(36) NOT NULL," +
-          "`server_name` VARCHAR(100) NOT NULL," +
-          "`world` VARCHAR(50) NOT NULL," +
-          "`currency` VARCHAR(100) NOT NULL," +
-          "`balance` DECIMAL(49,4)" +
-          ") ENGINE = INNODB;");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
+      if(version < 1114.0) {
+        h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+            "`id` INTEGER NOT NULL AUTO_INCREMENT," +
+            "`uuid` VARCHAR(36) NOT NULL," +
+            "`server_name` VARCHAR(100) NOT NULL," +
+            "`world` VARCHAR(50) NOT NULL," +
+            "`currency` VARCHAR(100) NOT NULL," +
+            "`balance` DECIMAL(49,4)" +
+            ") ENGINE = INNODB;");
+        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
 
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ALTER COLUMN `balance` DECIMAL(49,4)");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_initiator_balance` DECIMAL(49,4)");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_recipient_balance` DECIMAL(49,4)");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
+        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ALTER COLUMN `balance` DECIMAL(49,4)");
+        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_initiator_balance` DECIMAL(49,4)");
+        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_recipient_balance` DECIMAL(49,4)");
+        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
+      }
+
+      if(version < 1115.0) {
+      }
     }
   }
 
@@ -726,14 +731,15 @@ public class H2Provider extends TNEDataProvider {
     int start = 0;
     if(page > 1) start = ((page - 1) * limit);
 
-    final String join = "SELECT uuid, display_name, balance, world, currency FROM " + balanceTable + " INNER JOIN " + manager.getPrefix() + "_USERS USING(uuid)" +
+    final String complex = "SELECT " + manager.getPrefix() + "_BALANCES.uuid, display_name, balance, world, currency FROM " +
+        balanceTable + ", " + manager.getPrefix() + "_USERS" +
         " WHERE world = ? AND currency = ? AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Town") + "'" +
         " AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Nation") +
         "' AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Faction") + "' ORDER BY balance DESC LIMIT ?,?";
 
     final String query = (TNE.instance().api().getBoolean("Core.Server.ThirdParty.TopThirdParty"))?
         "SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;" :
-        join;
+        complex;
 
     int index = h2().executePreparedQuery(query,
         new Object[] { world, currency, start, limit });

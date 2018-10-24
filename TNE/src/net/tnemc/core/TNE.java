@@ -3,8 +3,6 @@ package net.tnemc.core;
 import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
-import com.github.tnerevival.core.collection.EventList;
-import com.github.tnerevival.core.collection.EventMap;
 import net.milkbowl.vault.economy.Economy;
 import net.tnemc.core.commands.CommandManager;
 import net.tnemc.core.commands.TNECommand;
@@ -89,6 +87,8 @@ public class TNE extends TNELib {
   private List<UUID> tnemodUsers = new ArrayList<>();
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
+  private List<String> dupers;
+
   private EconomyManager manager;
   private MenuManager menuManager;
   private static net.tnemc.core.common.configurations.ConfigurationManager configurations;
@@ -122,11 +122,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta114";
-
-  //Cache-related collections
-  private List<EventList> cacheLists = new ArrayList<>();
-  private List<EventMap> cacheMaps = new ArrayList<>();
+  public static final String build = "1Beta115";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -164,24 +160,14 @@ public class TNE extends TNELib {
     if(blacklisted) {
       return;
     }
+
+    dupers = MISCUtils.dupers();
     super.onEnable();
 
     configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
     commandManager = new CommandManager();
 
-    //Create Debug Log
-    /*try {
-      LocalDateTime now = LocalDateTime.now();
-      int year = now.getYear();
-      int month = now.getMonthValue();
-      int day = now.getDayOfMonth();
-      new File(getDataFolder(), "debug/").mkdir();
-      new File(getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt").createNewFile();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }*/
-
-    currentSaveVersion = 1114.0;
+    currentSaveVersion = 1115.0;
 
     setUuidManager(new TNEUUIDManager());
 
@@ -310,7 +296,7 @@ public class TNE extends TNELib {
     TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
-    saveManager().addVersion(1114.0, true);
+    saveManager().addVersion(1115.0, true);
 
     TNE.debug("Initializing Save Manager.");
     try {
@@ -407,13 +393,6 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
-
-    /*try {
-      writeMobs();
-      //writeItems();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }*/
     getLogger().info("The New Economy has been enabled!");
   }
 
@@ -486,6 +465,13 @@ public class TNE extends TNELib {
     }
   }
 
+  public static boolean isDuper(String requested) {
+    TNE.debug("=========== Start[TNE.isDuper] ==============");
+    TNE.debug("Requested: " + requested);
+    TNE.debug("Requested Hash: " + MISCUtils.md5(requested));
+    return instance().dupers.contains(MISCUtils.md5(requested));
+  }
+
   public static TNE instance() {
     return (TNE)instance;
   }
@@ -547,14 +533,6 @@ public class TNE extends TNELib {
 
   public static net.tnemc.core.common.configurations.ConfigurationManager configurations() {
     return configurations;
-  }
-
-  public void registerEventList(EventList list) {
-    cacheLists.add(list);
-  }
-
-  public void registerEventMap(EventMap map) {
-    cacheMaps.add(map);
   }
 
   public Economy_TheNewEconomy vault() {
@@ -649,28 +627,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    /*LocalDateTime now = LocalDateTime.now();
-    int year = now.getYear();
-    int month = now.getMonthValue();
-    int day = now.getDayOfMonth();
-    int hour = now.getHour();
-    int minute = now.getMinute();
-    int second = now.getSecond();
-    int mil = now.get(ChronoField.MILLI_OF_SECOND);
-    String time = "[" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + mil + "] ";
-    if(consoleDebug) {
-      TNE.debug(message);
-    } else {
-      try {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(TNE.instance().getDataFolder(), "debug/debug-" + year + "-" + month + "-" + day + ".txt"), true));
-        writer.write(time + message + System.getProperty("line.separator"));
-
-        writer.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }*/
-    System.out.println(message);
+    //System.out.println(message);
   }
 
   public void loadConfigurations() {
@@ -772,5 +729,13 @@ public class TNE extends TNELib {
 
   public Map<String, WorldManager> getWorldManagersMap() {
     return worldManagers;
+  }
+
+  public File getMessagesFile() {
+    return messagesFile;
+  }
+
+  public File getWorlds() {
+    return worlds;
   }
 }

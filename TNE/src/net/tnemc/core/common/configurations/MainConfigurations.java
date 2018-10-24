@@ -3,6 +3,7 @@ package net.tnemc.core.common.configurations;
 import net.tnemc.core.TNE;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class MainConfigurations  extends Configuration {
   }
 
   @Override
+  public File getFile() {
+    return new File(TNE.instance().getDataFolder(), "config.yml");
+  }
+
+  @Override
   public void load(FileConfiguration configurationFile) {
     configurations.put("Core.UUID", true);
     configurations.put("Core.Multiworld", false);
@@ -39,7 +45,6 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Server.CurrencyCrafting", true);
     configurations.put("Core.Server.CurrencyTrading", true);
     configurations.put("Core.Server.MobDrop", true);
-    configurations.put("Core.Server.McMMORewards", true);
     configurations.put("Core.Server.Account.Enabled", true);
     configurations.put("Core.Server.Account.Name", "Server_Account");
     configurations.put("Core.Server.Account.Balance", 500);

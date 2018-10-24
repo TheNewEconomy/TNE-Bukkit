@@ -4,6 +4,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,11 @@ public class WorldConfigurations extends Configuration {
     List<String> nodes = new ArrayList<>();
     nodes.add("Worlds");
     return nodes;
+  }
+
+  @Override
+  public File getFile() {
+    return TNE.instance().getWorlds();
   }
 
   @Override

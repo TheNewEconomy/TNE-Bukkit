@@ -26,7 +26,7 @@ public class MCMMOListener implements Listener {
   }
 
   public void onFishReward(final McMMOPlayerFishingTreasureEvent event) {
-    if(TNE.instance().api().getBoolean("Core.Server.McMMORewards")) {
+    if(TNE.instance().api().getBoolean("Core.Server.ThirdParty.McMMORewards")) {
       String world = WorldFinder.getWorld(event.getPlayer(), WorldVariant.BALANCE);
       Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, event.getTreasure());
       if (currency.isPresent()) event.setCancelled(true);

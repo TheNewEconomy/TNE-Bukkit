@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,11 @@ public class MobConfiguration extends Configuration {
   @Override
   public List<String> node() {
     return Collections.singletonList("Mobs");
+  }
+
+  @Override
+  public File getFile() {
+    return MobsModule.instance().mobs;
   }
 
   @Override

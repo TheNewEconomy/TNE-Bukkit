@@ -23,7 +23,6 @@ public class TNEUUIDManager extends UUIDManager {
 
   public TNEUUIDManager() {
     uuids.setListener(new IDListener());
-    TNE.instance().registerEventMap(uuids);
   }
 
 

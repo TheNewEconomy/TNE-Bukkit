@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -21,6 +22,8 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -314,6 +317,45 @@ public class MISCUtils {
       return blacklist;
     }
     return list;
+  }
+
+  public static List<String> dupers() {
+    List<String> list = new ArrayList<>();
+    boolean failed = false;
+    try {
+      URL url = new URL("https://creatorfromhell.com/tne/dupers.txt");
+      Scanner s = new Scanner(url.openStream());
+
+      String line;
+      while(s.hasNext()) {
+        line = s.nextLine();
+        if(line.trim().equalsIgnoreCase("")) continue;
+        list.add(line.toUpperCase());
+      }
+    }
+    catch(IOException ex) {
+      failed = true;
+    }
+    if(failed) {
+      List<String> dupers = new ArrayList<>();
+      return dupers;
+    }
+    return list;
+  }
+
+  public static String md5(String toDigest) {
+    String toReturn = "";
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      md.update(toDigest.getBytes());
+      byte[] digest = md.digest();
+      toReturn = DatatypeConverter.printHexBinary(digest).toUpperCase();
+      md = null;
+      digest = null;
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
+    return toReturn;
   }
 
   public static String pastebinUpload(String name, StringBuilder content) {
