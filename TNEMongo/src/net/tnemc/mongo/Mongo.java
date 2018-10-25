@@ -1,4 +1,4 @@
-package net.tnemc.cassandra;
+package net.tnemc.mongo;
 
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.SQLDatabase;
@@ -13,28 +13,28 @@ import com.github.tnerevival.core.db.SQLDatabase;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class Cassandra extends SQLDatabase {
-  public Cassandra(DataManager manager) {
+public class Mongo extends SQLDatabase {
+  public Mongo(DataManager manager) {
     super(manager);
   }
 
   @Override
   public String getDriver() {
-    return "com.simba.cassandra.jdbc42.Driver";
+    return "mongodb.jdbc.MongoDriver";
   }
 
   @Override
   public Boolean dataSource() {
-    return true;
+    return false;
   }
 
   @Override
   public String dataSourceURL() {
-    return "com.simba.cassandra.jdbc42.DataSource";
+    return "";
   }
 
   @Override
   public String getURL(String file, String host, int port, String database) {
-    return "jdbc:cassandra://" + host + ":" + port + ";";
+    return "jdbc:mongo://" + host + ":" + port + "/" + database + "_writeable";
   }
 }
