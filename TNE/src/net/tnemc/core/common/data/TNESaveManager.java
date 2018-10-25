@@ -29,6 +29,7 @@ public class TNESaveManager extends SaveManager {
 
   @Override
   public void initialize() throws SQLException {
+    manager.getDb().connector().initialize(manager);
     TNE.debug("Format: " + manager.getFormat());
     TNE.debug("Manager providers size: " + manager.getProviders().size());
     TNE.debug("Manager providers size: " + manager.getProviders().keySet().toString());
