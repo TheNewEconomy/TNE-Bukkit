@@ -42,4 +42,3 @@ public class MongoModule extends Module {
     return providers;
   }
 }
-

@@ -64,6 +64,21 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Transactions.Timezone", "US/Eastern");
     configurations.put("Core.AutoSaver.Enabled", true);
     configurations.put("Core.AutoSaver.Interval", 600);
+    
+    configurations.put("Core.Currency.Info.Advanced", false);
+    configurations.put("Core.Currency.Basic.Server", "Main Server");
+    configurations.put("Core.Currency.Basic.Major_Single", "Dollar");
+    configurations.put("Core.Currency.Basic.Major_Plural", "Dollars");
+    configurations.put("Core.Currency.Basic.Minor_Single", "Cent");
+    configurations.put("Core.Currency.Basic.Minor_Plural", "Cents");
+    configurations.put("Core.Currency.Basic.Prefixes", "kMGTPEZYXWVUN₮");
+    configurations.put("Core.Currency.Basic.Symbol", "$");
+    configurations.put("Core.Currency.Basic.ItemCurrency", false);
+    configurations.put("Core.Currency.Basic.ExperienceCurrency", false);
+    configurations.put("Core.Currency.Basic.Options.Format", "<symbol><major.amount><decimal><minor.amount>");
+    configurations.put("Core.Currency.Basic.Options.MaxBalance", "900000000000000000000000000000000000000000000");
+    configurations.put("Core.Currency.Basic.Options.Balance", "200.0");
+    configurations.put("Core.Currency.Basic.Options.Decimal", ".");
 
     configurations.put("Core.World.EnableChangeFee", false);
     configurations.put("Core.World.ChangeFee", 5.0);

@@ -152,6 +152,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Admin.Purge", "/tne purge - Deletes all player accounts that have the default balance");
     configurations.put("Messages.Commands.Admin.Recreate", "/tne recreate - Attempts to recreate database tables. WARNING: This will delete all data in the database.");
     configurations.put("Messages.Commands.Admin.Reload", "/tne reload <configuration> - Saves modifications made via command, and reloads a configuration file.<newline>- Configuration ~ The identifier of the configuration to reload. Default is all.");
+    configurations.put("Messages.Commands.Admin.Report", "/tne report <issue description> - Prepares a bug report for you to be linked in the TNE support chat, or on github.");
     configurations.put("Messages.Commands.Admin.Reset", "/tne reset - Deletes all economy-related data from the database.");
     configurations.put("Messages.Commands.Admin.Restore", "/tne restore - Restores all balances that are located in extracted.yml after /tne extract.");
     configurations.put("Messages.Commands.Admin.Save", "/tne save - Force saves all TNE data.");

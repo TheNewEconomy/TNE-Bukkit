@@ -27,6 +27,7 @@ public class AdminCommand extends TNECommand {
     subCommands.add(new AdminMenuCommand(plugin));
     subCommands.add(new AdminPurgeCommand(plugin));
     subCommands.add(new AdminReloadCommand(plugin));
+    subCommands.add(new AdminReportCommand(plugin));
     subCommands.add(new AdminResetCommand(plugin));
     subCommands.add(new AdminRestoreCommand(plugin));
     subCommands.add(new AdminSaveCommand(plugin));

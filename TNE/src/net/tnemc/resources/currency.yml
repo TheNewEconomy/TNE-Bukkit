@@ -1,7 +1,7 @@
 #All configurations relating to currency.
 Currencies:
 
-    Currency:
+    USD:
 
         #Configurations relating to basic information about this currency.
         Info:
@@ -23,10 +23,10 @@ Currencies:
 
            #The plural form of this currency's minor denomination.
            Minor_Plural: "Dollars"
+
            #The SI Prefixes used when <shorten> is used for the currency's format.
            #TNE's default prefixes are based off of the Internation Bureau of Weights and Measures official list.
-           #http://www.unitarium.com/si-prefixes along with a few addition shorts for Octillion, Nonillion,
-           #and Decillion.
+           #http://www.unitarium.com/si-prefixes along with a few addition shorts for above Nonillion.
            #The order in which the characters are:
            #Thousand - k
            #Million - M
@@ -39,7 +39,10 @@ Currencies:
            #Octillion - X
            #Nonillion - W
            #Decillion - V
-           Prefixes: 'kMGTPEZYXWV'
+           #Undecillion - U
+           #Nondecillion - N
+           #Nonvigintillion - ₮
+           Prefixes: 'kMGTPEZYXWVUN₮'
 
            #The character to use as the symbol for this currency.
            Symbol: '$'
@@ -71,8 +74,12 @@ Currencies:
            Format: <symbol><major.amount><decimal><minor.amount>
 
            #The maximum balance possible for this currency.
-           # Maximum possible value: 900000000000000000000000000000000000
-           MaxBalance: 900000000000000000000000000000000000
+           # Maximum possible value: 900000000000000000000000000000000000000000000
+           MaxBalance: 900000000000000000000000000000000000000000000
+
+           #The initial balance for accounts.
+           #Will be used if no world-specific configurations are found if multiworld is enabled
+           Balance: 200.0
 
            #The character to use as the decimal place holder.
            Decimal: .
@@ -80,10 +87,6 @@ Currencies:
            #The amount of digits to display after the decimal character.
            #The maximum amount of places is 4
            DecimalPlaces: 2
-
-           #The initial balance for accounts.
-           #Will be used if no world-specific configurations are found if multiworld is enabled
-           Balance: 200.0
 
            #Would you like to use experience as the currency?
            Experience: false
@@ -125,7 +128,7 @@ Currencies:
         #All configurations relating to this currency's tiers.
         Tiers:
 
-           Tier:
+           One:
 
               #Configurations relating to basic information about this currency tier.
               Info:
@@ -164,10 +167,10 @@ Currencies:
                  #Optional.
                  Enchantments:
 
-                    #The format is Enchantment Name: Enchantment Level, or * for all levels
-                    ExampleEnchantment: '*'
+                    #The format is - enchantment name
+                    - example_enchant
 
-           Tier:
+           Penny:
 
               #Configurations relating to basic information about this currency tier.
               Info:
@@ -206,5 +209,5 @@ Currencies:
                  #Optional.
                  Enchantments:
 
-                    #The format is Enchantment Name: Enchantment Level, or * for all levels
-                    ExampleEnchantment: '*'
+                    #The format is - enchantment name
+                    - example_enchant
