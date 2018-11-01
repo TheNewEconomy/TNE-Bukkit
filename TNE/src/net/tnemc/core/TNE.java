@@ -679,10 +679,16 @@ public class TNE extends TNELib {
   }
 
   private void setConfigurationDefaults() throws UnsupportedEncodingException {
+    Reader currenciesStream = new InputStreamReader(this.getResource("currency.yml"), "UTF8");
     Reader itemsStream = new InputStreamReader(this.getResource("items.yml"), "UTF8");
     Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
     Reader playersStream = new InputStreamReader(this.getResource("players.yml"), "UTF8");
     Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
+    if (currenciesStream != null && !currencies.exists()) {
+      YamlConfiguration config = YamlConfiguration.loadConfiguration(currenciesStream);
+      currencyConfigurations.setDefaults(config);
+    }
+
     if (itemsStream != null && !items.exists()) {
       YamlConfiguration config = YamlConfiguration.loadConfiguration(itemsStream);
       itemConfigurations.setDefaults(config);

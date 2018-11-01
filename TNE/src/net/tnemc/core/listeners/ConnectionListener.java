@@ -15,7 +15,6 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -137,11 +136,11 @@ public class ConnectionListener implements Listener {
     }
     TNE.manager().addAccount(account);
 
-    if(TNE.instance().developers.contains(player.getUniqueId().toString())) {
+    /*if(TNE.instance().developers.contains(player.getUniqueId().toString())) {
       Bukkit.getOnlinePlayers().forEach((p)->{
         p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 10f, 1f);
       });
-    }
+    }*/
     //final String uuidString = id.toString();
 
     /*if(TNE.useMod) {

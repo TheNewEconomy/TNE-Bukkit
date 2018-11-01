@@ -63,11 +63,13 @@ public class AdminReportCommand extends TNECommand {
     final int year = now.getYear();
     final int month = now.getMonthValue();
     final int day = now.getDayOfMonth();
+    final int minute = now.getMinute();
 
     StringBuilder content = new StringBuilder();
     String name = "";
 
-    name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-server.txt";
+    TNE.instance().getLogger().info("Logging report.");
+    name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-" + minute + "-server.txt";
     try (BufferedReader br = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(),"../../logs/latest.log")))){
       String line;
       while ((line = br.readLine()) != null) {
@@ -76,41 +78,47 @@ public class AdminReportCommand extends TNECommand {
     } catch (Exception e) {
       TNE.debug(e);
     }
-    serverLog = MISCUtils.pastebinUpload(name, content);
+    serverLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
-    name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-config.txt";
+    content = new StringBuilder();
+    name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-" + minute + "-config.txt";
     try (BufferedReader br = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(),"config.yml")))){
       String line;
       while ((line = br.readLine()) != null) {
-        if(line.contains("Database")) continue;
+        if(line.toLowerCase().contains("mysql") || line.toLowerCase().contains("host") ||
+            line.toLowerCase().contains("user") || line.toLowerCase().contains("pass") ||
+            line.toLowerCase().contains("port")) continue;
         content.append(line + System.getProperty("line.separator"));
       }
     } catch (Exception e) {
       TNE.debug(e);
     }
-    configLog = MISCUtils.pastebinUpload(name, content);
+    configLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
-    if(!serverLog.contains("pastebin.com") ||
-       !configLog.contains("pastebin.com")) {
+    System.out.println("ConfigLog: " + configLog);
+    System.out.println("serverLog: " + serverLog);
+
+    if(!configLog.contains("pastebin.com")) {
       sender.sendMessage(ChatColor.RED + "Something went wrong while preparing your report.");
       return false;
     }
 
     content = new StringBuilder();
     name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-report.txt";
-    content.append("Report Description: " + String.join(" ", arguments));
-    content.append("TNE Version: " + TNE.instance().getDescription().getVersion());
-    content.append("TNE Build: " + TNE.build);
-    content.append("Modules Loaded: " + String.join(", ", TNE.loader().getModules().keySet()));
-    content.append("API: " + Bukkit.getName());
-    content.append("API Version: " + Bukkit.getVersion());
-    content.append("Online Mode: " + Bukkit.getOnlineMode());
-    content.append("config.yml: " + configLog);
+    content.append("Report Description: " + String.join(" ", arguments) + System.getProperty("line.separator"));
+    content.append("TNE Version: " + TNE.instance().getDescription().getVersion() + System.getProperty("line.separator"));
+    content.append("TNE Build: " + TNE.build + System.getProperty("line.separator"));
+    content.append("Modules Loaded: " + String.join(", ", TNE.loader().getModules().keySet()) + System.getProperty("line.separator"));
+    content.append("API: " + Bukkit.getName() + System.getProperty("line.separator"));
+    content.append("API Version: " + Bukkit.getVersion() + System.getProperty("line.separator"));
+    content.append("Online Mode: " + Bukkit.getOnlineMode() + System.getProperty("line.separator"));
+    content.append("config.yml: " + configLog + System.getProperty("line.separator"));
     content.append("latest.log: " + serverLog);
 
-    reportLog = MISCUtils.pastebinUpload(name, content);
+    reportLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
     succeeded = reportLog.contains("pastebin.com");
+    System.out.println("reportLog: " + reportLog);
 
     if(succeeded) {
       sender.sendMessage(ChatColor.WHITE + "Report URL: " + reportLog);

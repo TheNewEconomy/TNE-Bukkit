@@ -118,7 +118,7 @@ public class CurrencyFormatter {
 
   private static String shorten(TNECurrency currency, BigDecimal balance) {
     final BigInteger wholeNum = balance.toBigInteger();
-    if (wholeNum.compareTo(new BigInteger("1000")) == 0) {
+    if (wholeNum.compareTo(new BigInteger("1009")) <= 0) {
       return "" + wholeNum.toString();
     }
     final String whole = wholeNum.toString();
@@ -126,12 +126,14 @@ public class CurrencyFormatter {
     final int posInclude = ((whole.length() % 3) == 0)? 3 : whole.length() % 3;
     String wholeSub = whole.substring(0, posInclude);
 
-    String extra = whole.substring(posInclude, posInclude + 2);
-    if(Integer.valueOf(extra) > 0) {
-      if(extra.endsWith("0")) {
-        extra = extra.substring(0, extra.length() - 1);
+    if(whole.length() > 3) {
+      String extra = whole.substring(posInclude, posInclude + 2);
+      if (Integer.valueOf(extra) > 0) {
+        if (extra.endsWith("0")) {
+          extra = extra.substring(0, extra.length() - 1);
+        }
+        wholeSub = wholeSub + "." + extra;
       }
-      wholeSub = wholeSub + "." + extra;
     }
 
     return wholeSub + currency.getPrefixes().charAt(pos);

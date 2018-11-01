@@ -186,7 +186,7 @@ public class MISCUtils {
     }));
 
     String name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-idextracted";
-    String pasteURL = MISCUtils.pastebinUpload(name, content);
+    String pasteURL = MISCUtils.pastebinUpload(name, "yaml", content);
 
     String result = "Successfully extracted ECOIDS data." + ((pasteURL.contains("pastebin.com"))? " Uploaded backup to " + pasteURL : "");
     sender.sendMessage(result);
@@ -249,7 +249,7 @@ public class MISCUtils {
     } catch (Exception e) {
       TNE.debug(e);
     }
-    String pasteURL = MISCUtils.pastebinUpload(name, content);
+    String pasteURL = MISCUtils.pastebinUpload(name, "yaml", content);
 
     String result = "Successfully extracted player balance data." + ((pasteURL.contains("pastebin.com"))? " Uploaded backup to " + pasteURL : "");
     sender.sendMessage(result);
@@ -272,7 +272,7 @@ public class MISCUtils {
     for(int i = 0; i < 40; i++) {
       builder.append(IDFinder.getID(player.getName()).toString() + System.getProperty("line.separator"));
     }
-    player.sendMessage("IDFinder Test Results: " + pastebinUpload("IDFinder Test", builder));
+    player.sendMessage("IDFinder Test Results: " + pastebinUpload("IDFinder Test", "yaml", builder));
   }
 
   public static void commandTest(Player player) {
@@ -358,14 +358,14 @@ public class MISCUtils {
     return toReturn;
   }
 
-  public static String pastebinUpload(String name, StringBuilder content) {
+  public static String pastebinUpload(String name, String format, StringBuilder content) {
     final String base = "https://pastebin.com/api/api_post.php";
     final String devKey = "b73948f0d7d8cb449085dc90168a5deb";
-    final String format = "txt";
     final String expiration = "N";
     final String privateCode = "1";
 
     String parameters = "api_option=paste&api_paste_private=" + privateCode +
+        "&api_paste_format=" + format +
         "&api_expire_date=" + expiration +
         "&api_dev_key=" + devKey;
 

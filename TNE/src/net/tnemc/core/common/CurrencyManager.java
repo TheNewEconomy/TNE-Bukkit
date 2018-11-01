@@ -121,7 +121,7 @@ public class CurrencyManager {
   }
 
   private void loadBasicTiers(TNECurrency currency, FileConfiguration configuration, boolean item) {
-    final String baseNode = "Core.Currency.Basic" + ((item)? "Items" : "Virtual");
+    final String baseNode = "Core.Currency.Basic." + ((item)? "Items" : "Virtual");
     Set<String> tiers = configuration.getConfigurationSection(baseNode).getKeys(false);
 
     for (String tierName : tiers) {
@@ -159,7 +159,7 @@ public class CurrencyManager {
   }
 
   private void loadCurrency(FileConfiguration configuration, boolean world, String worldName) {
-    String curBase = ((world)? "Worlds." + worldName : "Core") + ".Currencies";
+    String curBase = ((world)? "Worlds." + worldName + "." : "") + "Currencies";
     if(configuration.contains(curBase)) {
 
       Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);

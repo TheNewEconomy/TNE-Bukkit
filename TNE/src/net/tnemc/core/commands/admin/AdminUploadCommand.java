@@ -75,7 +75,7 @@ public class AdminUploadCommand extends TNECommand {
     } catch (Exception e) {
       TNE.debug(e);
     }
-    serverLog = MISCUtils.pastebinUpload(name, content);
+    serverLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
     content = new StringBuilder();
     name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-debug.txt";
@@ -87,7 +87,7 @@ public class AdminUploadCommand extends TNECommand {
     } catch (Exception e) {
       TNE.debug(e);
     }
-    debugLog = MISCUtils.pastebinUpload(name, content);
+    debugLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
     succeeded = serverLog.contains("pastebin.com") || debugLog.contains("pastebin.com");
 
