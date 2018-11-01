@@ -75,15 +75,25 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.Currency.Basic.Symbol", "$");
     configurations.put("Core.Currency.Basic.ItemCurrency", false);
     configurations.put("Core.Currency.Basic.ExperienceCurrency", false);
+
+
     configurations.put("Core.Currency.Basic.Options.Format", "<symbol><major.amount><decimal><minor.amount>");
     configurations.put("Core.Currency.Basic.Options.MaxBalance", "900000000000000000000000000000000000000000000");
     configurations.put("Core.Currency.Basic.Options.Balance", "200.0");
     configurations.put("Core.Currency.Basic.Options.Decimal", ".");
+    configurations.put("Core.Currency.Basic.Options.EnderChest", true);
+    configurations.put("Core.Currency.Basic.Options.Major_Separate", true);
+    configurations.put("Core.Currency.Basic.Options.Major_Separator", ",");
+    configurations.put("Core.Currency.Basic.Options.Minor_Weight", 100);
+
+    configurations.put("Core.Currency.Basic.Note.Notable", false);
+    configurations.put("Core.Currency.Basic.Note.Fee", 0.00);
+    configurations.put("Core.Currency.Basic.Note.Minimum", 0.00);
 
     configurations.put("Core.World.EnableChangeFee", false);
     configurations.put("Core.World.ChangeFee", 5.0);
 
-    configurations.put("Core.Database.Type", "flatfile");
+    configurations.put("Core.Database.Type", "h2");
     configurations.put("Core.Database.Prefix", "TNE");
     configurations.put("Core.Database.Backup", true);
     configurations.put("Core.Database.File", "economy.db");

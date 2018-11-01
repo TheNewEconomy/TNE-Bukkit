@@ -105,11 +105,13 @@ public class TNE extends TNELib {
   private TNEAPI api;
 
   // Files & Custom Configuration Files
+  private File currencies;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
+  private FileConfiguration currencyConfigurations;
   private FileConfiguration itemConfigurations;
   private FileConfiguration messageConfigurations;
   private FileConfiguration playerConfigurations;
@@ -122,7 +124,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta115";
+  public static final String build = "2Beta115";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -602,10 +604,12 @@ public class TNE extends TNELib {
   }
 
   private void initializeConfigurations() {
+    currencies = new File(getDataFolder(), "currency.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
     players = new File(getDataFolder(), "players.yml");
     worlds = new File(getDataFolder(), "worlds.yml");
+    currencyConfigurations = YamlConfiguration.loadConfiguration(currencies);
     itemConfigurations = YamlConfiguration.loadConfiguration(items);
     messageConfigurations = YamlConfiguration.loadConfiguration(messagesFile);
     playerConfigurations = YamlConfiguration.loadConfiguration(players);
@@ -638,6 +642,7 @@ public class TNE extends TNELib {
     if(!new File(getDataFolder(), "config.yml").exists()) {
       getConfig().options().copyDefaults(true);
     }
+    currencyConfigurations.options().copyDefaults(true);
     itemConfigurations.options().copyDefaults(true);
     messageConfigurations.options().copyDefaults(true);
     playerConfigurations.options().copyDefaults(true);
@@ -653,6 +658,9 @@ public class TNE extends TNELib {
       loader.getModules().forEach((key, value)->{
         value.getModule().saveConfigurations();
       });
+      if(!check || !currencies.exists() || configurations().changed.contains(currencyConfigurations.getName())) {
+        currencyConfigurations.save(currencies);
+      }
       if(!check || !items.exists() || configurations().changed.contains(itemConfigurations.getName())) {
         itemConfigurations.save(items);
       }
@@ -721,6 +729,10 @@ public class TNE extends TNELib {
       }
     }
     return null;
+  }
+
+  public FileConfiguration getCurrencyConfigurations() {
+    return currencyConfigurations;
   }
 
   public Collection<WorldManager> getWorldManagers() {

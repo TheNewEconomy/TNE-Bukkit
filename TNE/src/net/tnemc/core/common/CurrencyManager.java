@@ -49,7 +49,7 @@ public class CurrencyManager {
     largestSupported = new BigDecimal("900000000000000000000000000000000000000000000");
 
     if(TNE.instance().api().getBoolean("Core.Currency.Info.Advanced")) {
-      loadCurrency(TNE.instance().getConfig(), false, TNE.instance().defaultWorld);
+      loadCurrency(TNE.instance().getCurrencyConfigurations(), false, TNE.instance().defaultWorld);
     } else {
       loadBasic();
     }
