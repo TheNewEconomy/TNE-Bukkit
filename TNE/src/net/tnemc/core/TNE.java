@@ -337,7 +337,7 @@ public class TNE extends TNELib {
       saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
     }
 
-    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.McMMORewards")) {
+    if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.ThirdParty.McMMORewards")) {
       getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
