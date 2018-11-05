@@ -82,11 +82,11 @@ public class H2Provider extends TNEDataProvider {
   @Override
   public Boolean first() throws SQLException {
     String table = manager.getPrefix() + "_INFO";
-    boolean first = false;
+    boolean first = true;
     Connection connection = null;
     try {
       connection = h2().getDataSource().getConnection();
-      first = connection.getMetaData().getTables(null, null, table, null).next();
+      first = !connection.getMetaData().getTables(null, null, table, null).next();
     } catch(Exception e) {
       TNE.debug(e);
     } finally {
