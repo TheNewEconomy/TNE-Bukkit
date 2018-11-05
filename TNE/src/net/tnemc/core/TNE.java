@@ -124,7 +124,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "2Beta115";
+  public static final String build = "3Beta115";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -631,7 +631,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    //System.out.println(message);
+    System.out.println(message);
   }
 
   public void loadConfigurations() {

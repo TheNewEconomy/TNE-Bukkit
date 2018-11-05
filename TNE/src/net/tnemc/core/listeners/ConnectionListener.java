@@ -57,7 +57,6 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onChannel(final PlayerChannelEvent event) {
-    //System.out.println("Player channel registered! Name: " + event.getChannel());
     if(TNE.useMod) {
       if (event.getChannel().equalsIgnoreCase("tnemod")) {
         TNE.instance().addModUser(event.getPlayer().getUniqueId());
@@ -67,114 +66,80 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
-    TNE.debug("=====START ConnectionListener.onJoin =====");
-    TNE.debug("Player null: " + (event.getPlayer() == null));
-    long startTime = System.nanoTime();
-    final Player player = event.getPlayer();
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      TNE.debug("=====START ConnectionListener.onJoin =====");
+      TNE.debug("Player null: " + (event.getPlayer() == null));
+      final Player player = event.getPlayer();
 
-    UUID id = null;
-    if(!Bukkit.getServer().getOnlineMode()) {
-      id = IDFinder.ecoID(player.getName());
-    } else {
-      id = IDFinder.getID(player);
-    }
-    final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
-    TNE.debug(id + "");
-    boolean first = !TNE.manager().exists(id);
-    TNEAccount account;
-
-    if(first) {
-      if(!TNE.manager().createAccount(id, player.getName())) {
-        TNE.debug("Unable to create player account for " + player.getName());
+      UUID id = null;
+      if(!Bukkit.getServer().getOnlineMode()) {
+        id = IDFinder.ecoID(player.getName());
+      } else {
+        id = IDFinder.getID(player);
       }
-    }
-    account = TNE.manager().getAccount(id);
+      final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+      TNE.debug(id + "");
+      boolean first = !TNE.manager().exists(id);
+      TNEAccount account;
 
-    if (!first) {
-      if(!account.displayName().equals(player.getName())) {
-        account.setDisplayName(player.getName());
-        TNE.instance().getUuidManager().addUUID(player.getName(), id);
-      }
-    }
-    long endTime = System.nanoTime();
-    long duration = (endTime - startTime);
-    //System.out.println("Connection Event took " + (duration/1000000) + "ms");
-    startTime = System.nanoTime();
-
-    TNE.manager().addAccount(account);
-    if(first) account.initializeHoldings(world);
-    if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
-      String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
-      if(TNE.instance().updater.getRelease().equals(ReleaseType.PRERELEASE)) {
-        message = ChatColor.GREEN + "[TNE] Prerelease! Thank you for testing TNE Build: " + TNE.instance().updater.getCurrentBuild() + ".";
-      }
-      player.sendMessage(message);
-    }
-    endTime = System.nanoTime();
-    duration = (endTime - startTime);
-    //System.out.println("Connection Event took " + (duration/1000000) + "ms");
-    startTime = System.nanoTime();
-
-    boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
-    if(!noEconomy) {
-      TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-        ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value, true, true), player.getInventory(), false);
-      });
-    }
-    endTime = System.nanoTime();
-    duration = (endTime - startTime);
-    //System.out.println("Connection Event took " + (duration/1000000) + "ms");
-    startTime = System.nanoTime();
-
-    if(!first) {
-      try {
-        account.getHistory().populateAway(account.getLastOnline());
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
-    TNE.manager().addAccount(account);
-
-    /*if(TNE.instance().developers.contains(player.getUniqueId().toString())) {
-      Bukkit.getOnlinePlayers().forEach((p)->{
-        p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 10f, 1f);
-      });
-    }*/
-    //final String uuidString = id.toString();
-
-    /*if(TNE.useMod) {
-      final UUID uuid = id;
-      Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), () -> {
-        if (!TNE.instance().isModUser(uuid)) {
-          Bukkit.getScheduler().runTask(TNE.instance(), () -> {
-            event.getPlayer().kickPlayer(ChatColor.RED + "You must have the TNE Forge Mod installed.");
-          });
-        } else {
-          Bukkit.getScheduler().runTask(TNE.instance(), () -> {
-            TNE.instance().removeModUser(uuid);
-          });
+      if(first) {
+        if(!TNE.manager().createAccount(id, player.getName())) {
+          TNE.debug("Unable to create player account for " + player.getName());
         }
-      }, 40L);
-    }*/
-    endTime = System.nanoTime();
-    duration = (endTime - startTime);
-    System.out.println("Connection Event took " + (duration/1000000) + "ms");
+      }
+      account = TNE.manager().getAccount(id);
+
+      if (!first) {
+        if(!account.displayName().equals(player.getName())) {
+          account.setDisplayName(player.getName());
+          TNE.instance().getUuidManager().addUUID(player.getName(), id);
+        }
+      }
+
+      TNE.manager().addAccount(account);
+      if(first) account.initializeHoldings(world);
+      if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
+        String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
+        if(TNE.instance().updater.getRelease().equals(ReleaseType.PRERELEASE)) {
+          message = ChatColor.GREEN + "[TNE] Prerelease! Thank you for testing TNE Build: " + TNE.instance().updater.getCurrentBuild() + ".";
+        }
+        player.sendMessage(message);
+      }
+
+      boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+      if(!noEconomy) {
+        TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
+          ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+              account.getHoldings(world, value, true, true), player.getInventory(), false);
+        });
+      }
+
+      if(!first) {
+        try {
+          account.getHistory().populateAway(account.getLastOnline());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
+      TNE.manager().addAccount(account);
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(final PlayerQuitEvent event) {
-    final Player player = event.getPlayer();
-    UUID id = IDFinder.getID(player);
-    if(TNE.manager().exists(id)) {
-      TNEAccount account = TNEAccount.getAccount(id.toString());
-      if(player == null) TNE.debug("Player is null");
-      account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), true, player.getInventory());
-      account.setLastOnline(new Date().getTime());
-      account.getHistory().clearAway();
-      TNE.manager().addAccount(account);
-      TNE.manager().removeAccount(id);
-    }
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      final Player player = event.getPlayer();
+      UUID id = IDFinder.getID(player);
+      if(TNE.manager().exists(id)) {
+        TNEAccount account = TNEAccount.getAccount(id.toString());
+        if(player == null) TNE.debug("Player is null");
+        account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), true, player.getInventory());
+        account.setLastOnline(new Date().getTime());
+        account.getHistory().clearAway();
+        TNE.manager().addAccount(account);
+        TNE.manager().removeAccount(id);
+      }
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
