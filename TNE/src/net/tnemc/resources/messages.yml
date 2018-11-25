@@ -155,6 +155,7 @@ Messages:
           Build: "/tne build - Displays the version of TNE currently running."
           Caveats: "/tne caveats - Displays all known caveats for this version of TNE."
           Create: "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account."
+          Debug: "/tne debug - Toggles console debug mode."
           Delete: "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner."
           Extract: "/tne extract - Extracts all player balances with their username attached for database-related debugging."
           ID: "/tne id <player> - Retrieves a player's TNE UUID.<newline>- Player ~ The player you wish to discover the UUID of."

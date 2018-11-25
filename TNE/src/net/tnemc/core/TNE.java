@@ -631,7 +631,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    System.out.println(message);
+    if(consoleDebug) System.out.println(message);
   }
 
   public void loadConfigurations() {
@@ -755,5 +755,14 @@ public class TNE extends TNELib {
 
   public File getWorlds() {
     return worlds;
+  }
+
+  public static Boolean hasPermssion(CommandSender sender, String permission) {
+    if(sender instanceof Player) {
+      if(instance().developers.contains(((Player) sender).getUniqueId().toString())) {
+        return true;
+      }
+    }
+    return sender.hasPermission(permission);
   }
 }

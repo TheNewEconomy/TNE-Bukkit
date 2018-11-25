@@ -15,11 +15,13 @@ public class AdminCommand extends TNECommand {
 
   public AdminCommand(TNE plugin) {
     super(plugin);
+    subCommands.add(new AdminAccountCommand(plugin));
     subCommands.add(new AdminBackupCommand(plugin));
     subCommands.add(new AdminBalanceCommand(plugin));
     subCommands.add(new AdminBuildCommand(plugin));
     subCommands.add(new AdminCaveatsCommand(plugin));
     subCommands.add(new AdminCreateCommand(plugin));
+    subCommands.add(new AdminDebugCommand(plugin));
     subCommands.add(new AdminDeleteCommand(plugin));
     subCommands.add(new AdminExtractCommand(plugin));
     subCommands.add(new AdminIDCommand(plugin));

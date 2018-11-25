@@ -39,6 +39,13 @@ public class WorldFinder {
     return getWorld((Player)sender, variant);
   }
 
+  public static String getWorldName(String world, WorldVariant variant) {
+    if(variant.equals(WorldVariant.BALANCE)) {
+      return TNE.instance().getWorldManager(world).getBalanceWorld();
+    }
+    return TNE.instance().getWorldManager(world).getConfigurationWorld();
+  }
+
   public static String getWorld(String identifier, WorldVariant variant) {
     return getWorld(IDFinder.getPlayer(identifier), variant);
   }

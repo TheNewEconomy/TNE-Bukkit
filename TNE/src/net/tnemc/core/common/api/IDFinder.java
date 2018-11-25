@@ -35,8 +35,8 @@ public class IDFinder {
       if(IDFinder.getID(TNE.instance().consoleName) != null && identifier.equalsIgnoreCase(IDFinder.getID(TNE.instance().consoleName).toString())) {
         return TNE.instance().consoleName;
       }
-      UUID id = UUID.fromString(identifier);
-      OfflinePlayer player = Bukkit.getOfflinePlayer(id);
+      final UUID id = UUID.fromString(identifier);
+      final OfflinePlayer player = Bukkit.getOfflinePlayer(id);
       if(player == null) {
         return MojangAPI.getPlayerUsername(id);
       }
@@ -87,7 +87,7 @@ public class IDFinder {
   }
 
   public static Player getPlayer(String identifier) {
-    UUID id = getID(identifier);
+    final UUID id = getID(identifier);
     if(!TNELib.instance().useUUID) {
       return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
     }
@@ -97,7 +97,7 @@ public class IDFinder {
     return Bukkit.getPlayer(id);
   }
 
-  private static OfflinePlayer getOffline(String identifier, boolean username) {
+  public static OfflinePlayer getOffline(String identifier, boolean username) {
     if(username) return Bukkit.getOfflinePlayer(identifier);
     UUID id = getID(identifier);
 
@@ -143,7 +143,7 @@ public class IDFinder {
       return id;
     }
 
-    if(identifier.contains("empire-")) {
+    if(identifier.contains("kingdom-")) {
       TNELib.debug("Empire");
       UUID id = ecoID(identifier);
       checkSpecial(id);

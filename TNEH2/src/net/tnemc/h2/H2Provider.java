@@ -42,6 +42,7 @@ public class H2Provider extends TNEDataProvider {
   private String prefix = manager.getPrefix();
 
   private final String ID_LOAD = "SELECT uuid FROM " + prefix + "_ECOIDS WHERE username = ? LIMIT 1";
+  private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
@@ -256,6 +257,32 @@ public class H2Provider extends TNEDataProvider {
   }
 
   @Override
+  public String loadUsername(String identifier) throws SQLException {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet results = null;
+    try {
+      connection = h2().getDataSource().getConnection();
+      statement = connection.prepareStatement(ID_LOAD_USERNAME);
+      results = h2().executePreparedQuery(statement, new Object[] {
+          identifier
+      });
+      if(results.next()) {
+        return results.getString("username");
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    } finally {
+      try {
+        h2().close(connection, statement, results);
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
+    }
+    return null;
+  }
+
+  @Override
   public UUID loadID(String username) {
     Connection connection = null;
     PreparedStatement statement = null;
@@ -282,7 +309,41 @@ public class H2Provider extends TNEDataProvider {
   }
 
   @Override
+  public int accountCount(String username) {
+    StringBuilder builder = new StringBuilder();
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet results = null;
+    try {
+      connection = h2().getDataSource().getConnection();
+      statement = connection.prepareStatement("SELECT uuid FROM " + manager.getPrefix() + "_USERS WHERE display_name = ?");
+      results = h2().executePreparedQuery(statement, new Object[] {
+          username
+      });
+      while(results.next()) {
+        if(builder.length() > 0) {
+          builder.append(",");
+        }
+        builder.append(results.getString("uuid"));
+      }
+    } catch(SQLException ignore) {
+
+    } finally {
+      try {
+        if(statement != null) statement.close();
+        if(connection != null) connection.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    return builder.toString().split(",").length;
+  }
+
+
+  @Override
   public Map<String, UUID> loadEconomyIDS() {
+
+    TNE.debug(Thread.currentThread().getStackTrace());
     Map<String, UUID> ids = new HashMap<>();
 
     String table = manager.getPrefix() + "_ECOIDS";

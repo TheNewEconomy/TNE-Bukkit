@@ -4,6 +4,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
+import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
@@ -12,8 +13,12 @@ import net.tnemc.core.event.currency.TNECurrencyTierLoadedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
@@ -166,13 +171,13 @@ public class CurrencyManager {
       TNE.debug(currencies.toArray().toString());
 
       for(String cur : currencies) {
-        if (configuration.contains("Core.Currencies." + cur + ".Options.Disabled") &&
-            configuration.getBoolean("Core.Currencies." + cur + ".Options.Disabled")) {
+        final String base = curBase + "." + cur;
+        if (configuration.contains(base + ".Options.Disabled") &&
+            configuration.getBoolean(base + ".Options.Disabled")) {
               return;
         }
 
         TNE.debug("[Loop]Loading Currency: " + cur + " for world: " + worldName);
-        String base = curBase + "." + cur;
 
         //Currency Info Configurations.
         final String server = configuration.getString(base + ".Info.Server", "Main Server");
@@ -204,6 +209,10 @@ public class CurrencyManager {
 
         //Currency Conversion Configurations.
         final Double rate = configuration.getDouble(base + ".Conversion.Rate", 1.0);
+
+        System.out.println(cur + ": " + format);
+        System.out.println(cur + ": " + decimalPlaces);
+        System.out.println(cur + ": " + symbol);
 
         TNECurrency currency = new TNECurrency();
         currency.setIdentifier(configuration.getString(base + ".Info.Identifier"));
@@ -268,6 +277,37 @@ public class CurrencyManager {
         if(configuration.contains(tierBase + ".Options.Enchantments")) {
           //System.out.println("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());
           item.setEnchantments(configuration.getStringList(tierBase + ".Options.Enchantments"));
+        }
+      }
+
+      if(configuration.contains(tierBase + ".Options.Crafting")) {
+        if(configuration.getBoolean(tierBase + ".Options.Crafting.Enabled", false)) {
+          final boolean shapeless = configuration.getBoolean(tierBase + ".Options.Crafting.Shapeless", false);
+          final ItemStack stack = item.toStack();
+          stack.setAmount(0);
+          Recipe recipe = null;
+          if(shapeless) {
+            recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency + "_" + tierName), stack);
+          } else {
+            final List<String> shape = configuration.getStringList(tierBase + ".Options.Crafting.Recipe");
+            recipe = new ShapedRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency + "_" + tierName), stack);
+            ((ShapedRecipe)recipe).shape(shape.toArray(new String[shape.size()]));
+
+          }
+
+          if(recipe != null) {
+            for(String material : configuration.getStringList(tierBase + ".Options.Crafting.Recipe")) {
+              final String[] split = material.split(":");
+              if(split.length >= 2) {
+                if(shapeless) {
+                  ((ShapelessRecipe)recipe).addIngredient(MaterialHelper.getMaterial(split[1]));
+                } else {
+                  ((ShapedRecipe)recipe).setIngredient(split[0].charAt(0), MaterialHelper.getMaterial(split[1]));
+                }
+              }
+            }
+            Bukkit.addRecipe(recipe);
+          }
         }
       }
 

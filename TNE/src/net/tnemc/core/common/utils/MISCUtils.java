@@ -91,7 +91,8 @@ public class MISCUtils {
   }
 
   public static Boolean isOnline(UUID id, String world) {
-    if(IDFinder.getPlayer(id.toString()) != null) {
+    final Player player = IDFinder.getPlayer(id.toString());
+    if(player != null) {
       return WorldFinder.getWorld(id, WorldVariant.BALANCE).equalsIgnoreCase(world);
     }
     return false;

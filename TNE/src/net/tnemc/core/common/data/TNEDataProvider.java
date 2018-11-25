@@ -34,10 +34,15 @@ public abstract class TNEDataProvider extends DataProvider {
   }
 
   public abstract Boolean backupData();
+  public abstract String loadUsername(String identifier) throws SQLException;
   public abstract UUID loadID(String username) throws SQLException;
   public abstract Map<String, UUID> loadEconomyIDS() throws SQLException;
   public void saveIDS(Map<String, UUID> ids) throws SQLException {
 
+  }
+
+  public int accountCount(String username) {
+    return 0;
   }
 
   public abstract void createTables(List<String> tables) throws SQLException;
@@ -76,7 +81,7 @@ public abstract class TNEDataProvider extends DataProvider {
   public void load(Double version) throws SQLException {
     preLoad(version);
 
-    if(!supportUpdate()) {
+    /*if(!supportUpdate()) {
       TNE.debug("Inside !supportUpdate() || manager.isCacheData()");
       Collection<TNEAccount> accounts = loadAccounts();
       TNE.debug("loadAccounts() size: " + accounts.size());
@@ -95,7 +100,7 @@ public abstract class TNEDataProvider extends DataProvider {
 
       Collection<TNETransaction> transactions = loadTransactions();
       transactions.forEach((value)->TNE.transactionManager().add(value));
-    }
+    }*/
   }
 
   @Override
@@ -111,19 +116,19 @@ public abstract class TNEDataProvider extends DataProvider {
       TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
         UUID id = IDFinder.getID(player.getName());
         TNEAccount account = TNE.manager().getAccount(id);
-        account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), false);
+        account.saveItemCurrency(WorldFinder.getWorld(player.getName(), WorldVariant.BALANCE), false);
         accounts.add(account);
         ids.put(account.displayName(), account.identifier());
       });
       saveIDS(ids);
       saveAccounts(accounts);
-    } else {
+    }/* else {
       TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
         UUID id = IDFinder.getID(player);
-        TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE));
-      });
+        TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(player.getName(), WorldVariant.BALANCE));
+    });
 
-      TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
+      /*TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
       for(Map.Entry<String, UUID> entry : TNE.uuidManager().getUuids().entrySet()) {
         TNE.debug("Saving Offline id: " + entry.getKey() + ", " + entry.getValue().toString());
         saveID(entry.getKey(), entry.getValue());
@@ -131,7 +136,7 @@ public abstract class TNEDataProvider extends DataProvider {
       for(TNETransaction transaction : TNE.transactionManager().getTransactions().values()) {
         saveTransaction(transaction);
       }
-    }
+    }*/
     long end = System.nanoTime();
     TNE.debug("Saving data finished in milis: " + ((end - start) / 1e6));
   }

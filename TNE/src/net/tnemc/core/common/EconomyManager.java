@@ -40,6 +40,8 @@ public class EconomyManager {
    */
   private EventMap<UUID, TNEAccount> accounts = new EventMap<>();
 
+  private List<UUID> dead = new ArrayList<>();
+
   /**
    * The {@link CurrencyManager currency manager}, which manages all loaded currencies, and their respective tiers.
    */
@@ -66,6 +68,18 @@ public class EconomyManager {
     List<HoldingsHandler> handlers = holdingsHandlers.getOrDefault(handler.priority(), new ArrayList<>());
     handlers.add(handler);
     holdingsHandlers.put(handler.priority(), handlers);
+  }
+
+  public void addDead(UUID id) {
+    dead.add(id);
+  }
+
+  public void removeDead(UUID id) {
+    dead.remove(id);
+  }
+
+  public boolean isDead(UUID id) {
+    return dead.contains(id);
   }
 
   public CurrencyManager currencyManager() {

@@ -2,10 +2,10 @@ package net.tnemc.core.common;
 
 import com.github.tnerevival.core.UUIDManager;
 import com.github.tnerevival.core.collection.EventMap;
-import com.github.tnerevival.core.utils.Utilities;
 import net.tnemc.core.TNE;
 import net.tnemc.core.listeners.collections.IDListener;
 
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class TNEUUIDManager extends UUIDManager {
 
   @Override
   public boolean hasUsername(UUID uuid) {
-    return uuids.containsValue(uuid);
+    return getUsername(uuid) != null;
   }
 
   @Override
@@ -38,7 +38,7 @@ public class TNEUUIDManager extends UUIDManager {
 
   @Override
   public boolean containsUUID(UUID uuid) {
-    return uuids.containsValue(uuid);
+    return getUsername(uuid) != null;
   }
 
   @Override
@@ -59,12 +59,17 @@ public class TNEUUIDManager extends UUIDManager {
 
   @Override
   public String getUsername(UUID uuid) {
-    return (String)Utilities.getKey(uuids, uuid);
+    return getUsername(uuid.toString());
   }
 
   @Override
   public String getUsername(String identifier) {
-    return (String)Utilities.getKey(uuids, UUID.fromString(identifier));
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().loadUsername(identifier);
+    } catch (SQLException e) {
+      TNE.debug(e);
+    }
+    return null;
   }
 
   @Override
@@ -72,9 +77,9 @@ public class TNEUUIDManager extends UUIDManager {
     uuids.remove(username);
   }
 
-  public EventMap<String, UUID> getUuids() {
+  /*public EventMap<String, UUID> getUuids() {
     return uuids;
-  }
+  }*/
 
   public void addAll(Map<String, UUID> toAdd) {
     uuids.putAll(toAdd);

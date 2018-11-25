@@ -170,6 +170,30 @@ Currencies:
                     #The format is - enchantment name
                     - example_enchant
 
+                 #Configurations relating to crafting this currency tier.
+                 Crafting:
+
+                    #If custom crafting recipes for this tier are enabled.
+                    Enabled: false
+
+                    #Whether or not this recipe is shapeless.
+                    Shapeless: false
+
+                    #The materials that represent the characters used in the recipe option.
+                    #Format: Character:Material Name
+                    Materials:
+
+                      - "X:GOLD_NUGGET"
+                      - "Y:PAPER"
+
+                    #List of this recipe's representing characters.
+                    #maximum of three rows, where a space is an empty slot for shaped recipes.
+                    Recipe:
+
+                      - " X "
+                      - "XYX"
+                      - " X "
+
            Penny:
 
               #Configurations relating to basic information about this currency tier.
@@ -211,3 +235,24 @@ Currencies:
 
                     #The format is - enchantment name
                     - example_enchant
+
+                 #Configurations relating to crafting this currency tier.
+                 Crafting:
+
+                    #If custom crafting recipes for this tier are enabled.
+                    Enabled: false
+
+                    #Whether or not this recipe is shapeless.
+                    Shapeless: false
+
+                    #The materials that represent the characters used in the recipe option.
+                    #Format: Character:Material Name
+                    Materials:
+
+                      - "X:IRON_NUGGET"
+                      - "Y:PAPER"
+
+                    #List of this recipe's representing characters.
+                    #maximum of three rows, where a space is an empty slot for shaped recipes.
+                    Recipe:
+                      - "XYX"

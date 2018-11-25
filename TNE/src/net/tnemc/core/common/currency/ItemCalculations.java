@@ -67,7 +67,7 @@ public class ItemCalculations {
       String differenceString = difference.toPlainString();
       TNE.debug("differenceString: " + differenceString);
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorld(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), "");
+      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), "");
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
       if(remove) add = false;
 
@@ -234,6 +234,7 @@ public class ItemCalculations {
 
   public static BigDecimal getCurrencyItems(TNECurrency currency, Inventory inventory, String type) {
     BigDecimal value = BigDecimal.ZERO;
+    BigInteger minor = BigInteger.ZERO;
 
     if(currency.isItem()) {
       if(type.equalsIgnoreCase("all") || type.equalsIgnoreCase("major")) {
@@ -244,28 +245,26 @@ public class ItemCalculations {
 
       if(type.equalsIgnoreCase("all") || type.equalsIgnoreCase("minor")) {
         for (TNETier tier : currency.getTNEMinorTiers().values()) {
-          Integer parsed = getCount(tier.getItemInfo().toStack(), inventory) * tier.weight();
-          String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
-          value = value.add(new BigDecimal(convert));
+          Integer parsed = (getCount(tier.getItemInfo().toStack(), inventory) * tier.weight());
+          //String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
+          minor = minor.add(new BigInteger(parsed + ""));
         }
         if(type.equalsIgnoreCase("minor")) {
-          final String[] split = value.toPlainString().split("\\.");
-          TNE.debug("STRING: " + value.toPlainString());
-          TNE.debug("Split Length: " + split.length);
-          TNE.debug("SPLIT2: " + split[0]);
-          if(split.length >= 2) {
-            TNE.debug("SPLIT2: " + split[1]);
-            return new BigDecimal(split[1]);
-          }
+          return new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue()));
         }
+        //System.out.println("Value: " + value.toPlainString());
+        //System.out.println("Minor: " + minor.toString());
+        final BigInteger major = minor.divide(new BigInteger(currency.getMinorWeight() + ""));
+        //System.out.println("Major: " + major.toString());
+        minor = minor.subtract(major.multiply(new BigInteger(currency.getMinorWeight() + "")));
+        //System.out.println("Minor: " + minor.toString());
+        value = value.add(new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue())));
+        value = value.add(new BigDecimal(major.toString()));
+        //System.out.println("Value: " + value.toPlainString());
       }
     }
 
     return value;
-  }
-
-  public static boolean hasItem(ItemStack stack, Inventory inventory) {
-    return inventory.contains(stack, stack.getAmount());
   }
 
   public static void takeItems(Collection<ItemStack> items, Inventory inventory) {
@@ -315,7 +314,7 @@ public class ItemCalculations {
     }
 
     if(left > 0 && inventory instanceof PlayerInventory) {
-      ItemStack helmet = ((PlayerInventory) inventory).getHelmet();
+      final ItemStack helmet = ((PlayerInventory) inventory).getHelmet();
       if(helmet != null && helmet.isSimilar(stack)) {
         if(helmet.getAmount() <= left) {
           left -= helmet.getAmount();
@@ -324,6 +323,21 @@ public class ItemCalculations {
           helmet.setAmount(helmet.getAmount() - left);
           ((PlayerInventory) inventory).setHelmet(helmet);
           left = 0;
+        }
+      }
+
+      if(left > 0) {
+        final ItemStack hand = ((PlayerInventory) inventory).getItemInOffHand();
+
+        if(hand != null && hand.isSimilar(stack)) {
+          if (hand.getAmount() <= left) {
+            left -= hand.getAmount();
+            ((PlayerInventory) inventory).setItemInOffHand(null);
+          } else {
+            hand.setAmount(hand.getAmount() - left);
+            ((PlayerInventory) inventory).setItemInOffHand(hand);
+            left = 0;
+          }
         }
       }
     }

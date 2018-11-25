@@ -146,6 +146,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Admin.Caveats", "/tne caveats - Displays all known caveats for this version of TNE.");
     configurations.put("Messages.Commands.Admin.Create", "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account.");
     configurations.put("Messages.Commands.Admin.Delete", "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner.");
+    configurations.put("Messages.Commands.Admin.Debug", "/tne debug - Toggles console debug mode.");
     configurations.put("Messages.Commands.Admin.Extract", "/tne extract - Extracts all player balances with their username attached for database-related debugging.");
     configurations.put("Messages.Commands.Admin.ID", "/tne id <player> - Retrieves a player's TNE UUID.<newline>- Player ~ The player you wish to discover the UUID of.");
     configurations.put("Messages.Commands.Admin.Menu", "/tne menu <player> - Opens a GUI for performing basic transactions on the specified player.<newline>-Player ~ The name/uuid of the player you wish to perform transactions with in the GUI.");
@@ -192,7 +193,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Money.Top", "/money top [page] [currency:name] [world:world] [limit:#] - A list of players with the highest balances.<newline>[page] - The page number to view. Defaults to 1.<newline>[currency] - The name of the currency to get balances from. Defaults to world default. Use overall for all currencies.<newline>[world] - The world name you wish to filter, or all for every world. Defaults to current world. Use overall for all worlds.<newline>[limit] - Limit changes how many players are displayed. Defaults to 10.");
 
     configurations.put("Messages.Commands.Transaction.Away", "/transaction away [page:#] - Displays transactions that you missed since the last time you were on.");
-  configurations.put("Messages.Commands.Transaction.History", "/transaction history [player:name] [page:#] [world:name/all] - See a detailed break down of your transaction history.<newline>- Page ~ The page number you wish to view.<newline>- World ~ The world name you wish to filter, or all for every world. Defaults to current world.<newline>- Player ~ Then name of the player's history you wish to see.");
+    configurations.put("Messages.Commands.Transaction.History", "/transaction history [player:name] [page:#] [world:name/all] - See a detailed break down of your transaction history.<newline>- Page ~ The page number you wish to view.<newline>- World ~ The world name you wish to filter, or all for every world. Defaults to current world.<newline>- Player ~ Then name of the player's history you wish to see.");
     configurations.put("Messages.Commands.Transaction.Info", "/transaction info <uuid> - Displays information about a transaction.<newline>- UUID ~ The id of the transaction.");
     configurations.put("Messages.Commands.Transaction.Void", "/transaction void <uuid> - Undoes a previously completed transaction.<newline>- UUID ~ The id of the transaction.");
 

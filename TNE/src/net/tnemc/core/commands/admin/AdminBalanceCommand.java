@@ -63,7 +63,7 @@ public class AdminBalanceCommand extends TNECommand {
     if(arguments.length >= 1 && arguments.length <= 3) {
 
       UUID id = IDFinder.getID(arguments[0]);
-      String world = (arguments.length >= 2) ? WorldFinder.getWorld(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+      String world = (arguments.length >= 2) ? WorldFinder.getWorldName(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currencyName = (arguments.length == 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 

@@ -94,6 +94,10 @@ public class ConnectionListener implements Listener {
           account.setDisplayName(player.getName());
           TNE.instance().getUuidManager().addUUID(player.getName(), id);
         }
+        /*if(player.isDead()) {
+          TNE.manager().addDead(player.getUniqueId());
+          return;
+        }*/
       }
 
       TNE.manager().addAccount(account);
@@ -127,13 +131,13 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(final PlayerQuitEvent event) {
+    final Player player = event.getPlayer();
+    final UUID id = IDFinder.getID(player);
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-      final Player player = event.getPlayer();
-      UUID id = IDFinder.getID(player);
       if(TNE.manager().exists(id)) {
         TNEAccount account = TNEAccount.getAccount(id.toString());
         if(player == null) TNE.debug("Player is null");
-        account.saveItemCurrency(WorldFinder.getWorld(id, WorldVariant.BALANCE), true, player.getInventory());
+        account.saveItemCurrency(WorldFinder.getWorld(player, WorldVariant.BALANCE), true, player.getInventory());
         account.setLastOnline(new Date().getTime());
         account.getHistory().clearAway();
         TNE.manager().addAccount(account);
@@ -194,4 +198,26 @@ public class ConnectionListener implements Listener {
     String world = event.getWorld().getName();
     TNE.manager().currencyManager().initializeWorld(world);
   }
+
+  /*@EventHandler(priority = EventPriority.HIGHEST)
+  public void onRespawn(final PlayerRespawnEvent event) {
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      final Player player = event.getPlayer();
+      final UUID id = event.getPlayer().getUniqueId();
+      if(TNE.manager().isDead(id)) {
+        TNE.manager().removeDead(id);
+        final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+
+        TNEAccount account = TNE.manager().getAccount(id);
+
+        boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+        if(!noEconomy) {
+          TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
+            ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+                account.getHoldings(world, value, true, true), player.getInventory(), false);
+          });
+        }
+      }
+    });
+  }*/
 }

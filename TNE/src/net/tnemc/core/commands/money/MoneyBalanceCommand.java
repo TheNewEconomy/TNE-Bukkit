@@ -119,7 +119,7 @@ public class MoneyBalanceCommand extends TNECommand {
         balances.forEach((curName, balance)->{
           Message m = new Message("Messages.Money.HoldingsMultiSingle");
           m.addVariable("$currency", curName);
-          m.addVariable("$amount", balance.toPlainString());
+          m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(currencyName)));
           m.translate(w, sender, id.toString());
         });
         TNE.debug("===END MoneyBalanceCommand ===");
