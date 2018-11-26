@@ -131,8 +131,8 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(final PlayerQuitEvent event) {
+    final UUID id = event.getPlayer().getUniqueId();
     final Player player = event.getPlayer();
-    final UUID id = IDFinder.getID(player);
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       if(TNE.manager().exists(id)) {
         TNEAccount account = TNEAccount.getAccount(id.toString());
