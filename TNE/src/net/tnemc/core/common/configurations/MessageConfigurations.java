@@ -149,6 +149,7 @@ public class MessageConfigurations extends Configuration {
     configurations.put("Messages.Commands.Admin.Debug", "/tne debug - Toggles console debug mode.");
     configurations.put("Messages.Commands.Admin.Extract", "/tne extract - Extracts all player balances with their username attached for database-related debugging.");
     configurations.put("Messages.Commands.Admin.ID", "/tne id <player> - Retrieves a player's TNE UUID.<newline>- Player ~ The player you wish to discover the UUID of.");
+    configurations.put("Messages.Commands.Admin.Maintenance", "/tne maintenance - Toggles economy maintenance mode, which disables all economy functionality.");
     configurations.put("Messages.Commands.Admin.Menu", "/tne menu <player> - Opens a GUI for performing basic transactions on the specified player.<newline>-Player ~ The name/uuid of the player you wish to perform transactions with in the GUI.");
     configurations.put("Messages.Commands.Admin.Purge", "/tne purge - Deletes all player accounts that have the default balance");
     configurations.put("Messages.Commands.Admin.Recreate", "/tne recreate - Attempts to recreate database tables. WARNING: This will delete all data in the database.");

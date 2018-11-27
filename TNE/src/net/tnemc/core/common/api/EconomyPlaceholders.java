@@ -81,8 +81,8 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
       if(args.length >= 2) {
         return CurrencyFormatter.format(
             TNE.instance().defaultWorld,
-            args[2],
-            TNE.instance().api().getHoldings(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[2]))
+            args[1],
+            TNE.instance().api().getHoldings(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1]))
         );
       }
     }

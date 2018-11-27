@@ -139,6 +139,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse withdrawPlayer(String username, String world, double amount) {
+    if(TNE.maintenance) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Economy is in maintenance mode.");
     if(!hasAccount(username)) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "That account does not exist!");
     }
@@ -173,6 +174,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse depositPlayer(String username, String world, double amount) {
+    if(TNE.maintenance) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Economy is in maintenance mode.");
     if(!hasAccount(username)) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "That account does not exist!");
     }

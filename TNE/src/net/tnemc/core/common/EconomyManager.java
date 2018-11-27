@@ -121,6 +121,7 @@ public class EconomyManager {
   }
 
   public boolean createAccount(UUID id, String displayName) {
+    System.out.println("Creating account for " + displayName + " with ID of " + id.toString());
     TNE.debug("=====START EconomyManager.createAccount =====");
     TNE.debug("UUID: " + id.toString());
     TNEAccount account = new TNEAccount(id, displayName);

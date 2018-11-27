@@ -159,6 +159,7 @@ Messages:
           Delete: "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner."
           Extract: "/tne extract - Extracts all player balances with their username attached for database-related debugging."
           ID: "/tne id <player> - Retrieves a player's TNE UUID.<newline>- Player ~ The player you wish to discover the UUID of."
+          Maintenance: "tne maintenance - Toggles economy maintenance mode, which disables all economy functionality."
           Menu: "/tne menu <player> - Opens a GUI for performing basic transactions on the specified player.<newline>-Player ~ The name/uuid of the player you wish to perform transactions with in the GUI."
           Purge: "/tne purge - Deletes all player accounts that have the default balance"
           Recreate: "/tne recreate - Attempts to recreate database tables. WARNING: This will delete all data in the database."

@@ -51,7 +51,7 @@ public class EChestHandler implements HoldingsHandler {
   @Override
   public BigDecimal removeHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount) {
     if(currency.canEnderChest()) {
-      Player player = Bukkit.getPlayer(account);
+      final Player player = Bukkit.getPlayer(account);
       if(player != null) {
         BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
 

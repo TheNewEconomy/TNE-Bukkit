@@ -71,12 +71,7 @@ public class ConnectionListener implements Listener {
       TNE.debug("Player null: " + (event.getPlayer() == null));
       final Player player = event.getPlayer();
 
-      UUID id = null;
-      if(!Bukkit.getServer().getOnlineMode()) {
-        id = IDFinder.ecoID(player.getName());
-      } else {
-        id = IDFinder.getID(player);
-      }
+      final UUID id = IDFinder.getID(player);
       final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
       TNE.debug(id + "");
       boolean first = !TNE.manager().exists(id);
