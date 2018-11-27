@@ -106,7 +106,11 @@ public class MoneyTopCommand extends TNECommand {
       while(it.hasNext()) {
         Map.Entry<UUID, BigDecimal> entry = it.next();
         topEntry.addVariable("$player", TNE.manager().getAccount(entry.getKey()).displayName());
-        topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue()));
+        if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatTop")) {
+          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue()));
+        } else {
+          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), "<symbol><major.amount><decimal><minor.amount>"));
+        }
         message.add(topEntry.grabWithNew(world, sender));
       }
 

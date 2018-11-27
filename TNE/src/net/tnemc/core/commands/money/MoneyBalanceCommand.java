@@ -120,6 +120,11 @@ public class MoneyBalanceCommand extends TNECommand {
           Message m = new Message("Messages.Money.HoldingsMultiSingle");
           m.addVariable("$currency", curName);
           m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(currencyName)));
+          if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
+            m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(currencyName)));
+          } else {
+            m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(currencyName), "<symbol><major.amount><decimal><minor.amount>"));
+          }
           m.translate(w, sender, id.toString());
         });
         TNE.debug("===END MoneyBalanceCommand ===");
@@ -129,7 +134,11 @@ public class MoneyBalanceCommand extends TNECommand {
       message.addVariable("$player", account.displayName());
       message.addVariable("$world", world);
       message.addVariable("$currency", currencyName);
-      message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName)));
+      if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
+        message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName)));
+      } else {
+        message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName), "<symbol><major.amount><decimal><minor.amount>"));
+      }
       message.translate(world, sender, id.toString());
       TNE.debug("===END MoneyBalanceCommand ===");
     });

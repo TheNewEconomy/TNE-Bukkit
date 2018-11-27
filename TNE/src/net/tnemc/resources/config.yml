@@ -119,6 +119,12 @@ Core:
             #Whether or not you wish to use advanced currencies, which utilize the currency.yml configuration file.
             Advanced: false
 
+            #Whether or not to format the balances in /bal.
+            FormatMoney: true
+
+            #Whether or not to format the balances in /baltop.
+            FormatTop: true
+
         #Configurations relating to basic currency configurations.
         #This is only used if Currency.Info.Advanced is set to false.
         Basic:

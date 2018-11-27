@@ -66,6 +66,8 @@ public class MainConfigurations  extends Configuration {
     configurations.put("Core.AutoSaver.Interval", 600);
     
     configurations.put("Core.Currency.Info.Advanced", false);
+    configurations.put("Core.Currency.Info.FormatMoney", true);
+    configurations.put("Core.Currency.Info.FormatTop", true);
     configurations.put("Core.Currency.Basic.Server", "Main Server");
     configurations.put("Core.Currency.Basic.Major_Single", "Dollar");
     configurations.put("Core.Currency.Basic.Major_Plural", "Dollars");

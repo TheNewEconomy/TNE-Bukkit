@@ -29,6 +29,11 @@ public class CurrencyFormatter {
     return format(TNE.manager().currencyManager().get(world, name), world, amount);
   }
 
+  public static String format(String world, String name, BigDecimal amount, String format) {
+    //System.out.println("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
+    return format(TNE.manager().currencyManager().get(world, name), world, amount, format);
+  }
+
   public static String format(Currency currency, String world, BigDecimal amount) {
     return format(TNE.manager().currencyManager().get(world, currency.name()), world, amount);
   }
@@ -42,12 +47,21 @@ public class CurrencyFormatter {
     TNE.debug("CurrencyFormatter.format(" + currency.name() + ", " + world + ", " + amount.toPlainString() + ")");
 
     if(currency == null) currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+    return format(currency, world, amount, ((currency.shorten())? "<symbol><short.amount>" : currency.getFormat()));
+  }
+
+  public static String format(TNECurrency currency, String world, BigDecimal amount, String format) {
+    TNE.debug("CurrencyFormatter.java(41): TNECurrency != null - " + (currency != null));
+    TNE.debug("CurrencyFormatter.java(41): world != null - " + (world != null));
+    TNE.debug("CurrencyFormatter.java(41): amount != null - " + (amount != null));
+    TNE.debug("CurrencyFormatter.java(41): currency.name() != null - " + (currency.name() != null));
+    TNE.debug("CurrencyFormatter.java(41): amount.toPlainString() != null - " + (amount.toPlainString() != null));
+    TNE.debug("CurrencyFormatter.format(" + currency.name() + ", " + world + ", " + amount.toPlainString() + ")");
+
+    if(currency == null) currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
 
     amount = round(world, currency.name(), amount);
     TNE.debug(currency.name() + " World: " + world);
-
-    final String shortFormat = "<symbol><short.amount>";
-    final String format = currency.getFormat();
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
     final BigInteger major = new BigInteger(amountStr[0]);
@@ -67,7 +81,7 @@ public class CurrencyFormatter {
     replacements.put("<short.amount>", shorten(currency, amount));
     replacements.putAll(Message.colours);
 
-    String formatted = (currency.shorten())? shortFormat : format;
+    String formatted = format;
 
     for(Map.Entry<String, String> entry : replacements.entrySet()) {
       formatted = formatted.replace(entry.getKey(), entry.getValue());
