@@ -155,13 +155,13 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onWorldChange(final PlayerChangedWorldEvent event) {
-    Player player = event.getPlayer();
-    UUID id = IDFinder.getID(player);
-    TNEAccount account = TNEAccount.getAccount(id.toString());
-    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    final Player player = event.getPlayer();
+    final UUID id = IDFinder.getID(player);
+    final TNEAccount account = TNE.manager().getAccount(id);
+    final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
 
     boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null || TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
-    if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
+    if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), id.toString())) {
       if(!player.hasPermission("tne.bypass.world")) {
         WorldManager manager = TNE.instance().getWorldManager(world);
         TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("worldchange"));
@@ -174,9 +174,9 @@ public class ConnectionListener implements Listener {
         message.addVariable("$amount", CurrencyFormatter.format(WorldFinder.getWorld(player, WorldVariant.BALANCE), manager.getChangeFee()));
         message.translate(world, player);
       }
-      TNEAccount.getAccount(id.toString()).initializeHoldings(world);
-    } else if(!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), IDFinder.getID(player).toString())) {
-      TNEAccount.getAccount(id.toString()).initializeHoldings(world);
+      account.initializeHoldings(world);
+    } else if(!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), id.toString())) {
+      account.initializeHoldings(world);
     }
 
     if(!noEconomy && TNE.instance().api().getBoolean("Core.Multiworld") &&

@@ -3,11 +3,15 @@ package net.tnemc.signs;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.menu.Menu;
+import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import net.tnemc.signs.handlers.NationHandler;
 import net.tnemc.signs.handlers.PlayerHandler;
 import net.tnemc.signs.handlers.TownHandler;
 import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.PlayerListener;
+import net.tnemc.signs.signs.SignType;
+import net.tnemc.signs.signs.impl.item.menu.AmountSelectionMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +97,15 @@ public class SignsModule extends Module {
   }
 
   @Override
+  public Map<String, Menu> registerMenus(TNE pluginInstance) {
+    Map<String, Menu> menus = new HashMap<>();
+    menus.put("shop_currency_selection", new CurrencySelectionMenu("shop_currency_selection", "shop_amount_selection"));
+    menus.put("shop_amount_selection", new AmountSelectionMenu("shop_amount_selection"));
+
+    return menus;
+  }
+
+  @Override
   public void saveConfigurations() {
     super.saveConfigurations();
     if(!signs.exists()) {
@@ -120,9 +134,19 @@ public class SignsModule extends Module {
   @Override
   public Map<String, List<String>> getTables() {
     Map<String, List<String>> tables = new HashMap<>();
-
     tables.put("h2", Collections.singletonList(SignsData.SIGNS_TABLE_H2));
     tables.put("mysql", Collections.singletonList(SignsData.SIGNS_TABLE));
+
+    for(SignType type : manager.getSignTypes().values()) {
+      if(type.tables().size() > 0) {
+        for(Map.Entry<String, List<String>> entry : type.tables().entrySet()) {
+          List<String> query = new ArrayList<>();
+          query.addAll(entry.getValue());
+          if(tables.containsKey(entry.getKey())) query.addAll(tables.get(entry.getKey()));
+          tables.put(entry.getKey(), query);
+        }
+      }
+    }
 
     return tables;
   }

@@ -84,7 +84,7 @@ public class NationSign implements SignType {
 
 
           UUID owner = IDFinder.getID(TownySettings.getNationAccountPrefix() + name);
-          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "nation", owner, player, new Date().getTime()));
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "nation", owner, player, new Date().getTime(), 1));
           return true;
         } catch (NotRegisteredException e) {
           //Shouldn't reach this point.

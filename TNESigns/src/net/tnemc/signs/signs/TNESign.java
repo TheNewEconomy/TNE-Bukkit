@@ -22,23 +22,26 @@ public class TNESign {
   private UUID owner;
   private UUID creator;
   private Long creationDate;
+  private int step;
 
-  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate) {
+  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, int step) {
     this.location = location;
     this.attached = attached;
     this.type = type;
     this.owner = owner;
     this.creator = creator;
     this.creationDate = creationDate;
+    this.step = step;
   }
 
-  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, String data) {
+  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, int step, String data) {
     this.location = location;
     this.attached = attached;
     this.type = type;
     this.owner = owner;
     this.creator = creator;
     this.creationDate = creationDate;
+    this.step = step;
     loadExtraData(data);
   }
 
@@ -88,6 +91,14 @@ public class TNESign {
 
   public void setCreationDate(Long creationDate) {
     this.creationDate = creationDate;
+  }
+
+  public int getStep() {
+    return step;
+  }
+
+  public void setStep(int step) {
+    this.step = step;
   }
 
   public String saveExtraData() {

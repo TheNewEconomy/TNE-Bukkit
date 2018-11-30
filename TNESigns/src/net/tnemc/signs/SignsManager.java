@@ -7,6 +7,7 @@ import net.tnemc.signs.signs.impl.SafeSign;
 import net.tnemc.signs.signs.impl.TownSign;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,6 +15,7 @@ import org.bukkit.block.Sign;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -27,6 +29,8 @@ import java.util.regex.Pattern;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class SignsManager {
+
+  public static Map<UUID, Location> chestSelection = new HashMap<>();
 
   private Map<String, SignType> signTypes = new HashMap<>();
   public static final Pattern signPattern = Pattern.compile("\\[(.*?)\\]");
@@ -91,7 +95,7 @@ public class SignsManager {
   }
 
   public static boolean validSign(final String identifier) {
-    return signPattern.matcher(identifier).matches();
+    return signPattern.matcher(ChatColor.stripColor(identifier)).matches();
   }
 
   public SignType getType(String identifier) {

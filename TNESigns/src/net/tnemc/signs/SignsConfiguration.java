@@ -3,6 +3,7 @@ package net.tnemc.signs;
 import net.tnemc.core.common.configurations.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,11 @@ public class SignsConfiguration extends Configuration {
   @Override
   public List<String> node() {
     return Collections.singletonList("Signs");
+  }
+
+  @Override
+  public File getFile() {
+    return SignsModule.instance().getSigns();
   }
 
   @Override

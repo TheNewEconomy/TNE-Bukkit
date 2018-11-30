@@ -54,7 +54,7 @@ public class SafeSign implements SignType {
 
         event.setLine(1, IDFinder.getUsername(player.toString()));
         try {
-          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player, player, new Date().getTime()));
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "safe", player, player, new Date().getTime(), 1));
         } catch (SQLException e) {
           e.printStackTrace();
         }

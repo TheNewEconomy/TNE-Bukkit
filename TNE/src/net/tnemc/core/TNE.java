@@ -125,7 +125,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "3Beta115";
+  public static final String build = "1Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -225,7 +225,7 @@ public class TNE extends TNELib {
     configurations().add(world, "world");
     configurations().loadAll();
 
-    List<String> moneyArguments = new ArrayList<String>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
+    List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
     if(configurations().getBoolean("Core.Commands.PayShort")) {
       moneyArguments.add("pay");
     }

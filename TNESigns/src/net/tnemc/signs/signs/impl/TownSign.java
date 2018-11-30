@@ -81,7 +81,7 @@ public class TownSign implements SignType {
             event.setLine(1, name.substring(16, end));
           }
           UUID owner = IDFinder.getID(TownySettings.getTownAccountPrefix() + name);
-          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "town", owner, player, new Date().getTime()));
+          SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "town", owner, player, new Date().getTime(), 1));
           return true;
         } catch (NotRegisteredException e) {
           //Shouldn't reach this point.

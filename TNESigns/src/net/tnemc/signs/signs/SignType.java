@@ -11,6 +11,9 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,6 +27,10 @@ import java.util.UUID;
  * Created by creatorfromhell on 06/30/2017.
  */
 public interface SignType {
+
+  default Map<Integer, SignStep> steps() {
+    return new HashMap<>();
+  }
 
   /**
    * @return The name of this sign type.
@@ -69,12 +76,20 @@ public interface SignType {
    */
   String createPermission();
 
-  default Menu getMenu() {
+  default boolean stepped() {
+    return steps().size() > 0;
+  }
+
+  default Map<String, List<String>> tables() {
+    return new HashMap<>();
+  }
+
+  default Menu getMenu(final UUID player) {
     return null;
   }
 
-  default boolean hasMenu() {
-    return getMenu() != null;
+  default boolean hasMenu(final UUID player) {
+    return getMenu(player) != null;
   }
 
   default boolean create(final SignChangeEvent event, final Block attached, final UUID player) {

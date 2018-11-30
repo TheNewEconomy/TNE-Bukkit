@@ -20,6 +20,7 @@ Items:
     #The names supported by shop signs
     Names:
       - AcaciaBoat
+      - AcacBoat
       - Acacia Boat
 
   ACACIA_BUTTON:
@@ -35,6 +36,7 @@ Items:
     #The names supported by shop signs
     Names:
       - AcaciaButton
+      - AcacButton
       - Acacia Button
 
   ACACIA_DOOR:
@@ -50,6 +52,7 @@ Items:
     #The names supported by shop signs
     Names:
       - AcaciaDoor
+      - AcacDoor
       - Acacia Door
 
   ACACIA_FENCE:
@@ -65,6 +68,7 @@ Items:
     #The names supported by shop signs
     Names:
       - AcaciaFence
+      - AcacFence
       - Acacia Fence
 
   ACACIA_FENCE_GATE:
@@ -80,6 +84,7 @@ Items:
     #The names supported by shop signs
     Names:
       - AcaciaFenceGate
+      - AcacFenceGate
       - Acacia Fence Gate
 
   ACACIA_LEAVES:
