@@ -64,7 +64,6 @@ public class SignsData {
   private static final String SIGNS_UPDATE_CHEST = "UPDATE " + prefix + "_SIGNS SET sign_chest = ? WHERE sign_location = ?";
   private static final String SIGNS_LOAD_CHEST = "SELECT sign_chest FROM " + prefix + "_SIGNS WHERE sign_location = ?";
   public static final String SIGNS_CHEST_CHECK = "SELECT sign_owner FROM " + SignsData.prefix + "_SIGNS WHERE sign_chest = ?";
-  public static final String SIGNS_OWNER_CHECK = "SELECT sign_owner FROM " + SignsData.prefix + "_SIGNS WHERE sign_chest = ?";
   private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
                                            "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?, sign_step = ?, sign_data = ?;";
   private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";

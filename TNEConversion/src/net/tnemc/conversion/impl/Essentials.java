@@ -33,10 +33,10 @@ public class Essentials extends Converter {
     for(File accountFile : dataDirectory.listFiles()) {
       FileConfiguration acc = YamlConfiguration.loadConfiguration(accountFile);
 
-      Double money = acc.contains("money")? acc.getDouble("money") : 0.0;
+      final BigDecimal money = acc.contains("money")? new BigDecimal(acc.getString("money")) : BigDecimal.ZERO;
       String currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
 
-      ConversionModule.convertedAdd(acc.getString("lastAccountName"), TNE.instance().defaultWorld, currency, new BigDecimal(money));
+      ConversionModule.convertedAdd(acc.getString("lastAccountName"), TNE.instance().defaultWorld, currency, money);
     }
   }
 }
