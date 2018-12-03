@@ -1,11 +1,12 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,12 +49,23 @@ public class EnchantStorageData implements SerialItemData {
   }
 
   @Override
-  public void save(SaveManager manager) {
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.put("name", "enchantstorage");
 
+    JSONObject object = new JSONObject();
+    enchantments.forEach(object::put);
+    json.put("enchantments", object);
+
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+    JSONObject enchants = json.getJSON("enchantments");
+    enchants.forEach((key, value)->{
+      enchantments.put(key.toString(), Integer.valueOf(value.toString()));
+    });
   }
 }

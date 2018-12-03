@@ -1,5 +1,6 @@
 package net.tnemc.signs.signs.impl.item;
 
+import net.tnemc.core.TNE;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.SignStep;
 import net.tnemc.signs.signs.TNESign;
@@ -32,7 +33,7 @@ public class ItemSelectionStep implements SignStep {
 
   @Override
   public boolean onSignInteract(Sign sign, UUID player, boolean rightClick, boolean shifting) {
-    System.out.println("ItemSelect Interaction");
+    TNE.debug("ItemSelect Interaction");
     TNESign loaded = null;
     try {
       loaded = SignsData.loadSign(sign.getLocation());
@@ -40,7 +41,7 @@ public class ItemSelectionStep implements SignStep {
 
     final Player playerInstance = Bukkit.getPlayer(player);
     if(loaded != null) {
-      System.out.println("ItemSelect Interaction");
+      TNE.debug("ItemSelect Interaction");
       if(!loaded.getOwner().equals(player)) {
         playerInstance.sendMessage(ChatColor.RED + "This shop is not offering any items currently.");
         return false;
@@ -48,9 +49,15 @@ public class ItemSelectionStep implements SignStep {
 
       final ItemStack holding = playerInstance.getInventory().getItemInMainHand();
       if (holding != null && !holding.getType().equals(Material.AIR)) {
-        System.out.println("ItemSelect Interaction");
+
+        if(!ItemSign.canOffer(playerInstance, holding.getType())) {
+          playerInstance.sendMessage(ChatColor.RED + "Invalid permission.");
+          return false;
+        }
+
+        TNE.debug("ItemSelect Interaction");
         try {
-          ItemSign.saveItemSelection(loaded.getLocation(), holding, ((rightClick)? 1 : 0));
+          ItemSign.saveItemSelection(loaded.getLocation(), holding, rightClick);
           SignsData.updateStep(sign.getLocation(), 2);
 
           playerInstance.sendMessage(ChatColor.WHITE + "Changed shop offer to " + holding.getAmount() + " of " + holding.getType().name() + ".");

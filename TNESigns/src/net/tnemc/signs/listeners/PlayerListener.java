@@ -1,5 +1,7 @@
 package net.tnemc.signs.listeners;
 
+import com.palmergames.bukkit.towny.object.TownyPermission;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.signs.ChestHelper;
@@ -8,6 +10,7 @@ import net.tnemc.signs.SignsManager;
 import net.tnemc.signs.SignsModule;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.TNESign;
+import net.tnemc.signs.signs.impl.ItemSign;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -56,12 +59,12 @@ public class PlayerListener implements Listener {
     final Block block = event.getClickedBlock();
     if(block.getState() instanceof Sign) {
       final String identifier = ((Sign)block.getState()).getLine(0);
-      System.out.println("Identifier: " + identifier);
+      TNE.debug("Identifier: " + identifier);
       if(SignsManager.validSign(identifier)) {
-        System.out.println("Valid Sign.");
+        TNE.debug("Valid Sign.");
         SignType type = SignsModule.manager().getType(identifier);
         if(type != null) {
-          System.out.println("Type: " + type.name());
+          TNE.debug("Type: " + type.name());
           if(type.onSignInteract((Sign) block.getState(), IDFinder.getID(event.getPlayer()), (eventAction.equals(Action.RIGHT_CLICK_BLOCK)), event.getPlayer().isSneaking())) {
             event.setCancelled(true);
           }
@@ -76,9 +79,16 @@ public class PlayerListener implements Listener {
             final Location signLocation = SignsManager.chestSelection.get(id);
             Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
               try {
+                if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
+                  if(!PlayerCacheUtil.getCachePermission(event.getPlayer(), location, Material.CHEST, TownyPermission.ActionType.SWITCH)) {
+                    return;
+                  }
+                }
+
                 SignsData.updateChest(signLocation, location);
                 SignsData.updateStep(signLocation, 4);
                 event.getPlayer().sendMessage(ChatColor.WHITE + "Updated your shop's storage to the chest at X: " + location.getBlockX() + " Y: " + location.getBlockY() + " Z: " + location.getBlockZ());
+                SignsManager.chestSelection.remove(id);
               } catch (SQLException e) {
                 event.getPlayer().sendMessage(ChatColor.RED + "Error while updating your shop's storage.");
               }
@@ -98,6 +108,18 @@ public class PlayerListener implements Listener {
                   if (!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())) {
                     event.setCancelled(true);
                   }
+                }
+              } else {
+                try {
+                  UUID owner = ItemSign.chest(event.getClickedBlock().getLocation());
+
+                  if(owner != null) {
+                    if(!owner.equals(id)) {
+                      event.setCancelled(true);
+                    }
+                  }
+                } catch (SQLException e) {
+                  TNE.debug(e);
                 }
               }
             }

@@ -1,10 +1,13 @@
 package net.tnemc.signs;
 
 import com.github.tnerevival.core.db.SQLDatabase;
+import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import net.tnemc.core.TNE;
 import net.tnemc.signs.signs.TNESign;
 import org.bukkit.Location;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,6 +62,9 @@ public class SignsData {
 
   private static final String SIGNS_UPDATE_STEP = "UPDATE " + prefix + "_SIGNS SET sign_step = ? WHERE sign_location = ?";
   private static final String SIGNS_UPDATE_CHEST = "UPDATE " + prefix + "_SIGNS SET sign_chest = ? WHERE sign_location = ?";
+  private static final String SIGNS_LOAD_CHEST = "SELECT sign_chest FROM " + prefix + "_SIGNS WHERE sign_location = ?";
+  public static final String SIGNS_CHEST_CHECK = "SELECT sign_owner FROM " + SignsData.prefix + "_SIGNS WHERE sign_chest = ?";
+  public static final String SIGNS_OWNER_CHECK = "SELECT sign_owner FROM " + SignsData.prefix + "_SIGNS WHERE sign_chest = ?";
   private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
                                            "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?, sign_step = ?, sign_data = ?;";
   private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
@@ -68,6 +74,11 @@ public class SignsData {
   private static final String SIGNS_DELETE = "DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?";
 
   public static final String ITEM_CHECK = "SELECT item_amount FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
+  public static final String ITEM_OFFER_LOAD = "SELECT item_offer, item_amount FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
+  public static final String ITEM_TRADE_LOAD = "SELECT item_trade FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
+  public static final String ITEM_CURRENCY_LOAD = "SELECT item_cost FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
+  public static final String ITEM_CURRENCY_CHECK = "SELECT item_currency FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
+  public static final String ITEM_SELLING_CHECK = "SELECT item_selling FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_OFFER_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_offer = ?, item_amount = ?, item_selling = ? WHERE sign_location = ?";
   public static final String ITEM_OFFER_ADD = "INSERT INTO " + SignsData.prefix + "_SIGNS_ITEMS (item_offer, item_amount, item_selling, sign_location) VALUES(?, ?, ?, ?)";
   public static final String ITEM_TRADE_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_currency = ?, item_cost = ?, item_trade = ? WHERE sign_location = ?";
@@ -206,6 +217,60 @@ public class SignsData {
     }
 
     return signs;
+  }
+
+  public static ItemStack getItem(Location location) throws SQLException {
+    ItemStack item = null;
+
+    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+        PreparedStatement statement = connection.prepareStatement(ITEM_OFFER_LOAD);
+        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+            new SerializableLocation(location)
+        })) {
+
+      if(results.next()) {
+        item = SerializableItemStack.fromString(results.getString("item_offer")).toItemStack();
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    return item;
+  }
+
+  public static ItemStack getTrade(Location location) throws SQLException {
+    ItemStack item = null;
+
+    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+        PreparedStatement statement = connection.prepareStatement(ITEM_TRADE_LOAD);
+        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+            new SerializableLocation(location)
+        })) {
+
+      if(results.next()) {
+        item = SerializableItemStack.fromString(results.getString("item_trade")).toItemStack();
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    return item;
+  }
+
+  public static Chest chest(Location location) throws SQLException {
+    Location chestLocation = null;
+
+    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+        PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_CHEST);
+        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+            new SerializableLocation(location).toString()
+        })) {
+
+      if(results.next()) {
+        chestLocation = SerializableLocation.fromString(results.getString("sign_chest")).getLocation();
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    return (Chest)(chestLocation.getBlock().getState());
   }
 
   public static void deleteSign(Location location) throws SQLException {

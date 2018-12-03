@@ -51,12 +51,17 @@ public class TradeSelectionStep implements SignStep {
       if(rightClick) {
         final ItemStack holding = playerInstance.getInventory().getItemInMainHand();
         if (holding != null && !holding.getType().equals(Material.AIR)) {
+
+          if(!ItemSign.canOffer(playerInstance, holding.getType())) {
+            playerInstance.sendMessage(ChatColor.RED + "Invalid permission.");
+            return false;
+          }
           try {
             ItemSign.saveItemOffer(loaded.getLocation(), holding, false, BigDecimal.ZERO);
             SignsData.updateStep(sign.getLocation(), 3);
 
             playerInstance.sendMessage(ChatColor.WHITE + "Changed shop trade to " + holding.getAmount() + " of " + holding.getType().name() + ".");
-            playerInstance.sendMessage(ChatColor.WHITE + "Now click your shop sign, followed by a chest to mark your shop's storage.");
+            playerInstance.sendMessage(ChatColor.WHITE + "Now right click your shop sign, followed by a chest to mark your shop's storage.");
             return false;
           } catch (SQLException ignore) {
             playerInstance.sendMessage(ChatColor.RED + "Error while changing shop trade.");

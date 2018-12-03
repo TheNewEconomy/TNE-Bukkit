@@ -1,11 +1,12 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.json.simple.JSONObject;
 
 import java.util.UUID;
 
@@ -45,12 +46,16 @@ public class SkullData implements SerialItemData {
   }
 
   @Override
-  public void save(SaveManager manager) {
-
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.put("name", "skull");
+    if(owner != null) json.put("owner", owner.toString());
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+    if(json.has("owner")) owner = UUID.fromString(json.getString("owner"));
   }
 }

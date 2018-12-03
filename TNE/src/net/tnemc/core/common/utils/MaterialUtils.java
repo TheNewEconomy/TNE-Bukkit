@@ -2,10 +2,12 @@ package net.tnemc.core.common.utils;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.ItemTier;
+import net.tnemc.core.item.SerialItem;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -13,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -96,7 +100,53 @@ public class MaterialUtils {
         }
       }
     }
+
+    if(isShulker(original.getType())) {
+      if(originalMeta instanceof BlockStateMeta && compareMeta instanceof  BlockStateMeta) {
+        BlockStateMeta state = (BlockStateMeta) originalMeta;
+        BlockStateMeta stateCompare = (BlockStateMeta) compareMeta;
+        if (state.getBlockState() instanceof ShulkerBox && stateCompare.getBlockState() instanceof ShulkerBox) {
+          ShulkerBox shulker = (ShulkerBox)state.getBlockState();
+          ShulkerBox shulkerCompare = (ShulkerBox)stateCompare.getBlockState();
+
+          for(int i = 0; i < shulker.getInventory().getSize(); i++) {
+            final ItemStack stack = shulker.getInventory().getItem(i);
+            if(stack != null) {
+              if(!MaterialUtils.itemsEqual(stack, shulkerCompare.getInventory().getItem(i))) return false;
+            }
+          }
+          return true;
+        }
+        return false;
+      }
+      return false;
+    } else if(original.getType().equals(Material.WRITTEN_BOOK) ||
+        original.getType().equals(Material.WRITABLE_BOOK)) {
+      if(originalMeta instanceof BookMeta && compareMeta instanceof BookMeta) {
+        return new SerialItem(original).serialize().equals(new SerialItem(compare).serialize());
+      }
+      return false;
+    }
     return compare.isSimilar(original);
+  }
+
+  public static boolean isShulker(Material material) {
+    return material.equals(Material.WHITE_SHULKER_BOX) ||
+        material.equals(Material.ORANGE_SHULKER_BOX) ||
+        material.equals(Material.MAGENTA_SHULKER_BOX) ||
+        material.equals(Material.LIGHT_BLUE_SHULKER_BOX) ||
+        material.equals(Material.YELLOW_SHULKER_BOX) ||
+        material.equals(Material.LIME_SHULKER_BOX) ||
+        material.equals(Material.PINK_SHULKER_BOX) ||
+        material.equals(Material.GRAY_SHULKER_BOX) ||
+        material.equals(Material.LIGHT_GRAY_SHULKER_BOX) ||
+        material.equals(Material.CYAN_SHULKER_BOX) ||
+        material.equals(Material.PURPLE_SHULKER_BOX) ||
+        material.equals(Material.BLUE_SHULKER_BOX) ||
+        material.equals(Material.BROWN_SHULKER_BOX) ||
+        material.equals(Material.GREEN_SHULKER_BOX) ||
+        material.equals(Material.RED_SHULKER_BOX) ||
+        material.equals(Material.BLACK_SHULKER_BOX);
   }
 
   public static void removeItem(Player player, ItemTier info) {

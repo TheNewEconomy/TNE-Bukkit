@@ -1,7 +1,7 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
 import net.tnemc.core.TNE;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItem;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.Material;
@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,24 +65,43 @@ public class ShulkerData implements SerialItemData {
   @Override
   public ItemStack build(ItemStack stack) {
     if(valid) {
+      TNE.debug("Building shulker");
       BlockStateMeta meta = (BlockStateMeta)stack.getItemMeta();
-      ShulkerBox shulkerBox = (ShulkerBox)meta;
+      TNE.debug("Building shulker");
+      ShulkerBox shulkerBox = (ShulkerBox)meta.getBlockState();
+      TNE.debug("Building shulker");
       items.forEach((slot, item)->shulkerBox.getInventory().setItem(slot, item.getStack()));
+      TNE.debug("Building shulker");
       meta.setBlockState(shulkerBox);
+      TNE.debug("Building shulker");
       stack.setItemMeta(meta);
-
+      TNE.debug("Built shulker");
     }
     return stack;
   }
 
   @Override
-  public void save(SaveManager manager) {
-
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.put("name", "shulker");
+    JSONObject itemsObj = new JSONObject();
+    items.forEach((slot, item)->{
+      TNE.debug("Item Null?: " + (item == null));
+      TNE.debug("Item Type: " + item.getMaterial().name());
+      itemsObj.put(slot, item.toJSON());
+    });
+    json.put("items", itemsObj);
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+    TNE.debug("Shulker Data Start");
+    json.getJSON("items").forEach((key, value)->{
+      items.put(Integer.valueOf(key.toString()), SerialItem.fromJSON((JSONObject)value));
+    });
+    TNE.debug("Shulker Data END");
   }
 
   public Map<Integer, SerialItem> getItems() {

@@ -2,14 +2,17 @@ package net.tnemc.signs.listeners;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.signs.ChestHelper;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
 import net.tnemc.signs.SignsModule;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.TNESign;
+import net.tnemc.signs.signs.impl.ItemSign;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,6 +26,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -52,7 +56,8 @@ public class BlockListener implements Listener {
       if (sign != null) {
         final Sign signBlock = (event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN)) ?
             (Sign) event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
-        if (signBlock != null && !SignsModule.manager().getType(sign.getType()).onSignDestroy(sign.getOwner(), event.getPlayer().getUniqueId())) {
+        if (signBlock != null && !SignsModule.manager().getType(sign.getType()).onSignDestroy(sign.getOwner(), event.getPlayer().getUniqueId())
+            && !event.getPlayer().hasPermission("tne.shop.override")) {
           event.setCancelled(true);
         } else {
           if (signBlock != null) {
@@ -62,6 +67,35 @@ public class BlockListener implements Listener {
       }
     } catch(SQLException e) {
       e.printStackTrace();
+    }
+
+    if(!event.isCancelled()) {
+      if(event.getBlock().getType().equals(Material.CHEST)) {
+        ChestHelper helper = new ChestHelper((Chest)event.getBlock().getState());
+
+        try {
+          UUID chest = ItemSign.chest(event.getBlock().getLocation());
+
+          if(chest != null &&!event.getPlayer().getUniqueId().equals(chest) && !event.getPlayer().hasPermission("tne.shop.override")) {
+            event.setCancelled(true);
+          }
+        } catch (SQLException e) {
+          TNE.debug(e);
+        }
+
+        if(!event.isCancelled() && helper.isDouble()) {
+
+          try {
+            UUID chest = ItemSign.chest(helper.getDoubleChest().getLocation());
+
+            if(chest != null &&!event.getPlayer().getUniqueId().equals(chest) && !event.getPlayer().hasPermission("tne.shop.override")) {
+              event.setCancelled(true);
+            }
+          } catch (SQLException e) {
+            TNE.debug(e);
+          }
+        }
+      }
     }
   }
 

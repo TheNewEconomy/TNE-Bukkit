@@ -210,9 +210,9 @@ public class CurrencyManager {
         //Currency Conversion Configurations.
         final Double rate = configuration.getDouble(base + ".Conversion.Rate", 1.0);
 
-        System.out.println(cur + ": " + format);
-        System.out.println(cur + ": " + decimalPlaces);
-        System.out.println(cur + ": " + symbol);
+        //System.out.println(cur + ": " + format);
+        //System.out.println(cur + ": " + decimalPlaces);
+        //System.out.println(cur + ": " + symbol);
 
         TNECurrency currency = new TNECurrency();
         currency.setIdentifier(configuration.getString(base + ".Info.Identifier"));

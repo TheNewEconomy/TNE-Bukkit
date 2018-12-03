@@ -1,11 +1,15 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
+import net.tnemc.core.TNE;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
+import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +50,32 @@ public class BannerData implements SerialItemData {
   }
 
   @Override
-  public void save(SaveManager manager) {
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.put("name", "banner");
 
+    int i = 0;
+    JSONObject patterns = new JSONObject();
+    for(Pattern pattern : patternList) {
+      JSONObject patternObj = new JSONObject();
+      patternObj.put("colour", pattern.getColor().name());
+      patternObj.put("pattern", pattern.getPattern().getIdentifier());
+      patterns.put(i, patternObj);
+      i++;
+    }
+    json.put("patterns", patterns);
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+    json.getJSON("patterns").forEach((key, value)->{
+      JSONHelper helperObj = new JSONHelper((JSONObject)value);
+      final Pattern pattern = new Pattern(DyeColor.valueOf(helperObj.getString("colour")),
+          PatternType.getByIdentifier(helperObj.getString("pattern")));
+      patternList.add(pattern);
+    });
+    TNE.debug("Banner Data End");
   }
 }

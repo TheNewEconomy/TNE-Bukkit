@@ -1,12 +1,14 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
+import net.tnemc.core.TNE;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +65,63 @@ public class FireworkEffectData implements SerialItemData {
   }
 
   @Override
-  public void save(SaveManager manager) {
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.put("name", "fireworkeffect");
 
+    colors = new ArrayList<>();
+    if(colors.size() > 0) {
+      JSONObject colours = new JSONObject();
+      for (int i = 0; i < colors.size(); i++) {
+        colours.put(i, colors.get(i).asRGB());
+        TNE.debug("Color: " + colors.get(i).asRGB());
+      }
+      json.put("colours", colours);
+    }
+
+    fadeColors = new ArrayList<>();
+    if(fadeColors.size() > 0) {
+      JSONObject fades = new JSONObject();
+      for (int i = 0; i < fadeColors.size(); i++) {
+        fades.put(i, fadeColors.get(i).asRGB());
+        TNE.debug("Fade: " + fadeColors.get(i).asRGB());
+      }
+      json.put("fades", fades);
+    }
+
+    if(hasEffect) {
+      JSONObject effect = new JSONObject();
+      effect.put("type", type);
+      effect.put("trail", trail);
+      effect.put("flicker", flicker);
+      json.put("effect", effect);
+    }
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+
+    if(json.has("colours")) {
+      JSONObject colours = json.getJSON("colours");
+      colours.forEach((ignore, value)->{
+        colors.add(Color.fromRGB(Integer.valueOf(String.valueOf(value))));
+      });
+    }
+
+    if(json.has("fades")) {
+      JSONObject fades = json.getJSON("fades");
+      fades.forEach((ignore, value)->{
+        fadeColors.add(Color.fromRGB(Integer.valueOf(String.valueOf(value))));
+      });
+    }
+
+    if(json.has("effect")) {
+      JSONHelper helper = json.getHelper("effect");
+      type = helper.getString("type");
+      trail = helper.getBoolean("trail");
+      flicker = helper.getBoolean("flicker");
+    }
   }
 }

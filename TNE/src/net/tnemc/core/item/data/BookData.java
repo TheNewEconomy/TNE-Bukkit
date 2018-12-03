@@ -1,10 +1,12 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
+import net.tnemc.core.TNE;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +55,43 @@ public class BookData implements SerialItemData {
   }
 
   @Override
-  public void save(SaveManager manager) {
-
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    TNE.debug("Start book to json");
+    json.put("name", "book");
+    if(title != null) json.put("title", title);
+    TNE.debug("title");
+    if(author != null) json.put("author", author);
+    TNE.debug("author");
+    JSONObject pagesObj = new JSONObject();
+    TNE.debug("start pages");
+    for(int i = 0; i < pages.size(); i++) {
+      pagesObj.put(i, pages.get(i));
+    }
+    TNE.debug("mid pages");
+    json.put("pages", pagesObj);
+    TNE.debug("end pages");
+    TNE.debug("end book to json");
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+    TNE.debug("Start book from json");
+    if(json.has("title")) title = json.getString("title");
+    TNE.debug("title");
+    if(json.has("author")) author = json.getString("author");
+    TNE.debug("author");
+    JSONObject pagesObj = json.getJSON("pages");
+    TNE.debug("pages");
+    pages = new ArrayList<>();
+    pagesObj.forEach((key, page)->{
+      final String pageTXT = String.valueOf(page);
+      TNE.debug("Page: " + pageTXT);
+      pages.add(pageTXT);
+      TNE.debug("Pages Size: " + pages.size());
+    });
+    TNE.debug("End book from json");
   }
 }

@@ -44,7 +44,7 @@ public class ConfirmIcon extends Icon {
       SignsData.updateStep(location, 3);
 
       this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount) +
-                     ". Now click your shop sign, followed by a chest to mark your shop's storage.";
+                     ". Now right click your shop sign, followed by a chest to mark your shop's storage.";
     } catch (SQLException e) {
       this.message = ChatColor.RED + "Error while changing shop's currency offer.";
     }

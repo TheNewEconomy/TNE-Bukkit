@@ -1,14 +1,23 @@
 package net.tnemc.signs.signs.impl.item;
 
+import net.tnemc.core.TNE;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.SignStep;
 import net.tnemc.signs.signs.TNESign;
+import net.tnemc.signs.signs.impl.ItemSign;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -29,6 +38,8 @@ public class TradeStep implements SignStep {
 
   @Override
   public boolean onSignInteract(Sign sign, UUID player, boolean rightClick, boolean shifting) {
+    if(!rightClick) return false;
+
     final Player playerInstance = Bukkit.getPlayer(player);
     TNESign loaded = null;
     try {
@@ -39,9 +50,43 @@ public class TradeStep implements SignStep {
     }
 
     if(loaded != null) {
-      final boolean owner = loaded.getOwner().equals(player);
 
+      try {
+        final Chest chest = SignsData.chest(sign.getLocation());
+        ItemStack item = ItemSign.getItem(sign.getLocation());
+        TNE.debug("Damage: " + item.getDurability());
+        TNE.debug("Item Null?: " + (item == null));
+        TNE.menuManager().setViewerData(player, "shop_owner", loaded.getOwner());
+        TNE.menuManager().setViewerData(player, "shop_selling", ItemSign.isSelling(sign.getLocation()));
+        TNE.menuManager().setViewerData(player, "shop_chest", chest.getLocation());
+        TNE.menuManager().setViewerData(player, "shop_item", item);
 
+        final boolean currency = ItemSign.isCurrency(sign.getLocation());
+        TNE.menuManager().setViewerData(player, "shop_currency", currency);
+
+        final BigDecimal amount = ItemSign.getCost(sign.getLocation());
+        ItemStack cost = new ItemStack(Material.PAPER);
+
+        if(currency) {
+          TNE.menuManager().setViewerData(player, "shop_currency_cost", amount);
+          ItemMeta meta = cost.getItemMeta();
+          meta.setLore(Collections.singletonList(ChatColor.GOLD + "Cost: " + amount));
+          cost.setItemMeta(meta);
+        } else {
+          cost = ItemSign.getTrade(sign.getLocation());
+          ItemMeta meta = cost.getItemMeta();
+          meta.setLore(Collections.singletonList(meta.getDisplayName()));
+          cost.setItemMeta(meta);
+        }
+        TNE.menuManager().setViewerData(player, "shop_cost", cost);
+
+        TNE.menuManager().open("shop_offer_menu", playerInstance);
+
+      } catch (SQLException e) {
+        playerInstance.sendMessage(ChatColor.RED + "Unable to locate this shop's storage chest.");
+        playerInstance.playSound(playerInstance.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+        return false;
+      }
     }
     return false;
   }

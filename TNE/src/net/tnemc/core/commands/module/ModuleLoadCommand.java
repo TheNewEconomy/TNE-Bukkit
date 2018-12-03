@@ -9,6 +9,7 @@ import net.tnemc.core.common.module.ModuleEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,6 +92,14 @@ public class ModuleLoadCommand extends TNECommand {
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());
         TNE.debug("Registering Listener");
       });
+
+      if(module.getModule().getTables().containsKey(TNE.saveManager().getTNEManager().getFormat())) {
+        try {
+          TNE.saveManager().getTNEManager().getTNEProvider().createTables(module.getModule().getTables().get(TNE.saveManager().getTNEManager().getFormat()));
+        } catch (SQLException e) {
+          TNE.debug("Failed to create tables on module load.");
+        }
+      }
 
       Message message = new Message("Messages.Module.Loaded");
       message.addVariable("$module", moduleName);

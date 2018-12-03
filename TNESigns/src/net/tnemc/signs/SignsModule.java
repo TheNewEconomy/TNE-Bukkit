@@ -12,6 +12,8 @@ import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.PlayerListener;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.item.menu.AmountSelectionMenu;
+import net.tnemc.signs.signs.impl.item.menu.OfferMenu;
+import net.tnemc.signs.signs.impl.item.menu.ShulkerPreviewMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -101,6 +103,8 @@ public class SignsModule extends Module {
     Map<String, Menu> menus = new HashMap<>();
     menus.put("shop_currency_selection", new CurrencySelectionMenu("shop_currency_selection", "shop_amount_selection"));
     menus.put("shop_amount_selection", new AmountSelectionMenu("shop_amount_selection"));
+    menus.put("shop_offer_menu", new OfferMenu());
+    menus.put("shop_shulker_preview", new ShulkerPreviewMenu());
 
     return menus;
   }

@@ -11,7 +11,7 @@ import net.tnemc.core.item.data.MapData;
 import net.tnemc.core.item.data.SerialPotionData;
 import net.tnemc.core.item.data.ShulkerData;
 import net.tnemc.core.item.data.SkullData;
-import net.tnemc.core.item.data.SpawnEggData;
+import net.tnemc.core.item.data.TropicalFishBucketData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -26,9 +26,13 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.bukkit.inventory.meta.TropicalFishBucketMeta;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,16 +50,21 @@ public class SerialItem {
   private Map<String, Integer> enchantments = new HashMap<>();
   private List<String> lore = new ArrayList<>();
 
+  private int slot = 0;
   private Material material;
-  private Integer amount;
-  private String display;
-  private short damage;
+  private Integer amount = 1;
+  private String display = "";
+  private short damage = 0;
   private SerialItemData data;
 
   //Cache=related variables
   private ItemStack stack;
 
-  public SerialItem(ItemStack item) {
+  public SerialItem(ItemStack stack) {
+    this(stack, 0);
+  }
+
+  public SerialItem(ItemStack item, Integer slot) {
     stack = item;
     material = stack.getType();
     amount = stack.getAmount();
@@ -77,35 +86,54 @@ public class SerialItem {
   private void buildData(ItemStack stack) {
     if(isShulker(stack.getType())) {
       TNE.debug("Is shulker!!");
+      TNE.debug("shulker");
       data = new ShulkerData();
     } else {
       ItemMeta meta = stack.getItemMeta();
-      if (meta instanceof SpawnEggMeta) {
-        data = new SpawnEggData();
-      } else if (meta instanceof PotionMeta) {
+      if (meta instanceof PotionMeta) {
+        TNE.debug("Potion");
         data = new SerialPotionData();
       } else if (meta instanceof BookMeta) {
+        TNE.debug("Book");
         data = new BookData();
       } else if (meta instanceof BannerMeta) {
+        TNE.debug("Banner");
         data = new BannerData();
       } else if (meta instanceof LeatherArmorMeta) {
+        TNE.debug("leather");
         data = new LeatherData();
       } else if (meta instanceof SkullMeta) {
+        TNE.debug("skull");
         data = new SkullData();
       } else if (meta instanceof MapMeta) {
+        TNE.debug("map");
         data = new MapData();
       } else if (meta instanceof EnchantmentStorageMeta) {
+        TNE.debug("enchantment");
         data = new EnchantStorageData();
       } else if (meta instanceof FireworkMeta) {
+        TNE.debug("Firework");
         data = new FireworkData();
       } else if (meta instanceof FireworkEffectMeta) {
+        TNE.debug("Firework Effect");
         data = new FireworkEffectData();
+      } else if(meta instanceof TropicalFishBucketMeta) {
+        TNE.debug("fish bucket");
+        data = new TropicalFishBucketData();
       }
     }
     if(data != null){
       TNE.debug("Data != null");
       data.initialize(stack);
     }
+  }
+
+  public int getSlot() {
+    return slot;
+  }
+
+  public void setSlot(int slot) {
+    this.slot = slot;
   }
 
   public Map<String, Integer> getEnchantments() {
@@ -185,6 +213,79 @@ public class SerialItem {
 
   public void setStack(ItemStack stack) {
     this.stack = stack;
+  }
+
+  public JSONObject toJSON() {
+    TNE.debug("toJSON");
+    JSONObject json = new JSONObject();
+    json.put("slot", slot);
+    TNE.debug("slot");
+    json.put("material", material.name());
+    TNE.debug("material");
+    json.put("amount", amount);
+    TNE.debug("amount");
+    if(display != null && !display.equalsIgnoreCase("")) json.put("display", display);
+    TNE.debug("display");
+    json.put("damage", damage);
+    TNE.debug("damage");
+    if(lore != null && lore.size() > 0) json.put("lore", String.join(",", lore));
+    TNE.debug("lore");
+
+    JSONObject object = new JSONObject();
+    enchantments.forEach(object::put);
+    TNE.debug("enchantments obj");
+    json.put("enchantments", object);
+    TNE.debug("enchantments");
+    if(data != null) {
+      json.put("data", data.toJSON());
+    }
+    return json;
+  }
+
+  public String serialize() {
+    return toJSON().toJSONString();
+  }
+
+  public static SerialItem unserialize(String serialized) throws ParseException {
+    return fromJSON((JSONObject)new JSONParser().parse(serialized));
+  }
+
+  public static SerialItem fromJSON(JSONObject json) {
+    final JSONHelper helper = new JSONHelper(json);
+    TNE.debug("fromJSON");
+    Material material = Material.matchMaterial(helper.getString("material"));
+    TNE.debug("Material: " + material.name());
+    ItemStack stack = new ItemStack(material, helper.getInteger("amount"));
+    TNE.debug("Stack Created");
+    TNE.debug("Stack amount");
+    ItemMeta meta = Bukkit.getItemFactory().getItemMeta(stack.getType());
+    TNE.debug("Stack meta");
+    TNE.debug("Stack metaz");
+    TNE.debug(json.toJSONString());
+    if(helper.has("display") && helper.isNull("display") && !helper.getString("display").equalsIgnoreCase("")) {
+      meta.setDisplayName(helper.getString("display"));
+    }
+    TNE.debug("Stack display");
+    if(helper.has("lore")) meta.setLore(new ArrayList<>(Arrays.asList((helper.getString("lore")).split(","))));
+    TNE.debug("Stack lore");
+
+    if(json.containsKey("enchantments")) {
+      JSONObject enchants = (JSONObject)json.get("enchantments");
+      enchants.forEach((key, value) -> {
+        stack.addUnsafeEnchantment(Enchantment.getByName((String) key), (Integer) value);
+      });
+    }
+    TNE.debug("Stack enchants");
+
+    stack.setItemMeta(meta);
+    stack.setDurability(helper.getShort("damage"));
+    SerialItem serial = new SerialItem(stack, helper.getInteger("slot"));
+    if(helper.has("data")) {
+      serial.getData().readJSON(helper.getHelper("data"));
+      serial.getData().build(stack);
+    }
+    TNE.debug("Finished reading item's JSON");
+    return serial;
   }
 
   public static boolean isShulker(Material material) {

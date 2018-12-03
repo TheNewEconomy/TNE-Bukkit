@@ -1,7 +1,7 @@
 package net.tnemc.core.item;
 
-import com.github.tnerevival.core.SaveManager;
 import org.bukkit.inventory.ItemStack;
+import org.json.simple.JSONObject;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -15,6 +15,6 @@ public interface SerialItemData {
 
   SerialItemData initialize(ItemStack stack);
   ItemStack build(ItemStack stack);
-  void save(SaveManager manager);
-  SerialItemData load(SaveManager manager);
+  JSONObject toJSON();
+  void readJSON(JSONHelper json);
 }

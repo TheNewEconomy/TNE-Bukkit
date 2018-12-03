@@ -1,11 +1,12 @@
 package net.tnemc.core.item.data;
 
-import com.github.tnerevival.core.SaveManager;
+import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.Color;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.json.simple.JSONObject;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -42,12 +43,16 @@ public class LeatherData implements SerialItemData {
   }
 
   @Override
-  public void save(SaveManager manager) {
-
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.put("name", "leather");
+    json.put("colour", color.asRGB());
+    return json;
   }
 
   @Override
-  public SerialItemData load(SaveManager manager) {
-    return null;
+  public void readJSON(JSONHelper json) {
+    valid = true;
+    if(json.has("color")) color = Color.fromRGB(json.getInteger("colour"));
   }
 }

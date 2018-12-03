@@ -57,4 +57,8 @@ public class ChestHelper {
     if(sign != null) return sign;
     return null;
   }
+
+  public Chest getDoubleChest() {
+    return doubleChest;
+  }
 }
