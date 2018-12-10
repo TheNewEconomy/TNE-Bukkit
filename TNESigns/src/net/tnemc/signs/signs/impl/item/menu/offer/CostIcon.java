@@ -27,9 +27,14 @@ public class CostIcon extends Icon {
 
   @Override
   public ItemStack buildStack(Player player) {
+    final boolean selling = (Boolean)TNE.menuManager().getViewerData(player.getUniqueId(), "shop_selling");
     ItemStack stack = ((ItemStack) TNE.menuManager().getViewerData(player.getUniqueId(), "shop_cost")).clone();
     ItemMeta meta = stack.getItemMeta();
-    meta.setDisplayName(ChatColor.DARK_PURPLE + "Item Cost");
+    if(selling) {
+      meta.setDisplayName(ChatColor.DARK_PURPLE + "Item Cost");
+    } else {
+      meta.setDisplayName(ChatColor.DARK_PURPLE + "Shop's Offer");
+    }
     stack.setItemMeta(meta);
     return stack;
   }

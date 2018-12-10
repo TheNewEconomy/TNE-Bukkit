@@ -97,25 +97,25 @@ public class ItemSign implements SignType {
 
     tables.put("mysql", Collections.singletonList(
         "CREATE TABLE IF NOT EXISTS " + SignsData.prefix + "_SIGNS_ITEMS (" +
-        "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
+        "`sign_location` VARCHAR(255) NOT NULL UNIQUE," +
         "`item_selling` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_amount` INTEGER NOT NULL DEFAULT 1," +
         "`item_currency` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_cost` DECIMAL(49,4) DEFAULT 10," +
         "`item_offer` TEXT NOT NULL," +
-        "`item_trade` TEXT NOT NULL DEFAULT ''," +
-        ") ENGINE = INNODB;"
+        "`item_trade` TEXT" +
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
     ));
 
     tables.put("h2", Collections.singletonList(
         "CREATE TABLE IF NOT EXISTS " + SignsData.prefix + "_SIGNS_ITEMS (" +
-        "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
+        "`sign_location` VARCHAR(255) NOT NULL UNIQUE," +
         "`item_selling` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_amount` INTEGER NOT NULL DEFAULT 1," +
         "`item_currency` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_cost` DECIMAL(49,4) DEFAULT 10," +
         "`item_offer` TEXT NOT NULL," +
-        "`item_trade` TEXT NOT NULL DEFAULT ''," +
+        "`item_trade` TEXT" +
         ") ENGINE = INNODB;"
     ));
     return tables;
@@ -177,7 +177,7 @@ public class ItemSign implements SignType {
     database().executePreparedUpdate((offerExists(location))? SignsData.ITEM_OFFER_UPDATE : SignsData.ITEM_OFFER_ADD, new Object[] {
         new SerialItem(stack).toJSON().toJSONString(),
         stack.getAmount(),
-        selling,
+        ((selling)? 1 : 0),
         new SerializableLocation(location).toString()
     });
     Sign sign = (Sign) location.getBlock().getState();
@@ -217,8 +217,8 @@ public class ItemSign implements SignType {
         String str = results.getString("item_offer");
 
         item = SerialItem.fromJSON((JSONObject)new JSONParser().parse(str)).getStack();
-        TNE.debug(item.toString());
-        TNE.debug("Null: " + (item != null));
+        TNE.debug("Item: " + str);
+        TNE.debug("Null: " + (item == null));
 
       }
     } catch(Exception e) {

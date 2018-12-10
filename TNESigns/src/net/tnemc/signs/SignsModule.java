@@ -1,5 +1,7 @@
 package net.tnemc.signs;
 
+import com.github.tnerevival.core.SaveManager;
+import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
@@ -10,10 +12,14 @@ import net.tnemc.signs.handlers.PlayerHandler;
 import net.tnemc.signs.handlers.TownHandler;
 import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.PlayerListener;
+import net.tnemc.signs.listeners.TownyListener;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.item.menu.AmountSelectionMenu;
+import net.tnemc.signs.signs.impl.item.menu.ItemAmountSelection;
 import net.tnemc.signs.signs.impl.item.menu.OfferMenu;
 import net.tnemc.signs.signs.impl.item.menu.ShulkerPreviewMenu;
+import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmIcon;
+import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmTradeIcon;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,13 +60,20 @@ public class SignsModule extends Module {
 
   private static SignsModule instance;
 
+  public SignsModule() {
+    instance = this;
+    manager = new SignsManager();
+  }
+
   @Override
   public void load(TNE tne, String version) {
-    instance = this;
     Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
 
-    manager = new SignsManager();
+    if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
+      Bukkit.getServer().getPluginManager().registerEvents(new TownyListener(tne), tne);
+    }
+
     tne.logger().info("Signs Module loaded!");
   }
 
@@ -105,6 +119,8 @@ public class SignsModule extends Module {
     menus.put("shop_amount_selection", new AmountSelectionMenu("shop_amount_selection"));
     menus.put("shop_offer_menu", new OfferMenu());
     menus.put("shop_shulker_preview", new ShulkerPreviewMenu());
+    menus.put("shop_offer_amount_selection", new ItemAmountSelection("shop_offer_amount_selection", "shop_offer_amount", new ConfirmIcon(42, "shop_offer_amount")));
+    menus.put("shop_trade_amount_selection", new ItemAmountSelection("shop_trade_amount_selection", "shop_offer_amount", new ConfirmTradeIcon(42, "shop_offer_amount")));
 
     return menus;
   }
@@ -153,6 +169,23 @@ public class SignsModule extends Module {
     }
 
     return tables;
+  }
+
+  /**
+   * Used to perform any data loading, manipulation, layout updating, etc.
+   *
+   * @param saveManager An instance of TNE's Save Manager
+   */
+  @Override
+  public void enableSave(SaveManager saveManager) {
+    for(String table : getTables().get(saveManager.getDataManager().getFormat().toLowerCase())) {
+      try {
+        ((SQLDatabase) TNE.saveManager().getTNEManager().getTNEProvider().connector()).executeUpdate(table);
+        TNE.debug("Creating table: " + table);
+      } catch (SQLException e) {
+        TNE.debug("Failed to create tables on module load.");
+      }
+    }
   }
 
   public static SignsModule instance() {

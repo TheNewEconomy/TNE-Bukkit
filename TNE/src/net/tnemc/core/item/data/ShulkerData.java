@@ -99,7 +99,12 @@ public class ShulkerData implements SerialItemData {
     valid = true;
     TNE.debug("Shulker Data Start");
     json.getJSON("items").forEach((key, value)->{
-      items.put(Integer.valueOf(key.toString()), SerialItem.fromJSON((JSONObject)value));
+      TNE.debug("Slot: " + String.valueOf(key));
+      TNE.debug("Item Data: " + ((JSONObject)value).toJSONString());
+      final int slot = Integer.valueOf(String.valueOf(key));
+      TNE.debug("Amount: " + slot);
+      items.put(slot, SerialItem.fromJSON((JSONObject)value));
+      TNE.debug("Item Size: " + items.size());
     });
     TNE.debug("Shulker Data END");
   }

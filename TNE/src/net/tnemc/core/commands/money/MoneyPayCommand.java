@@ -57,6 +57,10 @@ public class MoneyPayCommand extends TNECommand {
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(arguments.length <= 0) {
+      help(sender);
+      return false;
+    }
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       TNE.debug("===START MoneyPayCommand ===");
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);

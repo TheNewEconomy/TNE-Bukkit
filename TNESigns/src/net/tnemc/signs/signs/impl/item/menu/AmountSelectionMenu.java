@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public class AmountSelectionMenu extends Menu {
   public AmountSelectionMenu(String name) {
-    super(name, "[TNE]Action", 5);
+    super(name, "Shop Price Selection", 5);
   }
 
   @Override

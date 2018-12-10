@@ -21,9 +21,9 @@ import java.math.BigDecimal;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MineConomy extends Converter {
-  private File accountsFile = new File("plugins/MineConomy/accounts.yml");
-  private File banksFile = new File("plugins/MineConomy/banks.yml");
-  private File currencyFile = new File("plugins/MineConomy/currencies.yml");
+  private File accountsFile = new File(TNE.instance().getDataFolder(), "../MineConomy/accounts.yml");
+  private File banksFile = new File(TNE.instance().getDataFolder(), "../MineConomy/banks.yml");
+  private File currencyFile = new File(TNE.instance().getDataFolder(), "../MineConomy/currencies.yml");
   private FileConfiguration accounts = YamlConfiguration.loadConfiguration(accountsFile);
   private FileConfiguration banks = YamlConfiguration.loadConfiguration(banksFile);
   private FileConfiguration currencies = YamlConfiguration.loadConfiguration(currencyFile);
@@ -70,8 +70,8 @@ public class MineConomy extends Converter {
     for(String username : accounts.getConfigurationSection(base).getKeys(false)) {
 
       double amount = accounts.getDouble(base + "." + username + ".Balance");
-      String currencyPath = "Currencies." + accounts.getString(base + "." + username + ".Currency") + ".Value";
-      double rate = (currencies.contains(currencyPath))? currencies.getDouble(currencyPath) : 1.0;
+      String currencyPath = (currencies != null)? "Currencies." + accounts.getString(base + "." + username + ".Currency") + ".Value" : null;
+      double rate = (currencyPath != null && currencies != null && currencies.contains(currencyPath))? currencies.getDouble(currencyPath) : 1.0;
       if(rate > 1.0) rate = 1.0;
       else if(rate < 0.1) rate = 0.1;
 
@@ -82,10 +82,15 @@ public class MineConomy extends Converter {
     }
 
     base = "Banks";
-    for(String bank : banks.getConfigurationSection(base).getKeys(false)) {
-      base = "Banks." + bank + ".Accounts";
-      for(String username : banks.getConfigurationSection(base).getKeys(false)) {
-        ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(), new BigDecimal(banks.getDouble(base + "." + username + ".Balance")));
+
+    if(banks != null && banks.contains(base) && !banks.isString(base)) {
+      for (String bank : banks.getConfigurationSection(base).getKeys(false)) {
+        base = "Banks." + bank + ".Accounts";
+        if(banks.contains(base)) {
+          for (String username : banks.getConfigurationSection(base).getKeys(false)) {
+            ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(), new BigDecimal(banks.getDouble(base + "." + username + ".Balance")));
+          }
+        }
       }
     }
   }

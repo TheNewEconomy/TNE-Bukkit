@@ -309,14 +309,17 @@ public class TNE extends TNELib {
     }
 
     loader.getModules().forEach((key, value)->{
-      value.getModule().getTables().forEach((type, tables)->saveManager().registerTables(type, tables));
-      if(value.getModule().getTables().containsKey(configurations().getString("Core.Database.Type").toLowerCase())) {
-        try {
-          TNE.saveManager().getTNEManager().getTNEProvider().createTables(value.getModule().getTables().get(configurations().getString("Core.Database.Type").toLowerCase()));
-        } catch (SQLException e) {
-          TNE.debug("Failed to create tables on module load.");
+      value.getModule().getTables().forEach((type, tables)->{
+        saveManager().registerTables(type, tables);
+
+        if(value.getModule().getTables().containsKey(configurations().getString("Core.Database.Type").toLowerCase())) {
+          try {
+            TNE.saveManager().getTNEManager().getTNEProvider().createTables(value.getModule().getTables().get(configurations().getString("Core.Database.Type").toLowerCase()));
+          } catch (SQLException e) {
+            TNE.debug("Failed to create tables on module load.");
+          }
         }
-      }
+      });
     });
 
     if(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()).size() > 0) {

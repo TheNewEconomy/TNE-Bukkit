@@ -12,7 +12,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -56,17 +55,12 @@ public class TradeSelectionStep implements SignStep {
             playerInstance.sendMessage(ChatColor.RED + "Invalid permission.");
             return false;
           }
-          try {
-            ItemSign.saveItemOffer(loaded.getLocation(), holding, false, BigDecimal.ZERO);
-            SignsData.updateStep(sign.getLocation(), 3);
+          TNE.menuManager().setViewerData(player, "shop_offer_amount", 0);
+          TNE.menuManager().setViewerData(player, "shop_item", holding);
+          TNE.menuManager().setViewerData(player, "action_shop", loaded.getLocation());
 
-            playerInstance.sendMessage(ChatColor.WHITE + "Changed shop trade to " + holding.getAmount() + " of " + holding.getType().name() + ".");
-            playerInstance.sendMessage(ChatColor.WHITE + "Now right click your shop sign, followed by a chest to mark your shop's storage.");
-            return false;
-          } catch (SQLException ignore) {
-            playerInstance.sendMessage(ChatColor.RED + "Error while changing shop trade.");
-            return false;
-          }
+          TNE.menuManager().open("shop_trade_amount_selection", playerInstance);
+          return false;
         }
       } else {
         TNE.menuManager().open("shop_currency_selection", playerInstance);

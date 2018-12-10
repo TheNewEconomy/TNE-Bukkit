@@ -75,6 +75,7 @@ public class SerialItem {
       lore = stack.getItemMeta().getLore();
 
       if(stack.getItemMeta().hasEnchants()) {
+
         stack.getItemMeta().getEnchants().forEach(((enchantment, level) ->{
           enchantments.put(enchantment.getName(), level);
         }));
@@ -268,16 +269,19 @@ public class SerialItem {
     TNE.debug("Stack display");
     if(helper.has("lore")) meta.setLore(new ArrayList<>(Arrays.asList((helper.getString("lore")).split(","))));
     TNE.debug("Stack lore");
+    stack.setItemMeta(meta);
 
     if(json.containsKey("enchantments")) {
       JSONObject enchants = (JSONObject)json.get("enchantments");
       enchants.forEach((key, value) -> {
-        stack.addUnsafeEnchantment(Enchantment.getByName((String) key), (Integer) value);
+        TNE.debug("Name: " + key);
+        TNE.debug("Integer: " + value);
+        stack.addUnsafeEnchantment(Enchantment.getByName(String.valueOf(key)), Integer.valueOf(String.valueOf(value)));
+        TNE.debug("Enchants Size: " + stack.getEnchantments().size());
       });
     }
     TNE.debug("Stack enchants");
 
-    stack.setItemMeta(meta);
     stack.setDurability(helper.getShort("damage"));
     SerialItem serial = new SerialItem(stack, helper.getInteger("slot"));
     if(helper.has("data")) {

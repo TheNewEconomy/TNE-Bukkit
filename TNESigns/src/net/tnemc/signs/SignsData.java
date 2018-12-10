@@ -5,8 +5,10 @@ import com.github.tnerevival.serializable.SerializableItemStack;
 import com.github.tnerevival.serializable.SerializableLocation;
 import net.tnemc.core.TNE;
 import net.tnemc.signs.signs.TNESign;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.Connection;
@@ -37,20 +39,20 @@ public class SignsData {
   public static final String prefix = TNE.saveManager().getTNEManager().getPrefix();
 
   public static final String SIGNS_TABLE = "CREATE TABLE IF NOT EXISTS " + prefix + "_SIGNS (" +
-      "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
-      "`sign_attached` VARCHAR(420)," +
-      "`sign_chest` VARCHAR(420) NOT NULL DEFAULT ''," +
+      "`sign_location` VARCHAR(255) NOT NULL UNIQUE," +
+      "`sign_attached` VARCHAR(255)," +
+      "`sign_chest` VARCHAR(255) NOT NULL DEFAULT ''," +
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
       "`sign_creator` VARCHAR(36) NOT NULL," +
       "`sign_created` BIGINT(60)," +
       "`sign_step` INTEGER," +
       "`sign_data` TEXT NOT NULL" +
-      ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+      ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
 
   public static final String SIGNS_TABLE_H2 = "CREATE TABLE IF NOT EXISTS " + prefix + "_SIGNS (" +
-      "`sign_location` VARCHAR(420) NOT NULL UNIQUE," +
-      "`sign_attached` VARCHAR(420)," +
+      "`sign_location` VARCHAR(255) NOT NULL UNIQUE," +
+      "`sign_attached` VARCHAR(255)," +
       "`sign_chest` VARCHAR(420) NOT NULL DEFAULT ''," +
       "`sign_owner` VARCHAR(36) NOT NULL," +
       "`sign_type` VARCHAR(100) NOT NULL," +
@@ -67,6 +69,7 @@ public class SignsData {
   private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
                                            "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?, sign_step = ?, sign_data = ?;";
   private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
+  private static final String SIGNS_CHANGE_OWNER = "UPDATE " + prefix + "_SIGNS SET sign_owner = ? WHERE sign_owner = ?";
   private static final String SIGNS_LOAD_CREATOR = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_creator = ? AND sign_type = ?";
   private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_location = ?";
   private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
@@ -100,6 +103,7 @@ public class SignsData {
         sign.getStep(),
         sign.saveExtraData()
     });
+
   }
 
   public static void updateStep(final Location location, final int step) throws SQLException {
@@ -138,6 +142,29 @@ public class SignsData {
       TNE.debug(e);
     }
     return sign;
+  }
+
+  public static void updateOwner(UUID old, UUID newOwner) {
+    try {
+      database().executePreparedUpdate(SIGNS_CHANGE_OWNER, new Object[] {
+          newOwner.toString(),
+          old.toString()
+      });
+    } catch (SQLException e) {
+      TNE.debug(e);
+    }
+  }
+
+  public static void changeOwner(UUID old, String type, String newName) throws SQLException {
+    Collection<TNESign> signs = loadSigns(old.toString(), type);
+
+    for(TNESign sign : signs) {
+      Bukkit.getScheduler().runTask(TNE.instance(), ()->{
+        Sign signState = (Sign)sign.getLocation().getBlock().getState();
+        signState.setLine(1, newName);
+        signState.update();
+      });
+    }
   }
 
   public static TNESign loadSignAttached(Location location) throws SQLException {

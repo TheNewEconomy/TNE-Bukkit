@@ -27,8 +27,8 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 11/7/2017.
  */
-public class ConfirmIcon extends Icon {
-  public ConfirmIcon(Integer slot) {
+public class ConfirmBuyIcon extends Icon {
+  public ConfirmBuyIcon(Integer slot) {
     super(slot, Material.GREEN_STAINED_GLASS_PANE, "Confirm Transaction");
     this.close = false;
   }
@@ -52,52 +52,57 @@ public class ConfirmIcon extends Icon {
       return;
     }
 
-    if(ItemCalculations.getCount(item, chest.getBlockInventory()) < amount) {
+    if(!currency && ItemCalculations.getCount(trade, chest.getBlockInventory()) < amount) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
       player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
       return;
     }
 
-    if(!currency) {
-      if(chest.getBlockInventory().firstEmpty() == -1) {
-        player.sendMessage(ChatColor.RED + "Shop doesn't have any free space.");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
-        return;
-      }
+    if(ItemCalculations.getCount(item, player.getInventory()) < amount) {
+      player.sendMessage(ChatColor.RED + "You don't have enough items to trade with this shop.");
+      player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+      return;
     }
 
-    if(currency) {
+    if(chest.getBlockInventory().firstEmpty() == -1) {
+      player.sendMessage(ChatColor.RED + "Shop doesn't have any free space.");
+      player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+      return;
+    }
+
+    if(!currency && player.getInventory().firstEmpty() == -1) {
+      player.sendMessage(ChatColor.RED + "You don't have any free space to hold this item.");
+      player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+      return;
+    }
+
+    if (currency) {
       final BigDecimal cost = (BigDecimal)TNE.menuManager().getViewerData(id, "shop_currency_cost");
-      if (!TNE.instance().api().hasHoldings(id.toString(), cost)) {
-        player.sendMessage(ChatColor.RED + "Insufficient funds.");
+
+      if (!TNE.instance().api().hasHoldings(owner.toString(), cost)) {
+        player.sendMessage(ChatColor.RED + "Shop has insufficient funds.");
         player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
         return;
       }
-      TNE.instance().api().addHoldings(owner.toString(), cost);
-      complete = TNE.instance().api().removeHoldings(id.toString(), cost);
+      TNE.instance().api().addHoldings(id.toString(), cost);
+      complete = TNE.instance().api().removeHoldings(owner.toString(), cost);
     } else {
 
-      if(ItemCalculations.getCount(trade, player.getInventory()) < trade.getAmount()) {
-        player.sendMessage(ChatColor.RED + "You don't have enough of the trade item to buy from this shop.");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
-        return;
-      }
-
-      ItemCalculations.removeItem(trade, player.getInventory());
-      ItemCalculations.giveItems(Collections.singletonList(trade), chest.getBlockInventory());
+      ItemCalculations.removeItem(trade, chest.getBlockInventory());
+      ItemCalculations.giveItems(Collections.singletonList(trade), player.getInventory());
       complete = true;
     }
 
     if (complete) {
-      ItemCalculations.giveItems(Collections.singletonList(item), player.getInventory());
-      ItemCalculations.removeItem(item, chest.getBlockInventory());
+      ItemCalculations.removeItem(item, player.getInventory());
+      ItemCalculations.giveItems(Collections.singletonList(item), chest.getBlockInventory());
 
       player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
       player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
 
       final Player ownerInstance = Bukkit.getPlayer(owner);
       if(ownerInstance != null) {
-        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just purchased an item from your shop.");
+        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just sold an item to your shop.");
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
       }
       return;

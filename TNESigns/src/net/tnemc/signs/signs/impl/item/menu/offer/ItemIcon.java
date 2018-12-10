@@ -31,6 +31,7 @@ public class ItemIcon extends Icon {
 
   @Override
   public ItemStack buildStack(Player player) {
+    final boolean selling = (Boolean)TNE.menuManager().getViewerData(player.getUniqueId(), "shop_selling");
     ItemStack stack = ((ItemStack)TNE.menuManager().getViewerData(player.getUniqueId(), "shop_item")).clone();
     TNE.debug("Item Durability: " + stack.getDurability());
     ItemMeta meta = stack.getItemMeta();
@@ -49,7 +50,11 @@ public class ItemIcon extends Icon {
       lore.add(ChatColor.RED + "Click to view preview of shulker box.");
     }
     meta.setLore(lore);
-    meta.setDisplayName(ChatColor.DARK_PURPLE + "Shop's Offer");
+    if(selling) {
+      meta.setDisplayName(ChatColor.DARK_PURPLE + "Shop's Offer");
+    } else {
+      meta.setDisplayName(ChatColor.DARK_PURPLE + "Cost");
+    }
     stack.setItemMeta(meta);
     return stack;
   }

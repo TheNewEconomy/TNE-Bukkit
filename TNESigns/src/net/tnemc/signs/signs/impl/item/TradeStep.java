@@ -54,12 +54,16 @@ public class TradeStep implements SignStep {
       try {
         final Chest chest = SignsData.chest(sign.getLocation());
         ItemStack item = ItemSign.getItem(sign.getLocation());
-        TNE.debug("Damage: " + item.getDurability());
         TNE.debug("Item Null?: " + (item == null));
+        TNE.debug("Damage: " + item.getDurability());
+        final boolean selling = ItemSign.isSelling(sign.getLocation());
         TNE.menuManager().setViewerData(player, "shop_owner", loaded.getOwner());
-        TNE.menuManager().setViewerData(player, "shop_selling", ItemSign.isSelling(sign.getLocation()));
+        TNE.menuManager().setViewerData(player, "shop_selling", selling);
         TNE.menuManager().setViewerData(player, "shop_chest", chest.getLocation());
+        TNE.menuManager().setViewerData(player, "shop_location", loaded.getLocation());
         TNE.menuManager().setViewerData(player, "shop_item", item);
+
+        TNE.debug("Selling: " + selling);
 
         final boolean currency = ItemSign.isCurrency(sign.getLocation());
         TNE.menuManager().setViewerData(player, "shop_currency", currency);
@@ -67,10 +71,17 @@ public class TradeStep implements SignStep {
         final BigDecimal amount = ItemSign.getCost(sign.getLocation());
         ItemStack cost = new ItemStack(Material.PAPER);
 
+        TNE.debug("Currency: " + currency);
+
         if(currency) {
           TNE.menuManager().setViewerData(player, "shop_currency_cost", amount);
           ItemMeta meta = cost.getItemMeta();
-          meta.setLore(Collections.singletonList(ChatColor.GOLD + "Cost: " + amount));
+
+          if(selling) {
+            meta.setLore(Collections.singletonList(ChatColor.GOLD + "Cost: " + amount));
+          } else {
+            meta.setLore(Collections.singletonList(ChatColor.GOLD + "Shop Offer: " + amount));
+          }
           cost.setItemMeta(meta);
         } else {
           cost = ItemSign.getTrade(sign.getLocation());

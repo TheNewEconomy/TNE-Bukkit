@@ -82,21 +82,34 @@ public class MaterialUtils {
     ItemMeta originalMeta = original.getItemMeta();
     ItemMeta compareMeta = compare.getItemMeta();
     if(compare.hasItemMeta()) {
+      TNE.debug("Meta");
       if (compareMeta.hasDisplayName()) {
+        TNE.debug("display");
         if (!originalMeta.hasDisplayName()) return false;
+        TNE.debug("Compare Display");
         if (!originalMeta.getDisplayName().equalsIgnoreCase(compareMeta.getDisplayName())) return false;
       }
+      TNE.debug("lore");
       if (compareMeta.hasLore()) {
+        TNE.debug("lorez");
         if (!originalMeta.hasLore()) return false;
+        TNE.debug("compare lorez");
+        TNE.debug(String.join(", " + originalMeta.getLore()));
+        TNE.debug(String.join(", " + compareMeta.getLore()));
         if (!originalMeta.getLore().containsAll(compareMeta.getLore())) return false;
       }
 
+      TNE.debug("enchant");
       if (compareMeta.hasEnchants()) {
         if (!originalMeta.hasEnchants()) return false;
 
+        TNE.debug("enchantz");
         for (Map.Entry<Enchantment, Integer> entry : compare.getEnchantments().entrySet()) {
+          TNE.debug("start");
           if (!original.containsEnchantment(entry.getKey())) return false;
+          TNE.debug("contains");
           if (original.getEnchantmentLevel(entry.getKey()) != entry.getValue()) return false;
+          TNE.debug("level");
         }
       }
     }
@@ -127,7 +140,10 @@ public class MaterialUtils {
       }
       return false;
     }
-    return compare.isSimilar(original);
+    TNE.debug("isSimilar: " + compare.isSimilar(original));
+    if(!original.getType().equals(compare.getType())) return false;
+    if(original.getDurability() != compare.getDurability()) return false;
+    return true;
   }
 
   public static boolean isShulker(Material material) {

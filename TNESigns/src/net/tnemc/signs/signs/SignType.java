@@ -122,7 +122,7 @@ public interface SignType {
   }
 
   default boolean onChest(final UUID owner, final UUID player) {
-    return false;
+    return owner.equals(player);
   }
 
   default boolean onMenuOpen(final Sign sign, final UUID player) {

@@ -45,9 +45,12 @@ public class ItemCalculations {
   }
 
   public static Integer getCount(ItemStack stack, Inventory inventory) {
+    ItemStack compare = stack.clone();
+    compare.setAmount(1);
+
     Integer value = 0;
     for(ItemStack item : inventory.getContents()) {
-      if(MaterialUtils.itemsEqual(stack, item)) {
+      if(MaterialUtils.itemsEqual(compare, item)) {
         value += item.getAmount();
       }
     }
@@ -301,7 +304,7 @@ public class ItemCalculations {
     for(int i = 0; i < inventory.getStorageContents().length; i++) {
       if(left <= 0) break;
       ItemStack item = inventory.getItem(i);
-      if(item == null || !item.isSimilar(stack)) continue;
+      if(item == null || !MaterialUtils.itemsEqual(stack, item)) continue;
 
       if(item.getAmount() <= left) {
         left -= item.getAmount();

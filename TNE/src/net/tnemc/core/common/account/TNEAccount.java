@@ -238,7 +238,7 @@ public class TNEAccount implements Account {
   }
 
   public Player getPlayer() {
-    return IDFinder.getPlayer(identifier().toString());
+    return IDFinder.getPlayer(displayName);
   }
 
   public AccountHistory getHistory() {

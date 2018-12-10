@@ -56,15 +56,13 @@ public class ItemSelectionStep implements SignStep {
         }
 
         TNE.debug("ItemSelect Interaction");
-        try {
-          ItemSign.saveItemSelection(loaded.getLocation(), holding, rightClick);
-          SignsData.updateStep(sign.getLocation(), 2);
+        TNE.menuManager().setViewerData(player, "shop_offer_amount", 0);
+        TNE.menuManager().setViewerData(player, "shop_sell", rightClick);
+        TNE.menuManager().setViewerData(player, "shop_item", holding);
+        TNE.menuManager().setViewerData(player, "action_shop", loaded.getLocation());
 
-          playerInstance.sendMessage(ChatColor.WHITE + "Changed shop offer to " + holding.getAmount() + " of " + holding.getType().name() + ".");
-          playerInstance.sendMessage(ChatColor.WHITE + "Right click with item to trade, or left click to enter currency amount.");
-          return false;
-        } catch (SQLException ignore) {
-        }
+        TNE.menuManager().open("shop_offer_amount_selection", playerInstance);
+        return false;
       }
     }
     playerInstance.sendMessage(ChatColor.RED + "Error while changing shop offer.");

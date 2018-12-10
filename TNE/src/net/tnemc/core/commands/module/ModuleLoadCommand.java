@@ -83,11 +83,12 @@ public class ModuleLoadCommand extends TNECommand {
       module.getModule().getConfigurations().forEach((configuration, identifier)->{
         TNE.configurations().add(configuration, identifier);
       });
-      module.getModule().getCommands().forEach((com)->{
+
+      for(TNECommand com : module.getModule().getCommands()) {
         List<String> accessors = Arrays.asList(com.getAliases());
         accessors.add(com.getName());
         TNE.instance().registerCommand((String[])accessors.toArray(), com);
-      });
+      }
       module.getModule().getListeners(TNE.instance()).forEach(listener->{
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());
         TNE.debug("Registering Listener");
