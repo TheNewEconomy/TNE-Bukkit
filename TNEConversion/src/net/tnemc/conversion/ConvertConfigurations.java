@@ -1,7 +1,7 @@
 package net.tnemc.conversion;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.common.configurations.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import java.util.List;
 public class ConvertConfigurations extends Configuration {
 
   @Override
-  public FileConfiguration getConfiguration() {
+  public CommentedConfiguration getConfiguration() {
     return ConversionModule.instance().getFileConfiguration();
   }
 
@@ -35,7 +35,7 @@ public class ConvertConfigurations extends Configuration {
   }
 
   @Override
-  public void load(FileConfiguration configurationFile) {
+  public void load(CommentedConfiguration configurationFile) {
     if(ConversionModule.instance().getConvert().exists()) ConversionModule.instance().saveConfigurations();
     configurations.put("Conversion.Format", "MySQL");
     configurations.put("Conversion.File", "Economy.db");

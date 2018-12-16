@@ -1,5 +1,6 @@
 package net.tnemc.conversion;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.conversion.command.ConvertCommand;
 import net.tnemc.conversion.impl.AdvancedEconomy;
 import net.tnemc.conversion.impl.BConomy;
@@ -44,9 +45,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +66,7 @@ public class ConversionModule extends Module {
 
   private static ConversionModule instance;
   private File convert;
-  private FileConfiguration fileConfiguration;
+  private CommentedConfiguration fileConfiguration;
   private ConvertConfigurations configuration;
 
   @Override
@@ -89,13 +87,12 @@ public class ConversionModule extends Module {
   public void initializeConfigurations() {
     super.initializeConfigurations();
     convert = new File(TNE.instance().getDataFolder(), "convert.yml");
-    fileConfiguration = YamlConfiguration.loadConfiguration(convert);
+    fileConfiguration = TNE.instance().initializeConfiguration(convert, "convery.yml");
   }
 
   @Override
   public void loadConfigurations() {
     super.loadConfigurations();
-    fileConfiguration.options().copyDefaults(true);
     configuration = new ConvertConfigurations();
     configurations.put(configuration, "Conversion");
   }
@@ -103,30 +100,14 @@ public class ConversionModule extends Module {
   @Override
   public void saveConfigurations() {
     super.saveConfigurations();
-    if(!convert.exists()) {
-      Reader stream = null;
-      try {
-        stream = new InputStreamReader(TNE.instance().getResource("convert.yml"), "UTF8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
-      if (stream != null) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(stream);
-        fileConfiguration.setDefaults(config);
-      }
-    }
-    try {
-      fileConfiguration.save(convert);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    fileConfiguration.save(convert);
   }
 
   public File getConvert() {
     return convert;
   }
 
-  public FileConfiguration getFileConfiguration() {
+  public CommentedConfiguration getFileConfiguration() {
     return fileConfiguration;
   }
 
