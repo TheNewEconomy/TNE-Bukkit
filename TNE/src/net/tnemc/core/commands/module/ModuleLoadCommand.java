@@ -74,12 +74,6 @@ public class ModuleLoadCommand extends TNECommand {
 
       module.getModule().initializeConfigurations();
       module.getModule().loadConfigurations();
-      module.getModule().getMainConfigurations().forEach((node, defaultValue)->{
-        TNE.instance().main().configurations.put(node, defaultValue);
-      });
-      module.getModule().getMessages().forEach((message, defaultValue)->{
-        TNE.instance().messages().configurations.put(message, defaultValue);
-      });
       module.getModule().getConfigurations().forEach((configuration, identifier)->{
         TNE.configurations().add(configuration, identifier);
       });

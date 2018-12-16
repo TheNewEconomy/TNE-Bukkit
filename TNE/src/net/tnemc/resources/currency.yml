@@ -164,10 +164,9 @@ Currencies:
                  Lore: 'Server Currency'
 
                  #All configurations relating to enchantment identification for currency tiers
+                 #The format is - enchantment name
                  #Optional.
                  Enchantments:
-
-                    #The format is - enchantment name
                     - example_enchant
 
                  #Configurations relating to crafting this currency tier.
@@ -182,14 +181,12 @@ Currencies:
                     #The materials that represent the characters used in the recipe option.
                     #Format: Character:Material Name
                     Materials:
-
                       - "X:GOLD_NUGGET"
                       - "Y:PAPER"
 
                     #List of this recipe's representing characters.
                     #maximum of three rows, where a space is an empty slot for shaped recipes.
                     Recipe:
-
                       - " X "
                       - "XYX"
                       - " X "
@@ -230,10 +227,9 @@ Currencies:
                  Lore: 'Server Currency'
 
                  #All configurations relating to enchantment identification for currency tiers
+                 #The format is - enchantment name
                  #Optional.
                  Enchantments:
-
-                    #The format is - enchantment name
                     - example_enchant
 
                  #Configurations relating to crafting this currency tier.
@@ -248,7 +244,6 @@ Currencies:
                     #The materials that represent the characters used in the recipe option.
                     #Format: Character:Material Name
                     Materials:
-
                       - "X:IRON_NUGGET"
                       - "Y:PAPER"
 

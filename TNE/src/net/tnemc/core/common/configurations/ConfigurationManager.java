@@ -17,7 +17,7 @@
 package net.tnemc.core.common.configurations;
 
 import com.github.tnerevival.TNELib;
-import org.bukkit.configuration.file.FileConfiguration;
+import net.tnemc.config.CommentedConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class ConfigurationManager {
     }
   }
 
-  private FileConfiguration getFileConfiguration(String id) {
+  private CommentedConfiguration getFileConfiguration(String id) {
     return configurations.get(id).getConfiguration();
   }
 
@@ -67,11 +67,11 @@ public class ConfigurationManager {
     return configurations.get(id);
   }
 
-  public void load(FileConfiguration configurationFile, String configID) {
+  public void load(CommentedConfiguration configurationFile, String configID) {
     getConfiguration(configID).load(configurationFile);
   }
 
-  public void save(FileConfiguration configurationFile, String configID) {
+  public void save(CommentedConfiguration configurationFile, String configID) {
     getConfiguration(configID).save(configurationFile);
   }
 
@@ -85,21 +85,16 @@ public class ConfigurationManager {
     configuration.save(configuration.getConfiguration());
   }
 
-  public void undoAll() {
-    for(Configuration configuration : configurations.values()) {
-      configuration.modified.clear();
-    }
-  }
 
   public boolean reload(String configID) {
     if(configID.equalsIgnoreCase("all")) {
       for(String str : loaded) {
-        save(configurations.get(str).getConfiguration(), str);
         load(configurations.get(str).getConfiguration(), str);
       }
       return true;
+    } else if(configID.equalsIgnoreCase("currency")) {
+
     } else if(loaded.contains(configID)) {
-      save(configurations.get(configID).getConfiguration(), configID);
       load(configurations.get(configID).getConfiguration(), configID);
       return true;
     }
@@ -149,15 +144,15 @@ public class ConfigurationManager {
   }
 
   public Boolean getBoolean(String node, String configID) {
-    return (Boolean)getConfiguration(configID).getValue(node);
+    return Boolean.valueOf(getConfiguration(configID).getValue(node).toString());
   }
 
   public Integer getInt(String node, String configID) {
-    return (Integer)getValue(node, configID, TNELib.instance().defaultWorld, "");
+    return Integer.valueOf(getValue(node, configID, TNELib.instance().defaultWorld, "").toString());
   }
 
   public Double getDouble(String node, String configID) {
-    return (Double)getValue(node, configID, TNELib.instance().defaultWorld, "");
+    return Double.valueOf(getValue(node, configID, TNELib.instance().defaultWorld, "").toString());
   }
 
   public Long getLong(String node, String configID) {
@@ -165,11 +160,13 @@ public class ConfigurationManager {
   }
 
   public String getString(String node, String configID) {
-    return (String)getValue(node, configID, TNELib.instance().defaultWorld, "");
+    if(getValue(node, configID, TNELib.instance().defaultWorld, "") == null) return null;
+    return getValue(node, configID, TNELib.instance().defaultWorld, "").toString();
   }
 
   public String getString(String node, String configID, String world, String player) {
-    return (String)getValue(node, configID, world, player);
+    if(getValue(node, configID, world, player) == null) return null;
+    return getValue(node, configID, world, player).toString();
   }
 
   /*

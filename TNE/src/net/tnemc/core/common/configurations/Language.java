@@ -1,9 +1,6 @@
 package net.tnemc.core.common.configurations;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.HashMap;
-import java.util.Map;
+import net.tnemc.config.CommentedConfiguration;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -15,21 +12,16 @@ import java.util.Map;
  */
 public class Language {
 
-  private Map<String, String> translations = new HashMap<>();
-  private FileConfiguration configuration;
+  private CommentedConfiguration configuration;
 
   private String name;
 
-  public Language(String name, FileConfiguration configuration) {
+  public Language(String name, CommentedConfiguration configuration) {
     this.name = name;
     this.configuration = configuration;
   }
 
-  public Map<String, String> getTranslations() {
-    return translations;
-  }
-
-  public FileConfiguration getConfiguration() {
+  public CommentedConfiguration getConfiguration() {
     return configuration;
   }
 
@@ -38,14 +30,10 @@ public class Language {
   }
 
   public boolean hasTranslation(String node) {
-    return translations.containsKey(node);
+    return configuration.contains(node);
   }
 
   public String getTranslation(String node) {
-    return translations.get(node);
-  }
-
-  public void addTranslation(String node, String value) {
-    translations.put(node, value);
+    return configuration.getString(node);
   }
 }

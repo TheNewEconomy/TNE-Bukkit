@@ -5,7 +5,11 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.TNECurrency;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -79,7 +83,7 @@ public class WorldManager {
     return false;
   }
 
-  public void setConfiguration(String node, Object value) {
+  public void setConfiguration(String node, String value) {
     configurations.put(node, value);
   }
 

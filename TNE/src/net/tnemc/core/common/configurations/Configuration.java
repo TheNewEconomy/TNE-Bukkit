@@ -1,76 +1,34 @@
 package net.tnemc.core.common.configurations;
 
-import com.github.tnerevival.TNELib;
-import net.tnemc.core.TNE;
-import org.bukkit.configuration.file.FileConfiguration;
+import net.tnemc.config.CommentedConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 
 public abstract class Configuration {
 
-  public abstract FileConfiguration getConfiguration();
+  public abstract CommentedConfiguration getConfiguration();
 
   public abstract List<String> node();
 
   public abstract File getFile();
 
-  public Map<String, Object> configurations = new HashMap<>();
-  public Map<String, Object> modified = new HashMap<>();
-
-  public void load(FileConfiguration configurationFile) {
-    Iterator<java.util.Map.Entry<String, Object>> it = configurations.entrySet().iterator();
-
-    while(it.hasNext()) {
-      java.util.Map.Entry<String, Object> entry = it.next();
-      if(configurationFile.contains(entry.getKey())) {
-        setValue(entry.getKey(), configurationFile.get(entry.getKey()));
-      } else {
-        configurationFile.set(entry.getKey(), entry.getValue());
-      }
-    }
-
-    try {
-      configurationFile.save(getFile());
-    } catch (IOException e) {
-      TNE.debug(e);
-    }
+  public void load(CommentedConfiguration configurationFile) {
+    configurationFile.load(false);
   }
 
-  public void save(FileConfiguration configurationFile) {
-    if(!new File(TNELib.instance().getDataFolder(), configurationFile.getName()).exists()) {
-      Iterator<Map.Entry<String, Object>> iterator = modified.entrySet().iterator();
-      while(iterator.hasNext()) {
-        Map.Entry<String, Object> entry = iterator.next();
-        if(configurationFile.contains(entry.getKey())) {
-          configurationFile.set(entry.getKey(), entry.getValue());
-        }
-        iterator.remove();
-      }
-
-      try {
-        configurationFile.save(getFile());
-      } catch (IOException e) {
-        TNE.debug(e);
-      }
-    }
-  }
-
-  public boolean acceptableValue(String node, Object object) {
-    return (configurations.get(node).getClass().equals(object.getClass()));
+  public void save(CommentedConfiguration configurationFile) {
+    configurationFile.save(getFile());
+    load(configurationFile);
   }
 
   public Boolean hasNode(String node) {
-    return configurations.get(node) != null;
+    return getConfiguration().contains(node);
   }
 
   public Object getValue(String node) {
-    return configurations.get(node);
+    return getConfiguration().getString(node);
   }
 
   public Object getValue(String node, String world) {
@@ -82,8 +40,7 @@ public abstract class Configuration {
   }
 
   public void setValue(String node, Object value) {
-    modified.put(node, value);
-    configurations.put(node, value);
+    getConfiguration().set(node, value.toString());
   }
 
 }

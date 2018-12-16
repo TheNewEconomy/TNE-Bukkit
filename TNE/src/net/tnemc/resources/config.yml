@@ -274,7 +274,7 @@ Core:
             Port: 3306
             
             #The MySQL database
-            Database: TheNewEconomy
+            DB: TheNewEconomy
             
             #Your MySQL user's name
             User: user

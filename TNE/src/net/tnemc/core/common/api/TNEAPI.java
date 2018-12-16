@@ -727,35 +727,35 @@ public class TNEAPI {
   }
 
   public Boolean getBoolean(String configuration) {
-    return (Boolean)getConfiguration(configuration, TNELib.instance().defaultWorld);
+    return Boolean.valueOf(getConfiguration(configuration, TNELib.instance().defaultWorld).toString());
   }
 
   public Boolean getBoolean(String configuration, String world) {
-    return (Boolean)getConfiguration(configuration, world, "");
+    return Boolean.valueOf(getConfiguration(configuration, world, "").toString());
   }
 
   public Boolean getBoolean(String configuration, String world, UUID uuid) {
-    return (Boolean)getConfiguration(configuration, world, uuid.toString());
+    return Boolean.valueOf(getConfiguration(configuration, world, uuid.toString()).toString());
   }
 
   public Boolean getBoolean(String configuration, String world, String player) {
-    return (Boolean)getConfiguration(configuration, world, player);
+    return Boolean.valueOf(getConfiguration(configuration, world, player).toString());
   }
 
   public Integer getInteger(String configuration) {
-    return (Integer)getConfiguration(configuration, TNELib.instance().defaultWorld);
+    return Integer.valueOf(getConfiguration(configuration, TNELib.instance().defaultWorld).toString());
   }
 
   public Integer getInteger(String configuration, String world) {
-    return (Integer)getConfiguration(configuration, world, "");
+    return Integer.valueOf(getConfiguration(configuration, world, "").toString());
   }
 
   public Integer getInteger(String configuration, String world, UUID uuid) {
-    return (Integer)getConfiguration(configuration, world, uuid.toString());
+    return Integer.valueOf(getConfiguration(configuration, world, uuid.toString()).toString());
   }
 
   public Integer getInteger(String configuration, String world, String player) {
-    return (Integer)getConfiguration(configuration, world, player);
+    return Integer.valueOf(getConfiguration(configuration, world, player).toString());
   }
 
   public boolean hasConfiguration(String configuration) {

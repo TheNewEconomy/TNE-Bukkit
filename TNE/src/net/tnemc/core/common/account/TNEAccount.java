@@ -299,7 +299,7 @@ public class TNEAccount implements Account {
 
   @Override
   public UUID identifier() {
-    return id;
+    return IDFinder.getID(displayName);
   }
 
   @Override
@@ -318,13 +318,13 @@ public class TNEAccount implements Account {
 
   @Override
   public boolean isAccessor(Account account) {
-    return accessors.containsKey(IDFinder.getID(account.identifier().toString()));
+    return accessors.containsKey(account.identifier());
   }
 
   @Override
   public boolean canWithdraw(Account account) {
     if(isAccessor(account)) {
-      return accessors.get(IDFinder.getID(account.identifier().toString())).canWithdraw();
+      return accessors.get(account.identifier()).canWithdraw();
     }
     return false;
   }
@@ -332,7 +332,7 @@ public class TNEAccount implements Account {
   @Override
   public boolean canDeposit(Account account) {
     if(isAccessor(account)) {
-      return accessors.get(IDFinder.getID(account.identifier().toString())).canDeposit();
+      return accessors.get(account.identifier()).canDeposit();
     }
     return false;
   }
@@ -340,7 +340,7 @@ public class TNEAccount implements Account {
   @Override
   public boolean canRemoveAccessor(Account account) {
     if(isAccessor(account)) {
-      return accessors.get(IDFinder.getID(account.identifier().toString())).canRemoveAccessor();
+      return accessors.get(account.identifier()).canRemoveAccessor();
     }
     return false;
   }
@@ -348,7 +348,7 @@ public class TNEAccount implements Account {
   @Override
   public boolean canAddAccessor(Account account) {
     if(isAccessor(account)) {
-      return accessors.get(IDFinder.getID(account.identifier().toString())).canAddAccessor();
+      return accessors.get(account.identifier()).canAddAccessor();
     }
     return false;
   }

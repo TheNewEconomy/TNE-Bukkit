@@ -1,5 +1,6 @@
 package net.tnemc.core.common;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -163,17 +164,18 @@ public class CurrencyManager {
     }
   }
 
-  private void loadCurrency(FileConfiguration configuration, boolean world, String worldName) {
+  private void loadCurrency(CommentedConfiguration configuration, boolean world, String worldName) {
     String curBase = ((world)? "Worlds." + worldName + "." : "") + "Currencies";
+
     if(configuration.contains(curBase)) {
 
-      Set<String> currencies = configuration.getConfigurationSection(curBase).getKeys(false);
+      Set<String> currencies = configuration.getSection(curBase).getKeys(false);
       TNE.debug(currencies.toArray().toString());
 
       for(String cur : currencies) {
         final String base = curBase + "." + cur;
         if (configuration.contains(base + ".Options.Disabled") &&
-            configuration.getBoolean(base + ".Options.Disabled")) {
+            configuration.getBool(base + ".Options.Disabled")) {
               return;
         }
 
@@ -189,21 +191,21 @@ public class CurrencyManager {
         final String symbol = configuration.getString(base + ".Info.Symbol", "$");
 
         //Currency Options Configurations.
-        final Boolean worldDefault = configuration.getBoolean(base + ".Options.Default", true);
+        final Boolean worldDefault = configuration.getBool(base + ".Options.Default", true);
         final String format = configuration.getString(base + ".Options.Format", "<symbol><major.amount><decimal><minor.amount>").trim();
         final BigDecimal maxBalance = ((new BigDecimal(configuration.getString(base + ".Options.MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance", largestSupported.toPlainString())));
         final BigDecimal balance = new BigDecimal(configuration.getString(base + ".Options.Balance", "200.00"));
         final String decimal = configuration.getString(base + ".Options.Decimal", ".");
         final Integer decimalPlaces = ((configuration.getInt(base + ".Options.DecimalPlace", 2) > 4)? 4 : configuration.getInt(base + ".DecimalPlace", 2));
-        final Boolean experience = configuration.getBoolean(base + ".Options.Experience");
-        final Boolean item = configuration.getBoolean(base + ".Options.ItemCurrency");
-        final Boolean ender = configuration.getBoolean(base + ".Options.EnderChest", true);
-        final Boolean separate = configuration.getBoolean(base + ".Options.Major_Separate", true);
+        final Boolean experience = configuration.getBool(base + ".Options.Experience");
+        final Boolean item = configuration.getBool(base + ".Options.ItemCurrency");
+        final Boolean ender = configuration.getBool(base + ".Options.EnderChest", true);
+        final Boolean separate = configuration.getBool(base + ".Options.Major_Separate", true);
         final String separator = configuration.getString(base + ".Options.Major_Separator", ",");
         final Integer minorWeight = configuration.getInt(base + ".Options.Minor_Weight", 100);
 
         //Currency Note Configurations
-        final Boolean notable = configuration.getBoolean(base + ".Note.Notable", false);
+        final Boolean notable = configuration.getBool(base + ".Note.Notable", false);
         final BigDecimal fee = new BigDecimal(configuration.getString(base + ".Note.Fee", "0.00"));
         final BigDecimal minimum = new BigDecimal(configuration.getString(base + ".Note.Minimum", "0.00"));
 
@@ -251,8 +253,8 @@ public class CurrencyManager {
     }
   }
 
-  private void loadTiers(String world, TNECurrency currency, FileConfiguration configuration, String baseNode) {
-    Set<String> tiers = configuration.getConfigurationSection(baseNode).getKeys(false);
+  private void loadTiers(String world, TNECurrency currency, CommentedConfiguration configuration, String baseNode) {
+    Set<String> tiers = configuration.getSection(baseNode).getKeys(false);
     for(String tierName : tiers) {
       String tierBase = baseNode + "." + tierName;
 
@@ -281,8 +283,8 @@ public class CurrencyManager {
       }
 
       if(configuration.contains(tierBase + ".Options.Crafting")) {
-        if(configuration.getBoolean(tierBase + ".Options.Crafting.Enabled", false)) {
-          final boolean shapeless = configuration.getBoolean(tierBase + ".Options.Crafting.Shapeless", false);
+        if(configuration.getBool(tierBase + ".Options.Crafting.Enabled", false)) {
+          final boolean shapeless = configuration.getBool(tierBase + ".Options.Crafting.Shapeless", false);
           final ItemStack stack = item.toStack();
           stack.setAmount(0);
           Recipe recipe = null;

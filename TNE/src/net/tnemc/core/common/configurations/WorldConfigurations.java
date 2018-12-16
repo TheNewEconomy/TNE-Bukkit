@@ -1,8 +1,8 @@
 package net.tnemc.core.common.configurations;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldManager;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class WorldConfigurations extends Configuration {
   private Map<String, String> configurationShare = new HashMap<>();
 
   @Override
-  public FileConfiguration getConfiguration() {
+  public CommentedConfiguration getConfiguration() {
     return TNE.instance().worldConfiguration();
   }
 
@@ -43,21 +43,21 @@ public class WorldConfigurations extends Configuration {
   }
 
   @Override
-  public void load(FileConfiguration configurationFile) {
+  public void load(CommentedConfiguration configurationFile) {
 
-    Set<String> worlds = configurationFile.getConfigurationSection("Worlds").getKeys(false);
+    Set<String> worlds = configurationFile.getSection("Worlds").getKeys(false);
 
     for(String world : worlds) {
       WorldManager manager = TNE.instance().getWorldManager(world);
       if(manager == null) {
         continue;
       }
-      Set<String> configurations = configurationFile.getConfigurationSection("Worlds." + world).getKeys(true);
+      Set<String> configurations = configurationFile.getSection("Worlds." + world).getKeys(true);
 
       for(String s : configurations) {
         String node = "Worlds." + world + "." + s;
         if(!configurationFile.isConfigurationSection(node) && !node.contains("Worlds." + world + ".Currency")) {
-          manager.setConfiguration(node, configurationFile.get(node));
+          manager.setConfiguration(node, configurationFile.getString(node));
         }
       }
 

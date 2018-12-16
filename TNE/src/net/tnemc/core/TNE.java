@@ -4,6 +4,7 @@ import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import net.milkbowl.vault.economy.Economy;
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.commands.CommandManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.commands.admin.AdminCommand;
@@ -48,8 +49,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -58,9 +57,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,17 +105,19 @@ public class TNE extends TNELib {
   private TNEAPI api;
 
   // Files & Custom Configuration Files
+  private File mainConfig;
   private File currencies;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
-  private FileConfiguration currencyConfigurations;
-  private FileConfiguration itemConfigurations;
-  private FileConfiguration messageConfigurations;
-  private FileConfiguration playerConfigurations;
-  private FileConfiguration worldConfigurations;
+  private CommentedConfiguration mainConfigurations;
+  private CommentedConfiguration currencyConfigurations;
+  private CommentedConfiguration itemConfigurations;
+  private CommentedConfiguration messageConfigurations;
+  private CommentedConfiguration playerConfigurations;
+  private CommentedConfiguration worldConfigurations;
 
   private MainConfigurations main;
   private MessageConfigurations messages;
@@ -125,7 +126,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta118";
+  public static final String build = "2Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -201,20 +202,11 @@ public class TNE extends TNELib {
 
     //Configurations
     initializeConfigurations();
-    loadConfigurations();
+
     main = new MainConfigurations();
     messages = new MessageConfigurations();
     world = new WorldConfigurations();
-    loader.getModules().forEach((key, value)->{
-      value.getModule().getMainConfigurations().forEach((node, defaultValue)->{
-        main.configurations.put(node, defaultValue);
-      });
-    });
-    loader.getModules().forEach((key, value)->{
-      value.getModule().getMessages().forEach((message, defaultValue)->{
-        messages.configurations.put(message, defaultValue);
-      });
-    });
+
     loader.getModules().forEach((key, value)->{
       value.getModule().getConfigurations().forEach((configuration, identifier)->{
         configurations().add(configuration, identifier);
@@ -281,7 +273,7 @@ public class TNE extends TNELib {
         configurations().getString("Core.Database.Type").toLowerCase(),
         configurations().getString("Core.Database.MySQL.Host"),
         configurations().getInt("Core.Database.MySQL.Port"),
-        configurations().getString("Core.Database.MySQL.Database"),
+        configurations().getString("Core.Database.MySQL.DB"),
         configurations().getString("Core.Database.MySQL.User"),
         configurations().getString("Core.Database.MySQL.Password"),
         configurations().getString("Core.Database.Prefix"),
@@ -598,41 +590,73 @@ public class TNE extends TNELib {
     return messages;
   }
 
-  public FileConfiguration messageConfiguration() {
+  public CommentedConfiguration mainConfigurations() {
+    return mainConfigurations;
+  }
+
+  public CommentedConfiguration messageConfiguration() {
     return messageConfigurations;
   }
 
-  public FileConfiguration itemConfiguration() {
+  public CommentedConfiguration itemConfiguration() {
     return itemConfigurations;
   }
 
-  public FileConfiguration playerConfiguration() {
+  public CommentedConfiguration playerConfiguration() {
     return playerConfigurations;
   }
 
-  public FileConfiguration worldConfiguration() {
+  public CommentedConfiguration worldConfiguration() {
     return worldConfigurations;
   }
 
+  public CommentedConfiguration getCurrencyConfigurations() {
+    return currencyConfigurations;
+  }
+
   private void initializeConfigurations() {
+    TNE.logger().info("Loading Configurations.");
+    mainConfig = new File(getDataFolder(), "config.yml");
     currencies = new File(getDataFolder(), "currency.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
     players = new File(getDataFolder(), "players.yml");
     worlds = new File(getDataFolder(), "worlds.yml");
-    currencyConfigurations = YamlConfiguration.loadConfiguration(currencies);
-    itemConfigurations = YamlConfiguration.loadConfiguration(items);
-    messageConfigurations = YamlConfiguration.loadConfiguration(messagesFile);
-    playerConfigurations = YamlConfiguration.loadConfiguration(players);
-    worldConfigurations = YamlConfiguration.loadConfiguration(worlds);
-    loader.getModules().forEach((key, value)->{
-      value.getModule().initializeConfigurations();
+
+    TNE.logger().info("Initializing Configurations.");
+    mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
+    TNE.logger().info("Initialized config.yml");
+    currencyConfigurations = initializeConfiguration(currencies, "currency.yml");
+    TNE.logger().info("Initialized currency.yml");
+    messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
+    TNE.logger().info("Initialized messages.yml");
+    playerConfigurations = initializeConfiguration(players, "players.yml");
+    TNE.logger().info("Initialized players.yml");
+    worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
+    TNE.logger().info("Initialized worlds.yml");
+    Bukkit.getScheduler().runTaskAsynchronously(this, ()-> {
+      itemConfigurations = initializeConfiguration(items, "items.yml");
+      TNE.logger().info("Initialized items.yml");
+
+      loader.getModules().forEach((key, value) -> {
+        value.getModule().initializeConfigurations();
+      });
     });
+  }
+
+  public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
+    CommentedConfiguration commentedConfiguration;
+
     try {
-      setConfigurationDefaults();
-    } catch (UnsupportedEncodingException e) {
+      Files.copy(this.getResource(defaultFile), Paths.get(getDataFolder() + "/default-" + defaultFile), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
       e.printStackTrace();
     }
+    File defaults = new File(getDataFolder(), "default-" + defaultFile);
+    commentedConfiguration = new CommentedConfiguration(file, defaults);
+    commentedConfiguration.load();
+    defaults.delete();
+    return commentedConfiguration;
   }
 
   public static void debug(StackTraceElement[] stack) {
@@ -645,7 +669,7 @@ public class TNE extends TNELib {
     if(consoleDebug) System.out.println(message);
   }
 
-  public void loadConfigurations() {
+  /*public void loadConfigurations() {
     loader.getModules().forEach((key, value)->{
       value.getModule().loadConfigurations();
     });
@@ -719,7 +743,7 @@ public class TNE extends TNELib {
       YamlConfiguration config = YamlConfiguration.loadConfiguration(worldsStream);
       worldConfigurations.setDefaults(config);
     }
-  }
+  }*/
 
   private void setupVault() {
     getServer().getServicesManager().register(Economy.class, vaultEconomy, this, ServicePriority.Highest);
@@ -746,10 +770,6 @@ public class TNE extends TNELib {
       }
     }
     return null;
-  }
-
-  public FileConfiguration getCurrencyConfigurations() {
-    return currencyConfigurations;
   }
 
   public Collection<WorldManager> getWorldManagers() {

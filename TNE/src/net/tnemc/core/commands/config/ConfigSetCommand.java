@@ -5,7 +5,6 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.api.IDFinder;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -64,16 +63,8 @@ public class ConfigSetCommand extends TNECommand {
         return false;
       }
 
-      Object value = TNE.configurations().getValue(node, configuration, world, IDFinder.getID(sender).toString());
       Object newValue = arguments[1];
 
-      if(!value.getClass().equals(newValue.getClass())) {
-        Message message = new Message("Messages.Configuration.Invalid");
-        message.addVariable("$node", node);
-        message.addVariable("$value", newValue.toString());
-        message.translate(world, sender);
-        return false;
-      }
       TNE.configurations().setValue(node, configuration, newValue);
       Message message = new Message("Messages.Configuration.Set");
       message.addVariable("$node", node);
