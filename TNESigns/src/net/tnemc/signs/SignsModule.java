@@ -2,6 +2,7 @@ package net.tnemc.signs;
 
 import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.db.SQLDatabase;
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
@@ -21,14 +22,8 @@ import net.tnemc.signs.signs.impl.item.menu.ShulkerPreviewMenu;
 import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmIcon;
 import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmTradeIcon;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +48,7 @@ public class SignsModule extends Module {
 
 
   private File signs;
-  private FileConfiguration fileConfiguration;
+  private CommentedConfiguration fileConfiguration;
   private SignsConfiguration configuration;
 
   private SignsManager manager;
@@ -79,7 +74,7 @@ public class SignsModule extends Module {
 
   @Override
   public void unload(TNE tne) {
-    if(!signs.exists()) {
+    if(fileConfiguration != null) {
       configuration.save(fileConfiguration);
     }
     tne.logger().info("Signs Module unloaded!");
@@ -101,13 +96,12 @@ public class SignsModule extends Module {
   public void initializeConfigurations() {
     super.initializeConfigurations();
     signs = new File(TNE.instance().getDataFolder(), "signs.yml");
-    fileConfiguration = YamlConfiguration.loadConfiguration(signs);
+    fileConfiguration = TNE.instance().initializeConfiguration(signs, "signs.yml");
   }
 
   @Override
   public void loadConfigurations() {
     super.loadConfigurations();
-    fileConfiguration.options().copyDefaults(true);
     configuration = new SignsConfiguration();
     configurations.put(configuration, "Signs");
   }
@@ -127,24 +121,7 @@ public class SignsModule extends Module {
 
   @Override
   public void saveConfigurations() {
-    super.saveConfigurations();
-    if(!signs.exists()) {
-      Reader stream = null;
-      try {
-        stream = new InputStreamReader(TNE.instance().getResource("signs.yml"), "UTF8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
-      if (stream != null) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(stream);
-        fileConfiguration.setDefaults(config);
-      }
-    }
-    try {
-      fileConfiguration.save(signs);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    fileConfiguration.save(signs);
   }
 
   /**
@@ -200,7 +177,7 @@ public class SignsModule extends Module {
     return signs;
   }
 
-  public FileConfiguration getFileConfiguration() {
+  public CommentedConfiguration getFileConfiguration() {
     return fileConfiguration;
   }
 

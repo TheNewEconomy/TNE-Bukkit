@@ -319,7 +319,7 @@ public class ItemSign implements SignType {
   public static boolean canOffer(final Player player, final Material material) {
     if(TNE.hasPermssion(player, "tne.item.sign")) return true;
     if(TNE.instance().itemConfiguration().contains("tne.item." + material.name().toLowerCase() + ".sign")) {
-      return TNE.hasPermssion(player, TNE.instance().itemConfiguration().getString(""));
+      return TNE.hasPermssion(player, TNE.instance().itemConfiguration().getString("tne.item." + material.name().toLowerCase() + ".sign"));
     }
     return false;
   }

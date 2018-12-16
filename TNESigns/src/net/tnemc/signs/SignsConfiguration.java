@@ -1,7 +1,7 @@
 package net.tnemc.signs;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.common.configurations.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import java.util.List;
 public class SignsConfiguration extends Configuration {
 
   @Override
-  public FileConfiguration getConfiguration() {
+  public CommentedConfiguration getConfiguration() {
     return SignsModule.instance().getFileConfiguration();
   }
 
@@ -35,20 +35,8 @@ public class SignsConfiguration extends Configuration {
   }
 
   @Override
-  public void load(FileConfiguration configurationFile) {
+  public void load(CommentedConfiguration configurationFile) {
     if(SignsModule.instance().getSigns().exists()) SignsModule.instance().saveConfigurations();
-
-    configurations.put("Signs.Item.Enabled", true);
-    configurations.put("Signs.Item.Max", 5);
-
-    configurations.put("Signs.Nation.Enabled", true);
-    configurations.put("Signs.Nation.Max", 5);
-
-    configurations.put("Signs.Town.Enabled", true);
-    configurations.put("Signs.Town.Max", 5);
-
-    configurations.put("Signs.Safe.Enabled", true);
-    configurations.put("Signs.Safe.Max", 5);
 
     super.load(configurationFile);
   }
