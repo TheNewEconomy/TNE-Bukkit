@@ -1,0 +1,37 @@
+Vault:
+
+    #The cost of a vault.
+    Cost: 2000.00
+
+    #Items you wish to blacklist from vaults.
+    BlackList:
+
+    #Size options for vaults.
+    Size:
+
+        #The default size if no other size options are valid.(in rows, maximum is 5)
+        Default: 3
+
+        #The default amount of tabs a vault has.(9 is the maximum, 1 is the minimum).
+        DefaultTabs: 2
+
+        #Vault size packages.
+        Packages:
+
+            #Whether or not packages are enabled
+            Enabled: false
+
+            #The name of the package
+            Dirt:
+
+                #The tabs this package allows.
+                Tabs: 2
+
+                #The size, in rows, per tab.
+                Size: 4
+
+                #The cost of the package.
+                Cost: 4000
+
+                #The permission node required to purchase this package.
+                Permission: "vault.package.4"
