@@ -11,4 +11,8 @@ package net.tnemc.web;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class WebManager {
+
+  private void start() {
+
+  }
 }

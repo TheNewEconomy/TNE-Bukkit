@@ -53,12 +53,14 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.7.1</version>
+            <version>1.1.8.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.takes</groupId>
-            <artifactId>takes</artifactId>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.7.2</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

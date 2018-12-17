@@ -28,4 +28,12 @@ public class WebModule extends Module {
   public void unload(TNE tne) {
     TNE.logger().info("Web Module unloaded!");
   }
+
+  /**
+   * Used to initialize any configuration files this module may use.
+   */
+  @Override
+  public void initializeConfigurations() {
+    super.initializeConfigurations();
+  }
 }
