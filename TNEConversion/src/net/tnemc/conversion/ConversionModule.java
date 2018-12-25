@@ -86,7 +86,7 @@ public class ConversionModule extends Module {
   public void initializeConfigurations() {
     super.initializeConfigurations();
     convert = new File(TNE.instance().getDataFolder(), "convert.yml");
-    fileConfiguration = TNE.instance().initializeConfiguration(convert, "convery.yml");
+    fileConfiguration = TNE.instance().initializeConfiguration(convert, "convert.yml");
   }
 
   @Override

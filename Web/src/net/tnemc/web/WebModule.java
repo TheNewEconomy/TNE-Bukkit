@@ -35,6 +35,20 @@ public class WebModule extends Module {
     TNE.logger().info("Web Module loaded!");
   }
 
+  /**
+   * Called at the last portion of TNE's onEnable, post initialization.
+   *
+   * @param tne An instance of the main TNE class.
+   */
+  @Override
+  public void postLoad(TNE tne) {
+    try {
+      manager.start(fileConfiguration.getInt("Web.Port"));
+    } catch (Exception ignore) {
+      TNE.logger().warning("Failed to start Web Server on Port: " + fileConfiguration.getInt("Web.Port"));
+    }
+  }
+
   @Override
   public void unload(TNE tne) {
     TNE.logger().info("Web Module unloaded!");

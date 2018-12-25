@@ -29,7 +29,7 @@ public class WebManager {
   private Map<String, Route> post = new HashMap<>();
   private LinkedHashMap<String, String> navLinks = new LinkedHashMap<>();
 
-  private void start(int port) throws Exception {
+  void start(int port) throws Exception {
 
     //Configure Spark
     port(port);
