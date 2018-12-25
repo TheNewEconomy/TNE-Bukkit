@@ -1,3 +1,4 @@
+<#include "../header.ftl">
 <div class="login">
     <form class="mc-form">
         <h1>Minecraft Login</h1>
@@ -7,3 +8,4 @@
         <input name="submit" value="Login" type="button" />
     </form>
 </div>
+<#include "../footer.ftl">

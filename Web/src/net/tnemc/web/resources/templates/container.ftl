@@ -1,3 +1,4 @@
+<#include "header.ftl">
 <header>
     <div class="user-bar">
         <div class="head">

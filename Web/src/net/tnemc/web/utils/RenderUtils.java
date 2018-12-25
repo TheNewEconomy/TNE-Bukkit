@@ -10,6 +10,9 @@ import spark.Request;
 import spark.Response;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,10 +30,13 @@ import java.util.Map;
  */
 public class RenderUtils {
 
-  public static Map<String, Object> buildHeader(Request request) throws SQLException {
+  public static Map<String, Object> buildHeader(Request request, Response response) throws SQLException {
     Map<String, Object> model = new HashMap<>();
-    model.putAll(buildNavigation(request));
+    if(!testLogin(request, response)) return model;
+
+    model.putAll(buildNavigation(request, response));
     model.put("user", request.session().attribute("user"));
+    model.put("year", LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(new Date())).getYear());
 
     List<Balance> balances = new LinkedList<>();
     ((TNEDataManager)TNE.instance().getSaveManager().getDataManager()).getTNEProvider().loadAccount(request.session().attribute("uuid")).getWorldHoldings().forEach((world, worldHoldings)->{
@@ -41,7 +47,7 @@ public class RenderUtils {
     return model;
   }
 
-  public static Map<String, Object> buildNavigation(Request request) {
+  public static Map<String, Object> buildNavigation(Request request, Response response) {
     LinkedList<NavLink> navigationLinks = new LinkedList<>();
 
     for(Map.Entry<String, String> link : WebModule.instance().getManager().getNavLinks().entrySet()) {
@@ -53,10 +59,12 @@ public class RenderUtils {
     return model;
   }
 
-  public static void testLogin(Request request, Response response) {
+  public static boolean testLogin(Request request, Response response) {
     if(request.session().attribute("accessToken") == null) {
       request.session().attribute("redirect", request.pathInfo());
       response.redirect("/login");
+      return false;
     }
+    return true;
   }
 }
