@@ -6,17 +6,18 @@
         </div>
         <div class="balances">
             <div class="entry">
-                <label class="currency">Gold:</label>
-                <label class="amount">${user.gold}</label>
+                <#list balances as balance>
+                    <label class="currency">${balance.currency}:</label>
+                    <label class="amount">${balance.amount}</label>
+                </#list>
             </div>
         </div>
     </div>
     <nav>
         <ul>
-            <li><a href="/overview">Overview</a></li>
-            <li><a href="/account">Account</a></li>
-            <li><a href="/shops">Shops</a></li>
-            <li><a href="/shops">Admin</a></li>
+            <#list links as link>
+                <li${link.active}><a href="${link.path}">${link.display}</a></li>
+            </#list>
         </ul>
     </nav>
     <div class="header-space"></div>

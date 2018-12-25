@@ -1,8 +1,11 @@
 package net.tnemc.web;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+
+import java.io.File;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -19,8 +22,16 @@ import net.tnemc.core.common.module.ModuleInfo;
 )
 public class WebModule extends Module {
 
+  private static WebModule instance;
+
+  private File webFile;
+  private CommentedConfiguration fileConfiguration;
+  private WebManager manager;
+
   @Override
   public void load(TNE tne, String version) {
+    instance = this;
+    manager = new WebManager();
     TNE.logger().info("Web Module loaded!");
   }
 
@@ -29,11 +40,29 @@ public class WebModule extends Module {
     TNE.logger().info("Web Module unloaded!");
   }
 
+  public static WebModule instance() {
+    return instance;
+  }
+
+  public WebManager getManager() {
+    return manager;
+  }
+
   /**
    * Used to initialize any configuration files this module may use.
    */
   @Override
   public void initializeConfigurations() {
     super.initializeConfigurations();
+    webFile = new File(TNE.instance().getDataFolder(), "web.yml");
+    fileConfiguration = TNE.instance().initializeConfiguration(webFile, "web.yml");
+  }
+
+  public File getWebFile() {
+    return webFile;
+  }
+
+  public CommentedConfiguration getFileConfiguration() {
+    return fileConfiguration;
   }
 }
