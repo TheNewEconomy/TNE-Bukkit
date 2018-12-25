@@ -6,11 +6,16 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 
 /**
@@ -35,32 +40,34 @@ public class BConomy extends Converter {
   @Override
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
-    try {
-      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (mysqlDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("userid");
-        Integer balance = mysqlDB().results(index).getInt("balance");
-        ConversionModule.convertedAdd(uuid, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name(), new BigDecimal(balance));
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString("userid"),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("balance")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
     db = new SQLite(conversionManager);
-    try {
-      int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (sqliteDB().results(index).next()) {
-        String uuid = sqliteDB().results(index).getString("userid");
-        Integer balance = sqliteDB().results(index).getInt("balance");
-        ConversionModule.convertedAdd(uuid, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name(), new BigDecimal(balance));
+    try(Connection connection = sqliteDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = sqliteDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString("userid"),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("balance")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 }

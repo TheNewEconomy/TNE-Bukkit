@@ -11,6 +11,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -33,17 +37,17 @@ public class SimplisticEconomy extends Converter {
   @Override
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
-    try {
-      int index = mysqlDB().executeQuery("SELECT player_name, balance FROM " + config.getString("storage.table") + ";");
 
-      Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
-      while (mysqlDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("player_name");
-        Double balance = mysqlDB().results(index).getDouble("balance");
-        ConversionModule.convertedAdd(uuid, TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT player_name, balance FROM " + config.getString("storage.table") + ";")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString("player_name"),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("balance")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 }

@@ -36,15 +36,6 @@ public class ConvertConfigurations extends Configuration {
 
   @Override
   public void load(CommentedConfiguration configurationFile) {
-    if(ConversionModule.instance().getConvert().exists()) ConversionModule.instance().saveConfigurations();
-    configurations.put("Conversion.Format", "MySQL");
-    configurations.put("Conversion.File", "Economy.db");
-    configurations.put("Conversion.Options.Host", "localhost");
-    configurations.put("Conversion.Options.Port", 3306);
-    configurations.put("Conversion.Options.Database", "sql_eco");
-    configurations.put("Conversion.Options.User", "root");
-    configurations.put("Conversion.Options.Password", "Password");
-
     super.load(configurationFile);
   }
 }

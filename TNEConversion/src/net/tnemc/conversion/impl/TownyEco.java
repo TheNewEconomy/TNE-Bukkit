@@ -6,13 +6,16 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -38,47 +41,41 @@ public class TownyEco extends Converter {
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
     String table = prefix + "balances";
-    try {
-      int index = mysqlDB().executeQuery("SELECT uuid, world, currency, balance FROM " + table + ";");
 
-      while (mysqlDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("uuid");
-        String world = mysqlDB().results(index).getString("world");
-        String currencyName = mysqlDB().results(index).getString("currency");
-        String balance = mysqlDB().results(index).getString("balance");
-        Currency currency = TNE.manager().currencyManager().get(world, currencyName);
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT uuid, world, currency, balance FROM " + table + ";")) {
+      while(results.next()) {
+        final String world = results.getString("world");
+        Currency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
         if(currency == null) {
           currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         }
-
-        ConversionModule.convertedAdd(IDFinder.getUsername(uuid), world, currency.name(), new BigDecimal(balance));
+        ConversionModule.convertedAdd(results.getString("username"),
+            world, currency.name(),
+            new BigDecimal(results.getDouble("balance")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
     db = new SQLite(conversionManager);
     String table = prefix + "balances";
-    try {
-      int index = sqliteDB().executeQuery("SELECT uuid, world, currency, balance FROM " + table + ";");
 
-      while (sqliteDB().results(index).next()) {
-        String uuid = sqliteDB().results(index).getString("uuid");
-        String world = sqliteDB().results(index).getString("world");
-        String currencyName = sqliteDB().results(index).getString("currency");
-        String balance = sqliteDB().results(index).getString("balance");
-        Currency currency = TNE.manager().currencyManager().get(world, currencyName);
+    try(Connection connection = sqliteDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = sqliteDB().executeQuery(statement, "SELECT uuid, world, currency, balance FROM " + table + ";")) {
+      while(results.next()) {
+        final String world = results.getString("world");
+        Currency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
         if(currency == null) {
           currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         }
-
-        ConversionModule.convertedAdd(IDFinder.getUsername(uuid), world, currency.name(), new BigDecimal(balance));
+        ConversionModule.convertedAdd(results.getString("username"),
+            world, currency.name(),
+            new BigDecimal(results.getDouble("balance")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 }

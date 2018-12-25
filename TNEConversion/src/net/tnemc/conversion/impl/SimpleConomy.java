@@ -12,6 +12,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -35,17 +39,17 @@ public class SimpleConomy extends Converter {
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
     String table = config.getString("mySqlSettings.Connection.Values.table");
-    try {
-      int index = mysqlDB().executeQuery("SELECT UUID, COINS FROM " + table + ";");
 
-      while (mysqlDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("UUID");
-        Double balance = mysqlDB().results(index).getDouble("COINS");
-        Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
-        ConversionModule.convertedAdd(IDFinder.getUsername(uuid), TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT UUID, COINS FROM " + table + ";")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(IDFinder.getUsername(results.getString("UUID")),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("COINS")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 }

@@ -13,6 +13,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Set;
 
 /**
@@ -37,21 +41,21 @@ public class GemsEconomy extends Converter {
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
     String table = config.getString("mysql.tableprefix") + "_balances";
-    try {
-      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (mysqlDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("account_id");
-        Double balance = mysqlDB().results(index).getDouble("balance");
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+
+      while(results.next()) {
         Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
-        if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, mysqlDB().results(index).getString("currency_id"))) {
-          currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, mysqlDB().results(index).getString("currency_id"));
+        if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, results.getString("currency_id"))) {
+          currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, results.getString("currency_id"));
         }
-        ConversionModule.convertedAdd(IDFinder.getUsername(uuid), TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
+        ConversionModule.convertedAdd(results.getString("account_id"),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("balance")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 
   @Override

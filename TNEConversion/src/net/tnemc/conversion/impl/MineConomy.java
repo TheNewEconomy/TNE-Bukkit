@@ -11,6 +11,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -38,14 +42,16 @@ public class MineConomy extends Converter {
     db = new MySQL(conversionManager);
 
     String table = "mineconomy_accounts";
-    try {
-      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
+
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
 
       TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
-      while (mysqlDB().results(index).next()) {
-        String username = mysqlDB().results(index).getString("account");
-        Double balance = mysqlDB().results(index).getDouble("balance");
-        String currencyName = mysqlDB().results(index).getString("currency");
+      while(results.next()) {
+        String username = results.getString("account");
+        Double balance = results.getDouble("balance");
+        String currencyName = results.getString("currency");
 
         String currencyPath = "Currencies." + currencyName + ".Value";
         double rate = (currencies.contains(currencyPath))? currencies.getDouble(currencyPath) : 1.0;
@@ -55,11 +61,10 @@ public class MineConomy extends Converter {
         if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, currencyName)) {
           currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currencyName);
         }
-        ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(), TNE.manager().currencyManager().convert(rate, currency.getRate(), new BigDecimal(balance)));
+        ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(),
+            TNE.manager().currencyManager().convert(rate, currency.getRate(), new BigDecimal(balance)));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 
   @Override

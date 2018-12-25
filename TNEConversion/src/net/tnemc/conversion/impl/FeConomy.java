@@ -12,6 +12,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -39,32 +43,34 @@ public class FeConomy extends Converter {
   @Override
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
-    try {
-      int index = mysqlDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (mysqlDB().results(index).next()) {
-        String username = mysqlDB().results(index).getString(nameColumn);
-        Double balance = mysqlDB().results(index).getDouble(balanceColumn);
-        ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString(nameColumn),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble(balanceColumn)));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
     db = new SQLite(conversionManager);
-    try {
-      int index = sqliteDB().executeQuery("SELECT * FROM " + table + ";");
 
-      while (sqliteDB().results(index).next()) {
-        String username = sqliteDB().results(index).getString(nameColumn);
-        Double balance = sqliteDB().results(index).getDouble(balanceColumn);
-        ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
+    try(Connection connection = sqliteDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = sqliteDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString(nameColumn),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble(balanceColumn)));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 }

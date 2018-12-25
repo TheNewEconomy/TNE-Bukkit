@@ -8,7 +8,6 @@ import net.tnemc.conversion.impl.BEconomy;
 import net.tnemc.conversion.impl.BOSEconomy;
 import net.tnemc.conversion.impl.BasicEconomy;
 import net.tnemc.conversion.impl.Blings;
-import net.tnemc.conversion.impl.CraftConomy;
 import net.tnemc.conversion.impl.DevCoinSystem;
 import net.tnemc.conversion.impl.ECEconomy;
 import net.tnemc.conversion.impl.EasyCoins;
@@ -135,8 +134,6 @@ public class ConversionModule extends Module {
         return new Blings();
       case "boseconomy":
         return new BOSEconomy();
-      case "craftconomy":
-        return new CraftConomy();
       case "devcoinsystem":
         return new DevCoinSystem();
       case "easycoins":

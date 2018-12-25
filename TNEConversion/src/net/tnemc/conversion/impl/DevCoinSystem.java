@@ -8,6 +8,10 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.economy.currency.Currency;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -28,17 +32,17 @@ public class DevCoinSystem extends Converter {
   @Override
   public void mysql() throws InvalidDatabaseImport {
     db = new MySQL(conversionManager);
-    try {
-      int index = mysqlDB().executeQuery("SELECT UUID, Coins FROM CoinSystem;");
 
-      Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
-      while (mysqlDB().results(index).next()) {
-        String uuid = mysqlDB().results(index).getString("UUID");
-        Double balance = mysqlDB().results(index).getDouble("Coins");
-        ConversionModule.convertedAdd(uuid, TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT UUID, Coins FROM CoinSystem;")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString("UUID"),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("Coins")));
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    } catch(SQLException ignore) {}
   }
 }
