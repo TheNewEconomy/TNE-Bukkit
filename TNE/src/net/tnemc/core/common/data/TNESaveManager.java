@@ -65,8 +65,8 @@ public class TNESaveManager extends SaveManager {
   @Override
   public void save() throws SQLException {
     getTNEManager().getTNEProvider().save(TNELib.instance().currentSaveVersion);
-    TNELib.instance().getLogger().info("Null Account Count: " + getTNEManager().getTNEProvider().nullAccounts());
-    TNELib.instance().getLogger().info("Finished saving data!");
+    TNE.debug("Null Account Count: " + getTNEManager().getTNEProvider().nullAccounts());
+    TNE.debug("Finished saving data!");
   }
 
   public void registerTables(String type, List<String> tables) {
