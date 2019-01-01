@@ -1,0 +1,195 @@
+/*
+ * Actual site CSS. Copyright (c) 2017 Daniel "creatorfromhell" Vidmar
+ */
+* {
+    margin: 0;
+    padding: 0;
+    zoom: 100%;
+}
+
+html {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-family: Verdana, sans-serif;
+    color: #333;
+    overflow-x: hidden;
+}
+
+body {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    background: #E7E6E4;
+}
+
+.clear {
+    clear: both;
+}
+
+.center {
+    margin: 0 auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.indent {
+    padding-left: 30px;
+}
+
+.content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/*
+ * Content Styling
+ */
+.container {
+    position: absolute;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    height: calc(100% - 100px);
+    width: 100%;
+}
+
+header {
+    background: #ffffff;
+    width: 250px;
+    height: auto;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    border-right: 1px solid #ababab;
+}
+
+nav {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #009BD4;
+}
+
+nav > ul {
+    display: block;
+    width: 100%;
+    position: relative;
+    list-style: none;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
+}
+
+nav > ul > li {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 50px;
+    transition: all 0.4s;
+}
+
+nav > ul > li:hover {
+    background: white;
+    transition: all 0.4s;
+}
+
+nav > ul > li > a {
+    text-align: center;
+    position: absolute;
+    color: white;
+    height: 35px;
+    width: 100%;
+    font-size: 20px;
+    padding-top: 15px;
+    text-decoration: none;
+    transition: all 0.4s;  
+}
+
+nav > ul > li:hover > a {
+    color: #009BD4;
+    transition: all 0.4s;
+}
+
+.user-bar {
+    display: block;
+    padding: 10px;
+    background: white;
+}
+
+.user-bar > .head {
+    width: 40px;  
+}
+
+.header-space {
+    height: 200px;
+}
+
+.main-content {
+    width: calc(100% - 250px);
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    padding-bottom: 20px;
+    background: white;
+}
+
+.main-content > h1, .main-content h2 {
+    text-align: center;
+    color: #009BD4;
+    padding: 30px;
+}
+
+.main-content > .page-content > .description {
+    width: 80%;
+    margin-left: 10%;
+}
+
+.topBalances {
+    width: 60%;
+    margin-left: 20%;
+}
+
+.topBalances > .topEntry {
+    background: #5BD4FF;
+    color: #333;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer {
+    position: absolute;
+    background: #009BD4;
+    color: #ffffff;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
+}
+
+footer > .content {
+    padding: 30px 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+footer > .content > p > a {
+    color: #ffffff;
+}
+
+footer > .content > p > a:hover {
+    text-decoration: none;
+    transition: all 0.4s;
+}

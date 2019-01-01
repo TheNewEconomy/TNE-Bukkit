@@ -402,11 +402,15 @@ public class TNE extends TNELib {
   }
 
   public void onDisable() {
-    try {
-      saveManager().save();
-    } catch (SQLException e) {
-      e.printStackTrace();
+
+    for(Player player : Bukkit.getServer().getOnlinePlayers()) {
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(TNE.manager().getAccount(player.getUniqueId()));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
+
     loader.getModules().forEach((key, value)->{
       value.getModule().disableSave(saveManager());
     });
@@ -415,8 +419,8 @@ public class TNE extends TNELib {
       Bukkit.getServer().getPluginManager().callEvent(event);
       value.getModule().unload(this);
     });
-    super.onDisable();
     getLogger().info("The New Economy has been disabled!");
+    super.onDisable();
   }
 
   private void writeMobs() throws IOException {

@@ -282,7 +282,7 @@ public class CurrencyManager {
         }
       }
 
-      if(configuration.contains(tierBase + ".Options.Crafting")) {
+      if(currency.isItem() && configuration.contains(tierBase + ".Options.Crafting")) {
         if(configuration.getBool(tierBase + ".Options.Crafting.Enabled", false)) {
           final boolean shapeless = configuration.getBool(tierBase + ".Options.Crafting.Shapeless", false);
           final ItemStack stack = item.toStack();

@@ -15,6 +15,11 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <sourceDirectory>src/</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/net/tnemc/resources/</directory>
+            </resource>
+        </resources>
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>

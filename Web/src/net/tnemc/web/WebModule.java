@@ -18,7 +18,7 @@ import java.io.File;
 @ModuleInfo(
     name = "Web",
     author = "creatorfromhell",
-    version = "0.1.1"
+    version = "0.1.0"
 )
 public class WebModule extends Module {
 
@@ -43,8 +43,9 @@ public class WebModule extends Module {
   @Override
   public void postLoad(TNE tne) {
     try {
-      manager.start(fileConfiguration.getInt("Web.Port"));
+      manager.start(8896);
     } catch (Exception ignore) {
+      ignore.printStackTrace();
       TNE.logger().warning("Failed to start Web Server on Port: " + fileConfiguration.getInt("Web.Port"));
     }
   }

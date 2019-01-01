@@ -1,6 +1,8 @@
 package net.tnemc.web;
 
 import net.tnemc.web.pages.general.FourZeroFour;
+import net.tnemc.web.pages.login.LoginForm;
+import net.tnemc.web.pages.login.LoginPage;
 import spark.Request;
 import spark.Route;
 import spark.Spark;
@@ -29,6 +31,8 @@ public class WebManager {
   private Map<String, Route> post = new HashMap<>();
   private LinkedHashMap<String, String> navLinks = new LinkedHashMap<>();
 
+  private FreeMarkerEngine engine;
+
   void start(int port) throws Exception {
 
     //Configure Spark
@@ -36,10 +40,16 @@ public class WebManager {
     staticFiles.location("/login");
     staticFiles.expireTime(600L);
 
+    engine = new FreeMarkerEngine();
+
+    get.put("/login", ((request, response) -> engine.render(new LoginPage().handle(request, response))));
+    post.put("/login", ((request, response) -> engine.render(new LoginForm().handle(request, response))));
+
     //Set up routes
     get.forEach(Spark::get);
     post.forEach(Spark::post);
-    Spark.get("*", new FourZeroFour(), new FreeMarkerEngine());
+    Spark.get("*", new FourZeroFour(), engine);
+    Spark.init();
   }
 
   public void addGet(String path, Route request) {

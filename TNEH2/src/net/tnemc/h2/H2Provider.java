@@ -58,10 +58,6 @@ public class H2Provider extends TNEDataProvider {
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
-  private final String HISTORY_SAVE = "INSERT INTO " + prefix + "_BALANCES_HISTORY (uuid, server_name, world, currency, balance) VALUES(?, ?, ?, ?, ?)";
-  private final String TRANSACTION_LOAD = "";
-  private final String TRANSACTION_SAVE = "";
-  private final String TRANSACTIONS_DELETE = "";
 
   private H2 sql;
 
@@ -528,7 +524,6 @@ public class H2Provider extends TNEDataProvider {
       connection = h2().getDataSource().getConnection();
       accountStatement = connection.prepareStatement(ACCOUNT_SAVE);
       balanceStatement = connection.prepareStatement(BALANCE_SAVE);
-      historyStatement = connection.prepareStatement(HISTORY_SAVE);
       for(TNEAccount account : accounts) {
         if(account.displayName() == null) {
           System.out.println("Attempted saving account with null display name.");
@@ -563,14 +558,6 @@ public class H2Provider extends TNEDataProvider {
             balanceStatement.setBigDecimal(5, entry.getValue());
             balanceStatement.setBigDecimal(6, entry.getValue());
             balanceStatement.addBatch();
-
-            //history
-            historyStatement.setString(1, account.identifier().toString());
-            historyStatement.setString(2, server);
-            historyStatement.setString(3, holdingsEntry.getKey());
-            historyStatement.setString(4, entry.getKey());
-            historyStatement.setBigDecimal(5, entry.getValue());
-            historyStatement.addBatch();
           }
         }
       }
@@ -653,15 +640,6 @@ public class H2Provider extends TNEDataProvider {
                 entry.getKey(),
                 curEntry.getKey(),
                 curEntry.getValue(),
-                curEntry.getValue()
-            }
-        );
-        h2().executePreparedUpdate(HISTORY_SAVE,
-            new Object[]{
-                account.identifier().toString(),
-                server,
-                entry.getKey(),
-                curEntry.getKey(),
                 curEntry.getValue()
             }
         );

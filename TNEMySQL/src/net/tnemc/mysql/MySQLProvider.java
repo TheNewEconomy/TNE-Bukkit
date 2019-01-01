@@ -58,10 +58,6 @@ public class MySQLProvider extends TNEDataProvider {
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
                                       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
-  private final String HISTORY_SAVE = "INSERT INTO " + prefix + "_BALANCES_HISTORY (uuid, server_name, world, currency, balance) VALUES(?, ?, ?, ?, ?)";
-  private final String TRANSACTION_LOAD = "";
-  private final String TRANSACTION_SAVE = "";
-  private final String TRANSACTIONS_DELETE = "";
 
   private MySQL sql;
 
@@ -420,8 +416,7 @@ public class MySQLProvider extends TNEDataProvider {
   public void saveAccounts(List<TNEAccount> accounts) {
     try(Connection connection = mysql().getDataSource().getConnection();
         PreparedStatement accountStatement = connection.prepareStatement(ACCOUNT_SAVE);
-        PreparedStatement balanceStatement = connection.prepareStatement(BALANCE_SAVE);
-        PreparedStatement historyStatement = connection.prepareStatement(HISTORY_SAVE)) {
+        PreparedStatement balanceStatement = connection.prepareStatement(BALANCE_SAVE)) {
 
       for(TNEAccount account : accounts) {
         if(account.displayName() == null) {
@@ -457,18 +452,9 @@ public class MySQLProvider extends TNEDataProvider {
             balanceStatement.setBigDecimal(5, entry.getValue());
             balanceStatement.setBigDecimal(6, entry.getValue());
             balanceStatement.addBatch();
-
-            //history
-            historyStatement.setString(1, account.identifier().toString());
-            historyStatement.setString(2, server);
-            historyStatement.setString(3, holdingsEntry.getKey());
-            historyStatement.setString(4, entry.getKey());
-            historyStatement.setBigDecimal(5, entry.getValue());
-            historyStatement.addBatch();
           }
         }
       }
-      historyStatement.executeBatch();
       balanceStatement.executeBatch();
       accountStatement.executeBatch();
     } catch (SQLException e) {
@@ -515,15 +501,6 @@ public class MySQLProvider extends TNEDataProvider {
                 entry.getKey(),
                 curEntry.getKey(),
                 curEntry.getValue(),
-                curEntry.getValue()
-            }
-        );
-        mysql().executePreparedUpdate(HISTORY_SAVE,
-            new Object[]{
-                account.identifier().toString(),
-                server,
-                entry.getKey(),
-                curEntry.getKey(),
                 curEntry.getValue()
             }
         );
