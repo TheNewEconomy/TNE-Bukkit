@@ -46,22 +46,22 @@ public interface SignType {
 
   default boolean enabled() {
     String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
-    return !SignsModule.instance().getConfiguration().hasNode("Signs." + formatted + ".Enabled")
-        || (boolean) SignsModule.instance().getConfiguration().getValue("Signs." + formatted + ".Enabled");
+    return !SignsModule.instance().getFileConfiguration().contains("Signs." + formatted + ".Enabled")
+        || (boolean) SignsModule.instance().getFileConfiguration().getBool("Signs." + formatted + ".Enabled");
   }
 
   default int max() {
     String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
-    if(SignsModule.instance().getConfiguration().hasNode("Signs." + formatted + ".Max")) {
-      return (int)SignsModule.instance().getConfiguration().getValue("Signs." + formatted + ".Max");
+    if(SignsModule.instance().getFileConfiguration().contains("Signs." + formatted + ".Max")) {
+      return SignsModule.instance().getFileConfiguration().getInt("Signs." + formatted + ".Max");
     }
     return 5;
   }
 
   default BigDecimal cost() {
     String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
-    if(SignsModule.instance().getConfiguration().hasNode("Signs." + formatted + ".PlaceCost")) {
-      return new BigDecimal((String)SignsModule.instance().getConfiguration().getValue("Signs." + formatted + ".PlaceCost"));
+    if(SignsModule.instance().getFileConfiguration().contains("Signs." + formatted + ".PlaceCost")) {
+      return SignsModule.instance().getFileConfiguration().getBigDecimal("Signs." + formatted + ".PlaceCost");
     }
     return BigDecimal.ZERO;
   }
