@@ -95,7 +95,11 @@ public class MoneySetCommand extends TNECommand {
           return;
         }
 
-        final BigDecimal value = new BigDecimal(parsed);
+        BigDecimal value = new BigDecimal(parsed);
+        if(currency.getTNEMinorTiers().size() <= 0) {
+          value = value.setScale(0, BigDecimal.ROUND_FLOOR);
+        }
+
         TNE.debug("Value: " + value.toPlainString());
         final BigDecimal balance = account.getHoldings(world, currency);
         TNE.debug("Balance: " + balance.toPlainString());

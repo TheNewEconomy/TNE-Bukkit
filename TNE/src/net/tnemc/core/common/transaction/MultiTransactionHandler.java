@@ -34,6 +34,10 @@ public class MultiTransactionHandler {
     this.currency = currency;
     this.world = world;
     this.initiator = initiator;
+
+    if(currency.getTNEMinorTiers().size() <= 0) {
+      this.amount = this.amount.setScale(0, BigDecimal.ROUND_FLOOR);
+    }
   }
 
   public void handle(boolean message) {
