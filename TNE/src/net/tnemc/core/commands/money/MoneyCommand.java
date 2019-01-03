@@ -22,7 +22,6 @@ public class MoneyCommand extends TNECommand {
     subCommands.add(new MoneyNoteCommand(plugin));
     subCommands.add(new MoneyPayCommand(plugin));
     subCommands.add(new MoneySetCommand(plugin));
-    subCommands.add(new MoneySlyCommand(plugin));
     subCommands.add(new MoneyTakeCommand(plugin));
     subCommands.add(new MoneyTopCommand(plugin));
   }
@@ -55,7 +54,7 @@ public class MoneyCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(command.equalsIgnoreCase("givemoney") ||
         command.equalsIgnoreCase("givebal")) {
-      TNECommand sub = FindSub("give");
+      TNECommand sub = findSub("give");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }
@@ -63,7 +62,7 @@ public class MoneyCommand extends TNECommand {
 
     if(command.equalsIgnoreCase("setmoney") ||
         command.equalsIgnoreCase("setbal")) {
-      TNECommand sub = FindSub("set");
+      TNECommand sub = findSub("set");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }
@@ -71,21 +70,21 @@ public class MoneyCommand extends TNECommand {
 
     if(command.equalsIgnoreCase("takemoney") ||
         command.equalsIgnoreCase("takebal")) {
-      TNECommand sub = FindSub("take");
+      TNECommand sub = findSub("take");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }
     }
 
     if(command.equalsIgnoreCase("baltop")) {
-      TNECommand sub = FindSub("top");
+      TNECommand sub = findSub("top");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }
     }
 
     if(command.equalsIgnoreCase("pay")) {
-      TNECommand sub = FindSub("pay");
+      TNECommand sub = findSub("pay");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }
@@ -94,7 +93,7 @@ public class MoneyCommand extends TNECommand {
     if(command.equalsIgnoreCase("balance") ||
         command.equalsIgnoreCase("bal") ||
         arguments.length == 0) {
-      TNECommand sub = FindSub("balance");
+      TNECommand sub = findSub("balance");
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }

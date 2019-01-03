@@ -11,9 +11,13 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -55,6 +59,15 @@ public class AdminBalanceCommand extends TNECommand {
   @Override
   public String getHelp() {
     return "Messages.Commands.Admin.Balance";
+  }
+
+  @Override
+  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
+    Map<Integer, String> argTypes = new HashMap<>();
+    argTypes.put(0, "player");
+    argTypes.put(1, "world");
+    argTypes.put(2, "currency");
+    return buildSuggestions(sender, shortened, arguments, argTypes, 1);
   }
 
   @Override

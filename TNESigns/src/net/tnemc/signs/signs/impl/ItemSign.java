@@ -144,6 +144,7 @@ public class ItemSign implements SignType {
     TNE.debug("Item Sign Interaction!");
     try {
       final TNESign loaded = SignsData.loadSign(sign.getLocation());
+      if(loaded == null) return false;
       TNE.debug("Item Sign Interaction! Step: " + loaded.getStep());
       return steps().get(loaded.getStep()).onSignInteract(sign, player, rightClick, shifting);
     } catch (SQLException e) {

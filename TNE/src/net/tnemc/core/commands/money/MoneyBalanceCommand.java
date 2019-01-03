@@ -14,6 +14,7 @@ import net.tnemc.core.economy.currency.CurrencyEntry;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -62,6 +63,14 @@ public class MoneyBalanceCommand extends TNECommand {
   @Override
   public String getHelp() {
     return "Messages.Commands.Money.Balance";
+  }
+
+  @Override
+  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
+    Map<Integer, String> argTypes = new HashMap<>();
+    argTypes.put(0, "world");
+    argTypes.put(1, "currency");
+    return buildSuggestions(sender, shortened, arguments, argTypes, 0);
   }
 
   @Override

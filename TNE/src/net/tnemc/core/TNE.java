@@ -517,7 +517,7 @@ public class TNE extends TNELib {
 
   public boolean customCommand(CommandSender sender, String label, String[] arguments) {
 
-    TNECommand ecoCommand = commandManager.Find(label);
+    TNECommand ecoCommand = commandManager.find(label);
     if(ecoCommand != null) {
       if(!ecoCommand.canExecute(sender)) {
         sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
