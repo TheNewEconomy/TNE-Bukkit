@@ -12,6 +12,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
@@ -298,8 +299,76 @@ public class ItemCalculations {
     }
   }
 
+  public static void giveItem(ItemStack stack, Inventory inventory, final Integer amount) {
+
+    int remaining = amount;
+    final int stacks = (int)Math.ceil(amount / stack.getMaxStackSize());
+
+    Collection<ItemStack> items = new ArrayList<>();
+    for(int i = 0; i < stacks; i++) {
+      ItemStack clone = stack.clone();
+      if(i == stacks - 1) {
+        clone.setAmount(remaining);
+      } else {
+        clone.setAmount(stack.getMaxStackSize());
+      }
+      items.add(clone);
+      remaining = remaining - clone.getAmount();
+    }
+    giveItems(items, inventory);
+  }
+
+  public static Integer removeItemAmount(ItemStack stack, Inventory inventory, final Integer amount) {
+    int left = amount;
+
+    for(int i = 0; i < inventory.getStorageContents().length; i++) {
+      if(left <= 0) break;
+      ItemStack item = inventory.getItem(i);
+      if(item == null || !MaterialUtils.itemsEqual(stack, item)) continue;
+
+      if(item.getAmount() <= left) {
+        left -= item.getAmount();
+        inventory.setItem(i, null);
+      } else {
+        item.setAmount(item.getAmount() - left);
+        inventory.setItem(i, item);
+        left = 0;
+      }
+    }
+
+    if(left > 0 && inventory instanceof PlayerInventory) {
+      final ItemStack helmet = ((PlayerInventory) inventory).getHelmet();
+      if(helmet != null && helmet.isSimilar(stack)) {
+        if(helmet.getAmount() <= left) {
+          left -= helmet.getAmount();
+          ((PlayerInventory) inventory).setHelmet(null);
+        } else {
+          helmet.setAmount(helmet.getAmount() - left);
+          ((PlayerInventory) inventory).setHelmet(helmet);
+          left = 0;
+        }
+      }
+
+      if(left > 0) {
+        final ItemStack hand = ((PlayerInventory) inventory).getItemInOffHand();
+
+        if(hand != null && hand.isSimilar(stack)) {
+          if (hand.getAmount() <= left) {
+            left -= hand.getAmount();
+            ((PlayerInventory) inventory).setItemInOffHand(null);
+          } else {
+            hand.setAmount(hand.getAmount() - left);
+            ((PlayerInventory) inventory).setItemInOffHand(hand);
+            left = 0;
+          }
+        }
+      }
+    }
+    return left;
+  }
+
   public static Integer removeItem(ItemStack stack, Inventory inventory) {
-    int left = stack.getAmount();
+    int left = stack.clone().getAmount();
 
     for(int i = 0; i < inventory.getStorageContents().length; i++) {
       if(left <= 0) break;

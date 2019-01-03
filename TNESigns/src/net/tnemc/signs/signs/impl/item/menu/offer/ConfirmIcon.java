@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -51,6 +50,7 @@ public class ConfirmIcon extends Icon {
       e.printStackTrace();
       return;
     }
+    final int tradeAmount = (trade != null)? trade.getAmount() : 0;
 
     if(ItemCalculations.getCount(item, ItemSign.getChestInventory(chest)) < amount) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
@@ -83,14 +83,14 @@ public class ConfirmIcon extends Icon {
         return;
       }
 
-      ItemCalculations.removeItem(trade, player.getInventory());
-      ItemCalculations.giveItems(Collections.singletonList(trade), ItemSign.getChestInventory(chest));
+      ItemCalculations.removeItemAmount(trade, player.getInventory(), tradeAmount);
+      ItemCalculations.giveItem(trade, ItemSign.getChestInventory(chest), tradeAmount);
       complete = true;
     }
 
     if (complete) {
-      ItemCalculations.giveItems(Collections.singletonList(item), player.getInventory());
-      ItemCalculations.removeItem(item, ItemSign.getChestInventory(chest));
+      ItemCalculations.giveItem(item, player.getInventory(), amount);
+      ItemCalculations.removeItemAmount(item, ItemSign.getChestInventory(chest), amount);
 
       player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
       player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);

@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -51,6 +50,7 @@ public class ConfirmBuyIcon extends Icon {
       e.printStackTrace();
       return;
     }
+    final int tradeAmount = (trade != null)? trade.getAmount() : 0;
 
     if(!currency && ItemCalculations.getCount(trade, ItemSign.getChestInventory(chest)) < amount) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
@@ -88,14 +88,14 @@ public class ConfirmBuyIcon extends Icon {
       complete = TNE.instance().api().removeHoldings(owner.toString(), cost);
     } else {
 
-      ItemCalculations.removeItem(trade, ItemSign.getChestInventory(chest));
-      ItemCalculations.giveItems(Collections.singletonList(trade), player.getInventory());
+      ItemCalculations.removeItemAmount(trade, ItemSign.getChestInventory(chest), tradeAmount);
+      ItemCalculations.giveItem(trade, player.getInventory(), tradeAmount);
       complete = true;
     }
 
     if (complete) {
-      ItemCalculations.removeItem(item, player.getInventory());
-      ItemCalculations.giveItems(Collections.singletonList(item), ItemSign.getChestInventory(chest));
+      ItemCalculations.removeItemAmount(item, player.getInventory(), amount);
+      ItemCalculations.giveItem(item, ItemSign.getChestInventory(chest), amount);
 
       player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
       player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
