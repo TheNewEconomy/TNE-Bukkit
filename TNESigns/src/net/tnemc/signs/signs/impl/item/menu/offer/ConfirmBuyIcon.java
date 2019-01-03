@@ -52,7 +52,7 @@ public class ConfirmBuyIcon extends Icon {
       return;
     }
 
-    if(!currency && ItemCalculations.getCount(trade, chest.getBlockInventory()) < amount) {
+    if(!currency && ItemCalculations.getCount(trade, ItemSign.getChestInventory(chest)) < amount) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
       player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
       return;
@@ -64,7 +64,7 @@ public class ConfirmBuyIcon extends Icon {
       return;
     }
 
-    if(chest.getBlockInventory().firstEmpty() == -1) {
+    if(ItemSign.getChestInventory(chest).firstEmpty() == -1) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have any free space.");
       player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
       return;
@@ -88,21 +88,21 @@ public class ConfirmBuyIcon extends Icon {
       complete = TNE.instance().api().removeHoldings(owner.toString(), cost);
     } else {
 
-      ItemCalculations.removeItem(trade, chest.getBlockInventory());
+      ItemCalculations.removeItem(trade, ItemSign.getChestInventory(chest));
       ItemCalculations.giveItems(Collections.singletonList(trade), player.getInventory());
       complete = true;
     }
 
     if (complete) {
       ItemCalculations.removeItem(item, player.getInventory());
-      ItemCalculations.giveItems(Collections.singletonList(item), chest.getBlockInventory());
+      ItemCalculations.giveItems(Collections.singletonList(item), ItemSign.getChestInventory(chest));
 
       player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
       player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
 
       final Player ownerInstance = Bukkit.getPlayer(owner);
       if(ownerInstance != null) {
-        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just sold an item to your shop.");
+        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just sold some " + item.getType().name() + " to your shop.");
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
       }
       return;

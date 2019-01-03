@@ -1,6 +1,7 @@
 package net.tnemc.core.commands;
 
 import com.github.tnerevival.TNELib;
+import net.tnemc.core.TNE;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
@@ -69,6 +70,7 @@ public class CommandManager {
     } catch(Exception e) {
       //nothing to see here;
     }
+    TNE.instance().getCommand(command).setTabCompleter(find(command));
   }
 
   private void unregister(String command) {
@@ -88,7 +90,7 @@ public class CommandManager {
     return false;
   }
 
-  public TNECommand Find(String name) {
+  public TNECommand find(String name) {
     for(TNECommand c : commands.values()) {
       if(c.getName().equalsIgnoreCase(name)) {
         return c;

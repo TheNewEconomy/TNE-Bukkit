@@ -52,14 +52,14 @@ public class ConfirmIcon extends Icon {
       return;
     }
 
-    if(ItemCalculations.getCount(item, chest.getBlockInventory()) < amount) {
+    if(ItemCalculations.getCount(item, ItemSign.getChestInventory(chest)) < amount) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
       player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
       return;
     }
 
     if(!currency) {
-      if(chest.getBlockInventory().firstEmpty() == -1) {
+      if(ItemSign.getChestInventory(chest).firstEmpty() == -1) {
         player.sendMessage(ChatColor.RED + "Shop doesn't have any free space.");
         player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
         return;
@@ -84,20 +84,20 @@ public class ConfirmIcon extends Icon {
       }
 
       ItemCalculations.removeItem(trade, player.getInventory());
-      ItemCalculations.giveItems(Collections.singletonList(trade), chest.getBlockInventory());
+      ItemCalculations.giveItems(Collections.singletonList(trade), ItemSign.getChestInventory(chest));
       complete = true;
     }
 
     if (complete) {
       ItemCalculations.giveItems(Collections.singletonList(item), player.getInventory());
-      ItemCalculations.removeItem(item, chest.getBlockInventory());
+      ItemCalculations.removeItem(item, ItemSign.getChestInventory(chest));
 
       player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
       player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
 
       final Player ownerInstance = Bukkit.getPlayer(owner);
       if(ownerInstance != null) {
-        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just purchased an item from your shop.");
+        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just purchased some " + item.getType().name() + " from your shop.");
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
       }
       return;
