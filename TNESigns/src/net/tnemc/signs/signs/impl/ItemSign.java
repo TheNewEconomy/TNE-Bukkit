@@ -18,9 +18,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.DoubleChestInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -323,5 +327,12 @@ public class ItemSign implements SignType {
       return TNE.hasPermssion(player, TNE.instance().itemConfiguration().getString("tne.item." + material.name().toLowerCase() + ".sign"));
     }
     return false;
+  }
+
+  public static Inventory getChestInventory(Chest chest) {
+    if(chest.getInventory() instanceof DoubleChestInventory) {
+      return ((DoubleChest)chest.getInventory().getHolder()).getInventory();
+    }
+    return chest.getInventory();
   }
 }
