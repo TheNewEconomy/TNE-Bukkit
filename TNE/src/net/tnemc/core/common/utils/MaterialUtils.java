@@ -140,10 +140,10 @@ public class MaterialUtils {
       }
       return false;
     }
-    TNE.debug("isSimilar: " + compare.isSimilar(original));
+    System.out.println("isSimilar: " + compare.isSimilar(original));
     if(!original.getType().equals(compare.getType())) return false;
     if(original.getDurability() != compare.getDurability()) return false;
-    return true;
+    return compare.isSimilar(original);
   }
 
   public static boolean isShulker(Material material) {

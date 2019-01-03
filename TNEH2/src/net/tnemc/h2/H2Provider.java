@@ -519,7 +519,6 @@ public class H2Provider extends TNEDataProvider {
     Connection connection = null;
     PreparedStatement accountStatement = null;
     PreparedStatement balanceStatement = null;
-    PreparedStatement historyStatement = null;
     try {
       connection = h2().getDataSource().getConnection();
       accountStatement = connection.prepareStatement(ACCOUNT_SAVE);
@@ -561,7 +560,6 @@ public class H2Provider extends TNEDataProvider {
           }
         }
       }
-      historyStatement.executeBatch();
       balanceStatement.executeBatch();
       accountStatement.executeBatch();
     } catch (SQLException e) {
@@ -578,14 +576,6 @@ public class H2Provider extends TNEDataProvider {
       if(balanceStatement != null) {
         try {
           balanceStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if(historyStatement != null) {
-        try {
-          historyStatement.close();
         } catch (SQLException e) {
           e.printStackTrace();
         }
