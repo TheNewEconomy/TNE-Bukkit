@@ -454,8 +454,8 @@ public class MySQLProvider extends TNEDataProvider {
             balanceStatement.addBatch();
           }
         }
+        balanceStatement.executeBatch();
       }
-      balanceStatement.executeBatch();
       accountStatement.executeBatch();
     } catch (SQLException e) {
       TNE.debug(e);

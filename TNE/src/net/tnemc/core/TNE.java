@@ -399,6 +399,10 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
     getLogger().info("The New Economy has been enabled!");
+
+    /*SQLDebug.testLoad(1000);
+    SQLDebug.loadAccountTest(1000);
+    SQLDebug.loadSaveAccountTest(1000);*/
   }
 
   public void onDisable() {
