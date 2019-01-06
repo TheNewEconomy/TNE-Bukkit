@@ -13,6 +13,9 @@ Core:
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
 
+    #Whether or not to have TNE boot into debug mode.
+    Debug: false
+
     #All configurations relating to the server in general.
     Server:
 
@@ -174,8 +177,8 @@ Core:
            #Format: Material: Value(using a period "." as the decimal)
            Items:
 
+             GOLD_BLOCK: 9
              GOLD_INGOT: 1
-             GOLD_NUGGET: 0.01
 
            #Configurations relating to virtual currency tiers for the basic currency.
            #Format: Name: Value(using a period "." as the decimal)

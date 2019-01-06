@@ -31,6 +31,7 @@ import net.tnemc.core.common.configurations.MessageConfigurations;
 import net.tnemc.core.common.configurations.WorldConfigurations;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
+import net.tnemc.core.common.debug.SQLDebug;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
@@ -206,6 +207,8 @@ public class TNE extends TNELib {
     main = new MainConfigurations();
     messages = new MessageConfigurations();
     world = new WorldConfigurations();
+
+    this.debugMode = mainConfigurations.getBool("Core.Debug");
 
     loader.getModules().forEach((key, value)->{
       value.getModule().getConfigurations().forEach((configuration, identifier)->{
@@ -400,19 +403,15 @@ public class TNE extends TNELib {
     }
     getLogger().info("The New Economy has been enabled!");
 
-    /*SQLDebug.testLoad(1000);
+    SQLDebug.testLoad(1000);
     SQLDebug.loadAccountTest(1000);
-    SQLDebug.loadSaveAccountTest(1000);*/
+    SQLDebug.loadSaveAccountTest(1000);
   }
 
   public void onDisable() {
 
     for(Player player : Bukkit.getServer().getOnlinePlayers()) {
-      try {
-        TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(TNE.manager().getAccount(player.getUniqueId()));
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      TNE.manager().getAccount(player.getUniqueId()).saveItemCurrency(worldManagers.get(player.getWorld().getName()).getBalanceWorld());
     }
 
     loader.getModules().forEach((key, value)->{

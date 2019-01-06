@@ -140,7 +140,7 @@ public class MaterialUtils {
       }
       return false;
     }
-    System.out.println("isSimilar: " + compare.isSimilar(original));
+    //System.out.println("isSimilar: " + compare.isSimilar(original));
     if(!original.getType().equals(compare.getType())) return false;
     if(original.getDurability() != compare.getDurability()) return false;
     return compare.isSimilar(original);

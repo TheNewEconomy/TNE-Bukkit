@@ -22,9 +22,13 @@ public class MaterialHelper {
 
   static {
     for(Material mat : Material.values()) {
-      List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
-      String[] names = nameList.toArray(new String[nameList.size()]);
-      validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
+      try {
+        List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
+        String[] names = nameList.toArray(new String[nameList.size()]);
+        validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
     }
     //TNE.debug("Materials Using: " + validNames.size());
   }

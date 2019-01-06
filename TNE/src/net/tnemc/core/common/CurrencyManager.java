@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
@@ -23,6 +22,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,32 +70,33 @@ public class CurrencyManager {
     final String base = "Core.Currency.Basic";
 
     //Currency Info Configurations.
-    final String server = TNE.instance().getConfig().getString(base + ".Info.Server", "Main Server");
-    final String single = TNE.instance().getConfig().getString(base + ".Major_Single", "Dollar");
-    final String plural = TNE.instance().getConfig().getString(base + ".Major_Plural", "Dollars");
-    final String singleMinor = TNE.instance().getConfig().getString(base + ".Minor_Single", "Cent");
-    final String pluralMinor = TNE.instance().getConfig().getString(base + ".Minor_Plural", "Cents");
-    final String prefixes = TNE.instance().getConfig().getString(base + ".Prefixes", "kMGTPEZYXWVUN₮").trim();
-    final String symbol = TNE.instance().getConfig().getString(base + ".Symbol", "$");
-    final Boolean item = TNE.instance().getConfig().getBoolean(base + ".ItemCurrency");
-    final Boolean experience = TNE.instance().getConfig().getBoolean(base + ".ExperienceCurrency");
+    final String server = TNE.instance().mainConfigurations().getString(base + ".Info.Server", "Main Server");
+    final String single = TNE.instance().mainConfigurations().getString(base + ".Major_Single", "Dollar");
+    final String plural = TNE.instance().mainConfigurations().getString(base + ".Major_Plural", "Dollars");
+    final String singleMinor = TNE.instance().mainConfigurations().getString(base + ".Minor_Single", "Cent");
+    final String pluralMinor = TNE.instance().mainConfigurations().getString(base + ".Minor_Plural", "Cents");
+    final String prefixes = TNE.instance().mainConfigurations().getString(base + ".Prefixes", "kMGTPEZYXWVUN₮").trim();
+    final String symbol = TNE.instance().mainConfigurations().getString(base + ".Symbol", "$");
+    final Boolean item = TNE.instance().mainConfigurations().getBool(base + ".ItemCurrency");
+    final Boolean experience = TNE.instance().mainConfigurations().getBool(base + ".ExperienceCurrency");
 
     //Currency Options Configurations.
-    final String format = TNE.instance().getConfig().getString(base + ".Options.Format", "<symbol><major.amount><decimal><minor.amount>").trim();
-    final BigDecimal maxBalance = ((new BigDecimal(TNE.instance().getConfig().getString(base + ".Options.MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(TNE.instance().getConfig().getString(base + ".MaxBalance", largestSupported.toPlainString())));
-    final BigDecimal balance = new BigDecimal(TNE.instance().getConfig().getString(base + ".Options.Balance", "200.00"));
-    final String decimal = TNE.instance().getConfig().getString(base + ".Options.Decimal", ".");
-    final Boolean ender = TNE.instance().getConfig().getBoolean(base + ".Options.EnderChest", true);
-    final Boolean separate = TNE.instance().getConfig().getBoolean(base + ".Options.Major_Separate", true);
-    final String separator = TNE.instance().getConfig().getString(base + ".Options.Major_Separator", ",");
-    final Integer minorWeight = TNE.instance().getConfig().getInt(base + ".Options.Minor_Weight", 100);
+    final String format = TNE.instance().mainConfigurations().getString(base + ".Options.Format", "<symbol><major.amount><decimal><minor.amount>").trim();
+    final BigDecimal maxBalance = ((new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Options.MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".MaxBalance", largestSupported.toPlainString())));
+    final BigDecimal balance = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Options.Balance", "200.00"));
+    final String decimal = TNE.instance().mainConfigurations().getString(base + ".Options.Decimal", ".");
+    final Boolean ender = TNE.instance().mainConfigurations().getBool(base + ".Options.EnderChest", true);
+    final Boolean separate = TNE.instance().mainConfigurations().getBool(base + ".Options.Major_Separate", true);
+    final String separator = TNE.instance().mainConfigurations().getString(base + ".Options.Major_Separator", ",");
+    final Integer minorWeight = TNE.instance().mainConfigurations().getInt(base + ".Options.Minor_Weight", 100);
 
     //Currency Note Configurations
-    final Boolean notable = TNE.instance().getConfig().getBoolean(base + ".Note.Notable", false);
-    final BigDecimal fee = new BigDecimal(TNE.instance().getConfig().getString(base + ".Note.Fee", "0.00"));
-    final BigDecimal minimum = new BigDecimal(TNE.instance().getConfig().getString(base + ".Note.Minimum", "0.00"));
+    final Boolean notable = TNE.instance().mainConfigurations().getBool(base + ".Note.Notable", false);
+    final BigDecimal fee = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Fee", "0.00"));
+    final BigDecimal minimum = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Minimum", "0.00"));
 
     TNECurrency currency = new TNECurrency();
+    currency.setServer(server);
     currency.setIdentifier(single);
     currency.setMaxBalance(maxBalance);
     currency.setBalance(balance);
@@ -121,14 +122,14 @@ public class CurrencyManager {
     currency.setMajorSeparator(separator);
     currency.setMinorWeight(minorWeight);
 
-    loadBasicTiers(currency, TNE.instance().getConfig(), item);
+    loadBasicTiers(currency, TNE.instance().mainConfigurations(), item);
 
     addCurrency(TNE.instance().defaultWorld, currency);
   }
 
-  private void loadBasicTiers(TNECurrency currency, FileConfiguration configuration, boolean item) {
+  private void loadBasicTiers(TNECurrency currency, CommentedConfiguration configuration, boolean item) {
     final String baseNode = "Core.Currency.Basic." + ((item)? "Items" : "Virtual");
-    Set<String> tiers = configuration.getConfigurationSection(baseNode).getKeys(false);
+    Set<String> tiers = configuration.getSection(baseNode).getKeys(false);
 
     for (String tierName : tiers) {
 
@@ -443,8 +444,13 @@ public class CurrencyManager {
     }
     TNE.manager().getAccounts().forEach((id, account)->{
       account.setHoldings(world, newName, account.getHoldings(world, TNE.manager().currencyManager().get(world, currency)));
-      account.getWorldHoldings(world).remove(currency);
-      TNE.manager().addAccount(account);
+      //account.getWorldHoldings(world).remove(currency);
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().deleteBalance(id, world, currency);
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
+      //TNE.manager().addAccount(account);
     });
   }
 

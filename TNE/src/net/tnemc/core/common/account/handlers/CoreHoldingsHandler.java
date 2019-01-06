@@ -2,13 +2,13 @@ package net.tnemc.core.common.account.handlers;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -68,9 +68,13 @@ public class CoreHoldingsHandler implements HoldingsHandler {
           return new BigDecimal(player.getLevel());
         }
       }
-      WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
-                                    tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);
-      current = worldHoldings.getHoldings(currency.name());
+      /*WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
+                                    tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);*/
+      try {
+        current = TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
     } else {
       //System.out.println("Grabbing physical holdings...");
       current = ItemCalculations.getCurrencyItems(currency, tneAccount.getPlayer().getInventory());

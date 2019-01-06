@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.UUID;
 
 public class TNEAccount implements Account {
   private Map<UUID, AccountAccessor> accessors = new HashMap<>();
-  private Map<String, WorldHoldings> holdings = new HashMap<>();
+  //private Map<String, WorldHoldings> holdings = new HashMap<>();
   private AccountHistory history;
 
   private int accountNumber = 0;
@@ -60,28 +61,6 @@ public class TNEAccount implements Account {
 
   public void log(TNETransaction transaction) {
     history.log(transaction);
-  }
-
-  public BigDecimal addAll(String world) {
-    BigDecimal total = BigDecimal.ZERO;
-
-    if(!world.equalsIgnoreCase("all")) {
-      if(holdings.containsKey(world)) {
-        WorldHoldings worldHoldings = holdings.get(world);
-        for(Map.Entry<String, BigDecimal> entry : worldHoldings.getHoldings().entrySet()) {
-          total = total.add(TNE.manager().currencyManager().convert(TNE.manager().currencyManager().get(world, entry.getKey()), 1.0, entry.getValue()));
-        }
-      }
-    } else {
-      for(Map.Entry<String, WorldHoldings> entry : holdings.entrySet()) {
-        WorldHoldings worldHoldings = entry.getValue();
-
-        for(Map.Entry<String, BigDecimal> balEntry : worldHoldings.getHoldings().entrySet()) {
-          total = total.add(TNE.manager().currencyManager().convert(TNE.manager().currencyManager().get(entry.getKey(), balEntry.getKey()), 1.0, balEntry.getValue()));
-        }
-      }
-    }
-    return total;
   }
 
   public void setHoldings(String world, String currency, BigDecimal newHoldings) {
@@ -117,10 +96,15 @@ public class TNEAccount implements Account {
         //System.out.println("Setting experience to " + newHoldings.intValue());
         player.setLevel(newHoldings.intValue());
       }
-      WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
+      /*WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
       worldHoldings.setHoldings(currency, newHoldings);
       holdings.put(world, worldHoldings);
-      TNE.manager().addAccount(this);
+      TNE.manager().addAccount(this);*/
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, newHoldings);
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
     } else {
       TNE.debug("item currency");
       TNE.debug("Skip: " + skipInventory);
@@ -156,13 +140,20 @@ public class TNEAccount implements Account {
     if(cur.isXp() && MISCUtils.isOnline(id, world)) {
       return true;
     } else if(!cur.isItem() || !MISCUtils.isOnline(id, world)) {
-      if (holdings.containsKey(world)) {
-        return holdings.get(world).hasHoldings(currency);
+      BigDecimal holdings = null;
+
+      try {
+        holdings = TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(identifier(), world, currency);
+      } catch (SQLException e) {
+        TNE.debug(e);
       }
+      return holdings != null;
+      /*if (holdings.containsKey(world)) {
+        return holdings.get(world).hasHoldings(currency);
+      }*/
     } else {
       return ItemCalculations.getCurrencyItems(cur, getPlayer().getInventory()).compareTo(BigDecimal.ZERO) > 0;
     }
-    return false;
   }
 
   public BigDecimal getHoldings(String world, String currency, boolean core, boolean database) {
@@ -206,24 +197,29 @@ public class TNEAccount implements Account {
   public void saveItemCurrency(String world, boolean save, PlayerInventory inventory) {
     TNE.debug("saveItemCurrency for world : " + world + " Save: " + save);
     List<String> currencies = TNE.instance().getWorldManager(world).getItemCurrencies();
-    WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
+    //WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
 
     currencies.forEach((currency)->{
       TNE.debug("Currency: " + currency);
-      TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-      worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(cur, inventory));
+      final TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
+      //worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(cur, inventory));
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, ItemCalculations.getCurrencyItems(cur, inventory));
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
     });
-    holdings.put(world, worldHoldings);
+    //holdings.put(world, worldHoldings);
     if(save) TNE.manager().addAccount(this);
   }
 
-  public Map<String, WorldHoldings> getWorldHoldings() {
+  /*public Map<String, WorldHoldings> getWorldHoldings() {
     return holdings;
   }
 
   public WorldHoldings getWorldHoldings(String world) {
     return holdings.get(world);
-  }
+  }*/
 
   public static TNEAccount getAccount(String identifier) {
     return TNE.manager().getAccount(IDFinder.getID(identifier));
