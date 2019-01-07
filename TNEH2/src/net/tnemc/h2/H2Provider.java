@@ -7,7 +7,6 @@ import com.github.tnerevival.core.db.sql.H2;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.currency.CurrencyEntry;
@@ -54,6 +53,8 @@ public class H2Provider extends TNEDataProvider {
       "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
       "account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
+  private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
+  private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
@@ -252,6 +253,7 @@ public class H2Provider extends TNEDataProvider {
     return false;
   }
 
+  @Override
   public String loadUsername(String identifier) throws SQLException {
     Connection connection = null;
     PreparedStatement statement = null;
@@ -544,7 +546,7 @@ public class H2Provider extends TNEDataProvider {
         accountStatement.setBoolean(15, account.playerAccount());
         accountStatement.addBatch();
 
-        for(Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
+        /*for(Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
           for(Map.Entry<String, BigDecimal> entry : holdingsEntry.getValue().getHoldings().entrySet()) {
             final String server = (TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()) != null)?
                 TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()).getServer() :
@@ -557,7 +559,7 @@ public class H2Provider extends TNEDataProvider {
             balanceStatement.setBigDecimal(6, entry.getValue());
             balanceStatement.addBatch();
           }
-        }
+        }*/
       }
       balanceStatement.executeBatch();
       accountStatement.executeBatch();
@@ -617,7 +619,7 @@ public class H2Provider extends TNEDataProvider {
         }
     );
 
-    for(Map.Entry<String, WorldHoldings> entry : account.getWorldHoldings().entrySet()) {
+    /*for(Map.Entry<String, WorldHoldings> entry : account.getWorldHoldings().entrySet()) {
       for(Map.Entry<String, BigDecimal> curEntry : entry.getValue().getHoldings().entrySet()) {
         final String server = (TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()) != null)?
             TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()).getServer() :
@@ -632,6 +634,60 @@ public class H2Provider extends TNEDataProvider {
                 curEntry.getValue()
             }
         );
+      }
+    }*/
+  }
+
+  @Override
+  public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
+    BigDecimal balance = null;
+    try(Connection connection = h2().getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
+
+        statement.setObject(1, id.toString());
+        statement.setObject(2, world);
+        statement.setObject(3, currency);
+
+        try(ResultSet results = statement.executeQuery()) {
+
+          if(results.next()) {
+            balance = results.getBigDecimal("balance");
+          }
+        }
+      }
+    }
+    return balance;
+  }
+
+  @Override
+  public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
+    try(Connection connection = h2().getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_SAVE)) {
+        final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
+            TNE.manager().currencyManager().get(world, currency).getServer() :
+            TNE.instance().getServerName();
+
+        statement.setObject(1, id.toString());
+        statement.setObject(2, server);
+        statement.setObject(3, world);
+        statement.setObject(4, currency);
+        statement.setObject(5, balance);
+        statement.setObject(6, balance);
+        statement.executeUpdate();
+      }
+    }
+  }
+
+  @Override
+  public void deleteBalance(UUID id, String world, String currency) throws SQLException {
+    try(Connection connection = h2().getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_DELETE_INDIVIDUAL)) {
+        statement.setObject(1, id.toString());
+        statement.setObject(2, world);
+        statement.setObject(3, currency);
+
+        statement.executeUpdate();
       }
     }
   }
