@@ -256,15 +256,15 @@ public class ItemCalculations {
         if(type.equalsIgnoreCase("minor")) {
           return new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue()));
         }
-        //System.out.println("Value: " + value.toPlainString());
-        //System.out.println("Minor: " + minor.toString());
+        //TNE.debug("Value: " + value.toPlainString());
+        //TNE.debug("Minor: " + minor.toString());
         final BigInteger major = minor.divide(new BigInteger(currency.getMinorWeight() + ""));
-        //System.out.println("Major: " + major.toString());
+        //TNE.debug("Major: " + major.toString());
         minor = minor.subtract(major.multiply(new BigInteger(currency.getMinorWeight() + "")));
-        //System.out.println("Minor: " + minor.toString());
+        //TNE.debug("Minor: " + minor.toString());
         value = value.add(new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue())));
         value = value.add(new BigDecimal(major.toString()));
-        //System.out.println("Value: " + value.toPlainString());
+        //TNE.debug("Value: " + value.toPlainString());
       }
     }
 
@@ -300,9 +300,8 @@ public class ItemCalculations {
   }
 
   public static void giveItem(ItemStack stack, Inventory inventory, final Integer amount) {
-
     int remaining = amount;
-    final int stacks = (int)Math.ceil(amount / stack.getMaxStackSize());
+    final int stacks = (amount > stack.getMaxStackSize())? (int)Math.ceil(amount / stack.getMaxStackSize()) : 1;
 
     Collection<ItemStack> items = new ArrayList<>();
     for(int i = 0; i < stacks; i++) {

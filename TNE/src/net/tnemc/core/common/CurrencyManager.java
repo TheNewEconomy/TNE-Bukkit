@@ -22,7 +22,6 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -96,7 +95,6 @@ public class CurrencyManager {
     final BigDecimal minimum = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Minimum", "0.00"));
 
     TNECurrency currency = new TNECurrency();
-    currency.setServer(server);
     currency.setIdentifier(single);
     currency.setMaxBalance(maxBalance);
     currency.setBalance(balance);
@@ -213,9 +211,9 @@ public class CurrencyManager {
         //Currency Conversion Configurations.
         final Double rate = configuration.getDouble(base + ".Conversion.Rate", 1.0);
 
-        //System.out.println(cur + ": " + format);
-        //System.out.println(cur + ": " + decimalPlaces);
-        //System.out.println(cur + ": " + symbol);
+        //TNE.debug(cur + ": " + format);
+        //TNE.debug(cur + ": " + decimalPlaces);
+        //TNE.debug(cur + ": " + symbol);
 
         TNECurrency currency = new TNECurrency();
         currency.setIdentifier(configuration.getString(base + ".Info.Identifier"));
@@ -278,7 +276,7 @@ public class CurrencyManager {
         item.setLore(lore);
 
         if(configuration.contains(tierBase + ".Options.Enchantments")) {
-          //System.out.println("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());
+          //TNE.debug("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());
           item.setEnchantments(configuration.getStringList(tierBase + ".Options.Enchantments"));
         }
       }
@@ -387,11 +385,11 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world, String name) {
-    //System.out.println("Currency: " + name);
-    //System.out.println("World: " + world);
-    //System.out.println("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
+    //TNE.debug("Currency: " + name);
+    //TNE.debug("World: " + world);
+    //TNE.debug("WorldManager null for " + world +"? " + (TNE.instance().getWorldManager(world) == null));
     if(TNE.instance().getWorldManager(world).containsCurrency(name)) {
-      //System.out.println("Returning Currency " + name + " for world " + world);
+      //TNE.debug("Returning Currency " + name + " for world " + world);
       return TNE.instance().getWorldManager(world).getCurrency(name);
     }
     return get(world);
@@ -444,13 +442,8 @@ public class CurrencyManager {
     }
     TNE.manager().getAccounts().forEach((id, account)->{
       account.setHoldings(world, newName, account.getHoldings(world, TNE.manager().currencyManager().get(world, currency)));
-      //account.getWorldHoldings(world).remove(currency);
-      try {
-        TNE.saveManager().getTNEManager().getTNEProvider().deleteBalance(id, world, currency);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
-      //TNE.manager().addAccount(account);
+      account.getWorldHoldings(world).remove(currency);
+      TNE.manager().addAccount(account);
     });
   }
 

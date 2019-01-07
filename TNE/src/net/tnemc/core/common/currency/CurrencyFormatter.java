@@ -25,12 +25,12 @@ public class CurrencyFormatter {
   }
 
   public static String format(String world, String name, BigDecimal amount) {
-    //System.out.println("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
+    //TNE.debug("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
     return format(TNE.manager().currencyManager().get(world, name), world, amount);
   }
 
   public static String format(String world, String name, BigDecimal amount, String format) {
-    //System.out.println("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
+    //TNE.debug("CurrencyFormatter.format(" + name + ", " + world + ", " + amount.doubleValue() + ")");
     return format(TNE.manager().currencyManager().get(world, name), world, amount, format);
   }
 

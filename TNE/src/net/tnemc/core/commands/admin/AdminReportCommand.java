@@ -95,8 +95,8 @@ public class AdminReportCommand extends TNECommand {
     }
     configLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
-    System.out.println("ConfigLog: " + configLog);
-    System.out.println("serverLog: " + serverLog);
+    TNE.debug("ConfigLog: " + configLog);
+    TNE.debug("serverLog: " + serverLog);
 
     if(!configLog.contains("pastebin.com")) {
       sender.sendMessage(ChatColor.RED + "Something went wrong while preparing your report.");
@@ -118,7 +118,7 @@ public class AdminReportCommand extends TNECommand {
     reportLog = MISCUtils.pastebinUpload(name, "yaml", content);
 
     succeeded = reportLog.contains("pastebin.com");
-    System.out.println("reportLog: " + reportLog);
+    TNE.debug("reportLog: " + reportLog);
 
     if(succeeded) {
       sender.sendMessage(ChatColor.WHITE + "Report URL: " + reportLog);

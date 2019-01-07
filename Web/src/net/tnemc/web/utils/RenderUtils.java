@@ -1,5 +1,8 @@
 package net.tnemc.web.utils;
 
+import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.web.WebModule;
 import net.tnemc.web.pages.helper.Balance;
 import net.tnemc.web.pages.helper.NavLink;
@@ -36,9 +39,9 @@ public class RenderUtils {
     model.put("year", LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(new Date())).getYear());
 
     List<Balance> balances = new LinkedList<>();
-     /*((TNEDataManager)TNE.instance().getSaveManager().getDataManager()).getTNEProvider().loadAccount(request.session().attribute("uuid")).getWorldHoldings().forEach((world, worldHoldings)->{
+    ((TNEDataManager)TNE.instance().getSaveManager().getDataManager()).getTNEProvider().loadAccount(request.session().attribute("uuid")).getWorldHoldings().forEach((world, worldHoldings)->{
       worldHoldings.getHoldings().forEach((currency, amount)-> balances.add(new Balance(currency, CurrencyFormatter.format(world, currency, amount))));
-    });*/
+    });
     model.put("balances", balances);
 
     return model;

@@ -16,13 +16,9 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -66,7 +62,7 @@ public class MoneySetCommand extends TNECommand {
     return "Messages.Commands.Money.Set";
   }
 
-  @Override
+  /*@Override
   public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
     Map<Integer, String> argTypes = new HashMap<>();
     argTypes.put(0, "player");
@@ -74,7 +70,7 @@ public class MoneySetCommand extends TNECommand {
     argTypes.put(2, "world");
     argTypes.put(3, "currency");
     return buildSuggestions(sender, shortened, arguments, argTypes, 2);
-  }
+  }*/
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {

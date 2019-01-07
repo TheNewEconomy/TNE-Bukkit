@@ -22,13 +22,9 @@ public class MaterialHelper {
 
   static {
     for(Material mat : Material.values()) {
-      try {
-        List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
-        String[] names = nameList.toArray(new String[nameList.size()]);
-        validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
-      } catch(Exception e) {
-        e.printStackTrace();
-      }
+      List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
+      String[] names = nameList.toArray(new String[nameList.size()]);
+      validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
     }
     //TNE.debug("Materials Using: " + validNames.size());
   }
@@ -54,7 +50,7 @@ public class MaterialHelper {
         return helper.getMaterial();
       }
     }
-    //System.out.println("Material Helper returning air.");
+    //TNE.debug("Material Helper returning air.");
     return Material.AIR;
   }
 }

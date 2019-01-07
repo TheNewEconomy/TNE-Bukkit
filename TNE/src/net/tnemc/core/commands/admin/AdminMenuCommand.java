@@ -6,13 +6,9 @@ import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -54,12 +50,12 @@ public class AdminMenuCommand extends TNECommand {
     return "Messages.Commands.Admin.Menu";
   }
 
-  @Override
+  /*@Override
   public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
     Map<Integer, String> argTypes = new HashMap<>();
     argTypes.put(0, "player");
-    return buildSuggestions(sender, shortened, arguments, argTypes, 2);
-  }
+    return buildSuggestions(sender, shortened, arguments, argTypes, 2)
+  }*/
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {

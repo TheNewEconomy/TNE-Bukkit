@@ -13,7 +13,7 @@ Core:
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
 
-    #Whether or not to have TNE boot into debug mode.
+    #Whether or not to load TNE in debug mode.
     Debug: false
 
     #All configurations relating to the server in general.

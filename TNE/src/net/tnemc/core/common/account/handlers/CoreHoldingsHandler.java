@@ -2,13 +2,13 @@ package net.tnemc.core.common.account.handlers;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -60,23 +60,19 @@ public class CoreHoldingsHandler implements HoldingsHandler {
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
     final Player player = tneAccount.getPlayer();
     if(database || !currency.isItem() || !MISCUtils.isOnline(account, world)) {
-      //System.out.println("Grabbing virtual holdings...");
+      //TNE.debug("Grabbing virtual holdings...");
       if(currency.isXp()) {
-        //System.out.println("experience currency");
-        //System.out.println("Grabbing experience holdings...");
+        //TNE.debug("experience currency");
+        //TNE.debug("Grabbing experience holdings...");
         if(player != null) {
           return new BigDecimal(player.getLevel());
         }
       }
-      /*WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
-                                    tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);*/
-      try {
-        current = TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
+      WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
+                                    tneAccount.getWorldHoldings().get(world) : new WorldHoldings(world);
+      current = worldHoldings.getHoldings(currency.name());
     } else {
-      //System.out.println("Grabbing physical holdings...");
+      //TNE.debug("Grabbing physical holdings...");
       current = ItemCalculations.getCurrencyItems(currency, tneAccount.getPlayer().getInventory());
     }
     return current;

@@ -69,7 +69,6 @@ public class CommandManager {
     } catch(Exception e) {
       //nothing to see here;
     }
-    //TNE.instance().getCommand(command).setTabCompleter(find(command));
   }
 
   private void unregister(String command) {

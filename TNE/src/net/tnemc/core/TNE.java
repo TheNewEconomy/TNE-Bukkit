@@ -31,7 +31,6 @@ import net.tnemc.core.common.configurations.MessageConfigurations;
 import net.tnemc.core.common.configurations.WorldConfigurations;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
-import net.tnemc.core.common.debug.SQLDebug;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
@@ -204,22 +203,26 @@ public class TNE extends TNELib {
     //Configurations
     initializeConfigurations();
 
+    TNE.debug("Preparing configuration instances");
     main = new MainConfigurations();
     messages = new MessageConfigurations();
     world = new WorldConfigurations();
 
+    TNE.debug("Preparing debug mode");
     this.debugMode = mainConfigurations.getBool("Core.Debug");
 
+    TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
       value.getModule().getConfigurations().forEach((configuration, identifier)->{
         configurations().add(configuration, identifier);
       });
     });
+    TNE.debug("Preparing configurations for manager");
     configurations().add(main, "main");
     configurations().add(messages, "messages");
     configurations().add(world, "world");
-    configurations().loadAll();
 
+    TNE.debug("Preparing commands");
     List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
     if(configurations().getBoolean("Core.Commands.PayShort")) {
       moneyArguments.add("pay");
@@ -235,6 +238,7 @@ public class TNE extends TNELib {
     }
 
     //Commands
+    TNE.debug("Preparing commands2");
     registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
     registerCommand(new String[] { "tne", "theneweconomy", "eco" }, new AdminCommand(this));
     registerCommand(new String[] { "tnedev", "theneweconomydev" }, new DeveloperCommand(this));
@@ -259,10 +263,12 @@ public class TNE extends TNELib {
     });
 
     //Initialize our plugin's managers.
+    TNE.debug("Preparing managers");
     manager = new EconomyManager();
     menuManager = new MenuManager();
 
     //General Variables based on configuration values
+    TNE.debug("Preparing variables");
     serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     useUUID = configurations().getBoolean("Core.UUID");
@@ -272,6 +278,7 @@ public class TNE extends TNELib {
       getLogger().log(Level.SEVERE, "Unable to locate module with specified database type.");
     }
 
+    TNE.debug("Preparing save manager");
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Core.Database.Type").toLowerCase(),
         configurations().getString("Core.Database.MySQL.Host"),
@@ -303,6 +310,7 @@ public class TNE extends TNELib {
       e.printStackTrace();
     }
 
+    TNE.debug("Preparing modules");
     loader.getModules().forEach((key, value)->{
       value.getModule().getTables().forEach((type, tables)->{
         saveManager().registerTables(type, tables);
@@ -338,6 +346,7 @@ public class TNE extends TNELib {
     }
 
     //Bukkit Runnables & Workers
+    TNE.debug("Preparing autosavers");
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       saveWorker = new SaveWorker(this);
       saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
@@ -347,6 +356,7 @@ public class TNE extends TNELib {
       getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
     }
 
+    TNE.debug("Preparing events");
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
     getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
     if(configurations().getBoolean("Core.Server.ExperienceGain")) {
@@ -361,25 +371,30 @@ public class TNE extends TNELib {
       });
     });
 
+    TNE.debug("Preparing postLoad");
     loader.getModules().forEach((key, value)->
         value.getModule().postLoad(this)
     );
+    TNE.debug("Preparing menus");
     loader.getModules().forEach((key, value)->
         value.getModule().registerMenus(this).forEach((name, menu)->{
           menuManager.menus.put(name, menu);
         })
     );
 
+    TNE.debug("Preparing placeholders");
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       new EconomyPlaceholders().register();
     }
 
     //Metrics
+    TNE.debug("Preparing metrics");
     if(api.getBoolean("Core.Server.ThirdParty.Stats")) {
       new Metrics(this);
       getLogger().info("Sending plugin statistics.");
     }
 
+    TNE.debug("Preparing server account");
     if(api.getBoolean("Core.Server.Account.Enabled")) {
       String world = worldManagers.get(defaultWorld).getBalanceWorld();
       UUID id = IDFinder.getID(consoleName);
@@ -395,6 +410,7 @@ public class TNE extends TNELib {
       }
     }
 
+    TNE.debug("Preparing TNE Forge Mod support");
     useMod = configurations.getBoolean("Core.Server.TNEMod");
 
     if(useMod) {
@@ -403,15 +419,19 @@ public class TNE extends TNELib {
     }
     getLogger().info("The New Economy has been enabled!");
 
-    SQLDebug.testLoad(1000);
+    /*SQLDebug.testLoad(1000);
     SQLDebug.loadAccountTest(1000);
-    SQLDebug.loadSaveAccountTest(1000);
+    SQLDebug.loadSaveAccountTest(1000);*/
   }
 
   public void onDisable() {
 
     for(Player player : Bukkit.getServer().getOnlinePlayers()) {
-      TNE.manager().getAccount(player.getUniqueId()).saveItemCurrency(worldManagers.get(player.getWorld().getName()).getBalanceWorld());
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(TNE.manager().getAccount(player.getUniqueId()));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
 
     loader.getModules().forEach((key, value)->{
@@ -652,6 +672,7 @@ public class TNE extends TNELib {
   }
 
   public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
+    TNE.debug("Started copying " + file.getName());
     CommentedConfiguration commentedConfiguration;
 
     try {
@@ -663,6 +684,7 @@ public class TNE extends TNELib {
     commentedConfiguration = new CommentedConfiguration(file, defaults);
     commentedConfiguration.load();
     defaults.delete();
+    TNE.debug("Finished copying " + file.getName());
     return commentedConfiguration;
   }
 
@@ -673,7 +695,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) System.out.println(message);
+    if(consoleDebug) TNE.debug(message);
   }
 
   /*public void loadConfigurations() {
@@ -776,7 +798,7 @@ public class TNE extends TNELib {
         return manager;
       }
     }
-    return null;
+    return worldManagers.get(defaultWorld);
   }
 
   public Collection<WorldManager> getWorldManagers() {

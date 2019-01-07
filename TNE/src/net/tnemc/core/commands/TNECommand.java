@@ -4,12 +4,8 @@ import com.github.tnerevival.TNELib;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -17,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TNECommand implements TabCompleter {
+public abstract class TNECommand {
 
   protected TNELib plugin;
 
@@ -117,7 +113,7 @@ public abstract class TNECommand implements TabCompleter {
     return true;
   }
 
-  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
+  /*public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
     List<String> suggestions = new ArrayList<>();
     subCommands.forEach((tneCommand ->{
       if(tneCommand.canExecute(sender) && tneCommand.getName().startsWith(arguments[arguments.length - 1])) {
@@ -188,7 +184,7 @@ public abstract class TNECommand implements TabCompleter {
         break;
     }
     return suggestions;
-  }
+  }*/
 
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 

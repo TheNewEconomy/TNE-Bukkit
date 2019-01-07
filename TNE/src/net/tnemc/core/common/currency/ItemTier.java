@@ -92,13 +92,13 @@ public class ItemTier {
     stack.setItemMeta(meta);
 
 
-    //System.out.println("ENCHANTMENTS SIZE: " + enchantments.size());
+    //TNE.debug("ENCHANTMENTS SIZE: " + enchantments.size());
     if(enchantments.size() > 0) {
       enchantments.forEach((name)->{
         Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name));
-        //System.out.println("ENCHANTMENT NULL: " + (enchantment == null));
+        //TNE.debug("ENCHANTMENT NULL: " + (enchantment == null));
         if(enchantment == null) {
-          //System.out.println("Unable to apply enchantment to item tier: " + name);
+          //TNE.debug("Unable to apply enchantment to item tier: " + name);
         } else {
           stack.addUnsafeEnchantment(enchantment, 1);
         }

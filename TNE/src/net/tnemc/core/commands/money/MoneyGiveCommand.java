@@ -10,13 +10,9 @@ import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -59,7 +55,7 @@ public class MoneyGiveCommand extends TNECommand {
     return "Messages.Commands.Money.Give";
   }
 
-  @Override
+  /*@Override
   public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
     Map<Integer, String> argTypes = new HashMap<>();
     argTypes.put(0, "player");
@@ -67,7 +63,7 @@ public class MoneyGiveCommand extends TNECommand {
     argTypes.put(2, "world");
     argTypes.put(3, "currency");
     return buildSuggestions(sender, shortened, arguments, argTypes, 2);
-  }
+  }*/
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
