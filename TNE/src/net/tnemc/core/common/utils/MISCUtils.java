@@ -82,6 +82,14 @@ public class MISCUtils {
     return Bukkit.getVersion().contains("1.12");
   }
 
+  public static boolean isOneThirteen() {
+    return Bukkit.getVersion().contains("1.13");
+  }
+
+  public static boolean offHand() {
+    return isOneNine() || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
+  }
+
   public static Boolean isBoolean(String value) {
     return value.equalsIgnoreCase(String.valueOf(true)) || value.equalsIgnoreCase(String.valueOf(false));
   }

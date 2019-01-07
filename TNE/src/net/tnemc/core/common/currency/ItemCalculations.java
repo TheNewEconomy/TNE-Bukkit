@@ -3,6 +3,7 @@ package net.tnemc.core.common.currency;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -348,7 +349,7 @@ public class ItemCalculations {
         }
       }
 
-      if(left > 0) {
+      if(left > 0 && MISCUtils.offHand()) {
         final ItemStack hand = ((PlayerInventory) inventory).getItemInOffHand();
 
         if(hand != null && hand.isSimilar(stack)) {
@@ -397,7 +398,7 @@ public class ItemCalculations {
         }
       }
 
-      if(left > 0) {
+      if(left > 0 && MISCUtils.offHand()) {
         final ItemStack hand = ((PlayerInventory) inventory).getItemInOffHand();
 
         if(hand != null && hand.isSimilar(stack)) {
