@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -79,6 +80,8 @@ public class MaterialUtils {
 
   public static Boolean itemsEqual(ItemStack original, ItemStack compare) {
     if(compare == null) return false;
+    TNE.debug("Enchant Size: " + original.getEnchantments().size());
+    TNE.debug("Enchant Size: " + original.getItemMeta().getEnchants().size());
     ItemMeta originalMeta = original.getItemMeta();
     ItemMeta compareMeta = compare.getItemMeta();
     if(compare.hasItemMeta()) {
@@ -100,6 +103,8 @@ public class MaterialUtils {
       }
 
       TNE.debug("enchant");
+      TNE.debug("Enchant Size: " + original.getEnchantments().size());
+      TNE.debug("Enchant Size: " + originalMeta.getEnchants().size());
       if (compareMeta.hasEnchants()) {
         if (!originalMeta.hasEnchants()) return false;
 
@@ -136,6 +141,11 @@ public class MaterialUtils {
     } else if(original.getType().equals(Material.WRITTEN_BOOK) ||
         original.getType().equals(Material.WRITABLE_BOOK)) {
       if(originalMeta instanceof BookMeta && compareMeta instanceof BookMeta) {
+        return new SerialItem(original).serialize().equals(new SerialItem(compare).serialize());
+      }
+      return false;
+    } else if(original.getType().equals(Material.ENCHANTED_BOOK)) {
+      if(originalMeta instanceof EnchantmentStorageMeta && compareMeta instanceof  EnchantmentStorageMeta) {
         return new SerialItem(original).serialize().equals(new SerialItem(compare).serialize());
       }
       return false;

@@ -253,6 +253,7 @@ public class SerialItem {
 
   public static SerialItem fromJSON(JSONObject json) {
     final JSONHelper helper = new JSONHelper(json);
+    TNE.debug("JSON: " + helper.toString());
     TNE.debug("fromJSON");
     Material material = Material.matchMaterial(helper.getString("material"));
     TNE.debug("Material: " + material.name());
@@ -272,6 +273,7 @@ public class SerialItem {
     stack.setItemMeta(meta);
 
     if(json.containsKey("enchantments")) {
+      TNE.debug("Enchants: " + json.get("enchantments"));
       JSONObject enchants = (JSONObject)json.get("enchantments");
       enchants.forEach((key, value) -> {
         TNE.debug("Name: " + key);

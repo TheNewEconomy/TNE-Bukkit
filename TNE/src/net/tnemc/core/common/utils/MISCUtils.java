@@ -227,13 +227,13 @@ public class MISCUtils {
       TNEAccount account = TNE.manager().getAccount(id);
       if(account != null) {
         TNE.debug("Extracting Account: " + username);
-        /*TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
+        TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
         account.getWorldHoldings().forEach((world, holdings) -> {
           holdings.getHoldings().forEach((currency, amount) -> {
             if(amount.compareTo(BigDecimal.ZERO) == 0) return;
             configuration.set("Accounts." + username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%") + ".Balances." + world + "." + currency, amount.toPlainString());
           });
-        });*/
+        });
       }
     });
     try {

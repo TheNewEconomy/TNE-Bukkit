@@ -56,11 +56,6 @@ public abstract class TNEDataProvider extends DataProvider {
   }
   public abstract void saveAccount(TNEAccount account) throws SQLException;
   public abstract void deleteAccount(UUID id) throws SQLException;
-
-  public abstract BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException;
-  public abstract void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException;
-  public abstract void deleteBalance(UUID id, String world, String currency) throws SQLException;
-
   public abstract TNETransaction loadTransaction(UUID id) throws SQLException;
   public abstract Collection<TNETransaction> loadTransactions() throws SQLException;
   public abstract void saveTransaction(TNETransaction transaction) throws SQLException;

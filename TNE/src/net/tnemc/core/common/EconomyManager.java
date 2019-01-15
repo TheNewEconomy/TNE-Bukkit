@@ -12,6 +12,7 @@ import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -120,7 +121,7 @@ public class EconomyManager {
   }
 
   public boolean createAccount(UUID id, String displayName) {
-    System.out.println("Creating account for " + displayName + " with ID of " + id.toString());
+    TNE.debug("Creating account for " + displayName + " with ID of " + id.toString());
     TNE.debug("=====START EconomyManager.createAccount =====");
     TNE.debug("UUID: " + id.toString());
     TNEAccount account = new TNEAccount(id, displayName);
@@ -164,11 +165,11 @@ public class EconomyManager {
       TNEAccount account = it.next();
       boolean remove = true;
 
-      /*for(Map.Entry<String, BigDecimal> balance : account.getWorldHoldings(world).getHoldings().entrySet()) {
+      for(Map.Entry<String, BigDecimal> balance : account.getWorldHoldings(world).getHoldings().entrySet()) {
         if(!balance.getValue().equals(TNE.manager().currencyManager().get(world, balance.getKey()).defaultBalance())) {
           remove = false;
         }
-      }*/
+      }
 
       if(remove) {
         TNE.manager().getAccounts().remove(account.identifier(), false);

@@ -31,6 +31,7 @@ import net.tnemc.core.common.configurations.MessageConfigurations;
 import net.tnemc.core.common.configurations.WorldConfigurations;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
+import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
@@ -126,10 +127,12 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "2Beta118";
+  public static final String build = "3Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
+
+  private MaterialHelper matHelper;
 
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
@@ -417,6 +420,7 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
+
     getLogger().info("The New Economy has been enabled!");
 
     /*SQLDebug.testLoad(1000);
@@ -663,6 +667,7 @@ public class TNE extends TNELib {
     TNE.logger().info("Initialized worlds.yml");
     Bukkit.getScheduler().runTaskAsynchronously(this, ()-> {
       itemConfigurations = initializeConfiguration(items, "items.yml");
+      this.matHelper = new MaterialHelper();
       TNE.logger().info("Initialized items.yml");
 
       loader.getModules().forEach((key, value) -> {

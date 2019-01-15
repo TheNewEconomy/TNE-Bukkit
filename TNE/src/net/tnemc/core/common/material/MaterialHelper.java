@@ -20,13 +20,12 @@ public class MaterialHelper {
 
   private static List<MaterialNameHelper> validNames = new ArrayList<>();
 
-  static {
+  public MaterialHelper() {
     for(Material mat : Material.values()) {
       List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
       String[] names = nameList.toArray(new String[nameList.size()]);
       validNames.add(new MaterialNameHelper(mat, MaterialUtils.formatMaterialName(mat), names));
     }
-    //TNE.debug("Materials Using: " + validNames.size());
   }
 
   public static String getShopName(Material material) {

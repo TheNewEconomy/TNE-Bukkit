@@ -1,5 +1,6 @@
 package net.tnemc.core.item.data;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.enchantments.Enchantment;
@@ -64,6 +65,7 @@ public class EnchantStorageData implements SerialItemData {
   public void readJSON(JSONHelper json) {
     valid = true;
     JSONObject enchants = json.getJSON("enchantments");
+    TNE.debug(json.getJSON("enchantments").toJSONString());
     enchants.forEach((key, value)->{
       enchantments.put(key.toString(), Integer.valueOf(value.toString()));
     });
