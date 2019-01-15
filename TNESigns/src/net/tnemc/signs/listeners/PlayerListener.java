@@ -105,7 +105,8 @@ public class PlayerListener implements Listener {
                   e.printStackTrace();
                 }
                 if (signInstance != null) {
-                  if (!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())) {
+                  if (!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())
+                      && !event.getPlayer().hasPermission("tne.shop.override")) {
                     event.setCancelled(true);
                   }
                 }

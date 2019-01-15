@@ -40,6 +40,8 @@ public class ConfirmIcon extends Icon {
 
     Chest chest = (Chest)((Location)TNE.menuManager().getViewerData(id, "shop_chest")).getBlock().getState();
     final ItemStack item = (ItemStack)TNE.menuManager().getViewerData(id, "shop_item");
+    TNE.debug("Click Enchant Size: " + item.getEnchantments().size());
+    TNE.debug("Click Enchant Size: " + item.getItemMeta().getEnchants().size());
     final int amount = item.getAmount();
     boolean complete = false;
     final Boolean currency = (Boolean)TNE.menuManager().getViewerData(id, "shop_currency");
@@ -89,7 +91,11 @@ public class ConfirmIcon extends Icon {
     }
 
     if (complete) {
+      TNE.debug("Complete Enchant Size: " + item.getEnchantments().size());
+      TNE.debug("Complete Enchant Size: " + item.getItemMeta().getEnchants().size());
       ItemCalculations.giveItem(item, player.getInventory(), amount);
+      TNE.debug("Post Enchant Size: " + item.getEnchantments().size());
+      TNE.debug("Post Enchant Size: " + item.getItemMeta().getEnchants().size());
       ItemCalculations.removeItemAmount(item, ItemSign.getChestInventory(chest), amount);
 
       player.sendMessage(ChatColor.GREEN + "Successfully bought item.");

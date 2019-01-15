@@ -221,6 +221,7 @@ public class ItemSign implements SignType {
       if(results.next()) {
         String str = results.getString("item_offer");
 
+        TNE.debug("Item Str: " + str);
         item = SerialItem.fromJSON((JSONObject)new JSONParser().parse(str)).getStack();
         TNE.debug("Item: " + str);
         TNE.debug("Null: " + (item == null));

@@ -33,6 +33,8 @@ public class ItemIcon extends Icon {
   public ItemStack buildStack(Player player) {
     final boolean selling = (Boolean)TNE.menuManager().getViewerData(player.getUniqueId(), "shop_selling");
     ItemStack stack = ((ItemStack)TNE.menuManager().getViewerData(player.getUniqueId(), "shop_item")).clone();
+    TNE.debug("Icon Enchant Size: " + stack.getEnchantments().size());
+    TNE.debug("icon Enchant Size: " + stack.getItemMeta().getEnchants().size());
     TNE.debug("Item Durability: " + stack.getDurability());
     ItemMeta meta = stack.getItemMeta();
     List<String> lore = new ArrayList<>();

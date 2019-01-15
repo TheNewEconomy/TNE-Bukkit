@@ -39,12 +39,16 @@ public class PlayerHandler implements HoldingsHandler {
     if(username != null && !username.toLowerCase().contains("town-") && !username.toLowerCase().contains("nation-")) {
       try {
         for(TNESign sign : SignsData.loadSigns(account.toString(), "safe")) {
-          if(sign.getAttached().getBlock().getState() instanceof Chest) {
-            amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock().getState()).getBlockInventory()));
+          try {
+            if (sign.getAttached().getBlock().getState() instanceof Chest) {
+              amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock().getState()).getBlockInventory()));
+            }
+          } catch(Exception ignore) {
+            //skip this iteration
           }
         }
-      } catch (SQLException e) {
-        e.printStackTrace();
+      } catch (SQLException ignore) {
+        //skip
       }
     }
     return amount;

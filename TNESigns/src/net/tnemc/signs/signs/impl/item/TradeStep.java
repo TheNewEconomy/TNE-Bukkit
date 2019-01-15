@@ -53,7 +53,9 @@ public class TradeStep implements SignStep {
 
       try {
         final Chest chest = SignsData.chest(sign.getLocation());
-        ItemStack item = ItemSign.getItem(sign.getLocation());
+        final ItemStack item = ItemSign.getItem(sign.getLocation());
+        TNE.debug("Trade Enchant Size: " + item.getEnchantments().size());
+        TNE.debug("TradeEnchant Size: " + item.getItemMeta().getEnchants().size());
         TNE.debug("Item Null?: " + (item == null));
         TNE.debug("Damage: " + item.getDurability());
         final boolean selling = ItemSign.isSelling(sign.getLocation());

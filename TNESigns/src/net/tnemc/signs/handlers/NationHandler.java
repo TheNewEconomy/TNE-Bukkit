@@ -45,14 +45,19 @@ public class NationHandler implements HoldingsHandler {
 
     try {
       for(TNESign sign : SignsData.loadSigns(account.toString(), "nation")) {
+
         if(sign.getOwner().toString().equalsIgnoreCase(account.toString())) {
-          if(sign.getAttached().getBlock().getState() instanceof Chest) {
-            amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock().getState()).getBlockInventory()));
+          try {
+            if (sign.getAttached().getBlock().getState() instanceof Chest) {
+              amount = amount.add(ItemCalculations.getCurrencyItems(currency, ((Chest) sign.getAttached().getBlock().getState()).getBlockInventory()));
+            }
+          } catch(Exception ignore) {
+            //skip this iteration
           }
         }
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (SQLException ignore) {
+      //rip balance check
     }
 
     return amount;
