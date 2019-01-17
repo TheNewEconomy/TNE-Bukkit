@@ -1,5 +1,6 @@
 package net.tnemc.signs.handlers;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
@@ -44,7 +45,7 @@ public class PlayerHandler implements HoldingsHandler {
           }
         }
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     }
     return amount;

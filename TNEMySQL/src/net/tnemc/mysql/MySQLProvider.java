@@ -41,7 +41,6 @@ public class MySQLProvider extends TNEDataProvider {
   private String prefix = manager.getPrefix();
 
   private final String ID_LOAD = "SELECT uuid FROM " + prefix + "_ECOIDS WHERE username = ? LIMIT 1";
-  private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
@@ -108,12 +107,12 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void initialize() throws SQLException {
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
         "`id` INTEGER NOT NULL UNIQUE," +
         "`version` VARCHAR(10)," +
         "`server_name` VARCHAR(100)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    mysql().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
+    executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
         new Object[] {
             1,
             TNELib.instance().currentSaveVersion,
@@ -121,12 +120,12 @@ public class MySQLProvider extends TNEDataProvider {
             TNELib.instance().currentSaveVersion,
         });
 
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
         "`username` VARCHAR(100)," +
         "`uuid` VARCHAR(36) UNIQUE" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
         "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
         "`display_name` VARCHAR(100)," +
         "`joined_date` BIGINT(60)," +
@@ -137,7 +136,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`account_player` BOOLEAN" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
         "`uuid` VARCHAR(36) NOT NULL," +
         "`server_name` VARCHAR(100) NOT NULL," +
         "`world` VARCHAR(50) NOT NULL," +
@@ -146,7 +145,7 @@ public class MySQLProvider extends TNEDataProvider {
         "PRIMARY KEY(uuid, server_name, world, currency)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
         "`trans_id` VARCHAR(36) NOT NULL," +
         "`trans_initiator` VARCHAR(36)," +
         "`trans_initiator_balance` DECIMAL(49,4)," +
@@ -159,7 +158,7 @@ public class MySQLProvider extends TNEDataProvider {
         "PRIMARY KEY(trans_id)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
         "`charge_transaction` VARCHAR(36) NOT NULL," +
         "`charge_player` VARCHAR(36) NOT NULL," +
         "`charge_currency` VARCHAR(100) NOT NULL," +
@@ -169,7 +168,7 @@ public class MySQLProvider extends TNEDataProvider {
         "PRIMARY KEY(charge_transaction, charge_player)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-    mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
         "`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE," +
         "`uuid` VARCHAR(36) NOT NULL," +
         "`server_name` VARCHAR(100) NOT NULL," +
@@ -186,7 +185,7 @@ public class MySQLProvider extends TNEDataProvider {
     if(version < TNE.instance().currentSaveVersion) {
 
       if(version < 1114.0) {
-        mysql().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+        executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
             "`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE," +
             "`uuid` VARCHAR(36) NOT NULL," +
             "`server_name` VARCHAR(100) NOT NULL," +
@@ -195,10 +194,10 @@ public class MySQLProvider extends TNEDataProvider {
             "`balance` DECIMAL(49,4)" +
             ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-        mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` MODIFY COLUMN `balance` DECIMAL(49,4)");
-        mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_initiator_balance` DECIMAL(49,4)");
-        mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_recipient_balance` DECIMAL(49,4)");
-        mysql().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` MODIFY COLUMN `charge_amount` DECIMAL(49,4)");
+        executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` MODIFY COLUMN `balance` DECIMAL(49,4)");
+        executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_initiator_balance` DECIMAL(49,4)");
+        executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_recipient_balance` DECIMAL(49,4)");
+        executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` MODIFY COLUMN `charge_amount` DECIMAL(49,4)");
       }
     }
   }
@@ -214,19 +213,19 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void save(Double version) throws SQLException {
-    mysql().executePreparedUpdate("UPDATE " + manager.getPrefix() + "_INFO SET version = ? WHERE id = 1;",
+    executePreparedUpdate("UPDATE " + manager.getPrefix() + "_INFO SET version = ? WHERE id = 1;",
         new Object[] { version });
     super.save(version);
   }
 
   @Override
   public void delete(Double version) throws SQLException {
-    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
-    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
-    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
-    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES_HISTORY;");
-    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
-    mysql().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES_HISTORY;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
   }
 
   @Override
@@ -351,25 +350,30 @@ public class MySQLProvider extends TNEDataProvider {
       return;
     }
 
-    try(Connection connection = mysql().getDataSource().getConnection()) {
-
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
       try(PreparedStatement statement = connection.prepareStatement(ID_SAVE)) {
         statement.setObject(1, username);
         statement.setObject(2, id.toString());
         statement.setObject(3, username);
 
       }
+    } finally {
+      if(connection != null) {
+        connection.close();
+      }
     }
   }
 
   @Override
   public void removeID(String username) throws SQLException {
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE username = ?", new Object[] { username });
+    executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE username = ?", new Object[] { username });
   }
 
   @Override
   public void removeID(UUID id) throws SQLException {
-    mysql().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
   }
 
   @Override
@@ -481,24 +485,6 @@ public class MySQLProvider extends TNEDataProvider {
           accountStatement.setString(14, account.getLanguage());
           accountStatement.setBoolean(15, account.playerAccount());
           accountStatement.addBatch();
-
-          /*try (PreparedStatement balanceStatement = connection.prepareStatement(BALANCE_SAVE)) {
-            for (Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
-              for (Map.Entry<String, BigDecimal> entry : holdingsEntry.getValue().getHoldings().entrySet()) {
-                final String server = (TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()) != null) ?
-                    TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()).getServer() :
-                    TNE.instance().getServerName();
-                balanceStatement.setString(1, account.identifier().toString());
-                balanceStatement.setString(2, server);
-                balanceStatement.setString(3, holdingsEntry.getKey());
-                balanceStatement.setString(4, entry.getKey());
-                balanceStatement.setBigDecimal(5, entry.getValue());
-                balanceStatement.setBigDecimal(6, entry.getValue());
-                balanceStatement.addBatch();
-              }
-            }
-            balanceStatement.executeBatch();
-          }*/
         }
         accountStatement.executeBatch();
       }
@@ -513,11 +499,9 @@ public class MySQLProvider extends TNEDataProvider {
       TNE.debug("Attempted saving account with null display name.");
       return;
     }
-    TNE.debug("Saving account: " + account.displayName());
-    TNE.debug("Save Account Timing");
-    long startTime = System.nanoTime();
-    try(Connection connection = mysql().getDataSource().getConnection()) {
-
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
       try(PreparedStatement statement = connection.prepareStatement(ACCOUNT_SAVE)) {
         statement.setObject(1, account.identifier().toString());
         statement.setObject(2, account.displayName());
@@ -537,36 +521,17 @@ public class MySQLProvider extends TNEDataProvider {
 
         statement.executeUpdate();
       }
-
-      TNE.debug("Save account info time: " + ((System.nanoTime() - startTime) / 1000000));
-
-      /*try(PreparedStatement statement = connection.prepareStatement(BALANCE_SAVE)) {
-
-        for(Map.Entry<String, WorldHoldings> entry : account.getWorldHoldings().entrySet()) {
-          for(Map.Entry<String, BigDecimal> curEntry : entry.getValue().getHoldings().entrySet()) {
-            final String server = (TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()) != null)?
-                TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()).getServer() :
-                TNE.instance().getServerName();
-            statement.setObject(1, account.identifier().toString());
-            statement.setObject(2, server);
-            statement.setObject(3, entry.getKey());
-            statement.setObject(4, curEntry.getKey());
-            statement.setObject(5, curEntry.getValue());
-            statement.setObject(6, curEntry.getValue());
-            statement.addBatch();
-          }
-        }
-        statement.executeBatch();
-      }*/
-      TNE.debug("Save balance info time: " + ((System.nanoTime() - startTime) / 1000000));
+    } finally {
+      if(connection != null) connection.close();
     }
-    TNE.debug("Save account time: " + ((System.nanoTime() - startTime) / 1000000));
   }
 
   @Override
   public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
     BigDecimal balance = null;
-    try(Connection connection = mysql().getDataSource().getConnection()) {
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
       try(PreparedStatement statement = connection.prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
 
         statement.setObject(1, id.toString());
@@ -580,13 +545,17 @@ public class MySQLProvider extends TNEDataProvider {
           }
         }
       }
+    } finally {
+      if(connection != null) connection.close();
     }
     return balance;
   }
 
   @Override
   public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
-    try(Connection connection = mysql().getDataSource().getConnection()) {
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
       try(PreparedStatement statement = connection.prepareStatement(BALANCE_SAVE)) {
         final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
             TNE.manager().currencyManager().get(world, currency).getServer() :
@@ -600,12 +569,16 @@ public class MySQLProvider extends TNEDataProvider {
         statement.setObject(6, balance);
         statement.executeUpdate();
       }
+    } finally {
+      if(connection != null) connection.close();
     }
   }
 
   @Override
   public void deleteBalance(UUID id, String world, String currency) throws SQLException {
-    try(Connection connection = mysql().getDataSource().getConnection()) {
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
 
       try(PreparedStatement statement = connection.prepareStatement(BALANCE_DELETE_INDIVIDUAL)) {
         statement.setObject(1, id.toString());
@@ -614,14 +587,16 @@ public class MySQLProvider extends TNEDataProvider {
 
         statement.executeUpdate();
       }
+    } finally {
+      if(connection != null) connection.close();
     }
   }
 
   @Override
   public void deleteAccount(UUID id) throws SQLException {
-    mysql().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
-    mysql().executePreparedUpdate(ACCOUNT_DELETE, new Object[] { id.toString() });
-    mysql().executePreparedUpdate(BALANCE_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(ACCOUNT_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(BALANCE_DELETE, new Object[] { id.toString() });
   }
 
   @Override
@@ -680,7 +655,9 @@ public class MySQLProvider extends TNEDataProvider {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     List<UUID> transactionIDS = new ArrayList<>();
 
-    try(Connection connection = mysql().getDataSource().getConnection()) {
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
 
       try(Statement statement = connection.createStatement()) {
         try(ResultSet results = mysql().executeQuery(statement,"SELECT trans_id FROM " + table + ";")) {
@@ -692,6 +669,12 @@ public class MySQLProvider extends TNEDataProvider {
       }
     } catch(Exception e) {
       TNE.debug(e);
+    } finally {
+      if(connection != null) try {
+        connection.close();
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
     }
     transactionIDS.forEach((id)->{
       TNETransaction transaction = loadTransaction(id);
@@ -703,7 +686,7 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public void saveTransaction(TNETransaction transaction) throws SQLException {
     String table = manager.getPrefix() + "_TRANSACTIONS";
-    mysql().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_initiator_balance, trans_recipient, trans_recipient_balance, trans_type, trans_world, trans_time, trans_voided) " +
+    executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_initiator_balance, trans_recipient, trans_recipient_balance, trans_type, trans_world, trans_time, trans_voided) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE trans_recipient = ?, trans_world = ?, trans_voided = ?",
         new Object[]{
             transaction.transactionID().toString(),
@@ -723,7 +706,7 @@ public class MySQLProvider extends TNEDataProvider {
 
     table = manager.getPrefix() + "_CHARGES";
     if(transaction.initiatorCharge() != null) {
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
+      executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
               "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE charge_world = ?, charge_amount = ?, charge_type = ?",
           new Object[]{
               transaction.transactionID().toString(),
@@ -740,7 +723,7 @@ public class MySQLProvider extends TNEDataProvider {
     }
 
     if(transaction.recipientCharge() != null) {
-      mysql().executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
+      executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
               "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE charge_world = ?, charge_amount = ?, charge_type = ?",
           new Object[]{
               transaction.transactionID().toString(),
@@ -759,8 +742,8 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void deleteTransaction(UUID id) throws SQLException {
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
-    mysql().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_CHARGES WHERE charge_transaction = ? ", new Object[] { id.toString() });
+    executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
+    executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_CHARGES WHERE charge_transaction = ? ", new Object[] { id.toString() });
   }
 
   @Override
@@ -831,7 +814,7 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public void createTables(List<String> tables) throws SQLException {
     for(String table : tables) {
-      mysql().executeUpdate(table);
+      executeUpdate(table);
     }
   }
 
@@ -916,5 +899,49 @@ public class MySQLProvider extends TNEDataProvider {
       e.printStackTrace();
     }
     return transactions;
+  }
+  
+  public void executeUpdate(String query) {
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
+      try(Statement statement = connection.createStatement()) {
+        statement.executeUpdate(query);
+      }
+    } catch (SQLException e) {
+      TNE.debug(e);
+    } finally {
+      if(connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          TNE.debug(e);
+        }
+      }
+    }
+  }
+
+  public void executePreparedUpdate(String query, Object[] variables) {
+    Connection connection = null;
+    try {
+      connection = mysql().getDataSource().getConnection();
+      try(PreparedStatement statement = connection.prepareStatement(query)) {
+
+        for (int i = 0; i < variables.length; i++) {
+          statement.setObject((i + 1), variables[i]);
+        }
+        statement.executeUpdate();
+      }
+    } catch (SQLException e) {
+      TNE.debug(e);
+    } finally {
+      if(connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          TNE.debug(e);
+        }
+      }
+    }
   }
 }

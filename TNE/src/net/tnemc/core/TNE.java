@@ -126,7 +126,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "2Beta118";
+  public static final String build = "3Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -419,9 +419,9 @@ public class TNE extends TNELib {
     }
     getLogger().info("The New Economy has been enabled!");
 
-    /*SQLDebug.testLoad(1000);
-    SQLDebug.loadAccountTest(1000);
-    SQLDebug.loadSaveAccountTest(1000);*/
+    /*SQLDebug.testLoad(500);
+    SQLDebug.loadAccountTest(500);
+    SQLDebug.loadSaveAccountTest(500);*/
   }
 
   public void onDisable() {
