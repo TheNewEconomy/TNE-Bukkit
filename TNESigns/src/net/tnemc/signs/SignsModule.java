@@ -8,12 +8,8 @@ import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
-import net.tnemc.signs.handlers.NationHandler;
-import net.tnemc.signs.handlers.PlayerHandler;
-import net.tnemc.signs.handlers.TownHandler;
 import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.PlayerListener;
-import net.tnemc.signs.listeners.TownyListener;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.item.menu.AmountSelectionMenu;
 import net.tnemc.signs.signs.impl.item.menu.ItemAmountSelection;
@@ -65,10 +61,6 @@ public class SignsModule extends Module {
     Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
 
-    if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
-      Bukkit.getServer().getPluginManager().registerEvents(new TownyListener(tne), tne);
-    }
-
     tne.logger().info("Signs Module loaded!");
   }
 
@@ -78,18 +70,6 @@ public class SignsModule extends Module {
       configuration.save(fileConfiguration);
     }
     tne.logger().info("Signs Module unloaded!");
-  }
-
-  /**
-   * Called at the last portion of TNE's onEnable, post initialization.
-   *
-   * @param tne An instance of the main TNE class.
-   */
-  @Override
-  public void postLoad(TNE tne) {
-    TNE.manager().registerHandler(new NationHandler());
-    TNE.manager().registerHandler(new PlayerHandler());
-    TNE.manager().registerHandler(new TownHandler());
   }
 
   @Override

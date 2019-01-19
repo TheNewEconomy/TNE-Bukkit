@@ -2,10 +2,6 @@ package net.tnemc.signs;
 
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.ItemSign;
-import net.tnemc.signs.signs.impl.NationSign;
-import net.tnemc.signs.signs.impl.SafeSign;
-import net.tnemc.signs.signs.impl.TownSign;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,14 +36,8 @@ public class SignsManager {
   };
 
   public SignsManager() {
-    //signs.setListener(new SignsListener());
 
-    addSignType(new SafeSign());
     addSignType(new ItemSign());
-    if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
-      addSignType(new TownSign());
-      addSignType(new NationSign());
-    }
   }
 
   public static boolean blockAttachedSign(final Block block) {
