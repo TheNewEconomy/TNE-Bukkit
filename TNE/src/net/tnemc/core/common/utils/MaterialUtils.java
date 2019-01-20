@@ -153,7 +153,7 @@ public class MaterialUtils {
     TNE.debug("isSimilar: " + compare.isSimilar(original));
     if(!original.getType().equals(compare.getType())) return false;
     if(original.getDurability() != compare.getDurability()) return false;
-    return compare.isSimilar(original);
+    return true;
   }
 
   public static boolean isShulker(Material material) {

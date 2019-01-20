@@ -55,6 +55,8 @@ public class ConfirmTradeIcon extends Icon {
     } catch (SQLException e) {
       this.message = ChatColor.RED + "Unable to update your shop's offer amount.";
     }
+    player.sendMessage(message);
+    this.message = "";
 
     super.onClick(menu, player);
   }

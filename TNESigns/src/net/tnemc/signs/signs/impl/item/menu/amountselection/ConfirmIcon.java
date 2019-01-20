@@ -48,6 +48,8 @@ public class ConfirmIcon extends Icon {
     } catch (SQLException e) {
       this.message = ChatColor.RED + "Error while changing shop's currency offer.";
     }
+    player.sendMessage(message);
+    this.message = "";
 
     super.onClick(menu, player);
   }
