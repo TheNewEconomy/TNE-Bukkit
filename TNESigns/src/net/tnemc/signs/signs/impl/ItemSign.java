@@ -187,6 +187,8 @@ public class ItemSign implements SignType {
     });
     Sign sign = (Sign) location.getBlock().getState();
     sign.setLine(1, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
+    if(selling) sign.setLine(3, "Selling");
+    else sign.setLine(3, "Buying");
     sign.update(true);
   }
 
