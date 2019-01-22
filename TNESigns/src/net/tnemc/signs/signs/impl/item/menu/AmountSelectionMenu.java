@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public class AmountSelectionMenu extends Menu {
   public AmountSelectionMenu(String name) {
-    super(name, "Shop Price Selection", 5);
+    super(name, "Shop Price Selection", 6);
   }
 
   @Override
@@ -55,18 +55,30 @@ public class AmountSelectionMenu extends Menu {
     icons.put(20, new AddIcon(20, Material.GOLD_INGOT, new BigDecimal("5"), getName()));
     icons.put(21, new AddIcon(21, Material.GOLD_NUGGET, BigDecimal.ONE, getName()));
 
+    //subtraction
+    icons.put(27, new AddIcon(27, Material.GOLD_BLOCK, new BigDecimal("-100"), getName()));
+    icons.put(28, new AddIcon(28, Material.LIGHT_WEIGHTED_PRESSURE_PLATE, new BigDecimal("-20"), getName()));
+    icons.put(29, new AddIcon(29, Material.GOLD_INGOT, new BigDecimal("-5"), getName()));
+    icons.put(30, new AddIcon(30, Material.GOLD_NUGGET, new BigDecimal("-1"), getName()));
+
     if(TNE.manager().currencyManager().get(world, currency).getTNEMinorTiers().size() > 0) {
       //Minor Icons
       icons.put(23, new AddIcon(23, Material.IRON_NUGGET, new BigDecimal(".01"), getName()));
       icons.put(24, new AddIcon(24, Material.IRON_INGOT, new BigDecimal(".10"), getName()));
       icons.put(25, new AddIcon(25, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, new BigDecimal(".25"), getName()));
       icons.put(26, new AddIcon(26, Material.IRON_BLOCK, new BigDecimal(".50"), getName()));
+
+      //subtraction
+      icons.put(32, new AddIcon(32, Material.IRON_NUGGET, new BigDecimal("-.01"), getName()));
+      icons.put(33, new AddIcon(33, Material.IRON_INGOT, new BigDecimal("-.10"), getName()));
+      icons.put(34, new AddIcon(34, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, new BigDecimal("-.25"), getName()));
+      icons.put(35, new AddIcon(35, Material.IRON_BLOCK, new BigDecimal("-.50"), getName()));
     }
 
     //Control Icons
-    icons.put(36, new CancelIcon(36));
-    icons.put(40, new ResetIcon(40, getName()));
-    icons.put(44, new ConfirmIcon(44));
+    icons.put(45, new CancelIcon(45));
+    icons.put(49, new ResetIcon(49, getName()));
+    icons.put(53, new ConfirmIcon(53));
 
     return super.buildInventory(player);
   }

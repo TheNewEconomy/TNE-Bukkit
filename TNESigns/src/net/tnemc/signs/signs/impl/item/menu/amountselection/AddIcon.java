@@ -27,6 +27,10 @@ public class AddIcon extends Icon {
     this.amount = amount;
     this.menu = menu;
 
+    if(amount.compareTo(BigDecimal.ZERO) < 0) {
+      this.display = "Subtract " + amount.toPlainString();
+    }
+
     this.switchMenu = menu;
   }
 
@@ -38,7 +42,9 @@ public class AddIcon extends Icon {
         (BigDecimal)TNE.menuManager().getViewerData(id, "action_amount") :
         BigDecimal.ZERO;
 
-    current = current.add(amount);
+    if(current.add(amount).compareTo(BigDecimal.ZERO) >= 0) {
+      current = current.add(amount);
+    }
     TNE.menuManager().setViewerData(id, "action_amount", current);
     TNE.debug("=====END AddIcon.onClick =====");
     super.onClick(menu, player);
