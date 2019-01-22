@@ -51,7 +51,7 @@ public class AmountSelectionMenu extends Menu {
 
     //Major Icons
     icons.put(18, new AddIcon(18, Material.GOLD_BLOCK, new BigDecimal("100"), getName()));
-    icons.put(19, new AddIcon(19, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, new BigDecimal("20"), getName()));
+    icons.put(19, new AddIcon(19, Material.LIGHT_WEIGHTED_PRESSURE_PLATE, new BigDecimal("20"), getName()));
     icons.put(20, new AddIcon(20, Material.GOLD_INGOT, new BigDecimal("5"), getName()));
     icons.put(21, new AddIcon(21, Material.GOLD_NUGGET, BigDecimal.ONE, getName()));
 
@@ -59,7 +59,7 @@ public class AmountSelectionMenu extends Menu {
       //Minor Icons
       icons.put(23, new AddIcon(23, Material.IRON_NUGGET, new BigDecimal(".01"), getName()));
       icons.put(24, new AddIcon(24, Material.IRON_INGOT, new BigDecimal(".10"), getName()));
-      icons.put(25, new AddIcon(25, Material.LIGHT_WEIGHTED_PRESSURE_PLATE, new BigDecimal(".25"), getName()));
+      icons.put(25, new AddIcon(25, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, new BigDecimal(".25"), getName()));
       icons.put(26, new AddIcon(26, Material.IRON_BLOCK, new BigDecimal(".50"), getName()));
     }
 

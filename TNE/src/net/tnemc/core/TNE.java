@@ -95,7 +95,7 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = true;
+  public static boolean consoleDebug = false;
   public static boolean maintenance = false;
   private String serverName;
 
@@ -126,7 +126,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "6Beta118";
+  public static final String build = "7Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -702,82 +702,6 @@ public class TNE extends TNELib {
   public static void debug(String message) {
     if(consoleDebug) System.out.println(message);
   }
-
-  /*public void loadConfigurations() {
-    loader.getModules().forEach((key, value)->{
-      value.getModule().loadConfigurations();
-    });
-    this.saveDefaultConfig();
-    if(!new File(getDataFolder(), "config.yml").exists()) {
-      getConfig().options().copyDefaults(true);
-    }
-    currencyConfigurations.options().copyDefaults(true);
-    itemConfigurations.options().copyDefaults(true);
-    messageConfigurations.options().copyDefaults(true);
-    playerConfigurations.options().copyDefaults(true);
-    worldConfigurations.options().copyDefaults(true);
-    saveConfigurations(false);
-  }
-
-  private void saveConfigurations(boolean check) {
-    if(!check || !new File(getDataFolder(), "config.yml").exists() || configurations().changed.contains("config.yml")) {
-      saveConfig();
-    }
-    try {
-      loader.getModules().forEach((key, value)->{
-        value.getModule().saveConfigurations();
-      });
-      if(!check || !currencies.exists() || configurations().changed.contains(currencyConfigurations.getName())) {
-        currencyConfigurations.save(currencies);
-      }
-      if(!check || !items.exists() || configurations().changed.contains(itemConfigurations.getName())) {
-        itemConfigurations.save(items);
-      }
-      if(!check || !messagesFile.exists() || configurations().changed.contains(messageConfigurations.getName())) {
-        messageConfigurations.save(messagesFile);
-      }
-      if(!check || !players.exists() || configurations().changed.contains(playerConfigurations.getName())) {
-        playerConfigurations.save(players);
-      }
-      if(!check || !worlds.exists() || configurations().changed.contains(worldConfigurations.getName())) {
-        worldConfigurations.save(worlds);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void setConfigurationDefaults() throws UnsupportedEncodingException {
-    Reader currenciesStream = new InputStreamReader(this.getResource("currency.yml"), "UTF8");
-    Reader itemsStream = new InputStreamReader(this.getResource("items.yml"), "UTF8");
-    Reader messagesStream = new InputStreamReader(this.getResource("messages.yml"), "UTF8");
-    Reader playersStream = new InputStreamReader(this.getResource("players.yml"), "UTF8");
-    Reader worldsStream = new InputStreamReader(this.getResource("worlds.yml"), "UTF8");
-    if (currenciesStream != null && !currencies.exists()) {
-      YamlConfiguration config = YamlConfiguration.loadConfiguration(currenciesStream);
-      currencyConfigurations.setDefaults(config);
-    }
-
-    if (itemsStream != null && !items.exists()) {
-      YamlConfiguration config = YamlConfiguration.loadConfiguration(itemsStream);
-      itemConfigurations.setDefaults(config);
-    }
-
-    if (messagesStream != null && !messagesFile.exists()) {
-      YamlConfiguration config = YamlConfiguration.loadConfiguration(messagesStream);
-      messageConfigurations.setDefaults(config);
-    }
-
-    if (playersStream != null && !players.exists()) {
-      YamlConfiguration config = YamlConfiguration.loadConfiguration(playersStream);
-      playerConfigurations.setDefaults(config);
-    }
-
-    if (worldsStream != null && !worlds.exists()) {
-      YamlConfiguration config = YamlConfiguration.loadConfiguration(worldsStream);
-      worldConfigurations.setDefaults(config);
-    }
-  }*/
 
   private void setupVault() {
     getServer().getServicesManager().register(Economy.class, vaultEconomy, this, ServicePriority.Highest);
