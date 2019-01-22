@@ -58,7 +58,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.3</version>
+            <version>1.1.8.7</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

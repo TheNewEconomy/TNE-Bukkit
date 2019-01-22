@@ -5,6 +5,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +57,18 @@ public class MessageConfigurations extends Configuration {
     if(langFiles != null) {
       for (File langFile : langFiles) {
         String name = langFile.getName().replace(".yml", "");
-        CommentedConfiguration configuration = new CommentedConfiguration(langFile, null);
+        CommentedConfiguration configuration = null;
+        try {
+          configuration = new CommentedConfiguration(new FileReader(langFile), null);
+        } catch (FileNotFoundException ignore) {
+        }
 
-        Language lang = new Language(name, configuration);
-        lang.getConfiguration().load(false);
-        TNE.debug("Loaded language: " + lang);
-        languages.put(name, lang);
+        if(configuration != null) {
+          Language lang = new Language(name, configuration);
+          lang.getConfiguration().load(false);
+          TNE.debug("Loaded language: " + lang);
+          languages.put(name, lang);
+        }
       }
     }
   }

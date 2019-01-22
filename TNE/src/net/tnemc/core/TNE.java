@@ -58,9 +58,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,7 +95,7 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = false;
+  public static boolean consoleDebug = true;
   public static boolean maintenance = false;
   private String serverName;
 
@@ -127,7 +126,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "5Beta118";
+  public static final String build = "6Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -170,6 +169,8 @@ public class TNE extends TNELib {
 
     dupers = MISCUtils.dupers();
     super.onEnable();
+
+    if(!getDataFolder().exists()) getDataFolder().mkdirs();
 
     configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
     commandManager = new CommandManager();
@@ -678,17 +679,16 @@ public class TNE extends TNELib {
 
   public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
     TNE.debug("Started copying " + file.getName());
-    CommentedConfiguration commentedConfiguration;
-
+    CommentedConfiguration commentedConfiguration = null;
     try {
-      Files.copy(this.getResource(defaultFile), Paths.get(getDataFolder() + "/default-" + defaultFile), StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException e) {
-      e.printStackTrace();
+      commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), "UTF8"));
+      TNE.debug("Initializing commented configuration");
+    } catch (UnsupportedEncodingException ignore) {
     }
-    File defaults = new File(getDataFolder(), "default-" + defaultFile);
-    commentedConfiguration = new CommentedConfiguration(file, defaults);
-    commentedConfiguration.load();
-    defaults.delete();
+    if(commentedConfiguration != null) {
+      TNE.debug("Loading commented configuration");
+      commentedConfiguration.load();
+    }
     TNE.debug("Finished copying " + file.getName());
     return commentedConfiguration;
   }
@@ -700,7 +700,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) TNE.debug(message);
+    if(consoleDebug) System.out.println(message);
   }
 
   /*public void loadConfigurations() {
