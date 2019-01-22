@@ -47,8 +47,8 @@ Features
 
 Requirements
 ----------
-- Vault(optional) 
-- Reserve(Optional)
+- Vault (Optional) 
+- Reserve (Optional)
 
 Support
 ----------
@@ -60,7 +60,7 @@ For support choose one of the following.
 
 API
 ---------
-To acces the API import the jar file(TNE.jar) then use the following code:  
+To access the API import the jar file(TNE.jar) then use the following code:  
 
 ```java
 TNE.instance().api();  
