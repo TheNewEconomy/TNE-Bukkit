@@ -6,6 +6,7 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -113,7 +114,12 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    giveItems(items.values(), inventory);
+    final int dropped = giveItemsFeedback(items.values(), inventory);
+    if(dropped > 0) {
+      if(inventory.getHolder() instanceof HumanEntity) {
+        ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
+      }
+    }
     return BigInteger.ZERO;
   }
 
@@ -130,7 +136,12 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    giveItems(items.values(), inventory);
+    final int dropped = giveItemsFeedback(items.values(), inventory);
+    if(dropped > 0) {
+      if(inventory.getHolder() instanceof HumanEntity) {
+        ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
+      }
+    }
     return BigInteger.ZERO;
   }
 
@@ -162,8 +173,14 @@ public class ItemCalculations {
       workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
       items.put(entry.getKey(), stack);
     }
-    if(add) giveItems(items.values(), inventory);
-    else takeItems(items.values(), inventory);
+    if(add) {
+      final int dropped = giveItemsFeedback(items.values(), inventory);
+      if(dropped > 0) {
+        if(inventory.getHolder() instanceof HumanEntity) {
+          ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
+        }
+      }
+    } else takeItems(items.values(), inventory);
 
     if(actualAmount.compareTo(amount) > 0) {
       return actualAmount.subtract(amount);
@@ -203,8 +220,15 @@ public class ItemCalculations {
       TNE.debug("actualAmount: " + actualAmount);
       TNE.debug("workingAmount: " + workingAmount);
     }
-    if(add) giveItems(items.values(), inventory);
-    else takeItems(items.values(), inventory);
+    if(add) {
+
+      final int dropped = giveItemsFeedback(items.values(), inventory);
+      if(dropped > 0) {
+        if(inventory.getHolder() instanceof HumanEntity) {
+          ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
+        }
+      }
+    } else takeItems(items.values(), inventory);
 
     if(!add && workingAmount.compareTo(BigInteger.ZERO) > 0) {
       TNE.debug("REMOVE 1 MAJOR!!!!!!!!!!!!!!!!!!!!");
@@ -278,6 +302,31 @@ public class ItemCalculations {
     }
   }
 
+  public static int giveItemsFeedback(Collection<ItemStack> items, Inventory inventory) {
+    int leftAmount = 0;
+    for(ItemStack item : items) {
+      Map<Integer, ItemStack> left = inventory.addItem(item);
+
+      if(left.size() > 0) {
+        if(inventory instanceof PlayerInventory) {
+          final HumanEntity entity = ((HumanEntity)inventory.getHolder());
+          for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
+            final ItemStack i = entry.getValue();
+            Bukkit.getScheduler().runTask(TNE.instance(), () -> {
+              try {
+                entity.getWorld().dropItemNaturally(entity.getLocation(), i);
+              } catch(Exception e) {
+                //attempted to drop air/some crazy/stupid error.
+              }
+            });
+          }
+        }
+        leftAmount++;
+      }
+    }
+    return 0;
+  }
+
   public static void giveItems(Collection<ItemStack> items, Inventory inventory) {
     for(ItemStack item : items) {
       Map<Integer, ItemStack> left = inventory.addItem(item);
@@ -295,6 +344,7 @@ public class ItemCalculations {
               }
             });
           }
+          entity.sendMessage(ChatColor.RED + "Your inventory was full so some items were dropped on the ground.");
         }
       }
     }
