@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.object.TownyPermission;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.signs.ChestHelper;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
@@ -19,12 +20,15 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -126,6 +130,39 @@ public class PlayerListener implements Listener {
             }
           }
         }
+      }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onPlayerInteractPaper(final PlayerInteractEvent event) {
+    final Player player = event.getPlayer();
+    final ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
+
+    if(stack.getType().equals(Material.PAPER)) {
+      final ItemMeta meta = stack.getItemMeta();
+
+      if(meta.hasDisplayName()) {
+
+        switch(meta.getDisplayName()) {
+          case "Experience Note":
+            if(meta.hasLore()) {
+              if(meta.getLore().get(0).contains("Amount:")) {
+                Integer amount = Integer.valueOf(meta.getLore().get(0).split("\\:")[1]);
+                ItemCalculations.removeItem(stack, player.getInventory());
+                player.giveExp(amount);
+              }
+            }
+            break;
+          case "Mob Note":
+            if(meta.hasLore()) {
+              if(meta.getLore().get(0).contains("Type:")) {
+
+              }
+            }
+            break;
+        }
+
       }
     }
   }
