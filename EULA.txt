@@ -10,7 +10,7 @@ Terms:
   - This includes, but is not limited to: real-world money, real-world services such as special chats/voice chats, and real-world items.
   - Anything that you do in real life for in-game currency powered by The New Economy essentially.
 - You agree to not either at server level, or at player level allow the selling of chats between any entities, be it player, bot, in-game 
-chat channel, or anything related to a communication.
+chat channel, or anything related to a communication using in-game currency.
 - You agree to not withhold any private modifications to the TNE source from the TNE developers and/or contributors.
 
 Termination:
