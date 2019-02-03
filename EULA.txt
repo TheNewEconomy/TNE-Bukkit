@@ -1,20 +1,25 @@
 By using The New Economy Bukkit Plugin you agree to the following agreement.
 
 Reason:
-These terms are provided to keep the player experience as intended by the developers and contributors of TNE, which is to be a fun and inviting experience.
+These terms are provided to keep the player experience as intended by the developers and contributors of TNE, which is to be a fun and
+inviting experience.
 
 Terms:
 - You agree to abide by the Creative Commons Attribution Non Commercial NoDerivatives 4.0 License, which TNE is licensed under.
-- You agree to not either at server level, or a player level allow the selling, trading, or offering of in-game currency for real-world possessions/activities, be it physical or virtual.
+- You agree to not either at server level, or at player level allow the selling, trading, or offering of in-game currency for real-world possessions/activities, be it physical or virtual.
   - This includes, but is not limited to: real-world money, real-world services such as special chats/voice chats, and real-world items.
   - Anything that you do in real life for in-game currency powered by The New Economy essentially.
+- You agree to not either at server level, or at player level allow the selling of chats between any entities, be it player, bot, in-game 
+chat channel, or anything related to a communication.
 - You agree to not withhold any private modifications to the TNE source from the TNE developers and/or contributors.
 
 Termination:
 You may terminate this agreement at any time by simply removing The New Economy from your server's plugin directory.
 
 Violation:
-Any violation of this agreement may result in your server being blacklisted. In the event that your server has been added to the blacklist, you'll be unable to use TNE.
+Any violation of this agreement may result in your server being blacklisted. In the event that your server has been added to the
+blacklist, you'll be unable to use TNE.
 
 Updates:
-This notice may be updated at any time, and for any reason. It's the End-Users responsibility to remain up-to-date with the terms of this agreement.
+This notice may be updated at any time, and for any reason. It's the End-Users responsibility to remain up-to-date with the terms of this
+agreement.
