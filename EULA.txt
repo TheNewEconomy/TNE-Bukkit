@@ -5,7 +5,9 @@ These terms are provided to keep the player experience as intended by the develo
 
 Terms:
 - You agree to abide by the Creative Commons Attribution Non Commercial NoDerivatives 4.0 License, which TNE is licensed under.
-- You agree to not either at server level, or a player level allow the selling, trading, or offering of in-game currency for real-world possessions, be it physical or virtual.
+- You agree to not either at server level, or a player level allow the selling, trading, or offering of in-game currency for real-world possessions/activities, be it physical or virtual.
+  - This includes, but is not limited to: real-world money, real-world services such as special chats/voice chats, and real-world items.
+  - Anything that you do in real life for in-game currency powered by The New Economy essentially.
 - You agree to not withhold any private modifications to the TNE source from the TNE developers and/or contributors.
 
 Termination:
