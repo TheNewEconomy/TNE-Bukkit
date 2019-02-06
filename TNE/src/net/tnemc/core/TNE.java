@@ -383,12 +383,6 @@ public class TNE extends TNELib {
     loader.getModules().forEach((key, value)->
         value.getModule().postLoad(this)
     );
-    TNE.debug("Preparing menus");
-    loader.getModules().forEach((key, value)->
-        value.getModule().registerMenus(this).forEach((name, menu)->{
-          menuManager.menus.put(name, menu);
-        })
-    );
 
     TNE.debug("Preparing placeholders");
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -676,6 +670,12 @@ public class TNE extends TNELib {
       MaterialHelper.initialize();
       itemCompatibility = (MISCUtils.isOneThirteen())? new ItemCompatibility13() : new ItemCompatibility12();
       menuManager = new MenuManager();
+      TNE.debug("Preparing menus");
+      loader.getModules().forEach((key, value)->
+          value.getModule().registerMenus(this).forEach((name, menu)->{
+            menuManager.menus.put(name, menu);
+          })
+      );
       TNE.logger().info("Initialized items.yml");
 
       loader.getModules().forEach((key, value) -> {

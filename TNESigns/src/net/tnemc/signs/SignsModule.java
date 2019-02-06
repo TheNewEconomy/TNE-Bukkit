@@ -66,7 +66,7 @@ public class SignsModule extends Module {
   @Override
   public void unload(TNE tne) {
     if(fileConfiguration != null) {
-      configuration.save(fileConfiguration);
+      fileConfiguration.save(signs);
     }
     TNE.logger().info("Signs Module unloaded!");
   }
