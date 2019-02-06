@@ -55,7 +55,7 @@ public class AmountSelectionMenu extends Menu {
     icons.put(21, new AddIcon(21, Material.GOLD_NUGGET, BigDecimal.ONE, getName()));
 
     //Minor Icons
-    icons.put(23, new AddIcon(23, Material.IRON_NUGGET, new BigDecimal(".01"), getName()));
+    icons.put(23, new AddIcon(23, TNE.item().build("IRON_NUGGET"), new BigDecimal(".01"), getName()));
     icons.put(24, new AddIcon(24, Material.IRON_INGOT, new BigDecimal(".10"), getName()));
     icons.put(25, new AddIcon(25, TNE.item().build("HEAVY_WEIGHTED_PRESSURE_PLATE"), new BigDecimal(".25"), getName()));
     icons.put(26, new AddIcon(26, Material.IRON_BLOCK, new BigDecimal(".50"), getName()));

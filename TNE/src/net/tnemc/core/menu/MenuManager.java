@@ -1,11 +1,11 @@
 package net.tnemc.core.menu;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.menu.impl.AmountSelectionMenu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import net.tnemc.core.menu.impl.DisplayMenu;
 import net.tnemc.core.menu.impl.MainMenu;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -31,7 +31,7 @@ public class MenuManager {
   private static ItemStack border;
 
   public MenuManager() {
-    border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+    border = TNE.item().build("BLACK_STAINED_GLASS_PANE");
     ItemMeta setMeta = border.getItemMeta();
     setMeta.setDisplayName(ChatColor.WHITE + "'member borders?");
     border.setItemMeta(setMeta);

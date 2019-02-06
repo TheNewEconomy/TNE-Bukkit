@@ -7,4 +7,6 @@ bin/
 *.classpath
 /.idea/
 /target/
+/target/
+/TNE/target/
 fiotnh33.xot.txt

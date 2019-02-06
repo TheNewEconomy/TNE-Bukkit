@@ -1,5 +1,6 @@
 package net.tnemc.core.compatibility.item;
 
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.compatibility.ItemCompatibility;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,11 @@ public class ItemCompatibility12 implements ItemCompatibility {
         return new ItemStack(Material.matchMaterial("SKULL_ITEM"), 1, (byte)3);
       case "BLACK_WOOL":
         return new ItemStack(Material.matchMaterial("WOOL"), 1, (byte)15);
+      case "IRON_NUGGET":
+        if(MISCUtils.isOneEight() || MISCUtils.isOneNine() || MISCUtils.isOneTen()) {
+          return new ItemStack(Material.matchMaterial("IRON_FENCE"), 1);
+        }
+        return new ItemStack(Material.IRON_NUGGET, 1);
 
     }
 
