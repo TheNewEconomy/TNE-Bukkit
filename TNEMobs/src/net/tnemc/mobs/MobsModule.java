@@ -1,16 +1,11 @@
 package net.tnemc.mobs;
 
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Random;
 import java.util.UUID;
@@ -31,7 +26,7 @@ import java.util.UUID;
 public class MobsModule extends Module {
 
   File mobs;
-  FileConfiguration fileConfiguration;
+  CommentedConfiguration fileConfiguration;
   MobConfiguration configuration;
 
   private static MobsModule instance;
@@ -57,13 +52,12 @@ public class MobsModule extends Module {
   public void initializeConfigurations() {
     super.initializeConfigurations();
     mobs = new File(TNE.instance().getDataFolder(), "mobs.yml");
-    fileConfiguration = YamlConfiguration.loadConfiguration(mobs);
+    fileConfiguration = TNE.instance().initializeConfiguration(mobs, "mobs.yml");
   }
 
   @Override
   public void loadConfigurations() {
     super.loadConfigurations();
-    fileConfiguration.options().copyDefaults(true);
     configuration = new MobConfiguration();
     configurations.put(configuration, "Mobs");
   }
@@ -71,23 +65,7 @@ public class MobsModule extends Module {
   @Override
   public void saveConfigurations() {
     super.saveConfigurations();
-    if(!mobs.exists()) {
-      Reader mobsStream = null;
-      try {
-        mobsStream = new InputStreamReader(TNE.instance().getResource("mobs.yml"), "UTF8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
-      if (mobsStream != null) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(mobsStream);
-        fileConfiguration.setDefaults(config);
-      }
-    }
-    try {
-      fileConfiguration.save(mobs);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    fileConfiguration.save(mobs);
   }
 
   static MobsModule instance() {

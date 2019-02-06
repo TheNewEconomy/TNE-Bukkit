@@ -20,6 +20,9 @@ Violation:
 Any violation of this agreement may result in your server being blacklisted. In the event that your server has been added to the
 blacklist, you'll be unable to use TNE.
 
+Furthermore, if it's a specific player, or group of player(s) violating the above terms, TNE reserves the right to prohibit
+them from using TNE-related server functionality including, but not limited to commands, API calls, and currencies.
+
 Updates:
 This notice may be updated at any time, and for any reason. It's the End-Users responsibility to remain up-to-date with the terms of this
 agreement.
