@@ -1,5 +1,6 @@
 package net.tnemc.signs.signs.impl;
 
+import com.github.tnerevival.core.db.SQLDatabase;
 import com.github.tnerevival.serializable.SerializableLocation;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyFormatter;
@@ -47,7 +48,6 @@ import static net.tnemc.signs.SignsData.ITEM_OFFER_LOAD;
 import static net.tnemc.signs.SignsData.ITEM_SELLING_CHECK;
 import static net.tnemc.signs.SignsData.ITEM_TRADE_LOAD;
 import static net.tnemc.signs.SignsData.SIGNS_CHEST_CHECK;
-import static net.tnemc.signs.SignsData.database;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -167,9 +167,9 @@ public class ItemSign implements SignType {
 
   public static boolean offerExists(final Location location) throws SQLException {
     boolean exists = false;
-    try (Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try (Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
          PreparedStatement statement = connection.prepareStatement(SignsData.ITEM_CHECK);
-         ResultSet results = database().executePreparedQuery(statement, new Object[] {
+         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
              new SerializableLocation(location).toString()
          })) {
 
@@ -179,7 +179,7 @@ public class ItemSign implements SignType {
   }
 
   public static void saveItemSelection(final Location location, final ItemStack stack, final boolean selling) throws SQLException {
-    database().executePreparedUpdate((offerExists(location))? SignsData.ITEM_OFFER_UPDATE : SignsData.ITEM_OFFER_ADD, new Object[] {
+    SQLDatabase.executePreparedUpdate((offerExists(location))? SignsData.ITEM_OFFER_UPDATE : SignsData.ITEM_OFFER_ADD, new Object[] {
         new SerialItem(stack).toJSON().toJSONString(),
         stack.getAmount(),
         ((selling)? 1 : 0),
@@ -195,9 +195,9 @@ public class ItemSign implements SignType {
   public static UUID chest(Location location) throws SQLException {
     UUID owner = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(SIGNS_CHEST_CHECK);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -214,9 +214,9 @@ public class ItemSign implements SignType {
   public static ItemStack getItem(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_OFFER_LOAD);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -238,9 +238,9 @@ public class ItemSign implements SignType {
   public static ItemStack getTrade(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_TRADE_LOAD);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -256,9 +256,9 @@ public class ItemSign implements SignType {
   public static boolean isCurrency(Location location) throws SQLException {
     boolean currency = false;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_CURRENCY_CHECK);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -274,9 +274,9 @@ public class ItemSign implements SignType {
   public static boolean isSelling(Location location) throws SQLException {
     boolean selling = false;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_SELLING_CHECK);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -292,9 +292,9 @@ public class ItemSign implements SignType {
   public static BigDecimal getCost(Location location) throws SQLException {
     BigDecimal amount = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_CURRENCY_LOAD);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -308,7 +308,7 @@ public class ItemSign implements SignType {
   }
 
   public static void saveItemOffer(final Location location, final ItemStack stack, final boolean currency, final BigDecimal amount) throws SQLException {
-    database().executePreparedUpdate(SignsData.ITEM_TRADE_UPDATE, new Object[] {
+    SQLDatabase.executePreparedUpdate(SignsData.ITEM_TRADE_UPDATE, new Object[] {
         currency,
         amount,
         ((stack == null)? "" : new SerialItem(stack).toJSON().toJSONString()),

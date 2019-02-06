@@ -86,7 +86,7 @@ public class SignsData {
   public static final String ITEM_TRADE_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_currency = ?, item_cost = ?, item_trade = ? WHERE sign_location = ?";
 
   public static void saveSign(TNESign sign) throws SQLException {
-    database().executePreparedUpdate(SIGNS_SAVE, new Object[] {
+    SQLDatabase.executePreparedUpdate(SIGNS_SAVE, new Object[] {
         new SerializableLocation(sign.getLocation()).toString(),
         new SerializableLocation(sign.getAttached()).toString(),
         sign.getOwner().toString(),
@@ -107,14 +107,14 @@ public class SignsData {
   }
 
   public static void updateStep(final Location location, final int step) throws SQLException {
-    database().executePreparedUpdate(SIGNS_UPDATE_STEP, new Object[] {
+    SQLDatabase.executePreparedUpdate(SIGNS_UPDATE_STEP, new Object[] {
         step,
         new SerializableLocation(location).toString()
     });
   }
 
   public static void updateChest(final Location location, final Location chest) throws SQLException {
-    database().executePreparedUpdate(SIGNS_UPDATE_CHEST, new Object[] {
+    SQLDatabase.executePreparedUpdate(SIGNS_UPDATE_CHEST, new Object[] {
         new SerializableLocation(chest).toString(),
         new SerializableLocation(location).toString()
     });
@@ -123,9 +123,9 @@ public class SignsData {
   public static TNESign loadSign(Location location) throws SQLException {
     TNESign sign = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_LOCATION);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
       if(results.next()) {
@@ -145,14 +145,10 @@ public class SignsData {
   }
 
   public static void updateOwner(UUID old, UUID newOwner) {
-    try {
-      database().executePreparedUpdate(SIGNS_CHANGE_OWNER, new Object[] {
-          newOwner.toString(),
-          old.toString()
-      });
-    } catch (SQLException e) {
-      TNE.debug(e);
-    }
+    SQLDatabase.executePreparedUpdate(SIGNS_CHANGE_OWNER, new Object[] {
+        newOwner.toString(),
+        old.toString()
+    });
   }
 
   public static void changeOwner(UUID old, String type, String newName) throws SQLException {
@@ -170,9 +166,9 @@ public class SignsData {
   public static TNESign loadSignAttached(Location location) throws SQLException {
     TNESign sign = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_ATTACHED);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
       if(results.next()) {
@@ -194,9 +190,9 @@ public class SignsData {
   public static Collection<TNESign> loadSignsCreator(String creator, String type) throws SQLException {
     List<TNESign> signs = new ArrayList<>();
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_CREATOR);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             creator, type
         })) {
       while(results.next()) {
@@ -221,9 +217,9 @@ public class SignsData {
   public static Collection<TNESign> loadSigns(String owner, String type) throws SQLException {
     List<TNESign> signs = new ArrayList<>();
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_OWNER);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             owner, type
         })) {
       while(results.next()) {
@@ -248,9 +244,9 @@ public class SignsData {
   public static ItemStack getItem(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_OFFER_LOAD);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location)
         })) {
 
@@ -266,9 +262,9 @@ public class SignsData {
   public static ItemStack getTrade(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(ITEM_TRADE_LOAD);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location)
         })) {
 
@@ -284,9 +280,9 @@ public class SignsData {
   public static Chest chest(Location location) throws SQLException {
     Location chestLocation = null;
 
-    try(Connection connection = database().connection(TNE.saveManager().getTNEManager());
+    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
         PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_CHEST);
-        ResultSet results = database().executePreparedQuery(statement, new Object[] {
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
 
@@ -300,10 +296,6 @@ public class SignsData {
   }
 
   public static void deleteSign(Location location) throws SQLException {
-    database().executePreparedUpdate(SIGNS_DELETE, new Object[] { new SerializableLocation(location).toString()});
-  }
-
-  public static SQLDatabase database() throws SQLException {
-    return ((SQLDatabase)TNE.saveManager().getTNEManager().getTNEProvider().connector());
+    SQLDatabase.executePreparedUpdate(SIGNS_DELETE, new Object[] { new SerializableLocation(location).toString()});
   }
 }

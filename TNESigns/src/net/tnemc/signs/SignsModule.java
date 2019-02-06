@@ -20,7 +20,6 @@ import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmTradeIcon;
 import org.bukkit.Bukkit;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,7 +60,7 @@ public class SignsModule extends Module {
     Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
 
-    tne.logger().info("Signs Module loaded!");
+    TNE.logger().info("Signs Module loaded!");
   }
 
   @Override
@@ -69,7 +68,7 @@ public class SignsModule extends Module {
     if(fileConfiguration != null) {
       configuration.save(fileConfiguration);
     }
-    tne.logger().info("Signs Module unloaded!");
+    TNE.logger().info("Signs Module unloaded!");
   }
 
   @Override
@@ -136,12 +135,8 @@ public class SignsModule extends Module {
   @Override
   public void enableSave(SaveManager saveManager) {
     for(String table : getTables().get(saveManager.getDataManager().getFormat().toLowerCase())) {
-      try {
-        ((SQLDatabase) TNE.saveManager().getTNEManager().getTNEProvider().connector()).executeUpdate(table);
-        TNE.debug("Creating table: " + table);
-      } catch (SQLException e) {
-        TNE.debug("Failed to create tables on module load.");
-      }
+      SQLDatabase.executeUpdate(table);
+      TNE.debug("Creating table: " + table);
     }
   }
 

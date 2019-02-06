@@ -7,7 +7,6 @@ import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.currency.CurrencyEntry;
@@ -45,17 +44,19 @@ public class MySQLProvider extends TNEDataProvider {
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
-                                      "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
-                                      "uuid = ? LIMIT 1";
+      "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
+      "uuid = ? LIMIT 1";
   private final String ACCOUNT_SAVE = "INSERT INTO " + prefix + "_USERS (uuid, display_name, joined_date, " +
-                                      "last_online, account_number, account_status, account_language, account_player) " +
-                                      "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
-                                      "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
-                                      "account_player = ?";
+      "last_online, account_number, account_status, account_language, account_player) " +
+      "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
+      "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
+      "account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
+  private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
+  private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
-                                      "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
+      "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
 
   private MySQL sql;
@@ -228,6 +229,7 @@ public class MySQLProvider extends TNEDataProvider {
     return false;
   }
 
+  @Override
   public String loadUsername(String identifier) throws SQLException {
     try(Connection connection = MySQL.getDataSource().getConnection()) {
 
@@ -237,8 +239,10 @@ public class MySQLProvider extends TNEDataProvider {
             identifier
         })) {
 
-      if(results.next()) {
-        return results.getString("username");
+          if(results.next()) {
+            return results.getString("username");
+          }
+        }
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -256,8 +260,10 @@ public class MySQLProvider extends TNEDataProvider {
             username
         })) {
 
-      if(results.next()) {
-        return UUID.fromString(results.getString("uuid"));
+          if(results.next()) {
+            return UUID.fromString(results.getString("uuid"));
+          }
+        }
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -276,10 +282,12 @@ public class MySQLProvider extends TNEDataProvider {
 
         try(ResultSet results = MySQL.executeQuery(statement, "SELECT username, uuid FROM " + table + ";")) {
 
-      TNE.debug("Predicted IDs: " + results.getFetchSize());
-      while (results.next()) {
-        TNE.debug("Loading EcoID for " + results.getString("username"));
-        ids.put(results.getString("username"), UUID.fromString(results.getString("uuid")));
+          TNE.debug("Predicted IDs: " + results.getFetchSize());
+          while (results.next()) {
+            TNE.debug("Loading EcoID for " + results.getString("username"));
+            ids.put(results.getString("username"), UUID.fromString(results.getString("uuid")));
+          }
+        }
       }
     } catch(Exception e) {
       TNE.debug(e);
@@ -313,17 +321,19 @@ public class MySQLProvider extends TNEDataProvider {
   public void saveIDS(Map<String, UUID> ids) throws SQLException {
     try(Connection connection = MySQL.getDataSource().getConnection()) {
 
-      for(Map.Entry<String, UUID> entry : ids.entrySet()) {
-        if(entry.getKey() == null) {
-          System.out.println("Attempted saving id with null display name.");
-          continue;
+      try(PreparedStatement statement = connection.prepareStatement(ID_SAVE)) {
+        for (Map.Entry<String, UUID> entry : ids.entrySet()) {
+          if (entry.getKey() == null) {
+            TNE.debug("Attempted saving id with null display name.");
+            continue;
+          }
+          statement.setString(1, entry.getKey());
+          statement.setString(2, entry.getValue().toString());
+          statement.setString(3, entry.getKey());
+          statement.addBatch();
         }
-        statement.setString(1, entry.getKey());
-        statement.setString(2, entry.getValue().toString());
-        statement.setString(3, entry.getKey());
-        statement.addBatch();
+        statement.executeBatch();
       }
-      statement.executeBatch();
     } catch (SQLException e) {
       TNE.debug(e);
     }
@@ -332,7 +342,7 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public void saveID(String username, UUID id) throws SQLException {
     if(username == null) {
-      System.out.println("Attempted saving id with null display name.");
+      TNE.debug("Attempted saving id with null display name.");
       return;
     }
 
@@ -342,12 +352,8 @@ public class MySQLProvider extends TNEDataProvider {
         statement.setObject(2, id.toString());
         statement.setObject(3, username);
 
-    executePreparedUpdate(ID_SAVE,
-        new Object[] {
-            username,
-            id.toString(),
-            username
-        });
+      }
+    }
   }
 
   @Override
@@ -378,15 +384,12 @@ public class MySQLProvider extends TNEDataProvider {
             userIDS.add(UUID.fromString(results.getString("uuid")));
           }
 
-      while (results.next()) {
-        TNE.debug("Loading account with UUID of " + results.getString("uuid"));
-        userIDS.add(UUID.fromString(results.getString("uuid")));
+          userIDS.forEach((id)->{
+            TNEAccount account = loadAccount(id);
+            if(account != null) accounts.add(account);
+          });
+        }
       }
-
-      userIDS.forEach((id)->{
-        TNEAccount account = loadAccount(id);
-        if(account != null) accounts.add(account);
-      });
     } catch(Exception e) {
       TNE.debug(e);
     }
@@ -427,9 +430,12 @@ public class MySQLProvider extends TNEDataProvider {
           }
         }
       }
+      TNE.debug("Load balance info time: " + ((System.nanoTime() - startTime) / 1000000));
+
     } catch(Exception e) {
       TNE.debug(e);
     }
+    TNE.debug("Load account time: " + ((System.nanoTime() - startTime) / 1000000));
     return account;
   }
 
@@ -437,40 +443,11 @@ public class MySQLProvider extends TNEDataProvider {
   public void saveAccounts(List<TNEAccount> accounts) {
     try(Connection connection = MySQL.getDataSource().getConnection()) {
 
-      for(TNEAccount account : accounts) {
-        if(account.displayName() == null) {
-          System.out.println("Attempted saving account with null display name.");
-          continue;
-        }
-        accountStatement.setString(1, account.identifier().toString());
-        accountStatement.setString(2, account.displayName());
-        accountStatement.setLong(3, account.getJoined());
-        accountStatement.setLong(4, account.getLastOnline());
-        accountStatement.setInt(5, account.getAccountNumber());
-        accountStatement.setString(6, account.getStatus().getName());
-        accountStatement.setString(7, account.getLanguage());
-        accountStatement.setBoolean(8, account.playerAccount());
-        accountStatement.setString(9, account.displayName());
-        accountStatement.setLong(10, account.getJoined());
-        accountStatement.setLong(11, account.getLastOnline());
-        accountStatement.setInt(12, account.getAccountNumber());
-        accountStatement.setString(13, account.getStatus().getName());
-        accountStatement.setString(14, account.getLanguage());
-        accountStatement.setBoolean(15, account.playerAccount());
-        accountStatement.addBatch();
-
-        for(Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
-          for(Map.Entry<String, BigDecimal> entry : holdingsEntry.getValue().getHoldings().entrySet()) {
-            final String server = (TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()) != null)?
-                TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()).getServer() :
-                TNE.instance().getServerName();
-            balanceStatement.setString(1, account.identifier().toString());
-            balanceStatement.setString(2, server);
-            balanceStatement.setString(3, holdingsEntry.getKey());
-            balanceStatement.setString(4, entry.getKey());
-            balanceStatement.setBigDecimal(5, entry.getValue());
-            balanceStatement.setBigDecimal(6, entry.getValue());
-            balanceStatement.addBatch();
+      try(PreparedStatement accountStatement = connection.prepareStatement(ACCOUNT_SAVE)) {
+        for (TNEAccount account : accounts) {
+          if (account.displayName() == null) {
+            TNE.debug("Attempted saving account with null display name.");
+            continue;
           }
           accountStatement.setString(1, account.identifier().toString());
           accountStatement.setString(2, account.displayName());
@@ -489,9 +466,8 @@ public class MySQLProvider extends TNEDataProvider {
           accountStatement.setBoolean(15, account.playerAccount());
           accountStatement.addBatch();
         }
-        balanceStatement.executeBatch();
+        accountStatement.executeBatch();
       }
-      accountStatement.executeBatch();
     } catch (SQLException e) {
       TNE.debug(e);
     }
@@ -500,7 +476,7 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public void saveAccount(TNEAccount account) throws SQLException {
     if(account.displayName() == null) {
-      System.out.println("Attempted saving account with null display name.");
+      TNE.debug("Attempted saving account with null display name.");
       return;
     }
     try(Connection connection = MySQL.getDataSource().getConnection()) {
@@ -542,7 +518,10 @@ public class MySQLProvider extends TNEDataProvider {
             balance = results.getBigDecimal("balance");
           }
         }
-    );
+      }
+    }
+    return balance;
+  }
 
   @Override
   public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
@@ -645,16 +624,18 @@ public class MySQLProvider extends TNEDataProvider {
       try(Statement statement = connection.createStatement()) {
         try(ResultSet results = MySQL.executeQuery(statement,"SELECT trans_id FROM " + table + ";")) {
 
-      while (results.next()) {
-        transactionIDS.add(UUID.fromString(results.getString("trans_id")));
+          while (results.next()) {
+            transactionIDS.add(UUID.fromString(results.getString("trans_id")));
+          }
+        }
       }
-      transactionIDS.forEach((id)->{
-        TNETransaction transaction = loadTransaction(id);
-        if(transaction != null) transactions.add(transaction);
-      });
     } catch(Exception e) {
       TNE.debug(e);
     }
+    transactionIDS.forEach((id)->{
+      TNETransaction transaction = loadTransaction(id);
+      if(transaction != null) transactions.add(transaction);
+    });
     return transactions;
   }
 
@@ -875,7 +856,7 @@ public class MySQLProvider extends TNEDataProvider {
     }
     return transactions;
   }
-  
+
   public void executeUpdate(String query) {
     try(Connection connection = MySQL.getDataSource().getConnection()) {
       try(Statement statement = connection.createStatement()) {

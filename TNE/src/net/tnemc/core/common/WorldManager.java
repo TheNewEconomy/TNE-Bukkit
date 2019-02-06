@@ -104,6 +104,7 @@ public class WorldManager {
   }
 
   public String getBalanceWorld() {
+    TNE.debug("World: " + world + " Balance World: " + balanceWorld);
     return balanceWorld;
   }
 

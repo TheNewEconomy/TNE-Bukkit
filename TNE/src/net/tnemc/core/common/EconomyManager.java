@@ -12,11 +12,8 @@ import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -159,7 +156,7 @@ public class EconomyManager {
   }
 
   public void purge(String world) {
-    Iterator<TNEAccount> it = accounts.values().iterator();
+    /*Iterator<TNEAccount> it = accounts.values().iterator();
 
     while(it.hasNext()) {
       TNEAccount account = it.next();
@@ -181,7 +178,7 @@ public class EconomyManager {
         }
         it.remove();
       }
-    }
+    }*/
   }
 
   public Collection<TNEAccount> parsePlayerArgument(String argument) {

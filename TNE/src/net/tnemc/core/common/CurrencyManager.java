@@ -22,6 +22,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -442,8 +443,12 @@ public class CurrencyManager {
     }
     TNE.manager().getAccounts().forEach((id, account)->{
       account.setHoldings(world, newName, account.getHoldings(world, TNE.manager().currencyManager().get(world, currency)));
-      account.getWorldHoldings(world).remove(currency);
-      TNE.manager().addAccount(account);
+      //account.getWorldHoldings(world).remove(currency);
+      try {
+        TNE.saveManager().getTNEManager().getTNEProvider().deleteBalance(id, world, currency);
+      } catch (SQLException e) {
+        TNE.debug(e);
+      }
     });
   }
 

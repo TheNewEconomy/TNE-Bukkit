@@ -50,6 +50,7 @@ public class WorldConfigurations extends Configuration {
     for(String world : worlds) {
       WorldManager manager = TNE.instance().getWorldManager(world);
       if(manager == null) {
+        TNE.debug("World manager = null");
         continue;
       }
       Set<String> configurations = configurationFile.getSection("Worlds." + world).getKeys(true);
@@ -71,10 +72,22 @@ public class WorldConfigurations extends Configuration {
       List<String> balances = new ArrayList<>();
       if(configurationFile.contains("Worlds." + world + ".Share.Balances")) {
         balances = configurationFile.getStringList("Worlds." + world + ".Share.Balances");
+        TNE.debug(world + " shared balanced: " + balances);
       }
+      TNE.debug("Balance Share Size: " + balances.size());
+      TNE.debug("Balance Share: " + String.join(", ", balances));
 
       if(balances.size() > 0) {
-        balances.forEach((sharedWorld)->balanceShare.put(sharedWorld, world));
+        balances.forEach((sharedWorld)->{
+          TNE.debug("Looping " + world + "->" + sharedWorld);
+          balanceShare.put(sharedWorld, world);
+
+          TNE.debug("Has Manager for " + sharedWorld + "? " + TNE.instance().hasWorldManager(sharedWorld));
+          if(TNE.instance().hasWorldManager(sharedWorld)) {
+            TNE.instance().getWorldManager(sharedWorld).setBalanceWorld(world);
+            TNE.debug(sharedWorld + " setting balance share to " + world);
+          }
+        });
       }
 
       List<String> configWorlds = new ArrayList<>();
@@ -83,13 +96,19 @@ public class WorldConfigurations extends Configuration {
       }
 
       if(configWorlds.size() > 0) {
-        configWorlds.forEach((sharedWorld)->configurationShare.put(sharedWorld, world));
+        configWorlds.forEach((sharedWorld)->{
+          configurationShare.put(sharedWorld, world);
+
+          if(TNE.instance().hasWorldManager(sharedWorld)) {
+            TNE.instance().getWorldManager(sharedWorld).setConfigurationWorld(world);
+          }
+        });
       }
 
       TNE.instance().addWorldManager(manager);
     }
 
-    TNE.instance().getWorldManagersMap().keySet().forEach((world)->{
+    /*TNE.instance().getWorldManagersMap().keySet().forEach((world)->{
       WorldManager manager = TNE.instance().getWorldManager(world);
       if(balanceShare.containsKey(manager.getWorld())) {
         TNE.debug("Setting balance share for " + manager.getWorld() + " to " + balanceShare.get(manager.getWorld()));
@@ -101,8 +120,6 @@ public class WorldConfigurations extends Configuration {
         manager.setConfigurationWorld(configurationShare.get(manager.getWorld()));
       }
       TNE.instance().addWorldManager(manager);
-    });
-
-    super.load(configurationFile);
+    });*/
   }
 }

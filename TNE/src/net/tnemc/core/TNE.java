@@ -126,7 +126,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "7Beta118";
+  public static final String build = "11Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -211,6 +211,7 @@ public class TNE extends TNELib {
     main = new MainConfigurations();
     messages = new MessageConfigurations();
     world = new WorldConfigurations();
+    world.load(worldConfigurations);
 
     TNE.debug("Preparing debug mode");
     this.debugMode = mainConfigurations.getBool("Core.Debug");
@@ -718,6 +719,10 @@ public class TNE extends TNELib {
     TNE.debug("Configuration World: " + manager.getConfigurationWorld());
     TNE.debug("Balance World: " + manager.getBalanceWorld());
     worldManagers.put(manager.getWorld(), manager);
+  }
+
+  public boolean hasWorldManager(String world) {
+    return worldManagers.containsKey(world);
   }
 
   public WorldManager getWorldManager(String world) {

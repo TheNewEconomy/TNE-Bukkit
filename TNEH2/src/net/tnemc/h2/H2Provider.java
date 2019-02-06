@@ -7,7 +7,6 @@ import com.github.tnerevival.core.db.sql.H2;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.account.WorldHoldings;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.currency.CurrencyEntry;
@@ -54,6 +53,8 @@ public class H2Provider extends TNEDataProvider {
       "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
       "account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
+  private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
+  private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
@@ -82,7 +83,7 @@ public class H2Provider extends TNEDataProvider {
     boolean first = true;
     Connection connection = null;
     try {
-      connection = h2().getDataSource().getConnection();
+      connection = H2.getDataSource().getConnection();
       first = !connection.getMetaData().getTables(null, null, table, null).next();
     } catch(Exception e) {
       TNE.debug(e);
@@ -100,18 +101,14 @@ public class H2Provider extends TNEDataProvider {
     Statement statement = null;
     ResultSet results = null;
     try {
-      connection = h2().getDataSource().getConnection();
+      connection = H2.getDataSource().getConnection();
       statement = connection.createStatement();
-      results = h2().executeQuery(statement, "SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;");
+      results = H2.executeQuery(statement, "SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;");
       if(results.first()) {
         version = Double.parseDouble(results.getString("version"));
       }
     } finally {
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
+      H2.close(connection, statement, results);
     }
     return version;
   }
@@ -120,12 +117,12 @@ public class H2Provider extends TNEDataProvider {
   public void initialize() throws SQLException {
 
     try {
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
           "`id` INTEGER NOT NULL UNIQUE," +
           "`version` VARCHAR(10)," +
           "`server_name` VARCHAR(100)" +
           ") ENGINE = INNODB;");
-      h2().executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
+      H2.executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
           new Object[]{
               1,
               TNELib.instance().currentSaveVersion,
@@ -133,12 +130,12 @@ public class H2Provider extends TNEDataProvider {
               TNELib.instance().currentSaveVersion,
           });
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
           "`username` VARCHAR(100)," +
           "`uuid` VARCHAR(36) UNIQUE" +
           ") ENGINE = INNODB;");
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
           "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
           "`display_name` VARCHAR(100)," +
           "`joined_date` BIGINT(60)," +
@@ -149,16 +146,16 @@ public class H2Provider extends TNEDataProvider {
           "`account_player` BOOLEAN" +
           ") ENGINE = INNODB;");
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`server_name` VARCHAR(100) NOT NULL," +
           "`world` VARCHAR(50) NOT NULL," +
           "`currency` VARCHAR(100) NOT NULL," +
           "`balance` DECIMAL(49,4)," +
           ") ENGINE = INNODB;");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ADD PRIMARY KEY(uuid, server_name, world, currency);");
+      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ADD PRIMARY KEY(uuid, server_name, world, currency);");
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
           "`trans_id` VARCHAR(36) NOT NULL," +
           "`trans_initiator` VARCHAR(36)," +
           "`trans_initiator_balance` DECIMAL(49,4)," +
@@ -169,9 +166,9 @@ public class H2Provider extends TNEDataProvider {
           "`trans_time` BIGINT(60) NOT NULL," +
           "`trans_voided` BOOLEAN NOT NULL" +
           ") ENGINE = INNODB;");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ADD PRIMARY KEY(trans_id);");
+      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ADD PRIMARY KEY(trans_id);");
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
           "`charge_transaction` VARCHAR(36) NOT NULL," +
           "`charge_player` VARCHAR(36) NOT NULL," +
           "`charge_currency` VARCHAR(100) NOT NULL," +
@@ -180,7 +177,7 @@ public class H2Provider extends TNEDataProvider {
           "`charge_type` VARCHAR(20) NOT NULL" +
           ") ENGINE = INNODB;");
 
-      h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
           "`id` INTEGER NOT NULL auto_increment," +
           "`uuid` VARCHAR(36) NOT NULL," +
           "`server_name` VARCHAR(100) NOT NULL," +
@@ -188,10 +185,10 @@ public class H2Provider extends TNEDataProvider {
           "`currency` VARCHAR(100) NOT NULL," +
           "`balance` DECIMAL(49,4)" +
           ") ENGINE = INNODB;");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
-      h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
+      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
+      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
     } finally {
-      h2().connection(manager).close();
+      H2.connection(manager).close();
     }
   }
 
@@ -201,7 +198,7 @@ public class H2Provider extends TNEDataProvider {
     if(version < TNE.instance().currentSaveVersion) {
 
       if(version < 1114.0) {
-        h2().executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+        H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
             "`id` INTEGER NOT NULL AUTO_INCREMENT," +
             "`uuid` VARCHAR(36) NOT NULL," +
             "`server_name` VARCHAR(100) NOT NULL," +
@@ -209,21 +206,17 @@ public class H2Provider extends TNEDataProvider {
             "`currency` VARCHAR(100) NOT NULL," +
             "`balance` DECIMAL(49,4)" +
             ") ENGINE = INNODB;");
-        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
 
-        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ALTER COLUMN `balance` DECIMAL(49,4)");
-        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_initiator_balance` DECIMAL(49,4)");
-        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_recipient_balance` DECIMAL(49,4)");
-        h2().executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ALTER COLUMN `balance` DECIMAL(49,4)");
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_initiator_balance` DECIMAL(49,4)");
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ALTER COLUMN `trans_recipient_balance` DECIMAL(49,4)");
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
       }
 
       if(version < 1115.0) {
       }
     }
-  }
-
-  public H2 h2() throws SQLException {
-    return ((H2)connector());
   }
 
   @Override
@@ -233,18 +226,19 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public void save(Double version) throws SQLException {
-    h2().executePreparedUpdate("UPDATE " + manager.getPrefix() + "_INFO SET version = ? WHERE id = 1;",
+    executePreparedUpdate("UPDATE " + manager.getPrefix() + "_INFO SET version = ? WHERE id = 1;",
         new Object[] { version });
     super.save(version);
   }
 
   @Override
   public void delete(Double version) throws SQLException {
-    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
-    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
-    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
-    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
-    h2().executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_ECOIDS;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_USERS;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_BALANCES_HISTORY;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_TRANSACTIONS;");
+    executeUpdate("TRUNCATE TABLE " + manager.getPrefix() + "_CHARGES;");
   }
 
   @Override
@@ -252,69 +246,82 @@ public class H2Provider extends TNEDataProvider {
     return false;
   }
 
+  @Override
   public String loadUsername(String identifier) throws SQLException {
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(ID_LOAD_USERNAME);
-      results = h2().executePreparedQuery(statement, new Object[] {
-          identifier
-      });
-      if(results.next()) {
-        return results.getString("username");
+    try(Connection connection = H2.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD)) {
+
+        try(ResultSet results = H2.executePreparedQuery(statement, new Object[] {
+            identifier
+        })) {
+
+          if(results.next()) {
+            return results.getString("username");
+          }
+        }
       }
     } catch(Exception e) {
       TNE.debug(e);
-    } finally {
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
     }
     return null;
   }
 
   @Override
   public UUID loadID(String username) {
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(ID_LOAD);
-      results = h2().executePreparedQuery(statement, new Object[] {
-          username
-      });
-      if(results.next()) {
-        return UUID.fromString(results.getString("uuid"));
+    try(Connection connection = H2.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD)) {
+
+        try(ResultSet results = H2.executePreparedQuery(statement, new Object[] {
+            username
+        })) {
+
+          if(results.next()) {
+            return UUID.fromString(results.getString("uuid"));
+          }
+        }
       }
     } catch(Exception e) {
       TNE.debug(e);
-    } finally {
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
     }
     return null;
   }
 
   @Override
+  public Map<String, UUID> loadEconomyIDS() {
+    Map<String, UUID> ids = new HashMap<>();
+
+    String table = manager.getPrefix() + "_ECOIDS";
+    try(Connection connection = H2.getDataSource().getConnection()) {
+
+      try(Statement statement = connection.createStatement()) {
+
+        try(ResultSet results = H2.executeQuery(statement, "SELECT username, uuid FROM " + table + ";")) {
+
+          TNE.debug("Predicted IDs: " + results.getFetchSize());
+          while (results.next()) {
+            TNE.debug("Loading EcoID for " + results.getString("username"));
+            ids.put(results.getString("username"), UUID.fromString(results.getString("uuid")));
+          }
+        }
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
+    return ids;
+  }
+
+  @Override
   public int accountCount(String username) {
     StringBuilder builder = new StringBuilder();
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement("SELECT uuid FROM " + manager.getPrefix() + "_USERS WHERE display_name = ?");
-      results = h2().executePreparedQuery(statement, new Object[] {
-          username
-      });
+    try(Connection connection = H2.getDataSource().getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT uuid FROM " + manager.getPrefix() + "_USERS WHERE display_name = ?");
+        ResultSet results = H2.executePreparedQuery(statement, new Object[] {
+            username
+        })) {
+
       while(results.next()) {
         if(builder.length() > 0) {
           builder.append(",");
@@ -323,98 +330,57 @@ public class H2Provider extends TNEDataProvider {
       }
     } catch(SQLException ignore) {
 
-    } finally {
-      try {
-        if(statement != null) statement.close();
-        if(connection != null) connection.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
     return builder.toString().split(",").length;
   }
 
-
-  @Override
-  public Map<String, UUID> loadEconomyIDS() {
-
-    TNE.debug(Thread.currentThread().getStackTrace());
-    Map<String, UUID> ids = new HashMap<>();
-
-    String table = manager.getPrefix() + "_ECOIDS";
-    Connection connection = null;
-    Statement statement = null;
-    ResultSet results = null;
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.createStatement();
-      results = h2().executeQuery(statement, "SELECT username, uuid FROM " + table + ";");
-      TNE.debug("Predicted IDs: " + results.getFetchSize());
-      while (results.next()) {
-        TNE.debug("Loading EcoID for " + results.getString("username"));
-        ids.put(results.getString("username"), UUID.fromString(results.getString("uuid")));
-      }
-    } catch(Exception e) {
-      TNE.debug(e);
-    } finally {
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
-    }
-    TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
-    return ids;
-  }
-
   @Override
   public void saveIDS(Map<String, UUID> ids) throws SQLException {
-    Connection connection = null;
-    PreparedStatement statement = null;
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(ID_SAVE);
-      for(Map.Entry<String, UUID> entry : ids.entrySet()) {
-        if(entry.getKey() == null) {
-          System.out.println("Attempted saving id with null display name.");
-          continue;
+    try(Connection connection = H2.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(ID_SAVE)) {
+        for (Map.Entry<String, UUID> entry : ids.entrySet()) {
+          if (entry.getKey() == null) {
+            TNE.debug("Attempted saving id with null display name.");
+            continue;
+          }
+          statement.setString(1, entry.getKey());
+          statement.setString(2, entry.getValue().toString());
+          statement.setString(3, entry.getKey());
+          statement.addBatch();
         }
-        statement.setString(1, entry.getKey());
-        statement.setString(2, entry.getValue().toString());
-        statement.setString(3, entry.getKey());
-        statement.addBatch();
+        statement.executeBatch();
       }
-      statement.executeBatch();
     } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      if(statement != null) statement.close();
-      if(connection != null) connection.close();
+      TNE.debug(e);
     }
   }
 
   @Override
   public void saveID(String username, UUID id) throws SQLException {
     if(username == null) {
-      System.out.println("Attempted saving id with null display name.");
+      TNE.debug("Attempted saving id with null display name.");
       return;
     }
-    h2().executePreparedUpdate(ID_SAVE,
-        new Object[] {
-            username,
-            id.toString(),
-            username
-        });
+
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(ID_SAVE)) {
+        statement.setObject(1, username);
+        statement.setObject(2, id.toString());
+        statement.setObject(3, username);
+
+      }
+    }
   }
 
   @Override
   public void removeID(String username) throws SQLException {
-    h2().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE username = ?", new Object[] { username });
+    executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_ECOIDS WHERE username = ?", new Object[] { username });
   }
 
   @Override
   public void removeID(UUID id) throws SQLException {
-    h2().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
   }
 
   @Override
@@ -424,31 +390,25 @@ public class H2Provider extends TNEDataProvider {
 
     String table = manager.getPrefix() + "_USERS";
     List<UUID> userIDS = new ArrayList<>();
-    Connection connection = null;
-    Statement statement = null;
-    ResultSet results = null;
 
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.createStatement();
-      results = h2().executeQuery(statement, "SELECT uuid FROM " + table + ";");
-      while (results.next()) {
-        TNE.debug("Loading account with UUID of " + results.getString("uuid"));
-        userIDS.add(UUID.fromString(results.getString("uuid")));
+    try(Connection connection = H2.getDataSource().getConnection()) {
+
+      try(Statement statement = connection.createStatement()) {
+
+        try(ResultSet results = H2.executeQuery(statement, "SELECT uuid FROM " + table + ";")) {
+          while (results.next()) {
+            TNE.debug("Loading account with UUID of " + results.getString("uuid"));
+            userIDS.add(UUID.fromString(results.getString("uuid")));
+          }
+
+          userIDS.forEach((id)->{
+            TNEAccount account = loadAccount(id);
+            if(account != null) accounts.add(account);
+          });
+        }
       }
-
-      userIDS.forEach((id)->{
-        TNEAccount account = loadAccount(id);
-        if(account != null) accounts.add(account);
-      });
     } catch(Exception e) {
       TNE.debug(e);
-    } finally {
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
     }
     TNE.debug("Finished loading Accounts. Total: " + accounts.size());
     return accounts;
@@ -456,205 +416,183 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public TNEAccount loadAccount(UUID id) {
-    Connection connection = null;
-    PreparedStatement statement = null;
-    PreparedStatement balStatement = null;
-    ResultSet results = null;
-    ResultSet balResults = null;
     TNEAccount account = null;
 
-    try {
+    TNE.debug("Load Account Timing");
+    long startTime = System.nanoTime();
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(ACCOUNT_LOAD)) {
+        try(ResultSet results = H2.executePreparedQuery(statement, new Object[] { id.toString() })) {
 
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(ACCOUNT_LOAD);
-      balStatement = connection.prepareStatement(BALANCE_LOAD);
-      results = h2().executePreparedQuery(statement, new Object[] { id.toString() });
-      balResults = h2().executePreparedQuery(balStatement, new Object[] { id.toString() });
+          if (results.next()) {
+            account = new TNEAccount(UUID.fromString(results.getString("uuid")),
+                results.getString("display_name"));
 
-      if (results.next()) {
-        account = new TNEAccount(UUID.fromString(results.getString("uuid")),
-            results.getString("display_name"));
-
-        account.setAccountNumber(results.getInt("account_number"));
-        account.setStatus(AccountStatus.fromName(results.getString("account_status")));
-        account.setLanguage(results.getString("account_language"));
-        account.setJoined(results.getLong("joined_date"));
-        account.setLastOnline(results.getLong("last_online"));
-        account.setPlayerAccount(results.getBoolean("account_player"));
-        while (balResults.next()) {
-          account.setHoldings(balResults.getString("world"), balResults.getString("currency"), balResults.getBigDecimal("balance"), true);
+            account.setAccountNumber(results.getInt("account_number"));
+            account.setStatus(AccountStatus.fromName(results.getString("account_status")));
+            account.setLanguage(results.getString("account_language"));
+            account.setJoined(results.getLong("joined_date"));
+            account.setLastOnline(results.getLong("last_online"));
+            account.setPlayerAccount(results.getBoolean("account_player"));
+          }
         }
       }
+
+      TNE.debug("Load account info time: " + ((System.nanoTime() - startTime) / 1000000));
+
+      try(PreparedStatement balStatement = connection.prepareStatement(BALANCE_LOAD)) {
+        try(ResultSet balResults = H2.executePreparedQuery(balStatement, new Object[] { id.toString() })) {
+          while (balResults.next()) {
+            account.setHoldings(balResults.getString("world"), balResults.getString("currency"), balResults.getBigDecimal("balance"), true);
+          }
+        }
+      }
+      TNE.debug("Load balance info time: " + ((System.nanoTime() - startTime) / 1000000));
+
     } catch(Exception e) {
       TNE.debug(e);
-    } finally {
-      if(balResults != null) {
-        try {
-          balResults.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if(balStatement != null) {
-        try {
-          balStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
     }
+    TNE.debug("Load account time: " + ((System.nanoTime() - startTime) / 1000000));
     return account;
   }
 
   @Override
   public void saveAccounts(List<TNEAccount> accounts) {
-    Connection connection = null;
-    PreparedStatement accountStatement = null;
-    PreparedStatement balanceStatement = null;
-    try {
-      connection = h2().getDataSource().getConnection();
-      accountStatement = connection.prepareStatement(ACCOUNT_SAVE);
-      balanceStatement = connection.prepareStatement(BALANCE_SAVE);
-      for(TNEAccount account : accounts) {
-        if(account.displayName() == null) {
-          System.out.println("Attempted saving account with null display name.");
-          continue;
-        }
-        accountStatement.setString(1, account.identifier().toString());
-        accountStatement.setString(2, account.displayName());
-        accountStatement.setLong(3, account.getJoined());
-        accountStatement.setLong(4, account.getLastOnline());
-        accountStatement.setInt(5, account.getAccountNumber());
-        accountStatement.setString(6, account.getStatus().getName());
-        accountStatement.setString(7, account.getLanguage());
-        accountStatement.setBoolean(8, account.playerAccount());
-        accountStatement.setString(9, account.displayName());
-        accountStatement.setLong(10, account.getJoined());
-        accountStatement.setLong(11, account.getLastOnline());
-        accountStatement.setInt(12, account.getAccountNumber());
-        accountStatement.setString(13, account.getStatus().getName());
-        accountStatement.setString(14, account.getLanguage());
-        accountStatement.setBoolean(15, account.playerAccount());
-        accountStatement.addBatch();
+    try(Connection connection = H2.getDataSource().getConnection()) {
 
-        for(Map.Entry<String, WorldHoldings> holdingsEntry : account.getWorldHoldings().entrySet()) {
-          for(Map.Entry<String, BigDecimal> entry : holdingsEntry.getValue().getHoldings().entrySet()) {
-            final String server = (TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()) != null)?
-                TNE.manager().currencyManager().get(holdingsEntry.getKey(), entry.getKey()).getServer() :
-                TNE.instance().getServerName();
-            balanceStatement.setString(1, account.identifier().toString());
-            balanceStatement.setString(2, server);
-            balanceStatement.setString(3, holdingsEntry.getKey());
-            balanceStatement.setString(4, entry.getKey());
-            balanceStatement.setBigDecimal(5, entry.getValue());
-            balanceStatement.setBigDecimal(6, entry.getValue());
-            balanceStatement.addBatch();
+      try(PreparedStatement accountStatement = connection.prepareStatement(ACCOUNT_SAVE)) {
+        for (TNEAccount account : accounts) {
+          if (account.displayName() == null) {
+            TNE.debug("Attempted saving account with null display name.");
+            continue;
           }
+          accountStatement.setString(1, account.identifier().toString());
+          accountStatement.setString(2, account.displayName());
+          accountStatement.setLong(3, account.getJoined());
+          accountStatement.setLong(4, account.getLastOnline());
+          accountStatement.setInt(5, account.getAccountNumber());
+          accountStatement.setString(6, account.getStatus().getName());
+          accountStatement.setString(7, account.getLanguage());
+          accountStatement.setBoolean(8, account.playerAccount());
+          accountStatement.setString(9, account.displayName());
+          accountStatement.setLong(10, account.getJoined());
+          accountStatement.setLong(11, account.getLastOnline());
+          accountStatement.setInt(12, account.getAccountNumber());
+          accountStatement.setString(13, account.getStatus().getName());
+          accountStatement.setString(14, account.getLanguage());
+          accountStatement.setBoolean(15, account.playerAccount());
+          accountStatement.addBatch();
         }
+        accountStatement.executeBatch();
       }
-      balanceStatement.executeBatch();
-      accountStatement.executeBatch();
     } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      if(accountStatement != null) {
-        try {
-          accountStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if(balanceStatement != null) {
-        try {
-          balanceStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if(connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
+      TNE.debug(e);
     }
   }
 
   @Override
   public void saveAccount(TNEAccount account) throws SQLException {
     if(account.displayName() == null) {
-      System.out.println("Attempted saving account with null display name.");
+      TNE.debug("Attempted saving account with null display name.");
       return;
     }
-    TNE.debug("Saving account: " + account.displayName());
-    h2().executePreparedUpdate(ACCOUNT_SAVE,
-        new Object[]{
-            account.identifier().toString(),
-            account.displayName(),
-            account.getJoined(),
-            account.getLastOnline(),
-            account.getAccountNumber(),
-            account.getStatus().getName(),
-            account.getLanguage(),
-            account.playerAccount(),
-            account.displayName(),
-            account.getJoined(),
-            account.getLastOnline(),
-            account.getAccountNumber(),
-            account.getStatus().getName(),
-            account.getLanguage(),
-            account.playerAccount(),
-        }
-    );
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(ACCOUNT_SAVE)) {
+        statement.setObject(1, account.identifier().toString());
+        statement.setObject(2, account.displayName());
+        statement.setObject(3, account.getJoined());
+        statement.setObject(4, account.getLastOnline());
+        statement.setObject(5, account.getAccountNumber());
+        statement.setObject(6, account.getStatus().getName());
+        statement.setObject(7, account.getLanguage());
+        statement.setObject(8, account.playerAccount());
+        statement.setObject(9, account.displayName());
+        statement.setObject(10, account.getJoined());
+        statement.setObject(11, account.getLastOnline());
+        statement.setObject(12, account.getAccountNumber());
+        statement.setObject(13, account.getStatus().getName());
+        statement.setObject(14, account.getLanguage());
+        statement.setObject(15, account.playerAccount());
 
-    for(Map.Entry<String, WorldHoldings> entry : account.getWorldHoldings().entrySet()) {
-      for(Map.Entry<String, BigDecimal> curEntry : entry.getValue().getHoldings().entrySet()) {
-        final String server = (TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()) != null)?
-            TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()).getServer() :
+        statement.executeUpdate();
+      }
+    }
+  }
+
+  @Override
+  public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
+    BigDecimal balance = null;
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
+
+        statement.setObject(1, id.toString());
+        statement.setObject(2, world);
+        statement.setObject(3, currency);
+
+        try(ResultSet results = statement.executeQuery()) {
+
+          if(results.next()) {
+            balance = results.getBigDecimal("balance");
+          }
+        }
+      }
+    }
+    return balance;
+  }
+
+  @Override
+  public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_SAVE)) {
+        final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
+            TNE.manager().currencyManager().get(world, currency).getServer() :
             TNE.instance().getServerName();
-        h2().executePreparedUpdate(BALANCE_SAVE,
-            new Object[]{
-                account.identifier().toString(),
-                server,
-                entry.getKey(),
-                curEntry.getKey(),
-                curEntry.getValue(),
-                curEntry.getValue()
-            }
-        );
+
+        statement.setObject(1, id.toString());
+        statement.setObject(2, server);
+        statement.setObject(3, world);
+        statement.setObject(4, currency);
+        statement.setObject(5, balance);
+        statement.setObject(6, balance);
+        statement.executeUpdate();
+      }
+    }
+  }
+
+  @Override
+  public void deleteBalance(UUID id, String world, String currency) throws SQLException {
+    try(Connection connection = H2.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_DELETE_INDIVIDUAL)) {
+        statement.setObject(1, id.toString());
+        statement.setObject(2, world);
+        statement.setObject(3, currency);
+
+        statement.executeUpdate();
       }
     }
   }
 
   @Override
   public void deleteAccount(UUID id) throws SQLException {
-    h2().executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
-    h2().executePreparedUpdate(ACCOUNT_DELETE, new Object[] { id.toString() });
-    h2().executePreparedUpdate(BALANCE_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(ID_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(ACCOUNT_DELETE, new Object[] { id.toString() });
+    executePreparedUpdate(BALANCE_DELETE, new Object[] { id.toString() });
   }
 
   @Override
   public TNETransaction loadTransaction(UUID id) {
     String table = manager.getPrefix() + "_TRANSACTIONS";
-    Connection connection = null;
-    PreparedStatement transactionStatement = null;
-    PreparedStatement chargeStatement = null;
-    ResultSet chargesResults = null;
-    ResultSet transResults = null;
-    try{
-      connection = h2().getDataSource().getConnection();
-      transactionStatement = connection.prepareStatement("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM " + table + " WHERE trans_id = ? LIMIT 1");
-      transResults = h2().executePreparedQuery(transactionStatement, new Object[] { id.toString() });
+    String chargesTable = manager.getPrefix() + "_CHARGES";
+
+    try(Connection connection = H2.getDataSource().getConnection();
+        PreparedStatement transactionStatement = connection.prepareStatement("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM " + table + " WHERE trans_id = ? LIMIT 1");
+        ResultSet transResults = H2.executePreparedQuery(transactionStatement, new Object[] { id.toString() });
+        PreparedStatement chargeStatement = connection.prepareStatement("SELECT charge_player, charge_world, charge_amount, charge_type, charge_currency FROM " + chargesTable + " WHERE charge_transaction = ?");
+        ResultSet chargesResults = H2.executePreparedQuery(chargeStatement, new Object[] {
+            id.toString()
+        });) {
+
       if (transResults.next()) {
         TNETransaction transaction = new TNETransaction(UUID.fromString(transResults.getString("trans_id")),
             TNE.manager().getAccount(UUID.fromString(transResults.getString("trans_initiator"))),
@@ -663,13 +601,6 @@ public class H2Provider extends TNEDataProvider {
             TNE.transactionManager().getType(transResults.getString("trans_type").toLowerCase()),
             transResults.getLong("trans_time"));
 
-        String chargesTable = manager.getPrefix() + "_CHARGES";
-
-        chargeStatement = connection.prepareStatement("SELECT charge_player, charge_world, charge_amount," +
-            "charge_type, charge_currency FROM " + chargesTable + " WHERE charge_transaction = ?");
-        chargesResults = h2().executePreparedQuery(chargeStatement, new Object[] {
-            transaction.transactionID().toString()
-        });
         while (chargesResults.next()) {
           String player = chargesResults.getString("charge_player");
           boolean initiator = player.equalsIgnoreCase(transaction.initiator());
@@ -694,29 +625,6 @@ public class H2Provider extends TNEDataProvider {
       }
     } catch(Exception e) {
       TNE.debug(e);
-    } finally {
-
-      if(chargesResults != null) {
-        try {
-          chargesResults.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if(chargeStatement != null) {
-        try {
-          chargeStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      try {
-        h2().close(connection, transactionStatement, transResults);
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
     return null;
   }
@@ -728,37 +636,30 @@ public class H2Provider extends TNEDataProvider {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     List<UUID> transactionIDS = new ArrayList<>();
 
-    Connection connection = null;
-    Statement statement = null;
-    ResultSet results = null;
+    try(Connection connection = H2.getDataSource().getConnection()) {
 
-    try {
-      connection = h2().getDataSource().getConnection();
-      statement = connection.createStatement();
-      results = h2().executeQuery(statement,"SELECT trans_id FROM " + table + ";");
-      while (results.next()) {
-        transactionIDS.add(UUID.fromString(results.getString("trans_id")));
+      try(Statement statement = connection.createStatement()) {
+        try(ResultSet results = H2.executeQuery(statement,"SELECT trans_id FROM " + table + ";")) {
+
+          while (results.next()) {
+            transactionIDS.add(UUID.fromString(results.getString("trans_id")));
+          }
+        }
       }
-      transactionIDS.forEach((id)->{
-        TNETransaction transaction = loadTransaction(id);
-        if(transaction != null) transactions.add(transaction);
-      });
     } catch(Exception e) {
       TNE.debug(e);
-    } finally {
-      try {
-        h2().close(connection, statement, results);
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
+    transactionIDS.forEach((id)->{
+      TNETransaction transaction = loadTransaction(id);
+      if(transaction != null) transactions.add(transaction);
+    });
     return transactions;
   }
 
   @Override
   public void saveTransaction(TNETransaction transaction) throws SQLException {
     String table = manager.getPrefix() + "_TRANSACTIONS";
-    h2().executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_initiator_balance, trans_recipient, trans_recipient_balance, trans_type, trans_world, trans_time, trans_voided) " +
+    executePreparedUpdate("INSERT INTO `" + table + "` (trans_id, trans_initiator, trans_initiator_balance, trans_recipient, trans_recipient_balance, trans_type, trans_world, trans_time, trans_voided) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE trans_recipient = ?, trans_world = ?, trans_voided = ?",
         new Object[]{
             transaction.transactionID().toString(),
@@ -778,7 +679,7 @@ public class H2Provider extends TNEDataProvider {
 
     table = manager.getPrefix() + "_CHARGES";
     if(transaction.initiatorCharge() != null) {
-      h2().executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
+      executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
               "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE charge_world = ?, charge_amount = ?, charge_type = ?",
           new Object[]{
               transaction.transactionID().toString(),
@@ -795,7 +696,7 @@ public class H2Provider extends TNEDataProvider {
     }
 
     if(transaction.recipientCharge() != null) {
-      h2().executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
+      executePreparedUpdate("INSERT INTO `" + table + "` (charge_transaction, charge_player, charge_currency, charge_world, charge_amount, charge_type) " +
               "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE charge_world = ?, charge_amount = ?, charge_type = ?",
           new Object[]{
               transaction.transactionID().toString(),
@@ -814,8 +715,8 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public void deleteTransaction(UUID id) throws SQLException {
-    h2().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
-    h2().executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_CHARGES WHERE charge_transaction = ? ", new Object[] { id.toString() });
+    executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_TRANSACTIONS WHERE trans_id = ? ", new Object[] { id.toString() });
+    executePreparedUpdate("DELETE FROM " + manager.getPrefix() + "_CHARGES WHERE charge_transaction = ? ", new Object[] { id.toString() });
   }
 
   @Override
@@ -828,23 +729,15 @@ public class H2Provider extends TNEDataProvider {
     final String balanceTable = manager.getPrefix() + "_BALANCES";
     int count = 0;
 
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
-
-    try {
-
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement("SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;");
-      results = h2().executePreparedQuery(statement, new Object[] { world, currency });
+    try(Connection connection = H2.getDataSource().getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;");
+        ResultSet results = H2.executePreparedQuery(statement, new Object[] { world, currency })) {
 
       while(results.next()) {
         count = results.getInt(1);
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      h2().close(connection, statement, results);
     }
 
     if(count > 0) {
@@ -876,25 +769,17 @@ public class H2Provider extends TNEDataProvider {
         "SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;" :
         complex;
 
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
-
-    try {
-
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(query);
-      results = h2().executePreparedQuery(statement, new Object[] {
-          world, currency, start, limit
-      });
+    try(Connection connection = H2.getDataSource().getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        ResultSet results = H2.executePreparedQuery(statement, new Object[] {
+            world, currency, start, limit
+        })) {
 
       while (results.next()) {
         balances.put(UUID.fromString(results.getString("uuid")), results.getBigDecimal("balance"));
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      h2().close(connection, statement, results);
+      TNE.debug(e);
     }
     return balances;
   }
@@ -902,7 +787,7 @@ public class H2Provider extends TNEDataProvider {
   @Override
   public void createTables(List<String> tables) throws SQLException {
     for(String table : tables) {
-      h2().executeUpdate(table);
+      executeUpdate(table);
     }
   }
 
@@ -927,23 +812,16 @@ public class H2Provider extends TNEDataProvider {
       values.add(time);
     }
 
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
-
     int count = 0;
-    try {
+    try(Connection connection = H2.getDataSource().getConnection();
+        PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
+        ResultSet results = H2.executePreparedQuery(statement, values.toArray())) {
 
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(queryBuilder.toString());
-      results = h2().executePreparedQuery(statement, values.toArray());
       while(results.next()) {
         count = results.getInt(1);
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      h2().close(connection, statement, results);
     }
 
     if(count > 0) {
@@ -982,24 +860,41 @@ public class H2Provider extends TNEDataProvider {
     values.add(start);
     values.add(limit);
 
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet results = null;
+    try(Connection connection = H2.getDataSource().getConnection();
+        PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
+        ResultSet results = H2.executePreparedQuery(statement, values.toArray())) {
 
-    try {
-
-      connection = h2().getDataSource().getConnection();
-      statement = connection.prepareStatement(queryBuilder.toString());
-      results = h2().executePreparedQuery(statement, values.toArray());
       while (results.next()) {
         UUID id = UUID.fromString(results.getString("trans_id"));
         transactions.put(id, loadTransaction(id));
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      h2().close(connection, statement, results);
     }
     return transactions;
+  }
+
+  public void executeUpdate(String query) {
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(Statement statement = connection.createStatement()) {
+        statement.executeUpdate(query);
+      }
+    } catch (SQLException e) {
+      TNE.debug(e);
+    }
+  }
+
+  public void executePreparedUpdate(String query, Object[] variables) {
+    try(Connection connection = H2.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(query)) {
+
+        for (int i = 0; i < variables.length; i++) {
+          statement.setObject((i + 1), variables[i]);
+        }
+        statement.executeUpdate();
+      }
+    } catch (SQLException e) {
+      TNE.debug(e);
+    }
   }
 }
