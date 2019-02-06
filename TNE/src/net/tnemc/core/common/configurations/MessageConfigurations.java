@@ -52,7 +52,7 @@ public class MessageConfigurations extends Configuration {
     directory.mkdir();
     File[] langFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
 
-    if(langFiles != null) {
+    /*if(langFiles != null) {
       for (File langFile : langFiles) {
         String name = langFile.getName().replace(".yml", "");
         CommentedConfiguration configuration = new CommentedConfiguration(langFile, null);
@@ -62,7 +62,7 @@ public class MessageConfigurations extends Configuration {
         TNE.debug("Loaded language: " + lang);
         languages.put(name, lang);
       }
-    }
+    }*/
   }
 
   public Map<String, Language> getLanguages() {

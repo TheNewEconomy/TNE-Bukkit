@@ -695,7 +695,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) TNE.debug(message);
+    if(consoleDebug) System.out.println(message);
   }
 
   /*public void loadConfigurations() {
