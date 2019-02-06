@@ -1,7 +1,7 @@
 package net.tnemc.core.menu.icons.main;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.Material;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class DisplayIcon extends Icon {
 
   public DisplayIcon() {
-    super(6, Material.WHITE_STAINED_GLASS_PANE, "Display Funds");
+    super(6, TNE.item().build("WHITE_STAINED_GLASS_PANE"), "Display Funds");
 
     data.put("action_type", "display");
     this.switchMenu = "display";

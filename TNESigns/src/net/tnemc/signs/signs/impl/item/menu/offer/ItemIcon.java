@@ -4,7 +4,6 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,7 +24,7 @@ import java.util.List;
 public class ItemIcon extends Icon {
 
   public ItemIcon(Integer slot) {
-    super(slot, Material.GREEN_STAINED_GLASS_PANE, "Shop's Offer");
+    super(slot, TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Shop's Offer");
     this.close = false;
   }
 

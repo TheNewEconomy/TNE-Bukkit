@@ -295,21 +295,6 @@ public class SerialItem {
   }
 
   public static boolean isShulker(Material material) {
-    return material.equals(Material.WHITE_SHULKER_BOX) ||
-           material.equals(Material.ORANGE_SHULKER_BOX) ||
-           material.equals(Material.MAGENTA_SHULKER_BOX) ||
-           material.equals(Material.LIGHT_BLUE_SHULKER_BOX) ||
-           material.equals(Material.YELLOW_SHULKER_BOX) ||
-           material.equals(Material.LIME_SHULKER_BOX) ||
-           material.equals(Material.PINK_SHULKER_BOX) ||
-           material.equals(Material.GRAY_SHULKER_BOX) ||
-           material.equals(Material.LIGHT_GRAY_SHULKER_BOX) ||
-           material.equals(Material.CYAN_SHULKER_BOX) ||
-           material.equals(Material.PURPLE_SHULKER_BOX) ||
-           material.equals(Material.BLUE_SHULKER_BOX) ||
-           material.equals(Material.BROWN_SHULKER_BOX) ||
-           material.equals(Material.GREEN_SHULKER_BOX) ||
-           material.equals(Material.RED_SHULKER_BOX) ||
-           material.equals(Material.BLACK_SHULKER_BOX);
+    return TNE.item().isShulker(material);
   }
 }

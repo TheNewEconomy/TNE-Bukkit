@@ -7,7 +7,6 @@ import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.impl.ItemSign;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,7 +28,7 @@ public class ConfirmIcon extends Icon {
   final String data;
 
   public ConfirmIcon(Integer slot, final String data) {
-    super(slot, Material.GREEN_STAINED_GLASS_PANE, "Confirm Amount");
+    super(slot, TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Confirm Amount");
 
     this.data = data;
     this.close = true;

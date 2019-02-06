@@ -1,7 +1,7 @@
 package net.tnemc.core.menu.icons.main;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.Material;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class GiveIcon extends Icon {
 
   public GiveIcon() {
-    super(2, Material.GREEN_STAINED_GLASS_PANE, "Give Funds");
+    super(2, TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Give Funds");
 
     data.put("action_type", "give");
     this.switchMenu = "cur_selection_give";

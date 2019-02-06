@@ -46,6 +46,14 @@ public class Icon {
     this(slot, material, display, damage, new ArrayList<>());
   }
 
+  public Icon(Integer slot, ItemStack stack, String display) {
+    this(slot, stack.getType(), display, stack.getDurability(), new ArrayList<>());
+  }
+
+  public Icon(Integer slot, ItemStack stack, String display, List<String> lore) {
+    this(slot, stack.getType(), display, stack.getDurability(), lore);
+  }
+
   public Icon(Integer slot, Material material, String display, short damage, List<String> lore) {
     this.slot = slot;
     this.material = material;

@@ -10,7 +10,6 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ import java.util.UUID;
  */
 public class ConfirmIcon extends Icon {
   public ConfirmIcon(Integer slot) {
-    super(slot, Material.GREEN_STAINED_GLASS_PANE, "Confirm Transaction");
+    super(slot, TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Confirm Transaction");
   }
 
   @Override

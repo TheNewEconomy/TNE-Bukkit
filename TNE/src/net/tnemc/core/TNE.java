@@ -35,6 +35,9 @@ import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.compatibility.ItemCompatibility;
+import net.tnemc.core.compatibility.item.ItemCompatibility12;
+import net.tnemc.core.compatibility.item.ItemCompatibility13;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
@@ -98,6 +101,9 @@ public class TNE extends TNELib {
   public static boolean consoleDebug = false;
   public static boolean maintenance = false;
   private String serverName;
+
+  //Compatibility Classes.
+  private ItemCompatibility itemCompatibility;
 
   //Economy APIs
   private Economy_TheNewEconomy vaultEconomy;
@@ -268,7 +274,6 @@ public class TNE extends TNELib {
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
     manager = new EconomyManager();
-    menuManager = new MenuManager();
 
     //General Variables based on configuration values
     TNE.debug("Preparing variables");
@@ -669,6 +674,8 @@ public class TNE extends TNELib {
       final String itemsFile = (MISCUtils.isOneThirteen())? "items.yml" : "items-1.12.yml";
       itemConfigurations = initializeConfiguration(items, itemsFile);
       MaterialHelper.initialize();
+      itemCompatibility = (MISCUtils.isOneThirteen())? new ItemCompatibility13() : new ItemCompatibility12();
+      menuManager = new MenuManager();
       TNE.logger().info("Initialized items.yml");
 
       loader.getModules().forEach((key, value) -> {
@@ -748,6 +755,10 @@ public class TNE extends TNELib {
 
   public File getWorlds() {
     return worlds;
+  }
+
+  public static ItemCompatibility item() {
+    return instance().itemCompatibility;
   }
 
   public static Boolean hasPermssion(CommandSender sender, String permission) {

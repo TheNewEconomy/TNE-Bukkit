@@ -3,7 +3,6 @@ package net.tnemc.signs.signs.impl.item.menu.itemselection;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -21,7 +20,7 @@ public class ResetIcon extends Icon {
   private final String data;
 
   public ResetIcon(Integer slot, final String menu, final String data) {
-    super(slot, Material.WHITE_STAINED_GLASS_PANE, "Reset Amount");
+    super(slot, TNE.item().build("WHITE_STAINED_GLASS_PANE"), "Reset Amount");
 
     this.data = data;
     this.switchMenu = menu;

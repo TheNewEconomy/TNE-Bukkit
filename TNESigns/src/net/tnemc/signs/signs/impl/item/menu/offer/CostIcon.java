@@ -3,7 +3,6 @@ package net.tnemc.signs.signs.impl.item.menu.offer;
 import net.tnemc.core.TNE;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CostIcon extends Icon {
 
   public CostIcon(Integer slot) {
-    super(slot, Material.GREEN_STAINED_GLASS_PANE, "Item Cost");
+    super(slot, TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Item Cost");
     this.close = false;
   }
 

@@ -1,7 +1,7 @@
 package net.tnemc.core.menu.icons.shared;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.Material;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class BackIcon extends Icon {
 
   public BackIcon(String menu, Integer slot) {
-    super(slot, Material.BLACK_WOOL, "Go Back");
+    super(slot, TNE.item().build("BLACK_WOOL"), "Go Back");
     this.switchMenu = menu;
   }
 }

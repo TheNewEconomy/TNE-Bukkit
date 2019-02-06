@@ -4,6 +4,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -19,6 +20,15 @@ public class AddIcon extends Icon {
 
   private final String data;
   private final int amount;
+
+  public AddIcon(Integer slot, final ItemStack stack, final String menu,
+                 final String data, final int amount) {
+    super(slot, stack, "Add " + amount);
+
+    this.data = data;
+    this.amount = amount;
+    this.switchMenu = menu;
+  }
 
   public AddIcon(Integer slot, final Material iconMat, final String menu,
                  final String data, final int amount) {

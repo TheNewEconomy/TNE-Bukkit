@@ -3,7 +3,6 @@ package net.tnemc.core.menu.icons.amountselection;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ import java.math.BigDecimal;
  */
 public class CancelIcon extends Icon {
   public CancelIcon(Integer slot) {
-    super(slot, Material.RED_STAINED_GLASS_PANE, "Cancel Transaction");
+    super(slot, TNE.item().build("RED_STAINED_GLASS_PANE"), "Cancel Transaction");
   }
 
   @Override

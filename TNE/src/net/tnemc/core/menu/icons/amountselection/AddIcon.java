@@ -5,6 +5,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -21,6 +22,15 @@ public class AddIcon extends Icon {
 
   private BigDecimal amount;
   private String menu;
+
+  public AddIcon(Integer slot, ItemStack stack, BigDecimal amount, String menu) {
+    super(slot, stack, "Add " + amount.toPlainString());
+
+    this.amount = amount;
+    this.menu = menu;
+
+    this.switchMenu = menu;
+  }
 
   public AddIcon(Integer slot, Material material, BigDecimal amount, String menu) {
     super(slot, material, "Add " + amount.toPlainString());
