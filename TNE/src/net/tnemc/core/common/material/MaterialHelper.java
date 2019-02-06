@@ -20,7 +20,7 @@ public class MaterialHelper {
 
   private static List<MaterialNameHelper> validNames = new ArrayList<>();
 
-  public MaterialHelper() {
+  public static void initialize() {
     for(Material mat : Material.values()) {
       List<String> nameList = (TNE.instance().itemConfiguration().contains("Items." + mat.name() + ".Names"))? TNE.instance().itemConfiguration().getStringList("Items." + mat.name() + ".Names") : Collections.singletonList(mat.name());
       String[] names = nameList.toArray(new String[nameList.size()]);

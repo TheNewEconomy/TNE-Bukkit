@@ -131,8 +131,6 @@ public class TNE extends TNELib {
   private boolean blacklisted = false;
   public static boolean useMod = false;
 
-  private MaterialHelper matHelper;
-
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
       blacklisted = true;
@@ -668,8 +666,9 @@ public class TNE extends TNELib {
     worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
     TNE.logger().info("Initialized worlds.yml");
     Bukkit.getScheduler().runTaskAsynchronously(this, ()-> {
-      itemConfigurations = initializeConfiguration(items, "items.yml");
-      this.matHelper = new MaterialHelper();
+      final String itemsFile = (MISCUtils.isOneThirteen())? "items.yml" : "items-1.12.yml";
+      itemConfigurations = initializeConfiguration(items, itemsFile);
+      MaterialHelper.initialize();
       TNE.logger().info("Initialized items.yml");
 
       loader.getModules().forEach((key, value) -> {
