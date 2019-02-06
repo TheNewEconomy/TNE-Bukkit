@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.github</groupId>
             <artifactId>TNELib</artifactId>
-            <version>0.1.1.25</version>
+            <version>0.1.1.26</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
