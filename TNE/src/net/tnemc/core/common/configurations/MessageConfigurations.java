@@ -54,7 +54,7 @@ public class MessageConfigurations extends Configuration {
     directory.mkdir();
     File[] langFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
 
-    if(langFiles != null) {
+    /*if(langFiles != null) {
       for (File langFile : langFiles) {
         String name = langFile.getName().replace(".yml", "");
         CommentedConfiguration configuration = null;
@@ -70,7 +70,7 @@ public class MessageConfigurations extends Configuration {
           languages.put(name, lang);
         }
       }
-    }
+    }*/
   }
 
   public Map<String, Language> getLanguages() {

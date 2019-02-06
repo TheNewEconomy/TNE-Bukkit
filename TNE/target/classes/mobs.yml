@@ -1,0 +1,1477 @@
+# The New Economy v0.1.1.1
+# Author: creatorfromhell
+# License: http://creativecommons.org/licenses/by-nc-nd/4.0/
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+# To donate to the continued development of TNE with perks, https://patreon.com/creatorfromhell
+# To view a commented version of this file, visit https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/mobs.yml.
+#All configurations relating to mobs.
+Mobs:
+
+  #Whether or not mobs drop money on death.
+  Enabled: true
+
+  #Whether or not a mob is a baby affects the reward.
+  EnableAge: true
+
+  #Whether or not to send a message stating how much money a player got for killing a mob
+  Message: true
+
+  #Settings relating to item multipliers.
+  #Here you may specify multipliers for killing entities with certain items.
+  Multipliers:
+    EXAMPLE_ITEM:
+      #The chance to get this multiplier. Value must be between 0 and 100
+      Chance: 10
+
+      #The multiplier that is applied when killing an entity with this item.
+      Multiplier: 10.00
+
+    FIST:
+      #The chance to get this multiplier. Value must be between 0 and 100
+      Chance: 100
+
+      #The multiplier that is applied when killing an entity with this item.
+      Multiplier: 1
+
+  #Reward configurations for individual mobs
+  #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
+  Default:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #If you want to allow a random value between two numbers use this configuration.
+    #Note: This overrides the value of Reward
+    Chance:
+      #The minimum value that may be granted
+      Min: 5.0
+      #The maximum value that may be granted
+      Max: 15.0
+  BAT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  BLAZE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  CAVE_SPIDER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  CHICKEN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  COD:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  COW:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  CREEPER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  DOLPHIN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  DONKEY:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  DROWNED:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ELDER_GUARDIAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  ENDERMAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  ENDERMITE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  ENDER_DRAGON:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  EVOKER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  GHAST:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  GIANT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  GUARDIAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  HORSE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  HUSK:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ILLUSIONER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  IRON_GOLEM:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  LLAMA:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  MAGMA_CUBE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Here you'll find the various configurations for the various magma cube sizes.
+    #We support the natural ones with Small, Medium, and Large, and also custom ones with simply the size.
+    #Natural sizes.
+    Small:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 5.00
+    Medium:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 10.00
+    Large:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 15.00
+    #Custom one for a magma cube size of 10
+    10:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 20.00
+
+  MULE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  MUSHROOM_COW:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  OCELOT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  PARROT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  PHANTOM:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  PIG:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  PIG_ZOMBIE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  PLAYER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Rewards for killing specific players may go here.
+    Individual:
+      player-uuid-here:
+        Enabled: true
+        Reward: 10.00
+
+  POLAR_BEAR:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  PUFFERFISH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  RABBIT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  SALMON:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  SHEEP:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  SHULKER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  SILVERFISH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  SKELETON:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  SKELETON_HORSE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  SLIME:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Here you'll find the various configurations for the various slime sizes.
+    #We support the natural ones with Small, Medium, and Large, and also custom ones with simply the size.
+    #Natural sizes.
+    Small:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 5.00
+    Medium:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 10.00
+    Large:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 15.00
+    #Custom one for a slime size of 10
+    10:
+      Enabled: true
+      RewardCurrency: Default
+      Reward: 20.00
+
+  SNOWMAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  SPIDER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  SQUID:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  STRAY:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  TROPICAL_FISH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  TURTLE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VEX:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  VILLAGER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_FARMER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_FISHERMAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_SHEPHERD:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_FLETCHER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_LIBRARIAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_CARTOGRAPHER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_CLERIC:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_ARMORER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_WEAPON_SMITH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_TOOL_SMITH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_BUTCHER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_LEATHERWORKER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VILLAGER_NITWIT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  VINDICATOR:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  WITCH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  WITHER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  WITHER_SKELETON:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  WOLF:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_HORSE:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER_FARMER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER_LIBRARIAN:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER_PRIEST:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER_BLACKSMITH:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER_BUTCHER:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  ZOMBIE_VILLAGER_NITWIT:
+    #Whether or not this entity drops money on death.
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      #Whether or not to enable separate configurations for baby versions of this entity.
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  Messages:
+    Killed: <white>You received $reward <white>for killing a <green>$mob<white>.
+    KilledVowel: <white>You received $reward <white>for killing an <green>$mob<white>.
+    NPCTag: <red>I'm sorry, but you cannot use a name tag on a villager.
+
+    #This is used to rename mobs for the mob reward messages.
+    Custom:
+
+      #The name of the mob, followed by the new name.
+      example-mob: New Name
+      MOCREATURES_TURKEY: Turkey

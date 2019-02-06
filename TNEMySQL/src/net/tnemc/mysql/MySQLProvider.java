@@ -42,7 +42,6 @@ public class MySQLProvider extends TNEDataProvider {
   private String prefix = manager.getPrefix();
 
   private final String ID_LOAD = "SELECT uuid FROM " + prefix + "_ECOIDS WHERE username = ? LIMIT 1";
-  private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
@@ -81,7 +80,7 @@ public class MySQLProvider extends TNEDataProvider {
     String table = manager.getPrefix() + "_INFO";
     boolean first = true;
 
-    try(Connection connection = mysql().getDataSource().getConnection()) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
       first = !connection.getMetaData().getTables(null, null, table, null).next();
     } catch(Exception e) {
       TNE.debug(e);
@@ -94,9 +93,9 @@ public class MySQLProvider extends TNEDataProvider {
     final String table = manager.getPrefix() + "_INFO";
     Double version = 0.0;
 
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysql().executeQuery(statement, "SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;")) {
+        ResultSet results = MySQL.executeQuery(statement, "SELECT version FROM " + table + " WHERE id = 1 LIMIT 1;")) {
 
       if(results.first()) {
         version = Double.parseDouble(results.getString("version"));
@@ -202,10 +201,6 @@ public class MySQLProvider extends TNEDataProvider {
     }
   }
 
-  private MySQL mysql() throws SQLException {
-    return ((MySQL)connector());
-  }
-
   @Override
   public DatabaseConnector connector() throws SQLException {
     return sql;
@@ -234,9 +229,11 @@ public class MySQLProvider extends TNEDataProvider {
   }
 
   public String loadUsername(String identifier) throws SQLException {
-    try(Connection connection = mysql().getDataSource().getConnection();
-        PreparedStatement statement = connection.prepareStatement(ID_LOAD_USERNAME);
-        ResultSet results = mysql().executePreparedQuery(statement, new Object[] {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD)) {
+
+        try(ResultSet results = MySQL.executePreparedQuery(statement, new Object[] {
             identifier
         })) {
 
@@ -251,9 +248,11 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public UUID loadID(String username) {
-    try(Connection connection = mysql().getDataSource().getConnection();
-        PreparedStatement statement = connection.prepareStatement(ID_LOAD);
-        ResultSet results = mysql().executePreparedQuery(statement, new Object[] {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD)) {
+
+        try(ResultSet results = MySQL.executePreparedQuery(statement, new Object[] {
             username
         })) {
 
@@ -271,9 +270,11 @@ public class MySQLProvider extends TNEDataProvider {
     Map<String, UUID> ids = new HashMap<>();
 
     String table = manager.getPrefix() + "_ECOIDS";
-    try(Connection connection = mysql().getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet results = mysql().executeQuery(statement, "SELECT username, uuid FROM " + table + ";")) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+
+      try(Statement statement = connection.createStatement()) {
+
+        try(ResultSet results = MySQL.executeQuery(statement, "SELECT username, uuid FROM " + table + ";")) {
 
       TNE.debug("Predicted IDs: " + results.getFetchSize());
       while (results.next()) {
@@ -290,9 +291,9 @@ public class MySQLProvider extends TNEDataProvider {
   @Override
   public int accountCount(String username) {
     StringBuilder builder = new StringBuilder();
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT uuid FROM " + manager.getPrefix() + "_USERS WHERE display_name = ?");
-        ResultSet results = mysql().executePreparedQuery(statement, new Object[] {
+        ResultSet results = MySQL.executePreparedQuery(statement, new Object[] {
             username
         })) {
 
@@ -310,8 +311,7 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void saveIDS(Map<String, UUID> ids) throws SQLException {
-    try(Connection connection = mysql().getDataSource().getConnection();
-        PreparedStatement statement = connection.prepareStatement(ID_SAVE)) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
 
       for(Map.Entry<String, UUID> entry : ids.entrySet()) {
         if(entry.getKey() == null) {
@@ -336,6 +336,11 @@ public class MySQLProvider extends TNEDataProvider {
       return;
     }
 
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(ID_SAVE)) {
+        statement.setObject(1, username);
+        statement.setObject(2, id.toString());
+        statement.setObject(3, username);
 
     executePreparedUpdate(ID_SAVE,
         new Object[] {
@@ -363,9 +368,15 @@ public class MySQLProvider extends TNEDataProvider {
     String table = manager.getPrefix() + "_USERS";
     List<UUID> userIDS = new ArrayList<>();
 
-    try(Connection connection = mysql().getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet results = mysql().executeQuery(statement, "SELECT uuid FROM " + table + ";")) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+
+      try(Statement statement = connection.createStatement()) {
+
+        try(ResultSet results = MySQL.executeQuery(statement, "SELECT uuid FROM " + table + ";")) {
+          while (results.next()) {
+            TNE.debug("Loading account with UUID of " + results.getString("uuid"));
+            userIDS.add(UUID.fromString(results.getString("uuid")));
+          }
 
       while (results.next()) {
         TNE.debug("Loading account with UUID of " + results.getString("uuid"));
@@ -387,24 +398,33 @@ public class MySQLProvider extends TNEDataProvider {
   public TNEAccount loadAccount(UUID id) {
     TNEAccount account = null;
 
-    try(Connection connection = mysql().getDataSource().getConnection();
-        PreparedStatement statement = connection.prepareStatement(ACCOUNT_LOAD);
-        PreparedStatement balStatement = connection.prepareStatement(BALANCE_LOAD);
-        ResultSet results = mysql().executePreparedQuery(statement, new Object[] { id.toString() });
-        ResultSet balResults = mysql().executePreparedQuery(balStatement, new Object[] { id.toString() })) {
+    TNE.debug("Load Account Timing");
+    long startTime = System.nanoTime();
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(ACCOUNT_LOAD)) {
+        try(ResultSet results = MySQL.executePreparedQuery(statement, new Object[] { id.toString() })) {
 
-      if (results.next()) {
-        account = new TNEAccount(UUID.fromString(results.getString("uuid")),
-            results.getString("display_name"));
+          if (results.next()) {
+            account = new TNEAccount(UUID.fromString(results.getString("uuid")),
+                results.getString("display_name"));
 
-        account.setAccountNumber(results.getInt("account_number"));
-        account.setStatus(AccountStatus.fromName(results.getString("account_status")));
-        account.setLanguage(results.getString("account_language"));
-        account.setJoined(results.getLong("joined_date"));
-        account.setLastOnline(results.getLong("last_online"));
-        account.setPlayerAccount(results.getBoolean("account_player"));
-        while (balResults.next()) {
-          account.setHoldings(balResults.getString("world"), balResults.getString("currency"), balResults.getBigDecimal("balance"), true);
+            account.setAccountNumber(results.getInt("account_number"));
+            account.setStatus(AccountStatus.fromName(results.getString("account_status")));
+            account.setLanguage(results.getString("account_language"));
+            account.setJoined(results.getLong("joined_date"));
+            account.setLastOnline(results.getLong("last_online"));
+            account.setPlayerAccount(results.getBoolean("account_player"));
+          }
+        }
+      }
+
+      TNE.debug("Load account info time: " + ((System.nanoTime() - startTime) / 1000000));
+
+      try(PreparedStatement balStatement = connection.prepareStatement(BALANCE_LOAD)) {
+        try(ResultSet balResults = MySQL.executePreparedQuery(balStatement, new Object[] { id.toString() })) {
+          while (balResults.next()) {
+            account.setHoldings(balResults.getString("world"), balResults.getString("currency"), balResults.getBigDecimal("balance"), true);
+          }
         }
       }
     } catch(Exception e) {
@@ -415,9 +435,7 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public void saveAccounts(List<TNEAccount> accounts) {
-    try(Connection connection = mysql().getDataSource().getConnection();
-        PreparedStatement accountStatement = connection.prepareStatement(ACCOUNT_SAVE);
-        PreparedStatement balanceStatement = connection.prepareStatement(BALANCE_SAVE)) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
 
       for(TNEAccount account : accounts) {
         if(account.displayName() == null) {
@@ -454,6 +472,22 @@ public class MySQLProvider extends TNEDataProvider {
             balanceStatement.setBigDecimal(6, entry.getValue());
             balanceStatement.addBatch();
           }
+          accountStatement.setString(1, account.identifier().toString());
+          accountStatement.setString(2, account.displayName());
+          accountStatement.setLong(3, account.getJoined());
+          accountStatement.setLong(4, account.getLastOnline());
+          accountStatement.setInt(5, account.getAccountNumber());
+          accountStatement.setString(6, account.getStatus().getName());
+          accountStatement.setString(7, account.getLanguage());
+          accountStatement.setBoolean(8, account.playerAccount());
+          accountStatement.setString(9, account.displayName());
+          accountStatement.setLong(10, account.getJoined());
+          accountStatement.setLong(11, account.getLastOnline());
+          accountStatement.setInt(12, account.getAccountNumber());
+          accountStatement.setString(13, account.getStatus().getName());
+          accountStatement.setString(14, account.getLanguage());
+          accountStatement.setBoolean(15, account.playerAccount());
+          accountStatement.addBatch();
         }
         balanceStatement.executeBatch();
       }
@@ -469,42 +503,76 @@ public class MySQLProvider extends TNEDataProvider {
       System.out.println("Attempted saving account with null display name.");
       return;
     }
-    TNE.debug("Saving account: " + account.displayName());
-    executePreparedUpdate(ACCOUNT_SAVE,
-        new Object[]{
-            account.identifier().toString(),
-            account.displayName(),
-            account.getJoined(),
-            account.getLastOnline(),
-            account.getAccountNumber(),
-            account.getStatus().getName(),
-            account.getLanguage(),
-            account.playerAccount(),
-            account.displayName(),
-            account.getJoined(),
-            account.getLastOnline(),
-            account.getAccountNumber(),
-            account.getStatus().getName(),
-            account.getLanguage(),
-            account.playerAccount(),
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(ACCOUNT_SAVE)) {
+        statement.setObject(1, account.identifier().toString());
+        statement.setObject(2, account.displayName());
+        statement.setObject(3, account.getJoined());
+        statement.setObject(4, account.getLastOnline());
+        statement.setObject(5, account.getAccountNumber());
+        statement.setObject(6, account.getStatus().getName());
+        statement.setObject(7, account.getLanguage());
+        statement.setObject(8, account.playerAccount());
+        statement.setObject(9, account.displayName());
+        statement.setObject(10, account.getJoined());
+        statement.setObject(11, account.getLastOnline());
+        statement.setObject(12, account.getAccountNumber());
+        statement.setObject(13, account.getStatus().getName());
+        statement.setObject(14, account.getLanguage());
+        statement.setObject(15, account.playerAccount());
+
+        statement.executeUpdate();
+      }
+    }
+  }
+
+  @Override
+  public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
+    BigDecimal balance = null;
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
+
+        statement.setObject(1, id.toString());
+        statement.setObject(2, world);
+        statement.setObject(3, currency);
+
+        try(ResultSet results = statement.executeQuery()) {
+
+          if(results.next()) {
+            balance = results.getBigDecimal("balance");
+          }
         }
     );
 
-    for(Map.Entry<String, WorldHoldings> entry : account.getWorldHoldings().entrySet()) {
-      for(Map.Entry<String, BigDecimal> curEntry : entry.getValue().getHoldings().entrySet()) {
-        final String server = (TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()) != null)?
-            TNE.manager().currencyManager().get(entry.getKey(), curEntry.getKey()).getServer() :
+  @Override
+  public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_SAVE)) {
+        final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
+            TNE.manager().currencyManager().get(world, currency).getServer() :
             TNE.instance().getServerName();
-        executePreparedUpdate(BALANCE_SAVE,
-            new Object[]{
-                account.identifier().toString(),
-                server,
-                entry.getKey(),
-                curEntry.getKey(),
-                curEntry.getValue(),
-                curEntry.getValue()
-            }
-        );
+
+        statement.setObject(1, id.toString());
+        statement.setObject(2, server);
+        statement.setObject(3, world);
+        statement.setObject(4, currency);
+        statement.setObject(5, balance);
+        statement.setObject(6, balance);
+        statement.executeUpdate();
+      }
+    }
+  }
+
+  @Override
+  public void deleteBalance(UUID id, String world, String currency) throws SQLException {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+
+      try(PreparedStatement statement = connection.prepareStatement(BALANCE_DELETE_INDIVIDUAL)) {
+        statement.setObject(1, id.toString());
+        statement.setObject(2, world);
+        statement.setObject(3, currency);
+
+        statement.executeUpdate();
       }
     }
   }
@@ -521,11 +589,11 @@ public class MySQLProvider extends TNEDataProvider {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     String chargesTable = manager.getPrefix() + "_CHARGES";
 
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         PreparedStatement transactionStatement = connection.prepareStatement("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM " + table + " WHERE trans_id = ? LIMIT 1");
-        ResultSet transResults = mysql().executePreparedQuery(transactionStatement, new Object[] { id.toString() });
+        ResultSet transResults = MySQL.executePreparedQuery(transactionStatement, new Object[] { id.toString() });
         PreparedStatement chargeStatement = connection.prepareStatement("SELECT charge_player, charge_world, charge_amount, charge_type, charge_currency FROM " + chargesTable + " WHERE charge_transaction = ?");
-        ResultSet chargesResults = mysql().executePreparedQuery(chargeStatement, new Object[] {
+        ResultSet chargesResults = MySQL.executePreparedQuery(chargeStatement, new Object[] {
             id.toString()
         });) {
 
@@ -572,9 +640,10 @@ public class MySQLProvider extends TNEDataProvider {
     String table = manager.getPrefix() + "_TRANSACTIONS";
     List<UUID> transactionIDS = new ArrayList<>();
 
-    try(Connection connection = mysql().getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet results = mysql().executeQuery(statement,"SELECT trans_id FROM " + table + ";")) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+
+      try(Statement statement = connection.createStatement()) {
+        try(ResultSet results = MySQL.executeQuery(statement,"SELECT trans_id FROM " + table + ";")) {
 
       while (results.next()) {
         transactionIDS.add(UUID.fromString(results.getString("trans_id")));
@@ -662,9 +731,9 @@ public class MySQLProvider extends TNEDataProvider {
     final String balanceTable = manager.getPrefix() + "_BALANCES";
     int count = 0;
 
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;");
-        ResultSet results = mysql().executePreparedQuery(statement, new Object[] { world, currency })) {
+        ResultSet results = MySQL.executePreparedQuery(statement, new Object[] { world, currency })) {
 
       while(results.next()) {
         count = results.getInt(1);
@@ -702,9 +771,9 @@ public class MySQLProvider extends TNEDataProvider {
         "SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;" :
         complex;
 
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(query);
-        ResultSet results = mysql().executePreparedQuery(statement, new Object[] {
+        ResultSet results = MySQL.executePreparedQuery(statement, new Object[] {
             world, currency, start, limit
         })) {
 
@@ -746,9 +815,9 @@ public class MySQLProvider extends TNEDataProvider {
     }
 
     int count = 0;
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
-        ResultSet results = mysql().executePreparedQuery(statement, values.toArray())) {
+        ResultSet results = MySQL.executePreparedQuery(statement, values.toArray())) {
 
       while(results.next()) {
         count = results.getInt(1);
@@ -793,9 +862,9 @@ public class MySQLProvider extends TNEDataProvider {
     values.add(start);
     values.add(limit);
 
-    try(Connection connection = mysql().getDataSource().getConnection();
+    try(Connection connection = MySQL.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
-        ResultSet results = mysql().executePreparedQuery(statement, values.toArray())) {
+        ResultSet results = MySQL.executePreparedQuery(statement, values.toArray())) {
 
       while (results.next()) {
         UUID id = UUID.fromString(results.getString("trans_id"));
@@ -808,26 +877,26 @@ public class MySQLProvider extends TNEDataProvider {
   }
   
   public void executeUpdate(String query) {
-    try(Connection con = mysql().getDataSource().getConnection()) {
-      try(Statement statement = con.createStatement()) {
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(Statement statement = connection.createStatement()) {
         statement.executeUpdate(query);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 
   public void executePreparedUpdate(String query, Object[] variables) {
-    try(Connection con = mysql().getDataSource().getConnection()) {
-      try(PreparedStatement statement = con.prepareStatement(query)) {
-        
+    try(Connection connection = MySQL.getDataSource().getConnection()) {
+      try(PreparedStatement statement = connection.prepareStatement(query)) {
+
         for (int i = 0; i < variables.length; i++) {
           statement.setObject((i + 1), variables[i]);
         }
         statement.executeUpdate();
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 }
