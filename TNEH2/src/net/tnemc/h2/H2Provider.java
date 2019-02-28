@@ -250,7 +250,7 @@ public class H2Provider extends TNEDataProvider {
   public String loadUsername(String identifier) throws SQLException {
     try(Connection connection = H2.getDataSource().getConnection()) {
 
-      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD)) {
+      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD_USERNAME)) {
 
         try(ResultSet results = H2.executePreparedQuery(statement, new Object[] {
             identifier

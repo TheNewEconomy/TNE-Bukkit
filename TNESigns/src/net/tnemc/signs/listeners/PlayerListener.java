@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.object.TownyPermission;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.signs.ChestHelper;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
@@ -27,8 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -137,7 +134,7 @@ public class PlayerListener implements Listener {
   @EventHandler(priority = EventPriority.MONITOR)
   public void onPlayerInteractPaper(final PlayerInteractEvent event) {
     final Player player = event.getPlayer();
-    final ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
+    /*final ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
 
     if(stack.getType().equals(Material.PAPER)) {
       final ItemMeta meta = stack.getItemMeta();
@@ -164,7 +161,7 @@ public class PlayerListener implements Listener {
         }
 
       }
-    }
+    }*/
   }
 
   @EventHandler(priority = EventPriority.MONITOR)

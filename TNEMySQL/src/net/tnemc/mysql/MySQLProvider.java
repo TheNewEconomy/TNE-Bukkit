@@ -41,6 +41,7 @@ public class MySQLProvider extends TNEDataProvider {
   private String prefix = manager.getPrefix();
 
   private final String ID_LOAD = "SELECT uuid FROM " + prefix + "_ECOIDS WHERE username = ? LIMIT 1";
+  private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
@@ -233,7 +234,7 @@ public class MySQLProvider extends TNEDataProvider {
   public String loadUsername(String identifier) throws SQLException {
     try(Connection connection = MySQL.getDataSource().getConnection()) {
 
-      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD)) {
+      try(PreparedStatement statement = connection.prepareStatement(ID_LOAD_USERNAME)) {
 
         try(ResultSet results = MySQL.executePreparedQuery(statement, new Object[] {
             identifier

@@ -7,7 +7,7 @@
 #All configurations relating to mobs.
 Mobs:
 
-    #Whether or not mobs drop money on death.
+    
     Enabled: true
 
     #Whether or not a mob is a baby affects the reward.
@@ -16,18 +16,22 @@ Mobs:
     #Whether or not to send a message stating how much money a player got for killing a mob
     Message: true
 
+    Messages:
+      Killed: "<white>You received $reward <white>for killing a <green>$mob<white>."
+      KilledVowel: "<white>You received $reward <white>for killing a <green>$mob<white>."
+
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.
   Multipliers:
     EXAMPLE_ITEM:
-      #The chance to get this multiplier. Value must be between 0 and 100
+
       Chance: 10
 
       #The multiplier that is applied when killing an entity with this item.
       Multiplier: 10.00
 
     FIST:
-      #The chance to get this multiplier. Value must be between 0 and 100
+
       Chance: 100
 
       #The multiplier that is applied when killing an entity with this item.
@@ -36,6 +40,7 @@ Mobs:
     #Reward configurations for individual mobs
     #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
     Default:
+
        Enabled: true
         #IF you want to specify a mysql for a mob specifically, it goes here.
        Multiplier: 1.0
@@ -43,7 +48,7 @@ Mobs:
         #If you want to allow a random value between two numbers use this configuration.
        #Note: This overwards the value of Reward
        Chance:
-         #The minimum value that may be granted
+
          Min: 5.0
          #The maximum value that may be granted
          Max: 15.0

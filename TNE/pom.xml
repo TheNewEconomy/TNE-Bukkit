@@ -168,7 +168,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.5</version>
+            <version>1.6.5</version>https://prnt.sc/mli0s6
             <scope>provided</scope>
         </dependency>
         <dependency>

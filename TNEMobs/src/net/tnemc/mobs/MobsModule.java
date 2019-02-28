@@ -37,8 +37,6 @@ public class MobsModule extends Module {
     TNE.logger().info("Mobs Module loaded!");
     instance = this;
     listeners.add(new MobsListener(tne));
-    messages.put("Mobs.Messages.Killed", "<white>You received $reward <white>for killing a <green>$mob<white>.");
-    messages.put("Mobs.Messages.KilledVowel", "<white>You received $reward <white>for killing an <green>$mob<white>.");
   }
 
   @Override
@@ -55,13 +53,19 @@ public class MobsModule extends Module {
     final String mobsFile = (MISCUtils.isOneThirteen())? "mobs.yml" : "mobs-1.12.yml";
     mobs = new File(TNE.instance().getDataFolder(), "mobs.yml");
     fileConfiguration = TNE.instance().initializeConfiguration(mobs, mobsFile);
+    configuration = new MobConfiguration();
+    configurations.put(configuration, "Mobs");
+
+    if(!fileConfiguration.contains("Mobs.Messages")) {
+      fileConfiguration.set("Mobs.Messages.Killed", "<white>You received $reward <white>for killing a <green>$mob<white>.");
+      fileConfiguration.set("Mobs.Messages.KilledVowel", "<white>You received $reward <white>for killing an <green>$mob<white>.");
+      fileConfiguration.save(mobs);
+    }
   }
 
   @Override
   public void loadConfigurations() {
     super.loadConfigurations();
-    configuration = new MobConfiguration();
-    configurations.put(configuration, "Mobs");
   }
 
   @Override
@@ -99,7 +103,9 @@ public class MobsModule extends Module {
 
   BigDecimal multiplier(String material, String world, String player) {
     if(TNE.instance().api().getConfiguration("Mobs.Multipliers." + material + ".Chance", world, player) == null
-        || TNE.instance().api().getConfiguration("Mobs.Multipliers." + material + ".Multiplier", world, player) == null) {
+        || TNE.instance().api().getConfiguration("Mobs.Multipliers." + material + ".Multiplier", world, player) == null
+        || TNE.instance().api().getString("Mobs.Multipliers." + material + ".Chance", world, player).equalsIgnoreCase("")
+        || TNE.instance().api().getString("Mobs.Multipliers." + material + ".Multiplier", world, player).equalsIgnoreCase("")) {
       return BigDecimal.ONE;
     }
     final int chance = TNE.instance().api().getInteger("Mobs.Multipliers." + material + ".Chance", world, player);
@@ -114,32 +120,37 @@ public class MobsModule extends Module {
   Boolean mobEnabled(String mob, String world, String player) {
     //System.out.println("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled", world, player) + "");
-    if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled", world, player) == null) {
+    System.out.println("Config null?: " + (fileConfiguration == null));
+    System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
+    System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
+    System.out.println("Mob: " + mob);
+    if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled") == null) {
       return false;
     }
-    return TNE.instance().api().getBoolean("Mobs." + mob + ".Enabled", world, player);
+    System.out.println(fileConfiguration.getBool("Mobs." + mob + ".Enabled"));
+    return fileConfiguration.getBool("Mobs." + mob + ".Enabled");
   }
 
   BigDecimal mobReward(String mob, String world, String player) {
     //System.out.println("Mob: " + mob);
     TNE.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Reward", world, player) + "");
-    if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Reward", world, player) == null) {
+    if(fileConfiguration.getNode("Mobs." + mob + ".Reward") == null) {
       return BigDecimal.ZERO;
     }
 
-    if(configuration.getConfiguration().contains("Mobs." + mob + ".Chance.Min") ||
-        configuration.getConfiguration().contains("Mobs." + mob + ".Chance.Max")) {
+    if(fileConfiguration.contains("Mobs." + mob + ".Chance.Min") ||
+        fileConfiguration.contains("Mobs." + mob + ".Chance.Max")) {
       //System.out.println("Chance found for " + mob);
-      BigDecimal min = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Min", world, player);
-      BigDecimal max = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Max", world, player);
+      BigDecimal min = fileConfiguration.getBigDecimal("Mobs." + mob + ".Chance.Min", BigDecimal.ZERO);
+      BigDecimal max = fileConfiguration.getBigDecimal("Mobs." + mob + ".Chance.Max", BigDecimal.TEN);
       return generateRandomBigDecimal(min, max);
     }
-    return TNE.instance().api().getBigDecimal("Mobs." + mob + ".Reward", world, player);
+    return fileConfiguration.getBigDecimal("Mobs." + mob + ".Reward", BigDecimal.ZERO);
   }
 
   String mobCurrency(String mob, String world, String player) {
-    String currency = TNE.instance().api().getString("Mobs." + mob + ".RewardCurrency", world, player);
+    String currency = fileConfiguration.getString("Mobs." + mob + ".RewardCurrency");
     return (currency != null)? currency : TNE.instance().api().getDefault(world).name();
   }
   

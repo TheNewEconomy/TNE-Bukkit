@@ -281,15 +281,15 @@ public class ItemCalculations {
         if(type.equalsIgnoreCase("minor")) {
           return new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue()));
         }
-        //TNE.debug("Value: " + value.toPlainString());
-        //TNE.debug("Minor: " + minor.toString());
+        //System.out.println("Value: " + value.toPlainString());
+        //System.out.println("Minor: " + minor.toString());
         final BigInteger major = minor.divide(new BigInteger(currency.getMinorWeight() + ""));
-        //TNE.debug("Major: " + major.toString());
+        //System.out.println("Major: " + major.toString());
         minor = minor.subtract(major.multiply(new BigInteger(currency.getMinorWeight() + "")));
-        //TNE.debug("Minor: " + minor.toString());
+        //System.out.println("Minor: " + minor.toString());
         value = value.add(new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue())));
         value = value.add(new BigDecimal(major.toString()));
-        //TNE.debug("Value: " + value.toPlainString());
+        //System.out.println("Value: " + value.toPlainString());
       }
     }
 
@@ -418,6 +418,7 @@ public class ItemCalculations {
   }
 
   public static Integer removeItem(ItemStack stack, Inventory inventory) {
+
     int left = stack.clone().getAmount();
 
     for(int i = 0; i < inventory.getStorageContents().length; i++) {

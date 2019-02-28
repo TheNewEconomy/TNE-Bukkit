@@ -80,41 +80,43 @@ public class MaterialUtils {
 
   public static Boolean itemsEqual(ItemStack original, ItemStack compare) {
     if(compare == null) return false;
-    TNE.debug("Enchant Size: " + original.getEnchantments().size());
-    TNE.debug("Enchant Size: " + original.getItemMeta().getEnchants().size());
+    //System.out.println("Enchant Size: " + original.getEnchantments().size());
+    //System.out.println("Enchant Size: " + original.getItemMeta().getEnchants().size());
     ItemMeta originalMeta = original.getItemMeta();
     ItemMeta compareMeta = compare.getItemMeta();
     if(compare.hasItemMeta()) {
-      TNE.debug("Meta");
+      //System.out.println("Meta");
       if (compareMeta.hasDisplayName()) {
-        TNE.debug("display");
+        //System.out.println("display");
+        //System.out.println("display1 " + compareMeta.getDisplayName());
+        //System.out.println("display2 " + originalMeta.getDisplayName());
         if (!originalMeta.hasDisplayName()) return false;
-        TNE.debug("Compare Display");
+        //System.out.println("Compare Display");
         if (!originalMeta.getDisplayName().equalsIgnoreCase(compareMeta.getDisplayName())) return false;
       }
-      TNE.debug("lore");
+      //System.out.println("lore");
       if (compareMeta.hasLore()) {
-        TNE.debug("lorez");
+        //System.out.println("lorez");
         if (!originalMeta.hasLore()) return false;
-        TNE.debug("compare lorez");
-        TNE.debug(String.join(", " + originalMeta.getLore()));
-        TNE.debug(String.join(", " + compareMeta.getLore()));
+        //System.out.println("compare lorez");
+        //System.out.println(String.join(", " + originalMeta.getLore()));
+        //System.out.println(String.join(", " + compareMeta.getLore()));
         if (!originalMeta.getLore().containsAll(compareMeta.getLore())) return false;
       }
 
-      TNE.debug("enchant");
-      TNE.debug("Enchant Size: " + original.getEnchantments().size());
-      TNE.debug("Enchant Size: " + originalMeta.getEnchants().size());
+      //System.out.println("enchant");
+      //System.out.println("Enchant Size: " + original.getEnchantments().size());
+      //System.out.println("Enchant Size: " + originalMeta.getEnchants().size());
       if (compareMeta.hasEnchants()) {
         if (!originalMeta.hasEnchants()) return false;
 
-        TNE.debug("enchantz");
+        //System.out.println("enchantz");
         for (Map.Entry<Enchantment, Integer> entry : compare.getEnchantments().entrySet()) {
-          TNE.debug("start");
+          //System.out.println("start");
           if (!original.containsEnchantment(entry.getKey())) return false;
-          TNE.debug("contains");
+          //System.out.println("contains");
           if (original.getEnchantmentLevel(entry.getKey()) != entry.getValue()) return false;
-          TNE.debug("level");
+          //System.out.println("level");
         }
       }
     }
@@ -150,7 +152,7 @@ public class MaterialUtils {
       }
       return false;
     }
-    TNE.debug("isSimilar: " + compare.isSimilar(original));
+    //System.out.println("isSimilar: " + compare.isSimilar(original));
     if(!original.getType().equals(compare.getType())) return false;
     if(original.getDurability() != compare.getDurability()) return false;
     return true;

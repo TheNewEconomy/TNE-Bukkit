@@ -8,7 +8,6 @@
 #All configurations relating to mobs.
 Mobs:
 
-  #Whether or not mobs drop money on death.
   Enabled: true
 
   #Whether or not a mob is a baby affects the reward.
@@ -17,18 +16,22 @@ Mobs:
   #Whether or not to send a message stating how much money a player got for killing a mob
   Message: true
 
+  Messages:
+    Killed: "<white>You received $reward <white>for killing a <green>$mob<white>."
+    KilledVowel: "<white>You received $reward <white>for killing a <green>$mob<white>."
+
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.
   Multipliers:
     EXAMPLE_ITEM:
-      #The chance to get this multiplier. Value must be between 0 and 100
+
       Chance: 10
 
       #The multiplier that is applied when killing an entity with this item.
       Multiplier: 10.00
 
     FIST:
-      #The chance to get this multiplier. Value must be between 0 and 100
+
       Chance: 100
 
       #The multiplier that is applied when killing an entity with this item.
@@ -37,7 +40,7 @@ Mobs:
   #Reward configurations for individual mobs
   #The configurations used for mobs that are not in vanilla MC or in your version of Bukkit
   Default:
-    #Whether or not this entity drops money on death.
+  
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -50,12 +53,12 @@ Mobs:
     #If you want to allow a random value between two numbers use this configuration.
     #Note: This overrides the value of Reward
     Chance:
-      #The minimum value that may be granted
+    
       Min: 5.0
       #The maximum value that may be granted
       Max: 15.0
   BAT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -66,7 +69,7 @@ Mobs:
     Reward: 10.00
 
   BLAZE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -77,7 +80,7 @@ Mobs:
     Reward: 10.00
 
   CAVE_SPIDER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -88,7 +91,7 @@ Mobs:
     Reward: 10.00
 
   CHICKEN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -111,7 +114,7 @@ Mobs:
       Reward: 10.00
 
   COD:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -122,7 +125,7 @@ Mobs:
     Reward: 10.00
 
   COW:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -145,7 +148,7 @@ Mobs:
       Reward: 10.00
 
   CREEPER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -156,7 +159,7 @@ Mobs:
     Reward: 10.00
 
   DOLPHIN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -167,7 +170,7 @@ Mobs:
     Reward: 10.00
 
   DONKEY:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -190,7 +193,7 @@ Mobs:
       Reward: 10.00
 
   DROWNED:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -213,7 +216,7 @@ Mobs:
       Reward: 10.00
 
   ELDER_GUARDIAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -224,7 +227,7 @@ Mobs:
     Reward: 10.00
 
   ENDERMAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -235,7 +238,7 @@ Mobs:
     Reward: 10.00
 
   ENDERMITE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -246,7 +249,7 @@ Mobs:
     Reward: 10.00
 
   ENDER_DRAGON:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -257,7 +260,7 @@ Mobs:
     Reward: 10.00
 
   EVOKER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -268,7 +271,7 @@ Mobs:
     Reward: 10.00
 
   GHAST:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -279,7 +282,7 @@ Mobs:
     Reward: 10.00
 
   GIANT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -290,7 +293,7 @@ Mobs:
     Reward: 10.00
 
   GUARDIAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -301,7 +304,7 @@ Mobs:
     Reward: 10.00
 
   HORSE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -324,7 +327,7 @@ Mobs:
       Reward: 10.00
 
   HUSK:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -347,7 +350,7 @@ Mobs:
       Reward: 10.00
 
   ILLUSIONER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -358,7 +361,7 @@ Mobs:
     Reward: 10.00
 
   IRON_GOLEM:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -369,7 +372,7 @@ Mobs:
     Reward: 10.00
 
   LLAMA:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -392,7 +395,7 @@ Mobs:
       Reward: 10.00
 
   MAGMA_CUBE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -424,7 +427,7 @@ Mobs:
       Reward: 20.00
 
   MULE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -447,7 +450,7 @@ Mobs:
       Reward: 10.00
 
   MUSHROOM_COW:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -470,7 +473,7 @@ Mobs:
       Reward: 10.00
 
   OCELOT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -493,7 +496,7 @@ Mobs:
       Reward: 10.00
 
   PARROT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -504,7 +507,7 @@ Mobs:
     Reward: 10.00
 
   PHANTOM:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -515,7 +518,7 @@ Mobs:
     Reward: 10.00
 
   PIG:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -538,7 +541,7 @@ Mobs:
       Reward: 10.00
 
   PIG_ZOMBIE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -561,7 +564,7 @@ Mobs:
       Reward: 10.00
 
   PLAYER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -578,7 +581,7 @@ Mobs:
         Reward: 10.00
 
   POLAR_BEAR:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -601,7 +604,7 @@ Mobs:
       Reward: 10.00
 
   PUFFERFISH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -612,7 +615,7 @@ Mobs:
     Reward: 10.00
 
   RABBIT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -635,7 +638,7 @@ Mobs:
       Reward: 10.00
 
   SALMON:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -646,7 +649,7 @@ Mobs:
     Reward: 10.00
 
   SHEEP:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -669,7 +672,7 @@ Mobs:
       Reward: 10.00
 
   SHULKER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -680,7 +683,7 @@ Mobs:
     Reward: 10.00
 
   SILVERFISH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -691,7 +694,7 @@ Mobs:
     Reward: 10.00
 
   SKELETON:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -702,7 +705,7 @@ Mobs:
     Reward: 10.00
 
   SKELETON_HORSE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -725,7 +728,7 @@ Mobs:
       Reward: 10.00
 
   SLIME:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -757,7 +760,7 @@ Mobs:
       Reward: 20.00
 
   SNOWMAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -768,7 +771,7 @@ Mobs:
     Reward: 10.00
 
   SPIDER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -779,7 +782,7 @@ Mobs:
     Reward: 10.00
 
   SQUID:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -790,7 +793,7 @@ Mobs:
     Reward: 10.00
 
   STRAY:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -801,7 +804,7 @@ Mobs:
     Reward: 10.00
 
   TROPICAL_FISH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -812,7 +815,7 @@ Mobs:
     Reward: 10.00
 
   TURTLE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -835,7 +838,7 @@ Mobs:
       Reward: 10.00
 
   VEX:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -846,7 +849,7 @@ Mobs:
     Reward: 10.00
 
   VILLAGER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -869,7 +872,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -892,7 +895,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_FARMER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -915,7 +918,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_FISHERMAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -938,7 +941,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_SHEPHERD:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -961,7 +964,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_FLETCHER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -984,7 +987,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_LIBRARIAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1007,7 +1010,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_CARTOGRAPHER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1030,7 +1033,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_CLERIC:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1053,7 +1056,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_ARMORER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1076,7 +1079,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_WEAPON_SMITH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1099,7 +1102,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_TOOL_SMITH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1122,7 +1125,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_BUTCHER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1145,7 +1148,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_LEATHERWORKER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1168,7 +1171,7 @@ Mobs:
       Reward: 10.00
 
   VILLAGER_NITWIT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1191,7 +1194,7 @@ Mobs:
       Reward: 10.00
 
   VINDICATOR:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1202,7 +1205,7 @@ Mobs:
     Reward: 10.00
 
   WITCH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1213,7 +1216,7 @@ Mobs:
     Reward: 10.00
 
   WITHER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1224,7 +1227,7 @@ Mobs:
     Reward: 10.00
 
   WITHER_SKELETON:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1235,7 +1238,7 @@ Mobs:
     Reward: 10.00
 
   WOLF:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1258,7 +1261,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1281,7 +1284,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_HORSE:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1304,7 +1307,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1327,7 +1330,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER_FARMER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1350,7 +1353,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER_LIBRARIAN:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1373,7 +1376,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER_PRIEST:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1396,7 +1399,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER_BLACKSMITH:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1419,7 +1422,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER_BUTCHER:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1442,7 +1445,7 @@ Mobs:
       Reward: 10.00
 
   ZOMBIE_VILLAGER_NITWIT:
-    #Whether or not this entity drops money on death.
+    
     Enabled: true
 
     #The currency to use for the money dropped by this entity
