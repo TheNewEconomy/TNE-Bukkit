@@ -107,7 +107,7 @@ public class ItemSign implements SignType {
         "`item_currency` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_cost` DECIMAL(49,4) DEFAULT 10," +
         "`item_offer` TEXT NOT NULL," +
-        "`item_trade` TEXT" +
+        "`item_trade` TEXT NOT NULL DEFAULT ''" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
     ));
 
@@ -119,7 +119,7 @@ public class ItemSign implements SignType {
         "`item_currency` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_cost` DECIMAL(49,4) DEFAULT 10," +
         "`item_offer` TEXT NOT NULL," +
-        "`item_trade` TEXT" +
+        "`item_trade` TEXT NOT NULL DEFAULT ''" +
         ") ENGINE = INNODB;"
     ));
     return tables;

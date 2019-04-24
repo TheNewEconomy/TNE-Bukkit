@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13-pre7-R0.1-SNAPSHOT</version>
+            <version>1.14-pre5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -56,11 +56,6 @@
             <artifactId>TNE</artifactId>
             <version>1.1.8.7</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>18w15a-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

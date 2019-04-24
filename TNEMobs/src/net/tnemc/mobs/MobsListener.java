@@ -153,7 +153,7 @@ public class MobsListener implements ModuleListener {
           }
 
           if(entity instanceof Villager) {
-            final String career = ((Villager)entity).getCareer().name().toUpperCase();
+            final String career = ((Villager)entity).getProfession().name().toUpperCase();
             if(MobsModule.instance().fileConfiguration.contains("Mobs." + mob + "_" + career)) {
               mob = mob + "_" + career;
             }
