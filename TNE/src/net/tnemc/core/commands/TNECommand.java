@@ -35,15 +35,15 @@ public abstract class TNECommand {
   }
 
   public String[] getHelpLines() {
-    Message message = new Message(getHelp());
+    //Message message = new Message(getHelp());
     return new Message(getHelp()).grabWithNew(TNE.instance().defaultWorld, null);
   }
 
-  public void help(CommandSender sender) {
+  public void help(final CommandSender sender) {
     help(sender, 1);
   }
 
-  public void help(CommandSender sender, Integer page) {
+  public void help(final CommandSender sender, Integer page) {
     List<String[]> help = new ArrayList<>();
     if(subCommands.size() > 0) {
       for (TNECommand sub : subCommands) {
@@ -92,11 +92,15 @@ public abstract class TNECommand {
       sender.sendMessage(ChatColor.GOLD + "~~~" + ChatColor.WHITE + formatted + " Help " + helpPage + "/" + maxPage + ChatColor.GOLD + "~~~");
     }
 
+    //System.out.println("Pre send loop");
+    //System.out.println("Send Size: " + send.size());
     for(Integer i : send) {
       for(String s : help.get(i)) {
         String message = (s.contains("Messages."))? new Message(s).grab("", sender) : s;
+        //System.out.println("Help Message: " + message);
         message = message.replaceFirst("/" , "<green>/").replaceFirst("-", "<white>-");
-        new Message(message).translate("", sender);
+        //System.out.println("Help Message: " + message);
+        sender.sendMessage(Message.replaceColours(message, false));
       }
     }
   }
