@@ -15,8 +15,10 @@ import net.tnemc.core.economy.transaction.type.TransactionType;
 import org.bukkit.World;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -657,6 +659,55 @@ public class TNEAPI {
       return true;
     }
     return false;
+  }
+
+  /**
+   * General API Methods
+   */
+
+  /**
+   * Returns a {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   * @param pageLimit The amount of entries per page.
+   * @param page The page you wish to grab.
+   * @return {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   */
+  public LinkedHashMap<UUID, BigDecimal> getBalTopPage(int pageLimit, int page) {
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name(), pageLimit, page);
+    } catch (SQLException e) {
+      return new LinkedHashMap<>();
+    }
+  }
+
+  /**
+   * Returns a {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   * @param world The world to use for the bal top check.
+   * @param pageLimit The amount of entries per page.
+   * @param page The page you wish to grab.
+   * @return {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   */
+  public LinkedHashMap<UUID, BigDecimal> getBalTopPage(String world, int pageLimit, int page) {
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, TNE.manager().currencyManager().get(world).name(), pageLimit, page);
+    } catch (SQLException e) {
+      return new LinkedHashMap<>();
+    }
+  }
+
+  /**
+   * Returns a {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   * @param world The world to use for the bal top check.
+   * @param currency The currency to use for the bal top check.
+   * @param pageLimit The amount of entries per page.
+   * @param page The page you wish to grab.
+   * @return {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   */
+  public LinkedHashMap<UUID, BigDecimal> getBalTopPage(String world, String currency, int pageLimit, int page) {
+    try {
+      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency, pageLimit, page);
+    } catch (SQLException e) {
+      return new LinkedHashMap<>();
+    }
   }
 
   /**
