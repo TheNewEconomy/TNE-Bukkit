@@ -100,7 +100,8 @@ public abstract class TNECommand {
         //System.out.println("Help Message: " + message);
         message = message.replaceFirst("/" , "<green>/").replaceFirst("-", "<white>-");
         //System.out.println("Help Message: " + message);
-        sender.sendMessage(Message.replaceColours(message, false));
+        new Message(message).translate("", sender);
+        //sender.sendMessage(Message.replaceColours(message, false));
       }
     }
   }
