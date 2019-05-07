@@ -1,8 +1,9 @@
 package net.tnemc.core.event.transaction;
 
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.event.TNEEvent;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -12,12 +13,14 @@ import org.bukkit.event.Cancellable;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/7/2017.
  */
-public class TNEPreTransaction extends TNEEvent implements Cancellable {
+public class TNEPreTransaction extends Event implements Cancellable {
+  private static final HandlerList handlers = new HandlerList();
 
   private boolean cancelled = false;
   private TNETransaction transaction;
 
   public TNEPreTransaction(TNETransaction transaction) {
+    super(true);
     this.transaction = transaction;
   }
 
@@ -37,5 +40,14 @@ public class TNEPreTransaction extends TNEEvent implements Cancellable {
   @Override
   public void setCancelled(boolean cancelled) {
     this.cancelled = cancelled;
+  }
+
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
+
+  @Override
+  public HandlerList getHandlers() {
+    return handlers;
   }
 }
