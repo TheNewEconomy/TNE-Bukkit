@@ -87,7 +87,13 @@ public class ConnectionListener implements Listener {
       if (!first) {
         if(!account.displayName().equals(player.getName())) {
           account.setDisplayName(player.getName());
-          TNE.instance().getUuidManager().addUUID(player.getName(), id);
+          try {
+            TNE.saveManager().getTNEManager().getTNEProvider().removeID(id);
+            TNE.saveManager().getTNEManager().getTNEProvider().saveID(player.getName(), id);
+          } catch (SQLException e) {
+            TNE.debug("Something went wrong while trying to update the player's display name.");
+          }
+          //TNE.instance().getUuidManager().addUUID(player.getName(), id);
         }
         /*if(player.isDead()) {
           TNE.manager().addDead(player.getUniqueId());
