@@ -54,46 +54,51 @@ public class TradeStep implements SignStep {
       try {
         final Chest chest = SignsData.chest(sign.getLocation());
         final ItemStack item = ItemSign.getItem(sign.getLocation());
-        TNE.debug("Trade Enchant Size: " + item.getEnchantments().size());
-        TNE.debug("TradeEnchant Size: " + item.getItemMeta().getEnchants().size());
-        TNE.debug("Item Null?: " + (item == null));
-        TNE.debug("Damage: " + item.getDurability());
-        final boolean selling = ItemSign.isSelling(sign.getLocation());
-        TNE.menuManager().setViewerData(player, "shop_owner", loaded.getOwner());
-        TNE.menuManager().setViewerData(player, "shop_selling", selling);
-        TNE.menuManager().setViewerData(player, "shop_chest", chest.getLocation());
-        TNE.menuManager().setViewerData(player, "shop_location", loaded.getLocation());
-        TNE.menuManager().setViewerData(player, "shop_item", item);
 
-        TNE.debug("Selling: " + selling);
+        if(item != null) {
+          TNE.debug("Trade Enchant Size: " + item.getEnchantments().size());
+          TNE.debug("TradeEnchant Size: " + item.getItemMeta().getEnchants().size());
+          TNE.debug("Item Null?: " + (item == null));
+          TNE.debug("Damage: " + item.getDurability());
+          final boolean selling = ItemSign.isSelling(sign.getLocation());
+          TNE.menuManager().setViewerData(player, "shop_owner", loaded.getOwner());
+          TNE.menuManager().setViewerData(player, "shop_selling", selling);
+          TNE.menuManager().setViewerData(player, "shop_chest", chest.getLocation());
+          TNE.menuManager().setViewerData(player, "shop_location", loaded.getLocation());
+          TNE.menuManager().setViewerData(player, "shop_item", item);
 
-        final boolean currency = ItemSign.isCurrency(sign.getLocation());
-        TNE.menuManager().setViewerData(player, "shop_currency", currency);
+          TNE.debug("Selling: " + selling);
 
-        final BigDecimal amount = ItemSign.getCost(sign.getLocation());
-        ItemStack cost = new ItemStack(Material.PAPER);
+          final boolean currency = ItemSign.isCurrency(sign.getLocation());
+          TNE.menuManager().setViewerData(player, "shop_currency", currency);
 
-        TNE.debug("Currency: " + currency);
+          final BigDecimal amount = ItemSign.getCost(sign.getLocation());
+          ItemStack cost = new ItemStack(Material.PAPER);
 
-        if(currency) {
-          TNE.menuManager().setViewerData(player, "shop_currency_cost", amount);
-          ItemMeta meta = cost.getItemMeta();
+          TNE.debug("Currency: " + currency);
 
-          if(selling) {
-            meta.setLore(Collections.singletonList(ChatColor.GOLD + "Cost: " + amount));
+          if (currency) {
+            TNE.menuManager().setViewerData(player, "shop_currency_cost", amount);
+            ItemMeta meta = cost.getItemMeta();
+
+            if (selling) {
+              meta.setLore(Collections.singletonList(ChatColor.GOLD + "Cost: " + amount));
+            } else {
+              meta.setLore(Collections.singletonList(ChatColor.GOLD + "Shop Offer: " + amount));
+            }
+            cost.setItemMeta(meta);
           } else {
-            meta.setLore(Collections.singletonList(ChatColor.GOLD + "Shop Offer: " + amount));
+            cost = ItemSign.getTrade(sign.getLocation());
+            ItemMeta meta = cost.getItemMeta();
+            meta.setLore(Collections.singletonList(meta.getDisplayName()));
+            cost.setItemMeta(meta);
           }
-          cost.setItemMeta(meta);
-        } else {
-          cost = ItemSign.getTrade(sign.getLocation());
-          ItemMeta meta = cost.getItemMeta();
-          meta.setLore(Collections.singletonList(meta.getDisplayName()));
-          cost.setItemMeta(meta);
-        }
-        TNE.menuManager().setViewerData(player, "shop_cost", cost);
+          TNE.menuManager().setViewerData(player, "shop_cost", cost);
 
-        TNE.menuManager().open("shop_offer_menu", playerInstance);
+          TNE.menuManager().open("shop_offer_menu", playerInstance);
+        } else {
+          System.out.println("Issue with TNE Trade Sign! Invalid sign data for sign at : " + sign.getLocation().toString());
+        }
 
       } catch (SQLException e) {
         playerInstance.sendMessage(ChatColor.RED + "Unable to locate this shop's storage chest.");

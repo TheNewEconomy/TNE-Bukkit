@@ -121,7 +121,7 @@ public abstract class TNEDataProvider extends DataProvider {
       TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
         UUID id = IDFinder.getID(player.getName());
         TNEAccount account = TNE.manager().getAccount(id);
-        account.saveItemCurrency(WorldFinder.getWorld(player.getName(), WorldVariant.BALANCE), false);
+        account.saveItemCurrency(WorldFinder.getWorld(player.getName(), WorldVariant.BALANCE), false, player.getInventory());
         accounts.add(account);
         ids.put(account.displayName(), account.identifier());
       });

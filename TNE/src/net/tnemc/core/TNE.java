@@ -98,7 +98,7 @@ public class TNE extends TNELib {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = true;
+  public static boolean consoleDebug = false;
   public static boolean maintenance = false;
   private String serverName;
 
@@ -132,7 +132,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "12Beta118";
+  public static final String build = "14Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
