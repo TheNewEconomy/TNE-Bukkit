@@ -20,6 +20,7 @@ public class MoneyCommand extends TNECommand {
     subCommands.add(new MoneyConvertCommand(plugin));
     subCommands.add(new MoneyGiveCommand(plugin));
     subCommands.add(new MoneyNoteCommand(plugin));
+    subCommands.add(new MoneyOtherCommand(plugin));
     subCommands.add(new MoneyPayCommand(plugin));
     subCommands.add(new MoneySetCommand(plugin));
     subCommands.add(new MoneyTakeCommand(plugin));
@@ -35,6 +36,7 @@ public class MoneyCommand extends TNECommand {
   public String[] getAliases() {
     return new String[] {
         "bal", "balance", "pay", "baltop",
+        "balother", "balo", "balanceother",
         "givemoney", "givebal", "setbal",
         "setmoney", "takemoney", "takebal"
     };
@@ -76,6 +78,15 @@ public class MoneyCommand extends TNECommand {
       }
     }
 
+    if(command.equalsIgnoreCase("balother") ||
+        command.equalsIgnoreCase("balo") ||
+        command.equalsIgnoreCase("balanceother")) {
+      TNECommand sub = findSub("other");
+      if(sub.canExecute(sender)) {
+        return sub.execute(sender, command, arguments);
+      }
+    }
+
     if(command.equalsIgnoreCase("baltop")) {
       TNECommand sub = findSub("top");
       if(sub.canExecute(sender)) {
@@ -94,6 +105,10 @@ public class MoneyCommand extends TNECommand {
         command.equalsIgnoreCase("bal") ||
         arguments.length == 0) {
       TNECommand sub = findSub("balance");
+
+      if(!TNE.configurations().getBoolean("Core.Multiworld") && arguments.length > 0) {
+        sub = findSub("other");
+      }
       if(sub.canExecute(sender)) {
         return sub.execute(sender, command, arguments);
       }
