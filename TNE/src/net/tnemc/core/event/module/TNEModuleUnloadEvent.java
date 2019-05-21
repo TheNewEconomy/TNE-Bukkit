@@ -9,7 +9,7 @@ package net.tnemc.core.event.module;
  * Created by Daniel on 7/7/2017.
  */
 public class TNEModuleUnloadEvent extends TNEModuleEvent {
-  public TNEModuleUnloadEvent(String module, String version) {
-    super(module, version);
+  public TNEModuleUnloadEvent(String module, String version, boolean async) {
+    super(module, version, async);
   }
 }

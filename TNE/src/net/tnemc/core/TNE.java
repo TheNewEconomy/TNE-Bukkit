@@ -38,6 +38,7 @@ import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.compatibility.ItemCompatibility;
 import net.tnemc.core.compatibility.item.ItemCompatibility12;
 import net.tnemc.core.compatibility.item.ItemCompatibility13;
+import net.tnemc.core.compatibility.item.ItemCompatibility7;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
 import net.tnemc.core.listeners.ConnectionListener;
@@ -132,7 +133,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "14Beta118";
+  public static final String build = "16Beta118";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -197,7 +198,7 @@ public class TNE extends TNELib {
 
     //Load modules
     loader.getModules().forEach((key, value)->{
-      TNEModuleLoadEvent event = new TNEModuleLoadEvent(key, value.getInfo().version());
+      TNEModuleLoadEvent event = new TNEModuleLoadEvent(key, value.getInfo().version(), !Bukkit.getServer().isPrimaryThread());
       Bukkit.getServer().getPluginManager().callEvent(event);
       if(!event.isCancelled()) {
         value.getModule().load(this, loader.getLastVersion(value.getInfo().name()));
@@ -240,6 +241,9 @@ public class TNE extends TNELib {
     if(configurations().getBoolean("Core.Commands.BalanceShort")) {
       moneyArguments.add("bal");
       moneyArguments.add("balance");
+      moneyArguments.add("balo");
+      moneyArguments.add("balother");
+      moneyArguments.add("balanceother");
     }
 
     if(configurations().getBoolean("Core.Commands.TopShort")) {
@@ -441,7 +445,7 @@ public class TNE extends TNELib {
       value.getModule().disableSave(saveManager());
     });
     loader.getModules().forEach((key, value)->{
-      TNEModuleUnloadEvent event = new TNEModuleUnloadEvent(key, value.getInfo().version());
+      TNEModuleUnloadEvent event = new TNEModuleUnloadEvent(key, value.getInfo().version(), !Bukkit.getServer().isPrimaryThread());
       Bukkit.getServer().getPluginManager().callEvent(event);
       value.getModule().unload(this);
     });
@@ -668,7 +672,15 @@ public class TNE extends TNELib {
       final String itemsFile = (MISCUtils.isOneThirteen())? "items.yml" : "items-1.12.yml";
       itemConfigurations = initializeConfiguration(items, itemsFile);
       MaterialHelper.initialize();
-      itemCompatibility = (MISCUtils.isOneThirteen())? new ItemCompatibility13() : new ItemCompatibility12();
+
+      if(MISCUtils.isOneThirteen()) {
+        itemCompatibility = new ItemCompatibility13();
+      } else if (MISCUtils.isOneSeven()) {
+        itemCompatibility = new ItemCompatibility7();
+      } else {
+        itemCompatibility = new ItemCompatibility12();
+      }
+
       menuManager = new MenuManager();
       TNE.debug("Preparing menus");
       loader.getModules().forEach((key, value)->

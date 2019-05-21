@@ -124,13 +124,13 @@ public class EconomyManager {
     TNEAccount account = new TNEAccount(id, displayName);
     account.setPlayerAccount(!TNE.instance().special.contains(id));
 
-    TNEAccountCreationEvent event = new TNEAccountCreationEvent(id, account);
+    TNEAccountCreationEvent event = new TNEAccountCreationEvent(id, account, !Bukkit.getServer().isPrimaryThread());
     Bukkit.getServer().getPluginManager().callEvent(event);
     if(event.isCancelled()) {
       return false;
     }
-    accounts.put(account.identifier(), event.getAccount());
-    TNE.instance().getUuidManager().addUUID(account.displayName(), account.identifier());
+    TNE.instance().getUuidManager().addUUID(displayName, id);
+    accounts.put(id, event.getAccount());
     TNE.debug("=====END EconomyManager.createAccount =====");
     return true;
   }

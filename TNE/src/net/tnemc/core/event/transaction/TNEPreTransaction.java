@@ -19,8 +19,8 @@ public class TNEPreTransaction extends Event implements Cancellable {
   private boolean cancelled = false;
   private TNETransaction transaction;
 
-  public TNEPreTransaction(TNETransaction transaction) {
-    super(true);
+  public TNEPreTransaction(TNETransaction transaction, boolean async) {
+    super(async);
     this.transaction = transaction;
   }
 

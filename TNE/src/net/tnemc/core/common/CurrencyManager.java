@@ -244,7 +244,7 @@ public class CurrencyManager {
 
         loadTiers(worldName, currency, configuration, base + ".Tiers");
 
-        TNECurrencyLoadEvent event = new TNECurrencyLoadEvent(worldName, currency.name());
+        TNECurrencyLoadEvent event = new TNECurrencyLoadEvent(worldName, currency.name(), !Bukkit.getServer().isPrimaryThread());
         Bukkit.getServer().getPluginManager().callEvent(event);
         if(!event.isCancelled()) {
           addCurrency(worldName, currency);
@@ -320,7 +320,7 @@ public class CurrencyManager {
       tier.setPlural(plural);
       tier.setWeight(weight);
 
-      TNECurrencyTierLoadedEvent event = new TNECurrencyTierLoadedEvent(world, currency.name(), tier.singular(), type);
+      TNECurrencyTierLoadedEvent event = new TNECurrencyTierLoadedEvent(world, currency.name(), tier.singular(), type, !Bukkit.getServer().isPrimaryThread());
       Bukkit.getServer().getPluginManager().callEvent(event);
 
       if(!event.isCancelled()) {

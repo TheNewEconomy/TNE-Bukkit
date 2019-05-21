@@ -16,6 +16,12 @@ public class TNEAccountEvent extends TNEEvent {
   private UUID id;
 
   public TNEAccountEvent(UUID id) {
+    super(false);
+    this.id = id;
+  }
+
+  public TNEAccountEvent(UUID id, boolean async) {
+    super(async);
     this.id = id;
   }
 

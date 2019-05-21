@@ -13,8 +13,8 @@ import org.bukkit.event.Cancellable;
 public class TNEModuleLoadEvent extends TNEModuleEvent implements Cancellable {
   private boolean cancelled = false;
 
-  public TNEModuleLoadEvent(String module, String version) {
-    super(module, version);
+  public TNEModuleLoadEvent(String module, String version, boolean async) {
+    super(module, version, async);
   }
 
   @Override

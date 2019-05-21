@@ -14,8 +14,8 @@ public class TNECurrencyTierLoadedEvent extends TNECurrencyTierEvent implements 
 
   private boolean cancelled = false;
 
-  public TNECurrencyTierLoadedEvent(String world, String currency, String tier, String tierType) {
-    super(world, currency, tier, tierType);
+  public TNECurrencyTierLoadedEvent(String world, String currency, String tier, String tierType, boolean async) {
+    super(world, currency, tier, tierType, async);
   }
 
   @Override

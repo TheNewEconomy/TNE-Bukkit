@@ -295,7 +295,7 @@ public class TNEAccount implements Account {
 
   @Override
   public UUID identifier() {
-    return IDFinder.getID(displayName);
+    return id;
   }
 
   @Override

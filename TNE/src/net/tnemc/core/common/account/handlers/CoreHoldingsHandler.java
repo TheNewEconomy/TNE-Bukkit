@@ -97,10 +97,15 @@ public class CoreHoldingsHandler implements HoldingsHandler {
   public BigDecimal removeHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount) {
     TNEAccount tneAccount = TNE.manager().getAccount(account);
     BigDecimal holdings = tneAccount.getHoldings(world, currency.name(), true, false);
+    TNE.debug("Amount: " + amount.toPlainString());
+    TNE.debug("Holdings: " + holdings.toPlainString());
     if(holdings.compareTo(amount) < 0) {
+      TNE.debug("holdings - amount compare = < 0");
       tneAccount.setHoldings(world, currency.name(), BigDecimal.ZERO);
       return amount.subtract(holdings);
     }
+    TNE.debug("Holdings: " + holdings.toPlainString());
+    TNE.debug("Amount: " + amount.toPlainString());
     tneAccount.setHoldings(world, currency.name(), holdings.subtract(amount));
     return BigDecimal.ZERO;
   }

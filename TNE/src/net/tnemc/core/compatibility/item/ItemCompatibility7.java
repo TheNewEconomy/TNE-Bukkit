@@ -15,13 +15,13 @@ import org.bukkit.inventory.ItemStack;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class ItemCompatibility12 implements ItemCompatibility {
+public class ItemCompatibility7 implements ItemCompatibility {
   @Override
   public ItemStack build(String material) {
 
     switch(material.toUpperCase()) {
       case "BARRIER":
-        return new ItemStack(Material.matchMaterial("BARRIER"), 1);
+        return new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (byte)14);
       case "WHITE_STAINED_GLASS_PANE":
         return new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (byte)0);
       case "BLACK_STAINED_GLASS_PANE":

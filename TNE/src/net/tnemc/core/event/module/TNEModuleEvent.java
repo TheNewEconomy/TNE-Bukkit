@@ -14,7 +14,8 @@ public abstract class TNEModuleEvent extends TNEEvent {
   protected String module;
   protected String version;
 
-  public TNEModuleEvent(String module, String version) {
+  public TNEModuleEvent(String module, String version, boolean async) {
+    super(async);
     this.module = module;
     this.version = version;
   }

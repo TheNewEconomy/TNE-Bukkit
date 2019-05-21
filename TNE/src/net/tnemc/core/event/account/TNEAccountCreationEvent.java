@@ -18,8 +18,8 @@ public class TNEAccountCreationEvent extends TNEAccountEvent implements Cancella
   private TNEAccount account;
   private boolean cancelled = false;
 
-  public TNEAccountCreationEvent(UUID id, TNEAccount account) {
-    super(id);
+  public TNEAccountCreationEvent(UUID id, TNEAccount account, boolean async) {
+    super(id, async);
 
     this.account = account;
   }

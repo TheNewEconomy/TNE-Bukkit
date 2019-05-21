@@ -14,7 +14,13 @@ public abstract class TNECurrencyTierEvent extends TNECurrencyEvent {
   protected String tierType;
 
   public TNECurrencyTierEvent(String world, String currency, String tier, String tierType) {
-    super(world, currency);
+    super(world, currency, false);
+    this.tier = tier;
+    this.tierType = tierType;
+  }
+
+  public TNECurrencyTierEvent(String world, String currency, String tier, String tierType, boolean async) {
+    super(world, currency, async);
     this.tier = tier;
     this.tierType = tierType;
   }

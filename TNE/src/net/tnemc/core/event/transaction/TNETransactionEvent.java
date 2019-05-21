@@ -17,7 +17,8 @@ public class TNETransactionEvent extends TNEEvent {
   private TNETransaction transaction;
   private TransactionResult result;
 
-  public TNETransactionEvent(TNETransaction transaction, TransactionResult result) {
+  public TNETransactionEvent(TNETransaction transaction, TransactionResult result, boolean async) {
+    super(async);
     this.transaction = transaction;
     this.result = result;
   }

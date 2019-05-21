@@ -19,6 +19,8 @@ public class ItemCompatibility13 implements ItemCompatibility {
   public ItemStack build(String material) {
 
     switch(material.toUpperCase()) {
+      case "BARRIER":
+        return new ItemStack(Material.matchMaterial("BARRIER"), 1);
       case "WHITE_STAINED_GLASS_PANE":
         return new ItemStack(Material.WHITE_STAINED_GLASS_PANE, 1);
       case "BLACK_STAINED_GLASS_PANE":

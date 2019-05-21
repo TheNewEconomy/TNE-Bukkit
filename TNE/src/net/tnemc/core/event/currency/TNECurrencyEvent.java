@@ -16,6 +16,13 @@ public abstract class TNECurrencyEvent extends TNEEvent {
   protected String currency;
 
   public TNECurrencyEvent(String world, String currency) {
+    super(false);
+    this.world = world;
+    this.currency = currency;
+  }
+
+  public TNECurrencyEvent(String world, String currency, boolean async) {
+    super(async);
     this.world = world;
     this.currency = currency;
   }

@@ -126,7 +126,7 @@ public class TransactionManager {
   }
 
   public TransactionResult perform(TNETransaction transaction) {
-    TNEPreTransaction event = new TNEPreTransaction(transaction);
+    TNEPreTransaction event = new TNEPreTransaction(transaction, !Bukkit.getServer().isPrimaryThread());
     Bukkit.getServer().getPluginManager().callEvent(event);
     if(event.isCancelled()) {
       return new TransactionResultFailed();

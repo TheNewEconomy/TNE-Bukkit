@@ -18,6 +18,10 @@ public class TNEEvent extends Event {
     return handlers;
   }
 
+  public TNEEvent(boolean async) {
+    super(async);
+  }
+
   @Override
   public HandlerList getHandlers() {
     return handlers;

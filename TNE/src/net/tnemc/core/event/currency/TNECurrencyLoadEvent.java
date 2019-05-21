@@ -14,8 +14,8 @@ public class TNECurrencyLoadEvent extends TNECurrencyEvent implements Cancellabl
 
   private boolean cancelled = false;
 
-  public TNECurrencyLoadEvent(String world, String currency) {
-    super(world, currency);
+  public TNECurrencyLoadEvent(String world, String currency, boolean async) {
+    super(world, currency, async);
   }
 
   @Override

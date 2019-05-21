@@ -50,40 +50,47 @@ public class MISCUtils {
   /**
    * @return Whether the bukkit in use is for MC >= 1.8
    */
+  public static boolean isOneSeven() {
+    return Bukkit.getVersion().contains("1.7") || isOneEight() || isOneNine() || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
+  }
+
+  /**
+   * @return Whether the bukkit in use is for MC >= 1.8
+   */
   public static boolean isOneEight() {
-    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven() || isOneTwelve();
+    return Bukkit.getVersion().contains("1.8") || isOneNine() || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
   }
 
   /**
    * @return Whether the bukkit in use is for MC >= 1.9
    */
   public static boolean isOneNine() {
-    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven() || isOneTwelve();
+    return Bukkit.getVersion().contains("1.9") || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
   }
 
   /**
    * @return Whether the bukkit in use is for MC >= 1.10
    */
   public static boolean isOneTen() {
-    return Bukkit.getVersion().contains("1.10") || isOneEleven() || isOneTwelve();
+    return Bukkit.getVersion().contains("1.10") || isOneEleven() || isOneTwelve() || isOneThirteen();
   }
 
   /**
    * @return Whether the bukkit in use is for MC >= 1.11
    */
   public static boolean isOneEleven() {
-    return Bukkit.getVersion().contains("1.11") || isOneTwelve();
+    return Bukkit.getVersion().contains("1.11") || isOneTwelve() || isOneThirteen();
   }
 
   /**
    * @return Whether the bukkit in use is for MC >= 1.12
    */
   public static boolean isOneTwelve() {
-    return Bukkit.getVersion().contains("1.12");
+    return Bukkit.getVersion().contains("1.12") || isOneThirteen();
   }
 
   public static boolean isOneThirteen() {
-    return Bukkit.getVersion().contains("1.13");
+    return Bukkit.getVersion().contains("1.13") || Bukkit.getVersion().contains("1.14");
   }
 
   public static boolean offHand() {
