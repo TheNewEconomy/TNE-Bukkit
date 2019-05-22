@@ -31,7 +31,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -132,7 +131,8 @@ public class ItemSign implements SignType {
 
     }
     try {
-      SignsData.saveSign(new TNESign(event.getBlock().getLocation(), attached.getLocation(), "item", player, player, new Date().getTime(), 1));
+
+      SignsData.saveSign(new TNESign(event.getBlock().getLocation(), (attached != null)? attached.getLocation() : event.getBlock().getLocation(), "item", player, player, new Date().getTime(), 1));
       TNE.debug("Created Item Sign");
       Bukkit.getPlayer(player).sendMessage(ChatColor.WHITE + "Left click the sign with an item in the correct amount to buy that item," +
                                              " or right click to sell an item.");
@@ -167,14 +167,15 @@ public class ItemSign implements SignType {
 
   public static boolean offerExists(final Location location) throws SQLException {
     boolean exists = false;
-    try (Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-         PreparedStatement statement = connection.prepareStatement(SignsData.ITEM_CHECK);
+    SQLDatabase.open();
+    try (PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SignsData.ITEM_CHECK);
          ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
              new SerializableLocation(location).toString()
          })) {
 
       if(results.next()) exists = true;
     } catch(Exception ignore) {}
+    SQLDatabase.close();
     return exists;
   }
 
@@ -195,8 +196,8 @@ public class ItemSign implements SignType {
   public static UUID chest(Location location) throws SQLException {
     UUID owner = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(SIGNS_CHEST_CHECK);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SIGNS_CHEST_CHECK);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -208,14 +209,15 @@ public class ItemSign implements SignType {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return owner;
   }
 
   public static ItemStack getItem(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_OFFER_LOAD);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_OFFER_LOAD);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -232,14 +234,15 @@ public class ItemSign implements SignType {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return item;
   }
 
   public static ItemStack getTrade(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_TRADE_LOAD);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_TRADE_LOAD);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -250,14 +253,15 @@ public class ItemSign implements SignType {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return item;
   }
 
   public static boolean isCurrency(Location location) throws SQLException {
     boolean currency = false;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_CURRENCY_CHECK);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_CURRENCY_CHECK);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -268,14 +272,15 @@ public class ItemSign implements SignType {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return currency;
   }
 
   public static boolean isSelling(Location location) throws SQLException {
     boolean selling = false;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_SELLING_CHECK);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_SELLING_CHECK);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -286,14 +291,15 @@ public class ItemSign implements SignType {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return selling;
   }
 
   public static BigDecimal getCost(Location location) throws SQLException {
     BigDecimal amount = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_CURRENCY_LOAD);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_CURRENCY_LOAD);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -304,6 +310,7 @@ public class ItemSign implements SignType {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return amount;
   }
 

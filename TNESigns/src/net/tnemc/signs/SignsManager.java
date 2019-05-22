@@ -4,7 +4,6 @@ import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.ItemSign;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -42,18 +41,16 @@ public class SignsManager {
 
   public static boolean blockAttachedSign(final Block block) {
     final Block above = block.getRelative(BlockFace.UP);
-    if(above.getType() != null && above.getType().equals(Material.SIGN) && validSign((Sign)above.getState())) {
+    if(above != null && above.getState() instanceof Sign && validSign((Sign)above.getState())) {
       return true;
     }
 
     for(BlockFace face : connectedBlocks) {
       final Block facedBlock = block.getRelative(face);
 
-      if(facedBlock.getType() != null && facedBlock.getType().equals(Material.WALL_SIGN)) {
-        if(facedBlock.getState() != null && facedBlock.getState().getData() != null && facedBlock.getState().getData() instanceof org.bukkit.material.Sign) {
-          final org.bukkit.material.Sign sign = (org.bukkit.material.Sign)facedBlock.getState().getData();
-          return sign != null && validSign((Sign)facedBlock.getState());
-        }
+      if(facedBlock.getState() != null && facedBlock.getState().getData() != null && facedBlock.getState().getData() instanceof org.bukkit.material.Sign && ((org.bukkit.material.Sign) facedBlock.getState().getData()).isWallSign()) {
+        final org.bukkit.material.Sign sign = (org.bukkit.material.Sign)facedBlock.getState().getData();
+        return sign != null && validSign((Sign)facedBlock.getState());
       }
     }
     return false;
@@ -61,19 +58,17 @@ public class SignsManager {
 
   public static Sign getAttachedSign(final Block block) {
     final Block above = block.getRelative(BlockFace.UP);
-    if(above.getType() != null && above.getType().equals(Material.SIGN) && validSign((Sign)above.getState())) {
+    if(above != null && above.getState() instanceof Sign && validSign((Sign)above.getState())) {
       return (Sign)above.getState();
     }
 
     for(BlockFace face : connectedBlocks) {
       final Block facedBlock = block.getRelative(face);
 
-      if(facedBlock.getType() != null && facedBlock.getType().equals(Material.WALL_SIGN)) {
-        if(facedBlock.getState() != null && facedBlock.getState().getData() != null && facedBlock.getState().getData() instanceof org.bukkit.material.Sign) {
-          final Sign sign = (Sign)facedBlock.getState();
-          if(sign != null) {
-            return sign;
-          }
+      if(facedBlock.getState() != null && facedBlock.getState().getData() != null && facedBlock.getState().getData() instanceof org.bukkit.material.Sign && ((org.bukkit.material.Sign) facedBlock.getState().getData()).isWallSign()) {
+        final Sign sign = (Sign)facedBlock.getState();
+        if(sign != null) {
+          return sign;
         }
       }
     }

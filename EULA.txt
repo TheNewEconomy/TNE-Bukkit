@@ -12,6 +12,7 @@ Terms:
 - You agree to not either at server level, or at player level allow the selling of chats between any entities, be it player, bot, in-game 
 chat channel, or anything related to a communication using in-game currency.
 - You agree to not withhold any private modifications to the TNE source from the TNE developers and/or contributors.
+- You agree to not use source from TNE, in whole or partial form, that would violate the TNE license.
 
 Termination:
 You may terminate this agreement at any time by simply removing The New Economy from your server's plugin directory.

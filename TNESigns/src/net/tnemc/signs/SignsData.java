@@ -11,7 +11,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -123,8 +122,8 @@ public class SignsData {
   public static TNESign loadSign(Location location) throws SQLException {
     TNESign sign = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_LOCATION);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SIGNS_LOAD_LOCATION);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -141,6 +140,7 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return sign;
   }
 
@@ -166,8 +166,8 @@ public class SignsData {
   public static TNESign loadSignAttached(Location location) throws SQLException {
     TNESign sign = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_ATTACHED);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SIGNS_LOAD_ATTACHED);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -184,14 +184,15 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return sign;
   }
 
   public static Collection<TNESign> loadSignsCreator(String creator, String type) throws SQLException {
     List<TNESign> signs = new ArrayList<>();
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_CREATOR);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SIGNS_LOAD_CREATOR);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             creator, type
         })) {
@@ -210,6 +211,7 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
 
     return signs;
   }
@@ -217,8 +219,8 @@ public class SignsData {
   public static Collection<TNESign> loadSigns(String owner, String type) throws SQLException {
     List<TNESign> signs = new ArrayList<>();
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_OWNER);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SIGNS_LOAD_OWNER);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             owner, type
         })) {
@@ -238,14 +240,15 @@ public class SignsData {
       TNE.debug(e);
     }
 
+    SQLDatabase.close();
     return signs;
   }
 
   public static ItemStack getItem(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_OFFER_LOAD);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_OFFER_LOAD);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location)
         })) {
@@ -256,14 +259,15 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return item;
   }
 
   public static ItemStack getTrade(Location location) throws SQLException {
     ItemStack item = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(ITEM_TRADE_LOAD);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_TRADE_LOAD);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location)
         })) {
@@ -274,14 +278,15 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return item;
   }
 
   public static Chest chest(Location location) throws SQLException {
     Location chestLocation = null;
 
-    try(Connection connection = SQLDatabase.connection(TNE.saveManager().getTNEManager());
-        PreparedStatement statement = connection.prepareStatement(SIGNS_LOAD_CHEST);
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(SIGNS_LOAD_CHEST);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             new SerializableLocation(location).toString()
         })) {
@@ -292,6 +297,7 @@ public class SignsData {
     } catch(Exception e) {
       TNE.debug(e);
     }
+    SQLDatabase.close();
     return (Chest)(chestLocation.getBlock().getState());
   }
 
