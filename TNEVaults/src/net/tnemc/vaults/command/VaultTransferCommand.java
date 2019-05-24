@@ -1,37 +1,35 @@
 package net.tnemc.vaults.command;
 
+import com.github.tnerevival.TNELib;
 import com.github.tnerevival.user.IDFinder;
-import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.vaults.VaultManager;
 import net.tnemc.vaults.VaultsModule;
 import net.tnemc.vaults.vault.Vault;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by creatorfromhell on 5/24/2019.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by Daniel on 11/12/2017.
+ * Created by creatorfromhell on 06/30/2017.
  */
-public class VaultMembersCommand extends TNECommand {
-  public VaultMembersCommand(TNE plugin) {
+public class VaultTransferCommand extends TNECommand {
+  public VaultTransferCommand(TNELib plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "members";
+    return "transfer";
   }
 
   @Override
@@ -41,7 +39,7 @@ public class VaultMembersCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.vault.members";
+    return "tne.vault.transfer";
   }
 
   @Override
@@ -52,16 +50,26 @@ public class VaultMembersCommand extends TNECommand {
   @Override
   public String[] getHelpLines() {
     return new String[] {
-      "/vault members [player] - View the members of a vault."
+      "/vault transfer <player> [owner] - Transfers vault ownership to another player."
     };
   }
 
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
 
-    final boolean self = arguments.length < 1;
+    if(arguments.length < 1) {
+      help(sender);
+      return false;
+    }
+
+    final boolean self = arguments.length < 2;
     final UUID id = (!self)? IDFinder.getID(arguments[0]) : IDFinder.getID(sender);
-    final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+    String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+
+    if(!self && !sender.hasPermission("tne.vault.transfer.admin")) {
+      sender.sendMessage(ChatColor.RED + "You do not have permission to transfer other players' vaults.");
+      return false;
+    }
 
     Vault vault = null;
     if(!self) {
@@ -70,33 +78,29 @@ public class VaultMembersCommand extends TNECommand {
         return false;
       }
       vault = VaultsModule.instance().manager().getVault(id, world);
-      if(!vault.getMembers().containsKey(IDFinder.getID(sender))) {
-        sender.sendMessage(ChatColor.RED + "You do not have access to that player's vault.");
-        return false;
-      }
 
-      List<String> members = new ArrayList<>();
+      VaultsModule.instance().manager().close(id, world);
 
-      vault.getMembers().keySet().forEach(identifier->members.add(IDFinder.getUsername(identifier.toString())));
-
-      sender.sendMessage(ChatColor.WHITE + "Vault Members: " + String.join(", ", members));
+      vault.setOwner(IDFinder.getID(arguments[1]));
+      VaultsModule.instance().manager().removeVault(id, world);
+      VaultsModule.instance().manager().addVault(vault);
+      sender.sendMessage(ChatColor.WHITE + "Successfully transferred \"" + arguments[0] + "\"'s vault to \"" + arguments[1] + "\".");
       return true;
     }
 
     if(!VaultsModule.instance().manager().hasVault(id, world)) {
-      if(VaultManager.cost.compareTo(BigDecimal.ZERO) > 0) {
-        sender.sendMessage(ChatColor.RED + "you do not have a vault. Please use /vault buy to get one.");
-        return false;
-      }
-      VaultsModule.instance().manager().addVault(new Vault(id, world));
+      sender.sendMessage(ChatColor.RED + "You do not have a vault. Please use /vault buy to get one.");
+      return false;
     }
     vault = VaultsModule.instance().manager().getVault(id, world);
 
-    List<String> members = new ArrayList<>();
+    VaultsModule.instance().manager().close(id, world);
 
-    vault.getMembers().keySet().forEach(identifier->members.add(IDFinder.getUsername(identifier.toString())));
+    vault.setOwner(IDFinder.getID(arguments[0]));
 
-    sender.sendMessage(ChatColor.WHITE + "Vault Members: " + String.join(", ", members));
+    VaultsModule.instance().manager().removeVault(id, world);
+    VaultsModule.instance().manager().addVault(vault);
+    sender.sendMessage(ChatColor.WHITE + "Successfully transferred vault to \"" + arguments[0] + "\".");
     return true;
   }
 }

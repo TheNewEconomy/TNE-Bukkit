@@ -1,7 +1,7 @@
 package net.tnemc.vaults.command;
 
-import com.github.tnerevival.commands.TNECommand;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 import org.bukkit.command.CommandSender;
 
 /**

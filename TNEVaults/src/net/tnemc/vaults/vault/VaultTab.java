@@ -63,6 +63,10 @@ public class VaultTab {
     return icon;
   }
 
+  public void addItem(int slot, ItemStack stack) {
+    items.put(slot, new SerialItem(stack));
+  }
+
   public Map<Integer, SerialItem> getItems() {
     return items;
   }

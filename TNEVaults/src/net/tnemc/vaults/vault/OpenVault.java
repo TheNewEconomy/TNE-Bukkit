@@ -5,7 +5,9 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.item.SerialItem;
 import net.tnemc.vaults.VaultsModule;
 import net.tnemc.vaults.inventory.VaultInventoryHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,8 @@ public class OpenVault {
   private UUID owner;
   private String world;
 
+  private boolean forceClosing = false;
+
   public OpenVault(UUID owner, String world) {
     this.owner = owner;
     this.world = world;
@@ -49,10 +53,19 @@ public class OpenVault {
     });
 
     openTabs.forEach((order, inventory)->{
-      ((VaultInventoryHolder)inventory.getHolder()).viewers.forEach((id)->{
-        IDFinder.getPlayer(id.toString()).openInventory(inventory);
-      });
+
+      final List<UUID> viewers = ((VaultInventoryHolder)inventory.getHolder()).viewers;
+      viewers.forEach(id->IDFinder.getPlayer(id.toString()).getOpenInventory().getTopInventory().setContents(inventory.getContents()));
     });
+  }
+
+  public void updateItem(int tab, int slot, ItemStack item) {
+    Inventory inventory = openTabs.get(tab);
+    inventory.setItem(slot, item);
+    openTabs.put(tab, inventory);
+
+    final List<UUID> viewers = ((VaultInventoryHolder)inventory.getHolder()).viewers;
+    viewers.forEach(id->IDFinder.getPlayer(id.toString()).getOpenInventory().getTopInventory().setContents(inventory.getContents()));
   }
 
   public void addViewer(UUID viewer, int tab) {
@@ -65,6 +78,7 @@ public class OpenVault {
   }
 
   public void removeViewer(UUID viewer, int tab) {
+    if(forceClosing) return;
     Inventory inventory = openTabs.get(tab);
     ((VaultInventoryHolder)inventory.getHolder()).removeViewer(viewer);
 
@@ -73,12 +87,22 @@ public class OpenVault {
   }
 
   public void close() {
+    if(forceClosing) return;
     Vault vault = VaultsModule.instance().manager().getVault(owner, world);
-    openTabs.forEach((tab, inventory)->vault.setItems(tab, inventory));
+    forceClosing = true;
+    openTabs.forEach((tab, inventory)->{
+      vault.setItems(tab, inventory);
+      final List<UUID> viewers = ((VaultInventoryHolder)inventory.getHolder()).viewers;
+      viewers.forEach(id->{
+        Bukkit.getPlayer(id).closeInventory();
+      });
+
+    });
     VaultsModule.instance().manager().addVault(vault);
   }
 
   public boolean shouldClose() {
+    System.out.println("Total close.");
     return totalViewers.size() == 0;
   }
 }

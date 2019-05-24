@@ -37,4 +37,8 @@ public class UserVaultManager {
   public Vault getVault(String world) {
     return vaults.get(world);
   }
+
+  public void removeVault(String world) {
+    vaults.remove(world);
+  }
 }

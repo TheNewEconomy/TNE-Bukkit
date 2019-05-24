@@ -4,7 +4,9 @@ import net.tnemc.core.TNE;
 import net.tnemc.vaults.vault.OpenVault;
 import net.tnemc.vaults.vault.UserVaultManager;
 import net.tnemc.vaults.vault.Vault;
+import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,9 @@ public class VaultManager {
 
   private List<UUID> readOnly = new ArrayList<>();
 
+  //Our temp configurations for testing.
+  public static final BigDecimal cost = BigDecimal.ZERO;
+
   public VaultManager() {
   }
 
@@ -39,6 +44,13 @@ public class VaultManager {
 
   public Vault getVault(UUID owner, String world) {
     return managers.get(owner).getVault(world);
+  }
+
+  public void removeVault(UUID owner, String world) {
+    if(managers.containsKey(owner)) {
+      System.out.println("Vault Removed");
+      managers.get(owner).removeVault(world);
+    }
   }
 
   public boolean isReadOnly(UUID viewer) {
@@ -70,6 +82,13 @@ public class VaultManager {
     open.put(key, openVault);
   }
 
+  public void updateItem(UUID owner, String world, int tab, int slot, ItemStack stack) {
+    String key = owner.toString() + ":" + world;
+    OpenVault openVault = open.get(key);
+    openVault.updateItem(tab, slot, stack);
+    open.put(key, openVault);
+  }
+
   public void removeViewer(UUID player, UUID owner, String world, int tab) {
     String key = owner.toString() + ":" + world;
     OpenVault openVault = open.get(key);
@@ -81,7 +100,10 @@ public class VaultManager {
   }
 
   public void close(UUID owner, String world) {
-    String key = owner.toString() + ":" + world;
-    open.get(key).close();
+    if(isOpen(owner, world)) {
+      String key = owner.toString() + ":" + world;
+      open.get(key).close();
+      open.remove(key);
+    }
   }
 }

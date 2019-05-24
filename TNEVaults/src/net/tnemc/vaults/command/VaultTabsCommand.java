@@ -1,25 +1,26 @@
 package net.tnemc.vaults.command;
 
-import com.github.tnerevival.commands.TNECommand;
-import net.tnemc.core.TNE;
-import org.bukkit.command.CommandSender;
+import com.github.tnerevival.TNELib;
+import net.tnemc.core.commands.TNECommand;
 
 /**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by creatorfromhell on 5/24/2019.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by Daniel on 11/15/2017.
+ * Created by creatorfromhell on 06/30/2017.
  */
-public class VaultModifyCommand extends TNECommand {
-  public VaultModifyCommand(TNE plugin) {
+public class VaultTabsCommand extends TNECommand {
+  public VaultTabsCommand(TNELib plugin) {
     super(plugin);
   }
 
   @Override
   public String getName() {
-    return "modify";
+    return null;
   }
 
   @Override
@@ -29,16 +30,11 @@ public class VaultModifyCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "tne.vault.modify";
+    return null;
   }
 
   @Override
   public boolean console() {
     return false;
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
-    return true;
   }
 }

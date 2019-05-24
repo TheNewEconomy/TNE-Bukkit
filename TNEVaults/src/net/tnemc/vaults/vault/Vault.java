@@ -11,8 +11,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -45,7 +47,7 @@ public class Vault {
     this.maxTabs = maxTabs;
 
     for(int i = 1; i <= maxTabs; i++) {
-      tabs.put(i, new VaultTab(owner, world, new SerialItem(new ItemStack(Material.STAINED_GLASS_PANE)), i));
+      tabs.put(i, new VaultTab(owner, world, new SerialItem(new ItemStack(Material.WHITE_STAINED_GLASS_PANE)), i));
     }
 
     this.created = new Date().getTime();
@@ -102,6 +104,9 @@ public class Vault {
     }
   }
 
+  public void updateTab(int tab) {
+  }
+
   public Map<UUID, VaultMember> getMembers() {
     return members;
   }
@@ -116,6 +121,15 @@ public class Vault {
 
   public void setOwner(UUID owner) {
     this.owner = owner;
+
+    List<VaultTab> modifiedTabs = new ArrayList<>();
+
+    tabs.values().forEach(tab->{
+      tab.setOwner(owner);
+      modifiedTabs.add(tab);
+    });
+
+    modifiedTabs.forEach(tab->tabs.put(tab.getLocation(), tab));
   }
 
   public String getWorld() {
@@ -151,8 +165,8 @@ public class Vault {
     Inventory inventory = Bukkit.createInventory(holder, 36, "Shulker Box View");
     TNE.debug("Building Shulker Box... Size: " + data.getItems().size());
 
-    ItemStack stack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte)14);
-    ItemMeta meta = Bukkit.getItemFactory().getItemMeta(Material.STAINED_GLASS_PANE);
+    ItemStack stack = new ItemStack(Material.WHITE_STAINED_GLASS_PANE, 1);
+    ItemMeta meta = Bukkit.getItemFactory().getItemMeta(Material.WHITE_STAINED_GLASS_PANE);
     meta.setDisplayName("Go Back");
     stack.setItemMeta(meta);
     inventory.setItem(0, stack);

@@ -5,8 +5,14 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.vaults.VaultManager;
 import net.tnemc.vaults.VaultsModule;
+import net.tnemc.vaults.vault.Vault;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -44,9 +50,43 @@ public class VaultViewCommand extends TNECommand {
   }
 
   @Override
+  public String[] getHelpLines() {
+    return new String[] {
+        "/vault view [owner] - Views your vault, or another players if you have the permissions to do so."
+    };
+  }
+
+  @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-    VaultsModule.instance().manager().open(IDFinder.getID(sender), IDFinder.getID(arguments[0]), world, 1, false);
+
+    final boolean self = arguments.length < 1;
+    final UUID id = (!self)? IDFinder.getID(arguments[0]) : IDFinder.getID(sender);
+    String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+
+    if(!self) {
+      if(!VaultsModule.instance().manager().hasVault(id, world)) {
+        sender.sendMessage(ChatColor.RED + "That player currently does not have a vault.");
+        return false;
+      }
+      Vault vault = VaultsModule.instance().manager().getVault(id, world);
+      if(!vault.getMembers().containsKey(IDFinder.getID(sender))) {
+        sender.sendMessage(ChatColor.RED + "You do not have access to that player's vault.");
+        return false;
+      }
+
+      VaultsModule.instance().manager().open(IDFinder.getID(sender), id, world, 1, false);
+      return true;
+    }
+
+    if(!VaultsModule.instance().manager().hasVault(id, world)) {
+      if(VaultManager.cost.compareTo(BigDecimal.ZERO) > 0) {
+        sender.sendMessage(ChatColor.RED + "you do not have a vault. Please use /vault buy to get one.");
+        return false;
+      }
+      VaultsModule.instance().manager().addVault(new Vault(id, world));
+    }
+
+    VaultsModule.instance().manager().open(IDFinder.getID(sender), id, world, 1, false);
     return true;
   }
 }

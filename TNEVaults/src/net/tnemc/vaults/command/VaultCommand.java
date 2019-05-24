@@ -15,8 +15,14 @@ public class VaultCommand extends TNECommand {
 
   public VaultCommand(TNE plugin) {
     super(plugin);
+    subCommands.add(new VaultAddCommand(plugin));
     subCommands.add(new VaultCreateCommand(plugin));
+    subCommands.add(new VaultDepositCommand(plugin));
+    subCommands.add(new VaultMembersCommand(plugin));
     subCommands.add(new VaultPeekCommand(plugin));
+    subCommands.add(new VaultRemoveCommand(plugin));
+    subCommands.add(new VaultResizeCommand(plugin));
+    subCommands.add(new VaultTransferCommand(plugin));
     subCommands.add(new VaultViewCommand(plugin));
   }
 

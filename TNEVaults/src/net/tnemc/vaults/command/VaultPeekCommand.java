@@ -6,7 +6,10 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.vaults.VaultsModule;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -42,10 +45,30 @@ public class VaultPeekCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
-    String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-    VaultsModule.instance().manager().open(IDFinder.getID(sender), IDFinder.getID(arguments[0]), world, 1, true);
+  public String[] getHelpLines() {
+    return new String[] {
+        "/vault peek <player> [edit] - Open another player's vault, optional edit mode requires additional permissions."
+    };
+  }
 
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    if(arguments.length < 1) {
+      help(sender);
+      return false;
+    }
+
+    final UUID id = IDFinder.getID(arguments[0]);
+    final String world = (arguments.length >= 2)? arguments[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+
+    if(!VaultsModule.instance().manager().hasVault(id, world)) {
+      sender.sendMessage(ChatColor.RED + "That player does not have a vault.");
+      return false;
+    }
+
+    final boolean edit = (arguments.length >= 2 && arguments[1].equalsIgnoreCase("true") && sender.hasPermission("tne.vault.peek.edit"));
+
+    VaultsModule.instance().manager().open(IDFinder.getID(sender), id, world, 1, !edit);
     return true;
   }
 }

@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
@@ -42,14 +43,16 @@ public class VaultListener implements ModuleListener {
         event.setCancelled(true);
       }
 
-      if(slot < 9) {
+      Vault vault = manager.getVault(holder.getOwner(), holder.getWorld());
+      if(vault.getTabs().containsKey(slot + 1)) {
         event.setCancelled(true);
 
         if(event.getClick().equals(ClickType.RIGHT)
            && event.getCursor() != null
            && !event.getCursor().getType().equals(Material.AIR)) {
-          Vault vault = manager.getVault(holder.getOwner(), holder.getWorld());
-          vault.setIcon(slot + 1, event.getCursor().clone());
+          ItemStack clone = event.getCursor().clone();
+          clone.setAmount(1);
+          vault.setIcon(slot + 1, clone);
           manager.addVault(vault);
           manager.updateIcon(holder.getOwner(), holder.getWorld(), slot + 1);
           TNE.debug("Changing icon for tab: " + (slot + 1));
@@ -75,7 +78,7 @@ public class VaultListener implements ModuleListener {
       VaultsModule.instance().manager().close(holder.getVault(), holder.getWorld());
     } else if(event.getInventory().getHolder() instanceof VaultInventoryHolder) {
       VaultInventoryHolder holder = ((VaultInventoryHolder)event.getInventory().getHolder());
-      VaultsModule.instance().manager().close(holder.getOwner(), holder.getWorld());
+      VaultsModule.instance().manager().removeViewer(IDFinder.getID(event.getPlayer()), holder.getOwner(), holder.getWorld(), holder.getTab());
     }
   }
 }
