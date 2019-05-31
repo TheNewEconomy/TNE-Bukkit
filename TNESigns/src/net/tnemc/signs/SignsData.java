@@ -46,6 +46,7 @@ public class SignsData {
       "`sign_creator` VARCHAR(36) NOT NULL," +
       "`sign_created` BIGINT(60)," +
       "`sign_step` INTEGER," +
+      "`sign_admin` BOOLEAN NOT NULL DEFAULT 0," +
       "`sign_data` TEXT NOT NULL" +
       ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
 
@@ -58,6 +59,7 @@ public class SignsData {
       "`sign_creator` VARCHAR(36) NOT NULL," +
       "`sign_created` BIGINT(60)," +
       "`sign_step` INTEGER," +
+      "`sign_admin` BOOLEAN NOT NULL DEFAULT 0," +
       "`sign_data` TEXT NOT NULL" +
       ") ENGINE = INNODB;";
 
@@ -65,13 +67,13 @@ public class SignsData {
   private static final String SIGNS_UPDATE_CHEST = "UPDATE " + prefix + "_SIGNS SET sign_chest = ? WHERE sign_location = ?";
   private static final String SIGNS_LOAD_CHEST = "SELECT sign_chest FROM " + prefix + "_SIGNS WHERE sign_location = ?";
   public static final String SIGNS_CHEST_CHECK = "SELECT sign_owner FROM " + SignsData.prefix + "_SIGNS WHERE sign_chest = ?";
-  private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
-                                           "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?, sign_step = ?, sign_data = ?;";
-  private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
+  private static final String SIGNS_SAVE = "INSERT INTO " + prefix + "_SIGNS (sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_admin, sign_data) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                                           "ON DUPLICATE KEY UPDATE sign_attached = ?, sign_owner = ?, sign_type = ?, sign_creator = ?, sign_created = ?, sign_step = ?, sign_admin = ?, sign_data = ?;";
+  private static final String SIGNS_LOAD_OWNER = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_admin, sign_data FROM " + prefix + "_SIGNS WHERE sign_owner = ? AND sign_type = ?";
   private static final String SIGNS_CHANGE_OWNER = "UPDATE " + prefix + "_SIGNS SET sign_owner = ? WHERE sign_owner = ?";
-  private static final String SIGNS_LOAD_CREATOR = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_creator = ? AND sign_type = ?";
-  private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_location = ?";
-  private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_data FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
+  private static final String SIGNS_LOAD_CREATOR = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_admin, sign_data FROM " + prefix + "_SIGNS WHERE sign_creator = ? AND sign_type = ?";
+  private static final String SIGNS_LOAD_LOCATION = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_admin, sign_data FROM " + prefix + "_SIGNS WHERE sign_location = ?";
+  private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_admin, sign_data FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
   private static final String SIGNS_DELETE = "DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?";
 
   public static final String ITEM_CHECK = "SELECT item_amount FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
@@ -79,6 +81,7 @@ public class SignsData {
   public static final String ITEM_TRADE_LOAD = "SELECT item_trade FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_CURRENCY_LOAD = "SELECT item_cost FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_CURRENCY_CHECK = "SELECT item_currency FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
+  public static final String ITEM_ADMIN_CHECK = "SELECT sign_admin FROM " + SignsData.prefix + "_SIGNS WHERE sign_location = ?";
   public static final String ITEM_SELLING_CHECK = "SELECT item_selling FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_OFFER_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_offer = ?, item_amount = ?, item_selling = ? WHERE sign_location = ?";
   public static final String ITEM_OFFER_ADD = "INSERT INTO " + SignsData.prefix + "_SIGNS_ITEMS (item_offer, item_amount, item_selling, sign_location) VALUES(?, ?, ?, ?)";
@@ -93,6 +96,7 @@ public class SignsData {
         sign.getCreator().toString(),
         sign.getCreationDate(),
         sign.getStep(),
+        sign.isAdmin(),
         sign.saveExtraData(),
         new SerializableLocation(sign.getAttached()).toString(),
         sign.getOwner().toString(),
@@ -100,9 +104,22 @@ public class SignsData {
         sign.getCreator().toString(),
         sign.getCreationDate(),
         sign.getStep(),
+        sign.isAdmin(),
         sign.saveExtraData()
     });
 
+  }
+
+  public static boolean hasColumn() {
+
+    boolean exist = false;
+    SQLDatabase.open();
+    try {
+      exist = SQLDatabase.getDb().getConnection().getMetaData().getColumns(null, null, SignsData.prefix + "_SIGNS", "sign_admin").next();
+    } catch(Exception ignore) {}
+
+    SQLDatabase.close();
+    return exist;
   }
 
   public static void updateStep(final Location location, final int step) throws SQLException {
@@ -134,6 +151,7 @@ public class SignsData {
             UUID.fromString(results.getString("sign_owner")),
             UUID.fromString(results.getString("sign_creator")),
             results.getLong("sign_created"),
+            results.getBoolean("sign_admin"),
             results.getInt("sign_step"));
         sign.loadExtraData(results.getString("sign_data"));
       }
@@ -178,6 +196,7 @@ public class SignsData {
             UUID.fromString(results.getString("sign_owner")),
             UUID.fromString(results.getString("sign_creator")),
             results.getLong("sign_created"),
+            results.getBoolean("sign_admin"),
             results.getInt("sign_step"));
         sign.loadExtraData(results.getString("sign_data"));
       }
@@ -204,6 +223,7 @@ public class SignsData {
               UUID.fromString(results.getString("sign_owner")),
               UUID.fromString(results.getString("sign_creator")),
               results.getLong("sign_created"),
+              results.getBoolean("sign_admin"),
               results.getInt("sign_step"),
               results.getString("sign_data"))
         );
@@ -232,6 +252,7 @@ public class SignsData {
                 UUID.fromString(results.getString("sign_owner")),
                 UUID.fromString(results.getString("sign_creator")),
                 results.getLong("sign_created"),
+                results.getBoolean("sign_admin"),
                 results.getInt("sign_step"),
                 results.getString("sign_data"))
         );

@@ -22,25 +22,28 @@ public class TNESign {
   private UUID owner;
   private UUID creator;
   private Long creationDate;
+  private boolean admin;
   private int step;
 
-  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, int step) {
+  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, boolean admin, int step) {
     this.location = location;
     this.attached = attached;
     this.type = type;
     this.owner = owner;
     this.creator = creator;
     this.creationDate = creationDate;
+    this.admin = admin;
     this.step = step;
   }
 
-  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, int step, String data) {
+  public TNESign(Location location, Location attached, String type, UUID owner, UUID creator, long creationDate, boolean admin, int step, String data) {
     this.location = location;
     this.attached = attached;
     this.type = type;
     this.owner = owner;
     this.creator = creator;
     this.creationDate = creationDate;
+    this.admin = admin;
     this.step = step;
     loadExtraData(data);
   }
@@ -91,6 +94,14 @@ public class TNESign {
 
   public void setCreationDate(Long creationDate) {
     this.creationDate = creationDate;
+  }
+
+  public boolean isAdmin() {
+    return admin;
+  }
+
+  public void setAdmin(boolean admin) {
+    this.admin = admin;
   }
 
   public int getStep() {

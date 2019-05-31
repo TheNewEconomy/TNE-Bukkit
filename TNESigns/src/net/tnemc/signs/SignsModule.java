@@ -138,6 +138,10 @@ public class SignsModule extends Module {
       SQLDatabase.executeUpdate(table);
       TNE.debug("Creating table: " + table);
     }
+
+    if(!SignsData.hasColumn()) {
+      SQLDatabase.executeUpdate("ALTER TABLE `" + SignsData.prefix + "_SIGNS` ADD COLUMN `sign_admin` BOOLEAN NOT NULL DEFAULT 0 AFTER `sign_step`");
+    }
   }
 
   public static SignsModule instance() {

@@ -2,6 +2,7 @@ package net.tnemc.signs.signs.impl;
 
 import com.github.tnerevival.core.db.SQLDatabase;
 import com.github.tnerevival.serializable.SerializableLocation;
+import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.material.MaterialHelper;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static net.tnemc.signs.SignsData.ITEM_ADMIN_CHECK;
 import static net.tnemc.signs.SignsData.ITEM_CURRENCY_CHECK;
 import static net.tnemc.signs.SignsData.ITEM_CURRENCY_LOAD;
 import static net.tnemc.signs.SignsData.ITEM_OFFER_LOAD;
@@ -132,7 +134,9 @@ public class ItemSign implements SignType {
     }
     try {
 
-      SignsData.saveSign(new TNESign(event.getBlock().getLocation(), (attached != null)? attached.getLocation() : event.getBlock().getLocation(), "item", player, player, new Date().getTime(), 1));
+      final boolean isAdmin = event.getLines().length >= 2 && event.getLine(1).equalsIgnoreCase("admin") && IDFinder.getPlayer(player.toString()).hasPermission("tne.sign.admin");
+
+      SignsData.saveSign(new TNESign(event.getBlock().getLocation(), (attached != null)? attached.getLocation() : event.getBlock().getLocation(), "item", player, player, new Date().getTime(), isAdmin, 1));
       TNE.debug("Created Item Sign");
       Bukkit.getPlayer(player).sendMessage(ChatColor.WHITE + "Left click the sign with an item in the correct amount to buy that item," +
                                              " or right click to sell an item.");
@@ -186,10 +190,11 @@ public class ItemSign implements SignType {
         ((selling)? 1 : 0),
         new SerializableLocation(location).toString()
     });
+    final boolean admin = ItemSign.isAdmin(location);
     Sign sign = (Sign) location.getBlock().getState();
     sign.setLine(1, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
-    if(selling) sign.setLine(3, "Selling");
-    else sign.setLine(3, "Buying");
+    if(selling) sign.setLine(3, "Selling" + ((admin)? " | Admin" : ""));
+    else sign.setLine(3, "Buying" + ((admin)? " | Admin" : ""));
     sign.update(true);
   }
 
@@ -274,6 +279,25 @@ public class ItemSign implements SignType {
     }
     SQLDatabase.close();
     return currency;
+  }
+
+  public static boolean isAdmin(Location location) throws SQLException {
+    boolean admin = false;
+
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ITEM_ADMIN_CHECK);
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
+            new SerializableLocation(location).toString()
+        })) {
+
+      if(results.next()) {
+        admin = results.getBoolean("sign_admin");
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    SQLDatabase.close();
+    return admin;
   }
 
   public static boolean isSelling(Location location) throws SQLException {

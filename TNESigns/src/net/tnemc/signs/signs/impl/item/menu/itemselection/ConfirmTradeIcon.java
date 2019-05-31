@@ -46,10 +46,17 @@ public class ConfirmTradeIcon extends Icon {
 
     try {
       ItemSign.saveItemOffer(location, stack, false, BigDecimal.ZERO);
-      SignsData.updateStep(location, 3);
 
-      this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name() + "."
-          + " Now right click your shop sign, followed by a chest to mark your shop's storage.";
+      if(ItemSign.isAdmin(location)) {
+        SignsData.updateStep(location, 4);
+
+        this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name();
+      } else {
+        SignsData.updateStep(location, 3);
+
+        this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name() + "."
+            + " Now right click your shop sign, followed by a chest to mark your shop's storage.";
+      }
 
     } catch (SQLException e) {
       this.message = ChatColor.RED + "Unable to update your shop's offer amount.";

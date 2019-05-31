@@ -41,6 +41,10 @@ public class ItemCompatibility13 implements ItemCompatibility {
         return new ItemStack(Material.PLAYER_HEAD, 1);
       case "BLACK_WOOL":
         return new ItemStack(Material.BLACK_WOOL, 1);
+      case "GREEN_WOOL":
+        return new ItemStack(Material.GREEN_WOOL, 1);
+      case "RED_WOOL":
+        return new ItemStack(Material.RED_WOOL, 1);
       case "IRON_NUGGET":
         return new ItemStack(Material.IRON_NUGGET, 1);
     }

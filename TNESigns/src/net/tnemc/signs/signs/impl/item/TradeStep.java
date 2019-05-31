@@ -52,8 +52,10 @@ public class TradeStep implements SignStep {
     if(loaded != null) {
 
       try {
-        final Chest chest = SignsData.chest(sign.getLocation());
+        final boolean admin = ItemSign.isAdmin(sign.getLocation());
+        final Chest chest = (admin)? null : SignsData.chest(sign.getLocation());
         final ItemStack item = ItemSign.getItem(sign.getLocation());
+
 
         if(item != null) {
           TNE.debug("Trade Enchant Size: " + item.getEnchantments().size());
@@ -63,8 +65,9 @@ public class TradeStep implements SignStep {
           final boolean selling = ItemSign.isSelling(sign.getLocation());
           TNE.menuManager().setViewerData(player, "shop_owner", loaded.getOwner());
           TNE.menuManager().setViewerData(player, "shop_selling", selling);
-          TNE.menuManager().setViewerData(player, "shop_chest", chest.getLocation());
+          if(!admin) TNE.menuManager().setViewerData(player, "shop_chest", chest.getLocation());
           TNE.menuManager().setViewerData(player, "shop_location", loaded.getLocation());
+          TNE.menuManager().setViewerData(player, "shop_admin", admin);
           TNE.menuManager().setViewerData(player, "shop_item", item);
 
           TNE.debug("Selling: " + selling);

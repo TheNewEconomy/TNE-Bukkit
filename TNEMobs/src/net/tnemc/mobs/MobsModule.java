@@ -120,14 +120,14 @@ public class MobsModule extends Module {
   Boolean mobEnabled(String mob, String world, String player) {
     //System.out.println("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled", world, player) + "");
-    System.out.println("Config null?: " + (fileConfiguration == null));
-    System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
-    System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
-    System.out.println("Mob: " + mob);
+    //System.out.println("Config null?: " + (fileConfiguration == null));
+    //System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
+    //System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
+    //System.out.println("Mob: " + mob);
     if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled") == null) {
       return false;
     }
-    System.out.println(fileConfiguration.getBool("Mobs." + mob + ".Enabled"));
+    //System.out.println(fileConfiguration.getBool("Mobs." + mob + ".Enabled"));
     return fileConfiguration.getBool("Mobs." + mob + ".Enabled");
   }
 

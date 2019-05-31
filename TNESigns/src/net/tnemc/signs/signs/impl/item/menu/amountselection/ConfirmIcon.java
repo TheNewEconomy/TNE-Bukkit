@@ -40,10 +40,17 @@ public class ConfirmIcon extends Icon {
 
     try {
       ItemSign.saveItemOffer(location, null, true, amount);
-      SignsData.updateStep(location, 3);
 
-      this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount) +
-                     ". Now right click your shop sign, followed by a chest to mark your shop's storage.";
+      if(ItemSign.isAdmin(location)) {
+        SignsData.updateStep(location, 4);
+        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount);
+      } else {
+        SignsData.updateStep(location, 3);
+
+        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount) +
+            ". Now right click your shop sign, followed by a chest to mark your shop's storage.";
+      }
+
     } catch (SQLException e) {
       this.message = ChatColor.RED + "Error while changing shop's currency offer.";
     }

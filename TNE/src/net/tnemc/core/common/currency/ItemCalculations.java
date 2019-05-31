@@ -370,14 +370,21 @@ public class ItemCalculations {
 
   public static Integer removeItemAmount(ItemStack stack, Inventory inventory, final Integer amount) {
     int left = amount;
+    TNE.debug("Amount: " + amount);
 
     for(int i = 0; i < inventory.getStorageContents().length; i++) {
       if(left <= 0) break;
       ItemStack item = inventory.getItem(i);
-      if(item == null || !MaterialUtils.itemsEqual(stack, item)) continue;
+      TNE.debug("Null?: " + (item == null));
+      if(item == null || !MaterialUtils.itemsEqual(stack, item)) {
+        TNE.debug("Skipping item in removeITemAmount due to not equaling.");
+        continue;
+      }
+      TNE.debug("Items Equal, go onwards.");
 
       if(item.getAmount() <= left) {
         left -= item.getAmount();
+        TNE.debug("remove stack from inventory");
         inventory.setItem(i, null);
       } else {
         item.setAmount(item.getAmount() - left);

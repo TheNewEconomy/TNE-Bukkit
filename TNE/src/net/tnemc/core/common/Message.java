@@ -115,19 +115,19 @@ public class Message {
 
   public String[] format(String world, CommandSender sender, String id) {
     String found = TNE.instance().api().getString(this.node, world, id);
+    //System.out.println("Node: " + node);
+    //System.out.println("Message: " + found);
 
     String[] message = (found == null || found.trim().equalsIgnoreCase(""))? new String[] { this.node } : found.split("<newline>");
     String[] formatted = new String[message.length];
 
     for(int i = 0; i < message.length; i++) {
       String send = message[i];
-      if (!send.equals(this.node)) {
-        Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
+      Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 
-        while (it.hasNext()) {
-          Map.Entry<String, String> entry = it.next();
-          send = send.replace(entry.getKey(), entry.getValue());
-        }
+      while (it.hasNext()) {
+        Map.Entry<String, String> entry = it.next();
+        send = send.replace(entry.getKey(), entry.getValue());
       }
       Boolean strip = !(sender instanceof Player);
       formatted[i] = replaceColours(send, strip);
