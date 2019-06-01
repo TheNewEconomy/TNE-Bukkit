@@ -94,7 +94,7 @@ public class TNEAccount implements Account {
       if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
         //System.out.println("experience currency");
         //System.out.println("Setting experience to " + newHoldings.intValue());
-        player.setLevel(newHoldings.intValue());
+        player.setTotalExperience(newHoldings.intValue());
       }
       /*WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
       worldHoldings.setHoldings(currency, newHoldings);

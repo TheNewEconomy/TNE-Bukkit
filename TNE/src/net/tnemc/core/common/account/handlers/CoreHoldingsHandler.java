@@ -65,7 +65,7 @@ public class CoreHoldingsHandler implements HoldingsHandler {
         //TNE.debug("experience currency");
         //TNE.debug("Grabbing experience holdings...");
         if(player != null) {
-          return new BigDecimal(player.getLevel());
+          return new BigDecimal(player.getTotalExperience());
         }
       }
       /*WorldHoldings worldHoldings = tneAccount.getWorldHoldings().containsKey(world)?
