@@ -7,6 +7,8 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.ItemCalculations;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
@@ -194,14 +196,22 @@ public class MobsListener implements ModuleListener {
           //TNE.debug("Enabled: " + MobsModule.instance().mobEnabled(mob, world, id.toString()));
           if (MobsModule.instance().mobEnabled(mob, world, id.toString())) {
             //TNE.debug("Mob: " + mob);
-            TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
-            transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), reward, TransactionChargeType.GAIN));
-            TransactionResult result = TNE.transactionManager().perform(transaction);
-            if (result.proceed() && MobsModule.instance().fileConfiguration.getBool("Mobs.Message")) {
-              Message mobKilled = new Message(MobsModule.instance().fileConfiguration.getString(messageNode));
-              mobKilled.addVariable("$mob", formatted.replace("_", " "));
-              mobKilled.addVariable("$reward", CurrencyFormatter.format(world, currency, reward));
-              mobKilled.translate(world, killer);
+            final TNECurrency currencyObject = TNE.manager().currencyManager().get(world, currency);
+
+            if(currencyObject.isItem()) {
+              event.getDrops().addAll(ItemCalculations.getItemsForAmount(currencyObject, reward));
+            }  else if(currencyObject.isXp()) {
+              event.setDroppedExp(reward.intValue());
+            } else {
+              TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
+              transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), reward, TransactionChargeType.GAIN));
+              TransactionResult result = TNE.transactionManager().perform(transaction);
+              if (result.proceed() && MobsModule.instance().fileConfiguration.getBool("Mobs.Message")) {
+                Message mobKilled = new Message(MobsModule.instance().fileConfiguration.getString(messageNode));
+                mobKilled.addVariable("$mob", formatted.replace("_", " "));
+                mobKilled.addVariable("$reward", CurrencyFormatter.format(world, currency, reward));
+                mobKilled.translate(world, killer);
+              }
             }
           }
         }

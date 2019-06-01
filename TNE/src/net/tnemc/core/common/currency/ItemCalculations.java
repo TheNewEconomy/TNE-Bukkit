@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -348,6 +349,71 @@ public class ItemCalculations {
         }
       }
     }
+  }
+
+  public static List<ItemStack> getItemsForAmount(TNECurrency currency, BigDecimal amount) {
+    List<ItemStack> items = new ArrayList<>();
+
+
+    if(currency.isItem()) {
+      final String differenceString = amount.toPlainString();
+      String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
+
+      final BigInteger majorChange = new BigInteger(split[0]);
+      final BigInteger minorChange = new BigInteger(split[1]);
+
+      BigInteger workingAmount = BigInteger.ZERO;
+      BigInteger actualAmount = BigInteger.ZERO;
+      String additional = "0";
+
+      NavigableMap<Integer, TNETier> values;
+
+      if(majorChange.compareTo(BigInteger.ZERO) > 0) {
+        values = currency.getTNEMajorTiers();
+
+        workingAmount = majorChange;
+        actualAmount = BigInteger.ZERO;
+
+        for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
+          BigInteger weight = BigInteger.valueOf(entry.getKey());
+
+          BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
+          additional = "0";
+
+          ItemStack stack = entry.getValue().getItemInfo().toStack();
+          stack.setAmount(itemAmount.intValue());
+
+
+          actualAmount = actualAmount.add(weight.multiply(itemAmount));
+          workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
+          items.add(stack);
+        }
+      }
+
+      if(minorChange.compareTo(BigInteger.ZERO) > 0) {
+        values = currency.getTNEMinorTiers();
+
+        workingAmount = minorChange;
+        actualAmount = BigInteger.ZERO;
+
+        for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
+          BigInteger weight = BigInteger.valueOf(entry.getKey());
+
+          BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
+          additional = "0";
+
+          ItemStack stack = entry.getValue().getItemInfo().toStack();
+          stack.setAmount(itemAmount.intValue());
+
+
+          actualAmount = actualAmount.add(weight.multiply(itemAmount));
+          workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
+          items.add(stack);
+        }
+      }
+    }
+
+    return items;
   }
 
   public static void giveItem(ItemStack stack, Inventory inventory, final Integer amount) {
