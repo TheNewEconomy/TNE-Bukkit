@@ -50,6 +50,10 @@ public class WorldManager {
     return currencies.get(currency);
   }
 
+  public boolean hasCurrency(String currency) {
+    return currencies.containsKey(currency);
+  }
+
   public void removeCurrency(String currency) {
     currencies.remove(currency);
   }

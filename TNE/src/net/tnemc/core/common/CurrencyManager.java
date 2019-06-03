@@ -375,6 +375,19 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world) {
+    if(TNE.instance().hasWorldManager(world)) {
+      final String normalized = TNE.instance().getWorldManager(world).getConfigurationWorld();
+      if (TNE.instance().api().hasConfiguration("World." + world + ".DefaultCurrency")) {
+        final String defaultCurrency = TNE.instance().api().getString("World." + world + ".DefaultCurrency");
+
+        if(TNE.instance().getWorldManager(world).hasCurrency(defaultCurrency)) {
+          return TNE.instance().getWorldManager(world).getCurrency(defaultCurrency);
+        }
+
+      }
+    }
+
+
     for(TNECurrency currency : TNE.instance().getWorldManager(world).getCurrencies()) {
       TNE.debug("Currency: " + currency.name() + " World: " + world + " Default? " + currency.isDefault());
       if(currency.isDefault()) {
