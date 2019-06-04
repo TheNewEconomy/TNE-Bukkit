@@ -84,6 +84,11 @@ public class ModuleLoader {
           continue;
         }
         ModuleInfo info = module.getClass().getAnnotation(ModuleInfo.class);
+
+        if(info.name().equalsIgnoreCase("h2") || info.name().equalsIgnoreCase("mysql")) {
+          continue;
+        }
+
         ModuleEntry entry = new ModuleEntry(info, module);
         TNE.instance().getLogger().info("Found module: " + info.name() + " version: " + info.version());
         modules.put(entry.getInfo().name(), entry);

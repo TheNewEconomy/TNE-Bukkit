@@ -3,6 +3,8 @@ package net.tnemc.core.common.data;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DataProvider;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.impl.H2Provider;
+import net.tnemc.core.common.data.impl.MySQLProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +26,12 @@ public class TNEDataManager extends DataManager {
   }
 
   public void loadProviders() {
+    TNE.debug("Loading core providers");
+
+    registerProvider(H2Provider.class);
+    registerProvider(MySQLProvider.class);
+
+
     TNE.debug("Loading providers");
 
     TNE.loader().getModules().forEach((key, value)->{

@@ -378,7 +378,7 @@ public class CurrencyManager {
     if(TNE.instance().hasWorldManager(world)) {
       final String normalized = TNE.instance().getWorldManager(world).getConfigurationWorld();
       if (TNE.instance().api().hasConfiguration("World." + world + ".DefaultCurrency")) {
-        final String defaultCurrency = TNE.instance().api().getString("World." + world + ".DefaultCurrency");
+        final String defaultCurrency = TNE.instance().api().getString("World." + normalized + ".DefaultCurrency");
 
         if(TNE.instance().getWorldManager(world).hasCurrency(defaultCurrency)) {
           return TNE.instance().getWorldManager(world).getCurrency(defaultCurrency);

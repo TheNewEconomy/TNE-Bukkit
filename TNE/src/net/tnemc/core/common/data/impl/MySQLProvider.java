@@ -1,4 +1,4 @@
-package net.tnemc.mysql;
+package net.tnemc.core.common.data.impl;
 
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
