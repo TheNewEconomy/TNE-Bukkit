@@ -190,11 +190,11 @@ public class TNE extends TNELib {
     loader = new ModuleLoader();
     loader.load();
 
-    if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
+    /*if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
       new File(getDataFolder(), "modules").mkdir();
       ModuleLoader.downloadModule("h2");
       loader.load("H2");
-    }
+    }*/
 
     //Load modules
     loader.getModules().forEach((key, value)->{
@@ -420,7 +420,9 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
-    WorldGuardManager.init();
+    if(getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+      WorldGuardManager.init();
+    }
 
     getLogger().info("The New Economy has been enabled!");
 

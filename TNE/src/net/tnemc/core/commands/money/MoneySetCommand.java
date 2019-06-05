@@ -1,7 +1,6 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -81,7 +80,7 @@ public class MoneySetCommand extends TNECommand {
         String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
 
         if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 4) {
-          currencyName = WorldGuardManager.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+          currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
         }
 
         final UUID id = IDFinder.getID(arguments[0]);

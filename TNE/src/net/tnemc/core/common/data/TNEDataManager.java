@@ -28,9 +28,6 @@ public class TNEDataManager extends DataManager {
   public void loadProviders() {
     TNE.debug("Loading core providers");
 
-    registerProvider(H2Provider.class);
-    registerProvider(MySQLProvider.class);
-
 
     TNE.debug("Loading providers");
 
@@ -41,6 +38,9 @@ public class TNEDataManager extends DataManager {
         registerProvider(provider);
       });
     });
+
+    registerProvider(H2Provider.class);
+    registerProvider(MySQLProvider.class);
   }
 
   public Map<String, TNEDataProvider> getTNEProviders() {

@@ -1,7 +1,6 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -78,7 +77,7 @@ public class AdminBalanceCommand extends TNECommand {
       String world = (arguments.length >= 2) ? WorldFinder.getWorldName(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
       if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
-        currencyName = WorldGuardManager.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
       }
 
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);

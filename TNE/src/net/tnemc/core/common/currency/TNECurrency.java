@@ -160,7 +160,7 @@ public class TNECurrency implements Currency {
 
   @Override
   public String name() {
-    return single;
+    return identifier;
   }
 
   @Override

@@ -1,12 +1,15 @@
 package net.tnemc.core.common.utils;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.TNECurrency;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -141,6 +144,20 @@ public class MISCUtils {
       return Bukkit.getPlayer(IDFinder.getID(argument)) != null;
     }
     return false;
+  }
+
+  public static TNECurrency findCurrency(String world, Location location) {
+    if(TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+      return WorldGuardManager.findCurrency(world, location);
+    }
+    return TNE.manager().currencyManager().get(world);
+  }
+
+  public static String findCurrencyName(String world, Location location) {
+    if(TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+      return WorldGuardManager.findCurrencyName(world, location);
+    }
+    return TNE.manager().currencyManager().get(world).name();
   }
 
   public static void restore(CommandSender sender) {

@@ -1,7 +1,6 @@
 package net.tnemc.mobs;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
@@ -12,6 +11,7 @@ import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -179,7 +179,7 @@ public class MobsListener implements ModuleListener {
             mob = "Custom.Entries." + entity.getCustomName();
           String currency = MobsModule.instance().mobCurrency(mob, world, id.toString());
           reward = (player) ? MobsModule.instance().playerReward(mob, world, id.toString()) : MobsModule.instance().mobReward(mob, world, id.toString());
-          reward = CurrencyFormatter.round(WorldGuardManager.findCurrency(world, killer.getLocation()), reward.multiply(MobsModule.instance().multiplier(material, world, id.toString())));
+          reward = CurrencyFormatter.round(MISCUtils.findCurrency(world, killer.getLocation()), reward.multiply(MobsModule.instance().multiplier(material, world, id.toString())));
 
           TNE.debug("Reward: " + reward);
 

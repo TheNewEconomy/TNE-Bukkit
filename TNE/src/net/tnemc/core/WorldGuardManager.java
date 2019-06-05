@@ -27,15 +27,17 @@ public class WorldGuardManager {
   }
 
   public static TNECurrency findCurrency(String world, Location location) {
-    final RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(location.getWorld()));
+    if(TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+      final RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(location.getWorld()));
 
-    if(regionManager != null) {
-      final ApplicableRegionSet set = regionManager.getApplicableRegions(BukkitAdapter.asBlockVector(location));
+      if (regionManager != null) {
+        final ApplicableRegionSet set = regionManager.getApplicableRegions(BukkitAdapter.asBlockVector(location));
 
-      final String value = set.queryValue(null, currencyFlag);
+        final String value = set.queryValue(null, currencyFlag);
 
-      if(value != null && !value.equalsIgnoreCase(currencyFlag.getDefault())) {
-        return TNE.manager().currencyManager().get(world, value);
+        if (value != null && !value.equalsIgnoreCase(currencyFlag.getDefault())) {
+          return TNE.manager().currencyManager().get(world, value);
+        }
       }
     }
     return TNE.manager().currencyManager().get(world);

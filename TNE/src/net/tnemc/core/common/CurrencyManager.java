@@ -2,12 +2,12 @@ package net.tnemc.core.common;
 
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
-import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.event.currency.TNECurrencyLoadEvent;
@@ -401,7 +401,7 @@ public class CurrencyManager {
   }
 
   public TNECurrency get(String world, Location location) {
-    return WorldGuardManager.findCurrency(world, location);
+    return MISCUtils.findCurrency(world, location);
   }
 
   public TNECurrency get(String world, String name) {

@@ -1,7 +1,6 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -82,16 +81,16 @@ public class MoneyBalanceCommand extends TNECommand {
       if(TNE.instance().getWorldManager(world) == null) world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       world = TNE.instance().getWorldManager(world).getBalanceWorld();
       TNE.debug("MoneyBalanceCommand.execute, World: " + world);
+      final UUID id = IDFinder.getID(sender);
       if(TNE.manager() == null) TNE.debug("Economy Manager is null");
       if(TNE.manager().currencyManager() == null) TNE.debug("TNECurrency Manager is null");
       if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
       String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
 
-      if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 2) {
-        currencyName = WorldGuardManager.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+      if(arguments.length < 2) {
+        currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(id).getLocation());
       }
 
-      final UUID id = IDFinder.getID(sender);
       final TNEAccount account = TNE.manager().getAccount(id);
       TNE.debug("World: " + world);
       TNE.debug("Args Length: " + arguments.length);
