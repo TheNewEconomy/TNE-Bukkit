@@ -60,7 +60,7 @@ public class CurrencyFormatter {
 
     if(currency == null) currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
 
-    amount = round(world, currency.name(), amount);
+    amount = round(currency, amount);
     TNE.debug(currency.name() + " World: " + world);
 
     String[] amountStr = (String.valueOf(amount) + (String.valueOf(amount).contains(".")? "" : ".00")).split("\\.");
@@ -90,21 +90,14 @@ public class CurrencyFormatter {
     return formatted;
   }
 
-  public static BigDecimal round(String world, String currency, BigDecimal amount) {
-    if(TNE.manager().currencyManager().contains(world, currency)) {
-      return amount.setScale(TNE.manager().currencyManager().get(world, currency).decimalPlaces(), BigDecimal.ROUND_CEILING);
-    }
-
-    if(TNE.manager().currencyManager().contains(world)) {
-      return amount.setScale(TNE.manager().currencyManager().get(world).decimalPlaces(), BigDecimal.ROUND_CEILING);
-    }
-    return amount.setScale(TNE.manager().currencyManager().get(TNE.instance().defaultWorld).decimalPlaces(), BigDecimal.ROUND_CEILING);
+  public static BigDecimal round(TNECurrency currency, BigDecimal amount) {
+    return amount.setScale(currency.decimalPlaces(), BigDecimal.ROUND_CEILING);
   }
 
   public static String parseAmount(TNECurrency currency, String world, String amount) {
     if(amount.length() > 40) return "Messages.Money.ExceedsCurrencyMaximum";
-    if(isBigDecimal(amount, currency.name(), world)) {
-      BigDecimal translated = translateBigDecimal(amount, currency.name(), world);
+    if(isBigDecimal(amount, currency)) {
+      BigDecimal translated = translateBigDecimal(amount, currency);
       if(translated.compareTo(currency.getMaxBalance()) > 0) {
         return "Messages.Money.ExceedsCurrencyMaximum";
       }
@@ -159,15 +152,9 @@ public class CurrencyFormatter {
     return String.format(form, sub).replace(' ', '0');
   }
 
-  public static boolean isBigDecimal(String value, String world) {
-    String major = TNE.manager().currencyManager().get(world).name();
-    return isBigDecimal(value, major, world);
-  }
-
-  private static boolean isBigDecimal(String value, String currency, String world) {
-    String decimal = (TNE.manager().currencyManager().get(world, currency)).getDecimal();
+  private static boolean isBigDecimal(String value, TNECurrency currency) {
     try {
-      new BigDecimal(value.replace(decimal, "."));
+      new BigDecimal(value.replace(currency.getDecimal(), "."));
       return true;
     } catch(Exception e) {
       return false;
@@ -175,12 +162,10 @@ public class CurrencyFormatter {
   }
 
   public static BigDecimal translateBigDecimal(String value, String world) {
-    String major = TNE.manager().currencyManager().get(world).name();
-    return translateBigDecimal(value, major, world);
+    return translateBigDecimal(value, TNE.manager().currencyManager().get(world));
   }
 
-  public static BigDecimal translateBigDecimal(String value, String currency, String world) {
-    String decimal = (TNE.manager().currencyManager().get(world, currency)).getDecimal();
-    return new BigDecimal(value.replace(decimal, "."));
+  public static BigDecimal translateBigDecimal(String value, TNECurrency currency) {
+    return new BigDecimal(value.replace(currency.getDecimal(), "."));
   }
 }

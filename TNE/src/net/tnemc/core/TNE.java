@@ -205,10 +205,6 @@ public class TNE extends TNELib {
       }
     });
 
-    getServer().getWorlds().forEach(world->{
-      worldManagers.put(world.getName(), new WorldManager(world.getName()));
-    });
-
     //Configurations
     initializeConfigurations();
 
@@ -231,6 +227,8 @@ public class TNE extends TNELib {
     configurations().add(main, "main");
     configurations().add(messages, "messages");
     configurations().add(world, "world");
+
+    getServer().getWorlds().forEach(world-> worldManagers.put(world.getName(), new WorldManager(world.getName())));
 
     TNE.debug("Preparing commands");
     List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
@@ -261,19 +259,17 @@ public class TNE extends TNELib {
     registerCommand(moneyArguments.toArray(new String[moneyArguments.size()]), new MoneyCommand(this));
     registerCommand(new String[] { "transaction", "trans" }, new TransactionCommand(this));
     registerCommand(new String[] { "yediot" }, new YetiCommand(this));
-    loader.getModules().forEach((key, value)->{
-      value.getModule().getCommands().forEach((command)->{
-        List<String> accessors = new ArrayList<>();
-        for(String string : command.getAliases()) {
-          accessors.add(string);
-        }
-        accessors.add(command.getName());
-        TNE.debug("Command Manager Null?: " + (commandManager == null));
-        TNE.debug("Accessors?: " + accessors.size());
-        TNE.debug("Command Null?: " + (command == null));
-        registerCommand(accessors.toArray(new String[accessors.size()]), command);
-      });
-    });
+    loader.getModules().forEach((key, value)-> value.getModule().getCommands().forEach((command)->{
+      List<String> accessors = new ArrayList<>();
+      for(String string : command.getAliases()) {
+        accessors.add(string);
+      }
+      accessors.add(command.getName());
+      TNE.debug("Command Manager Null?: " + (commandManager == null));
+      TNE.debug("Accessors?: " + accessors.size());
+      TNE.debug("Command Null?: " + (command == null));
+      registerCommand(accessors.toArray(new String[accessors.size()]), command);
+    }));
 
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
@@ -423,6 +419,8 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
+
+    WorldGuardManager.init();
 
     getLogger().info("The New Economy has been enabled!");
 

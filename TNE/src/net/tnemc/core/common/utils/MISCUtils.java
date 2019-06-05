@@ -133,6 +133,15 @@ public class MISCUtils {
       return false;
     }
   }
+  
+  public static boolean isSingularPlayer(String argument) {
+    if(!argument.contains(",") && !argument.contains(TNE.instance().api().getString("Core.Server.ThirdParty.Faction")) &&
+        !argument.contains(TNE.instance().api().getString("Core.Server.ThirdParty.Town")) &&
+        !argument.contains(TNE.instance().api().getString("Core.Server.ThirdParty.Nation"))) {
+      return Bukkit.getPlayer(IDFinder.getID(argument)) != null;
+    }
+    return false;
+  }
 
   public static void restore(CommandSender sender) {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");

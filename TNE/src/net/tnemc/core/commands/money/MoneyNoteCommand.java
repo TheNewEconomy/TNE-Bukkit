@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -10,6 +11,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -72,7 +74,12 @@ public class MoneyNoteCommand extends TNECommand {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       if(arguments.length >= 1) {
         final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-        final String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
+        String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
+
+        if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 2) {
+          currencyName = WorldGuardManager.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        }
+
         final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
         final UUID id = IDFinder.getID(sender);
         final TNEAccount account = TNE.manager().getAccount(id);

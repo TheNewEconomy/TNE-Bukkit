@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -9,8 +10,10 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -75,7 +78,12 @@ public class MoneyOtherCommand extends TNECommand {
 
       UUID id = IDFinder.getID(arguments[0]);
       String world = (arguments.length >= 2) ? WorldFinder.getWorldName(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      String currencyName = (arguments.length == 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
+      String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
+
+      if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
+        currencyName = WorldGuardManager.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+      }
+
       TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
       if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {

@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -9,6 +10,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -70,7 +72,11 @@ public class MoneyTakeCommand extends TNECommand {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       if(arguments.length >= 2) {
         final String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-        final String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
+        String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
+
+        if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 4) {
+          currencyName = WorldGuardManager.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        }
 
         if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
           new Message("Messages.General.Disabled").translate(world, sender);

@@ -10,6 +10,7 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -66,7 +67,9 @@ public class MoneyTopCommand extends TNECommand {
       int page = 1;
       int limit = (parsed.containsKey("limit") && MISCUtils.isInteger(parsed.get("limit")))? Integer.valueOf(parsed.get("limit")) : 10;
       final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      final TNECurrency currency = TNE.manager().currencyManager().get(world);
+      final TNECurrency currency = (sender instanceof Player)?
+          TNE.manager().currencyManager().get(world, ((Player) sender).getLocation())
+          : TNE.manager().currencyManager().get(world);
 
       if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
         new Message("Messages.General.Disabled").translate(world, sender);

@@ -106,24 +106,34 @@ public class Economy_TheNewEconomy implements Economy {
   @Override
   public boolean has(String username, double amount) {
     TNE.debug("Economy_TheNewEconomy.has(username, amount)");
+    TNE.debug("username: " + username);
     TNE.debug("Amount: " + amount);
     return has(username, TNE.instance().defaultWorld, amount);
   }
 
   @Override
   public boolean has(OfflinePlayer offlinePlayer, double amount) {
+    TNE.debug("Economy_TheNewEconomy.has(offlinePlayer, amount)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("Amount: " + amount);
     return has(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), TNE.instance().defaultWorld, amount);
   }
 
   @Override
   public boolean has(String username, String world, double amount) {
     TNE.debug("Economy_TheNewEconomy.has(username, world, amount)");
+    TNE.debug("username: " + username);
+    TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
     return api.hasHoldings(username, new BigDecimal(amount + ""), world);
   }
 
   @Override
   public boolean has(OfflinePlayer offlinePlayer, String world, double amount) {
+    TNE.debug("Economy_TheNewEconomy.has(offlinePlayer, world, amount)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
     return has(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), world, amount);
   }
 

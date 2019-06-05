@@ -2,6 +2,7 @@ package net.tnemc.core.common;
 
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
@@ -13,6 +14,7 @@ import net.tnemc.core.event.currency.TNECurrencyLoadEvent;
 import net.tnemc.core.event.currency.TNECurrencyTierLoadedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -396,6 +398,10 @@ public class CurrencyManager {
       }
     }
     return null;
+  }
+
+  public TNECurrency get(String world, Location location) {
+    return WorldGuardManager.findCurrency(world, location);
   }
 
   public TNECurrency get(String world, String name) {

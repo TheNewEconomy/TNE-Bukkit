@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -9,6 +10,7 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.CurrencyFormatter;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -69,7 +71,11 @@ public class AdminCreateCommand extends TNECommand {
         TNEAccount acc = new TNEAccount(id, IDFinder.getUsername(arguments[0]));
         acc.initializeHoldings(world);
         if(initial.compareTo(BigDecimal.ZERO) > 0) {
-          acc.setHoldings(world, TNE.manager().currencyManager().get(world).name(), initial);
+          if(sender instanceof Player) {
+            acc.setHoldings(world, WorldGuardManager.findCurrencyName(world, ((Player) sender).getLocation()), initial);
+          } else {
+            acc.setHoldings(world, TNE.manager().currencyManager().get(world).name(), initial);
+          }
         }
         TNE.manager().addAccount(acc);
 

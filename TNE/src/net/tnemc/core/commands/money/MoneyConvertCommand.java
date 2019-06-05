@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -69,8 +70,8 @@ public class MoneyConvertCommand extends TNECommand {
         final String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         final String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
         final TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
-        TNECurrency from = TNE.manager().currencyManager().get(WorldFinder.getWorld(sender, WorldVariant.BALANCE));
         String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        TNECurrency from = WorldGuardManager.findCurrency(worldFrom, player.getLocation());
 
         if(TNE.instance().getWorldManager(worldFrom).isEconomyDisabled()) {
           new Message("Messages.General.Disabled").translate(worldFrom, sender);
