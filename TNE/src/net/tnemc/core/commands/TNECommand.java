@@ -210,7 +210,7 @@ public abstract class TNECommand {
     TNECommand sub = findSub(arguments[0]);
     if(sub == null && !arguments[0].equalsIgnoreCase("help") && !arguments[0].equalsIgnoreCase("?")) {
       Message noCommand = new Message("Messages.Command.None");
-      noCommand.addVariable("$commands", "/" + getName());
+      noCommand.addVariable("$command", "/" + getName());
       noCommand.addVariable("$arguments", arguments[0]);
       noCommand.translate(world, sender);
       return false;

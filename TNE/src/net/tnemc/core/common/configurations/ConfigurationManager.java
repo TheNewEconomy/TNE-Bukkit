@@ -18,6 +18,7 @@ package net.tnemc.core.common.configurations;
 
 import com.github.tnerevival.TNELib;
 import net.tnemc.config.CommentedConfiguration;
+import net.tnemc.core.TNE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,6 @@ public class ConfigurationManager {
 
   public boolean save = false;
   public List<String> loaded = new ArrayList<>();
-  public List<String> changed = new ArrayList<>();
 
   public HashMap<String, Configuration> configurations = new HashMap<>();
 
@@ -68,7 +68,10 @@ public class ConfigurationManager {
   }
 
   public void load(CommentedConfiguration configurationFile, String configID) {
-    getConfiguration(configID).load(configurationFile);
+    Configuration config = getConfiguration(configID);
+    config.load(configurationFile);
+
+    add(config, configID);
   }
 
   public void save(CommentedConfiguration configurationFile, String configID) {
@@ -88,9 +91,7 @@ public class ConfigurationManager {
 
   public boolean reload(String configID) {
     if(configID.equalsIgnoreCase("all")) {
-      for(String str : loaded) {
-        load(configurations.get(str).getConfiguration(), str);
-      }
+      TNE.instance().initializeConfigurations(false);
       return true;
     } else if(configID.equalsIgnoreCase("currency")) {
 

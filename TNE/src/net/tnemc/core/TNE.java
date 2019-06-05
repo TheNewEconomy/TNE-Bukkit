@@ -648,7 +648,11 @@ public class TNE extends TNELib {
     return currencyConfigurations;
   }
 
-  private void initializeConfigurations() {
+  public void initializeConfigurations() {
+    initializeConfigurations(true);
+  }
+
+  public void initializeConfigurations(boolean item) {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
     currencies = new File(getDataFolder(), "currency.yml");
@@ -668,32 +672,34 @@ public class TNE extends TNELib {
     TNE.logger().info("Initialized players.yml");
     worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
     TNE.logger().info("Initialized worlds.yml");
-    Bukkit.getScheduler().runTaskAsynchronously(this, ()-> {
-      final String itemsFile = (MISCUtils.isOneThirteen())? "items.yml" : "items-1.12.yml";
-      itemConfigurations = initializeConfiguration(items, itemsFile);
-      MaterialHelper.initialize();
+    if(item) {
+      Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+        final String itemsFile = (MISCUtils.isOneThirteen()) ? "items.yml" : "items-1.12.yml";
+        itemConfigurations = initializeConfiguration(items, itemsFile);
+        MaterialHelper.initialize();
 
-      if(MISCUtils.isOneThirteen()) {
-        itemCompatibility = new ItemCompatibility13();
-      } else if (MISCUtils.isOneSeven()) {
-        itemCompatibility = new ItemCompatibility7();
-      } else {
-        itemCompatibility = new ItemCompatibility12();
-      }
+        if (MISCUtils.isOneThirteen()) {
+          itemCompatibility = new ItemCompatibility13();
+        } else if (MISCUtils.isOneSeven()) {
+          itemCompatibility = new ItemCompatibility7();
+        } else {
+          itemCompatibility = new ItemCompatibility12();
+        }
 
-      menuManager = new MenuManager();
-      TNE.debug("Preparing menus");
-      loader.getModules().forEach((key, value)->
-          value.getModule().registerMenus(this).forEach((name, menu)->{
-            menuManager.menus.put(name, menu);
-          })
-      );
-      TNE.logger().info("Initialized items.yml");
+        menuManager = new MenuManager();
+        TNE.debug("Preparing menus");
+        loader.getModules().forEach((key, value) ->
+            value.getModule().registerMenus(this).forEach((name, menu) -> {
+              menuManager.menus.put(name, menu);
+            })
+        );
+        TNE.logger().info("Initialized items.yml");
 
-      loader.getModules().forEach((key, value) -> {
-        value.getModule().initializeConfigurations();
+        loader.getModules().forEach((key, value) -> {
+          value.getModule().initializeConfigurations();
+        });
       });
-    });
+    }
   }
 
   public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
