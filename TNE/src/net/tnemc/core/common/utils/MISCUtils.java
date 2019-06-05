@@ -147,14 +147,14 @@ public class MISCUtils {
   }
 
   public static TNECurrency findCurrency(String world, Location location) {
-    if(TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    if(!TNE.fawe && TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       return WorldGuardManager.findCurrency(world, location);
     }
     return TNE.manager().currencyManager().get(world);
   }
 
   public static String findCurrencyName(String world, Location location) {
-    if(TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    if(!TNE.fawe && TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       return WorldGuardManager.findCurrencyName(world, location);
     }
     return TNE.manager().currencyManager().get(world).name();

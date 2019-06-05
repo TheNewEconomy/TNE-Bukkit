@@ -60,7 +60,11 @@ public class MaterialUtils {
   }
 
   public static String formatMaterialNameWithSpace(Material material) {
-    String[] wordsSplit = material.name().split("_");
+    return formatMaterialNameWithSpace(material.name());
+  }
+
+  public static String formatMaterialNameWithSpace(String name) {
+    String[] wordsSplit = name.split("_");
     String sReturn = "";
     int count = 1;
     for(String w: wordsSplit) {

@@ -74,7 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -137,6 +136,7 @@ public class TNE extends TNELib {
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
+  public static boolean fawe = false;
 
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
@@ -149,6 +149,10 @@ public class TNE extends TNELib {
       getLogger().info("Unable to load The New Economy as it is incompatible with GUIShop.");
       blacklisted = true;
       return;
+    }
+
+    if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") != null) {
+      fawe = true;
     }
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
@@ -281,11 +285,6 @@ public class TNE extends TNELib {
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     useUUID = configurations().getBoolean("Core.UUID");
 
-
-    if(!loader.hasModuleWithoutCase(configurations().getString("Core.Database.Type"))) {
-      getLogger().log(Level.SEVERE, "Unable to locate module with specified database type.");
-    }
-
     TNE.debug("Preparing save manager");
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Core.Database.Type").toLowerCase(),
@@ -391,10 +390,7 @@ public class TNE extends TNELib {
 
     //Metrics
     TNE.debug("Preparing metrics");
-    if(api.getBoolean("Core.Server.ThirdParty.Stats")) {
-      new Metrics(this);
-      getLogger().info("Sending plugin statistics.");
-    }
+    new Metrics(this);
 
     TNE.debug("Preparing server account");
     if(api.getBoolean("Core.Server.Account.Enabled")) {
@@ -420,7 +416,7 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
-    if(getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       WorldGuardManager.init();
     }
 

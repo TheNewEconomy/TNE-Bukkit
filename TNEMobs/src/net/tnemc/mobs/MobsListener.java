@@ -12,6 +12,7 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -209,7 +210,7 @@ public class MobsListener implements ModuleListener {
               TransactionResult result = TNE.transactionManager().perform(transaction);
               if (result.proceed() && MobsModule.instance().fileConfiguration.getBool("Mobs.Message")) {
                 Message mobKilled = new Message(MobsModule.instance().fileConfiguration.getString(messageNode));
-                mobKilled.addVariable("$mob", formatted.replace("_", " "));
+                mobKilled.addVariable("$mob", MaterialUtils.formatMaterialNameWithSpace(formatted));
                 mobKilled.addVariable("$reward", CurrencyFormatter.format(world, currency, reward));
                 mobKilled.translate(world, killer);
               }

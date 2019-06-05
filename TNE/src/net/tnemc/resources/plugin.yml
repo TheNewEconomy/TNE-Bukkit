@@ -7,4 +7,4 @@ api-version: 1.13
 
 #Plugin Data
 main: net.tnemc.core.TNE
-softdepend: [PlaceholderAPI, Vault, Essentials, Reserve, Towny, mcMMO, GUIShop, DiscordSRV, Multiverse-Core]
+softdepend: [WorldEdit, WorldGuard, FastAsyncWorldEdit, PlaceholderAPI, Vault, Essentials, Reserve, Towny, mcMMO, GUIShop, DiscordSRV, Multiverse-Core]
