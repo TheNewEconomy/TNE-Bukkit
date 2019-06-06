@@ -122,15 +122,18 @@ public class TransactionHistoryCommand extends TNECommand {
     transactions.translate(world, sender);
 
     for(TNETransaction transaction : history.values()) {
-      String initiator = (transaction.initiator() == null || IDFinder.getUsername(transaction.initiator()) == null)? "N/A" : IDFinder.getUsername(transaction.initiator());
-      String recipient = (transaction.recipient() == null || IDFinder.getUsername(transaction.recipient()) == null)? "N/A" : IDFinder.getUsername(transaction.recipient());
+      System.out.println("Transaction null?" + (transaction == null));
+      if(transaction != null) {
+        String initiator = (transaction.initiator() == null || IDFinder.getUsername(transaction.initiator()) == null) ? "N/A" : IDFinder.getUsername(transaction.initiator());
+        String recipient = (transaction.recipient() == null || IDFinder.getUsername(transaction.recipient()) == null) ? "N/A" : IDFinder.getUsername(transaction.recipient());
 
-      Message entry = new Message("Messages.Transaction.HistoryEntry");
-      entry.addVariable("$id", transaction.transactionID().toString());
-      entry.addVariable("$type", transaction.type().name());
-      entry.addVariable("$initiator", initiator);
-      entry.addVariable("$recipient", recipient);
-      entry.translate(world, sender);
+        Message entry = new Message("Messages.Transaction.HistoryEntry");
+        entry.addVariable("$id", transaction.transactionID().toString());
+        entry.addVariable("$type", transaction.type().name());
+        entry.addVariable("$initiator", initiator);
+        entry.addVariable("$recipient", recipient);
+        entry.translate(world, sender);
+      }
     }
     return true;
   }

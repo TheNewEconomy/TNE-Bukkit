@@ -53,6 +53,13 @@ public class MISCUtils {
   /**
    * @return Whether the bukkit in use is for MC >= 1.8
    */
+  public static boolean isOneSix() {
+    return Bukkit.getVersion().contains("1.6");
+  }
+
+  /**
+   * @return Whether the bukkit in use is for MC >= 1.8
+   */
   public static boolean isOneSeven() {
     return Bukkit.getVersion().contains("1.7") || isOneEight() || isOneNine() || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
   }

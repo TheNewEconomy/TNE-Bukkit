@@ -291,10 +291,10 @@ public class CurrencyManager {
           stack.setAmount(0);
           Recipe recipe = null;
           if(shapeless) {
-            recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency + "_" + tierName), stack);
+            recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
           } else {
             final List<String> shape = configuration.getStringList(tierBase + ".Options.Crafting.Recipe");
-            recipe = new ShapedRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency + "_" + tierName), stack);
+            recipe = new ShapedRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
             ((ShapedRecipe)recipe).shape(shape.toArray(new String[shape.size()]));
 
           }

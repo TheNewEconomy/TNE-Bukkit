@@ -285,6 +285,8 @@ public class TNE extends TNELib {
     consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
     useUUID = configurations().getBoolean("Core.UUID");
 
+    if(MISCUtils.isOneSix()) useUUID = false;
+
     TNE.debug("Preparing save manager");
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Core.Database.Type").toLowerCase(),

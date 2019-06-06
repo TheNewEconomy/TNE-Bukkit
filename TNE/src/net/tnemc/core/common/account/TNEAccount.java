@@ -88,10 +88,10 @@ public class TNEAccount implements Account {
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
     TNE.debug("Currency: " + cur.name());
-    final Player player = Bukkit.getPlayer(id);
     if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
       //System.out.println("virtual currency");
       if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
+        final Player player = Bukkit.getPlayer(id);
         //System.out.println("experience currency");
         //System.out.println("Setting experience to " + newHoldings.intValue());
         player.setTotalExperience(newHoldings.intValue());
@@ -111,6 +111,7 @@ public class TNEAccount implements Account {
       TNE.debug("Online: " + MISCUtils.isOnline(id, world));
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
+        final Player player = Bukkit.getPlayer(id);
         //System.out.println("physical currency");
         ItemCalculations.setItems(cur, newHoldings, player.getInventory(), false);
       }
