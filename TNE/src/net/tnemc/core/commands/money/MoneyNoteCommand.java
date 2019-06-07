@@ -105,7 +105,7 @@ public class MoneyNoteCommand extends TNECommand {
 
         final BigDecimal value = new BigDecimal(parsed);
         if(value.compareTo(currency.getMinimum()) < 0) {
-          Message minimum = new Message(parsed);
+          Message minimum = new Message("Messages.Money.NoteMinimum");
           minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum()));
           minimum.translate(world, sender);
           return;

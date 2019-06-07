@@ -288,20 +288,22 @@ public class CurrencyManager {
         if(configuration.getBool(tierBase + ".Options.Crafting.Enabled", false)) {
           final boolean shapeless = configuration.getBool(tierBase + ".Options.Crafting.Shapeless", false);
           final ItemStack stack = item.toStack();
-          stack.setAmount(0);
+          stack.setAmount(1);
           Recipe recipe = null;
           if(shapeless) {
             recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
           } else {
             final List<String> shape = configuration.getStringList(tierBase + ".Options.Crafting.Recipe");
+            TNE.debug("Shape: " + String.join(",", shape));
             recipe = new ShapedRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
             ((ShapedRecipe)recipe).shape(shape.toArray(new String[shape.size()]));
 
           }
 
           if(recipe != null) {
-            for(String material : configuration.getStringList(tierBase + ".Options.Crafting.Recipe")) {
+            for(String material : configuration.getStringList(tierBase + ".Options.Crafting.Materials")) {
               final String[] split = material.split(":");
+              TNE.debug("Material: " + material);
               if(split.length >= 2) {
                 if(shapeless) {
                   ((ShapelessRecipe)recipe).addIngredient(MaterialHelper.getMaterial(split[1]));
