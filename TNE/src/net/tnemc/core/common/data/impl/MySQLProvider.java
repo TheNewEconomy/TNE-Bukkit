@@ -573,12 +573,12 @@ public class MySQLProvider extends TNEDataProvider {
     TNETransaction transaction = null;
 
     SQLDatabase.open();
-    try(PreparedStatement transactionStatement = SQLDatabase.getDb().getConnection().prepareStatement("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM " + table + " WHERE trans_id = ? LIMIT 1");
+    try(PreparedStatement transactionStatement = SQLDatabase.getDb().getConnection().prepareStatement("SELECT trans_id, trans_initiator, trans_recipient, trans_world, trans_type, trans_time, trans_initiator_balance, trans_recipient_balance FROM `" + table + "` WHERE trans_id = ? LIMIT 1");
         ResultSet transResults = MySQL.executePreparedQuery(transactionStatement, new Object[] { id.toString() });
-        PreparedStatement chargeStatement = SQLDatabase.getDb().getConnection().prepareStatement("SELECT charge_player, charge_world, charge_amount, charge_type, charge_currency FROM " + chargesTable + " WHERE charge_transaction = ?");
+        PreparedStatement chargeStatement = SQLDatabase.getDb().getConnection().prepareStatement("SELECT charge_player, charge_world, charge_amount, charge_type, charge_currency FROM `" + chargesTable + "` WHERE charge_transaction = ?");
         ResultSet chargesResults = MySQL.executePreparedQuery(chargeStatement, new Object[] {
             id.toString()
-        });) {
+        })) {
 
       if (transResults.next()) {
         transaction = new TNETransaction(UUID.fromString(transResults.getString("trans_id")),

@@ -171,7 +171,7 @@ public class PlayerListener implements Listener {
                   && MaterialUtils.itemsEqual(stack, player.getInventory().getItemInOffHand())) {
                 player.getInventory().setItemInOffHand(null);
               } else {
-                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
+                player.getInventory().clear(player.getInventory().getHeldItemSlot());
               }
             }
             TNE.debug("=====END PlayerListener.onInteract->proceed");

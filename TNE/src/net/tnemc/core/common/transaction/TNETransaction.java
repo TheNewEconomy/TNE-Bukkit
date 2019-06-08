@@ -35,6 +35,10 @@ public class TNETransaction implements Transaction {
 
   private boolean voided;
 
+  public TNETransaction(UUID id, UUID initiator, UUID recipient, String world, TransactionType type, long time) {
+    this(id, TNE.manager().getAccount(initiator), TNE.manager().getAccount(recipient), world, type, time);
+  }
+
   public TNETransaction(TNEAccount initiator, TNEAccount recipient, String world, TransactionType type) {
     this(TNE.transactionManager().generateTransactionID(), initiator, recipient, world, type, new Date().getTime());
   }
