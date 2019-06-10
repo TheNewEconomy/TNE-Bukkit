@@ -70,6 +70,7 @@ public class CurrencyFormatter {
     final String minorName = (minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor();
 
     Map<String, String> replacements = new HashMap<>();
+    TNE.debug("Symbol: " + currency.symbol());
     replacements.put("<symbol>", currency.symbol());
     replacements.put("<decimal>", currency.getDecimal());
     replacements.put("<major>", major.toString() + " " + majorName);

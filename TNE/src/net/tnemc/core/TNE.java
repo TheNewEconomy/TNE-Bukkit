@@ -3,6 +3,7 @@ package net.tnemc.core;
 import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
+import com.hellyard.cuttlefish.grammar.yaml.YamlValue;
 import net.milkbowl.vault.economy.Economy;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.commands.CommandManager;
@@ -62,14 +63,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -132,7 +137,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta118d";
+  public static final String build = "2Beta118d";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -153,6 +158,10 @@ public class TNE extends TNELib {
 
     if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") != null) {
       fawe = true;
+    }
+
+    if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") == null && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+      WorldGuardManager.init();
     }
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
@@ -194,12 +203,6 @@ public class TNE extends TNELib {
     loader = new ModuleLoader();
     loader.load();
 
-    /*if(!loader.hasModule("MySQL") && !loader.hasModule("H2")) {
-      new File(getDataFolder(), "modules").mkdir();
-      ModuleLoader.downloadModule("h2");
-      loader.load("H2");
-    }*/
-
     //Load modules
     loader.getModules().forEach((key, value)->{
       TNEModuleLoadEvent event = new TNEModuleLoadEvent(key, value.getInfo().version(), !Bukkit.getServer().isPrimaryThread());
@@ -215,11 +218,19 @@ public class TNE extends TNELib {
     TNE.debug("Preparing configuration instances");
     main = new MainConfigurations();
     messages = new MessageConfigurations();
+    messages.load(messageConfigurations);
     world = new WorldConfigurations();
     world.load(worldConfigurations);
 
     TNE.debug("Preparing debug mode");
     this.debugMode = mainConfigurations.getBool("Core.Debug");
+
+    if(!mainConfigurations.contains("Core.Currency.Basic.Identifier")) {
+      LinkedList<String> comments = new LinkedList<>();
+      comments.add("The identifier for the basic currency, used for data handling.");
+      mainConfigurations.setOrCreate("Core.Currency.Basic.Identifier", 0, new YamlValue(comments, "Dollar", "String"));
+      mainConfigurations.save(main.getFile());
+    }
 
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
@@ -416,10 +427,6 @@ public class TNE extends TNELib {
     if(useMod) {
       Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
-    }
-
-    if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-      WorldGuardManager.init();
     }
 
     getLogger().info("The New Economy has been enabled!");
@@ -703,17 +710,30 @@ public class TNE extends TNELib {
   public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
     TNE.debug("Started copying " + file.getName());
     CommentedConfiguration commentedConfiguration = null;
-    try {
-      commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), "UTF8"));
-      TNE.debug("Initializing commented configuration");
-    } catch (UnsupportedEncodingException ignore) {
-    }
+    commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(findResource(defaultFile), StandardCharsets.UTF_16), false);
+    TNE.debug("Initializing commented configuration");
     if(commentedConfiguration != null) {
       TNE.debug("Loading commented configuration");
       commentedConfiguration.load();
     }
     TNE.debug("Finished copying " + file.getName());
     return commentedConfiguration;
+  }
+
+  private InputStream findResource(String file) {
+
+    try {
+      URL url = this.getClassLoader().getResource(file);
+      if (url == null) {
+        return null;
+      } else {
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        return connection.getInputStream();
+      }
+    } catch (IOException var4) {
+      return null;
+    }
   }
 
   public static void debug(StackTraceElement[] stack) {

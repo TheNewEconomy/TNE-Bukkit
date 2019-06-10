@@ -183,6 +183,9 @@ public class ConfigurationManager {
         path = path.replace(prefix + ".", "");
       }
     }
+    if(prefix.equalsIgnoreCase("messages")) {
+      return TNE.instance().messages().getValue(configuration, world, player);
+    }
     return getValue(configuration, fromPrefix(prefix), world, player);
   }
 

@@ -73,6 +73,7 @@ public class CurrencyManager {
 
     //Currency Info Configurations.
     final String server = TNE.instance().mainConfigurations().getString(base + ".Info.Server", "Main Server");
+    final String identifier = TNE.instance().mainConfigurations().getString(base + ".Identifier", "Dollar");
     final String single = TNE.instance().mainConfigurations().getString(base + ".Major_Single", "Dollar");
     final String plural = TNE.instance().mainConfigurations().getString(base + ".Major_Plural", "Dollars");
     final String singleMinor = TNE.instance().mainConfigurations().getString(base + ".Minor_Single", "Cent");
@@ -97,8 +98,12 @@ public class CurrencyManager {
     final BigDecimal fee = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Fee", "0.00"));
     final BigDecimal minimum = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Minimum", "0.00"));
 
+    TNE.debug("Symbol: " + symbol);
+    TNE.debug("Symbol: " + TNE.instance().mainConfigurations().getString(base + ".Symbol", "$"));
+    TNE.debug("identifier: " + identifier);
+
     TNECurrency currency = new TNECurrency();
-    currency.setIdentifier(single);
+    currency.setIdentifier(identifier);
     currency.setMaxBalance(maxBalance);
     currency.setBalance(balance);
     currency.setDecimal(decimal);
@@ -122,6 +127,7 @@ public class CurrencyManager {
     currency.setSeparateMajor(separate);
     currency.setMajorSeparator(separator);
     currency.setMinorWeight(minorWeight);
+    TNE.debug("Symbol: " + currency.symbol());
 
     loadBasicTiers(currency, TNE.instance().mainConfigurations(), item);
 

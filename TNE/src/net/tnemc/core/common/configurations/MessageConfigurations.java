@@ -5,8 +5,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,16 +51,17 @@ public class MessageConfigurations extends Configuration {
 
   public void loadLanguages() {
     File directory = new File(TNE.instance().getDataFolder(), "languages");
-    directory.mkdir();
+    if(!directory.exists()) directory.mkdir();
     File[] langFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
 
-    /*if(langFiles != null) {
+    if(langFiles != null) {
       for (File langFile : langFiles) {
         String name = langFile.getName().replace(".yml", "");
         CommentedConfiguration configuration = null;
         try {
-          configuration = new CommentedConfiguration(new FileReader(langFile), null);
-        } catch (FileNotFoundException ignore) {
+          configuration = new CommentedConfiguration(new InputStreamReader(new FileInputStream(langFile), "UTF8"), null);
+        } catch (Exception ignore) {
+          System.out.println("Failed to load language: " + name);
         }
 
         if(configuration != null) {
@@ -70,7 +71,7 @@ public class MessageConfigurations extends Configuration {
           languages.put(name, lang);
         }
       }
-    }*/
+    }
   }
 
   public Map<String, Language> getLanguages() {
@@ -80,7 +81,7 @@ public class MessageConfigurations extends Configuration {
   @Override
   public Object getValue(String node, String world, String player) {
     TNE.debug("Checking for translation in languages.");
-    String language = (player.trim().equalsIgnoreCase(""))? "Default" : TNE.manager().getAccount(IDFinder.getID(player)).getLanguage();
+    final String language = (player.trim().equalsIgnoreCase(""))? "Default" : TNE.manager().getAccount(IDFinder.getID(player)).getLanguage();
 
     if(languages.containsKey(language)) {
       Language lang = languages.get(language);
