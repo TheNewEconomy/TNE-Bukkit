@@ -8,8 +8,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.ItemCalculations;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -177,7 +177,8 @@ public class ConnectionListener implements Listener {
           player.teleport(event.getFrom().getSpawnLocation());
         }
         Message message = new Message(result.recipientMessage());
-        message.addVariable("$amount", CurrencyFormatter.format(WorldFinder.getWorld(player, WorldVariant.BALANCE), manager.getChangeFee()));
+        final String balanceWorld = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(balanceWorld), balanceWorld, manager.getChangeFee(), player.getUniqueId().toString()));
         message.translate(world, player);
       }
       account.initializeHoldings(world);

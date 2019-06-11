@@ -5,8 +5,8 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -110,9 +110,9 @@ public class MoneyTopCommand extends TNECommand {
         Map.Entry<UUID, BigDecimal> entry = it.next();
         topEntry.addVariable("$player", TNE.manager().getAccount(entry.getKey()).displayName());
         if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatTop")) {
-          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue()));
+          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), ""));
         } else {
-          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), "<symbol><major.amount><decimal><minor.amount>"));
+          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), ""));
         }
         message.add(topEntry.grabWithNew(world, sender));
       }

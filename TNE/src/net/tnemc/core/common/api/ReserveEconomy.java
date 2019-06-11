@@ -1,9 +1,9 @@
 package net.tnemc.core.common.api;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.ExtendedEconomyAPI;
 import net.tnemc.core.economy.currency.Currency;
@@ -568,12 +568,12 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public String format(BigDecimal amount, Currency currency) {
-    return CurrencyFormatter.format(currency, TNE.instance().defaultWorld, amount);
+    return CurrencyFormatter.format(TNECurrency.fromReserve(currency), TNE.instance().defaultWorld, amount, "");
   }
 
   @Override
   public String format(BigDecimal amount, Currency currency, String world) {
-    return CurrencyFormatter.format(currency, world, amount);
+    return CurrencyFormatter.format(TNECurrency.fromReserve(currency), world, amount, "");
   }
 
   @Override

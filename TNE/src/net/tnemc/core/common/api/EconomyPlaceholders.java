@@ -2,7 +2,7 @@ package net.tnemc.core.common.api;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import org.bukkit.entity.Player;
 
 /**
@@ -48,8 +48,10 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
     //%tne_balance%
     if(identifier.equalsIgnoreCase("balance")) {
       return CurrencyFormatter.format(
+          TNE.manager().currencyManager().get(TNE.instance().defaultWorld),
           TNE.instance().defaultWorld,
-          TNE.instance().api().getHoldings(id)
+          TNE.instance().api().getHoldings(id),
+          id
       );
     }
 
@@ -59,9 +61,10 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
     if(identifier.toLowerCase().contains("wcur_")) {
       if(args.length >= 3) {
         return CurrencyFormatter.format(
+            TNE.manager().currencyManager().get(args[1], args[2]),
             args[1],
-            args[2],
-            TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2]))
+            TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2])),
+            id
         );
       }
     }
@@ -70,8 +73,10 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
     if(identifier.toLowerCase().contains("world_")) {
       if(args.length >= 2) {
         return CurrencyFormatter.format(
+            TNE.manager().currencyManager().get(args[1]),
             args[1],
-            TNE.instance().api().getHoldings(id, args[1])
+            TNE.instance().api().getHoldings(id, args[1]),
+            id
         );
       }
     }
@@ -80,9 +85,10 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
     if(identifier.toLowerCase().contains("currency_")) {
       if(args.length >= 2) {
         return CurrencyFormatter.format(
+            TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1]),
             TNE.instance().defaultWorld,
-            args[1],
-            TNE.instance().api().getHoldings(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1]))
+            TNE.instance().api().getHoldings(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1])),
+            id
         );
       }
     }

@@ -3,8 +3,8 @@ package net.tnemc.core.menu.icons.display;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -50,7 +50,7 @@ public class DisplayCurrencyIcon extends Icon {
     Message m = new Message(result.initiatorMessage());
     m.addVariable("$player", IDFinder.getUsername(id.toString()));
     m.addVariable("$world", world);
-    m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientBalance().getCurrency().name()), world, transaction.recipientBalance().getAmount()));
+    m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientBalance().getCurrency().name()), world, transaction.recipientBalance().getAmount(), ""));
     this.message = m.grab(world, player);
 
     super.onClick(menu, player);
