@@ -1,6 +1,17 @@
 package net.tnemc.core.common.currency.formatter;
 
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.impl.ColourRule;
+import net.tnemc.core.common.currency.formatter.impl.DecimalRule;
+import net.tnemc.core.common.currency.formatter.impl.MajorAmountRule;
+import net.tnemc.core.common.currency.formatter.impl.MajorNameRule;
+import net.tnemc.core.common.currency.formatter.impl.MajorRule;
+import net.tnemc.core.common.currency.formatter.impl.MaterialRule;
+import net.tnemc.core.common.currency.formatter.impl.MinorAmountRule;
+import net.tnemc.core.common.currency.formatter.impl.MinorNameRule;
+import net.tnemc.core.common.currency.formatter.impl.MinorRule;
+import net.tnemc.core.common.currency.formatter.impl.ShortenRule;
+import net.tnemc.core.common.currency.formatter.impl.SymbolRule;
 import org.bukkit.Location;
 
 import java.math.BigDecimal;
@@ -18,14 +29,46 @@ import java.util.LinkedHashMap;
  */
 public class NewCurrencyFormatter {
 
-  static LinkedHashMap<String, FormatRule> rules = new LinkedHashMap<>();
+  static LinkedHashMap<String, FormatRule> rulesMap = new LinkedHashMap<>();
 
-  public static String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
+  static {
+    addRule(new ColourRule());
+    addRule(new DecimalRule());
+    addRule(new MajorAmountRule());
+    addRule(new MajorNameRule());
+    addRule(new MajorRule());
+    addRule(new MinorAmountRule());
+    addRule(new MinorNameRule());
+    addRule(new MinorRule());
+    addRule(new ShortenRule());
+    addRule(new SymbolRule());
+    addRule(new MaterialRule());
+  }
 
-    if(currency.isItem()) {
+  public static void addRule(FormatRule rule) {
+    rulesMap.put(rule.name(), rule);
+  }
 
+  public static String format(TNECurrency currency, BigDecimal amount, Location location, String player) {
+    String format = currency.getFormat();
+
+    for(FormatRule rule : rulesMap.values()) {
+      format = rule.format(currency, amount, location, player, format);
     }
 
-    return currency.getFormat();
+    return format;
+  }
+
+  public static String format(TNECurrency currency, BigDecimal amount, Location location, String player, String... rules) {
+
+    String format = currency.getFormat();
+
+    for(String str : rules) {
+      if(rulesMap.containsKey(str)) {
+        format = rulesMap.get(str).format(currency, amount, location, player, format);
+      }
+    }
+
+    return format;
   }
 }
