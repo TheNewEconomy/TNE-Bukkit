@@ -27,7 +27,7 @@ public class ShortenRule implements FormatRule {
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
     final BigInteger wholeNum = amount.toBigInteger();
     if (wholeNum.compareTo(new BigInteger("1009")) <= 0) {
-      return "" + wholeNum.toString();
+      return formatted.replace("<short.amount>", wholeNum.toString());
     }
     final String whole = wholeNum.toString();
     final int pos = ((whole.length() - 1) / 3) - 1;
@@ -44,6 +44,6 @@ public class ShortenRule implements FormatRule {
       }
     }
 
-    return formatted.replaceAll("<short\\.amount>", wholeSub + currency.getPrefixes().charAt(pos));
+    return formatted.replace("<short.amount>", wholeSub + currency.getPrefixes().charAt(pos));
   }
 }

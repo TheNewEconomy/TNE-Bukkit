@@ -26,6 +26,6 @@ public class MajorRule implements FormatRule {
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
     final BigInteger major = amount.toBigInteger();
-    return formatted.replaceAll("<major>", major.toString() + " " + ((major.compareTo(BigInteger.ONE) == 0)? currency.name() : currency.plural()));
+    return formatted.replace("<major>", major.toString() + " " + ((major.compareTo(BigInteger.ONE) == 0)? currency.name() : currency.plural()));
   }
 }

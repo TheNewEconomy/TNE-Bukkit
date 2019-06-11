@@ -25,6 +25,6 @@ public class MinorAmountRule implements FormatRule {
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
     String[] amountStr = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
-    return formatted.replaceAll("<minor\\.amount>", String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'))).replace(' ', '0'));
+    return formatted.replace("<minor.amount>", String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'))).replace(' ', '0'));
   }
 }

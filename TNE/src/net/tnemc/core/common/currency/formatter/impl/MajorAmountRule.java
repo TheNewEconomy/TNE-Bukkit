@@ -24,6 +24,6 @@ public class MajorAmountRule implements FormatRule {
 
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
-    return formatted.replaceAll("<major\\.amount>", amount.toBigInteger().toString());
+    return formatted.replace("<major.amount>", amount.toBigInteger().toString());
   }
 }

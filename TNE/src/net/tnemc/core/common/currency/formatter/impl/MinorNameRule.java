@@ -29,6 +29,6 @@ public class MinorNameRule implements FormatRule {
 
     final BigInteger minor = new BigInteger(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'));
 
-    return formatted.replaceAll("<minor\\.name>", (minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor());
+    return formatted.replace("<minor.name>", (minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor());
   }
 }

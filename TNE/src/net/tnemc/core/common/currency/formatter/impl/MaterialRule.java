@@ -32,14 +32,14 @@ public class MaterialRule implements FormatRule {
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
     String format = formatted;
 
-    if(currency.isItem()) {
+    if(player != null && !player.equalsIgnoreCase("") && currency.isItem()) {
       final UUID id = IDFinder.getID(player);
       if(id != null) {
         Player p = Bukkit.getPlayer(id);
         if(p != null) {
           for(TNETier tier : currency.getTNETiers()) {
             if(format.contains("<" + tier.singular() + ">")) {
-              format = format.replaceAll("<" + tier.singular() + ">", "" + ItemCalculations.getCount(tier.getItemInfo().toStack(), p.getInventory()));
+              format = format.replace("<" + tier.singular() + ">", "" + ItemCalculations.getCount(tier.getItemInfo().toStack(), p.getInventory()));
             }
           }
         }

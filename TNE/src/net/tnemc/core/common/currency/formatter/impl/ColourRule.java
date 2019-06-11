@@ -29,7 +29,7 @@ public class ColourRule implements FormatRule {
     String format = formatted;
 
     for(Map.Entry<String, String> entry : Message.colours.entrySet()) {
-      format = format.replaceAll(entry.getKey(), entry.getValue());
+      format = format.replace(entry.getKey(), entry.getValue());
     }
     return format;
   }

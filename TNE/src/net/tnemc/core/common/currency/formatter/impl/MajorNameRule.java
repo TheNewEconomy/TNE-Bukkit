@@ -25,6 +25,6 @@ public class MajorNameRule implements FormatRule {
 
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
-    return formatted.replaceAll("<major\\.name>", ((amount.toBigInteger().compareTo(BigInteger.ONE) == 0)? currency.name() : currency.plural()));
+    return formatted.replace("<major.name>", ((amount.toBigInteger().compareTo(BigInteger.ONE) == 0)? currency.name() : currency.plural()));
   }
 }

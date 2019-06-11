@@ -24,6 +24,6 @@ public class DecimalRule implements FormatRule {
 
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
-    return formatted.replaceAll("<decimal>", currency.getDecimal());
+    return formatted.replace("<decimal>", currency.getDecimal());
   }
 }

@@ -34,6 +34,8 @@ public class CurrencyFormatter {
   static LinkedHashMap<String, FormatRule> rulesMap = new LinkedHashMap<>();
 
   static {
+    addRule(new ShortenRule());
+
     addRule(new ColourRule());
     addRule(new DecimalRule());
     addRule(new MajorAmountRule());
@@ -42,7 +44,6 @@ public class CurrencyFormatter {
     addRule(new MinorAmountRule());
     addRule(new MinorNameRule());
     addRule(new MinorRule());
-    addRule(new ShortenRule());
     addRule(new SymbolRule());
     addRule(new MaterialRule());
   }

@@ -28,6 +28,6 @@ public class MinorRule implements FormatRule {
     String[] amountStr = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
 
     final BigInteger minor = new BigInteger(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'));
-    return formatted.replaceAll("<minor>", minor.toString() + " " + ((minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor()));
+    return formatted.replace("<minor>", minor.toString() + " " + ((minor.compareTo(BigInteger.ONE) == 0)? currency.getSingleMinor() : currency.getPluralMinor()));
   }
 }
