@@ -36,7 +36,7 @@ permissions:
             tne.menu.set: true
             tne.menu.take: true
     tne.menu.display:
-        description: Allows use of the the TNE Action Menu.
+        description: Allows use of the the TNE Action Menu Display icon.
         default: op
     tne.menu.give:
         description: Allows use of the TNE Action Menu Give icon.
@@ -105,7 +105,7 @@ permissions:
         description: Allows retrieving any player's TNE UUID.
         default: op
     tne.admin.menu:
-        description: Allows access to the TNE admin action menu.
+        description: Allows access to the TNE Action Menu.
         default: op
     tne.admin.purge:
         description: Allows deleting all player accounts with the default balance.
