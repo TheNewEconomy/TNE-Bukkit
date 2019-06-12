@@ -9,6 +9,18 @@ api-version: 1.13
 main: net.tnemc.core.TNE
 softdepend: [WorldEdit, WorldGuard, FastAsyncWorldEdit, PlaceholderAPI, Vault, Essentials, Reserve, Towny, mcMMO, GUIShop, DiscordSRV, Multiverse-Core]
 permissions:
+    tne.*:
+        description: Grants full permission to all TNE functionality.
+        children:
+            tne.general.mob: true
+            tne.menu.*: true
+            tne.admin.*: true
+            tne.config.*: true
+            tne.currency.*: true
+            tne.language.*: true
+            tne.module.*: true
+            tne.money.*: true
+            tne.transaction.*: true
     tne.bypass.world:
         description: Allows bypassing of any configured world changing costs.
         default: false
