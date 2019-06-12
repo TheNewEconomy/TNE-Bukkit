@@ -25,7 +25,7 @@ permissions:
         description: Allows bypassing of any configured world changing costs.
         default: false
     tne.general.mob:
-        description: Allows mob rewards.
+        description: Allows receiving mob rewards.
         default: true
     tne.menu.*:
         description: Grants full access to the TNE Action Menu.
