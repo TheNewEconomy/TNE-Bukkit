@@ -8,3 +8,278 @@ api-version: 1.13
 #Plugin Data
 main: net.tnemc.core.TNE
 softdepend: [WorldEdit, WorldGuard, FastAsyncWorldEdit, PlaceholderAPI, Vault, Essentials, Reserve, Towny, mcMMO, GUIShop, DiscordSRV, Multiverse-Core]
+permissions:
+    tne.bypass.world:
+        description: Allows bypassing of any configured world changing costs.
+        default: false
+    tne.general.mob:
+        description: Allows mob rewards.
+        default: true
+    tne.menu.*:
+        description: Grants full access to the TNE Action Menu.
+        children:
+            tne.menu.display: true
+            tne.menu.give: true
+            tne.menu.pay: true
+            tne.menu.set: true
+            tne.menu.take: true
+    tne.menu.display:
+        description: Allows use of the the TNE Action Menu.
+        default: op
+    tne.menu.give:
+        description: Allows use of the TNE Action Menu Give icon.
+        default: op
+    tne.menu.pay:
+        description: Allows use of the TNE Action Menu Pay icon.
+        default: op
+    tne.menu.set:
+        description: Allows use of the TNE Action Menu Set icon.
+        default: op
+    tne.menu.take:
+        description: Allows use of the TNE Action Menu Take icon.
+        default: op
+    tne.admin.*:
+        description: Grants full access to all admin commands.
+        children:
+            tne.admin: true
+            tne.admin.backup: true
+            tne.admin.balance: true
+            tne.admin.build: true
+            tne.admin.caveats: true
+            tne.admin.create: true
+            tne.admin.debug: true
+            tne.admin.delete: true
+            tne.admin.extract: true
+            tne.admin.id: true
+            tne.admin.menu: true
+            tne.admin.purge: true
+            tne.admin.recreate: true
+            tne.admin.reload: true
+            tne.admin.report: true
+            tne.admin.reset: true
+            tne.admin.restore: true
+            tne.admin.save: true
+            tne.admin.status: true
+            tne.admin.upload: true
+            tne.admin.version: true
+    tne.admin:
+        description: Allows use of the admin command.
+        default: op
+    tne.admin.backup:
+        description: Allows making a backup of all TNE server data.
+        default: op
+    tne.admin.balance:
+        description: Allows checking the balance of other players.
+        default: op
+    tne.admin.build:
+        description: Allows checking the current version of TNE.
+        default: op
+    tne.admin.caveats:
+        description: Allows viewing the currently known caveats of the plugin.
+        default: op
+    tne.admin.create:
+        description: Allows creating a new economy account for any player.
+        default: op
+    tne.admin.debug:
+        description: Allows toggling debug mode.
+        default: op
+    tne.admin.delete:
+        description: Allows deleting an economy account for any player.
+        default: op
+    tne.admin.extract:
+        description: Allows exporting a list of all users and their balances tp a file.
+        default: op
+    tne.admin.id:
+        description: Allows retrieving any player's TNE UUID.
+        default: op
+    tne.admin.menu:
+        description: Allows access to the TNE admin action menu.
+        default: op
+    tne.admin.purge:
+        description: Allows deleting all player accounts with the default balance.
+        default: op
+    tne.admin.recreate:
+        description: Allows recreating all database tables.
+        default: op
+    tne.admin.reload:
+        description: Allows reloading of all configuration.
+        default: op
+    tne.admin.report:
+        description: Allows filing a bug report.
+        default: op
+    tne.admin.reset:
+        description: Allows resetting all economy data.
+        default: op
+    tne.admin.restore:
+        description: Allows restoring all balances from an extracted file.
+        default: op
+    tne.admin.save:
+        description: Allows force-saving all data.
+        default: op
+    tne.admin.status:
+        description: Allows viewing and controlling of any player's account status
+        default: op
+    tne.admin.upload:
+        description: Allows uploading TNE debug info and logs to Pastebin.
+        default: op
+    tne.admin.version:
+        description: Allows checking the current version of TNE.
+        default: op
+    tne.config.*:
+        description: Grants full access to all config commands.
+        children:
+            tne.config: true
+            tne.config.get: true
+            tne.config.save: true
+            tne.config.set: true
+            tne.config.tneget: true
+            tne.config.undo: true
+    tne.config:
+        description: Allows use of the config command.
+        default: op
+    tne.config.get:
+        description: Allows getting the value of a configuration node.
+        default: op
+    tne.config.save:
+        description: Allows saving configuration changes.
+        default: op
+    tne.config.set:
+        description: Allows setting the value of a configuration node.
+        default: op
+    tne.config.tneget:
+        description: Allows getting the value of a configuration node, taking all factors into account.
+        default: op
+    tne.config.undo:
+        description: Allows undoing modifications to configuration.
+        default: op
+    tne.currency.*:
+        description: Grants full access to all currency commands.
+        children:
+            tne.currency: true
+            tne.currency.rename: true
+            tne.currency.list: true
+            tne.currency.tiers: true
+    tne.currency:
+        description: Allows use of the currency command.
+        default: op
+    tne.currency.rename:
+        description: Allows renaming a currency.
+        default: op
+    tne.currency.list:
+        description: Allows listing all currencies in a world.
+        default: op
+    tne.currency.tiers:
+        description: Allows listing tiers of a currency.
+        default: op
+    tne.language.*:
+        description: Grants full access to all language commands.
+        children:
+            tne.language: true
+            tne.language.current: true
+            tne.language.list: true
+            tne.language.reload: true
+            tne.language.set: true
+    tne.language:
+        description: Allows use of the language command.
+        default: true
+    tne.language.current:
+        description: Allows checking the language currently in-use.
+        default: true
+    tne.language.list:
+        description: Allows listing all available languages.
+        default: true
+    tne.language.reload:
+        description: Allows reloading all language files.
+        default: op
+    tne.language.set:
+        description: Allows setting the language to use.
+        default: true
+    tne.module.*:
+        description: Grants full access to all module commands.
+        children:
+            tne.module: true
+            tne.module.info: true
+            tne.module.list: true
+            tne.module.load: true
+            tne.module.reload: true
+            tne.module.unload: true
+    tne.module:
+        description: Allows use of the module command.
+        default: op
+    tne.module.info:
+        description: Allows viewing info of a module.
+        default: op
+    tne.module.list:
+        description: Allows listing all loaded modules.
+        default: op
+    tne.module.load:
+        description: Allows loading a module.
+        default: op
+    tne.module.reload:
+        description: Allows reloading a module.
+        default: op
+    tne.module.unload:
+        description: Allows unloading a module.
+        default: op
+    tne.money.*:
+        description: Grants full access to all money commands.
+        children:
+            tne.money: true
+            tne.money.balance: true
+            tne.money.convert: true
+            tne.money.give: true
+            tne.money.note: true
+            tne.money.pay: true
+            tne.money.set: true
+            tne.money.take: true
+            tne.money.top: true
+    tne.money:
+        description: Allows use of the money command.
+        default: true
+    tne.money.balance:
+        description: Allows checking balance.
+        default: true
+    tne.money.convert:
+        description: Allows converting between currencies.
+        default: true
+    tne.money.give:
+        description: Allows giving new money to any player.
+        default: op
+    tne.money.note:
+        description: Allows creating a physical bank note from a currency.
+        default: true
+    tne.money.pay:
+        description: Allows paying money to a player.
+        default: true
+    tne.money.set:
+        description: Allows setting balance of any player.
+        default: op
+    tne.money.take:
+        description: Allows removing money from any player.
+        default: op
+    tne.money.top:
+        description: Allows viewing the list of players sorted by their balance.
+        default: op
+    tne.transaction.*:
+        description: Grants full access to all transaction commands.
+        children:
+            tne.transaction: true
+            tne.transaction.away: true
+            tne.transaction.history: true
+            tne.transaction.info: true
+            tne.transaction.void: true
+    tne.transaction:
+        description: Allows use of the transaction command.
+        default: op
+    tne.transaction.away:
+        description: Allows viewing a list of transactions that happened while offline.
+        default: op
+    tne.transaction.history:
+        description: Allows viewing any player's transaction history.
+        default: op
+    tne.transaction.info:
+        description: Allows viewing details on any transaction.
+        default: op
+    tne.transaction.void:
+        description: Allows undoing a completed transaction.
+        default: op
