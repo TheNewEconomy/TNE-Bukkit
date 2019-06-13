@@ -278,20 +278,24 @@ permissions:
             tne.transaction: true
             tne.transaction.away: true
             tne.transaction.history: true
+            tne.transaction.history.other: true
             tne.transaction.info: true
             tne.transaction.void: true
     tne.transaction:
         description: Allows use of the transaction command.
-        default: op
+        default: true
     tne.transaction.away:
         description: Allows viewing a list of transactions that happened while offline.
-        default: op
+        default: true
     tne.transaction.history:
+        description: Allows viewing any player's transaction history.
+        default: true
+    tne.transaction.history.other:
         description: Allows viewing any player's transaction history.
         default: op
     tne.transaction.info:
         description: Allows viewing details on any transaction.
-        default: op
+        default: true
     tne.transaction.void:
         description: Allows undoing a completed transaction.
         default: op
