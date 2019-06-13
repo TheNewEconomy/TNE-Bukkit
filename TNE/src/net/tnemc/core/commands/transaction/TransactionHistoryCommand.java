@@ -71,7 +71,7 @@ public class TransactionHistoryCommand extends TNECommand {
       return false;
     }
 
-    if(parsed.containsKey("player") && sender.hasPermission("tne.transactions.historyother")) {
+    if(parsed.containsKey("player") && sender.hasPermission("tne.transactions.history.other")) {
       if(Bukkit.getPlayer(parsed.get("player")) != null) {
         player = Bukkit.getPlayer(parsed.get("player"));
       }
