@@ -66,7 +66,7 @@ public class VaultTransferCommand extends TNECommand {
     final UUID id = (!self)? IDFinder.getID(arguments[0]) : IDFinder.getID(sender);
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 
-    if(!self && !sender.hasPermission("tne.vault.transfer.admin")) {
+    if(!self && !sender.hasPermission("tne.vault.transfer.other")) {
       sender.sendMessage(ChatColor.RED + "You do not have permission to transfer other players' vaults.");
       return false;
     }
