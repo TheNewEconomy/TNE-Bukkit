@@ -8,8 +8,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.ItemCalculations;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -161,36 +161,39 @@ public class ConnectionListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onWorldChange(final PlayerChangedWorldEvent event) {
-    final Player player = event.getPlayer();
-    final UUID id = IDFinder.getID(player);
-    final TNEAccount account = TNE.manager().getAccount(id);
-    final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    if(TNE.configurations().getBoolean("Core.Multiworld")) {
+      final Player player = event.getPlayer();
+      final UUID id = IDFinder.getID(player);
+      final TNEAccount account = TNE.manager().getAccount(id);
+      final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
 
-    boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null || TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
-    if(!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), id.toString())) {
-      if(!player.hasPermission("tne.bypass.world")) {
-        WorldManager manager = TNE.instance().getWorldManager(world);
-        TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("worldchange"));
-        transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, manager.getChangeFeeCurrency()), manager.getChangeFee()));
-        TransactionResult result = TNE.transactionManager().perform(transaction);
-        if(!result.proceed()) {
-          player.teleport(event.getFrom().getSpawnLocation());
+      boolean noEconomy = TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)) == null || TNE.instance().getWorldManager(WorldFinder.getWorld(player, WorldVariant.CONFIGURATION)).isEconomyDisabled();
+      if (!noEconomy && TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), id.toString())) {
+        if (!player.hasPermission("tne.bypass.world")) {
+          WorldManager manager = TNE.instance().getWorldManager(world);
+          TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("worldchange"));
+          transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, manager.getChangeFeeCurrency()), manager.getChangeFee()));
+          TransactionResult result = TNE.transactionManager().perform(transaction);
+          if (!result.proceed()) {
+            player.teleport(event.getFrom().getSpawnLocation());
+          }
+          Message message = new Message(result.recipientMessage());
+          final String balanceWorld = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+          message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(balanceWorld), balanceWorld, manager.getChangeFee(), player.getUniqueId().toString()));
+          message.translate(world, player);
         }
-        Message message = new Message(result.recipientMessage());
-        message.addVariable("$amount", CurrencyFormatter.format(WorldFinder.getWorld(player, WorldVariant.BALANCE), manager.getChangeFee()));
-        message.translate(world, player);
+        account.initializeHoldings(world);
+      } else if (!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), id.toString())) {
+        account.initializeHoldings(world);
       }
-      account.initializeHoldings(world);
-    } else if(!noEconomy && !TNE.instance().api().getBoolean("Core.World.EnableChangeFee", WorldFinder.getWorld(player, WorldVariant.CONFIGURATION), id.toString())) {
-      account.initializeHoldings(world);
-    }
 
-    if(!noEconomy && TNE.instance().api().getBoolean("Core.Multiworld") &&
-        !TNE.instance().getWorldManager(event.getFrom().getName()).getBalanceWorld().equalsIgnoreCase(world)) {
-      TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-        ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
-            account.getHoldings(world, value, true, true), player.getInventory(), false);
-      });
+      if (!noEconomy && TNE.instance().api().getBoolean("Core.Multiworld") &&
+          !TNE.instance().getWorldManager(event.getFrom().getName()).getBalanceWorld().equalsIgnoreCase(world)) {
+        TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
+          ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+              account.getHoldings(world, value, true, true), player.getInventory(), false);
+        });
+      }
     }
   }
 

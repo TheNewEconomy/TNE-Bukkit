@@ -7,7 +7,7 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -81,7 +81,7 @@ public class AdminCreateCommand extends TNECommand {
 
         Message m = new Message("Messages.Admin.Created");
         m.addVariable("$player", arguments[0]);
-        m.addVariable("$amount", CurrencyFormatter.format(world, TNE.instance().api().getHoldings(id.toString(), world)));
+        m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world), world, TNE.instance().api().getHoldings(id.toString(), world), id.toString()));
         m.translate(world, sender);
         return true;
       }

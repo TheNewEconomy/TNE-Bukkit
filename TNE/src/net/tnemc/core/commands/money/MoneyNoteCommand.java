@@ -7,8 +7,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
@@ -106,7 +106,7 @@ public class MoneyNoteCommand extends TNECommand {
         final BigDecimal value = new BigDecimal(parsed);
         if(value.compareTo(currency.getMinimum()) < 0) {
           Message minimum = new Message("Messages.Money.NoteMinimum");
-          minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum()));
+          minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum(), getPlayer(sender).getUniqueId().toString()));
           minimum.translate(world, sender);
           return;
         }
@@ -123,7 +123,7 @@ public class MoneyNoteCommand extends TNECommand {
           message.addVariable("$player", arguments[0]);
           message.addVariable("$world", world);
           message.addVariable("$currency", currencyName);
-          message.addVariable("$amount", CurrencyFormatter.format(transaction.recipientCharge().getEntry().getCurrency(), world, value));
+          message.addVariable("$amount", CurrencyFormatter.format(TNECurrency.fromReserve(transaction.recipientCharge().getEntry().getCurrency()), world, value, transaction.recipient()));
           message.translate(world, sender);
           return;
         }

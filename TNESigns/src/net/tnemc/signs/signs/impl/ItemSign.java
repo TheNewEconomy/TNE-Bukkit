@@ -4,7 +4,7 @@ import com.github.tnerevival.core.db.SQLDatabase;
 import com.github.tnerevival.serializable.SerializableLocation;
 import com.github.tnerevival.user.IDFinder;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.item.SerialItem;
 import net.tnemc.signs.SignsData;

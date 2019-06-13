@@ -7,8 +7,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
@@ -110,8 +110,8 @@ public class MoneyConvertCommand extends TNECommand {
         message.addVariable("$world", worldTo);
         message.addVariable("$currency", to.name());
         message.addVariable("$worldFrom", worldFrom);
-        message.addVariable("$from_amount", CurrencyFormatter.format(worldFrom, from.name(), value));
-        message.addVariable("$amount", CurrencyFormatter.format(worldTo, currencyTo, transaction.recipientCharge().getEntry().getAmount()));
+        message.addVariable("$from_amount", CurrencyFormatter.format(from, worldFrom, value, arguments[0]));
+        message.addVariable("$amount", CurrencyFormatter.format(to, worldTo, transaction.recipientCharge().getEntry().getAmount(), arguments[0]));
         message.translate(worldTo, IDFinder.getID(sender));
         return;
       }

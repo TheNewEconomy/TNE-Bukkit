@@ -7,8 +7,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.currency.CurrencyEntry;
@@ -137,7 +137,7 @@ public class MoneySetCommand extends TNECommand {
           message.addVariable("$player", account.displayName());
           message.addVariable("$world", world);
           message.addVariable("$currency", currencyName);
-          message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, value));
+          message.addVariable("$amount", CurrencyFormatter.format(currency, world, value, id.toString()));
           message.translate(world, id);
         }
 
@@ -145,7 +145,7 @@ public class MoneySetCommand extends TNECommand {
         message.addVariable("$player", arguments[0]);
         message.addVariable("$world", world);
         message.addVariable("$currency", currencyName);
-        message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, value));
+        message.addVariable("$amount", CurrencyFormatter.format(currency, world, value, arguments[0]));
         message.translate(world, IDFinder.getID(sender));
         return;
       }

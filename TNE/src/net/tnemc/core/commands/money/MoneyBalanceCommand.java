@@ -7,8 +7,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.currency.CurrencyEntry;
@@ -133,11 +133,11 @@ public class MoneyBalanceCommand extends TNECommand {
         balances.forEach((curName, balance)->{
           Message m = new Message("Messages.Money.HoldingsMultiSingle");
           m.addVariable("$currency", curName);
-          m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(curName)));
+          m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(w, curName), w, balances.get(curName), id.toString()));
           if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
-            m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(curName)));
+            m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(w, curName), w, balances.get(curName), id.toString()));
           } else {
-            m.addVariable("$amount", CurrencyFormatter.format(w, curName, balances.get(curName), "<symbol><major.amount><decimal><minor.amount>"));
+            m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(w, curName), w, balances.get(curName), id.toString()));
           }
           m.translate(w, sender, id.toString());
         });
@@ -149,9 +149,9 @@ public class MoneyBalanceCommand extends TNECommand {
       message.addVariable("$world", world);
       message.addVariable("$currency", currencyName);
       if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
-        message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName)));
+        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currencyName), world, balances.get(currencyName), id.toString()));
       } else {
-        message.addVariable("$amount", CurrencyFormatter.format(world, currencyName, balances.get(currencyName), "<symbol><major.amount><decimal><minor.amount>"));
+        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currencyName), world, balances.get(currencyName), id.toString()));
       }
       message.translate(world, sender, id.toString());
       TNE.debug("===END MoneyBalanceCommand ===");

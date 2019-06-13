@@ -2,9 +2,9 @@ package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.EconomyAPI;
@@ -214,7 +214,7 @@ public class TNEAPI {
    * @return The formatted amount.
    */
   public String format(BigDecimal amount, String world) {
-    return CurrencyFormatter.format(world, amount);
+    return CurrencyFormatter.format(TNE.manager().currencyManager().get(world), world, amount, "");
   }
 
   /**
@@ -225,7 +225,7 @@ public class TNEAPI {
    * @return The formatted amount.
    */
   public String format(BigDecimal amount, TNECurrency currency, String world) {
-    return CurrencyFormatter.format(world, currency.name(), amount);
+    return CurrencyFormatter.format(currency, world, amount, "");
   }
 
   /**

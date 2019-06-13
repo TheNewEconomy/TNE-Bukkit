@@ -3,8 +3,8 @@ package net.tnemc.core.common.transaction;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 
 import java.math.BigDecimal;
@@ -72,7 +72,7 @@ public class MultiTransactionHandler {
         msg.addVariable("$player", playerVariable);
         msg.addVariable("$world", world);
         msg.addVariable("$currency", currency.name());
-        msg.addVariable("$amount", CurrencyFormatter.format(currency, world, amount));
+        msg.addVariable("$amount", CurrencyFormatter.format(currency, world, amount, playerVariable));
         msg.translate(world, uuid);
       }
     });
