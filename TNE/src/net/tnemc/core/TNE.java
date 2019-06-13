@@ -157,7 +157,7 @@ public class TNE extends TNELib {
       fawe = true;
     }
 
-    if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") == null && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       WorldGuardManager.init();
     }
 
