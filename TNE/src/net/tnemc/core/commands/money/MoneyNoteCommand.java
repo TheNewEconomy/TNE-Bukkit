@@ -79,6 +79,21 @@ public class MoneyNoteCommand extends TNECommand {
           currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
         }
 
+        if (!TNE.manager().currencyManager().contains(world, currencyName)) {
+          Message m = new Message("Messages.Money.NoCurrency");
+          m.addVariable("$currency", currencyName);
+          m.addVariable("$world", world);
+          m.translate(world, sender);
+          return;
+        }
+
+        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.note." + currencyName)) {
+          Message unable = new Message("Messages.Command.Unable");
+          unable.addVariable("$commands", "/" + getName());
+          unable.translate(world, sender);
+          return;
+        }
+
         final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
         final UUID id = IDFinder.getID(sender);
         final TNEAccount account = TNE.manager().getAccount(id);

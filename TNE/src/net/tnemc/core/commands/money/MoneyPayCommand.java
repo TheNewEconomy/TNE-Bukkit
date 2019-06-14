@@ -93,6 +93,22 @@ public class MoneyPayCommand extends TNECommand {
         if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
           currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
         }
+
+        if (!TNE.manager().currencyManager().contains(world, currencyName)) {
+          Message m = new Message("Messages.Money.NoCurrency");
+          m.addVariable("$currency", currencyName);
+          m.addVariable("$world", world);
+          m.translate(world, sender);
+          return;
+        }
+
+        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.pay." + currencyName)) {
+          Message unable = new Message("Messages.Command.Unable");
+          unable.addVariable("$commands", "/" + getName());
+          unable.translate(world, sender);
+          return;
+        }
+
         TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
         String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);

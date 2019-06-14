@@ -91,6 +91,21 @@ public class MoneySetCommand extends TNECommand {
           return;
         }
 
+        if (!TNE.manager().currencyManager().contains(world, currencyName)) {
+          Message m = new Message("Messages.Money.NoCurrency");
+          m.addVariable("$currency", currencyName);
+          m.addVariable("$world", world);
+          m.translate(world, sender);
+          return;
+        }
+
+        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.set." + currencyName)) {
+          Message unable = new Message("Messages.Command.Unable");
+          unable.addVariable("$commands", "/" + getName());
+          unable.translate(world, sender);
+          return;
+        }
+
         if(!arguments[0].contains(",") && !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Faction")) &&
             !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Town")) &&
             !arguments[0].contains(TNE.instance().api().getString("Core.Server.ThirdParty.Nation")) && IDFinder.getOffline(arguments[0], true) == null) {

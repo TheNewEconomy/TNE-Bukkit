@@ -97,6 +97,13 @@ public class MoneyTakeCommand extends TNECommand {
           return;
         }
 
+        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.take." + currencyName)) {
+          Message unable = new Message("Messages.Command.Unable");
+          unable.addVariable("$commands", "/" + getName());
+          unable.translate(world, sender);
+          return;
+        }
+
         final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
         final String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);

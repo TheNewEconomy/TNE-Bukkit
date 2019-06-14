@@ -73,6 +73,13 @@ public class MoneyConvertCommand extends TNECommand {
         String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         TNECurrency from = MISCUtils.findCurrency(worldFrom, player.getLocation());
 
+        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.convert." + from.name())) {
+          Message unable = new Message("Messages.Command.Unable");
+          unable.addVariable("$commands", "/" + getName());
+          unable.translate(worldFrom, sender);
+          return;
+        }
+
         if(TNE.instance().getWorldManager(worldFrom).isEconomyDisabled()) {
           new Message("Messages.General.Disabled").translate(worldFrom, sender);
           return;

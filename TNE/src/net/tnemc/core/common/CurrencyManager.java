@@ -22,6 +22,8 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -49,8 +51,38 @@ public class CurrencyManager {
   //Cache-related maps.
   private List<String> globalDisabled = new ArrayList<>();
 
+  //OP
+  Permission giveParent = new Permission("tne.money.give.*", "Grants access to /money give for all currencies.", PermissionDefault.OP);
+  Permission setParent = new Permission("tne.money.set.*", "Grants access to /money set for all currencies.", PermissionDefault.OP);
+  Permission takeParent = new Permission("tne.money.take.*", "Grants access to /money take for all currencies.", PermissionDefault.OP);
+
+  //Non-op
+  Permission convertParent = new Permission("tne.money.convert.*", "Grants access to /money convert for all currencies.", PermissionDefault.TRUE);
+  Permission noteParent = new Permission("tne.money.note.*", "Grants access to /money note for all currencies.", PermissionDefault.TRUE);
+  Permission payParent = new Permission("tne.money.pay.*", "Grants access to /money pay for all currencies.", PermissionDefault.TRUE);
+
   public CurrencyManager() {
+    initPermissions();
+
     loadCurrencies();
+  }
+
+  public void initPermissions() {
+    giveParent.addParent("tne.money.*", true);
+    setParent.addParent("tne.money.*", true);
+    takeParent.addParent("tne.money.*", true);
+
+    convertParent.addParent("tne.money.*", true);
+    noteParent.addParent("tne.money.*", true);
+    payParent.addParent("tne.money.*", true);
+
+    Bukkit.getServer().getPluginManager().addPermission(giveParent);
+    Bukkit.getServer().getPluginManager().addPermission(setParent);
+    Bukkit.getServer().getPluginManager().addPermission(takeParent);
+
+    Bukkit.getServer().getPluginManager().addPermission(convertParent);
+    Bukkit.getServer().getPluginManager().addPermission(noteParent);
+    Bukkit.getServer().getPluginManager().addPermission(payParent);
   }
 
   public void loadCurrencies() {
@@ -188,6 +220,34 @@ public class CurrencyManager {
         }
 
         TNE.debug("[Loop]Loading Currency: " + cur + " for world: " + worldName);
+        final String identifier = configuration.getString(base + ".Info.Identifier");
+
+
+        //OP
+        Permission give = new Permission("tne.money.give." + identifier, "Grants access to /money give for currency: " + identifier, PermissionDefault.OP);
+        give.addParent(giveParent, true);
+        Bukkit.getServer().getPluginManager().addPermission(give);
+
+        Permission set = new Permission("tne.money.set." + identifier, "Grants access to /money set for currency: " + identifier, PermissionDefault.OP);
+        set.addParent(setParent, true);
+        Bukkit.getServer().getPluginManager().addPermission(set);
+
+        Permission take = new Permission("tne.money.take." + identifier, "Grants access to /money take for currency: " + identifier, PermissionDefault.OP);
+        take.addParent(takeParent, true);
+        Bukkit.getServer().getPluginManager().addPermission(take);
+
+        //Non-op
+        Permission convert = new Permission("tne.money.convert." + identifier, "Grants access to /money convert for currency: " + identifier, PermissionDefault.TRUE);
+        convert.addParent(convertParent, true);
+        Bukkit.getServer().getPluginManager().addPermission(convert);
+
+        Permission note = new Permission("tne.money.note." + identifier, "Grants access to /money note for currency: " + identifier, PermissionDefault.TRUE);
+        note.addParent(noteParent, true);
+        Bukkit.getServer().getPluginManager().addPermission(note);
+
+        Permission pay = new Permission("tne.money.pay." + identifier, "Grants access to /money pay for currency: " + identifier, PermissionDefault.TRUE);
+        pay.addParent(payParent, true);
+        Bukkit.getServer().getPluginManager().addPermission(pay);
 
         //Currency Info Configurations.
         final String server = configuration.getString(base + ".Info.Server", "Main Server");
@@ -225,7 +285,7 @@ public class CurrencyManager {
         //TNE.debug(cur + ": " + symbol);
 
         TNECurrency currency = new TNECurrency();
-        currency.setIdentifier(configuration.getString(base + ".Info.Identifier"));
+        currency.setIdentifier(identifier);
         currency.setMaxBalance(maxBalance);
         currency.setBalance(balance);
         currency.setDecimal(decimal);
