@@ -59,7 +59,7 @@ public class MobsListener implements ModuleListener {
       Player killer = entity.getKiller();
 
       //Permissions Check
-      if (killer.hasPermission("tne.general.mob")) {
+      if (killer.hasPermission("tne.mobs.rewards")) {
 
         String world = WorldFinder.getWorld(killer, WorldVariant.CONFIGURATION);
         UUID id = IDFinder.getID(killer);

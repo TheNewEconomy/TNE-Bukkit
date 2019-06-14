@@ -12,15 +12,17 @@ permissions:
     tne.*:
         description: Grants full access to all TNE functionality.
         children:
-            tne.general.mob: true
             tne.menu.*: true
             tne.admin.*: true
             tne.config.*: true
             tne.currency.*: true
             tne.language.*: true
+            tne.mobs.*: true
             tne.module.*: true
             tne.money.*: true
+            tne.sign.*: true
             tne.transaction.*: true
+            tne.vault.*: true
     tne.bypass.world:
         description: Allows bypassing of any configured world changing costs.
         default: false
@@ -206,6 +208,13 @@ permissions:
     tne.language.set:
         description: Allows setting the language to use.
         default: true
+    tne.mobs.*:
+        description: Grants full access to all mobs module functionality.
+        children:
+            tne.mobs.rewards: true
+    tne.mobs.rewards:
+        description: Allows receiving rewards from killing mobs.
+        default: true
     tne.module.*:
         description: Grants full access to all module commands.
         children:
@@ -272,6 +281,25 @@ permissions:
     tne.money.top:
         description: Allows viewing the list of players sorted by their balance.
         default: op
+    tne.sign.*:
+        description: Grants full access to all sign module functionality.
+        children:
+            tne.sign.item.*: true
+    tne.sign.item.*:
+        description: Grants full access to all item sign functionality.
+        children:
+            tne.sign.item.use: true
+            tne.sign.item.create: true
+            tne.sign.item.create.admin: true
+    tne.sign.item.use:
+        description: Allows the use of item signs.
+        default: true
+    tne.sign.item.create:
+        description: Allows creating item signs.
+        default: true
+    tne.sign.item.create.admin:
+        description: Allows creating admin item signs.
+        default: op
     tne.transaction.*:
         description: Grants full access to all transaction commands.
         children:
@@ -299,3 +327,58 @@ permissions:
     tne.transaction.void:
         description: Allows undoing a completed transaction.
         default: op
+    tne.vault.*:
+        description: Grants full access to all vaults module functionality.
+        children:
+            tne.vault: true
+            tne.vault.add: true
+            tne.vault.create: true
+            tne.vault.deposit: true
+            tne.vault.members: true
+            tne.vault.peek: true
+            tne.vault.peek.edit: true
+            tne.vault.remove: true
+            tne.vault.resize: true
+            tne.vault.transfer: true
+            tne.vault.transfer.other: true
+            tne.vault.view: true
+            tne.vault.withdraw: true
+    tne.vault:
+        description: Allows use of the vault command.
+        default: true
+    tne.vault.add:
+        description: Allows adding another player to the own player's vault.
+        default: true
+    tne.vault.create:
+        description: Allows creating a vault.
+        default: true
+    tne.vault.deposit:
+        description: Allows depositing items into vaults.
+        default: true
+    tne.vault.members:
+        description: Allows listing members of vaults.
+        default: true
+    tne.vault.peek:
+        description: Allows viewing the contents of any player's vault.
+        default: op
+    tne.vault.peek.edit:
+        description: Allows modifying the contents of any player's vault.
+        default: op
+    tne.vault.remove:
+        description: Allows removing another player from the own player's vault.
+        default: true
+    tne.vault.resize:
+        description: Allows resizing any player's vault.
+        default: op
+    tne.vault.transfer:
+        description: Allows transferring the player's own vault to another player.
+        default: true
+    tne.vault.transfer.other:
+        description: Allows transferring any player's vault to another player.
+        default: op
+    tne.vault.view:
+        description: Allows viewing the contents of vaults.
+        default: true
+    tne.vault.withdraw:
+        description: Allows withdrawing items from vaults.
+        default: true

@@ -134,7 +134,7 @@ public class ItemSign implements SignType {
     }
     try {
 
-      final boolean isAdmin = event.getLines().length >= 2 && event.getLine(1).equalsIgnoreCase("admin") && IDFinder.getPlayer(player.toString()).hasPermission("tne.sign.admin");
+      final boolean isAdmin = event.getLines().length >= 2 && event.getLine(1).equalsIgnoreCase("admin") && IDFinder.getPlayer(player.toString()).hasPermission("tne.sign.item.create.admin");
 
       SignsData.saveSign(new TNESign(event.getBlock().getLocation(), (attached != null)? attached.getLocation() : event.getBlock().getLocation(), "item", player, player, new Date().getTime(), isAdmin, 1));
       TNE.debug("Created Item Sign");
