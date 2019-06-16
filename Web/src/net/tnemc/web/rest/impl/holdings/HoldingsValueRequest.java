@@ -15,15 +15,15 @@ import spark.Response;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class HoldingsTakeRequest implements IRequest {
+public class HoldingsValueRequest implements IRequest {
   @Override
   public RequestType type() {
-    return RequestType.POST;
+    return RequestType.GET;
   }
 
   @Override
   public String route() {
-    return "/api-v1/holdings/:take";
+    return "/api-v1/holdings/:value";
   }
 
   @Override

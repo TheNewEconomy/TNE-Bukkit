@@ -1,7 +1,7 @@
-package net.tnemc.web.rest;
+package net.tnemc.web.rest.object;
 
-import spark.Request;
-import spark.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -13,9 +13,17 @@ import spark.Response;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public interface IRequest {
+public class RestAccount {
 
-  RequestType type();
-  String route();
-  String work(Request request, Response response);
+  private Map<String, RestWorldHoldings> holdingsMap = new HashMap<>();
+
+  //Main Attributes
+  private String display;
+  private String identifier;
+  private boolean player;
+
+  //Extra Attributes
+  private String language;
+  private long joined;
+  private long lastOnline;
 }

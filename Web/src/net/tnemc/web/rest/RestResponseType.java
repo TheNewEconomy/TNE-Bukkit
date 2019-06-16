@@ -1,9 +1,4 @@
-package net.tnemc.web.rest.impl.holdings;
-
-import net.tnemc.web.rest.IRequest;
-import net.tnemc.web.rest.RequestType;
-import spark.Request;
-import spark.Response;
+package net.tnemc.web.rest;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -15,19 +10,22 @@ import spark.Response;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class HoldingsTakeRequest implements IRequest {
-  @Override
-  public RequestType type() {
-    return RequestType.POST;
+public enum RestResponseType {
+
+  SUCCESS("Success"),
+  FAILED("Failed");
+
+  private String value;
+
+  RestResponseType(String value) {
+    this.value = value;
   }
 
-  @Override
-  public String route() {
-    return "/api-v1/holdings/:take";
+  public String getValue() {
+    return value;
   }
 
-  @Override
-  public String work(Request request, Response response) {
-    return null;
+  public static RestResponseType convert(boolean value) {
+    return ((value)? SUCCESS : FAILED);
   }
 }

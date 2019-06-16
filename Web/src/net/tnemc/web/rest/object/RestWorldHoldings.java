@@ -1,7 +1,8 @@
-package net.tnemc.web.rest;
+package net.tnemc.web.rest.object;
 
-import spark.Request;
-import spark.Response;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -13,9 +14,9 @@ import spark.Response;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public interface IRequest {
+public class RestWorldHoldings {
 
-  RequestType type();
-  String route();
-  String work(Request request, Response response);
+  private Map<String, BigDecimal> holdings = new HashMap<>();
+
+  private String world;
 }

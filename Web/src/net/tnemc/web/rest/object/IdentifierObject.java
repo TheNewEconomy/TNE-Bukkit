@@ -1,9 +1,4 @@
-package net.tnemc.web.rest.impl.holdings;
-
-import net.tnemc.web.rest.IRequest;
-import net.tnemc.web.rest.RequestType;
-import spark.Request;
-import spark.Response;
+package net.tnemc.web.rest.object;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -15,19 +10,19 @@ import spark.Response;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class HoldingsTakeRequest implements IRequest {
-  @Override
-  public RequestType type() {
-    return RequestType.POST;
+public class IdentifierObject {
+
+  private String identifier;
+
+  public IdentifierObject(String identifier) {
+    this.identifier = identifier;
   }
 
-  @Override
-  public String route() {
-    return "/api-v1/holdings/:take";
+  public String getIdentifier() {
+    return identifier;
   }
 
-  @Override
-  public String work(Request request, Response response) {
-    return null;
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
   }
 }

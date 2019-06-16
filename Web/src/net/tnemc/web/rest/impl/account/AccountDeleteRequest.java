@@ -1,7 +1,12 @@
-package net.tnemc.web.rest.impl.holdings;
+package net.tnemc.web.rest.impl.account;
 
+import com.google.gson.Gson;
 import net.tnemc.web.rest.IRequest;
 import net.tnemc.web.rest.RequestType;
+import net.tnemc.web.rest.RestResponse;
+import net.tnemc.web.rest.RestResponseType;
+import net.tnemc.web.rest.object.IdentifierObject;
+import net.tnemc.web.rest.service.AccountService;
 import spark.Request;
 import spark.Response;
 
@@ -15,19 +20,21 @@ import spark.Response;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class HoldingsTakeRequest implements IRequest {
+public class AccountDeleteRequest implements IRequest {
   @Override
   public RequestType type() {
-    return RequestType.POST;
+    return RequestType.DELETE;
   }
 
   @Override
   public String route() {
-    return "/api-v1/holdings/:take";
+    return "/api-v1/accounts/:remove";
   }
 
   @Override
   public String work(Request request, Response response) {
-    return null;
+    response.type("application/json");
+    IdentifierObject identifier = new Gson().fromJson(request.body(), IdentifierObject.class);
+    return new Gson().toJson(new RestResponse(RestResponseType.convert(AccountService.deleteAccount(identifier.getIdentifier()))));
   }
 }

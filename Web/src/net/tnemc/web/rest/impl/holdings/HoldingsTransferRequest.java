@@ -4,7 +4,6 @@ import net.tnemc.web.rest.IRequest;
 import net.tnemc.web.rest.RequestType;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -28,7 +27,7 @@ public class HoldingsTransferRequest implements IRequest {
   }
 
   @Override
-  public Route work(Request request, Response response) {
+  public String work(Request request, Response response) {
     return null;
   }
 }
