@@ -10,6 +10,13 @@ The New Economy is a feature-packed modular economy plugin that is currently und
 server owners to simply disable features they don't wish to use, or even remove the module's jar to save disk space. TNE's modular system also allows third-party developers to easily add additional features without
 the need for additional dependencies. Developers, of course, are welcome to add functionality via TNE's custom events, API, Vault, or Reserve(Recommended).
 
+Special Thanks
+--------------
+<p align="center">
+    <img src="https://www.worldsrc.org/uploadimage/307c9b78_WorldSrc.com_img_EJ_Technologies_JProfiler.jpg" />
+</p>
+
+
 Build Status
 --------------
 [![Build Status](https://travis-ci.org/TheNewEconomy/TNE-Bukkit.svg?branch=master)](https://travis-ci.org/TheNewEconomy/TNE-Bukkit)
