@@ -43,7 +43,7 @@ public class WebModule extends Module {
   @Override
   public void postLoad(TNE tne) {
     try {
-      manager.start(8896);
+      manager.start(fileConfiguration.getInt("Web.Port"));
     } catch (Exception ignore) {
       ignore.printStackTrace();
       TNE.logger().warning("Failed to start Web Server on Port: " + fileConfiguration.getInt("Web.Port"));
