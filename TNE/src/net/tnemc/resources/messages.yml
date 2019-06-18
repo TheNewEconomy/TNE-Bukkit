@@ -193,6 +193,7 @@ Messages:
           Unload: "/tnem unload <module> - Unload a module from the server.<newline>- Module ~ The module to unload."
        Money:
           Balance: "/money balance [world] [currency] - Displays your current holdings."
+          Consolidate: "/money consolidate [player] - Consolidate your item currency into the least number of items."
           Convert: "/money convert <amount> <to currency[:world]> [from currency[:world]] - Convert some of your holdings to another currency."
           Give: "/money give <player> <amount> [world] [currency] - Adds money into your economy, and gives it to a player."
           Note: "/money note <amount> [currency] - Makes your virtual currency physical, for storage/trading purposes."

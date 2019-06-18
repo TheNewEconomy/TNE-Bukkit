@@ -244,6 +244,8 @@ permissions:
         children:
             tne.money: true
             tne.money.balance: true
+            tne.money.consolidate: true
+            tne.money.consolidate.other: true
             tne.money.convert: true
             tne.money.give: true
             tne.money.note: true
@@ -256,6 +258,12 @@ permissions:
         default: true
     tne.money.balance:
         description: Allows checking balance.
+        default: true
+    tne.money.consolidate:
+        description: Allows consolidating item currencies to the least amount of items.
+        default: true
+    tne.money.consolidate.other:
+        description: Allows consolidating item currencies to the least amount of items, for other players.
         default: true
     tne.money.convert:
         description: Allows converting between currencies.
