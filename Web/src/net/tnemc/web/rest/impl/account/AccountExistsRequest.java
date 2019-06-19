@@ -1,12 +1,7 @@
 package net.tnemc.web.rest.impl.account;
 
-import com.google.gson.Gson;
 import net.tnemc.web.rest.IRequest;
 import net.tnemc.web.rest.RequestType;
-import net.tnemc.web.rest.RestResponse;
-import net.tnemc.web.rest.RestResponseType;
-import net.tnemc.web.rest.object.IdentifierObject;
-import net.tnemc.web.rest.service.AccountService;
 import spark.Request;
 import spark.Response;
 
@@ -33,8 +28,10 @@ public class AccountExistsRequest implements IRequest {
 
   @Override
   public String work(Request request, Response response) {
-    response.type("application/json");
+    return "SUCCESS";
+
+    /*response.type("application/json");
     IdentifierObject identifier = new Gson().fromJson(request.body(), IdentifierObject.class);
-    return new Gson().toJson(new RestResponse(RestResponseType.convert(AccountService.hasAccount(identifier.getIdentifier()))));
+    return new Gson().toJson(new RestResponse(RestResponseType.convert(AccountService.hasAccount(identifier.getIdentifier()))));*/
   }
 }

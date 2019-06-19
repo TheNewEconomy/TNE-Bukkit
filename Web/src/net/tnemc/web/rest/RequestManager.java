@@ -1,5 +1,7 @@
 package net.tnemc.web.rest;
 
+import net.tnemc.web.rest.impl.account.AccountExistsRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,6 @@ public class RequestManager {
   }
 
   private void initBaseRequests() {
-    //TODO: Initialize our default requests.
+    requests.add(new AccountExistsRequest());
   }
 }

@@ -1,22 +1,7 @@
 package net.tnemc.web.utils;
 
-import net.tnemc.core.TNE;
-import net.tnemc.core.common.currency.CurrencyFormatter;
-import net.tnemc.core.common.data.TNEDataManager;
-import net.tnemc.web.WebModule;
-import net.tnemc.web.pages.helper.Balance;
-import net.tnemc.web.pages.helper.NavLink;
 import spark.Request;
 import spark.Response;
-
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -30,7 +15,7 @@ import java.util.Map;
  */
 public class RenderUtils {
 
-  public static Map<String, Object> buildHeader(Request request, Response response) throws SQLException {
+  /*public static Map<String, Object> buildHeader(Request request, Response response) throws SQLException {
     Map<String, Object> model = new HashMap<>();
     if(!testLogin(request, response)) return model;
 
@@ -47,7 +32,7 @@ public class RenderUtils {
     return model;
   }
 
-  public static Map<String, Object> buildNavigation(Request request, Response response) {
+  /*public static Map<String, Object> buildNavigation(Request request, Response response) {
     LinkedList<NavLink> navigationLinks = new LinkedList<>();
 
     for(Map.Entry<String, String> link : WebModule.instance().getManager().getNavLinks().entrySet()) {
@@ -57,7 +42,7 @@ public class RenderUtils {
     Map<String, Object> model = new HashMap<>();
     model.put("links", navigationLinks);
     return model;
-  }
+  }*/
 
   public static boolean testLogin(Request request, Response response) {
     if(request.session().attribute("accessToken") == null) {

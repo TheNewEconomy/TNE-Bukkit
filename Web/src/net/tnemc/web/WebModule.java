@@ -31,6 +31,8 @@ public class WebModule extends Module {
   @Override
   public void load(TNE tne, String version) {
     instance = this;
+    webFile = new File(TNE.instance().getDataFolder(), "web.yml");
+    fileConfiguration = TNE.instance().initializeConfiguration(webFile, "web.yml");
     manager = new WebManager();
     TNE.logger().info("Web Module loaded!");
   }
@@ -69,8 +71,6 @@ public class WebModule extends Module {
   @Override
   public void initializeConfigurations() {
     super.initializeConfigurations();
-    webFile = new File(TNE.instance().getDataFolder(), "web.yml");
-    fileConfiguration = TNE.instance().initializeConfiguration(webFile, "web.yml");
   }
 
   public File getWebFile() {
