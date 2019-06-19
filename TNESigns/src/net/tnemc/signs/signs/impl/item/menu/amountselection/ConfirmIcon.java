@@ -4,7 +4,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.CurrencyFormatter;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.menu.icons.Icon;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.impl.ItemSign;
@@ -43,11 +43,11 @@ public class ConfirmIcon extends Icon {
 
       if(ItemSign.isAdmin(location)) {
         SignsData.updateStep(location, 4);
-        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount);
+        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount, player.getUniqueId().toString());
       } else {
         SignsData.updateStep(location, 3);
 
-        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount) +
+        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount, player.getUniqueId().toString()) +
             ". Now right click your shop sign, followed by a chest to mark your shop's storage.";
       }
 

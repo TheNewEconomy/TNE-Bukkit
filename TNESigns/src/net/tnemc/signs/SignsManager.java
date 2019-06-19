@@ -1,7 +1,10 @@
 package net.tnemc.signs;
 
+import net.tnemc.signs.selection.SelectionManager;
 import net.tnemc.signs.signs.SignType;
+import net.tnemc.signs.signs.impl.CommandSign;
 import net.tnemc.signs.signs.impl.ItemSign;
+import net.tnemc.signs.signs.impl.SignalSign;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -27,6 +30,7 @@ public class SignsManager {
 
   public static Map<UUID, Location> chestSelection = new HashMap<>();
 
+
   private Map<String, SignType> signTypes = new HashMap<>();
   public static final Pattern signPattern = Pattern.compile("\\[(.*?)\\]");
 
@@ -34,9 +38,15 @@ public class SignsManager {
     BlockFace.SOUTH, BlockFace.EAST, BlockFace.NORTH, BlockFace.WEST
   };
 
+  private SelectionManager selectionManager;
+
   public SignsManager() {
 
+    addSignType(new CommandSign());
     addSignType(new ItemSign());
+    addSignType(new SignalSign());
+
+    selectionManager = new SelectionManager();
   }
 
   public static boolean blockAttachedSign(final Block block) {
@@ -93,6 +103,10 @@ public class SignsManager {
 
   public Map<String, SignType> getSignTypes() {
     return signTypes;
+  }
+
+  public SelectionManager getSelectionManager() {
+    return selectionManager;
   }
 
   public void setSignTypes(Map<String, SignType> signTypes) {
