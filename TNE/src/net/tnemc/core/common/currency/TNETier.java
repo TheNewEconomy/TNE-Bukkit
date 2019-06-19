@@ -2,6 +2,8 @@ package net.tnemc.core.common.currency;
 
 import net.tnemc.core.economy.currency.Tier;
 
+import java.math.BigInteger;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -14,14 +16,14 @@ public class TNETier implements Tier {
   private boolean major;
   private String single;
   private String plural;
-  private Integer weight;
+  private BigInteger weight;
   private ItemTier itemInfo;
 
   public static TNETier fromReserve(Tier tier) {
     TNETier tneTier = new TNETier();
     tneTier.setPlural(tier.plural());
     tneTier.setSingle(tier.singular());
-    tneTier.setWeight(tier.weight());
+    tneTier.setWeight(new BigInteger(tier.weight() + ""));
     tneTier.setMajor(tier.isMajor());
     return tneTier;
   }
@@ -42,8 +44,12 @@ public class TNETier implements Tier {
     this.plural = plural;
   }
 
-  public void setWeight(Integer weight) {
+  public void setWeight(BigInteger weight) {
     this.weight = weight;
+  }
+
+  public BigInteger getTNEWeight() {
+    return weight;
   }
 
   public void setMajor(boolean major) {
@@ -67,6 +73,6 @@ public class TNETier implements Tier {
 
   @Override
   public int weight() {
-    return weight;
+    return weight.intValue();
   }
 }

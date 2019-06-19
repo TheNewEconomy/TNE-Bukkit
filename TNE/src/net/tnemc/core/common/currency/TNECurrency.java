@@ -4,6 +4,7 @@ import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -20,9 +21,9 @@ import java.util.TreeMap;
  */
 public class TNECurrency implements Currency {
 
-  private TreeMap<Integer, TNETier> majorTiers = new TreeMap<>(Collections.reverseOrder());
+  private TreeMap<BigInteger, TNETier> majorTiers = new TreeMap<>(Collections.reverseOrder());
 
-  private TreeMap<Integer, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
+  private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
 
   private boolean worldDefault = true;
   private BigDecimal balance;
@@ -57,16 +58,16 @@ public class TNECurrency implements Currency {
     return tiers;
   }
 
-  public TreeMap<Integer, TNETier> getTNEMajorTiers() {
+  public TreeMap<BigInteger, TNETier> getTNEMajorTiers() {
     return majorTiers;
   }
 
-  public void setTNEMajorTiers(TreeMap<Integer, TNETier> tiers) {
+  public void setTNEMajorTiers(TreeMap<BigInteger, TNETier> tiers) {
     majorTiers = tiers;
   }
 
   public void addTNEMajorTier(TNETier tier) {
-    majorTiers.put(tier.weight(), tier);
+    majorTiers.put(tier.getTNEWeight(), tier);
   }
 
   public Optional<TNETier> getMajorTier(Integer weight) {
@@ -81,16 +82,16 @@ public class TNECurrency implements Currency {
     return Optional.empty();
   }
 
-  public TreeMap<Integer, TNETier> getTNEMinorTiers() {
+  public TreeMap<BigInteger, TNETier> getTNEMinorTiers() {
     return minorTiers;
   }
 
-  public void setTNEMinorTiers(TreeMap<Integer, TNETier> tiers) {
+  public void setTNEMinorTiers(TreeMap<BigInteger, TNETier> tiers) {
     minorTiers = tiers;
   }
 
   public void addTNEMinorTier(TNETier tier) {
-    minorTiers.put(tier.weight(), tier);
+    minorTiers.put(tier.getTNEWeight(), tier);
   }
 
   public Optional<TNETier> getMinorTier(Integer weight) {

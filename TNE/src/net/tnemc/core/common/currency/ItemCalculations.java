@@ -103,10 +103,10 @@ public class ItemCalculations {
 
   public static BigInteger setMajorConsolidate(TNECurrency currency, BigInteger amount, Inventory inventory) {
     TNE.debug("===== START setMinorItems =====");
-    Map<Integer, ItemStack> items = new HashMap<>();
+    Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
-    for(Map.Entry<Integer, TNETier> entry : currency.getTNEMajorTiers().entrySet()) {
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
+    for(Map.Entry<BigInteger, TNETier> entry : currency.getTNEMajorTiers().entrySet()) {
+      BigInteger weight = entry.getKey();
 
       BigInteger itemAmount = workingAmount.divide(weight);
 
@@ -125,10 +125,10 @@ public class ItemCalculations {
   }
 
   public static BigInteger setMinorConsolidate(TNECurrency currency, BigInteger amount, Inventory inventory) {
-    Map<Integer, ItemStack> items = new HashMap<>();
+    Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
-    for(Map.Entry<Integer, TNETier> entry : currency.getTNEMinorTiers().entrySet()) {
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
+    for(Map.Entry<BigInteger, TNETier> entry : currency.getTNEMinorTiers().entrySet()) {
+      BigInteger weight = entry.getKey();
 
       BigInteger itemAmount = workingAmount.divide(weight);
 
@@ -147,15 +147,15 @@ public class ItemCalculations {
   }
 
   public static BigInteger setMajor(TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
-    Map<Integer, ItemStack> items = new HashMap<>();
+    Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     BigInteger actualAmount = BigInteger.ZERO;
-    NavigableMap<Integer, TNETier> values = (add)? currency.getTNEMajorTiers() :
+    NavigableMap<BigInteger, TNETier> values = (add)? currency.getTNEMajorTiers() :
         currency.getTNEMajorTiers().descendingMap();
     String additional = "0";
-    for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
-      if(entry.getKey() <= 0) continue;
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
+    for(Map.Entry<BigInteger, TNETier> entry : values.entrySet()) {
+      if(entry.getKey().compareTo(BigInteger.ZERO) <= 0) continue;
+      BigInteger weight = entry.getKey();
 
       BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
       BigInteger itemActual = new BigInteger(getCount(entry.getValue().getItemInfo().toStack(), inventory) + "");
@@ -194,11 +194,11 @@ public class ItemCalculations {
     BigInteger workingAmount = new BigInteger(amount.toString());
     TNE.debug("workingAmount: " + workingAmount);
     BigInteger actualAmount = BigInteger.ZERO;
-    NavigableMap<Integer, TNETier> values = (add)? currency.getTNEMinorTiers() :
+    NavigableMap<BigInteger, TNETier> values = (add)? currency.getTNEMinorTiers() :
         currency.getTNEMinorTiers().descendingMap();
     String additional = "0";
-    for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
-      BigInteger weight = BigInteger.valueOf(entry.getKey());
+    for(Map.Entry<BigInteger, TNETier> entry : values.entrySet()) {
+      BigInteger weight = entry.getKey();
 
       BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
       BigInteger itemActual = new BigInteger(getCount(entry.getValue().getItemInfo().toStack(), inventory) + "");
@@ -217,7 +217,7 @@ public class ItemCalculations {
 
       actualAmount = actualAmount.add(weight.multiply(itemAmount));
       workingAmount = workingAmount.subtract(weight.multiply(itemAmount));
-      items.put(entry.getKey(), stack);
+      items.put(entry.getKey().intValue(), stack);
       TNE.debug("actualAmount: " + actualAmount);
       TNE.debug("workingAmount: " + workingAmount);
     }
@@ -275,7 +275,7 @@ public class ItemCalculations {
 
       if(type.equalsIgnoreCase("all") || type.equalsIgnoreCase("minor")) {
         for (TNETier tier : currency.getTNEMinorTiers().values()) {
-          Integer parsed = (getCount(tier.getItemInfo().toStack(), inventory) * tier.weight());
+          BigInteger parsed = BigInteger.valueOf(getCount(tier.getItemInfo().toStack(), inventory)).multiply(tier.getTNEWeight());
           //String convert = "." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", parsed);
           minor = minor.add(new BigInteger(parsed + ""));
         }
@@ -366,7 +366,7 @@ public class ItemCalculations {
       BigInteger actualAmount = BigInteger.ZERO;
       String additional = "0";
 
-      NavigableMap<Integer, TNETier> values;
+      NavigableMap<BigInteger, TNETier> values;
 
       if(majorChange.compareTo(BigInteger.ZERO) > 0) {
         values = currency.getTNEMajorTiers();
@@ -374,8 +374,8 @@ public class ItemCalculations {
         workingAmount = majorChange;
         actualAmount = BigInteger.ZERO;
 
-        for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
-          BigInteger weight = BigInteger.valueOf(entry.getKey());
+        for(Map.Entry<BigInteger, TNETier> entry : values.entrySet()) {
+          BigInteger weight = entry.getKey();
 
           BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
           additional = "0";
@@ -396,8 +396,8 @@ public class ItemCalculations {
         workingAmount = minorChange;
         actualAmount = BigInteger.ZERO;
 
-        for(Map.Entry<Integer, TNETier> entry : values.entrySet()) {
-          BigInteger weight = BigInteger.valueOf(entry.getKey());
+        for(Map.Entry<BigInteger, TNETier> entry : values.entrySet()) {
+          BigInteger weight = entry.getKey();
 
           BigInteger itemAmount = workingAmount.divide(weight).add(new BigInteger(additional));
           additional = "0";

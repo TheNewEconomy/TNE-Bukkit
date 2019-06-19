@@ -26,6 +26,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -194,7 +195,7 @@ public class CurrencyManager {
       tier.setItemInfo(itemTier);
       tier.setSingle(tierName);
       tier.setPlural(tierName + "s");
-      tier.setWeight(Integer.valueOf(unparsedValue));
+      tier.setWeight(new BigInteger(unparsedValue));
 
       if (type.equalsIgnoreCase("minor")) {
         currency.addTNEMinorTier(tier);
@@ -330,7 +331,7 @@ public class CurrencyManager {
       String type = configuration.getString(tierBase + ".Info.Type", "Major");
       String single = configuration.getString(tierBase + ".Info.Single", "Dollar");
       String plural = configuration.getString(tierBase + ".Info.Plural", "Dollars");
-      Integer weight = configuration.getInt(tierBase + ".Options.Weight", 1);
+      BigInteger weight = new BigInteger(configuration.getString(tierBase + ".Options.Weight", "1"));
       ItemTier item = null;
 
       if(currency.isItem()) {

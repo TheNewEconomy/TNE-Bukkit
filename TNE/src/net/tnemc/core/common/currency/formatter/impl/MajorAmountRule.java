@@ -24,6 +24,32 @@ public class MajorAmountRule implements FormatRule {
 
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
-    return formatted.replace("<major.amount>", amount.toBigInteger().toString());
+    String amountFormatted = (currency.canSeparateMajor())? separate(amount.toBigInteger().toString().split("\\."), currency.getMajorSeparator()) : amount.toBigInteger().toString();
+    return formatted.replace("<major.amount>", amountFormatted);
+  }
+
+  public static String separate(String[] format, String separator) {
+    String whole = format[0];
+
+    StringBuilder builder = new StringBuilder();
+
+    final int leftOver = whole.length() % 3;
+    boolean hasLeft = leftOver > 0;
+
+    for(int i = 0; i < whole.length(); i++) {
+      final int actual = (i + 1) - leftOver;
+      builder.append(whole.charAt(i));
+      if(i == whole.length() - 1) continue;
+      if(hasLeft && i == (leftOver - 1)) {
+        builder.append(separator);
+        hasLeft = false;
+        continue;
+      }
+
+      if(!hasLeft && actual > 0 && (actual % 3) == 0) {
+        builder.append(separator);
+      }
+    }
+    return builder.toString();
   }
 }

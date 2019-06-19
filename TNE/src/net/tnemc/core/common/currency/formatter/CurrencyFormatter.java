@@ -11,7 +11,6 @@ import net.tnemc.core.common.currency.formatter.impl.MaterialRule;
 import net.tnemc.core.common.currency.formatter.impl.MinorAmountRule;
 import net.tnemc.core.common.currency.formatter.impl.MinorNameRule;
 import net.tnemc.core.common.currency.formatter.impl.MinorRule;
-import net.tnemc.core.common.currency.formatter.impl.SeparateRule;
 import net.tnemc.core.common.currency.formatter.impl.ShortenRule;
 import net.tnemc.core.common.currency.formatter.impl.SymbolRule;
 import org.bukkit.Location;
@@ -37,8 +36,6 @@ public class CurrencyFormatter {
   static {
     addRule(new ShortenRule());
 
-    addRule(new SeparateRule());
-    addRule(new ColourRule());
     addRule(new DecimalRule());
     addRule(new MajorAmountRule());
     addRule(new MajorNameRule());
@@ -47,6 +44,7 @@ public class CurrencyFormatter {
     addRule(new MinorNameRule());
     addRule(new MinorRule());
     addRule(new SymbolRule());
+    addRule(new ColourRule());
     addRule(new MaterialRule());
   }
 
