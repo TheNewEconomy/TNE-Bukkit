@@ -48,6 +48,7 @@ import net.tnemc.core.listeners.ExperienceListener;
 import net.tnemc.core.listeners.MCMMOListener;
 import net.tnemc.core.listeners.PlayerListener;
 import net.tnemc.core.listeners.TNEMessageListener;
+import net.tnemc.core.listeners.item.CraftItemListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
@@ -374,6 +375,13 @@ public class TNE extends TNELib {
     }
 
     TNE.debug("Preparing events");
+    //Our new Listener Setup
+
+    //Item
+    getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
+
+
+    //Old Listener Setup
     getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
     getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
     if(configurations().getBoolean("Core.Server.ExperienceGain")) {
