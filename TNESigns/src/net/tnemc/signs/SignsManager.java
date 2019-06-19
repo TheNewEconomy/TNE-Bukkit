@@ -6,14 +6,12 @@ import net.tnemc.signs.signs.impl.CommandSign;
 import net.tnemc.signs.signs.impl.ItemSign;
 import net.tnemc.signs.signs.impl.SignalSign;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -27,9 +25,6 @@ import java.util.regex.Pattern;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class SignsManager {
-
-  public static Map<UUID, Location> chestSelection = new HashMap<>();
-
 
   private Map<String, SignType> signTypes = new HashMap<>();
   public static final Pattern signPattern = Pattern.compile("\\[(.*?)\\]");

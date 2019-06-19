@@ -2,7 +2,8 @@ package net.tnemc.signs.signs.impl.item;
 
 import net.tnemc.core.TNE;
 import net.tnemc.signs.SignsData;
-import net.tnemc.signs.SignsManager;
+import net.tnemc.signs.SignsModule;
+import net.tnemc.signs.selection.SelectionPlayer;
 import net.tnemc.signs.signs.SignStep;
 import net.tnemc.signs.signs.TNESign;
 import org.bukkit.Bukkit;
@@ -50,13 +51,13 @@ public class ChestSelectionStep implements SignStep {
       playerInstance.sendMessage(ChatColor.WHITE + "Now click on the chest you wish to use as this shop's storage. This" +
                                  " request will expire in 30 seconds.");
       Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), ()->{
-        if(SignsManager.chestSelection.containsKey(player)) {
-          SignsManager.chestSelection.remove(player);
+        if(SignsModule.manager().getSelectionManager().isSelecting(player, "chest")) {
+          SignsModule.manager().getSelectionManager().remove(player);
           playerInstance.sendMessage(ChatColor.RED + "Chest selection request has expired.");
           playerInstance.playSound(playerInstance.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5.0f, 5.0f);
         }
       }, 600);
-      SignsManager.chestSelection.put(player, sign.getLocation());
+      SignsModule.manager().getSelectionManager().addPlayer(player, new SelectionPlayer(player, sign.getLocation(), "chest"));
     }
     return false;
   }

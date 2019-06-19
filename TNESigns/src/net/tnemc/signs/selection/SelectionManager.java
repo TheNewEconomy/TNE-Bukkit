@@ -21,7 +21,7 @@ public class SelectionManager {
 
   private Map<String, Selection> selectionMap = new HashMap<>();
 
-  private Map<UUID, String> selectors = new HashMap<>();
+  private Map<UUID, SelectionPlayer> selectors = new HashMap<>();
 
   public SelectionManager() {
     add(new ChestSelection());
@@ -37,12 +37,20 @@ public class SelectionManager {
     }
   }
 
-  public void addPlayer(UUID id, String type) {
-    selectors.put(id, type);
+  public void addPlayer(UUID id, SelectionPlayer player) {
+    selectors.put(id, player);
+  }
+
+  public SelectionPlayer getSelectionInstance(UUID id) {
+    return selectors.get(id);
   }
 
   public boolean isSelecting(UUID id, String type) {
-    return selectors.containsKey(id) && selectors.get(id).equalsIgnoreCase(type);
+    return selectors.containsKey(id) && selectors.get(id).getType().equalsIgnoreCase(type);
+  }
+
+  public boolean isSelectingAny(UUID id) {
+    return selectors.containsKey(id);
   }
 
   public void remove(UUID id) {

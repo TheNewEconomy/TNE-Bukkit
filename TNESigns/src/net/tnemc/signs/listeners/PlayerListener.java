@@ -1,7 +1,5 @@
 package net.tnemc.signs.listeners;
 
-import com.palmergames.bukkit.towny.object.TownyPermission;
-import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.signs.ChestHelper;
@@ -11,8 +9,6 @@ import net.tnemc.signs.SignsModule;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.TNESign;
 import net.tnemc.signs.signs.impl.ItemSign;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -74,26 +70,11 @@ public class PlayerListener implements Listener {
     } else {
       if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getPlayer().isSneaking()) {
         if(event.getClickedBlock().getType().equals(Material.CHEST)) {
-          if(SignsManager.chestSelection.containsKey(id)) {
+          if(SignsModule.manager().getSelectionManager().isSelecting(id, "chest")) {
 
             final Location location = event.getClickedBlock().getLocation();
-            final Location signLocation = SignsManager.chestSelection.get(id);
-            Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-              try {
-                if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
-                  if(!PlayerCacheUtil.getCachePermission(event.getPlayer(), location, Material.CHEST, TownyPermission.ActionType.SWITCH)) {
-                    return;
-                  }
-                }
-
-                SignsData.updateChest(signLocation, location);
-                SignsData.updateStep(signLocation, 4);
-                event.getPlayer().sendMessage(ChatColor.WHITE + "Updated your shop's storage to the chest at X: " + location.getBlockX() + " Y: " + location.getBlockY() + " Z: " + location.getBlockZ());
-                SignsManager.chestSelection.remove(id);
-              } catch (SQLException e) {
-                event.getPlayer().sendMessage(ChatColor.RED + "Error while updating your shop's storage.");
-              }
-            });
+            final Location signLocation = SignsModule.manager().getSelectionManager().getSelectionInstance(id).getSign();
+            SignsModule.manager().getSelectionManager().doSelection("chest", id, signLocation, location);
           } else {
 
             if (event.getClickedBlock().getState() instanceof Chest) {
@@ -166,8 +147,8 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.MONITOR)
   public void onQuit(final PlayerQuitEvent event) {
-    if(SignsManager.chestSelection.containsKey(event.getPlayer().getUniqueId())) {
-      SignsManager.chestSelection.remove(event.getPlayer().getUniqueId());
+    if(SignsModule.manager().getSelectionManager().isSelectingAny(event.getPlayer().getUniqueId())) {
+      SignsModule.manager().getSelectionManager().remove(event.getPlayer().getUniqueId());
     }
   }
 }
