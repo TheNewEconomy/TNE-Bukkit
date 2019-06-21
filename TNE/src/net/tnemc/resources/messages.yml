@@ -68,6 +68,12 @@ Messages:
        Reset: "<white>Performed an economy reset using these parameters - world = $world, currency = $currency, and player = $player."
 
     Account:
+       PinSetAlready: "<red>You have already set a pin, please provide the old pin to set a new one."
+       PinSet: "<white>Your pin has been set to $pin."
+       PinReset: "<white>The pin of $player has been reset."
+       PinMax: "<red>Pins must be fewer than 60 characters."
+       PinIncorrect: "<red>Pin given is incorrect."
+       PinInvalid: "<red>Pin requested is invalid."
        Locked: "<red>You can't do that with a locked account($player)!"
        NoTransactions: "<white>You have no transactions to display at this time."
        StatusChange: "<white>Your account's status has been changed to <green>$status<white>."
@@ -149,6 +155,9 @@ Messages:
        Voided: "<white>Successfully voided the transaction with the ID of <green>$transaction<white>."
 
     Commands:
+       Account:
+          PinReset: "/account pin reset <username/UUID> - Changes an account's pin to the default one."
+          PinSet: "/account pin set <pin> [old pin] - Used to change your account's pin."
        Admin:
           Backup: "/tne backup - Creates a backup of all server data."
           Balance: "/tne balance <player> [world] [currency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- currency ~ The currency to retrieve the balance of."
