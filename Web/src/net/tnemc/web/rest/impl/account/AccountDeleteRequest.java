@@ -28,7 +28,7 @@ public class AccountDeleteRequest implements IRequest {
 
   @Override
   public String route() {
-    return "/api-v1/accounts/:remove";
+    return "/api-v1/accounts/remove";
   }
 
   @Override

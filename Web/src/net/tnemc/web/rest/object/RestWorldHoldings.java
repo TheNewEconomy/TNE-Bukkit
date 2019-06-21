@@ -19,4 +19,24 @@ public class RestWorldHoldings {
   private Map<String, BigDecimal> holdings = new HashMap<>();
 
   private String world;
+
+  public RestWorldHoldings(String world) {
+    this.world = world;
+  }
+
+  public Map<String, BigDecimal> getHoldings() {
+    return holdings;
+  }
+
+  public void setHoldings(Map<String, BigDecimal> holdings) {
+    this.holdings = holdings;
+  }
+
+  public String getWorld() {
+    return world;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
+  }
 }

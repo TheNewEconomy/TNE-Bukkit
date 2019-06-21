@@ -26,4 +26,64 @@ public class RestAccount {
   private String language;
   private long joined;
   private long lastOnline;
+
+  public RestAccount(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public Map<String, RestWorldHoldings> getHoldingsMap() {
+    return holdingsMap;
+  }
+
+  public void setHoldingsMap(Map<String, RestWorldHoldings> holdingsMap) {
+    this.holdingsMap = holdingsMap;
+  }
+
+  public String getDisplay() {
+    return display;
+  }
+
+  public void setDisplay(String display) {
+    this.display = display;
+  }
+
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public boolean isPlayer() {
+    return player;
+  }
+
+  public void setPlayer(boolean player) {
+    this.player = player;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public long getJoined() {
+    return joined;
+  }
+
+  public void setJoined(long joined) {
+    this.joined = joined;
+  }
+
+  public long getLastOnline() {
+    return lastOnline;
+  }
+
+  public void setLastOnline(long lastOnline) {
+    this.lastOnline = lastOnline;
+  }
 }

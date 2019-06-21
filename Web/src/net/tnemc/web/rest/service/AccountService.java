@@ -1,9 +1,13 @@
 package net.tnemc.web.rest.service;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldManager;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.web.rest.object.HoldingsObject;
 import net.tnemc.web.rest.object.RestAccount;
+import net.tnemc.web.rest.object.RestWorldHoldings;
 
 import java.math.BigDecimal;
 
@@ -29,7 +33,23 @@ public class AccountService {
   }
 
   public static RestAccount getAccount(String identifier) {
-    return new RestAccount();
+    TNEAccount account = TNE.manager().getAccount(IDFinder.getID(identifier));
+
+    RestAccount acc = new RestAccount(identifier);
+    acc.setDisplay(account.displayName());
+    acc.setJoined(account.getJoined());
+    acc.setLanguage(account.getLanguage());
+    acc.setLastOnline(account.getLastOnline());
+    acc.setPlayer(account.playerAccount());
+
+    for(WorldManager manager : TNE.instance().getWorldManagers()) {
+      RestWorldHoldings worldHoldings = new RestWorldHoldings(manager.getBalanceWorld());
+      for(Currency cur : manager.getCurrencies()) {
+        worldHoldings.getHoldings().put(cur.name(), account.getHoldings(manager.getBalanceWorld(), cur));
+      }
+      acc.getHoldingsMap().put(manager.getBalanceWorld(), worldHoldings);
+    }
+    return acc;
   }
 
   public static boolean deleteAccount(String identifier) {
@@ -42,7 +62,7 @@ public class AccountService {
     return TNE.instance().api().addHoldings(identifier, amount, TNE.manager().currencyManager().get(world, currency), world);
   }
 
-  public static boolean transferHoldings(String identifier, String receiver, String world, String currency) {
+  public static boolean transferHoldings(String identifier, String receiver, String world, String currency, BigDecimal amount) {
     return true;
   }
 

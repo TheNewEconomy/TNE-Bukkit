@@ -40,9 +40,15 @@ public class EconomyManager {
   private List<UUID> dead = new ArrayList<>();
 
   /**
-   * The {@link CurrencyManager currency manager}, which manages all loaded currencies, and their respective tiers.
+   * The Currency Manager, which manages all loaded currencies, and their respective tiers.
    */
   private CurrencyManager currencyManager;
+
+  /**
+   * Used to track active sessions from the REST API located in the web module, may be used by 3rd party APIs/other modules
+   * to create a secure session using an account's pin.
+   */
+  private SessionManager sessionManager;
 
   /**
    * The {@link TransactionManager transaction manager}, which manages all transactions performed on the server.
@@ -56,6 +62,7 @@ public class EconomyManager {
   public EconomyManager() {
     this.accounts.setListener(new AccountListener());
     currencyManager = new CurrencyManager();
+    sessionManager = new SessionManager();
     transactionManager = new TransactionManager();
     registerHandler(new CoreHoldingsHandler());
     registerHandler(new EChestHandler());
@@ -81,6 +88,10 @@ public class EconomyManager {
 
   public CurrencyManager currencyManager() {
     return currencyManager;
+  }
+
+  public SessionManager sessionManager() {
+    return sessionManager;
   }
 
   public TransactionManager transactionManager() {

@@ -1,6 +1,10 @@
 package net.tnemc.web.rest;
 
+import net.tnemc.web.rest.impl.account.AccountAddRequest;
+import net.tnemc.web.rest.impl.account.AccountDeleteRequest;
 import net.tnemc.web.rest.impl.account.AccountExistsRequest;
+import net.tnemc.web.rest.impl.account.AccountGetRequest;
+import net.tnemc.web.rest.impl.holdings.HoldingsGiveRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +49,14 @@ public class RequestManager {
   }
 
   private void initBaseRequests() {
+
+    //Account Requests
+    requests.add(new AccountAddRequest());
+    requests.add(new AccountDeleteRequest());
     requests.add(new AccountExistsRequest());
+    requests.add(new AccountGetRequest());
+
+    //Holdings Requests
+    requests.add(new HoldingsGiveRequest());
   }
 }

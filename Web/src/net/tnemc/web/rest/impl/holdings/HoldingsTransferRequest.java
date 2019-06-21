@@ -1,9 +1,16 @@
 package net.tnemc.web.rest.impl.holdings;
 
+import com.google.gson.Gson;
 import net.tnemc.web.rest.IRequest;
 import net.tnemc.web.rest.RequestType;
+import net.tnemc.web.rest.RestResponse;
+import net.tnemc.web.rest.RestResponseType;
+import net.tnemc.web.rest.object.HoldingsTransferObject;
+import net.tnemc.web.rest.service.AccountService;
 import spark.Request;
 import spark.Response;
+
+import java.math.BigDecimal;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -23,11 +30,21 @@ public class HoldingsTransferRequest implements IRequest {
 
   @Override
   public String route() {
-    return "/api-v1/holdings/:transfer";
+    return "/api-v1/holdings/transfer";
   }
 
   @Override
   public String work(Request request, Response response) {
-    return null;
+    response.type("application/json");
+    HoldingsTransferObject requestHoldings = new Gson().fromJson(request.body(), HoldingsTransferObject.class);
+    BigDecimal amount;
+
+    try {
+      amount = new BigDecimal(requestHoldings.getAmount());
+    } catch(Exception ignore) {
+      return new Gson().toJson(new RestResponse(RestResponseType.FAILED));
+    }
+
+    return new Gson().toJson(new RestResponse(RestResponseType.convert(AccountService.transferHoldings(requestHoldings.getFrom(), requestHoldings.getTo(), requestHoldings.getWorld(), requestHoldings.getCurrency(), amount))));
   }
 }

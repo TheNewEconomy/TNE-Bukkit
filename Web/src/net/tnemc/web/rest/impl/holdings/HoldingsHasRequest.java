@@ -23,7 +23,7 @@ public class HoldingsHasRequest implements IRequest {
 
   @Override
   public String route() {
-    return "/api-v1/holdings/:has";
+    return "/api-v1/holdings/has";
   }
 
   @Override

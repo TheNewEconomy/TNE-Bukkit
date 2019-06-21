@@ -23,7 +23,7 @@ public class AccountAddRequest implements IRequest {
 
   @Override
   public String route() {
-    return "/api-v1/accounts/:add";
+    return "/api-v1/accounts/add";
   }
 
   @Override

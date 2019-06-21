@@ -48,6 +48,9 @@ public class TNEAccount implements Account {
   private long joined;
   private long lastOnline;
 
+  //Extended Account Functionality
+  private String pin;
+
   public TNEAccount(UUID id, String displayName) {
     this.id = id;
     this.displayName = displayName;
@@ -56,6 +59,7 @@ public class TNEAccount implements Account {
     this.player = true;
     this.joined = new Date().getTime();
     this.lastOnline = new Date().getTime();
+    this.pin = "";
     history = new AccountHistory();
   }
 
@@ -292,6 +296,14 @@ public class TNEAccount implements Account {
 
   public void setLastOnline(long lastOnline) {
     this.lastOnline = lastOnline;
+  }
+
+  public String getPin() {
+    return pin;
+  }
+
+  public void setPin(String pin) {
+    this.pin = pin;
   }
 
   @Override
