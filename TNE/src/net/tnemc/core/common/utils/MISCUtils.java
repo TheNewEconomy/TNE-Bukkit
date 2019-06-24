@@ -10,6 +10,7 @@ import net.tnemc.core.common.currency.TNECurrency;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -105,6 +106,13 @@ public class MISCUtils {
 
   public static boolean offHand() {
     return isOneNine() || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
+  }
+
+  public static Material getMainHand(Player player) {
+    if(offHand()) {
+      return player.getInventory().getItemInMainHand().getType();
+    }
+    return player.getInventory().getItemInHand().getType();
   }
 
   public static Boolean isBoolean(String value) {

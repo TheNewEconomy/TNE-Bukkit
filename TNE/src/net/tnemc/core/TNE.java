@@ -159,7 +159,7 @@ public class TNE extends TNELib {
     }
 
     if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-      WorldGuardManager.init();
+      //TODO: World Guard is the most idiotic plugin to hook into apparently.WorldGuardManager.init();
     }
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));

@@ -25,25 +25,28 @@ public class ShortenRule implements FormatRule {
 
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
-    final BigInteger wholeNum = amount.toBigInteger();
-    if (wholeNum.compareTo(new BigInteger("1009")) <= 0) {
-      return formatted.replace("<short.amount>", wholeNum.toString());
-    }
-    final String whole = wholeNum.toString();
-    final int pos = ((whole.length() - 1) / 3) - 1;
-    final int posInclude = ((whole.length() % 3) == 0)? 3 : whole.length() % 3;
-    String wholeSub = whole.substring(0, posInclude);
-
-    if(whole.length() > 3) {
-      String extra = whole.substring(posInclude, posInclude + 2);
-      if (Integer.valueOf(extra) > 0) {
-        if (extra.endsWith("0")) {
-          extra = extra.substring(0, extra.length() - 1);
-        }
-        wholeSub = wholeSub + "." + extra;
+    if(formatted.contains("<short.amount>")) {
+      final BigInteger wholeNum = amount.toBigInteger();
+      if (wholeNum.compareTo(new BigInteger("1009")) <= 0) {
+        return formatted.replace("<short.amount>", wholeNum.toString());
       }
-    }
+      final String whole = wholeNum.toString();
+      final int pos = ((whole.length() - 1) / 3) - 1;
+      final int posInclude = ((whole.length() % 3) == 0) ? 3 : whole.length() % 3;
+      String wholeSub = whole.substring(0, posInclude);
 
-    return formatted.replace("<short.amount>", wholeSub + currency.getPrefixes().charAt(pos));
+      if (whole.length() > 3) {
+        String extra = whole.substring(posInclude, posInclude + 2);
+        if (Integer.valueOf(extra) > 0) {
+          if (extra.endsWith("0")) {
+            extra = extra.substring(0, extra.length() - 1);
+          }
+          wholeSub = wholeSub + "." + extra;
+        }
+      }
+
+      return formatted.replace("<short.amount>", wholeSub + currency.getPrefixes().charAt(pos));
+    }
+    return formatted;
   }
 }

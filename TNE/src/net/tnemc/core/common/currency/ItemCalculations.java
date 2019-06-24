@@ -58,6 +58,7 @@ public class ItemCalculations {
         value += item.getAmount();
       }
     }
+    System.out.println("Count: " + value);
     return value;
   }
 

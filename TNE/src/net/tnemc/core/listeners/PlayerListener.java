@@ -9,6 +9,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.Menu;
@@ -70,8 +71,8 @@ public class PlayerListener implements Listener {
 
     if(!noEconomy && event.getRightClicked() instanceof Player) {
 
-      Material actionMaterial = MaterialHelper.getMaterial(TNE.instance().api().getString("Core.Server.MenuMaterial"));
-      Material material = player.getInventory().getItemInMainHand().getType();
+      final Material actionMaterial = MaterialHelper.getMaterial(TNE.instance().api().getString("Core.Server.MenuMaterial"));
+      final Material material = MISCUtils.getMainHand(player);
 
       if(actionMaterial == null && material == null
          || material == null && actionMaterial.equals(Material.AIR)

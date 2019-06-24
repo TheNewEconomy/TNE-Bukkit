@@ -41,7 +41,7 @@ public class ChestSelection implements Selection {
           }
         }
 
-        SignsData.updateChest(location, location);
+        SignsData.updateChest(location, (Location)selection);
         SignsData.updateStep(location, 4);
         IDFinder.getPlayer(identifier.toString()).sendMessage(ChatColor.WHITE + "Updated your shop's storage to the chest at X: " + location.getBlockX() + " Y: " + location.getBlockY() + " Z: " + location.getBlockZ());
         SignsModule.manager().getSelectionManager().remove(identifier);

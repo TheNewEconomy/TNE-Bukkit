@@ -53,7 +53,7 @@ public class ConfirmBuyIcon extends Icon {
     }
     final int tradeAmount = (trade != null)? trade.getAmount() : 0;
 
-    if(!admin && !currency && ItemCalculations.getCount(trade, ItemSign.getChestInventory(chest)) < amount) {
+    if(!admin && !currency && ItemCalculations.getCount(trade, ItemSign.getChestInventory(chest)) < tradeAmount) {
       player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
       player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
       return;
