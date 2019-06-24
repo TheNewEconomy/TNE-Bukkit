@@ -8,6 +8,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.commands.CommandManager;
 import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.commands.account.AccountCommand;
 import net.tnemc.core.commands.admin.AdminCommand;
 import net.tnemc.core.commands.config.ConfigCommand;
 import net.tnemc.core.commands.currency.CurrencyCommand;
@@ -264,6 +265,7 @@ public class TNE extends TNELib {
     //Commands
     TNE.debug("Preparing commands2");
     registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
+    registerCommand(new String[] { "acc", "account" }, new AccountCommand(this));
     registerCommand(new String[] { "tne", "theneweconomy", "eco" }, new AdminCommand(this));
     registerCommand(new String[] { "tnedev", "theneweconomydev" }, new DeveloperCommand(this));
     registerCommand(new String[] { "tneconfig", "tnec" }, new ConfigCommand(this));
