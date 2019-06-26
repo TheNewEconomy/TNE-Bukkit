@@ -4,7 +4,6 @@ import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DatabaseConnector;
 import com.github.tnerevival.core.db.SQLDatabase;
-import com.github.tnerevival.core.db.sql.H2;
 import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
@@ -46,13 +45,13 @@ public class MySQLProvider extends TNEDataProvider {
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
-      "joined_date, last_online, account_pin, account_player FROM " + prefix + "_USERS WHERE " +
+      "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
       "uuid = ? LIMIT 1";
   private final String ACCOUNT_SAVE = "INSERT INTO " + prefix + "_USERS (uuid, display_name, joined_date, " +
-      "last_online, account_number, account_status, account_language, account_pin, account_player) " +
-      "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
+      "last_online, account_number, account_status, account_language, account_player) " +
+      "VALUES(?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
       "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
-      "account_pin = ?, account_player = ?";
+      "account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
   private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
@@ -137,7 +136,7 @@ public class MySQLProvider extends TNEDataProvider {
         "`account_number` INTEGER," +
         "`account_status` VARCHAR(60)," +
         "`account_language` VARCHAR(10) NOT NULL DEFAULT 'default'," +
-        "`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN'," +
+        //"`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN'," +
         "`account_player` BOOLEAN" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
@@ -205,9 +204,9 @@ public class MySQLProvider extends TNEDataProvider {
         executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` MODIFY COLUMN `charge_amount` DECIMAL(49,4)");
       }
 
-      if(version < 1116.0) {
+      /*if(version < 1116.0) {
         H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
-      }
+      }*/
     }
   }
 
@@ -422,7 +421,7 @@ public class MySQLProvider extends TNEDataProvider {
             account.setAccountNumber(results.getInt("account_number"));
             account.setStatus(AccountStatus.fromName(results.getString("account_status")));
             account.setLanguage(results.getString("account_language"));
-            account.setPin(results.getString("account_pin"));
+            //account.setPin(results.getString("account_pin"));
             account.setJoined(results.getLong("joined_date"));
             account.setLastOnline(results.getLong("last_online"));
             account.setPlayerAccount(results.getBoolean("account_player"));
@@ -465,16 +464,16 @@ public class MySQLProvider extends TNEDataProvider {
         accountStatement.setInt(5, account.getAccountNumber());
         accountStatement.setString(6, account.getStatus().getName());
         accountStatement.setString(7, account.getLanguage());
-        accountStatement.setString(8, account.getPin());
-        accountStatement.setBoolean(9, account.playerAccount());
-        accountStatement.setString(10, account.displayName());
-        accountStatement.setLong(11, account.getJoined());
-        accountStatement.setLong(12, account.getLastOnline());
-        accountStatement.setInt(13, account.getAccountNumber());
-        accountStatement.setString(14, account.getStatus().getName());
-        accountStatement.setString(15, account.getLanguage());
-        accountStatement.setString(16, account.getPin());
-        accountStatement.setBoolean(17, account.playerAccount());
+        //accountStatement.setString(8, account.getPin());
+        accountStatement.setBoolean(8, account.playerAccount());
+        accountStatement.setString(9, account.displayName());
+        accountStatement.setLong(10, account.getJoined());
+        accountStatement.setLong(11, account.getLastOnline());
+        accountStatement.setInt(12, account.getAccountNumber());
+        accountStatement.setString(13, account.getStatus().getName());
+        accountStatement.setString(14, account.getLanguage());
+        //accountStatement.setString(16, account.getPin());
+        accountStatement.setBoolean(15, account.playerAccount());
         accountStatement.addBatch();
       }
       accountStatement.executeBatch();
@@ -499,16 +498,16 @@ public class MySQLProvider extends TNEDataProvider {
       statement.setObject(5, account.getAccountNumber());
       statement.setObject(6, account.getStatus().getName());
       statement.setObject(7, account.getLanguage());
-      statement.setObject(8, account.getPin());
-      statement.setObject(9, account.playerAccount());
-      statement.setObject(10, account.displayName());
-      statement.setObject(11, account.getJoined());
-      statement.setObject(12, account.getLastOnline());
-      statement.setObject(13, account.getAccountNumber());
-      statement.setObject(14, account.getStatus().getName());
-      statement.setObject(15, account.getLanguage());
-      statement.setObject(16, account.getPin());
-      statement.setObject(17, account.playerAccount());
+      //statement.setObject(8, account.getPin());
+      statement.setObject(8, account.playerAccount());
+      statement.setObject(9, account.displayName());
+      statement.setObject(10, account.getJoined());
+      statement.setObject(11, account.getLastOnline());
+      statement.setObject(12, account.getAccountNumber());
+      statement.setObject(13, account.getStatus().getName());
+      statement.setObject(14, account.getLanguage());
+      //statement.setObject(16, account.getPin());
+      statement.setObject(15, account.playerAccount());
 
       statement.executeUpdate();
     } catch(Exception ignore) {

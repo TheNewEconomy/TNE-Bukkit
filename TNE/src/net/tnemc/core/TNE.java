@@ -155,13 +155,14 @@ public class TNE extends TNELib {
       return;
     }
 
-    if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") != null) {
+    fawe = true;
+    /*if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") != null) {
       fawe = true;
-    }
+    }*/
 
-    if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    /*if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       //TODO: World Guard is the most idiotic plugin to hook into apparently.WorldGuardManager.init();
-    }
+    }*/
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
     instance = this;
@@ -321,8 +322,8 @@ public class TNE extends TNELib {
     TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
-    saveManager().addVersion(1115.0, false);
-    saveManager().addVersion(1116.0, true);
+    saveManager().addVersion(1115.0, true);
+    //saveManager().addVersion(1116.0, true);
 
     TNE.debug("Initializing Save Manager.");
     try {
