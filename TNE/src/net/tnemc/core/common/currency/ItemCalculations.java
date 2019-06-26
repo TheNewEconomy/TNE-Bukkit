@@ -63,6 +63,10 @@ public class ItemCalculations {
   }
 
   public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove) {
+    setItems(currency, amount, inventory, remove, TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), ""));
+  }
+
+  public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove, boolean consolidate) {
     TNE.debug("=====START Account.setItems =====");
     TNE.debug("Holdings: " + amount.toPlainString());
     if(currency.isItem()) {
@@ -75,7 +79,6 @@ public class ItemCalculations {
       String differenceString = difference.toPlainString();
       TNE.debug("differenceString: " + differenceString);
       String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean consolidate = TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), "");
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
       if(remove) add = false;
 

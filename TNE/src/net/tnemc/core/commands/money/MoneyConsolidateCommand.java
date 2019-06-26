@@ -80,7 +80,7 @@ public class MoneyConsolidateCommand extends TNECommand {
 
       for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
         if(currency.isItem()) {
-          ItemCalculations.setItems(currency, TNE.instance().api().getHoldings(id.toString(), balWorld, currency), player.getInventory(), false);
+          ItemCalculations.setItems(currency, TNE.instance().api().getHoldings(id.toString(), balWorld, currency), player.getInventory(), false, true);
         }
       }
 

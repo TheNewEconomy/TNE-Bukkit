@@ -211,7 +211,8 @@ public class H2Provider extends TNEDataProvider {
         H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ALTER COLUMN `charge_amount` DECIMAL(49,4)");
       }
 
-      if(version < 1115.0) {
+      if(version < 1116.0) {
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
       }
     }
   }

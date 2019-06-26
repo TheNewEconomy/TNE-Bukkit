@@ -192,7 +192,7 @@ public class TNE extends TNELib {
     configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
     commandManager = new CommandManager();
 
-    currentSaveVersion = 1115.0;
+    currentSaveVersion = 1116.0;
 
     setUuidManager(new TNEUUIDManager());
 
@@ -321,7 +321,8 @@ public class TNE extends TNELib {
     TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
-    saveManager().addVersion(1115.0, true);
+    saveManager().addVersion(1115.0, false);
+    saveManager().addVersion(1116.0, true);
 
     TNE.debug("Initializing Save Manager.");
     try {
@@ -420,6 +421,7 @@ public class TNE extends TNELib {
       if(!manager.exists(id)) {
         special.add(id);
         manager.createAccount(id, consoleName);
+        api.getOrCreate(id);
         TNEAccount account = manager.getAccount(id);
         TNE.debug("Account Null? " + (account == null));
         TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));

@@ -4,6 +4,7 @@ import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DatabaseConnector;
 import com.github.tnerevival.core.db.SQLDatabase;
+import com.github.tnerevival.core.db.sql.H2;
 import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
@@ -202,6 +203,10 @@ public class MySQLProvider extends TNEDataProvider {
         executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_initiator_balance` DECIMAL(49,4)");
         executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` MODIFY COLUMN `trans_recipient_balance` DECIMAL(49,4)");
         executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` MODIFY COLUMN `charge_amount` DECIMAL(49,4)");
+      }
+
+      if(version < 1116.0) {
+        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
       }
     }
   }
