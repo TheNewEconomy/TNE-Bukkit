@@ -135,6 +135,7 @@ public class TNECurrency implements Currency {
     tneCurrency.setSymbol(currency.symbol());
     tneCurrency.setBalance(currency.defaultBalance());
     tneCurrency.setWorldDefault(currency.isDefault());
+    tneCurrency.setFormat("<symbol><major.amount><decimal><minor.amount>");
 
     if(currency.getMajorTiers() != null) {
       currency.getMajorTiers().forEach((weight, tier) -> {

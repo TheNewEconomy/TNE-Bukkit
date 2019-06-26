@@ -138,7 +138,7 @@ public class MoneyNoteCommand extends TNECommand {
           message.addVariable("$player", arguments[0]);
           message.addVariable("$world", world);
           message.addVariable("$currency", currencyName);
-          message.addVariable("$amount", CurrencyFormatter.format(TNECurrency.fromReserve(transaction.recipientCharge().getEntry().getCurrency()), world, value, transaction.recipient()));
+          message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientCharge().getCurrency().name()), world, value, transaction.recipient()));
           message.translate(world, sender);
           return;
         }
