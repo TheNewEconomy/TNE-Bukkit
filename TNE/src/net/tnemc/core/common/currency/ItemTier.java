@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,11 +23,13 @@ import java.util.List;
 public class ItemTier {
 
   private List<String> enchantments = new ArrayList<>();
+  private List<String> flags = new ArrayList<>();
 
   private String material;
   private short damage;
   private String name;
   private String lore;
+  private int customModel = -1;
 
   public ItemTier(String material) {
     this(material, (short)0);
@@ -45,6 +48,14 @@ public class ItemTier {
 
   public void setEnchantments(List<String> enchantments) {
     this.enchantments = enchantments;
+  }
+
+  public List<String> getFlags() {
+    return flags;
+  }
+
+  public void setFlags(List<String> flags) {
+    this.flags = flags;
   }
 
   public String getMaterial() {
@@ -79,6 +90,14 @@ public class ItemTier {
     this.lore = lore;
   }
 
+  public int getCustomModel() {
+    return customModel;
+  }
+
+  public void setCustomModel(int customModel) {
+    this.customModel = customModel;
+  }
+
   public ItemStack toStack() {
     //TNE.debug("========= START ItemTier.toStack ===========");
     ItemStack stack = new ItemStack(MaterialHelper.getMaterial(material));
@@ -89,13 +108,25 @@ public class ItemTier {
     if(name != null && !name.trim().equals("")) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
     if(lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
     meta.setLore(itemLore);
+
+    if(customModel > -1) {
+      meta.setCustomModelData(customModel);
+    }
+
+    for(String str : flags) {
+      final ItemFlag flag = ItemFlag.valueOf(str);
+      if(flag != null) {
+        meta.addItemFlags(flag);
+      }
+    }
+
     stack.setItemMeta(meta);
 
 
     //TNE.debug("ENCHANTMENTS SIZE: " + enchantments.size());
     if(enchantments.size() > 0) {
       enchantments.forEach((name)->{
-        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name));
+        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
         //TNE.debug("ENCHANTMENT NULL: " + (enchantment == null));
         if(enchantment == null) {
           //TNE.debug("Unable to apply enchantment to item tier: " + name);

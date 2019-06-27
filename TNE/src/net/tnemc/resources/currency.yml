@@ -163,11 +163,21 @@ Currencies:
                  #Optional.
                  Lore: 'Server Currency'
 
+                 #The custom model data value used for this item. Defaults to 0.
+                 #Optional.
+                 ModelData: 0
+
                  #All configurations relating to enchantment identification for currency tiers
                  #The format is - enchantment name
                  #Optional.
                  Enchantments:
                     - example_enchant
+
+                 #All configurations relating to item flags identification for currency tiers
+                 #The format is - item flag
+                 #Optional.
+                 Flags:
+                    - example_flag
 
                  #Configurations relating to crafting this currency tier.
                  Crafting:
@@ -226,11 +236,21 @@ Currencies:
                  #Optional.
                  Lore: 'Server Currency'
 
+                 #The custom model data value used for this item. Defaults to 0.
+                 #Optional.
+                 ModelData: 0
+
                  #All configurations relating to enchantment identification for currency tiers
                  #The format is - enchantment name
                  #Optional.
                  Enchantments:
                     - example_enchant
+
+                 #All configurations relating to item flags identification for currency tiers
+                 #The format is - item flag
+                 #Optional.
+                 Flags:
+                    - example_flag
 
                  #Configurations relating to crafting this currency tier.
                  Crafting:

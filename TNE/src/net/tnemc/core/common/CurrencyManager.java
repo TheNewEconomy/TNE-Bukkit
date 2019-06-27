@@ -340,14 +340,20 @@ public class CurrencyManager {
         short damage = (short) configuration.getInt(tierBase + ".Options.Damage", 0);
         String customName = configuration.getString(tierBase + ".Options.Name", null);
         String lore = configuration.getString(tierBase + ".Options.Lore", null);
+        int customModel = configuration.getInt(tierBase + ".Options.ModelData", -1);
 
         item = new ItemTier(material, damage);
         item.setName(customName);
         item.setLore(lore);
+        item.setCustomModel(customModel);
 
         if(configuration.contains(tierBase + ".Options.Enchantments")) {
           //TNE.debug("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());
           item.setEnchantments(configuration.getStringList(tierBase + ".Options.Enchantments"));
+        }
+
+        if(configuration.contains(tierBase + ".Options.Flags")) {
+          item.setFlags(configuration.getStringList(tierBase + ".Options.Flags"));
         }
       }
 

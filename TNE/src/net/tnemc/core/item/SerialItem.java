@@ -15,6 +15,7 @@ import net.tnemc.core.item.data.TropicalFishBucketData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BookMeta;
@@ -47,6 +48,7 @@ import java.util.Map;
  */
 public class SerialItem {
 
+  private List<String> flags = new ArrayList<>();
   private Map<String, Integer> enchantments = new HashMap<>();
   private List<String> lore = new ArrayList<>();
 
@@ -55,6 +57,7 @@ public class SerialItem {
   private Integer amount = 1;
   private String display = "";
   private short damage = 0;
+  private int customModelData = -1;
   private SerialItemData data;
 
   //Cache=related variables
@@ -73,6 +76,11 @@ public class SerialItem {
     if(stack.hasItemMeta()) {
       display = stack.getItemMeta().getDisplayName();
       lore = stack.getItemMeta().getLore();
+      customModelData = stack.getItemMeta().getCustomModelData();
+
+      for(ItemFlag flag : stack.getItemMeta().getItemFlags()) {
+        flags.add(flag.name());
+      }
 
       if(stack.getItemMeta().hasEnchants()) {
 
@@ -229,8 +237,12 @@ public class SerialItem {
     TNE.debug("display");
     json.put("damage", damage);
     TNE.debug("damage");
+    json.put("modelData", customModelData);
+    TNE.debug("modelData");
     if(lore != null && lore.size() > 0) json.put("lore", String.join(",", lore));
     TNE.debug("lore");
+
+    if(flags != null && flags.size() > 0) json.put("flags", String.join(",", flags));
 
     JSONObject object = new JSONObject();
     enchantments.forEach(object::put);
@@ -268,8 +280,24 @@ public class SerialItem {
       meta.setDisplayName(helper.getString("display"));
     }
     TNE.debug("Stack display");
+
+    if(helper.has("modelData")) {
+      meta.setCustomModelData(helper.getInteger("modelData"));
+    }
+
     if(helper.has("lore")) meta.setLore(new ArrayList<>(Arrays.asList((helper.getString("lore")).split(","))));
     TNE.debug("Stack lore");
+
+    if(helper.has("flags")) {
+      List<String> parsedFlags = new ArrayList<>(Arrays.asList((helper.getString("lore")).split(",")));
+      for(String str : parsedFlags) {
+        final ItemFlag flag = ItemFlag.valueOf(str);
+        if(flag != null) {
+          meta.addItemFlags(flag);
+        }
+      }
+    }
+    TNE.debug("Stack flags");
     stack.setItemMeta(meta);
 
     if(json.containsKey("enchantments")) {
