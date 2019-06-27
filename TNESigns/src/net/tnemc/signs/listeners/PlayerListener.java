@@ -2,6 +2,7 @@ package net.tnemc.signs.listeners;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.signs.ChestHelper;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
@@ -9,6 +10,7 @@ import net.tnemc.signs.SignsModule;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.TNESign;
 import net.tnemc.signs.signs.impl.ItemSign;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,9 +22,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -116,7 +119,7 @@ public class PlayerListener implements Listener {
   @EventHandler(priority = EventPriority.MONITOR)
   public void onPlayerInteractPaper(final PlayerInteractEvent event) {
     final Player player = event.getPlayer();
-    /*final ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
+    final ItemStack stack = event.getPlayer().getInventory().getItemInMainHand();
 
     if(stack.getType().equals(Material.PAPER)) {
       final ItemMeta meta = stack.getItemMeta();
@@ -127,7 +130,7 @@ public class PlayerListener implements Listener {
           case "Experience Note":
             if(meta.hasLore()) {
               if(meta.getLore().get(0).contains("Amount:")) {
-                Integer amount = Integer.valueOf(meta.getLore().get(0).split("\\:")[1]);
+                final Integer amount = Integer.valueOf(meta.getLore().get(0).split("\\:")[1].trim());
                 ItemCalculations.removeItem(stack, player.getInventory());
                 player.giveExp(amount);
               }
@@ -140,19 +143,17 @@ public class PlayerListener implements Listener {
               }
             }
             break;
+          case "Command Note":
+            if(meta.getLore().get(0).contains("Command:")) {
+              String command = meta.getLore().get(0).split("\\:")[1].trim();
+              command = command.replace("$player", event.getPlayer().getName());
+              ItemCalculations.removeItem(stack, player.getInventory());
+              Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            }
+            break;
         }
 
       }
-    }*/
-  }
-
-  @EventHandler(priority = EventPriority.MONITOR)
-  public void onChat(AsyncPlayerChatEvent event) {
-    final UUID id = IDFinder.getID(event.getPlayer());
-    if(SignsModule.manager().getSelectionManager().isSelecting(id, "command")) {
-
-      final Location signLocation = SignsModule.manager().getSelectionManager().getSelectionInstance(id).getSign();
-      SignsModule.manager().getSelectionManager().doSelection("command", id, signLocation, event.getMessage());
     }
   }
 

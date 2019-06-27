@@ -2,7 +2,6 @@ package net.tnemc.signs;
 
 import net.tnemc.signs.selection.SelectionManager;
 import net.tnemc.signs.signs.SignType;
-import net.tnemc.signs.signs.impl.CommandSign;
 import net.tnemc.signs.signs.impl.ItemSign;
 import net.tnemc.signs.signs.impl.NationItemSign;
 import net.tnemc.signs.signs.impl.TownItemSign;
@@ -39,7 +38,6 @@ public class SignsManager {
 
   public SignsManager() {
 
-    addSignType(new CommandSign());
     addSignType(new ItemSign());
 
     if(Bukkit.getPluginManager().isPluginEnabled("Towny")) {
