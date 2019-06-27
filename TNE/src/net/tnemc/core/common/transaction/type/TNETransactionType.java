@@ -73,6 +73,11 @@ public interface TNETransactionType extends TransactionType {
       }
     }
 
+    if(proceed) {
+      if(tneTransaction.getInitiator() != null && !tneTransaction.getInitiator().getStatus().getBalance()) proceed = false;
+      if(tneTransaction.getRecipient() != null && !tneTransaction.getRecipient().getStatus().getBalance()) proceed = false;
+    }
+
 
     if(proceed) {
       TNE.debug("yeah, proceed");
