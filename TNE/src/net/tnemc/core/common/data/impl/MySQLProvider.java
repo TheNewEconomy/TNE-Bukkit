@@ -58,6 +58,7 @@ public class MySQLProvider extends TNEDataProvider {
   private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
+  private final String BALANCE_SET_ALL = "UPDATE " + prefix + "_BALANCES SET balance = ? WHERE world = ? AND server_name = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
 
   private MySQL sql;
@@ -553,6 +554,22 @@ public class MySQLProvider extends TNEDataProvider {
       statement.setObject(6, balance);
       statement.executeUpdate();
     }
+    SQLDatabase.close();
+  }
+
+  @Override
+  public void setAllBalance(String world, BigDecimal balance) throws SQLException {
+    SQLDatabase.open();
+
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_SET_ALL)) {
+      final String server = TNE.instance().getServerName();
+
+      statement.setObject(1, balance);
+      statement.setObject(2, world);
+      statement.setObject(3, server);
+      statement.executeUpdate();
+    }
+
     SQLDatabase.close();
   }
 

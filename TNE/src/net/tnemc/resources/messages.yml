@@ -125,6 +125,7 @@ Messages:
        Gave: "<white>Successfully gave $player <gold>$amount<white>."
        RecipientSet: "<white>Your balance has been set to <gold>$amount<white> by $player."
        Set: "<white>Successfully set $player's balance to <gold>$amount<white>."
+       SetAll: "<white>Successfully set all players balances to <gold>$amount<white> for world $world."
        Paid: "<white>Successfully paid $player <gold>$amount<white>."
        Took: "<white>Successfully took <gold>$amount<white> from $player."
        Negative: "<red>Amount cannot be a negative value!"
@@ -208,6 +209,7 @@ Messages:
           Note: "/money note <amount> [currency] - Makes your virtual currency physical, for storage/trading purposes."
           Pay: "/money pay <player> <amount> [currency] - Use some of your holdings to pay another player."
           Set: "/money set <player> <amount> [world] [currency] - Set the holdings of a player."
+          SetAll: "/money setall <amount> [world] - Set the holdings of all players."
           Take: "/money take <player> <amount> [world] [currency] - Removes money from your economy, specifically from a player's balance."
           Top: "/money top [page] [currency:name] [world:world] [limit:#] - A list of players with the highest balances.<newline>[page] - The page number to view. Defaults to 1.<newline>[Currency] - The name of the Currency to get balances from. Defaults to world default. Use overall for all currencies.<newline>[world] - The world name you wish to filter, or all for every world. Defaults to current world. Use overall for all worlds.<newline>[limit] - Limit changes how many players are displayed. Defaults to 10."
        Transaction:
