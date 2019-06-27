@@ -40,6 +40,10 @@ public class JSONHelper {
     return Short.valueOf(getString(identifier));
   }
 
+  public Double getDouble(String identifier) {
+    return Double.valueOf(getString(identifier));
+  }
+
   public Integer getInteger(String identifier) {
     return Integer.valueOf(getString(identifier));
   }

@@ -13,6 +13,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -83,6 +84,7 @@ public class MaterialUtils {
   }
 
   public static Boolean itemsEqual(ItemStack original, ItemStack compare) {
+    TNE.debug("Compare Null: " + (compare == null));
     if(compare == null) return false;
     ItemStack originalClone = original.clone();
     originalClone.setAmount(1);
@@ -119,6 +121,18 @@ public class MaterialUtils {
         if (!originalCloneMeta.getLore().containsAll(compareCloneMeta.getLore())) return false;
       } else {
         if(originalCloneMeta.hasLore()) return false;
+      }
+
+      if(compareCloneMeta.hasCustomModelData()) {
+        if(!originalCloneMeta.hasCustomModelData()) return false;
+
+        if(compareCloneMeta.getCustomModelData() != originalCloneMeta.getCustomModelData()) return false;
+      } else {
+        if(originalCloneMeta.hasCustomModelData()) return false;
+      }
+
+      for(ItemFlag flag : compareCloneMeta.getItemFlags()) {
+        if(!originalCloneMeta.getItemFlags().contains(flag)) return false;
       }
 
       TNE.debug("enchant");

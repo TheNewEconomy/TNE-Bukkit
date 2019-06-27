@@ -14,7 +14,10 @@ import net.tnemc.core.item.data.SkullData;
 import net.tnemc.core.item.data.TropicalFishBucketData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
@@ -37,6 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -49,6 +53,7 @@ import java.util.Map;
 public class SerialItem {
 
   private List<String> flags = new ArrayList<>();
+  private Map<String, AttributeModifier> attributes = new HashMap<>();
   private Map<String, Integer> enchantments = new HashMap<>();
   private List<String> lore = new ArrayList<>();
 
@@ -76,11 +81,16 @@ public class SerialItem {
     if(stack.hasItemMeta()) {
       display = stack.getItemMeta().getDisplayName();
       lore = stack.getItemMeta().getLore();
-      customModelData = stack.getItemMeta().getCustomModelData();
+
+      if(stack.getItemMeta().hasCustomModelData()) {
+        customModelData = stack.getItemMeta().getCustomModelData();
+      }
 
       for(ItemFlag flag : stack.getItemMeta().getItemFlags()) {
         flags.add(flag.name());
       }
+
+      stack.getItemMeta().getAttributeModifiers().forEach((attr, modifier)->attributes.put(attr.name(), modifier));
 
       if(stack.getItemMeta().hasEnchants()) {
 
@@ -212,6 +222,18 @@ public class SerialItem {
       enchantments.forEach((name, level)->{
         meta.addEnchant(Enchantment.getByName(name), level, true);
       });
+
+      for(String str : flags) {
+        final ItemFlag flag = ItemFlag.valueOf(str);
+        if(flag != null) {
+          meta.addItemFlags(flag);
+        }
+      }
+
+      if(customModelData != -1) {
+        meta.setCustomModelData(customModelData);
+      }
+
       stack.setItemMeta(meta);
       if(data != null) {
         stack = data.build(stack);
@@ -237,7 +259,7 @@ public class SerialItem {
     TNE.debug("display");
     json.put("damage", damage);
     TNE.debug("damage");
-    json.put("modelData", customModelData);
+    if(customModelData != -1) json.put("modelData", customModelData);
     TNE.debug("modelData");
     if(lore != null && lore.size() > 0) json.put("lore", String.join(",", lore));
     TNE.debug("lore");
@@ -249,6 +271,22 @@ public class SerialItem {
     TNE.debug("enchantments obj");
     json.put("enchantments", object);
     TNE.debug("enchantments");
+
+    JSONObject attr = new JSONObject();
+
+    attributes.forEach((name, modifier)->{
+      JSONObject mod = new JSONObject();
+
+      mod.put("id", modifier.getUniqueId().toString());
+      mod.put("name", modifier.getName());
+      mod.put("amount", modifier.getAmount());
+      mod.put("operation", modifier.getOperation().name());
+      mod.put("slot", modifier.getSlot().name());
+
+      attr.put(name, mod);
+    });
+    json.put("attributes", attr);
+
     if(data != null) {
       json.put("data", data.toJSON());
     }
@@ -276,7 +314,7 @@ public class SerialItem {
     TNE.debug("Stack meta");
     TNE.debug("Stack metaz");
     TNE.debug(json.toJSONString());
-    if(helper.has("display") && helper.isNull("display") && !helper.getString("display").equalsIgnoreCase("")) {
+    if(helper.has("display") && !helper.isNull("display") && !helper.getString("display").equalsIgnoreCase("")) {
       meta.setDisplayName(helper.getString("display"));
     }
     TNE.debug("Stack display");
@@ -289,7 +327,7 @@ public class SerialItem {
     TNE.debug("Stack lore");
 
     if(helper.has("flags")) {
-      List<String> parsedFlags = new ArrayList<>(Arrays.asList((helper.getString("lore")).split(",")));
+      List<String> parsedFlags = new ArrayList<>(Arrays.asList((helper.getString("flags")).split(",")));
       for(String str : parsedFlags) {
         final ItemFlag flag = ItemFlag.valueOf(str);
         if(flag != null) {
@@ -298,6 +336,23 @@ public class SerialItem {
       }
     }
     TNE.debug("Stack flags");
+
+    if(json.containsKey("attributes")) {
+      JSONObject attr = (JSONObject)json.get("attributes");
+
+      attr.forEach((name, modifier)->{
+        JSONHelper mod = new JSONHelper((JSONObject)modifier);
+
+        meta.getAttributeModifiers().put(Attribute.valueOf(name.toString()),
+            new AttributeModifier(UUID.fromString(mod.getString("id")),
+                mod.getString("name"),
+                mod.getDouble("amount"),
+                AttributeModifier.Operation.valueOf(mod.getString("operation")),
+                EquipmentSlot.valueOf(mod.getString("slot"))));
+      });
+    }
+    TNE.debug("Stack attributes");
+
     stack.setItemMeta(meta);
 
     if(json.containsKey("enchantments")) {

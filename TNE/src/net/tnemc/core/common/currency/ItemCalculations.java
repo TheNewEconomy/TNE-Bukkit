@@ -54,11 +54,12 @@ public class ItemCalculations {
 
     Integer value = 0;
     for(ItemStack item : inventory.getContents()) {
+      TNE.debug("item: " + compare.getItemMeta().getDisplayName());
       if(MaterialUtils.itemsEqual(compare, item)) {
         value += item.getAmount();
       }
     }
-    System.out.println("Count: " + value);
+    TNE.debug("Count: " + value);
     return value;
   }
 
@@ -286,15 +287,15 @@ public class ItemCalculations {
         if(type.equalsIgnoreCase("minor")) {
           return new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue()));
         }
-        //System.out.println("Value: " + value.toPlainString());
-        //System.out.println("Minor: " + minor.toString());
+        //TNE.debug("Value: " + value.toPlainString());
+        //TNE.debug("Minor: " + minor.toString());
         final BigInteger major = minor.divide(new BigInteger(currency.getMinorWeight() + ""));
-        //System.out.println("Major: " + major.toString());
+        //TNE.debug("Major: " + major.toString());
         minor = minor.subtract(major.multiply(new BigInteger(currency.getMinorWeight() + "")));
-        //System.out.println("Minor: " + minor.toString());
+        //TNE.debug("Minor: " + minor.toString());
         value = value.add(new BigDecimal("." + String.format(Locale.US, "%0" + currency.decimalPlaces() + "d", minor.intValue())));
         value = value.add(new BigDecimal(major.toString()));
-        //System.out.println("Value: " + value.toPlainString());
+        //TNE.debug("Value: " + value.toPlainString());
       }
     }
 
