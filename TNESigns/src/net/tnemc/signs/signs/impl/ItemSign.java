@@ -128,10 +128,6 @@ public class ItemSign implements SignType {
 
   @Override
   public boolean onSignCreate(SignChangeEvent event, Block attached, UUID player) {
-    final Material material = MaterialHelper.getMaterial(event.getLine(0));
-    if(material != null && !material.equals(Material.AIR)) {
-
-    }
     try {
 
       final boolean isAdmin = event.getLines().length >= 2 && event.getLine(1).equalsIgnoreCase("admin") && IDFinder.getPlayer(player.toString()).hasPermission("tne.sign.item.create.admin");

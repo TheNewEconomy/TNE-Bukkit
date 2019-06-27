@@ -14,8 +14,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.SignChangeEvent;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -60,6 +62,34 @@ public class SignalSign implements SignType {
     steps.put(1, new SignalBlockSelectionStep());
     steps.put(2, new CostSelectionStep());
     return steps;
+  }
+
+  @Override
+  public Map<String, List<String>> tables() {
+    Map<String, List<String>> tables = new HashMap<>();
+
+    tables.put("mysql", Collections.singletonList(
+        "CREATE TABLE IF NOT EXISTS " + SignsData.prefix + "_SIGNS_COMMANDS (" +
+            "`sign_location` VARCHAR(255) NOT NULL UNIQUE," +
+            "`signal_location` TEXT NOT NULL," +
+            "`signal_currency` BOOLEAN NOT NULL DEFAULT 1," +
+            "`signal_cost` DECIMAL(49,4) DEFAULT 10," +
+            "`signal_offer` TEXT NOT NULL," +
+            "`signal_trade` TEXT NOT NULL DEFAULT ''" +
+            ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+    ));
+
+    tables.put("h2", Collections.singletonList(
+        "CREATE TABLE IF NOT EXISTS " + SignsData.prefix + "_SIGNS_COMMANDS (" +
+            "`sign_location` VARCHAR(255) NOT NULL UNIQUE," +
+            "`signal_location` TEXT NOT NULL," +
+            "`signal_currency` BOOLEAN NOT NULL DEFAULT 1," +
+            "`signal_cost` DECIMAL(49,4) DEFAULT 10," +
+            "`signal_offer` TEXT NOT NULL," +
+            "`signal_trade` TEXT NOT NULL DEFAULT ''" +
+            ") ENGINE = INNODB;"
+    ));
+    return tables;
   }
 
   @Override
