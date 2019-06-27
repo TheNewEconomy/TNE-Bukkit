@@ -233,6 +233,7 @@ public class ItemSign implements SignType {
         TNE.debug("Item Str: " + str);
         item = SerialItem.fromJSON((JSONObject)new JSONParser().parse(str)).getStack();
         TNE.debug("Item: " + str);
+        TNE.debug("Item Display: " + item.getItemMeta().getDisplayName());
         TNE.debug("Null: " + (item == null));
 
       }
@@ -254,6 +255,7 @@ public class ItemSign implements SignType {
 
       if(results.next()) {
         item = SerialItem.fromJSON((JSONObject)new JSONParser().parse(results.getString("item_trade"))).getStack();
+        TNE.debug("Trade: " + results.getString("item_trade"));
       }
     } catch(Exception e) {
       TNE.debug(e);

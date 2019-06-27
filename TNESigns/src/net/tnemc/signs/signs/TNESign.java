@@ -117,6 +117,5 @@ public class TNESign {
   }
 
   public void loadExtraData(String data) {
-
   }
 }

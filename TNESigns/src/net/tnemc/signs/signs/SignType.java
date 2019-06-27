@@ -41,7 +41,7 @@ public interface SignType {
    * @return The ChatColor to set the top line to if the sign is created successfully.
    */
   default ChatColor success() {
-    return ChatColor.DARK_PURPLE;
+    return ChatColor.DARK_BLUE;
   }
 
   default boolean enabled() {
