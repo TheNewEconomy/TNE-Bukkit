@@ -1,8 +1,13 @@
 package net.tnemc.signs.selection.impl;
 
+import net.tnemc.signs.SignsData;
 import net.tnemc.signs.selection.Selection;
+import net.tnemc.signs.signs.impl.CommandSign;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -23,6 +28,11 @@ public class CommandSelection implements Selection {
 
   @Override
   public void select(UUID identifier, Location location, Object selection) {
-
+    try {
+      SignsData.updateStep(location, 2);
+      CommandSign.saveCommand(location, (String)selection);
+      Bukkit.getPlayer(identifier).sendMessage(ChatColor.WHITE + "Sign command set to \"" + selection + "\". Now right click with an item to set cost to an item, otherwise left click to select currency cost.");
+    } catch (SQLException ignore) {
+    }
   }
 }

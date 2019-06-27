@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -143,6 +144,16 @@ public class PlayerListener implements Listener {
 
       }
     }*/
+  }
+
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onChat(AsyncPlayerChatEvent event) {
+    final UUID id = IDFinder.getID(event.getPlayer());
+    if(SignsModule.manager().getSelectionManager().isSelecting(id, "command")) {
+
+      final Location signLocation = SignsModule.manager().getSelectionManager().getSelectionInstance(id).getSign();
+      SignsModule.manager().getSelectionManager().doSelection("command", id, signLocation, event.getMessage());
+    }
   }
 
   @EventHandler(priority = EventPriority.MONITOR)

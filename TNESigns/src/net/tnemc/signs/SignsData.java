@@ -76,6 +76,7 @@ public class SignsData {
   private static final String SIGNS_LOAD_ATTACHED = "SELECT sign_location, sign_attached, sign_owner, sign_type, sign_creator, sign_created, sign_step, sign_admin, sign_data FROM " + prefix + "_SIGNS WHERE sign_attached = ?";
   private static final String SIGNS_DELETE = "DELETE FROM " + prefix + "_SIGNS WHERE sign_location = ?";
 
+  //Item Sign Queries
   public static final String ITEM_CHECK = "SELECT item_amount FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_OFFER_LOAD = "SELECT item_offer, item_amount FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_TRADE_LOAD = "SELECT item_trade FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
@@ -86,6 +87,14 @@ public class SignsData {
   public static final String ITEM_OFFER_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_offer = ?, item_amount = ?, item_selling = ? WHERE sign_location = ?";
   public static final String ITEM_OFFER_ADD = "INSERT INTO " + SignsData.prefix + "_SIGNS_ITEMS (item_offer, item_amount, item_selling, sign_location) VALUES(?, ?, ?, ?)";
   public static final String ITEM_TRADE_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_currency = ?, item_cost = ?, item_trade = ? WHERE sign_location = ?";
+
+  //Command Sign Queries
+  public static final String COMMAND_COMMAND_UPDATE = "INSERT INTO " + SignsData.prefix + "_SIGNS_COMMANDS (sign_location, cmd_value) VALUES(?, ?) ON DUPLICATE KEY UPDATE cmd_value = ?";
+  public static final String COMMAND_TRADE_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_COMMANDS SET cmd_currency = ?, cmd_cost = ?, cmd_trade = ? WHERE sign_location = ?";
+  public static final String COMMAND_TRADE_LOAD = "SELECT cmd_trade FROM " + SignsData.prefix + "_SIGNS_COMMANDS WHERE sign_location = ?";
+  public static final String COMMAND_CURRENCY_LOAD = "SELECT cmd_cost FROM " + SignsData.prefix + "_SIGNS_COMMANDS WHERE sign_location = ?";
+  public static final String COMMAND_CURRENCY_CHECK = "SELECT cmd_currency FROM " + SignsData.prefix + "_SIGNS_COMMANDS WHERE sign_location = ?";
+
 
   public static void saveSign(TNESign sign) throws SQLException {
     SQLDatabase.executePreparedUpdate(SIGNS_SAVE, new Object[] {

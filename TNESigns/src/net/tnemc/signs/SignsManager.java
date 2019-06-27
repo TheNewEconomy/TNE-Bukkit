@@ -5,7 +5,6 @@ import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.CommandSign;
 import net.tnemc.signs.signs.impl.ItemSign;
 import net.tnemc.signs.signs.impl.NationItemSign;
-import net.tnemc.signs.signs.impl.SignalSign;
 import net.tnemc.signs.signs.impl.TownItemSign;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,7 +41,6 @@ public class SignsManager {
 
     addSignType(new CommandSign());
     addSignType(new ItemSign());
-    addSignType(new SignalSign());
 
     if(Bukkit.getPluginManager().isPluginEnabled("Towny")) {
       addSignType(new NationItemSign());

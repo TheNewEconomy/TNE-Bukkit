@@ -1,6 +1,7 @@
 package net.tnemc.signs.selection;
 
 import net.tnemc.signs.selection.impl.ChestSelection;
+import net.tnemc.signs.selection.impl.CommandSelection;
 import org.bukkit.Location;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class SelectionManager {
 
   public SelectionManager() {
     add(new ChestSelection());
+    add(new CommandSelection());
   }
 
   public void add(Selection selection) {
