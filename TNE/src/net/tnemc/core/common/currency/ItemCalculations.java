@@ -316,6 +316,16 @@ public class ItemCalculations {
       if(left.size() > 0) {
         if(inventory instanceof PlayerInventory) {
           final HumanEntity entity = ((HumanEntity)inventory.getHolder());
+
+          if(entity != null) {
+            left = entity.getEnderChest().addItem(left.values().toArray(new ItemStack[left.size()]));
+          }
+        }
+      }
+
+      if(left.size() > 0) {
+        if(inventory instanceof PlayerInventory) {
+          final HumanEntity entity = ((HumanEntity)inventory.getHolder());
           for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
             final ItemStack i = entry.getValue();
             Bukkit.getScheduler().runTask(TNE.instance(), () -> {
