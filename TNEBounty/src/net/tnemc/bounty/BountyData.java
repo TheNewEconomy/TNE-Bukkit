@@ -3,9 +3,13 @@ package net.tnemc.bounty;
 import net.tnemc.bounty.model.Bounty;
 import net.tnemc.bounty.model.RewardCenter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
+
+import static net.tnemc.core.common.utils.MISCUtils.offHand;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -35,6 +39,10 @@ public class BountyData {
 
   public static boolean hasBounty(UUID id) {
     return false;
+  }
+
+  public static void saveBounty(Bounty bounty) {
+
   }
 
   public static Bounty getBounty(UUID id) {
@@ -71,5 +79,12 @@ public class BountyData {
 
   public static void setRewards(UUID id, List<String> rewards) {
 
+  }
+
+  public static ItemStack getItemInHand(Player player) {
+    if(offHand()) {
+      return player.getInventory().getItemInMainHand();
+    }
+    return player.getInventory().getItemInHand();
   }
 }

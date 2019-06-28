@@ -1,5 +1,6 @@
 package net.tnemc.bounty;
 
+import net.tnemc.bounty.command.BountyCommand;
 import net.tnemc.bounty.listeners.InventoryCloseListener;
 import net.tnemc.bounty.listeners.PlayerDeathListener;
 import net.tnemc.bounty.listeners.PlayerJoinListener;
@@ -39,6 +40,9 @@ public class BountyModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
+
+    commands.add(new BountyCommand(tne));
+
     Bukkit.getServer().getPluginManager().registerEvents(new InventoryCloseListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeathListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(tne), tne);
