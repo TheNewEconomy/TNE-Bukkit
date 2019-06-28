@@ -4,9 +4,12 @@ import net.tnemc.bounty.command.BountyCommand;
 import net.tnemc.bounty.listeners.InventoryCloseListener;
 import net.tnemc.bounty.listeners.PlayerDeathListener;
 import net.tnemc.bounty.listeners.PlayerJoinListener;
+import net.tnemc.bounty.menu.AmountSelectionMenu;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.menu.Menu;
+import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -113,6 +116,15 @@ public class BountyModule extends Module {
     tables.put("mysql", provider);
 
     return tables;
+  }
+
+  @Override
+  public Map<String, Menu> registerMenus(TNE pluginInstance) {
+    Map<String, Menu> menus = new HashMap<>();
+    menus.put("bounty_currency_selection", new CurrencySelectionMenu("bounty_currency_selection", "bounty_amount_selection"));
+    menus.put("bounty_amount_selection", new AmountSelectionMenu("bounty_amount_selection"));
+
+    return menus;
   }
 
   public static BountyModule instance() {

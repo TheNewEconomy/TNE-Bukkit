@@ -95,8 +95,9 @@ public class BountyPlaceCommand extends TNECommand {
       return true;
     }
 
-    TNE.menuManager().open("bounty_cost", getPlayer(sender));
+    TNE.menuManager().open("bounty_currency_selection", getPlayer(sender));
     TNE.menuManager().setViewerData(id, "bounty_target", target.toString());
+    TNE.menuManager().setViewerData(id, "bounty_target_name", player.getName());
     TNE.menuManager().setViewerData(id, "bounty_benefactor", id.toString());
     return true;
   }

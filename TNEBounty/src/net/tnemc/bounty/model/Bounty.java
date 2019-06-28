@@ -30,6 +30,8 @@ public class Bounty {
 
   //Our reward data for each bounty
   private boolean currencyReward = true;
+  private String currency;
+  private String world;
   private BigDecimal amount = BigDecimal.ZERO;
   private String itemReward = null;
 
@@ -110,6 +112,22 @@ public class Bounty {
 
   public void setCurrencyReward(boolean currencyReward) {
     this.currencyReward = currencyReward;
+  }
+
+  public String getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(String currency) {
+    this.currency = currency;
+  }
+
+  public String getWorld() {
+    return world;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
   }
 
   public BigDecimal getAmount() {
