@@ -181,6 +181,10 @@ public class PlayerListener implements Listener {
         }
       }
     }
+
+    if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && player.getUniqueId().toString().equals("18e8ba77-a630-47b0-9b47-20c0996b2f72")) {
+      player.playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10f, 1f);
+    }
     TNE.debug("=====END PlayerListener.onInteract =====");
   }
 

@@ -2,6 +2,7 @@ package net.tnemc.signs.command;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import net.tnemc.signs.SignsModule;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -78,12 +79,24 @@ public class NoteExperienceCommand extends TNECommand {
 
     Player player = getPlayer(sender);
 
-    if(player.getExp() < amount) {
+    int xp = SignsModule.xpCalculations().getXp(player.getLevel()) + (int)(SignsModule.xpCalculations().expTo(player.getLevel() + 1) * player.getExp());
+
+    System.out.println("XP: " + xp);
+    if(xp < amount) {
       sender.sendMessage(ChatColor.RED + "You don't have enough experience.");
       return false;
     }
 
-    player.setExp(player.getExp() - amount);
+    xp = xp - amount;
+    final int newLevel = SignsModule.xpCalculations().getLevel(xp);
+    System.out.println("XP: " + xp);
+    System.out.println("XP-: " + ((xp - SignsModule.xpCalculations().getXp(newLevel))));
+    System.out.println("XP-*: " + ((xp - SignsModule.xpCalculations().getXp(newLevel)) * 100f));
+    System.out.println("XPto: " + SignsModule.xpCalculations().expTo(newLevel + 1));
+    final float newXP = ((xp - SignsModule.xpCalculations().getXp(newLevel)) * 100f) / SignsModule.xpCalculations().expTo(newLevel + 1);
+    System.out.println("XP: " + xp);
+    player.setLevel(newLevel);
+    player.setExp(newXP);
 
     ItemStack stack = new ItemStack(Material.PAPER, 1);
 

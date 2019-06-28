@@ -48,12 +48,14 @@ public class SignsModule extends Module {
   private SignsConfiguration configuration;
 
   private SignsManager manager;
+  private ExperienceCalculations xpCalculations;
 
   private static SignsModule instance;
 
   public SignsModule() {
     instance = this;
     manager = new SignsManager();
+    xpCalculations = new ExperienceCalculations();
   }
 
   @Override
@@ -61,6 +63,8 @@ public class SignsModule extends Module {
     commands.add(new NoteCommand(tne));
     Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
+
+
 
     TNE.logger().info("Signs Module loaded!");
   }
@@ -152,6 +156,10 @@ public class SignsModule extends Module {
 
   public static SignsManager manager() {
     return instance.manager;
+  }
+
+  public static ExperienceCalculations xpCalculations() {
+    return instance.xpCalculations;
   }
 
   public File getSigns() {

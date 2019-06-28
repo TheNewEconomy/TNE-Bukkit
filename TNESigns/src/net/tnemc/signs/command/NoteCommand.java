@@ -18,7 +18,7 @@ public class NoteCommand extends TNECommand {
   public NoteCommand(TNE plugin) {
     super(plugin);
     subCommands.add(new NoteCommandCommand(plugin));
-    subCommands.add(new NoteExperienceCommand(plugin));
+    //subCommands.add(new NoteExperienceCommand(plugin));
   }
 
   @Override
