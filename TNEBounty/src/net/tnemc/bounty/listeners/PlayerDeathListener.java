@@ -7,6 +7,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.item.SerialItem;
 import org.bukkit.Bukkit;
@@ -55,8 +56,9 @@ public class PlayerDeathListener implements Listener {
       Bukkit.broadcastMessage(ChatColor.YELLOW + killer.getDisplayName() + ChatColor.YELLOW + " has claimed the bounty for " + player.getDisplayName());
 
       if(bounty.isCurrencyReward()) {
-        plugin.api().addHoldings(killerID.toString(), bounty.getAmount());
-        killer.sendMessage(ChatColor.YELLOW + "You received " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world), bounty.getAmount(), killer.getLocation(), "") + ChatColor.YELLOW + " for claiming a bounty.");
+        final TNECurrency currency = TNE.manager().currencyManager().get(bounty.getWorld(), bounty.getCurrency());
+        plugin.api().addHoldings(killerID.toString(), bounty.getAmount(), currency, bounty.getWorld());
+        killer.sendMessage(ChatColor.YELLOW + "You received " + CurrencyFormatter.format(currency, bounty.getAmount(), killer.getLocation(), "") + ChatColor.YELLOW + " for claiming a bounty.");
       } else {
         RewardCenter rewards = BountyData.getRewards(killerID);
         rewards.getRewards().add(bounty.getItemReward());

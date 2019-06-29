@@ -40,17 +40,21 @@ public class ConfirmIcon extends Icon {
     final UUID benefactor = UUID.fromString((String)TNE.menuManager().getViewerData(id, "bounty_benefactor"));
     final TNECurrency currencyObj = TNE.manager().currencyManager().get(world, currency);
 
-    if(!TNE.instance().api().hasHoldings(benefactor.toString(), amount, currencyObj, currency)) {
+    if(!TNE.instance().api().hasHoldings(benefactor.toString(), amount, currencyObj, world)) {
       this.message = ChatColor.RED + "You don't have enough funds to set this bounty.";
     } else {
 
-      Bounty bounty = new Bounty(target, id);
-      bounty.setCurrencyReward(true);
-      bounty.setAmount(amount);
-      bounty.setCurrency(currency);
-      bounty.setWorld(world);
+      if(TNE.instance().api().removeHoldings(benefactor.toString(), amount, currencyObj, world)) {
+        Bounty bounty = new Bounty(target, id);
+        bounty.setCurrencyReward(true);
+        bounty.setAmount(amount);
+        bounty.setCurrency(currency);
+        bounty.setWorld(world);
 
-      Bukkit.broadcastMessage(ChatColor.YELLOW + "A bounty in the amount of " + CurrencyFormatter.format(currencyObj, world, amount, "") + " has been placed on " + targetName + ". Type /bounty view " + targetName + " to view it.");
+        Bukkit.broadcastMessage(ChatColor.YELLOW + "A bounty in the amount of " + CurrencyFormatter.format(currencyObj, world, amount, "") + " has been placed on " + targetName + ". Type /bounty view " + targetName + " to view it.");
+      } else {
+        this.message = ChatColor.RED + "An error occurred while setting bounty amount.";
+      }
     }
 
     player.sendMessage(message);

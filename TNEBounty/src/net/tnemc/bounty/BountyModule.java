@@ -69,6 +69,8 @@ public class BountyModule extends Module {
         "`bounty_claimed` BOOLEAN NOT NULL DEFAULT 0," +
         "`bounty_claimant` VARCHAR(36) NOT NULL," +
         "`bounty_currency` BOOLEAN NOT NULL DEFAULT 0," +
+        "`bounty_currency_name` VARCHAR(70) NOT NULL," +
+        "`bounty_world` VARCHAR(70) NOT NULL," +
         "`bounty_amount` DECIMAL(49,4) DEFAULT 0," +
         "`bounty_reward` TEXT NOT NULL" +
         ") ENGINE = INNODB;");
@@ -98,6 +100,8 @@ public class BountyModule extends Module {
         "`bounty_claimed` BOOLEAN NOT NULL DEFAULT 0," +
         "`bounty_claimant` VARCHAR(36) NOT NULL," +
         "`bounty_currency` BOOLEAN NOT NULL DEFAULT 0," +
+        "`bounty_currency_name` VARCHAR(70) NOT NULL," +
+        "`bounty_world` VARCHAR(70) NOT NULL," +
         "`bounty_amount` DECIMAL(49,4) DEFAULT 0," +
         "`bounty_reward` TEXT NOT NULL" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
