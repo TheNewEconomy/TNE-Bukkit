@@ -1,6 +1,7 @@
 package net.tnemc.core.item;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.item.data.BannerData;
 import net.tnemc.core.item.data.BookData;
 import net.tnemc.core.item.data.EnchantStorageData;
@@ -82,7 +83,7 @@ public class SerialItem {
       display = stack.getItemMeta().getDisplayName();
       lore = stack.getItemMeta().getLore();
 
-      if(stack.getItemMeta().hasCustomModelData()) {
+      if(MISCUtils.isOneFourteen() && stack.getItemMeta().hasCustomModelData()) {
         customModelData = stack.getItemMeta().getCustomModelData();
       }
 
@@ -230,7 +231,7 @@ public class SerialItem {
         }
       }
 
-      if(customModelData != -1) {
+      if(MISCUtils.isOneFourteen() && customModelData != -1) {
         meta.setCustomModelData(customModelData);
       }
 
@@ -259,7 +260,7 @@ public class SerialItem {
     TNE.debug("display");
     json.put("damage", damage);
     TNE.debug("damage");
-    if(customModelData != -1) json.put("modelData", customModelData);
+    if(MISCUtils.isOneFourteen() && customModelData != -1) json.put("modelData", customModelData);
     TNE.debug("modelData");
     if(lore != null && lore.size() > 0) json.put("lore", String.join(",", lore));
     TNE.debug("lore");
@@ -319,7 +320,7 @@ public class SerialItem {
     }
     TNE.debug("Stack display");
 
-    if(helper.has("modelData")) {
+    if(MISCUtils.isOneFourteen() && helper.has("modelData")) {
       meta.setCustomModelData(helper.getInteger("modelData"));
     }
 

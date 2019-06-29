@@ -30,7 +30,7 @@ public class CraftItemListener implements Listener {
   public void onEvent(CraftItemEvent event) {
     if(!event.isCancelled()) {
       for(ItemStack stack : event.getInventory().getMatrix()) {
-        if(stack.hasItemMeta()) {
+        if(stack != null && stack.hasItemMeta()) {
           ItemMeta meta = stack.getItemMeta();
 
           if(meta.hasDisplayName() && meta.getDisplayName().contains("Currency Note")) event.setCancelled(true);
