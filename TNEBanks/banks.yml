@@ -1,0 +1,10 @@
+Banks:
+
+  #Whether or not banks utilize the multiworld options from TNE. If set to false, all banks will be created in the
+  #default world.
+  MultiWorld: false
+
+  #All configurations relating to regional banks.
+  Regional:
+
+    #Whether or not regional banks have to be setup in a regional
