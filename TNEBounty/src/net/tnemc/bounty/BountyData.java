@@ -28,19 +28,20 @@ import static net.tnemc.core.common.utils.MISCUtils.offHand;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class BountyData {
+  public static final String prefix = TNE.saveManager().getTNEManager().getPrefix();
 
   public static final String BOUNTY_LOAD_ACTIVE = "SELECT bounty_id, bounty_target, bounty_benefactor, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward FROM " +
-      BountyModule.prefix + "_BOUNTY WHERE bounty_claimed = 0";
-  public static final String BOUNTY_LOAD_TARGET = "SELECT bounty_id, bounty_target, bounty_benefactor, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward FROM " + BountyModule.prefix + "_BOUNTY WHERE bounty_target = ? AND bounty_claimed = 0";
-  public static final String BOUNTY_SAVE = "INSERT INTO " + BountyModule.prefix + "_BOUNTY (bounty_id, bounty_target, bounty_benefactor, bounty_created, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+      prefix + "_BOUNTY WHERE bounty_claimed = 0";
+  public static final String BOUNTY_LOAD_TARGET = "SELECT bounty_id, bounty_target, bounty_benefactor, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward FROM " + prefix + "_BOUNTY WHERE bounty_target = ? AND bounty_claimed = 0";
+  public static final String BOUNTY_SAVE = "INSERT INTO " + prefix + "_BOUNTY (bounty_id, bounty_target, bounty_benefactor, bounty_created, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
       "ON DUPLICATE KEY UPDATE bounty_claimed = ?, bounty_claimant = ?, bounty_finished = ?";
-  public static final String BOUNTY_DELETE = "DELETE FROM " + BountyModule.prefix + "_BOUNTY WHERE bounty_target = ?";
-  public static final String HUNTER_LOAD = "SELECT hunter_experience, hunter_level FROM " + BountyModule.prefix + "_BOUNTY_HUNTER WHERE hunter_id = ?";
-  public static final String HUNTER_SAVE = "INSERT INTO " + BountyModule.prefix + "_BOUNTY_HUNTER (hunter_id, hunter_experience, hunter_level) VALUES(?, ?, ?) " +
+  public static final String BOUNTY_DELETE = "DELETE FROM " + prefix + "_BOUNTY WHERE bounty_target = ?";
+  public static final String HUNTER_LOAD = "SELECT hunter_experience, hunter_level FROM " + prefix + "_BOUNTY_HUNTER WHERE hunter_id = ?";
+  public static final String HUNTER_SAVE = "INSERT INTO " + prefix + "_BOUNTY_HUNTER (hunter_id, hunter_experience, hunter_level) VALUES(?, ?, ?) " +
       "ON DUPLICATE KEY UPDATE hunter_experience = ?, hunter_level = ?";
 
-  public static final String REWARDS_LOAD = "SELECT hunter_rewards FROM " + BountyModule.prefix + "_BOUNTY_REWARD WHERE hunter_id = ?";
-  public static final String REWARDS_SAVE = "INSERT INTO " + BountyModule.prefix + "_BOUNTY_REWARD (hunter_id, hunter_rewards) VALUES(?, ?) ON DUPLICATE KEY UPDATE hunter_rewards = ?";
+  public static final String REWARDS_LOAD = "SELECT hunter_rewards FROM " + prefix + "_BOUNTY_REWARD WHERE hunter_id = ?";
+  public static final String REWARDS_SAVE = "INSERT INTO " + prefix + "_BOUNTY_REWARD (hunter_id, hunter_rewards) VALUES(?, ?) ON DUPLICATE KEY UPDATE hunter_rewards = ?";
 
   public static boolean hasBounty(UUID id) {
     return getBounty(id) != null;
@@ -59,7 +60,7 @@ public class BountyData {
         bounty.getAmount(),
         bounty.getItemReward(),
         bounty.isClaimed(),
-        bounty.getClaimant().toString(),
+        (bounty.getClaimant() != null)? bounty.getClaimant().toString() : bounty.getBenefactor().toString(),
         bounty.getClaimedTime()
     });
   }
@@ -81,6 +82,7 @@ public class BountyData {
         bounty.setCurrency(results.getString("bounty_currency_name"));
         bounty.setWorld(results.getString("bounty_world"));
         bounty.setAmount(results.getBigDecimal("bounty_amount"));
+        System.out.println("Amount: " + results.getBigDecimal("bounty_amount").toPlainString());
         bounty.setItemReward(results.getString("bounty_reward"));
 
       }

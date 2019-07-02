@@ -5,7 +5,6 @@ import com.github.tnerevival.core.db.sql.H2;
 import com.github.tnerevival.core.db.sql.MySQL;
 import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.data.TNEDataManager;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -19,32 +18,7 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 06/30/2017.
  */
 public abstract class Converter {
-  protected String usedFile = ConversionModule.instance().getFileConfiguration().getString("Conversion.File");
-  protected String mysqlHost = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Host");
-  protected Integer mysqlPort = ConversionModule.instance().getFileConfiguration().getInt("Conversion.Options.Port");
-  protected String mysqlDatabase = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Database");
-  protected String mysqlUser = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.User");
-  protected String mysqlPassword = ConversionModule.instance().getFileConfiguration().getString("Conversion.Options.Password");
-
-  protected String type = ConversionModule.instance().getFileConfiguration().getString("Conversion.Format");
   protected DatabaseConnector db;
-  protected TNEDataManager conversionManager;
-
-  public Converter() {
-    conversionManager = new TNEDataManager(
-        type.toLowerCase(),
-        mysqlHost,
-        mysqlPort,
-        mysqlDatabase,
-        mysqlUser,
-        mysqlPassword,
-        "",
-        new File(TNE.instance().getDataFolder(), usedFile).getAbsolutePath(),
-        true,
-        false,
-        600,
-        true);
-  }
 
 
   public MySQL mysqlDB() {
@@ -61,6 +35,8 @@ public abstract class Converter {
 
   public abstract String name();
 
+  public abstract String type();
+
   public void convert() {
     try {
       new File(TNE.instance().getDataFolder(), "extracted.yml").createNewFile();
@@ -68,7 +44,7 @@ public abstract class Converter {
       TNE.debug(e);
     }
     try {
-      switch (type.toLowerCase()) {
+      switch (type().toLowerCase()) {
         case "mysql":
           mysql();
           break;

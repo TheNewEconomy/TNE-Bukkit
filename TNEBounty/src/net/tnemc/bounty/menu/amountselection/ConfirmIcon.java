@@ -1,5 +1,6 @@
 package net.tnemc.bounty.menu.amountselection;
 
+import net.tnemc.bounty.BountyData;
 import net.tnemc.bounty.model.Bounty;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
@@ -50,6 +51,8 @@ public class ConfirmIcon extends Icon {
         bounty.setAmount(amount);
         bounty.setCurrency(currency);
         bounty.setWorld(world);
+
+        BountyData.saveBounty(bounty);
 
         Bukkit.broadcastMessage(ChatColor.YELLOW + "A bounty in the amount of " + CurrencyFormatter.format(currencyObj, world, amount, "") + " has been placed on " + targetName + ". Type /bounty view " + targetName + " to view it.");
       } else {

@@ -1,5 +1,7 @@
 package net.tnemc.bounty;
 
+import com.github.tnerevival.core.SaveManager;
+import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.bounty.command.BountyCommand;
 import net.tnemc.bounty.listeners.InventoryCloseListener;
 import net.tnemc.bounty.listeners.PlayerDeathListener;
@@ -12,6 +14,7 @@ import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import org.bukkit.Bukkit;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +36,6 @@ import java.util.Map;
     version = "0.1.0"
 )
 public class BountyModule extends Module {
-  public static final String prefix = TNE.saveManager().getTNEManager().getPrefix();
 
   private static BountyModule instance;
 
@@ -57,9 +59,9 @@ public class BountyModule extends Module {
   public Map<String, List<String>> getTables() {
     Map<String, List<String>> tables = new HashMap<>();
 
-    List<String> provider = new ArrayList<>();
+    List<String> h2 = new ArrayList<>();
     //H2 Tables
-    provider.add("CREATE TABLE IF NOT EXISTS " + prefix + "_BOUNTY (" +
+    h2.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY (" +
         "`bounty_id` VARCHAR(36) NOT NULL UNIQUE," +
         "`bounty_target` VARCHAR(36) NOT NULL," +
         "`bounty_benefactor` VARCHAR(36) NOT NULL," +
@@ -75,22 +77,23 @@ public class BountyModule extends Module {
         "`bounty_reward` TEXT NOT NULL" +
         ") ENGINE = INNODB;");
 
-    provider.add("CREATE TABLE IF NOT EXISTS " + prefix + "_BOUNTY_HUNTER (" +
+    h2.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY_HUNTER (" +
         "`hunter_id` VARCHAR(36) NOT NULL UNIQUE," +
         "`hunter_experience` BIGINT(60)," +
         "`hunter_level` BIGINT(60)" +
         ") ENGINE = INNODB;");
 
-    provider.add("CREATE TABLE IF NOT EXISTS " + prefix + "_BOUNTY_REWARD (" +
+    h2.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY_REWARD (" +
         "`hunter_id` VARCHAR(36) NOT NULL UNIQUE," +
         "`hunter_rewards` TEXT NOT NULL" +
         ") ENGINE = INNODB;");
 
-    tables.put("h2", provider);
-    provider.clear();
+    tables.put("h2", h2);
+
+    List<String> mysql = new ArrayList<>();
 
     //MySQL Tables
-    provider.add("CREATE TABLE IF NOT EXISTS " + prefix + "_BOUNTY (" +
+    mysql.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY (" +
         "`bounty_id` VARCHAR(36) NOT NULL UNIQUE," +
         "`bounty_target` VARCHAR(36) NOT NULL," +
         "`bounty_benefactor` VARCHAR(36) NOT NULL," +
@@ -106,20 +109,40 @@ public class BountyModule extends Module {
         "`bounty_reward` TEXT NOT NULL" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
 
-    provider.add("CREATE TABLE IF NOT EXISTS " + prefix + "_BOUNTY_HUNTER (" +
+    mysql.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY_HUNTER (" +
         "`hunter_id` VARCHAR(36) NOT NULL UNIQUE," +
         "`hunter_experience` BIGINT(60)," +
         "`hunter_level` BIGINT(60)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
 
-    provider.add("CREATE TABLE IF NOT EXISTS " + prefix + "_BOUNTY_REWARD (" +
+    mysql.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY_REWARD (" +
         "`hunter_id` VARCHAR(36) NOT NULL UNIQUE," +
         "`hunter_rewards` TEXT NOT NULL" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
 
-    tables.put("mysql", provider);
+    tables.put("mysql", mysql);
 
     return tables;
+  }
+
+  /**
+   * Used to perform any data loading, manipulation, layout updating, etc.
+   *
+   * @param saveManager An instance of TNE's Save Manager
+   */
+  @Override
+  public void enableSave(SaveManager saveManager) {
+    for(String str : getTables().get("h2")) {
+      SQLDatabase.open(SQLDatabase.getDataSource());
+
+      try {
+        SQLDatabase.getDb().getConnection().createStatement().executeUpdate(str);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+      SQLDatabase.close();
+    }
   }
 
   @Override

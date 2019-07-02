@@ -5,6 +5,7 @@ import net.tnemc.bounty.model.Bounty;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.item.SerialItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -91,6 +92,7 @@ public class BountyPlaceCommand extends TNECommand {
       bounty.setItemReward(new SerialItem(stack).serialize());
 
       BountyData.saveBounty(bounty);
+      ItemCalculations.removeItem(stack, getPlayer(sender).getInventory());
       Bukkit.broadcastMessage(ChatColor.YELLOW + "An item reward-based bounty has been placed on " + player.getName() + ". Type /bounty view " + player.getName() + " to view it.");
       return true;
     }

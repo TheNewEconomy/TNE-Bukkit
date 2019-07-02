@@ -1,6 +1,5 @@
 package net.tnemc.conversion;
 
-import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.conversion.command.ConvertCommand;
 import net.tnemc.conversion.impl.AdvancedEconomy;
 import net.tnemc.conversion.impl.BConomy;
@@ -64,9 +63,6 @@ import java.util.List;
 public class ConversionModule extends Module {
 
   private static ConversionModule instance;
-  private File convert;
-  private CommentedConfiguration fileConfiguration;
-  private ConvertConfigurations configuration;
 
   @Override
   public void load(TNE tne, String version) {
@@ -76,42 +72,7 @@ public class ConversionModule extends Module {
 
   @Override
   public void unload(TNE tne) {
-    if(!convert.exists()) {
-      configuration.save(fileConfiguration);
-    }
     tne.logger().info("Conversion Module unloaded!");
-  }
-
-  @Override
-  public void initializeConfigurations() {
-    super.initializeConfigurations();
-    convert = new File(TNE.instance().getDataFolder(), "convert.yml");
-    fileConfiguration = TNE.instance().initializeConfiguration(convert, "convert.yml");
-  }
-
-  @Override
-  public void loadConfigurations() {
-    super.loadConfigurations();
-    configuration = new ConvertConfigurations();
-    configurations.put(configuration, "Conversion");
-  }
-
-  @Override
-  public void saveConfigurations() {
-    super.saveConfigurations();
-    fileConfiguration.save(convert);
-  }
-
-  public File getConvert() {
-    return convert;
-  }
-
-  public CommentedConfiguration getFileConfiguration() {
-    return fileConfiguration;
-  }
-
-  public ConvertConfigurations getConfiguration() {
-    return configuration;
   }
 
   @Override

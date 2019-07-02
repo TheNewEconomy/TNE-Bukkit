@@ -32,6 +32,11 @@ public class BasicEconomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return "yaml";
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
 
     final ConfigurationSection accountSection = config.getConfigurationSection("balances");
