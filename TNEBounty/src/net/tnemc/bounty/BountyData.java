@@ -33,7 +33,7 @@ public class BountyData {
   public static final String BOUNTY_LOAD_ACTIVE = "SELECT bounty_id, bounty_target, bounty_benefactor, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward FROM " +
       prefix + "_BOUNTY WHERE bounty_claimed = 0";
   public static final String BOUNTY_LOAD_TARGET = "SELECT bounty_id, bounty_target, bounty_benefactor, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward FROM " + prefix + "_BOUNTY WHERE bounty_target = ? AND bounty_claimed = 0";
-  public static final String BOUNTY_SAVE = "INSERT INTO " + prefix + "_BOUNTY (bounty_id, bounty_target, bounty_benefactor, bounty_created, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+  public static final String BOUNTY_SAVE = "INSERT INTO " + prefix + "_BOUNTY (bounty_id, bounty_target, bounty_benefactor, bounty_created, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward, bounty_claimant) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
       "ON DUPLICATE KEY UPDATE bounty_claimed = ?, bounty_claimant = ?, bounty_finished = ?";
   public static final String BOUNTY_DELETE = "DELETE FROM " + prefix + "_BOUNTY WHERE bounty_target = ?";
   public static final String HUNTER_LOAD = "SELECT hunter_experience, hunter_level FROM " + prefix + "_BOUNTY_HUNTER WHERE hunter_id = ?";
@@ -59,8 +59,9 @@ public class BountyData {
         bounty.getWorld(),
         bounty.getAmount(),
         bounty.getItemReward(),
+        bounty.getClaimant(),
         bounty.isClaimed(),
-        (bounty.getClaimant() != null)? bounty.getClaimant().toString() : bounty.getBenefactor().toString(),
+        bounty.getClaimant(),
         bounty.getClaimedTime()
     });
   }

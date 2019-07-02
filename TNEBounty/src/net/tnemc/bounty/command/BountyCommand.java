@@ -19,6 +19,7 @@ public class BountyCommand extends TNECommand {
 
     subCommands.add(new BountyPlaceCommand(plugin));
     subCommands.add(new BountyListCommand(plugin));
+    subCommands.add(new BountyRewardsCommand(plugin));
   }
 
   @Override

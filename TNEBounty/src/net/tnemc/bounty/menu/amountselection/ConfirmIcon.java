@@ -51,6 +51,7 @@ public class ConfirmIcon extends Icon {
         bounty.setAmount(amount);
         bounty.setCurrency(currency);
         bounty.setWorld(world);
+        bounty.setItemReward("default");
 
         BountyData.saveBounty(bounty);
 

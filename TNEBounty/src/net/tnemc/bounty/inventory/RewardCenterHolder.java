@@ -3,9 +3,12 @@ package net.tnemc.bounty.inventory;
 import net.tnemc.bounty.BountyData;
 import net.tnemc.bounty.model.RewardCenter;
 import net.tnemc.core.item.SerialItem;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +27,24 @@ public class RewardCenterHolder implements InventoryHolder {
 
   private Inventory inventory;
   private RewardCenter center;
+  private int pages = 1;
 
   public RewardCenterHolder(RewardCenter center) {
     this.center = center;
 
+    pages = center.getRewards().size() / 36;
+    if(center.getRewards().size() % 36 > 0) pages++;
+  }
+
+  public void buildInventory() {
+    inventory = Bukkit.createInventory(this, 45, "[TNE] Bounty Rewards");
+
+    for(String str : center.getRewards()) {
+      try {
+        inventory.addItem(SerialItem.unserialize(str).getStack());
+      } catch (ParseException ignore) {
+      }
+    }
   }
 
   @Override
@@ -35,11 +52,18 @@ public class RewardCenterHolder implements InventoryHolder {
     return inventory;
   }
 
+  public void open(Player player) {
+    buildInventory();
+    player.openInventory(inventory);
+  }
+
   public void saveRewards() {
     List<String> rewards = new ArrayList<>();
 
     for(ItemStack item : inventory.getContents()) {
-      rewards.add(new SerialItem(item).serialize());
+      if(item != null) {
+        rewards.add(new SerialItem(item).serialize());
+      }
     }
     center.setRewards(rewards);
 

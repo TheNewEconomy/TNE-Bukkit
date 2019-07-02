@@ -64,25 +64,27 @@ public class PlayerDeathListener implements Listener {
         rewards.getRewards().add(bounty.getItemReward());
         BountyData.setRewards(killerID, rewards.getRewards());
         killer.sendMessage(ChatColor.YELLOW + "Your bounty reward has been sent to your reward center. Type \"/bounty rewards\" to claim it.");
+      }
 
-        if(bounty.isRequireHead()) {
-          Player benefactor = Bukkit.getPlayer(bounty.getBenefactor());
+      ItemStack skull = TNE.item().build("PLAYER_HEAD");
+      SkullMeta meta = (SkullMeta) skull.getItemMeta();
+      meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
+      skull.setItemMeta(meta);
 
-          RewardCenter benRewards = BountyData.getRewards(bounty.getBenefactor());
+      if(bounty.isRequireHead()) {
+        Player benefactor = Bukkit.getPlayer(bounty.getBenefactor());
 
-          ItemStack skull = TNE.item().build("PLAYER_HEAD");
-          SkullMeta meta = (SkullMeta) skull.getItemMeta();
-          meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
-          skull.setItemMeta(meta);
+        RewardCenter benRewards = BountyData.getRewards(bounty.getBenefactor());
 
-          benRewards.getRewards().add(new SerialItem(skull).serialize());
-          BountyData.setRewards(bounty.getBenefactor(), benRewards.getRewards());
+        benRewards.getRewards().add(new SerialItem(skull).serialize());
+        BountyData.setRewards(bounty.getBenefactor(), benRewards.getRewards());
 
-          if(benefactor != null) {
-            benefactor.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
-            benefactor.sendMessage(ChatColor.YELLOW + "You have a new head waiting from a bounty claim. Type \"/bounty rewards\" to claim it.");
-          }
+        if(benefactor != null) {
+          benefactor.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
+          benefactor.sendMessage(ChatColor.YELLOW + "You have a new head waiting from a bounty claim. Type \"/bounty rewards\" to claim it.");
         }
+      } else {
+        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), skull);
       }
       BountyData.deleteBounty(id);
     }

@@ -26,7 +26,7 @@ public class Bounty {
   private boolean requireHead = false;
   private long claimedTime = 0;
   private boolean claimed = false;
-  private UUID claimant = null;
+  private String claimant = "None";
 
   //Our reward data for each bounty
   private boolean currencyReward = true;
@@ -98,11 +98,11 @@ public class Bounty {
     this.claimed = claimed;
   }
 
-  public UUID getClaimant() {
+  public String getClaimant() {
     return claimant;
   }
 
-  public void setClaimant(UUID claimant) {
+  public void setClaimant(String claimant) {
     this.claimant = claimant;
   }
 

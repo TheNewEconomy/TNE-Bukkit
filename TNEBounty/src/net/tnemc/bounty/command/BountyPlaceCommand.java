@@ -89,6 +89,8 @@ public class BountyPlaceCommand extends TNECommand {
 
       Bounty bounty = new Bounty(target, id);
       bounty.setCurrencyReward(false);
+      bounty.setCurrency("default");
+      bounty.setWorld("world");
       bounty.setItemReward(new SerialItem(stack).serialize());
 
       BountyData.saveBounty(bounty);
