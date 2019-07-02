@@ -49,7 +49,7 @@ public class MySQLProvider extends TNEDataProvider {
       "uuid = ? LIMIT 1";
   private final String ACCOUNT_SAVE = "INSERT INTO " + prefix + "_USERS (uuid, display_name, joined_date, " +
       "last_online, account_number, account_status, account_language, account_player) " +
-      "VALUES(?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
+      "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
       "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
       "account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";

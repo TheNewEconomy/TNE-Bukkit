@@ -101,7 +101,7 @@ public class MISCUtils {
   }
 
   public static boolean isOneThirteen() {
-    return Bukkit.getVersion().contains("1.13");
+    return Bukkit.getVersion().contains("1.13") || isOneFourteen();
   }
 
   public static boolean isOneFourteen() {

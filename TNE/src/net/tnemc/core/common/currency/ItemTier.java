@@ -1,5 +1,6 @@
 package net.tnemc.core.common.currency;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.material.MaterialHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -114,9 +115,13 @@ public class ItemTier {
     }
 
     for(String str : flags) {
-      final ItemFlag flag = ItemFlag.valueOf(str);
-      if(flag != null) {
-        meta.addItemFlags(flag);
+      try {
+        final ItemFlag flag = ItemFlag.valueOf(str);
+        if (flag != null) {
+          meta.addItemFlags(flag);
+        }
+      } catch(Exception ignore) {
+        TNE.debug("Invalid ItemFlag name: " + str);
       }
     }
 

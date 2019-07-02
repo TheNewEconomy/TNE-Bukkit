@@ -68,7 +68,8 @@ public class AdminCreateCommand extends TNECommand {
             TNE.debug("Invalid amount: " + arguments[1]);
           }
         }
-        TNEAccount acc = new TNEAccount(id, IDFinder.getUsername(arguments[0]));
+        TNEAccount acc = new TNEAccount(id, arguments[0]);
+        TNE.manager().addAccount(acc);
         acc.initializeHoldings(world);
         if(initial.compareTo(BigDecimal.ZERO) > 0) {
           if(sender instanceof Player) {

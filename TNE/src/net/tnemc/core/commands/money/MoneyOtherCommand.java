@@ -96,7 +96,7 @@ public class MoneyOtherCommand extends TNECommand {
       Message message = new Message(result.initiatorMessage());
       message.addVariable("$player", arguments[0]);
       message.addVariable("$world", world);
-      message.addVariable("$amount", CurrencyFormatter.format(TNECurrency.fromReserve(transaction.recipientBalance().getCurrency()), world, transaction.recipientBalance().getAmount(), transaction.recipient()));
+      message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientBalance().getCurrency().name()), world, transaction.recipientBalance().getAmount(), transaction.recipient()));
       message.translate(world, IDFinder.getID(sender));
       TNE.debug("===END MoneyOtherCommand  ===");
       return result.proceed();

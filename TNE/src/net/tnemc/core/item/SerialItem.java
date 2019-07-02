@@ -91,7 +91,9 @@ public class SerialItem {
         flags.add(flag.name());
       }
 
-      stack.getItemMeta().getAttributeModifiers().forEach((attr, modifier)->attributes.put(attr.name(), modifier));
+      if(stack.getItemMeta().hasAttributeModifiers()) {
+        stack.getItemMeta().getAttributeModifiers().forEach((attr, modifier) -> attributes.put(attr.name(), modifier));
+      }
 
       if(stack.getItemMeta().hasEnchants()) {
 

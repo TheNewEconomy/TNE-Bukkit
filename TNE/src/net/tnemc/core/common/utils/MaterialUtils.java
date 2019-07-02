@@ -123,12 +123,14 @@ public class MaterialUtils {
         if(originalCloneMeta.hasLore()) return false;
       }
 
-      if(compareCloneMeta.hasCustomModelData()) {
-        if(!originalCloneMeta.hasCustomModelData()) return false;
+      if(MISCUtils.isOneFourteen()) {
+        if (compareCloneMeta.hasCustomModelData()) {
+          if (!originalCloneMeta.hasCustomModelData()) return false;
 
-        if(compareCloneMeta.getCustomModelData() != originalCloneMeta.getCustomModelData()) return false;
-      } else {
-        if(originalCloneMeta.hasCustomModelData()) return false;
+          if (compareCloneMeta.getCustomModelData() != originalCloneMeta.getCustomModelData()) return false;
+        } else {
+          if (originalCloneMeta.hasCustomModelData()) return false;
+        }
       }
 
       for(ItemFlag flag : compareCloneMeta.getItemFlags()) {

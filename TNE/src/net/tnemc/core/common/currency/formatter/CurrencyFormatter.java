@@ -57,7 +57,7 @@ public class CurrencyFormatter {
   }
 
   public static String format(TNECurrency currency, BigDecimal amount, Location location, String player) {
-    System.out.println("Format: " + currency.getFormat());
+    //System.out.println("Format: " + currency.getFormat());
     amount = amount.setScale(currency.decimalPlaces(), BigDecimal.ROUND_CEILING);
 
     String format = currency.getFormat();

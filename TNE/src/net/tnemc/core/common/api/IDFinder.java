@@ -23,9 +23,11 @@ public class IDFinder {
 
   public static UUID ecoID(String username, boolean skip) {
     if(TNE.uuidManager().hasID(username)) {
+      TNELib.debug("TNE.uuidManager().hasID(username)");
       return TNE.uuidManager().getID(username);
     }
     UUID eco = (skip)? genUUID() : genUUID(username);
+    TNELib.debug("Eco: " + eco.toString());
     //TNELib.instance().getUuidManager().addUUID(username, eco);
     return eco;
   }
@@ -46,12 +48,20 @@ public class IDFinder {
   }
 
   public static UUID genUUID(String name) {
-    UUID id = Bukkit.getOfflinePlayer(name).getUniqueId();
-    if(id != null) return id;
+    OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+    if(player.hasPlayedBefore()) {
+      TNELib.debug("genUUID: OfflinePlayer");
+      final UUID id = player.getUniqueId();
+      if(id != null) return id;
+    }
 
-    id = MojangAPI.getPlayerUUID(name);
-    if(id != null) return id;
+    UUID id = MojangAPI.getPlayerUUID(name);
+    if(id != null) {
+      TNELib.debug("genUUID: Mojang");
+      return id;
+    }
 
+    TNELib.debug("genUUID: gen");
     return genUUID();
   }
 
@@ -144,7 +154,7 @@ public class IDFinder {
     }
 
     if(identifier.contains("kingdom-")) {
-      TNELib.debug("Empire");
+      TNELib.debug("Kingdom");
       UUID id = ecoID(identifier);
       checkSpecial(id);
       return id;

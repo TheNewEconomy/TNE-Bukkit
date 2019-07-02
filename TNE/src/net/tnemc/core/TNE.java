@@ -719,8 +719,7 @@ public class TNE extends TNELib {
 
   public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
     TNE.debug("Started copying " + file.getName());
-    CommentedConfiguration commentedConfiguration = null;
-    commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8), false);
+    CommentedConfiguration commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8), false);
     TNE.debug("Initializing commented configuration");
     if(commentedConfiguration != null) {
       TNE.debug("Loading commented configuration");
