@@ -65,8 +65,8 @@ public class BountyListCommand extends TNECommand {
       }
 
 
-      TNE.menuManager().open("bounty_view_offer", getPlayer(sender));
-      TNE.menuManager().setViewerData(IDFinder.getID(sender), "bounty_target", id.toString());
+      TNE.menuManager().setViewerData(IDFinder.getID(sender), "hunted_id", id.toString());
+      TNE.menuManager().open("bounty_view_player", getPlayer(sender));
       return true;
     }
 

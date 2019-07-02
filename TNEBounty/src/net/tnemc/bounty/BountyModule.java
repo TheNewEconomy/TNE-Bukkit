@@ -7,6 +7,7 @@ import net.tnemc.bounty.listeners.InventoryCloseListener;
 import net.tnemc.bounty.listeners.PlayerDeathListener;
 import net.tnemc.bounty.listeners.PlayerJoinListener;
 import net.tnemc.bounty.menu.AmountSelectionMenu;
+import net.tnemc.bounty.menu.BountyViewMenu;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
@@ -150,6 +151,7 @@ public class BountyModule extends Module {
     Map<String, Menu> menus = new HashMap<>();
     menus.put("bounty_currency_selection", new CurrencySelectionMenu("bounty_currency_selection", "bounty_amount_selection"));
     menus.put("bounty_amount_selection", new AmountSelectionMenu("bounty_amount_selection"));
+    menus.put("bounty_view_player", new BountyViewMenu());
 
     return menus;
   }

@@ -27,17 +27,13 @@ public class RewardCenterHolder implements InventoryHolder {
 
   private Inventory inventory;
   private RewardCenter center;
-  private int pages = 1;
 
   public RewardCenterHolder(RewardCenter center) {
     this.center = center;
-
-    pages = center.getRewards().size() / 36;
-    if(center.getRewards().size() % 36 > 0) pages++;
   }
 
   public void buildInventory() {
-    inventory = Bukkit.createInventory(this, 45, "[TNE] Bounty Rewards");
+    inventory = Bukkit.createInventory(this, 54, "[TNE] Bounty Rewards");
 
     for(String str : center.getRewards()) {
       try {

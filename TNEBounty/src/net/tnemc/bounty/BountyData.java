@@ -83,7 +83,6 @@ public class BountyData {
         bounty.setCurrency(results.getString("bounty_currency_name"));
         bounty.setWorld(results.getString("bounty_world"));
         bounty.setAmount(results.getBigDecimal("bounty_amount"));
-        System.out.println("Amount: " + results.getBigDecimal("bounty_amount").toPlainString());
         bounty.setItemReward(results.getString("bounty_reward"));
 
       }

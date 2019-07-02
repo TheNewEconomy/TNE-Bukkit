@@ -20,7 +20,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.json.simple.parser.ParseException;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -61,9 +63,23 @@ public class PlayerDeathListener implements Listener {
         killer.sendMessage(ChatColor.YELLOW + "You received " + CurrencyFormatter.format(currency, bounty.getAmount(), killer.getLocation(), "") + ChatColor.YELLOW + " for claiming a bounty.");
       } else {
         RewardCenter rewards = BountyData.getRewards(killerID);
-        rewards.getRewards().add(bounty.getItemReward());
-        BountyData.setRewards(killerID, rewards.getRewards());
-        killer.sendMessage(ChatColor.YELLOW + "Your bounty reward has been sent to your reward center. Type \"/bounty rewards\" to claim it.");
+
+        if(rewards.getRewards().size() >= 54) {
+          try {
+            Map<Integer, ItemStack> left = killer.getInventory().addItem(SerialItem.unserialize(bounty.getItemReward()).getStack());
+            if(left.size() <= 0) {
+              killer.sendMessage(ChatColor.YELLOW + "Your bounty reward center is full, your reward has been added to your inventory.");
+            } else {
+              killer.getLocation().getWorld().dropItemNaturally(killer.getLocation(), left.get(0));
+              killer.sendMessage(ChatColor.YELLOW + "Your bounty reward center and inventory is full, your reward has been dropped on the ground.");
+            }
+          } catch (ParseException ignore) {
+          }
+        } else {
+          rewards.getRewards().add(bounty.getItemReward());
+          BountyData.setRewards(killerID, rewards.getRewards());
+          killer.sendMessage(ChatColor.YELLOW + "Your bounty reward has been sent to your reward center. Type \"/bounty rewards\" to claim it.");
+        }
       }
 
       ItemStack skull = TNE.item().build("PLAYER_HEAD");
