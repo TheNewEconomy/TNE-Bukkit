@@ -1,0 +1,43 @@
+Bounty:
+
+  #All configurations relating to bounty placing.
+  Placing:
+
+    #The limit, in seconds, between placing bounties. Use 0 for no limit.
+    Limit: 120
+
+    #Configurations relating to bounty item rewards.
+    Item:
+
+      #Whether or not item rewards are enabled.
+      Enabled: true
+
+    #Configurations relating to bounty currency rewards.
+    Currency:
+
+      #Whether or not currency rewards are enabled.
+      Enabled: true
+
+      #The tax, in percentage, that will be taken from every currency bounty reward.
+      Tax: 5
+
+      #The minimum reward for a bounty, set to 0 for none.
+      Minimum: 50
+
+      #The maximum reward for a bounty, set to 0 for none.
+      Maximum: 0
+
+  #All configurations relating to claiming a bounty.
+  Claiming:
+
+    #Whether or not players may claim the bounty they set themselves.
+    Own: true
+
+    #Whether or not Towny players may claim bounties on players in their town.
+    Town: false
+
+    #Whether or not Towny players may claim bounties on players in their nation.
+    Nation: false
+
+    #Whether or not death messages are enabled.(These are configured in hunter.yml)
+    Death: true

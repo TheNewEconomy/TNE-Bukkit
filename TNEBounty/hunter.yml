@@ -1,0 +1,22 @@
+Hunter:
+
+  #All hunter levels, and their perks.
+  #There is a built-in max level of 99, and levels above this are ignored.
+  Levels:
+
+    1:
+
+      #Experience gained per bounty claimed.
+      ExperienceGain: 10
+
+      #Experience required for this level.
+      Experience: 0
+
+      #Whether or not this level allows heads to drop when claiming a bounty.
+      Head: false
+
+      #Message displayed when someone with this level kills someone with a bounty.
+      Death Message: "<red>$target got rekt by $killer."
+
+      #Command sent when leveling up to this level.
+      Command: "say $player has reached level 1."
