@@ -59,7 +59,7 @@ public class PlayerDeathListener implements Listener {
       final String world = WorldFinder.getWorld(killer, WorldVariant.BALANCE);
 
       if(bounty.getBenefactor().equals(killerID)) {
-        if(!BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Own")) {
+        if(!TNE.instance().api().getBoolean("Bounty.Claiming.Own")) {
           killer.sendMessage(ChatColor.RED + "You can't claim bounties set by yourself.");
           return;
         }
@@ -72,14 +72,14 @@ public class PlayerDeathListener implements Listener {
 
             final String townName = TownyUniverse.getDataSource().getResident(killer.getName()).getTown().getName();
 
-            if(!BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Town")) {
+            if(!TNE.instance().api().getBoolean("Bounty.Claiming.Town")) {
               if (TownyUniverse.getDataSource().getResident(player.getName()).hasTown()) {
                 if (TownyUniverse.getDataSource().getResident(player.getName()).getTown().getName().equalsIgnoreCase(townName)) {
                   killer.sendMessage(ChatColor.RED + "You can't claim bounties set on your fellow town members.");
                   return;
                 }
 
-                if(!BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Nation")) {
+                if(!TNE.instance().api().getBoolean("Bounty.Claiming.Nation")) {
                   if (TownyUniverse.getDataSource().getResident(killer.getName()).getTown().hasNation()) {
 
                     final String nationName = TownyUniverse.getDataSource().getResident(killer.getName()).getTown().getNation().getName();
@@ -132,14 +132,15 @@ public class PlayerDeathListener implements Listener {
 
       final HunterLevel levelObject = BountyModule.instance().getHunterManager().getObject(hunter.getLevel());
 
-      if(BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Death")) {
+      if(TNE.instance().api().getBoolean("Bounty.Claiming.Death")) {
 
         final String msg = (hunter.getMessage().equalsIgnoreCase("generic"))? levelObject.getDeathMessage() : hunter.getMessage();
+
 
         Message message = new Message(Message.replaceColours(msg, false));
         message.addVariable("$target", player.getDisplayName());
         message.addVariable("$killer", killer.getDisplayName());
-        Bukkit.broadcastMessage(message.grab(killer.getWorld().getName(), killer));
+        event.setDeathMessage(message.grab(world, killer));
       }
 
       if(levelObject.canHead()) {
@@ -160,7 +161,11 @@ public class PlayerDeathListener implements Listener {
 
       if(BountyModule.instance().getHunterManager().canLevel(hunter.getLevel(), hunter.getExperience())) {
         if(!levelObject.getCommand().trim().equalsIgnoreCase("")) {
-          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), levelObject.getCommand());
+
+          Message message = new Message(Message.replaceColours(levelObject.getCommand(), false));
+          message.addVariable("$player", killer.getDisplayName());
+          message.addVariable("$level", (hunter.getLevel() + 1) + "");
+          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), message.grab(world, killer));
         }
         hunter.setLevel(hunter.getLevel() + 1);
       }

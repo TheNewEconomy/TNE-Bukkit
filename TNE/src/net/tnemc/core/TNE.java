@@ -234,6 +234,7 @@ public class TNE extends TNELib {
 
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
+      value.getModule().loadConfigurations();
       value.getModule().getConfigurations().forEach((configuration, identifier)->{
         configurations().add(configuration, identifier);
       });

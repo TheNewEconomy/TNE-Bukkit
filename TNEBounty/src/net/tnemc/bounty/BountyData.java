@@ -167,7 +167,7 @@ public class BountyData {
     BountyHunter hunter = new BountyHunter(id);
 
     SQLDatabase.open();
-    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BOUNTY_LOAD_TARGET);
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(HUNTER_LOAD);
         ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
             id.toString()
         })) {

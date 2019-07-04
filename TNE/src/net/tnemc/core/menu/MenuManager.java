@@ -5,6 +5,7 @@ import net.tnemc.core.menu.impl.AmountSelectionMenu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import net.tnemc.core.menu.impl.DisplayMenu;
 import net.tnemc.core.menu.impl.MainMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -56,7 +57,7 @@ public class MenuManager {
         player.getOpenInventory().getTopInventory().setContents(inventory.getContents());
         ((MenuHolder)holder).setMenu(menu);
       } else {
-        player.openInventory(menus.get(menu).buildInventory(player));
+        Bukkit.getScheduler().runTask(TNE.instance(), ()->player.openInventory(menus.get(menu).buildInventory(player)));
       }
     }
   }

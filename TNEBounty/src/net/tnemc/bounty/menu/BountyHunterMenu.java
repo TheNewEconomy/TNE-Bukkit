@@ -48,6 +48,7 @@ public class BountyHunterMenu extends Menu {
     List<String> infoLore = new ArrayList<>();
     infoLore.add(ChatColor.YELLOW + "Level: " + ChatColor.WHITE + hunter.getLevel());
     infoLore.add(ChatColor.YELLOW + "Bounties: " + ChatColor.WHITE + hunter.getBounties());
+    infoMeta.setLore(infoLore);
     info.setItemMeta(infoMeta);
 
     ItemStack experience = new ItemStack(Material.EXPERIENCE_BOTTLE);
@@ -57,6 +58,7 @@ public class BountyHunterMenu extends Menu {
     xpLore.add(ChatColor.YELLOW + "Current XP: " + ChatColor.WHITE + hunter.getExperience());
     xpLore.add(ChatColor.YELLOW + "Next Level: " + ChatColor.WHITE + BountyModule.instance().getHunterManager().experience(hunter.getLevel() + 1));
     xpLore.add(ChatColor.YELLOW + "XP Per Bounty: " + ChatColor.WHITE + level.getExperienceGain());
+    xpMeta.setLore(xpLore);
     experience.setItemMeta(xpMeta);
 
     ItemStack head = TNE.item().build("PLAYER_HEAD");
@@ -65,6 +67,7 @@ public class BountyHunterMenu extends Menu {
     List<String> headLore = new ArrayList<>();
     headLore.add(ChatColor.YELLOW + "Head Drops: " + ChatColor.WHITE + level.canHead());
     headLore.add(ChatColor.YELLOW + "Head Chance: " + ChatColor.WHITE + level.getHeadChance());
+    headMeta.setLore(headLore);
     head.setItemMeta(headMeta);
 
     ItemStack message = new ItemStack(Material.NAME_TAG);
@@ -72,6 +75,7 @@ public class BountyHunterMenu extends Menu {
     messageMeta.setDisplayName(ChatColor.YELLOW + "Kill Message");
     List<String> messageLore = new ArrayList<>();
     messageLore.add(ChatColor.WHITE + hunter.getMessage());
+    messageMeta.setLore(messageLore);
     message.setItemMeta(messageMeta);
 
 

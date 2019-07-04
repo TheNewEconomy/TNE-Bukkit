@@ -23,10 +23,8 @@ public class HunterManager {
   private TreeMap<Integer, HunterLevel> levels = new TreeMap<>();
 
   public HunterManager() {
-
     loadExperience();
     loadHunterObjects();
-
   }
 
   public void loadExperience() {
@@ -85,7 +83,7 @@ public class HunterManager {
   }
 
   public boolean canLevel(int level, long xp) {
-    if(level == 99) return false;
+    if(!experience.containsKey(level + 1)) return false;
     return xp >= experience.get(level + 1);
   }
 }

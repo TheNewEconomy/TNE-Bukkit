@@ -83,7 +83,7 @@ public class Message {
     String id = (sender instanceof Player)? IDFinder.getID((Player)sender).toString() : "";
     String found = TNE.instance().api().getString(this.node, world, id);
 
-    String message = (found == null)? this.node : found;
+    String message = (found == null || found.trim().equalsIgnoreCase(""))? this.node : found;
     Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 
     while (it.hasNext()) {

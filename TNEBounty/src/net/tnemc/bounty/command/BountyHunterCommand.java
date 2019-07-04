@@ -57,9 +57,13 @@ public class BountyHunterCommand extends TNECommand {
       id = IDFinder.getID(Bukkit.getOfflinePlayer(arguments[0]));
     }
 
-    TNE.menuManager().setViewerData(id, "hunter_id", id.toString());
+    final UUID uuid = id;
 
-    TNE.menuManager().open("bounty_hunter_menu", getPlayer(sender));
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      TNE.menuManager().setViewerData(uuid, "hunter_id", uuid.toString());
+
+      TNE.menuManager().open("bounty_hunter_menu", getPlayer(sender));
+    });
     return true;
   }
 }

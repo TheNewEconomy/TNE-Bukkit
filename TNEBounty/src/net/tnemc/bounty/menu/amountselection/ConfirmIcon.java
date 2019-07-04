@@ -1,7 +1,6 @@
 package net.tnemc.bounty.menu.amountselection;
 
 import net.tnemc.bounty.BountyData;
-import net.tnemc.bounty.BountyModule;
 import net.tnemc.bounty.model.Bounty;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
@@ -36,19 +35,20 @@ public class ConfirmIcon extends Icon {
     final UUID id = IDFinder.getID(player);
     final String world = WorldFinder.getWorld(player, WorldVariant.ACTUAL);
     final String currency = (String)TNE.menuManager().getViewerData(id, "action_currency");
+    final BigDecimal trueAmount = (BigDecimal)TNE.menuManager().getViewerData(id, "action_amount");
     BigDecimal amount = (BigDecimal)TNE.menuManager().getViewerData(id, "action_amount");
     final UUID target = UUID.fromString((String)TNE.menuManager().getViewerData(id, "bounty_target"));
     final String targetName = (String)TNE.menuManager().getViewerData(id, "bounty_target_name");
     final UUID benefactor = UUID.fromString((String)TNE.menuManager().getViewerData(id, "bounty_benefactor"));
     final TNECurrency currencyObj = TNE.manager().currencyManager().get(world, currency);
 
-    final BigDecimal tax = BountyModule.instance().getBountyFileConfiguration().getBigDecimal("Bounty.Placing.Tax");
-    final int min = BountyModule.instance().getBountyFileConfiguration().getInt("Bounty.Placing.Min");
-    final int max = BountyModule.instance().getBountyFileConfiguration().getInt("Bounty.Placing.Max");
+    final BigDecimal tax = new BigDecimal(TNE.instance().api().getInteger("Bounty.Placing.Currency.Tax"));
+    final int min = TNE.instance().api().getInteger("Bounty.Placing.Currency.Minimum");
+    final int max = TNE.instance().api().getInteger("Bounty.Placing.Currency.Maximum");
 
     boolean canPlace = true;
 
-    if(!TNE.instance().api().hasHoldings(benefactor.toString(), amount, currencyObj, world)) {
+    if(!TNE.instance().api().hasHoldings(benefactor.toString(), trueAmount, currencyObj, world)) {
       canPlace = false;
       this.message = ChatColor.RED + "You don't have enough funds to set this bounty.";
     }
@@ -71,7 +71,7 @@ public class ConfirmIcon extends Icon {
     if(canPlace) {
 
       this.message = ChatColor.YELLOW + "You placed a bounty in the amount of " + CurrencyFormatter.format(currencyObj, world, amount, "") + " has been placed on " + targetName + " after tax.";
-      if(TNE.instance().api().removeHoldings(benefactor.toString(), amount, currencyObj, world)) {
+      if(TNE.instance().api().removeHoldings(benefactor.toString(), trueAmount, currencyObj, world)) {
         Bounty bounty = new Bounty(target, id);
         bounty.setCurrencyReward(true);
         bounty.setAmount(amount);

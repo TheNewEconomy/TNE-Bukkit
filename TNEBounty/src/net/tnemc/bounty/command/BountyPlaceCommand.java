@@ -98,7 +98,7 @@ public class BountyPlaceCommand extends TNECommand {
 
     if(type.equalsIgnoreCase("item")) {
 
-      if(!BountyModule.instance().getHunterFileConfiguration().getBool("Bounty.Placing.Item.Enabled")) {
+      if(!TNE.instance().api().getBoolean("Bounty.Placing.Item.Enabled")) {
         sender.sendMessage(ChatColor.RED + "Item Bounties are disabled in this server.");
         return false;
       }
@@ -121,7 +121,7 @@ public class BountyPlaceCommand extends TNECommand {
       return true;
     }
 
-    if(!BountyModule.instance().getHunterFileConfiguration().getBool("Bounty.Placing.Currency.Enabled")) {
+    if(!TNE.instance().api().getBoolean("Bounty.Placing.Currency.Enabled")) {
       sender.sendMessage(ChatColor.RED + "Currency Bounties are disabled in this server.");
       return false;
     }

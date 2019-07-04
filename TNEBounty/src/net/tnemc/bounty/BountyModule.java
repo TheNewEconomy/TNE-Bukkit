@@ -18,8 +18,15 @@ import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -184,8 +191,10 @@ public class BountyModule extends Module {
     super.initializeConfigurations();
     bounty = new File(TNE.instance().getDataFolder(), "bounty.yml");
     hunter = new File(TNE.instance().getDataFolder(), "hunter.yml");
-    bountyFileConfiguration = TNE.instance().initializeConfiguration(bounty, "bounty.yml");
-    hunterFileConfiguration = TNE.instance().initializeConfiguration(hunter, "hunter.yml");
+    bountyFileConfiguration = initializeConfiguration(bounty, "bounty.yml");
+    hunterFileConfiguration = initializeConfiguration(hunter, "hunter.yml");
+
+    hunterManager = new HunterManager();
   }
 
   @Override
@@ -195,14 +204,40 @@ public class BountyModule extends Module {
     hunterConfiguration = new HunterConfiguration();
     configurations.put(bountyConfiguration, "Bounty");
     configurations.put(hunterConfiguration, "Hunter");
-
-    hunterManager = new HunterManager();
   }
 
   @Override
   public void saveConfigurations() {
     bountyFileConfiguration.save(bounty);
     hunterFileConfiguration.save(hunter);
+  }
+
+  public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
+    TNE.debug("Started copying " + file.getName());
+    CommentedConfiguration commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(getResource(defaultFile), StandardCharsets.UTF_8), false);
+    TNE.debug("Initializing commented configuration");
+    if(commentedConfiguration != null) {
+      TNE.debug("Loading commented configuration");
+      commentedConfiguration.load();
+    }
+    TNE.debug("Finished copying " + file.getName());
+    return commentedConfiguration;
+  }
+
+
+  public InputStream getResource(@NotNull String filename) {
+    try {
+      URL url = getClass().getClassLoader().getResource(filename);
+      if (url == null) {
+        return null;
+      } else {
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        return connection.getInputStream();
+      }
+    } catch (IOException var4) {
+      return null;
+    }
   }
 
   public static BountyModule instance() {
