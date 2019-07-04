@@ -2,6 +2,7 @@ package net.tnemc.bounty;
 
 import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.bounty.model.Bounty;
+import net.tnemc.bounty.model.BountyHunter;
 import net.tnemc.bounty.model.RewardCenter;
 import net.tnemc.core.TNE;
 import org.bukkit.Bukkit;
@@ -36,9 +37,9 @@ public class BountyData {
   public static final String BOUNTY_SAVE = "INSERT INTO " + prefix + "_BOUNTY (bounty_id, bounty_target, bounty_benefactor, bounty_created, bounty_head, bounty_currency, bounty_currency_name, bounty_world, bounty_amount, bounty_reward, bounty_claimant) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
       "ON DUPLICATE KEY UPDATE bounty_claimed = ?, bounty_claimant = ?, bounty_finished = ?";
   public static final String BOUNTY_DELETE = "DELETE FROM " + prefix + "_BOUNTY WHERE bounty_target = ?";
-  public static final String HUNTER_LOAD = "SELECT hunter_experience, hunter_level FROM " + prefix + "_BOUNTY_HUNTER WHERE hunter_id = ?";
-  public static final String HUNTER_SAVE = "INSERT INTO " + prefix + "_BOUNTY_HUNTER (hunter_id, hunter_experience, hunter_level) VALUES(?, ?, ?) " +
-      "ON DUPLICATE KEY UPDATE hunter_experience = ?, hunter_level = ?";
+  public static final String HUNTER_LOAD = "SELECT hunter_experience, hunter_last_bounty, hunter_bounties, hunter_last_track, hunter_message, hunter_level FROM " + prefix + "_BOUNTY_HUNTER WHERE hunter_id = ?";
+  public static final String HUNTER_SAVE = "INSERT INTO " + prefix + "_BOUNTY_HUNTER (hunter_id, hunter_last_bounty, hunter_experience, hunter_bounties, hunter_last_track, hunter_message, hunter_level) VALUES(?, ?, ?, ?, ?, ?, ?) " +
+      "ON DUPLICATE KEY UPDATE hunter_last_bounty = ?, hunter_experience = ?, hunter_bounties = ?, hunter_last_track = ?, hunter_message = ?, hunter_level = ?";
 
   public static final String REWARDS_LOAD = "SELECT hunter_rewards FROM " + prefix + "_BOUNTY_REWARD WHERE hunter_id = ?";
   public static final String REWARDS_SAVE = "INSERT INTO " + prefix + "_BOUNTY_REWARD (hunter_id, hunter_rewards) VALUES(?, ?) ON DUPLICATE KEY UPDATE hunter_rewards = ?";
@@ -64,6 +65,10 @@ public class BountyData {
         bounty.getClaimant(),
         bounty.getClaimedTime()
     });
+
+    BountyHunter hunter = getHunter(bounty.getBenefactor());
+    hunter.setLastBounty(bounty.getCreated());
+    saveHunter(hunter);
   }
 
   public static Bounty getBounty(UUID id) {
@@ -138,6 +143,49 @@ public class BountyData {
         object.toJSONString()
     });
 
+  }
+
+  public static void saveHunter(BountyHunter hunter) {
+    SQLDatabase.executePreparedUpdate(HUNTER_SAVE, new Object[] {
+        hunter.getId().toString(),
+        hunter.getLastBounty(),
+        hunter.getExperience(),
+        hunter.getBounties(),
+        hunter.getLastTrack(),
+        hunter.getMessage(),
+        hunter.getLevel(),
+        hunter.getLastBounty(),
+        hunter.getExperience(),
+        hunter.getBounties(),
+        hunter.getLastTrack(),
+        hunter.getMessage(),
+        hunter.getLevel()
+    });
+  }
+
+  public static BountyHunter getHunter(UUID id) {
+    BountyHunter hunter = new BountyHunter(id);
+
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BOUNTY_LOAD_TARGET);
+        ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
+            id.toString()
+        })) {
+      if(results.next()) {
+        hunter.setBounties(results.getLong("hunter_bounties"));
+        hunter.setLastBounty(results.getLong("hunter_last_bounty"));
+        hunter.setExperience(results.getLong("hunter_experience"));
+        hunter.setLastTrack(results.getLong("hunter_last_track"));
+        hunter.setMessage(results.getString("hunter_message"));
+        hunter.setLevel(results.getInt("hunter_level"));
+
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    SQLDatabase.close();
+
+    return hunter;
   }
 
   public static ItemStack getItemInHand(Player player) {

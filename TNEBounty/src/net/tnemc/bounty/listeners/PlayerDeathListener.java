@@ -1,9 +1,14 @@
 package net.tnemc.bounty.listeners;
 
+import com.palmergames.bukkit.towny.object.TownyUniverse;
 import net.tnemc.bounty.BountyData;
+import net.tnemc.bounty.BountyModule;
 import net.tnemc.bounty.model.Bounty;
+import net.tnemc.bounty.model.BountyHunter;
+import net.tnemc.bounty.model.HunterLevel;
 import net.tnemc.bounty.model.RewardCenter;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
@@ -53,9 +58,52 @@ public class PlayerDeathListener implements Listener {
       Bounty bounty = BountyData.getBounty(id);
       final String world = WorldFinder.getWorld(killer, WorldVariant.BALANCE);
 
+      if(bounty.getBenefactor().equals(killerID)) {
+        if(!BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Own")) {
+          killer.sendMessage(ChatColor.RED + "You can't claim bounties set by yourself.");
+          return;
+        }
+      }
+
+      if(Bukkit.getPluginManager().isPluginEnabled("Towny")) {
+
+        try {
+          if (TownyUniverse.getDataSource().getResident(killer.getName()).hasTown()) {
+
+            final String townName = TownyUniverse.getDataSource().getResident(killer.getName()).getTown().getName();
+
+            if(!BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Town")) {
+              if (TownyUniverse.getDataSource().getResident(player.getName()).hasTown()) {
+                if (TownyUniverse.getDataSource().getResident(player.getName()).getTown().getName().equalsIgnoreCase(townName)) {
+                  killer.sendMessage(ChatColor.RED + "You can't claim bounties set on your fellow town members.");
+                  return;
+                }
+
+                if(!BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Nation")) {
+                  if (TownyUniverse.getDataSource().getResident(killer.getName()).getTown().hasNation()) {
+
+                    final String nationName = TownyUniverse.getDataSource().getResident(killer.getName()).getTown().getNation().getName();
+
+                    if (TownyUniverse.getDataSource().getResident(player.getName()).getTown().hasNation()) {
+                      if (TownyUniverse.getDataSource().getResident(player.getName()).getTown().getNation().getName().equalsIgnoreCase(nationName)) {
+                        killer.sendMessage(ChatColor.RED + "You can't claim bounties set on your fellow nation members.");
+                        return;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch(Exception ignore) {
+        }
+      }
+
       killer.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
       player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 10f, 1f);
-      Bukkit.broadcastMessage(ChatColor.YELLOW + killer.getDisplayName() + ChatColor.YELLOW + " has claimed the bounty for " + player.getDisplayName());
+
+      BountyHunter hunter = BountyData.getHunter(killerID);
+      hunter.setBounties(hunter.getBounties() + 1);
 
       if(bounty.isCurrencyReward()) {
         final TNECurrency currency = TNE.manager().currencyManager().get(bounty.getWorld(), bounty.getCurrency());
@@ -82,26 +130,42 @@ public class PlayerDeathListener implements Listener {
         }
       }
 
-      ItemStack skull = TNE.item().build("PLAYER_HEAD");
-      SkullMeta meta = (SkullMeta) skull.getItemMeta();
-      meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
-      skull.setItemMeta(meta);
+      final HunterLevel levelObject = BountyModule.instance().getHunterManager().getObject(hunter.getLevel());
 
-      if(bounty.isRequireHead()) {
-        Player benefactor = Bukkit.getPlayer(bounty.getBenefactor());
+      if(BountyModule.instance().getBountyFileConfiguration().getBool("Bounty.Claiming.Death")) {
 
-        RewardCenter benRewards = BountyData.getRewards(bounty.getBenefactor());
+        final String msg = (hunter.getMessage().equalsIgnoreCase("generic"))? levelObject.getDeathMessage() : hunter.getMessage();
 
-        benRewards.getRewards().add(new SerialItem(skull).serialize());
-        BountyData.setRewards(bounty.getBenefactor(), benRewards.getRewards());
-
-        if(benefactor != null) {
-          benefactor.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
-          benefactor.sendMessage(ChatColor.YELLOW + "You have a new head waiting from a bounty claim. Type \"/bounty rewards\" to claim it.");
-        }
-      } else {
-        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), skull);
+        Message message = new Message(Message.replaceColours(msg, false));
+        message.addVariable("$target", player.getDisplayName());
+        message.addVariable("$killer", killer.getDisplayName());
+        Bukkit.broadcastMessage(message.grab(killer.getWorld().getName(), killer));
       }
+
+      if(levelObject.canHead()) {
+
+        int foo = (int)(Math.random() * 100);
+
+        if(foo <= levelObject.getHeadChance()) {
+
+          ItemStack skull = TNE.item().build("PLAYER_HEAD");
+          SkullMeta meta = (SkullMeta) skull.getItemMeta();
+          meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
+          skull.setItemMeta(meta);
+          killer.getLocation().getWorld().dropItemNaturally(player.getLocation(), skull);
+        }
+      }
+
+      hunter.setExperience(hunter.getExperience() + levelObject.getExperienceGain());
+
+      if(BountyModule.instance().getHunterManager().canLevel(hunter.getLevel(), hunter.getExperience())) {
+        if(!levelObject.getCommand().trim().equalsIgnoreCase("")) {
+          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), levelObject.getCommand());
+        }
+        hunter.setLevel(hunter.getLevel() + 1);
+      }
+
+      BountyData.saveHunter(hunter);
       BountyData.deleteBounty(id);
     }
   }

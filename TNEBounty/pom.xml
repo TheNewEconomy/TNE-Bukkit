@@ -69,5 +69,10 @@
             <version>17.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.palmergames</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.89.2.0</version>
+        </dependency>
     </dependencies>
 </project>

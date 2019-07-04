@@ -1,5 +1,109 @@
 Hunter:
 
+  #The experience required for each level.
+  Experience:
+
+    #Format is Level: Experience Required for said level
+    1: 0
+    2: 16
+    3: 27
+    4: 40
+    5: 55
+    6: 72
+    7: 91
+    8: 112
+    9: 135
+    10: 160
+    11: 187
+    12: 216
+    13: 247
+    14: 280
+    15: 315
+    16: 352
+    17: 394
+    18: 441
+    19: 493
+    20: 550
+    21: 612
+    22: 679
+    23: 751
+    24: 828
+    25: 910
+    26: 997
+    27: 1089
+    28: 1186
+    29: 1288
+    30: 1395
+    31: 1507
+    32: 1628
+    33: 1758
+    34: 1897
+    35: 2045
+    36: 2202
+    37: 2368
+    38: 2543
+    39: 2727
+    40: 2920
+    41: 3122
+    42: 3333
+    43: 3553
+    44: 3782
+    45: 4020
+    46: 4267
+    47: 4523
+    48: 4788
+    49: 5062
+    50: 5345
+    51: 5637
+    52: 5938
+    53: 6248
+    54: 6567
+    55: 6895
+    56: 7232
+    57: 7578
+    58: 7933
+    59: 8297
+    60: 8670
+    61: 9052
+    62: 9443
+    63: 9843
+    64: 10252
+    65: 10670
+    66: 11097
+    67: 11533
+    68: 11978
+    69: 12432
+    70: 12895
+    71: 13367
+    72: 13848
+    73: 14338
+    74: 14837
+    75: 15345
+    76: 15862
+    77: 16388
+    78: 16923
+    79: 17467
+    80: 18020
+    81: 18582
+    82: 19153
+    83: 19733
+    84: 20322
+    85: 20920
+    86: 21527
+    87: 22143
+    88: 22768
+    89: 23402
+    90: 24045
+    91: 24697
+    92: 25358
+    93: 26028
+    94: 26707
+    95: 27395
+    96: 28092
+    97: 28798
+    98: 29513
+    99: 30237
+
   #All hunter levels, and their perks.
   #There is a built-in max level of 99, and levels above this are ignored.
   Levels:
@@ -7,16 +111,33 @@ Hunter:
     1:
 
       #Experience gained per bounty claimed.
-      ExperienceGain: 10
-
-      #Experience required for this level.
-      Experience: 0
+      ExperienceGain: 8
 
       #Whether or not this level allows heads to drop when claiming a bounty.
       Head: false
 
+      #The chance, out of 100, that a head will drop if Head is true.
+      HeadChance: 10
+
       #Message displayed when someone with this level kills someone with a bounty.
-      Death Message: "<red>$target got rekt by $killer."
+      DeathMessage: "<red>$target got rekt by $killer."
 
       #Command sent when leveling up to this level.
-      Command: "say $player has reached level 1."
+      Command: "say $player has reached level $level."
+
+    10:
+
+      #Experience gained per bounty claimed.
+      ExperienceGain: 20
+
+      #Whether or not this level allows heads to drop when claiming a bounty.
+      Head: true
+
+      #The chance, out of 100, that a head will drop if Head is true.
+      HeadChance: 10
+
+      #Message displayed when someone with this level kills someone with a bounty.
+      DeathMessage: "<red>$target got rekt by $killer."
+
+      #Command sent when leveling up to this level.
+      Command: "say $player has reached level $level."

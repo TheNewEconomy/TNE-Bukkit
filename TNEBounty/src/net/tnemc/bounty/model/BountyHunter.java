@@ -15,7 +15,11 @@ import java.util.UUID;
 public class BountyHunter {
 
   private UUID id;
+  private long lastBounty = 0;
   private long experience = 0;
+  private long bounties = 0;
+  private long lastTrack = 0;
+  private String message = "Generic";
   private int level = 1;
 
   public BountyHunter(UUID id) {
@@ -30,12 +34,44 @@ public class BountyHunter {
     this.id = id;
   }
 
+  public long getLastBounty() {
+    return lastBounty;
+  }
+
+  public void setLastBounty(long lastBounty) {
+    this.lastBounty = lastBounty;
+  }
+
   public long getExperience() {
     return experience;
   }
 
   public void setExperience(long experience) {
     this.experience = experience;
+  }
+
+  public long getBounties() {
+    return bounties;
+  }
+
+  public void setBounties(long bounties) {
+    this.bounties = bounties;
+  }
+
+  public long getLastTrack() {
+    return lastTrack;
+  }
+
+  public void setLastTrack(long lastTrack) {
+    this.lastTrack = lastTrack;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
   }
 
   public int getLevel() {

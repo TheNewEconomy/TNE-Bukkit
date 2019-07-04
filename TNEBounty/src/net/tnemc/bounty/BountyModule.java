@@ -3,11 +3,15 @@ package net.tnemc.bounty;
 import com.github.tnerevival.core.SaveManager;
 import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.bounty.command.BountyCommand;
+import net.tnemc.bounty.configuration.BountyConfiguration;
+import net.tnemc.bounty.configuration.HunterConfiguration;
 import net.tnemc.bounty.listeners.InventoryCloseListener;
 import net.tnemc.bounty.listeners.PlayerDeathListener;
 import net.tnemc.bounty.listeners.PlayerJoinListener;
 import net.tnemc.bounty.menu.AmountSelectionMenu;
+import net.tnemc.bounty.menu.BountyHunterMenu;
 import net.tnemc.bounty.menu.BountyViewMenu;
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
@@ -15,6 +19,7 @@ import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import org.bukkit.Bukkit;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +44,15 @@ import java.util.Map;
 public class BountyModule extends Module {
 
   private static BountyModule instance;
+
+  private HunterManager hunterManager;
+
+  private File bounty;
+  private File hunter;
+  private CommentedConfiguration bountyFileConfiguration;
+  private CommentedConfiguration hunterFileConfiguration;
+  private BountyConfiguration bountyConfiguration;
+  private HunterConfiguration hunterConfiguration;
 
   public BountyModule() {
     instance = this;
@@ -80,7 +94,11 @@ public class BountyModule extends Module {
 
     h2.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY_HUNTER (" +
         "`hunter_id` VARCHAR(36) NOT NULL UNIQUE," +
+        "`hunter_last_bounty` BIGINT(60)," +
         "`hunter_experience` BIGINT(60)," +
+        "`hunter_bounties` BIGINT(60)," +
+        "`hunter_last_track` BIGINT(60)," +
+        "`hunter_message` TEXT NOT NULL," +
         "`hunter_level` BIGINT(60)" +
         ") ENGINE = INNODB;");
 
@@ -112,7 +130,11 @@ public class BountyModule extends Module {
 
     mysql.add("CREATE TABLE IF NOT EXISTS " + BountyData.prefix + "_BOUNTY_HUNTER (" +
         "`hunter_id` VARCHAR(36) NOT NULL UNIQUE," +
+        "`hunter_last_bounty` BIGINT(60)," +
         "`hunter_experience` BIGINT(60)," +
+        "`hunter_bounties` BIGINT(60)," +
+        "`hunter_last_track` BIGINT(60)," +
+        "`hunter_message` TEXT NOT NULL," +
         "`hunter_level` BIGINT(60)" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
 
@@ -152,11 +174,66 @@ public class BountyModule extends Module {
     menus.put("bounty_currency_selection", new CurrencySelectionMenu("bounty_currency_selection", "bounty_amount_selection"));
     menus.put("bounty_amount_selection", new AmountSelectionMenu("bounty_amount_selection"));
     menus.put("bounty_view_player", new BountyViewMenu());
+    menus.put("bounty_hunter_menu", new BountyHunterMenu());
 
     return menus;
   }
 
+  @Override
+  public void initializeConfigurations() {
+    super.initializeConfigurations();
+    bounty = new File(TNE.instance().getDataFolder(), "bounty.yml");
+    hunter = new File(TNE.instance().getDataFolder(), "hunter.yml");
+    bountyFileConfiguration = TNE.instance().initializeConfiguration(bounty, "bounty.yml");
+    hunterFileConfiguration = TNE.instance().initializeConfiguration(hunter, "hunter.yml");
+  }
+
+  @Override
+  public void loadConfigurations() {
+    super.loadConfigurations();
+    bountyConfiguration = new BountyConfiguration();
+    hunterConfiguration = new HunterConfiguration();
+    configurations.put(bountyConfiguration, "Bounty");
+    configurations.put(hunterConfiguration, "Hunter");
+
+    hunterManager = new HunterManager();
+  }
+
+  @Override
+  public void saveConfigurations() {
+    bountyFileConfiguration.save(bounty);
+    hunterFileConfiguration.save(hunter);
+  }
+
   public static BountyModule instance() {
     return instance;
+  }
+
+  public File getBounty() {
+    return bounty;
+  }
+
+  public File getHunter() {
+    return hunter;
+  }
+
+  public CommentedConfiguration getBountyFileConfiguration() {
+    return bountyFileConfiguration;
+  }
+
+  public CommentedConfiguration getHunterFileConfiguration() {
+    return hunterFileConfiguration;
+  }
+
+  public BountyConfiguration getBountyConfiguration() {
+    return bountyConfiguration;
+  }
+
+  public HunterConfiguration getHunterConfiguration() {
+    return hunterConfiguration;
+  }
+
+  public HunterManager getHunterManager() {
+    return hunterManager;
   }
 }

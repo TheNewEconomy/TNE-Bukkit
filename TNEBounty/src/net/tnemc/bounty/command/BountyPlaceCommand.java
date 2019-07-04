@@ -1,7 +1,9 @@
 package net.tnemc.bounty.command;
 
 import net.tnemc.bounty.BountyData;
+import net.tnemc.bounty.BountyModule;
 import net.tnemc.bounty.model.Bounty;
+import net.tnemc.bounty.model.BountyHunter;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.api.IDFinder;
@@ -14,6 +16,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -80,7 +83,26 @@ public class BountyPlaceCommand extends TNECommand {
       return false;
     }
 
+    final long delay = BountyModule.instance().getHunterFileConfiguration().getInt("Bounty.Placing.Limit") * 1000;
+
+    if(delay > 0) {
+      BountyHunter hunter = BountyData.getHunter(id);
+      if(hunter.getLastBounty() == 0) return true;
+      final long difference = new Date().getTime() - hunter.getLastBounty();
+
+      if(difference < delay) {
+        sender.sendMessage(ChatColor.RED + "Your /bounty place is still on cooldown.");
+        return false;
+      }
+    }
+
     if(type.equalsIgnoreCase("item")) {
+
+      if(!BountyModule.instance().getHunterFileConfiguration().getBool("Bounty.Placing.Item.Enabled")) {
+        sender.sendMessage(ChatColor.RED + "Item Bounties are disabled in this server.");
+        return false;
+      }
+
       final ItemStack stack = BountyData.getItemInHand(getPlayer(sender));
       if(stack == null || stack.getType() == Material.AIR) {
         sender.sendMessage(ChatColor.RED + "Place your bounty reward item in your main hand.");
@@ -97,6 +119,11 @@ public class BountyPlaceCommand extends TNECommand {
       ItemCalculations.removeItem(stack, getPlayer(sender).getInventory());
       Bukkit.broadcastMessage(ChatColor.YELLOW + "An item reward-based bounty has been placed on " + player.getName() + ". Type /bounty view " + player.getName() + " to view it.");
       return true;
+    }
+
+    if(!BountyModule.instance().getHunterFileConfiguration().getBool("Bounty.Placing.Currency.Enabled")) {
+      sender.sendMessage(ChatColor.RED + "Currency Bounties are disabled in this server.");
+      return false;
     }
 
     TNE.menuManager().open("bounty_currency_selection", getPlayer(sender));
