@@ -1,9 +1,11 @@
 package net.tnemc.vaults;
 
 import net.tnemc.core.TNE;
+import net.tnemc.vaults.model.VaultData;
 import net.tnemc.vaults.vault.OpenVault;
 import net.tnemc.vaults.vault.UserVaultManager;
 import net.tnemc.vaults.vault.Vault;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
@@ -34,15 +36,24 @@ public class VaultManager {
   }
 
   public boolean hasVault(UUID owner, String world) {
-    return managers.containsKey(owner) && managers.get(owner).hasVault(world);
+    return VaultData.hasVault(owner, world);
   }
 
   public void addVault(Vault vault) {
+    addVault(vault, true);
+  }
+
+  public void addVault(Vault vault, boolean data) {
     if(!managers.containsKey(vault.getOwner())) managers.put(vault.getOwner(), new UserVaultManager(vault.getOwner()));
     managers.get(vault.getOwner()).addVault(vault);
+    if(data) Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->VaultData.saveVault(vault));
   }
 
   public Vault getVault(UUID owner, String world) {
+    if(!managers.containsKey(owner) || !managers.get(owner).hasVault(world)) {
+      Vault vault = VaultData.getVault(owner, world);
+      addVault(vault, false);
+    }
     return managers.get(owner).getVault(world);
   }
 

@@ -12,8 +12,8 @@ import net.tnemc.core.item.SerialItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
@@ -75,7 +75,18 @@ public class BountyPlaceCommand extends TNECommand {
       return false;
     }
 
-    final OfflinePlayer player = Bukkit.getOfflinePlayer(arguments[0]);
+    final Player player = Bukkit.getPlayer(arguments[0]);
+
+    if(player == null) {
+      sender.sendMessage(ChatColor.RED + "Unable to locate the specified player. Make sure they're online.");
+      return false;
+    }
+
+    if(player.hasPermission("tne.bounty.cantplace")) {
+      sender.sendMessage(ChatColor.RED + "You're not allowed to place bounties on that player.");
+      return false;
+    }
+
     final UUID target = IDFinder.getID(player);
 
     if(BountyData.hasBounty(target)) {

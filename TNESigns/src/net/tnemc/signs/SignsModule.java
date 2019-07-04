@@ -48,14 +48,12 @@ public class SignsModule extends Module {
   private SignsConfiguration configuration;
 
   private SignsManager manager;
-  private ExperienceCalculations xpCalculations;
 
   private static SignsModule instance;
 
   public SignsModule() {
     instance = this;
     manager = new SignsManager();
-    xpCalculations = new ExperienceCalculations();
   }
 
   @Override
@@ -156,10 +154,6 @@ public class SignsModule extends Module {
 
   public static SignsManager manager() {
     return instance.manager;
-  }
-
-  public static ExperienceCalculations xpCalculations() {
-    return instance.xpCalculations;
   }
 
   public File getSigns() {

@@ -5,6 +5,9 @@ import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.vaults.command.VaultCommand;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -29,6 +32,11 @@ public class VaultsModule extends Module {
     manager = new VaultManager();
     commands.add(new VaultCommand(tne));
     listeners.add(new VaultListener(tne));
+  }
+
+  @Override
+  public Map<String, List<String>> getTables() {
+    return super.getTables();
   }
 
   @Override

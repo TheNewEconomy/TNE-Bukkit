@@ -68,7 +68,7 @@ public class VaultAddCommand extends TNECommand {
 
     if(!VaultsModule.instance().manager().hasVault(id, world)) {
       if(VaultManager.cost.compareTo(BigDecimal.ZERO) > 0) {
-        sender.sendMessage(ChatColor.RED + "you do not have a vault. Please use /vault buy to get one.");
+        sender.sendMessage(ChatColor.RED + "You do not have a vault. Please use /vault buy to get one.");
         return false;
       }
       VaultsModule.instance().manager().addVault(new Vault(id, world));
