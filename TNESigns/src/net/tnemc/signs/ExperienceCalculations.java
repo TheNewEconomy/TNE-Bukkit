@@ -1,8 +1,5 @@
 package net.tnemc.signs;
 
-import net.tnemc.core.TNE;
-import org.bukkit.Bukkit;
-
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -20,11 +17,11 @@ public class ExperienceCalculations {
 
   NavigableMap<Integer, Integer> experienceLevels = new TreeMap<>();
 
-  final int maxLevels = 40;
+  final int maxLevels = 99;
 
   public ExperienceCalculations() {
-    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), this::populateMap);
-    System.out.println("Experience calculations are operational.");
+    //Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), this::populateMap);
+    //System.out.println("Experience calculations are operational.");
   }
 
   void populateMap() {
