@@ -20,15 +20,13 @@ public class DiscordListener {
   @Subscribe(priority = ListenerPriority.HIGHEST)
   public void discordMessageReceived(DiscordGuildMessageReceivedEvent event) {
 
-    if(!event.getMessage().isEdited()) {
-      if(event.getMessage().getContentStripped().startsWith("!eco")) {
-
-      }
-    }
+    System.out.println("Stripped: " + event.getMessage().getContentStripped());
+    System.out.println("Display: " + event.getMessage().getContentDisplay());
+    System.out.println("Raw: " + event.getMessage().getContentRaw());
   }
 
   @Subscribe
   public void discordMessageProcessed(DiscordGuildMessagePostProcessEvent event) {
-    event.setProcessedMessage(event.getProcessedMessage().replace("cat", "dog"));
+    System.out.println(event.getProcessedMessage());
   }
 }
