@@ -125,6 +125,13 @@ public class IDFinder {
       return UUID.fromString(identifier);
     }
 
+    if(identifier.contains("discord-")) {
+      TNELib.debug("Discord Economy");
+      UUID id = ecoID(identifier);
+      checkSpecial(id);
+      return id;
+    }
+
     if(identifier.contains(TNELib.instance().factionPrefix)) {
       TNELib.debug("Faction");
       UUID id = ecoID(identifier);

@@ -74,7 +74,7 @@ public class OpenVault {
 
     openTabs.put(tab, inventory);
     totalViewers.add(viewer);
-    IDFinder.getPlayer(viewer.toString()).openInventory(openTabs.get(tab));
+    Bukkit.getScheduler().runTask(TNE.instance(), ()->IDFinder.getPlayer(viewer.toString()).openInventory(openTabs.get(tab)));
   }
 
   public void removeViewer(UUID viewer, int tab) {

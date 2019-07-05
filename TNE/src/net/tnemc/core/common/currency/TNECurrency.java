@@ -1,5 +1,6 @@
 package net.tnemc.core.common.currency;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
 
@@ -26,6 +27,8 @@ public class TNECurrency implements Currency {
   private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
 
   private boolean worldDefault = true;
+  private String world = TNE.instance().defaultWorld;
+  private boolean global = true;
   private BigDecimal balance;
   private BigDecimal maxBalance;
   private boolean item;
@@ -207,6 +210,22 @@ public class TNECurrency implements Currency {
 
   public void setWorldDefault(boolean worldDefault) {
     this.worldDefault = worldDefault;
+  }
+
+  public String getWorld() {
+    return world;
+  }
+
+  public void setWorld(String world) {
+    this.world = world;
+  }
+
+  public boolean isGlobal() {
+    return global;
+  }
+
+  public void setGlobal(boolean global) {
+    this.global = global;
   }
 
   public void setBalance(BigDecimal balance) {

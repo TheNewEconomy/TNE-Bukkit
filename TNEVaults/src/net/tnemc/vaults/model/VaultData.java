@@ -14,6 +14,7 @@ import org.json.simple.parser.ParseException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -63,7 +64,7 @@ public class VaultData {
         vault.setCreated(results.getLong("vault_created"));
         vault.setSize(results.getInt("vault_size"));
         vault.setMaxTabs(results.getInt("vault_tabs"));
-        vault = unSerializeTabs(vault, results.getString("vault_items"));
+        vault.setTabs(unSerializeTabs(results.getString("vault_items")));
         vault = unSerializeMembers(vault, results.getString("vault_members"));
 
       }
@@ -115,7 +116,9 @@ public class VaultData {
     return json.toJSONString();
   }
 
-  public static Vault unSerializeTabs(Vault vault, String tabs) {
+  public static Map<Integer, VaultTab> unSerializeTabs(String tabs) {
+
+    Map<Integer, VaultTab> tabsMap = new HashMap<>();
 
     try {
       JSONObject object = (JSONObject)(new JSONParser()).parse(tabs);
@@ -133,21 +136,25 @@ public class VaultData {
         VaultTab tab = new VaultTab(owner, world, icon, location);
 
         if(helper.has("items")) {
-          JSONObject items = (JSONObject)object.get("items");
+          JSONObject items = helper.getJSON("items");
+          Map<Integer, SerialItem> itemsMap = new HashMap<>();
           items.forEach((slot, item)->{
             try {
-              tab.getItems().put(Integer.valueOf(String.valueOf(slot)), SerialItem.unserialize(String.valueOf(item)));
+              System.out.println("Slot: " + Integer.valueOf(String.valueOf(slot)));
+              System.out.println("Item: " + String.valueOf(item));
+              itemsMap.put(Integer.valueOf(String.valueOf(slot)), SerialItem.unserialize(String.valueOf(item)));
             } catch (ParseException ignore) {
             }
           });
+          tab.setItems(itemsMap);
         }
 
-        vault.getTabs().put(location, new VaultTab(owner, world, icon, location));
+        tabsMap.put(location, new VaultTab(owner, world, icon, location));
       });
     } catch (ParseException ignore) {
     }
 
-    return vault;
+    return tabsMap;
   }
 
   public static String serializeMembers(Vault vault) {

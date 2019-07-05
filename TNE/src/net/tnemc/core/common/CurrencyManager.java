@@ -147,7 +147,7 @@ public class CurrencyManager {
     currency.setPlural(plural);
     currency.setSingleMinor(singleMinor);
     currency.setPluralMinor(pluralMinor);
-    currency.setServer("Main Server");
+    currency.setServer(server);
     currency.setSymbol(symbol);
     currency.setWorldDefault(true);
     currency.setRate(1.0);
@@ -261,6 +261,8 @@ public class CurrencyManager {
 
         //Currency Options Configurations.
         final Boolean worldDefault = configuration.getBool(base + ".Options.Default", true);
+        final String currencyWorld = configuration.getString(base + ".Options.World", TNE.instance().defaultWorld);
+        final Boolean global = configuration.getBool(base + ".Options.Global", true);
         final String format = configuration.getString(base + ".Options.Format", "<symbol><major.amount><decimal><minor.amount>").trim();
         final BigDecimal maxBalance = ((new BigDecimal(configuration.getString(base + ".Options.MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance", largestSupported.toPlainString())));
         final BigDecimal balance = new BigDecimal(configuration.getString(base + ".Options.Balance", "200.00"));
@@ -300,6 +302,8 @@ public class CurrencyManager {
         currency.setServer(server);
         currency.setSymbol(symbol);
         currency.setWorldDefault(worldDefault);
+        currency.setWorld(currencyWorld);
+        currency.setGlobal(global);
         currency.setRate(rate);
         currency.setItem(item);
         currency.setXp(experience);
@@ -412,10 +416,10 @@ public class CurrencyManager {
 
   public void addCurrency(String world, TNECurrency currency) {
     TNE.debug("[Add]Loading Currency: " + currency.name() + " for world: " + world + " with default balance of " + currency.defaultBalance());
-    if(world.equalsIgnoreCase(TNE.instance().defaultWorld)) {
+    if(world.equalsIgnoreCase(TNE.instance().defaultWorld) && currency.isGlobal()) {
       globalCurrencies.put(currency.name(), currency);
     } else {
-      WorldManager manager = TNE.instance().getWorldManager(world);
+      WorldManager manager = TNE.instance().getWorldManager(currency.getWorld());
       if (manager != null) {
         TNE.debug("[Add]Adding Currency: " + currency.name() + " for world: " + world);
         manager.addCurrency(currency);

@@ -4,7 +4,10 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.vaults.command.VaultCommand;
+import net.tnemc.vaults.model.VaultData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +39,40 @@ public class VaultsModule extends Module {
 
   @Override
   public Map<String, List<String>> getTables() {
-    return super.getTables();
+    Map<String, List<String>> tables = new HashMap<>();
+
+    List<String> h2 = new ArrayList<>();
+    //H2 Tables
+    h2.add("CREATE TABLE IF NOT EXISTS " + VaultData.prefix + "_VAULTS (" +
+        "`vault_owner` VARCHAR(36) NOT NULL," +
+        "`vault_world` VARCHAR(70) NOT NULL," +
+        "`vault_created` BIGINT(60)," +
+        "`vault_size` BIGINT(60)," +
+        "`vault_tabs` BIGINT(60)," +
+        "`vault_items` TEXT NOT NULL," +
+        "`vault_members` TEXT NOT NULL," +
+        "PRIMARY KEY(vault_owner, vault_world)" +
+        ") ENGINE = INNODB;");
+
+    tables.put("h2", h2);
+
+    List<String> mysql = new ArrayList<>();
+
+    //MySQL Tables
+    mysql.add("CREATE TABLE IF NOT EXISTS " + VaultData.prefix + "_VAULTS (" +
+        "`vault_owner` VARCHAR(36) NOT NULL," +
+        "`vault_world` VARCHAR(70) NOT NULL," +
+        "`vault_created` BIGINT(60)," +
+        "`vault_size` BIGINT(60)," +
+        "`vault_tabs` BIGINT(60)," +
+        "`vault_items` TEXT NOT NULL," +
+        "`vault_members` TEXT NOT NULL," +
+        "PRIMARY KEY(vault_owner, vault_world)" +
+        ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
+
+    tables.put("mysql", mysql);
+
+    return tables;
   }
 
   @Override

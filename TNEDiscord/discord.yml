@@ -1,0 +1,10 @@
+#Discord Module configurations
+Discord:
+
+  #Whether or not to allow the use of !deco, which uses separate accounts for discord users to create a discord-based
+  #economy system.
+  Deco: true
+
+  #Whether or not to allow the use of !eco, which allows runnings TNE commands from discord. Note: This checks user permissions
+  #for each command.
+  Eco: true
