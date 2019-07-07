@@ -16,10 +16,6 @@ Mobs:
   #Whether or not to send a message stating how much money a player got for killing a mob
   Message: true
 
-  Messages:
-    Killed: "<white>You received $reward <white>for killing a <green>$mob<white>."
-    KilledVowel: "<white>You received $reward <white>for killing a <green>$mob<white>."
-
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.
   Multipliers:
@@ -847,29 +843,6 @@ Mobs:
     #The amount of money this mob should drop.
     #Negative will take money from player
     Reward: 10.00
-
-  VILLAGER:
-    
-    Enabled: true
-
-    #The currency to use for the money dropped by this entity
-    RewardCurrency: Default
-
-    #The amount of money this mob should drop.
-    #Negative will take money from player
-    Reward: 10.00
-
-    #Configurations relating to baby versions of this entity.
-    Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
-      Enabled: true
-
-      #The currency to use for the money dropped by this entity
-      RewardCurrency: Default
-
-      #The amount of money this mob should drop.
-      #Negative will take money from player
-      Reward: 10.00
 
   VILLAGER:
     

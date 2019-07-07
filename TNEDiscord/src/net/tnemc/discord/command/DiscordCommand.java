@@ -1,6 +1,10 @@
 package net.tnemc.discord.command;
 
+import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.dependencies.jda.core.EmbedBuilder;
+import github.scarsz.discordsrv.dependencies.jda.core.entities.Channel;
 import github.scarsz.discordsrv.dependencies.jda.core.entities.User;
+import net.tnemc.core.common.api.IDFinder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +26,16 @@ public abstract class DiscordCommand {
 
   public abstract String name();
 
-  public boolean execute(User user, UUID minecraft, boolean fake, String[] arguments) {
+  public abstract String role();
+
+  public abstract EmbedBuilder help();
+
+  public boolean execute(User user, UUID minecraft, boolean fake, Channel channel, String[] arguments) {
     return true;
+  }
+
+  public UUID getID(final String discordID, boolean fake) {
+    return (fake)? IDFinder.getID("discord-" + discordID) : DiscordSRV.getPlugin().getAccountLinkManager().getUuid(discordID);
   }
 
   public DiscordCommand findSub(String name) {

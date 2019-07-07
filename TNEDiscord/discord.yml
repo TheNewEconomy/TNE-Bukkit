@@ -1,6 +1,33 @@
 #Discord Module configurations
 Discord:
 
+  #Configurations relating to transactions.
+  Transactions:
+
+    #Whether or not to log transactions performed with TNE(/pay, /money give, /money take, etc) into a discord channel.
+    Log: true
+
+    #The channel ID of the channel to log transactions to.
+    Channel: "ChannelID"
+
+  #Configurations relating to required roles for each command.
+  Roles:
+
+    #The required role for balance.
+    Balance: "RoleID"
+
+    #The required role for give.
+    Give: "RoleID"
+
+    #The required role for pay.
+    Pay: "RoleID"
+
+    #The required role for set.
+    Set: "RoleID"
+
+    #The required role for take.
+    Take: "RoleID"
+
   #Whether or not to allow the use of !deco, which uses separate accounts for discord users to create a discord-based
   #economy system.
   Deco: true

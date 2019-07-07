@@ -8,6 +8,8 @@ import net.tnemc.core.economy.transaction.Transaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
+import net.tnemc.core.event.transaction.TNETransactionEvent;
+import org.bukkit.Bukkit;
 
 import java.util.Date;
 import java.util.UUID;
@@ -87,7 +89,10 @@ public class TNETransaction implements Transaction {
     if(recipientCharge != null) TNE.debug("Recipient Charge: " + recipientCharge.getAmount());
 
     TNE.debug("=====END TNETransaction.perform =====");
-    return this.type().perform(this);
+    final TransactionResult result = this.type().perform(this);
+    TNETransactionEvent event = new TNETransactionEvent(this, result, !Bukkit.isPrimaryThread());
+    Bukkit.getServer().getPluginManager().callEvent(event);
+    return result;
   }
 
   public TNEAccount getInitiator() {

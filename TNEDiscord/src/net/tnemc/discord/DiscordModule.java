@@ -4,6 +4,8 @@ import github.scarsz.discordsrv.DiscordSRV;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.discord.command.DiscordCommandManager;
+import org.bukkit.Bukkit;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -22,7 +24,10 @@ import net.tnemc.core.common.module.ModuleInfo;
 )
 public class DiscordModule extends Module {
 
+  public static final String transactionLog = "422433392303407115";
+
   private static DiscordModule instance;
+  private DiscordCommandManager commandManager;
   private DiscordListener listener = new DiscordListener();
 
   public DiscordModule() {
@@ -31,12 +36,19 @@ public class DiscordModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
+    Bukkit.getServer().getPluginManager().registerEvents(new TransactionListener(tne), tne);
 
     DiscordSRV.api.subscribe(listener);
+    //DiscordSRV.getPlugin().getJda().addEventListener(new DiscordMessageListener());
+    commandManager = new DiscordCommandManager();
     TNE.logger().info("Discord Module loaded!");
   }
 
   public static DiscordModule instance() {
     return instance;
+  }
+
+  public DiscordCommandManager getCommandManager() {
+    return commandManager;
   }
 }

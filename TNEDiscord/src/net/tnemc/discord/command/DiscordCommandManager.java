@@ -1,6 +1,7 @@
 package net.tnemc.discord.command;
 
-import net.tnemc.core.TNE;
+import net.tnemc.discord.command.deco.DiscordDecoCommand;
+import net.tnemc.discord.command.eco.DiscordEcoCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,13 +20,20 @@ public class DiscordCommandManager {
 
   private Map<String, DiscordCommand> commands = new HashMap<>();
 
-  public DiscordCommand find(String string, boolean fake) {
-    if(!fake && !TNE.instance().api().getBoolean("Discord.Eco")) return null;
-    if(fake && !TNE.instance().api().getBoolean("Discord.Deco")) return null;
+  public DiscordCommandManager() {
+    addCommand(new DiscordDecoCommand());
+    addCommand(new DiscordEcoCommand());
+  }
 
-    String[] arguments = string.split(" ");
+  public DiscordCommand find(String command, boolean fake) {
+    /*if(!fake && !TNE.instance().api().getBoolean("Discord.Eco")) return null;
+    if(fake && !TNE.instance().api().getBoolean("Discord.Deco")) return null;*/
 
-    return commands.get(arguments[0]);
+    return commands.get(command);
+  }
+
+  public void addCommand(DiscordCommand command) {
+    commands.put(command.name(), command);
   }
 
   public Map<String, DiscordCommand> getCommands() {
