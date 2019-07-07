@@ -24,15 +24,16 @@ public class DiscordEcoTakeCommand extends DiscordCommand {
 
   @Override
   public String role() {
-    return TNE.configurations().getString("Discord.Roles.Take");
+    return TNE.instance().api().getString("Discord.Roles.Take");
   }
 
   @Override
-  public EmbedBuilder help() {
+  public EmbedBuilder help(String command) {
     EmbedBuilder builder = new EmbedBuilder();
-    builder.setTitle("!eco take");
-    builder.setDescription("Usage: !eco take <discord id> <amount>");
-    builder.addField("Description", "Take an amount of funds from a Minecraft user's balance.", false);
+    builder.setTitle(command + "take");
+    builder.setDescription("Usage: " + command + " take <discord id> <amount> [world] [currency]");
+    final String id = (command.contains("deco")) ? "Discord" : "Minecraft";
+    builder.addField("Description", "Take an amount of funds from a user's " + id + " balance.", false);
     builder.setColor(new Color(190, 57, 0));
     return builder;
   }

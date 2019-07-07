@@ -33,11 +33,11 @@ public class DiscordListener {
       String[] split = message.split(" ");
 
       final String command = split[0];
-      if (command.equalsIgnoreCase("!eco") || command.equalsIgnoreCase("!deco")) {
+      if (command.equalsIgnoreCase("!eco") ) {
         final boolean fake = command.equalsIgnoreCase("!deco");
         final String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 
-        DiscordCommand commandInstance = DiscordModule.instance().getCommandManager().find(command, fake);
+        DiscordCommand commandInstance = DiscordModule.instance().getCommandManager().find("!eco", fake);
 
         if (commandInstance == null) {
           event.getMessage().getChannel().sendMessage("Invalid command.").queue();
@@ -60,7 +60,7 @@ public class DiscordListener {
             }
           }
         }
-        commandInstance.execute(event.getMessage().getAuthor(), id, fake, event.getChannel(), arguments);
+        commandInstance.execute(event.getMessage().getAuthor(), event.getGuild(), id, fake, event.getChannel(), command, arguments);
       }
     } catch(Exception e) {
       e.printStackTrace();

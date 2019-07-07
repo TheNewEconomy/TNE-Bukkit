@@ -16,6 +16,9 @@ Discord:
     #The required role for balance.
     Balance: "RoleID"
 
+    #The required role for balanceother.
+    BalanceOther: "RoleID"
+
     #The required role for give.
     Give: "RoleID"
 

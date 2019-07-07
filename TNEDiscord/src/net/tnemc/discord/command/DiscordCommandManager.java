@@ -1,6 +1,5 @@
 package net.tnemc.discord.command;
 
-import net.tnemc.discord.command.deco.DiscordDecoCommand;
 import net.tnemc.discord.command.eco.DiscordEcoCommand;
 
 import java.util.HashMap;
@@ -21,7 +20,6 @@ public class DiscordCommandManager {
   private Map<String, DiscordCommand> commands = new HashMap<>();
 
   public DiscordCommandManager() {
-    addCommand(new DiscordDecoCommand());
     addCommand(new DiscordEcoCommand());
   }
 

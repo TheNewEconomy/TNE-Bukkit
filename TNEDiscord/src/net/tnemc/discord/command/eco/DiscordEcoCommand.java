@@ -16,6 +16,16 @@ import java.awt.*;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class DiscordEcoCommand extends DiscordCommand {
+
+  public DiscordEcoCommand() {
+    addSub(new DiscordEcoBalanceCommand());
+    addSub(new DiscordEcoBalanceOtherCommand());
+    addSub(new DiscordEcoGiveCommand());
+    addSub(new DiscordEcoPayCommand());
+    addSub(new DiscordEcoSetCommand());
+    addSub(new DiscordEcoTakeCommand());
+  }
+
   @Override
   public String name() {
     return "!eco";
@@ -27,13 +37,14 @@ public class DiscordEcoCommand extends DiscordCommand {
   }
 
   @Override
-  public EmbedBuilder help() {
+  public EmbedBuilder help(String cmd) {
     EmbedBuilder builder = new EmbedBuilder();
-    builder.setTitle("!eco Help");
-    builder.setDescription("Base command for economy-related commands that correlate to the balance of your Minecraft ID.");
+    builder.setTitle(cmd);
+    final String id = (cmd.contains("deco"))? "Discord" : "Minecraft";
+    builder.setDescription("Base command for economy-related commands that correlate to the balance of your " + id + " ID.");
     StringBuilder subs = new StringBuilder();
     for(DiscordCommand command : subCommands.values()) {
-      subs.append(command.help().getDescriptionBuilder());
+      subs.append(command.help(cmd).getDescriptionBuilder());
       subs.append(System.lineSeparator());
     }
     builder.addField("Sub Commands", subs.toString(), false);

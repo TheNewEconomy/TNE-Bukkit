@@ -574,6 +574,11 @@ public class TNE extends TNELib {
     return false;
   }
 
+  public String sanitizeWorld(String world) {
+    if(hasWorldManager(world)) return getWorldManager(world).getBalanceWorld();
+    return world;
+  }
+
   public void addModUser(UUID id) {
     tnemodUsers.add(id);
   }
