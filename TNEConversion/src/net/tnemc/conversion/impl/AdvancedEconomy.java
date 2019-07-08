@@ -5,6 +5,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,7 +28,7 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class AdvancedEconomy extends Converter {
-  private File configFile = new File("plugins/AdvancedEconomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../AdvancedEconomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
@@ -35,8 +36,17 @@ public class AdvancedEconomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("host"),
+        config.getInt("port"), config.getString("database"),
+        config.getString("username"), config.getString("password"),
+        config.getString("table"), "accounts.db",
+        false, false, 60, false));
     final String table = config.getString("table");
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();

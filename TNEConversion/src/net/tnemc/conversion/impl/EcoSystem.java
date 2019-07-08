@@ -24,11 +24,16 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class EcoSystem extends Converter {
-  private File configFile = new File("plugins/EcoSystem/playerData.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../EcoSystem/playerData.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "EcoSystem";
+  }
+
+  @Override
+  public String type() {
+    return "yaml";
   }
 
   @Override

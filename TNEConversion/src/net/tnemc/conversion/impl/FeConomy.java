@@ -6,6 +6,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +27,7 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class FeConomy extends Converter {
-  private File configFile = new File("plugins/Fe/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Fe/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String table = config.getString("mysql.tables.accounts");
@@ -41,8 +42,17 @@ public class FeConomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return config.getString("type");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("host"),
+        config.getInt("port"), config.getString("database"),
+        config.getString("user"), config.getString("password"),
+        table, "database.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();
@@ -59,7 +69,11 @@ public class FeConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(conversionManager);
+    db = new SQLite(new TNEDataManager(type(), config.getString("host"),
+        config.getInt("port"), config.getString("database"),
+        config.getString("user"), config.getString("password"),
+        table, "database.db",
+        false, false, 60, false));
 
     try(Connection connection = sqliteDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

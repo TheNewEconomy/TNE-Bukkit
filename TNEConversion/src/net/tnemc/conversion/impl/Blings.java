@@ -24,11 +24,16 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class Blings extends Converter {
-  private File configFile = new File("plugins/Blings/players.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Blings/players.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "Blings";
+  }
+
+  @Override
+  public String type() {
+    return "yaml";
   }
 
   @Override

@@ -5,6 +5,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,14 +30,25 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MinetopiaEconomy extends Converter {
+  private File configFile = new File(TNE.instance().getDataFolder(), "../MinetopiaEconomy/config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "MinetopiaEconomy";
   }
 
   @Override
+  public String type() {
+    return (config.getString("storage").equalsIgnoreCase("file"))? "yaml" : "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("database.host"),
+        3306, config.getString("database.database"),
+        config.getString("database.username"), config.getString("database.password"),
+        "UserData", "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();
@@ -53,7 +65,7 @@ public class MinetopiaEconomy extends Converter {
 
   @Override
   public void yaml() throws InvalidDatabaseImport {
-    File configFile = new File("plugins/MinetopiaEconomy/data/userdata.yml");
+    File configFile = new File(TNE.instance().getDataFolder(), "../MinetopiaEconomy/data/userdata.yml");
     FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
     final ConfigurationSection accountSection = config.getConfigurationSection("players");
     if(accountSection != null) {

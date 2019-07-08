@@ -23,11 +23,16 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class XConomy extends Converter {
-  private File configFile = new File("plugins/XConomy/balances.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../XConomy/balances.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "XConomy";
+  }
+
+  @Override
+  public String type() {
+    return "yaml";
   }
 
   @Override

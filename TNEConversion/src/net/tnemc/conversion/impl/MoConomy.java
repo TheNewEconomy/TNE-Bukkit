@@ -5,8 +5,12 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,14 +28,25 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MoConomy extends Converter {
+  private File configFile = new File(TNE.instance().getDataFolder(), "../MoConomy/config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "MoConomy";
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("MySQL.Host"),
+        config.getInt("MySQL.Port"), config.getString("MySQL.Database"),
+        config.getString("MySQL.Username"), config.getString("MySQL.Password"),
+        "coins", "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

@@ -5,8 +5,12 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,18 +28,29 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class EconomyAPI extends Converter {
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Economy/config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "EconomyAPI";
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("mysql.host"),
+        config.getInt("mysql.port"), config.getString("mysql.database"),
+        config.getString("mysql.username"), config.getString("mysql.password"),
+        config.getString("mysql.table"), "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT UUID, BALANCE FROM economy_data;")) {
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT UUID, BALANCE FROM " + config.getString("mysql.table") + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {

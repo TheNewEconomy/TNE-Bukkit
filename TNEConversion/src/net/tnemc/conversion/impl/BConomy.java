@@ -6,6 +6,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,10 +28,10 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class BConomy extends Converter {
-  private File configFile = new File("plugins/BConomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../BConomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
-  private String table = config.getString("Database.Mysql.Table");
+  private String table = "accounts";
 
   @Override
   public String name() {
@@ -38,8 +39,17 @@ public class BConomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return (config.getBoolean("Database.Mysql.Enabled"))? "MySQL" : "sqlite";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
+        config.getInt("Database.Mysql.Port"), config.getString("Database.Mysql.Database"),
+        config.getString("Database.Mysql.User"), config.getString("Database.Mysql.Pass"),
+        config.getString("Database.Mysql.Table"), "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();
@@ -56,7 +66,11 @@ public class BConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(conversionManager);
+    db = new SQLite(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
+        config.getInt("Database.Mysql.Port"), config.getString("Database.Mysql.Database"),
+        config.getString("Database.Mysql.User"), config.getString("Database.Mysql.Pass"),
+        config.getString("Database.Mysql.Table"), "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = sqliteDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

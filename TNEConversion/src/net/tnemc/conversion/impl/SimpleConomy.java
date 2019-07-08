@@ -6,6 +6,7 @@ import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,7 +29,7 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class SimpleConomy extends Converter {
-  private File configFile = new File("plugins/SimpleConomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../SimpleConomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
@@ -36,9 +37,18 @@ public class SimpleConomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
-    String table = config.getString("mySqlSettings.Connection.Values.table");
+    final String table = config.getString("mySqlSettings.Connection.Values.table");
+    db = new MySQL(new TNEDataManager(type(), config.getString("mySqlSettings.Connection.Values.host"),
+        config.getInt("mySqlSettings.Connection.Values.port"), config.getString("mySqlSettings.Connection.Values.db"),
+        config.getString("mySqlSettings.Connection.Values.user"), config.getString("mySqlSettings.Connection.Values.password"),
+        table, "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

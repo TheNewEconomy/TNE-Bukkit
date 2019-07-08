@@ -27,7 +27,7 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class UltimateEconomy extends Converter {
-  private File configFile = new File("plugins/UltimateEconomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../UltimateEconomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
@@ -35,8 +35,13 @@ public class UltimateEconomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(null);
     final String table = config.getString("table");
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();

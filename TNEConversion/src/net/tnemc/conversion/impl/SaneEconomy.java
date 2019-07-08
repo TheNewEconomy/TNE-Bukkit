@@ -9,6 +9,7 @@ import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,7 +36,7 @@ import java.util.Map;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class SaneEconomy extends Converter {
-  private File configFile = new File("plugins/SaneEconomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../SaneEconomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   @Override
@@ -44,12 +45,23 @@ public class SaneEconomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return config.getString("backend.type");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("backend.host"),
+        config.getInt("backend.port"), config.getString("backend.database"),
+        config.getString("backend.username"), config.getString("backend.password"),
+        config.getString("backend.table_prefix"), "economy.db",
+        false, false, 60, false));
+
+    final String prefix = config.getString("backend.table_prefix");
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM saneeconomy_balances;")) {
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + prefix + "saneeconomy_balances;")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -62,7 +74,7 @@ public class SaneEconomy extends Converter {
 
   @Override
   public void json() throws InvalidDatabaseImport {
-    File file = new File("plugins/SaneEconomy" + config.getString("backend.file", "economy.json"));
+    File file = new File(TNE.instance().getDataFolder(), "../SaneEconomy" + config.getString("backend.file", "economy.json"));
     final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
     Map<String, Double> balances = new HashMap<>();
     try {

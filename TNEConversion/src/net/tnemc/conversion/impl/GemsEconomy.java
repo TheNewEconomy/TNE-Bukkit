@@ -6,6 +6,7 @@ import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,7 +31,7 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class GemsEconomy extends Converter {
-  private File configFile = new File("plugins/GemsEconomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../GemsEconomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
@@ -38,8 +39,17 @@ public class GemsEconomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return config.getString("storage");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("mysql.host"),
+        config.getInt("mysql.port"), config.getString("mysql.database"),
+        config.getString("mysql.username"), config.getString("mysql.password"),
+        config.getString("mysql.tableprefix"), "accounts.db",
+        false, false, 60, false));
     String table = config.getString("mysql.tableprefix") + "_balances";
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
@@ -60,7 +70,7 @@ public class GemsEconomy extends Converter {
 
   @Override
   public void yaml() throws InvalidDatabaseImport {
-    File dataFile = new File("plugins/GemsEconomy/data.yml");
+    File dataFile = new File(TNE.instance().getDataFolder(), "../GemsEconomy/data.yml");
     FileConfiguration dataConfiguration = YamlConfiguration.loadConfiguration(dataFile);
 
     final ConfigurationSection accountSection = dataConfiguration.getConfigurationSection("accounts");

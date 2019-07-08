@@ -1,12 +1,17 @@
 package net.tnemc.conversion.impl;
 
 import com.github.tnerevival.core.db.sql.MySQL;
+import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,14 +29,46 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class ECEconomy extends Converter {
+  private File configFile = new File(TNE.instance().getDataFolder(), "../EC_Economy/config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "ECEconomy";
   }
 
   @Override
+  public String type() {
+    return (config.getBoolean("Mysql.Enabled"))? "MySQL" : "sqlite";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("MySQL.hostname"),
+        config.getInt("MySQL.port"), config.getString("MySQL.database"),
+        config.getString("MySQL.username"), config.getString("MySQL.password"),
+        "Money", "accounts.db",
+        false, false, 60, false));
+
+    try(Connection connection = mysqlDB().getDataSource().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT Player, Money FROM Money;")) {
+
+      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      while(results.next()) {
+        ConversionModule.convertedAdd(results.getString("Player"),
+            TNE.instance().defaultWorld, currency.name(),
+            new BigDecimal(results.getDouble("Money")));
+      }
+    } catch(SQLException ignore) {}
+  }
+
+  @Override
+  public void sqlite() throws InvalidDatabaseImport {
+    db = new SQLite(new TNEDataManager(type(), config.getString("MySQL.hostname"),
+        config.getInt("MySQL.port"), config.getString("MySQL.database"),
+        config.getString("MySQL.username"), config.getString("MySQL.password"),
+        "Money", "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

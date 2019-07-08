@@ -28,7 +28,7 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class TownyEco extends Converter {
-  private File configFile = new File("plugins/TownyEco/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../TownyEco/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   private String prefix = config.getString("database.table_prefix");
@@ -38,8 +38,13 @@ public class TownyEco extends Converter {
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(null);
     String table = prefix + "balances";
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
@@ -60,7 +65,7 @@ public class TownyEco extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(conversionManager);
+    db = new SQLite(null);
     String table = prefix + "balances";
 
     try(Connection connection = sqliteDB().getDataSource().getConnection();

@@ -24,11 +24,16 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class Meep extends Converter {
-  private File configFile = new File("plugins/Meep/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Meep/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "Meep";
+  }
+
+  @Override
+  public String type() {
+    return "yaml";
   }
 
   @Override

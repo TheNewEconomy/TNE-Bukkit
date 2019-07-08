@@ -1,12 +1,16 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
+import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,14 +28,25 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class FeatherEconomy extends Converter {
+  private File configFile = new File(TNE.instance().getDataFolder(), "../FeatherEconomy/config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "FeatherEconomy";
   }
 
   @Override
-  public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+  public String type() {
+    return "sqlite";
+  }
+
+  @Override
+  public void sqlite() throws InvalidDatabaseImport {
+    db = new SQLite(new TNEDataManager(type(), "localhost",
+        3306, "",
+        "", "",
+        "Econ", "FeatherEconomy.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

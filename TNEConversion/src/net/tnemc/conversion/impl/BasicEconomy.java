@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class BasicEconomy extends Converter {
-  private File configFile = new File("plugins/BasicEconomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../BasicEconomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {

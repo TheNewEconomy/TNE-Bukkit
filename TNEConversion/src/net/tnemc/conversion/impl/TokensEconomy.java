@@ -24,11 +24,16 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class TokensEconomy extends Converter {
-  private File configFile = new File("plugins/TokensEconomy/players.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../TokensEconomy/players.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "TokensEconomy";
+  }
+
+  @Override
+  public String type() {
+    return "yaml";
   }
 
   @Override

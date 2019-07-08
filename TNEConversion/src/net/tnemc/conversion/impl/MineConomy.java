@@ -6,6 +6,7 @@ import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.data.TNEDataManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -25,6 +26,8 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MineConomy extends Converter {
+  private File configFile = new File(TNE.instance().getDataFolder(), "../Mineconomy/config.yml");
+  private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   private File accountsFile = new File(TNE.instance().getDataFolder(), "../MineConomy/accounts.yml");
   private File banksFile = new File(TNE.instance().getDataFolder(), "../MineConomy/banks.yml");
   private File currencyFile = new File(TNE.instance().getDataFolder(), "../MineConomy/currencies.yml");
@@ -38,8 +41,17 @@ public class MineConomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return config.getString("Database.Type");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("Database.URL"),
+        3306, config.getString("Database.Name"),
+        config.getString("Database.Username"), config.getString("Database.Password"),
+        "mineconomy_accounts", "accounts.db",
+        false, false, 60, false));
 
     String table = "mineconomy_accounts";
 

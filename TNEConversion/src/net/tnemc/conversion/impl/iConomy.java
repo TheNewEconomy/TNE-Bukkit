@@ -5,6 +5,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,9 +29,9 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class iConomy extends Converter {
-  private File configFile = new File("plugins/iConomy/Config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../iConomy/Config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-  private String table = config.getString("System.Database.Table");
+  private String table = config.getString("System.Database.Settings.Table");
 
   @Override
   public String name() {
@@ -38,8 +39,17 @@ public class iConomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return config.getString("System.Database.Type");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("System.Database.Settings.MySQL.Hostname"),
+        config.getInt("System.Database.Settings.MySQL.Port"), config.getString("System.Database.Settings.Name"),
+        config.getString("System.Database.Settings.MySQL.Username"), config.getString("System.Database.Settings.MySQL.Password"),
+        config.getString("System.Database.Settings.Table"), "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();

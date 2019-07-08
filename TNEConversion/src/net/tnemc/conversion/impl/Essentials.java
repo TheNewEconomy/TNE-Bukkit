@@ -27,6 +27,11 @@ public class Essentials extends Converter {
   }
 
   @Override
+  public String type() {
+    return "yaml";
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
     if(!dataDirectory.isDirectory() || dataDirectory.listFiles() == null || dataDirectory.listFiles().length == 0) return;
 

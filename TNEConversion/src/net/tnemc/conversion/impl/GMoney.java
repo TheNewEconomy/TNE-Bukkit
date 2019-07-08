@@ -5,6 +5,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,14 +30,19 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class GMoney extends Converter {
-  private File saveFile = new File("plugins/gMoney/money.yml");
+  private File saveFile = new File(TNE.instance().getDataFolder(), "../gMoney/money.yml");
   private FileConfiguration save = YamlConfiguration.loadConfiguration(saveFile);
 
-  private File configFile = new File("plugins/gMoney/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../gMoney/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "gMoney";
+  }
+
+  @Override
+  public String type() {
+    return (config.getBoolean("MySQL.Enable"))? "mysql" : "yaml";
   }
 
   @Override
@@ -54,7 +60,11 @@ public class GMoney extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    db = new MySQL(new TNEDataManager(type(), config.getString("MySQL.Ip"),
+        3306, config.getString("MySQL.DataBase"),
+        config.getString("MySQL.User"), config.getString("MySQL.Password"),
+        config.getString("MySQL.Table"), "accounts.db",
+        false, false, 60, false));
 
     final String table = config.getString("MySQL.Table");
 

@@ -5,6 +5,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,7 +28,7 @@ import java.sql.Statement;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class SimplisticEconomy extends Converter {
-  private File configFile = new File("plugins/SimplisticEconomy/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../SimplisticEconomy/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
@@ -35,12 +36,22 @@ public class SimplisticEconomy extends Converter {
   }
 
   @Override
+  public String type() {
+    return "mysql";
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(conversionManager);
+    final String table = config.getString("storage.table");
+    db = new MySQL(new TNEDataManager(type(), config.getString("storage.host"),
+        config.getInt("storage.port"), config.getString("storage.database"),
+        config.getString("storage.username"), config.getString("storage.password"),
+        table, "accounts.db",
+        false, false, 60, false));
 
     try(Connection connection = mysqlDB().getDataSource().getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT player_name, balance FROM " + config.getString("storage.table") + ";")) {
+        ResultSet results = mysqlDB().executeQuery(statement, "SELECT player_name, balance FROM " + table + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {

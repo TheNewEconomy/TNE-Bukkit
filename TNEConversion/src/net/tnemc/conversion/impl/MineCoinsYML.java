@@ -24,11 +24,16 @@ import java.util.Set;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MineCoinsYML extends Converter {
-  private File configFile = new File("plugins/MineCoinsYML/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../MineCoinsYML/config.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
   @Override
   public String name() {
     return "MineCoinsYML";
+  }
+
+  @Override
+  public String type() {
+    return "yaml";
   }
 
   @Override
