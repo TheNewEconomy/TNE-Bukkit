@@ -241,6 +241,31 @@ Core:
 
              #The minimum amount required to create a note for this currency.
              Minimum: 0.00
+
+             #Configurations relating to the note item.
+             Item:
+
+               #The material to use.
+               Material: PAPER
+
+               #The custom model data value used for this item. Defaults to 0.
+               #Optional.
+               ModelData: 0
+
+               #The base64 texture to use if the material is PLAYER_HEAD
+               Texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA0NzE5YjNiOTdkMTk1YTIwNTcxOGI2ZWUyMWY1Yzk1Y2FmYTE2N2U3YWJjYTg4YTIxMDNkNTJiMzdkNzIyIn19fQ=="
+
+               #All configurations relating to enchantment identification for the note item
+               #The format is - enchantment name
+               #Optional.
+               Enchantments:
+                 - example_enchant
+
+               #All configurations relating to item flags identification for the note item
+               #The format is - item flag
+               #Optional.
+               Flags:
+                 - example_flag
             
     #All configurations relating to worlds
     World:

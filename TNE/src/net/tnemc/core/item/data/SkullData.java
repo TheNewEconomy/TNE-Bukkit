@@ -1,6 +1,7 @@
 package net.tnemc.core.item.data;
 
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.item.JSONHelper;
 import net.tnemc.core.item.SerialItemData;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +30,11 @@ public class SkullData implements SerialItemData {
     if(meta instanceof SkullMeta) {
       valid = true;
       if(((SkullMeta) meta).hasOwner()) {
-        owner = IDFinder.getID(((SkullMeta) meta).getOwner());
+        if(MISCUtils.isOneEight()) {
+
+        } else {
+          owner = IDFinder.getID(((SkullMeta) meta).getOwner());
+        }
       }
     }
     return this;

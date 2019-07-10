@@ -26,6 +26,8 @@ public class TNECurrency implements Currency {
 
   private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
 
+  private CurrencyNote note = new CurrencyNote("PAPER");
+
   private boolean worldDefault = true;
   private String world = TNE.instance().defaultWorld;
   private boolean global = true;
@@ -161,6 +163,14 @@ public class TNECurrency implements Currency {
 
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
+  }
+
+  public CurrencyNote getNote() {
+    return note;
+  }
+
+  public void setNote(CurrencyNote note) {
+    this.note = note;
   }
 
   @Override

@@ -2,6 +2,7 @@ package net.tnemc.core.common;
 
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.CurrencyNote;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
@@ -15,7 +16,6 @@ import net.tnemc.core.event.currency.TNECurrencyTierLoadedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -131,11 +131,28 @@ public class CurrencyManager {
     final BigDecimal fee = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Fee", "0.00"));
     final BigDecimal minimum = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Minimum", "0.00"));
 
+
+    //Note Item Configurations
+    final String material = TNE.instance().mainConfigurations().getString(base + ".Note.Item.Material", "PAPER");
+
+    CurrencyNote currencyNote = new CurrencyNote(material);
+    currencyNote.setTexture(TNE.instance().mainConfigurations().getString(base + ".Note.Item.Texture", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA0NzE5YjNiOTdkMTk1YTIwNTcxOGI2ZWUyMWY1Yzk1Y2FmYTE2N2U3YWJjYTg4YTIxMDNkNTJiMzdkNzIyIn19fQ=="));
+    currencyNote.setCustomModelData(TNE.instance().mainConfigurations().getInt(base + ".Note.Item.ModelData", -1));
+
+    if(TNE.instance().mainConfigurations().contains(base + ".Note.Item.Enchantments")) {
+      currencyNote.setEnchantments(TNE.instance().mainConfigurations().getStringList(base + ".Note.Item.Enchantments"));
+    }
+
+    if(TNE.instance().mainConfigurations().contains(base + ".Note.Item.Flags")) {
+      currencyNote.setFlags(TNE.instance().mainConfigurations().getStringList(base + ".Note.Item.Flags"));
+    }
+    
     TNE.debug("Symbol: " + symbol);
     TNE.debug("Symbol: " + TNE.instance().mainConfigurations().getString(base + ".Symbol", "$"));
     TNE.debug("identifier: " + identifier);
 
     TNECurrency currency = new TNECurrency();
+    currency.setNote(currencyNote);
     currency.setIdentifier(identifier);
     currency.setMaxBalance(maxBalance);
     currency.setBalance(balance);
@@ -279,6 +296,23 @@ public class CurrencyManager {
         final Boolean notable = configuration.getBool(base + ".Note.Notable", false);
         final BigDecimal fee = new BigDecimal(configuration.getString(base + ".Note.Fee", "0.00"));
         final BigDecimal minimum = new BigDecimal(configuration.getString(base + ".Note.Minimum", "0.00"));
+        
+        //Note Item Configurations
+        final String material = configuration.getString(base + ".Note.Item.Material", "PAPER");
+
+        CurrencyNote currencyNote = new CurrencyNote(material);
+        currencyNote.setTexture(configuration.getString(base + ".Note.Item.Texture", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA0NzE5YjNiOTdkMTk1YTIwNTcxOGI2ZWUyMWY1Yzk1Y2FmYTE2N2U3YWJjYTg4YTIxMDNkNTJiMzdkNzIyIn19fQ=="));
+        currencyNote.setCustomModelData(configuration.getInt(base + ".Note.Item.ModelData", -1));
+
+        if(configuration.contains(base + ".Note.Item.Enchantments")) {
+          currencyNote.setEnchantments(configuration.getStringList(base + ".Note.Item.Enchantments"));
+        }
+
+        if(configuration.contains(base + ".Note.Item.Flags")) {
+          currencyNote.setFlags(configuration.getStringList(base + ".Note.Item.Flags"));
+        }
+        
+        
 
         //Currency Conversion Configurations.
         final Double rate = configuration.getDouble(base + ".Conversion.Rate", 1.0);
@@ -288,6 +322,7 @@ public class CurrencyManager {
         //TNE.debug(cur + ": " + symbol);
 
         TNECurrency currency = new TNECurrency();
+        currency.setNote(currencyNote);
         currency.setIdentifier(identifier);
         currency.setMaxBalance(maxBalance);
         currency.setBalance(balance);
@@ -555,7 +590,7 @@ public class CurrencyManager {
   }
 
   public ItemStack createNote(String currency, String world, BigDecimal amount) {
-    ItemStack stack = new ItemStack(Material.PAPER, 1);
+    ItemStack stack = TNE.manager().currencyManager().get(world, currency).getNote().build();
 
     ItemMeta meta = stack.getItemMeta();
 

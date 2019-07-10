@@ -138,8 +138,7 @@ public class PlayerListener implements Listener {
     if(!noEconomy && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
       ItemStack stack = event.getItem();
 
-      if(stack != null && stack.getType().equals(Material.PAPER) && stack.hasItemMeta()
-          && stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Currency Note")) {
+      if(stack != null && stack.hasItemMeta()) {
         if(stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Currency Note")) {
           Optional<TNETransaction> transaction = TNE.manager().currencyManager().claimNote(id, stack);
           if(transaction == null) TNE.debug("Transaction is null");
@@ -163,6 +162,7 @@ public class PlayerListener implements Listener {
             note.addVariable("$balance", TNE.instance().api().getHoldings(id.toString(),
                 trans.getWorld(), TNECurrency.fromReserve(trans.recipientCharge().getCurrency())).toPlainString()
             );
+            event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
             if(stack.getAmount() > 1) {
               stack.setAmount(stack.getAmount() - 1);

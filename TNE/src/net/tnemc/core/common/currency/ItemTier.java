@@ -2,6 +2,7 @@ package net.tnemc.core.common.currency;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.material.MaterialHelper;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -110,7 +111,7 @@ public class ItemTier {
     if(lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
     meta.setLore(itemLore);
 
-    if(customModel > -1) {
+    if(customModel > -1 && MISCUtils.isOneFourteen()) {
       meta.setCustomModelData(customModel);
     }
 

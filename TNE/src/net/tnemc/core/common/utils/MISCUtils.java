@@ -1,5 +1,7 @@
 package net.tnemc.core.common.utils;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.tnemc.core.TNE;
 import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.WorldVariant;
@@ -14,6 +16,8 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.MetadataValue;
 
 import javax.xml.bind.DatatypeConverter;
@@ -23,6 +27,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -154,6 +159,22 @@ public class MISCUtils {
     } catch(Exception e) {
       return false;
     }
+  }
+
+  public static ItemStack getCustomTextureHead(String value) {
+    ItemStack head = TNE.item().build("PLAYER_HEAD");
+    SkullMeta meta = (SkullMeta) head.getItemMeta();
+    GameProfile profile = new GameProfile(UUID.randomUUID(), "");
+    profile.getProperties().put("textures", new Property("textures", value));
+    Field profileField = null;
+    try {
+      profileField = meta.getClass().getDeclaredField("profile");
+      profileField.setAccessible(true);
+      profileField.set(meta, profile);
+    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ignore) {
+    }
+    head.setItemMeta(meta);
+    return head;
   }
   
   public static boolean isSingularPlayer(String argument) {
