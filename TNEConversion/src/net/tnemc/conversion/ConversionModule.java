@@ -157,6 +157,16 @@ public class ConversionModule extends Module {
     File conversionFile = new File(TNE.instance().getDataFolder(), "extracted.yml");
     FileConfiguration conversion = YamlConfiguration.loadConfiguration(conversionFile);
 
+    if(!conversion.contains("Accounts")) {
+      conversion.createSection("Accounts");
+      try {
+        conversion.save(conversionFile);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+
     BigDecimal starting = BigDecimal.ZERO;
 
     String newID = identifier.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%");

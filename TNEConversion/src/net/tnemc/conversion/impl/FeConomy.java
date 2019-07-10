@@ -1,7 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
-import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -48,15 +46,16 @@ public class FeConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(new TNEDataManager(type(), config.getString("host"),
+    initialize(new TNEDataManager(type(), config.getString("host"),
         config.getInt("port"), config.getString("database"),
         config.getString("user"), config.getString("password"),
         table, "database.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT * FROM " + table + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -65,19 +64,21 @@ public class FeConomy extends Converter {
             new BigDecimal(results.getDouble(balanceColumn)));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(new TNEDataManager(type(), config.getString("host"),
+    initialize(new TNEDataManager(type(), config.getString("host"),
         config.getInt("port"), config.getString("database"),
         config.getString("user"), config.getString("password"),
         table, "database.db",
         false, false, 60, false));
 
-    try(Connection connection = sqliteDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = sqliteDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT * FROM " + table + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -86,5 +87,6 @@ public class FeConomy extends Converter {
             new BigDecimal(results.getDouble(balanceColumn)));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 }

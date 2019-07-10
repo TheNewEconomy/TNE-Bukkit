@@ -3,6 +3,7 @@ package net.tnemc.core;
 import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
+import com.github.tnerevival.core.db.SQLDatabase;
 import com.hellyard.cuttlefish.grammar.yaml.YamlValue;
 import net.milkbowl.vault.economy.Economy;
 import net.tnemc.config.CommentedConfiguration;
@@ -465,6 +466,8 @@ public class TNE extends TNELib {
       Bukkit.getServer().getPluginManager().callEvent(event);
       value.getModule().unload(this);
     });
+    SQLDatabase.close();
+    SQLDatabase.getDataSource().close();
     getLogger().info("The New Economy has been disabled!");
     super.onDisable();
   }

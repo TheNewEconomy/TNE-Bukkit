@@ -1,6 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -44,15 +43,16 @@ public class MinetopiaEconomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(new TNEDataManager(type(), config.getString("database.host"),
+    initialize(new TNEDataManager(type(), config.getString("database.host"),
         3306, config.getString("database.database"),
         config.getString("database.username"), config.getString("database.password"),
         "UserData", "accounts.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT username, money FROM UserData;")) {
+        ResultSet results = statement.executeQuery("SELECT username, money FROM UserData;")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -61,6 +61,7 @@ public class MinetopiaEconomy extends Converter {
             new BigDecimal(results.getDouble("money")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 
   @Override

@@ -1,7 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
-import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -45,15 +43,16 @@ public class BConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
+    initialize(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
         config.getInt("Database.Mysql.Port"), config.getString("Database.Mysql.Database"),
         config.getString("Database.Mysql.User"), config.getString("Database.Mysql.Pass"),
         config.getString("Database.Mysql.Table"), "accounts.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT * FROM " + table + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -62,19 +61,21 @@ public class BConomy extends Converter {
             new BigDecimal(results.getDouble("balance")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
+    initialize(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
         config.getInt("Database.Mysql.Port"), config.getString("Database.Mysql.Database"),
         config.getString("Database.Mysql.User"), config.getString("Database.Mysql.Pass"),
         config.getString("Database.Mysql.Table"), "accounts.db",
         false, false, 60, false));
 
-    try(Connection connection = sqliteDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = sqliteDB().executeQuery(statement, "SELECT * FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT * FROM " + table + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -83,5 +84,6 @@ public class BConomy extends Converter {
             new BigDecimal(results.getDouble("balance")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 }

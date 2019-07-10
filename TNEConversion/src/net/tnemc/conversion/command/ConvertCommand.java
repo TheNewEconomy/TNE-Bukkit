@@ -52,7 +52,7 @@ public class ConvertCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      final String old = arguments[0];
+      final String old = arguments[0].toLowerCase();
       final Converter converter = ConversionModule.instance().getConverter(old);
       if(converter == null) {
         sender.sendMessage(ChatColor.RED + "Invalid <from> argument specified.");

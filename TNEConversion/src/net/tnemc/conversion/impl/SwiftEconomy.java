@@ -1,6 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -43,15 +42,16 @@ public class SwiftEconomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(new TNEDataManager(type(), config.getString("MySQL.Ip"),
+    initialize(new TNEDataManager(type(), config.getString("MySQL.Ip"),
         3306, config.getString("MySQL.Database"),
         config.getString("MySQL.Username"), config.getString("MySQL.Password"),
         "SWIFTeco", "accounts.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT uuid, money FROM SWIFTeco;")) {
+        ResultSet results = statement.executeQuery("SELECT uuid, money FROM SWIFTeco;")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -60,6 +60,7 @@ public class SwiftEconomy extends Converter {
             new BigDecimal(results.getDouble("money")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 
   @Override

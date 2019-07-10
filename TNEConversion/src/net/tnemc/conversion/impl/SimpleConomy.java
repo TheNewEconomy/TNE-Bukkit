@@ -1,6 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -44,15 +43,16 @@ public class SimpleConomy extends Converter {
   @Override
   public void mysql() throws InvalidDatabaseImport {
     final String table = config.getString("mySqlSettings.Connection.Values.table");
-    db = new MySQL(new TNEDataManager(type(), config.getString("mySqlSettings.Connection.Values.host"),
+    initialize(new TNEDataManager(type(), config.getString("mySqlSettings.Connection.Values.host"),
         config.getInt("mySqlSettings.Connection.Values.port"), config.getString("mySqlSettings.Connection.Values.db"),
         config.getString("mySqlSettings.Connection.Values.user"), config.getString("mySqlSettings.Connection.Values.password"),
         table, "accounts.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT UUID, COINS FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT UUID, COINS FROM " + table + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -61,5 +61,6 @@ public class SimpleConomy extends Converter {
             new BigDecimal(results.getDouble("COINS")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 }

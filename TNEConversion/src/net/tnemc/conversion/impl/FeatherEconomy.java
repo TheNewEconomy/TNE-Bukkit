@@ -1,6 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -42,15 +41,16 @@ public class FeatherEconomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(new TNEDataManager(type(), "localhost",
+    initialize(new TNEDataManager(type(), "localhost",
         3306, "",
         "", "",
         "Econ", "FeatherEconomy.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM Econ;")) {
+        ResultSet results = statement.executeQuery("SELECT * FROM Econ;")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -59,5 +59,6 @@ public class FeatherEconomy extends Converter {
             new BigDecimal(results.getDouble("balance")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 }

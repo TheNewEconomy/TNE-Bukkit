@@ -1,6 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -42,15 +41,16 @@ public class EconomyAPI extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(new TNEDataManager(type(), config.getString("mysql.host"),
+    initialize(new TNEDataManager(type(), config.getString("mysql.host"),
         config.getInt("mysql.port"), config.getString("mysql.database"),
         config.getString("mysql.username"), config.getString("mysql.password"),
         config.getString("mysql.table"), "accounts.db",
         false, false, 60, false));
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT UUID, BALANCE FROM " + config.getString("mysql.table") + ";")) {
+        ResultSet results = statement.executeQuery("SELECT UUID, BALANCE FROM " + config.getString("mysql.table") + ";")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -59,5 +59,6 @@ public class EconomyAPI extends Converter {
             new BigDecimal(results.getDouble("BALANCE")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 }

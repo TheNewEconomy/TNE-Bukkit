@@ -1,6 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,7 +50,7 @@ public class SaneEconomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(new TNEDataManager(type(), config.getString("backend.host"),
+    initialize(new TNEDataManager(type(), config.getString("backend.host"),
         config.getInt("backend.port"), config.getString("backend.database"),
         config.getString("backend.username"), config.getString("backend.password"),
         config.getString("backend.table_prefix"), "economy.db",
@@ -59,9 +58,10 @@ public class SaneEconomy extends Converter {
 
     final String prefix = config.getString("backend.table_prefix");
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT * FROM " + prefix + "saneeconomy_balances;")) {
+        ResultSet results = statement.executeQuery("SELECT * FROM " + prefix + "saneeconomy_balances;")) {
 
       final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
@@ -70,6 +70,7 @@ public class SaneEconomy extends Converter {
             new BigDecimal(results.getDouble("balance")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 
   @Override

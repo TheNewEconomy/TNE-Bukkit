@@ -183,24 +183,27 @@ public class MISCUtils {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
     YamlConfiguration original = YamlConfiguration.loadConfiguration(file);
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-    Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
 
-    accounts.forEach((username) -> {
-      String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
-      if(reformattedUsername.equalsIgnoreCase("server account")) reformattedUsername = TNE.instance().consoleName;
-      UUID id = IDFinder.getID(reformattedUsername);
-      TNEAccount account = new TNEAccount(id, reformattedUsername);
-      Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);
-      worlds.forEach((world) -> {
-        Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
-        currencies.forEach((currency) -> {
-          String finalCurrency = (currency.equalsIgnoreCase("default"))? TNE.manager().currencyManager().get(world).name() : currency;
-          String balance = original.getString("Accounts." + username + ".Balances." + world + "." + currency);
-          account.setHoldings(world, finalCurrency, new BigDecimal(balance));
+    if(configuration.contains("Accounts")) {
+      Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
+
+      accounts.forEach((username) -> {
+        String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
+        if (reformattedUsername.equalsIgnoreCase("server account")) reformattedUsername = TNE.instance().consoleName;
+        UUID id = IDFinder.getID(reformattedUsername);
+        TNEAccount account = new TNEAccount(id, reformattedUsername);
+        Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);
+        worlds.forEach((world) -> {
+          Set<String> currencies = configuration.getConfigurationSection("Accounts." + username + ".Balances." + world).getKeys(false);
+          currencies.forEach((currency) -> {
+            String finalCurrency = (currency.equalsIgnoreCase("default")) ? TNE.manager().currencyManager().get(world).name() : currency;
+            String balance = original.getString("Accounts." + username + ".Balances." + world + "." + currency);
+            account.setHoldings(world, finalCurrency, new BigDecimal(balance));
+          });
         });
+        TNE.manager().addAccount(account);
       });
-      TNE.manager().addAccount(account);
-    });
+    }
 
     sender.sendMessage(ChatColor.WHITE + "Restored accounts from extracted.yml.");
   }

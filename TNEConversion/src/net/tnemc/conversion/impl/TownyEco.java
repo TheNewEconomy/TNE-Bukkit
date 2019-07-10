@@ -1,7 +1,5 @@
 package net.tnemc.conversion.impl;
 
-import com.github.tnerevival.core.db.sql.MySQL;
-import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
@@ -44,12 +42,13 @@ public class TownyEco extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    db = new MySQL(null);
+    initialize(null);
     String table = prefix + "balances";
 
-    try(Connection connection = mysqlDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = mysqlDB().executeQuery(statement, "SELECT uuid, world, currency, balance FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT uuid, world, currency, balance FROM " + table + ";")) {
       while(results.next()) {
         final String world = results.getString("world");
         Currency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
@@ -61,16 +60,18 @@ public class TownyEco extends Converter {
             new BigDecimal(results.getDouble("balance")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    db = new SQLite(null);
+    initialize(null);
     String table = prefix + "balances";
 
-    try(Connection connection = sqliteDB().getDataSource().getConnection();
+    open();
+    try(Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet results = sqliteDB().executeQuery(statement, "SELECT uuid, world, currency, balance FROM " + table + ";")) {
+        ResultSet results = statement.executeQuery("SELECT uuid, world, currency, balance FROM " + table + ";")) {
       while(results.next()) {
         final String world = results.getString("world");
         Currency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
@@ -82,5 +83,6 @@ public class TownyEco extends Converter {
             new BigDecimal(results.getDouble("balance")));
       }
     } catch(SQLException ignore) {}
+    close();
   }
 }

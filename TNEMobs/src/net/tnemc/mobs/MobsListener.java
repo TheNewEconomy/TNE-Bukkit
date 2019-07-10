@@ -1,24 +1,12 @@
 package net.tnemc.mobs;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.ItemCalculations;
-import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.module.ModuleListener;
-import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.common.utils.MaterialUtils;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
-import org.bukkit.Material;
 import org.bukkit.entity.Ageable;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
@@ -30,9 +18,7 @@ import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -53,9 +39,50 @@ public class MobsListener implements ModuleListener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onEntityDeath(final EntityDeathEvent event) {
-    LivingEntity entity = event.getEntity();
+    final LivingEntity entity = event.getEntity();
+    final Player killer = entity.getKiller();
 
-    if (entity.getKiller() != null) {
+    if(killer != null) {
+      final String world = WorldFinder.getWorld(killer, WorldVariant.CONFIGURATION);
+      final UUID id = IDFinder.getID(killer);
+      final String type = entity.getType().name();
+      final String customName = entity.getCustomName();
+      final String name = entity.getName();
+
+      String mob = getMob(entity, entity.getCustomName(), world, id);
+
+      System.out.println("type: " + type);
+      System.out.println("customName: " + customName);
+      System.out.println("name: " + name);
+      System.out.println("mob: " + mob);
+      System.out.println("config: " + "Mobs.Messages.Custom." + type);
+
+
+
+      System.out.println("has config name? " + TNE.instance().api().hasConfiguration("Mobs.Messages.Custom." + type));
+      System.out.println("config name: " + TNE.instance().api().getString("Mobs.Messages.Custom." + type));
+
+      if (MobsModule.instance().mobAge(world, id.toString())) {
+        if (entity instanceof Ageable) {
+          Ageable e = (Ageable) entity;
+          if (!e.isAdult()) {
+            mob = mob + ".Baby";
+          }
+        } else if (entity instanceof Zombie) {
+          Zombie e = (Zombie) entity;
+          if (e.isBaby()) {
+            mob = mob + ".Baby";
+          }
+        }
+      }
+
+      TNEAccount account = TNE.manager().getAccount(id);
+
+
+
+    }
+
+    /*if (entity.getKiller() != null) {
       Player killer = entity.getKiller();
 
       //Permissions Check
@@ -171,7 +198,7 @@ public class MobsListener implements ModuleListener {
           }
 
           //TNE.debug("Mob Name1: " + mob);
-          final ItemStack tool =  event.getEntity().getKiller().getInventory().getItemInMainHand();
+          final ItemStack tool = event.getEntity().getKiller().getInventory().getItemInMainHand();
           final String material = (tool != null && tool.getType() != null && !tool.getType().equals(Material.AIR))? tool.getType().name() : "FIST";
 
           if (!MobsModule.instance().fileConfiguration.contains("Mobs." + mob)) mob = "Default";
@@ -218,6 +245,82 @@ public class MobsListener implements ModuleListener {
           }
         }
       }
+    }*/
+  }
+
+  private String getMob(LivingEntity entity, String mob, String world, UUID killer) {
+    switch(entity.getType()) {
+      case RABBIT:
+        Rabbit rab = (Rabbit) entity;
+        if (rab.getType().equals(Rabbit.Type.THE_KILLER_BUNNY)) {
+          return "RABBIT_KILLER";
+        }
+        break;
+      case PLAYER:
+        Player p = (Player)entity;
+        if (MobsModule.instance().playerEnabled(p.getUniqueId(), world, killer.toString())) {
+          return p.getUniqueId().toString();
+        }
+        break;
+      case ZOMBIE_VILLAGER:
+        final String career = ((ZombieVillager)entity).getVillagerProfession().name().toUpperCase();
+        if(MobsModule.instance().fileConfiguration.contains("Mobs." + mob + "_" + career)) {
+          return mob + "_" + career;
+        }
+        break;
+      case VILLAGER:
+        final String villageCareer = ((Villager)entity).getProfession().name().toUpperCase();
+        if(MobsModule.instance().fileConfiguration.contains("Mobs." + mob + "_" + villageCareer)) {
+          return mob + "_" + villageCareer;
+        }
+        break;
+
+      case SLIME:
+        String tier = "Small";
+
+        switch (((Slime) entity).getSize()) {
+          case 1:
+            break;
+          case 2:
+            tier = "Medium";
+            break;
+          case 4:
+            tier = "Large";
+            break;
+          default:
+            tier = ((Slime) entity).getSize() + "";
+            break;
+        }
+        if (MobsModule.instance().mobEnabled(mob + "." + tier, world, killer.toString())) {
+          return mob + "." + tier;
+        }
+        break;
+
+      case MAGMA_CUBE:
+        String magmaTier = "Small";
+
+        switch (((MagmaCube) entity).getSize()) {
+          case 1:
+            break;
+          case 2:
+            magmaTier = "Medium";
+            break;
+          case 4:
+            magmaTier = "Large";
+            break;
+          default:
+            magmaTier = ((MagmaCube) entity).getSize() + "";
+            break;
+        }
+        if (MobsModule.instance().mobEnabled(mob + "." + magmaTier, world, killer.toString())) {
+          return mob + "." + magmaTier;
+        }
+        break;
+
+      default:
+        if(entity.getType().isAlive()) return entity.getType().getName();
+        break;
     }
+    return mob;
   }
 }

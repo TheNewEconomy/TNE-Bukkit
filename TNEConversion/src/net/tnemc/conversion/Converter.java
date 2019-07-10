@@ -1,12 +1,18 @@
 package net.tnemc.conversion;
 
-import com.github.tnerevival.core.db.DatabaseConnector;
-import com.github.tnerevival.core.db.sql.H2;
-import com.github.tnerevival.core.db.sql.MySQL;
-import com.github.tnerevival.core.db.sql.SQLite;
+import com.github.tnerevival.core.DataManager;
+import com.github.tnerevival.core.db.DataProvider;
 import net.tnemc.core.TNE;
+import org.javalite.activejdbc.DB;
 
+import javax.sql.DataSource;
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -18,19 +24,103 @@ import java.util.logging.Level;
  * Created by creatorfromhell on 06/30/2017.
  */
 public abstract class Converter {
-  protected DatabaseConnector db;
+
+  protected DB db;
+  private DataManager manager;
 
 
-  public MySQL mysqlDB() {
-    return (MySQL)db;
+  public void initialize(DataManager manager) {
+    db = new DB("Conversion");
+
+    this.manager = manager;
+
+    DataProvider provider = TNE.saveManager().getDataManager().getProviders().get(manager.getFormat());
+
+    try {
+      db.open(provider.connector().getDriver(), provider.connector().getURL(manager.getFile(), manager.getHost(), manager.getPort(), manager.getDatabase()) + ((manager.getFormat().equalsIgnoreCase("mysql"))? "?useSSL=false" : ""), manager.getUser(), manager.getPassword());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+  public Map<String, Object> hikariProperties(String format) {
+    Map<String, Object> properties = new HashMap<>();
+
+    if(format.equalsIgnoreCase("mysql")) {
+      properties.put("autoReconnect", true);
+      properties.put("cachePrepStmts", true);
+      properties.put("prepStmtCacheSize", 250);
+      properties.put("prepStmtCacheSqlLimit", 2048);
+      properties.put("rewriteBatchedStatements", true);
+      properties.put("useServerPrepStmts", true);
+      properties.put("cacheResultSetMetadata", true);
+      properties.put("cacheServerConfiguration", true);
+      properties.put("useSSL", false);
+    }
+
+    return properties;
   }
 
-  public SQLite sqliteDB() {
-    return (SQLite)db;
+  public void open() {
+    if(db.hasConnection()) return;
+    DataProvider provider = TNE.saveManager().getDataManager().getProviders().get(manager.getFormat());
+
+    try {
+      db.open(provider.connector().getDriver(), provider.connector().getURL(manager.getFile(), manager.getHost(), manager.getPort(), manager.getDatabase()), manager.getUser(), manager.getPassword());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
-  public H2 h2DB() {
-    return (H2)db;
+  public void close() {
+    if(!db.hasConnection()) return;
+    db.close();
+  }
+
+  public void open(DataSource datasource) {
+    if(db.hasConnection()) return;
+    db.open(datasource);
+  }
+
+  public ResultSet executeQuery(Statement statement, String query) {
+    try(ResultSet results = db.getConnection().createStatement().executeQuery(query)) {
+      return results;
+    } catch(SQLException ignore) {}
+
+    return null;
+  }
+
+  public ResultSet executePreparedQuery(PreparedStatement statement, Object[] variables) {
+    try {
+      for(int i = 0; i < variables.length; i++) {
+        statement.setObject((i + 1), variables[i]);
+      }
+      return statement.executeQuery();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public void executeUpdate(String query) {
+    open();
+    try {
+      db.getConnection().createStatement().executeUpdate(query);
+    } catch (SQLException ignore) {}
+    close();
+  }
+
+  public void executePreparedUpdate(String query, Object[] variables) {
+    open();
+    try(PreparedStatement statement = db.getConnection().prepareStatement(query)) {
+
+      for(int i = 0; i < variables.length; i++) {
+        statement.setObject((i + 1), variables[i]);
+      }
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    close();
   }
 
   public abstract String name();
@@ -46,6 +136,7 @@ public abstract class Converter {
     try {
       switch (type().toLowerCase()) {
         case "mysql":
+          System.out.println("MySQL Conversion for : " + name());
           mysql();
           break;
         case "sqlite":
