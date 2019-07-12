@@ -12,7 +12,6 @@ import net.tnemc.signs.signs.TNESign;
 import net.tnemc.signs.signs.impl.ItemSign;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -74,12 +73,7 @@ public class PlayerListener implements Listener {
     } else {
       if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getPlayer().isSneaking()) {
         if(event.getClickedBlock().getType().equals(Material.CHEST)) {
-          if(SignsModule.manager().getSelectionManager().isSelecting(id, "chest")) {
-
-            final Location location = event.getClickedBlock().getLocation();
-            final Location signLocation = SignsModule.manager().getSelectionManager().getSelectionInstance(id).getSign();
-            SignsModule.manager().getSelectionManager().doSelection("chest", id, signLocation, location);
-          } else {
+          if(!SignsModule.manager().getSelectionManager().isSelecting(id, "chest")) {
 
             if (event.getClickedBlock().getState() instanceof Chest) {
               Sign sign = new ChestHelper((Chest) event.getClickedBlock().getState()).getSign();

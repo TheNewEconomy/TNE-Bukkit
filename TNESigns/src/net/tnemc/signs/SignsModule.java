@@ -10,6 +10,7 @@ import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import net.tnemc.signs.command.NoteCommand;
 import net.tnemc.signs.listeners.BlockListener;
+import net.tnemc.signs.listeners.ChestSelectionListener;
 import net.tnemc.signs.listeners.PlayerListener;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.item.menu.AmountSelectionMenu;
@@ -61,6 +62,7 @@ public class SignsModule extends Module {
     commands.add(new NoteCommand(tne));
     Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
     Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
+    Bukkit.getServer().getPluginManager().registerEvents(new ChestSelectionListener(tne), tne);
 
 
 
