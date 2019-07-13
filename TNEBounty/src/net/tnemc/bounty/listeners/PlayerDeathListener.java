@@ -55,6 +55,11 @@ public class PlayerDeathListener implements Listener {
     Player killer = player.getKiller();
     if(killer != null && BountyData.hasBounty(id)) {
       final UUID killerID = IDFinder.getID(killer);
+
+      if(killerID.toString().equalsIgnoreCase(id.toString())) {
+        return;
+      }
+
       Bounty bounty = BountyData.getBounty(id);
       final String world = WorldFinder.getWorld(killer, WorldVariant.BALANCE);
 

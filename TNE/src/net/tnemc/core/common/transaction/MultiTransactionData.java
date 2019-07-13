@@ -2,8 +2,11 @@ package net.tnemc.core.common.transaction;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,6 +67,26 @@ public class MultiTransactionData {
     if(account == null) {
       return;
     }
+
+    if(handler.getTransactionType().equalsIgnoreCase("pay")) {
+      final int radius = TNE.instance().mainConfigurations().getInt("Core.Commands.Pay.Radius", 0);
+
+      if (!TNE.instance().mainConfigurations().getBool("Core.Commands.Pay.Offline", true) || radius > 0) {
+        if (!MISCUtils.isOnline(account.identifier())) {
+          messages.put(handler.getInitiator().identifier(), ChatColor.RED + "Some players were offline, and you're not able to send them money while they are offline in this world.");
+          return;
+        }
+
+        if (radius > 0 && IDFinder.getPlayer(account.identifier().toString()).getLocation().distance(IDFinder.getPlayer(handler.getInitiator().identifier().toString()).getLocation()) > radius) {
+          messages.put(handler.getInitiator().identifier(), ChatColor.RED + "Some players were out of the " + radius + " block distance set for this world., and did not get paid.");
+          return;
+        }
+      }
+    }
+
+
+
+
     TNETransaction transaction = new TNETransaction(handler.getInitiator(), account,
                                                     handler.getWorld(),
                                                     TNE.transactionManager().getType(handler.getTransactionType()));

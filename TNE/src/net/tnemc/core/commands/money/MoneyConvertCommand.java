@@ -69,9 +69,17 @@ public class MoneyConvertCommand extends TNECommand {
         final TNEAccount account = TNE.manager().getAccount(id);
         final String worldTo = (arguments[1].contains(":"))? arguments[1].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         final String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
+
+        if(!TNE.manager().currencyManager().contains(worldTo, currencyTo)) {
+          help(sender);
+          return;
+        }
+
         final TNECurrency to = TNE.manager().currencyManager().get(worldTo, currencyTo);
         String worldFrom = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         TNECurrency from = MISCUtils.findCurrency(worldFrom, player.getLocation());
+
+
 
         if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.convert." + from.name())) {
           Message unable = new Message("Messages.Command.Unable");
@@ -93,6 +101,12 @@ public class MoneyConvertCommand extends TNECommand {
         if(arguments.length >= 3) {
           worldFrom = (arguments[2].contains(":"))? arguments[2].split(":")[1] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
           String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
+
+          if(!TNE.manager().currencyManager().contains(worldTo, currencyTo)) {
+            help(sender);
+            return;
+          }
+
           from = TNE.manager().currencyManager().get(worldFrom, currencyFrom);
         }
 

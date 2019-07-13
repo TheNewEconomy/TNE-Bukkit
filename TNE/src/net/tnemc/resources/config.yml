@@ -85,6 +85,15 @@ Core:
 
         #Whether or not players should be able to use /baltop instead of /money top
         TopShort: true
+
+        #Extra configurations regarding the pay command
+        Pay:
+
+          #Can players use /pay on offline players?
+          Offline: true
+
+          #How close to another player someone must be, in blocks, in order to use /pay on them. Set to 0 to disable.
+          Radius: 0
     
     #All configurations relating to update checking
     Update:
