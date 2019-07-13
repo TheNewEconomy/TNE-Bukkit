@@ -198,7 +198,7 @@ public class TNE extends TNELib {
 
     setUuidManager(new TNEUUIDManager());
 
-    updater = new UpdateChecker("https://creatorfromhell.com/tne/tnebuild.txt", getDescription().getVersion());
+    updater = new UpdateChecker("https://cfh.dev/tne/tnebuild.txt", getDescription().getVersion());
 
     //Run the ModuleLoader
     loader = new ModuleLoader();
