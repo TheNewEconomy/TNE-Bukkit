@@ -1,5 +1,6 @@
 package net.tnemc.mobs;
 
+import com.sun.istack.internal.NotNull;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
@@ -7,7 +8,13 @@ import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.core.common.utils.MISCUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.UUID;
 
@@ -52,30 +59,51 @@ public class MobsModule extends Module {
     super.initializeConfigurations();
     final String mobsFile = (MISCUtils.isOneThirteen())? "mobs.yml" : "mobs-1.12.yml";
     mobs = new File(TNE.instance().getDataFolder(), "mobs.yml");
-    fileConfiguration = TNE.instance().initializeConfiguration(mobs, mobsFile);
-    configuration = new MobConfiguration();
-    configurations.put(configuration, "Mobs");
-
-    if(!fileConfiguration.contains("Mobs.Messages")) {
-      fileConfiguration.set("Mobs.Messages.Killed", "<white>You received $reward <white>for killing a <green>$mob<white>.");
-      fileConfiguration.set("Mobs.Messages.KilledVowel", "<white>You received $reward <white>for killing an <green>$mob<white>.");
-      fileConfiguration.save(mobs);
-    }
+    fileConfiguration = initializeConfiguration(mobs, mobsFile);
   }
 
   @Override
   public void loadConfigurations() {
     super.loadConfigurations();
+    configuration = new MobConfiguration();
+    configurations.put(configuration, "Mobs");
   }
 
   @Override
   public void saveConfigurations() {
-    super.saveConfigurations();
     fileConfiguration.save(mobs);
   }
 
   static MobsModule instance() {
     return instance;
+  }
+
+  public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
+    TNE.debug("Started copying " + file.getName());
+    CommentedConfiguration commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(getResource(defaultFile), StandardCharsets.UTF_8), false);
+    TNE.debug("Initializing commented configuration");
+    if(commentedConfiguration != null) {
+      TNE.debug("Loading commented configuration");
+      commentedConfiguration.load();
+    }
+    TNE.debug("Finished copying " + file.getName());
+    return commentedConfiguration;
+  }
+
+
+  public InputStream getResource(@NotNull String filename) {
+    try {
+      URL url = getClass().getClassLoader().getResource(filename);
+      if (url == null) {
+        return null;
+      } else {
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        return connection.getInputStream();
+      }
+    } catch (IOException var4) {
+      return null;
+    }
   }
 
   /**
@@ -118,39 +146,45 @@ public class MobsModule extends Module {
   }
 
   Boolean mobEnabled(String mob, String world, String player) {
-    //System.out.println("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
+    //TNE.debug("ConfigurationManager.mobEnabled(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled", world, player) + "");
-    //System.out.println("Config null?: " + (fileConfiguration == null));
-    //System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
-    //System.out.println("Node null?: " + (fileConfiguration.getNode("Mobs") == null));
-    //System.out.println("Mob: " + mob);
+    //TNE.debug("Config null?: " + (TNE.instance().api() == null));
+    //TNE.debug("Node null?: " + (TNE.instance().api().getNode("Mobs") == null));
+    //TNE.debug("Node null?: " + (TNE.instance().api().getNode("Mobs") == null));
+    //TNE.debug("Mob: " + mob);
     if(TNE.instance().api().getConfiguration("Mobs." + mob + ".Enabled") == null) {
       return false;
     }
-    //System.out.println(fileConfiguration.getBool("Mobs." + mob + ".Enabled"));
-    return fileConfiguration.getBool("Mobs." + mob + ".Enabled");
+    //TNE.debug(TNE.instance().api().getBool("Mobs." + mob + ".Enabled"));
+    return TNE.instance().api().getBoolean("Mobs." + mob + ".Enabled");
   }
 
   BigDecimal mobReward(String mob, String world, String player) {
-    //System.out.println("Mob: " + mob);
+    TNE.debug("Mob: " + mob);
     TNE.debug("ConfigurationManager.mobReward(" + mob + ", " + world + "," + player + ")");
     TNE.debug(TNE.instance().api().getConfiguration("Mobs." + mob + ".Reward", world, player) + "");
-    if(fileConfiguration.getNode("Mobs." + mob + ".Reward") == null) {
+    if(!TNE.instance().api().hasConfiguration("Mobs." + mob + ".Reward")) {
       return BigDecimal.ZERO;
     }
 
-    if(fileConfiguration.contains("Mobs." + mob + ".Chance.Min") ||
-        fileConfiguration.contains("Mobs." + mob + ".Chance.Max")) {
-      //System.out.println("Chance found for " + mob);
-      BigDecimal min = fileConfiguration.getBigDecimal("Mobs." + mob + ".Chance.Min", BigDecimal.ZERO);
-      BigDecimal max = fileConfiguration.getBigDecimal("Mobs." + mob + ".Chance.Max", BigDecimal.TEN);
+    if(TNE.instance().api().hasConfiguration("Mobs." + mob + ".Chance.Min") ||
+        TNE.instance().api().hasConfiguration("Mobs." + mob + ".Chance.Max")) {
+      TNE.debug("Chance found for " + mob);
+      BigDecimal min = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Min");
+      if(min == null) min = BigDecimal.ZERO;
+      BigDecimal max = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Chance.Max");
+      if(max == null) max = BigDecimal.TEN;
       return generateRandomBigDecimal(min, max);
     }
-    return fileConfiguration.getBigDecimal("Mobs." + mob + ".Reward", BigDecimal.ZERO);
+
+    BigDecimal reward = TNE.instance().api().getBigDecimal("Mobs." + mob + ".Reward");
+    if(reward == null) reward = BigDecimal.ZERO;
+    TNE.debug("Reward: " + reward.toPlainString());
+    return reward;
   }
 
   String mobCurrency(String mob, String world, String player) {
-    String currency = fileConfiguration.getString("Mobs." + mob + ".RewardCurrency");
+    String currency = TNE.instance().api().getString("Mobs." + mob + ".RewardCurrency");
     return (currency != null)? currency : TNE.instance().api().getDefault(world).name();
   }
   

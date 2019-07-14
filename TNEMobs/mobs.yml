@@ -16,6 +16,9 @@ Mobs:
   #Whether or not to send a message stating how much money a player got for killing a mob
   Message: true
 
+  #Whether a message should be sent if the reward is set to zero.
+  MessageZero: false
+
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.
   Multipliers:
@@ -99,7 +102,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -133,7 +135,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -178,7 +179,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -201,7 +201,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -312,7 +311,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -335,7 +333,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -380,7 +377,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -435,7 +431,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -458,7 +453,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -481,7 +475,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -526,7 +519,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -549,7 +541,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -589,7 +580,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -623,7 +613,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -657,7 +646,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -713,7 +701,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -823,7 +810,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -857,7 +843,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -880,7 +865,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -903,7 +887,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -926,7 +909,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -949,7 +931,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -972,7 +953,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -995,7 +975,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1018,7 +997,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1041,7 +1019,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1064,7 +1041,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1087,7 +1063,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1110,7 +1085,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1133,7 +1107,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1156,7 +1129,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1223,7 +1195,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1246,7 +1217,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1269,7 +1239,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1292,7 +1261,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1315,7 +1283,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1338,7 +1305,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1361,7 +1327,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1384,7 +1349,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1407,7 +1371,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1430,7 +1393,6 @@ Mobs:
 
     #Configurations relating to baby versions of this entity.
     Baby:
-      #Whether or not to enable separate configurations for baby versions of this entity.
       Enabled: true
 
       #The currency to use for the money dropped by this entity
@@ -1441,9 +1403,14 @@ Mobs:
       Reward: 10.00
 
   Messages:
-    Killed: <white>You received $reward <white>for killing a <green>$mob<white>.
-    KilledVowel: <white>You received $reward <white>for killing an <green>$mob<white>.
-    NPCTag: <red>I'm sorry, but you cannot use a name tag on a villager.
+    Killed: "<white>You received $reward <white>for killing a <green>$mob<white>."
+    KilledVowel: "<white>You received $reward <white>for killing an <green>$mob<white>."
+    NPCTag: "<red>I'm sorry, but you cannot use a name tag on a villager."
+
+    #This is used to set custom messages for each mob.
+    Entries:
+
+      Example: "<white>You received some cash for killing a $mob. This is a custom message for a mob named Example, nice right?"
 
     #This is used to rename mobs for the mob reward messages.
     Custom:

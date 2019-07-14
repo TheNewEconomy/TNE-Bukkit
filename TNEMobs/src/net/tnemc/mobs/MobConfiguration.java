@@ -31,4 +31,11 @@ public class MobConfiguration extends Configuration {
   public File getFile() {
     return MobsModule.instance().mobs;
   }
+
+  @Override
+  public void load(CommentedConfiguration configurationFile) {
+    if(MobsModule.instance().mobs.exists()) MobsModule.instance().saveConfigurations();
+
+    super.load(configurationFile);
+  }
 }

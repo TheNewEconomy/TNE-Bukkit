@@ -108,7 +108,7 @@ public class ItemSign implements SignType {
         "`item_currency` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_cost` DECIMAL(49,4) DEFAULT 10," +
         "`item_offer` TEXT NOT NULL," +
-        "`item_trade` TEXT NOT NULL DEFAULT ''" +
+        "`item_trade` TEXT NOT NULL" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
     ));
 
@@ -120,7 +120,7 @@ public class ItemSign implements SignType {
         "`item_currency` BOOLEAN NOT NULL DEFAULT 1," +
         "`item_cost` DECIMAL(49,4) DEFAULT 10," +
         "`item_offer` TEXT NOT NULL," +
-        "`item_trade` TEXT NOT NULL DEFAULT ''" +
+        "`item_trade` TEXT NOT NULL" +
         ") ENGINE = INNODB;"
     ));
     return tables;
@@ -354,7 +354,12 @@ public class ItemSign implements SignType {
   }
 
   public static boolean canOffer(final Player player, final Material material) {
-    if(TNE.hasPermssion(player, "tne.item.sign")) return true;
+    if(TNE.hasPermssion(player, "tne.item.sign")) {
+      if(TNE.instance().itemConfiguration().contains("tne.item." + material.name().toLowerCase() + ".sign")) {
+        return !player.hasPermission(TNE.instance().itemConfiguration().getString("tne.item." + material.name().toLowerCase() + ".sign"));
+      }
+      return true;
+    }
     if(TNE.instance().itemConfiguration().contains("tne.item." + material.name().toLowerCase() + ".sign")) {
       return TNE.hasPermssion(player, TNE.instance().itemConfiguration().getString("tne.item." + material.name().toLowerCase() + ".sign"));
     }
