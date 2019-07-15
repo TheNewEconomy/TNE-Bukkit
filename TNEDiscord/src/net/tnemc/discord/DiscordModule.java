@@ -1,11 +1,11 @@
 package net.tnemc.discord;
 
-import github.scarsz.discordsrv.DiscordSRV;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.discord.command.DiscordCommandManager;
+import net.tnemc.discord.command.DiscordManager;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,14 +35,14 @@ import java.nio.charset.StandardCharsets;
 public class DiscordModule extends Module {
 
   private static DiscordModule instance;
-  private DiscordCommandManager commandManager;
-  private DiscordListener listener = new DiscordListener();
 
   //configurations
 
   private File discord;
   private CommentedConfiguration discordFileConfiguration;
   private DiscordConfiguration discordConfiguration;
+
+  private DiscordManager manager;
 
   public DiscordModule() {
     instance = this;
@@ -51,10 +51,12 @@ public class DiscordModule extends Module {
   @Override
   public void load(TNE tne, String version) {
     Bukkit.getServer().getPluginManager().registerEvents(new TransactionListener(tne), tne);
-
-    DiscordSRV.api.subscribe(listener);
     //DiscordSRV.getPlugin().getJda().addEventListener(new DiscordMessageListener());
-    commandManager = new DiscordCommandManager();
+
+    if(Bukkit.getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
+      manager = new DiscordManager();
+      manager.initialize();
+    }
     TNE.logger().info("Discord Module loaded!");
   }
 
@@ -110,7 +112,7 @@ public class DiscordModule extends Module {
   }
 
   public DiscordCommandManager getCommandManager() {
-    return commandManager;
+    return manager.getCommandManager();
   }
 
   public File getDiscord() {

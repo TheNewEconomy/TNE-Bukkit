@@ -105,6 +105,11 @@ public class DiscordEcoPayCommand extends DiscordCommand {
         return;
       }
 
+      if(!validateDiscordID(arguments[0])) {
+        channel.sendMessage("Invalid discord id").queue();
+        return;
+      }
+
       MultiTransactionHandler handler = new MultiTransactionHandler(channel, MultiTransactionHandler.parsePlayerArgument(arguments[0], true, fake),
           "pay", value, currency, world,
           TNE.manager().getAccount(minecraft));

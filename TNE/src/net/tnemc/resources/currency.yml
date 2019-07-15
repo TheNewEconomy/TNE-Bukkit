@@ -219,6 +219,9 @@ Currencies:
                     #Whether or not this recipe is shapeless.
                     Shapeless: false
 
+                    #The amount of the currency to return for this crafting recipe.
+                    Amount: 1
+
                     #The materials that represent the characters used in the recipe option.
                     #Format: Character:Material Name
                     Materials:
@@ -291,6 +294,9 @@ Currencies:
 
                     #Whether or not this recipe is shapeless.
                     Shapeless: false
+
+                    #The amount of the currency to return for this crafting recipe.
+                    Amount: 1
 
                     #The materials that represent the characters used in the recipe option.
                     #Format: Character:Material Name

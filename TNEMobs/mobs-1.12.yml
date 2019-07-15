@@ -8,17 +8,21 @@
 Mobs:
 
     
-    Enabled: true
+   Enabled: true
 
-    #Whether or not a mob is a baby affects the reward.
-    EnableAge: true
+   #Whether or not a mob is a baby affects the reward.
+   EnableAge: true
 
-    #Whether or not to send a message stating how much money a player got for killing a mob
-    Message: true
+   #Whether or not to send a message stating how much money a player got for killing a mob
+   Message: true
 
-    Messages:
-      Killed: "<white>You received $reward <white>for killing a <green>$mob<white>."
-      KilledVowel: "<white>You received $reward <white>for killing a <green>$mob<white>."
+   #If using virtual currency. If this is true all money rewards will be dropped as a currency note. If this is false they
+   #will be added directly to the player's balance.
+   Note: true
+
+   Messages:
+     Killed: "<white>You received $reward <white>for killing a <green>$mob<white>."
+     KilledVowel: "<white>You received $reward <white>for killing a <green>$mob<white>."
 
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.

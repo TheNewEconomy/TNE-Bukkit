@@ -19,6 +19,10 @@ Mobs:
   #Whether a message should be sent if the reward is set to zero.
   MessageZero: false
 
+  #If using virtual currency. If this is true all money rewards will be dropped as a currency note. If this is false they
+  #will be added directly to the player's balance.
+  Note: true
+
   #Settings relating to item multipliers.
   #Here you may specify multipliers for killing entities with certain items.
   Multipliers:

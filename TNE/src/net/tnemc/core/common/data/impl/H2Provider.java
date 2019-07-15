@@ -429,7 +429,6 @@ public class H2Provider extends TNEDataProvider {
             account.setAccountNumber(results.getInt("account_number"));
             account.setStatus(AccountStatus.fromName(results.getString("account_status")));
             account.setLanguage(results.getString("account_language"));
-            account.setPin(results.getString("account_pin"));
             account.setJoined(results.getLong("joined_date"));
             account.setLastOnline(results.getLong("last_online"));
             account.setPlayerAccount(results.getBoolean("account_player"));

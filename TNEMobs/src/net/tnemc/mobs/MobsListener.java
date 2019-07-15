@@ -10,8 +10,12 @@ import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.module.ModuleListener;
+import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.economy.transaction.charge.TransactionCharge;
+import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
+import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Ageable;
@@ -132,8 +136,14 @@ public class MobsListener implements ModuleListener {
               } else if (currencyObject.isXp()) {
                 event.setDroppedExp(reward.intValue());
               } else {
-                final BigDecimal rewardFinal = reward;
-                Bukkit.getScheduler().runTask(plugin, () -> entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), TNE.manager().currencyManager().createNote(currencyObject.name(), world, rewardFinal)));
+                if(TNE.instance().api().hasConfiguration("Mobs.Note") && TNE.instance().api().getBoolean("Mobs.Note")) {
+                  final BigDecimal rewardFinal = reward;
+                  Bukkit.getScheduler().runTask(plugin, () -> entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), TNE.manager().currencyManager().createNote(currencyObject.name(), world, rewardFinal)));
+                } else {
+                  TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
+                  transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), reward, TransactionChargeType.GAIN));
+                  TransactionResult result = TNE.transactionManager().perform(transaction);
+                }
               }
             }
 

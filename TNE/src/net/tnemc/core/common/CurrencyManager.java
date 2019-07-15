@@ -399,8 +399,8 @@ public class CurrencyManager {
       if(currency.isItem() && configuration.contains(tierBase + ".Options.Crafting")) {
         if(configuration.getBool(tierBase + ".Options.Crafting.Enabled", false)) {
           final boolean shapeless = configuration.getBool(tierBase + ".Options.Crafting.Shapeless", false);
-          final ItemStack stack = item.toStack();
-          stack.setAmount(1);
+          ItemStack stack = item.toStack().clone();
+          stack.setAmount(configuration.getInt(tierBase + ".Options.Crafting.Amount", 1));
           Recipe recipe = null;
           if(shapeless) {
             recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
