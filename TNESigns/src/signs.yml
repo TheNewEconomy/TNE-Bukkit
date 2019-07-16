@@ -15,21 +15,3 @@ Signs:
 
     #The max amount of this sign type any one person may own.
     Max: 5
-
-  #All configurations relating to XP signs.
-  XP:
-
-    #Whether or not this sign type is enabled.
-    Enabled: true
-
-    #The max amount of this sign type any one person may own.
-    Max: 5
-
-  #All configurations relating to Creature signs.
-  Creature:
-
-    #Whether or not this sign type is enabled.
-    Enabled: true
-
-    #The max amount of this sign type any one person may own.
-    Max: 5
