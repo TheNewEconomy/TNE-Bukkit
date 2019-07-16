@@ -114,7 +114,7 @@ public class ConnectionListener implements Listener {
       boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
       if(!noEconomy) {
         TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-          ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+          ItemCalculations.setItems(id, TNE.manager().currencyManager().get(world, value),
               account.getHoldings(world, value, true, true), player.getInventory(), false);
         });
       }
@@ -123,7 +123,7 @@ public class ConnectionListener implements Listener {
         try {
           account.getHistory().populateAway(account.getLastOnline());
         } catch (SQLException e) {
-          e.printStackTrace();
+          TNE.debug(e);
         }
       }
       TNE.manager().addAccount(account);
@@ -190,7 +190,7 @@ public class ConnectionListener implements Listener {
       if (!noEconomy && TNE.instance().api().getBoolean("Core.Multiworld") &&
           !TNE.instance().getWorldManager(event.getFrom().getName()).getBalanceWorld().equalsIgnoreCase(world)) {
         TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-          ItemCalculations.setItems(TNE.manager().currencyManager().get(world, value),
+          ItemCalculations.setItems(id, TNE.manager().currencyManager().get(world, value),
               account.getHoldings(world, value, true, true), player.getInventory(), false);
         });
       }

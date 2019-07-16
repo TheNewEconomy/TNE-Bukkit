@@ -99,7 +99,7 @@ public class TransactionHistoryCommand extends TNECommand {
     try {
       max = TNE.saveManager().getTNEManager().getTNEProvider().transactionCount(id, world, type, "all", 10);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     if(max == 0) max = 1;
     if (page > max) page = max;
@@ -107,7 +107,7 @@ public class TransactionHistoryCommand extends TNECommand {
     try {
       history = TNE.saveManager().getTNEManager().getTNEProvider().transactionHistory(id, world, type, "all", 10, page);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     if(history.size() == 0) {
@@ -122,7 +122,7 @@ public class TransactionHistoryCommand extends TNECommand {
     transactions.translate(world, sender);
 
     for(TNETransaction transaction : history.values()) {
-      System.out.println("Transaction null?" + (transaction == null));
+      TNE.debug("Transaction null?" + (transaction == null));
       if(transaction != null) {
         String initiator = (transaction.initiator() == null || IDFinder.getUsername(transaction.initiator()) == null) ? "N/A" : IDFinder.getUsername(transaction.initiator());
         String recipient = (transaction.recipient() == null || IDFinder.getUsername(transaction.recipient()) == null) ? "N/A" : IDFinder.getUsername(transaction.recipient());

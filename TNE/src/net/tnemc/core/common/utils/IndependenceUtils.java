@@ -47,8 +47,8 @@ public class IndependenceUtils {
           Bukkit.getScheduler().runTask(TNE.instance(), ()->MaterialUtils.spawnRandomFirework(location));
         }
 
-        System.out.println("Length: " + length);
-        System.out.println("Duration: " + duration);
+        TNE.debug("Length: " + length);
+        TNE.debug("Duration: " + duration);
 
         if(duration == length) {
           Bukkit.broadcastMessage(ChatColor.RED + "Happy " + ChatColor.WHITE + "Independence " + ChatColor.BLUE + "Day!");

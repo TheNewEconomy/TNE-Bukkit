@@ -432,15 +432,6 @@ public class MySQLProvider extends TNEDataProvider {
 
       TNE.debug("Load account info time: " + ((System.nanoTime() - startTime) / 1000000));
 
-      try(PreparedStatement balStatement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD)) {
-        try(ResultSet balResults = MySQL.executePreparedQuery(balStatement, new Object[] { id.toString() })) {
-          while (balResults.next()) {
-            account.setHoldings(balResults.getString("world"), balResults.getString("currency"), balResults.getBigDecimal("balance"), true);
-          }
-        }
-      }
-      TNE.debug("Load balance info time: " + ((System.nanoTime() - startTime) / 1000000));
-
     } catch(Exception e) {
       TNE.debug(e);
     }
@@ -750,7 +741,7 @@ public class MySQLProvider extends TNEDataProvider {
         count = results.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     SQLDatabase.close();
@@ -836,7 +827,7 @@ public class MySQLProvider extends TNEDataProvider {
         count = results.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     if(count > 0) {
@@ -886,7 +877,7 @@ public class MySQLProvider extends TNEDataProvider {
         transactions.put(id, loadTransaction(id));
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     SQLDatabase.close();
     return transactions;

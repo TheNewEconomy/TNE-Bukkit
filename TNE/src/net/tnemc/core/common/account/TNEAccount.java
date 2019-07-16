@@ -93,11 +93,11 @@ public class TNEAccount implements Account {
 
     TNE.debug("Currency: " + cur.name());
     if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
-      //System.out.println("virtual currency");
+      //TNE.debug("virtual currency");
       if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
         final Player player = Bukkit.getPlayer(id);
-        //System.out.println("experience currency");
-        //System.out.println("Setting experience to " + newHoldings.intValue());
+        //TNE.debug("experience currency");
+        //TNE.debug("Setting experience to " + newHoldings.intValue());
         player.setTotalExperience(newHoldings.intValue());
       }
       /*WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
@@ -105,6 +105,7 @@ public class TNEAccount implements Account {
       holdings.put(world, worldHoldings);
       TNE.manager().addAccount(this);*/
       try {
+        TNE.debug("ID: " + identifier());
         TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, newHoldings);
       } catch (SQLException e) {
         TNE.debug(e);
@@ -116,8 +117,8 @@ public class TNEAccount implements Account {
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
         final Player player = Bukkit.getPlayer(id);
-        //System.out.println("physical currency");
-        ItemCalculations.setItems(cur, newHoldings, player.getInventory(), false);
+        //TNE.debug("physical currency");
+        ItemCalculations.setItems(id, cur, newHoldings, player.getInventory(), false);
       }
     }
     TNE.debug("=====END Account.setHoldings =====");

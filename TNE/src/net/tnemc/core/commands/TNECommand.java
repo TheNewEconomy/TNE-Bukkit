@@ -92,14 +92,14 @@ public abstract class TNECommand {
       sender.sendMessage(ChatColor.GOLD + "~~~" + ChatColor.WHITE + formatted + " Help " + helpPage + "/" + maxPage + ChatColor.GOLD + "~~~");
     }
 
-    //System.out.println("Pre send loop");
-    //System.out.println("Send Size: " + send.size());
+    //TNE.debug("Pre send loop");
+    //TNE.debug("Send Size: " + send.size());
     for(Integer i : send) {
       for(String s : help.get(i)) {
         String message = (s.contains("Messages."))? new Message(s).grab("", sender) : s;
-        //System.out.println("Help Message: " + message);
+        //TNE.debug("Help Message: " + message);
         message = message.replaceFirst("/" , "<green>/").replaceFirst("-", "<white>-");
-        //System.out.println("Help Message: " + message);
+        //TNE.debug("Help Message: " + message);
         new Message(message).translate("", sender);
         //sender.sendMessage(Message.replaceColours(message, false));
       }

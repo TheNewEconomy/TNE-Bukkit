@@ -55,7 +55,7 @@ public class AdminIDExportCommand extends TNECommand {
       try {
         MISCUtils.idExtract(sender);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     });
     return true;

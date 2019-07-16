@@ -50,7 +50,7 @@ public class AdminSaveCommand extends TNECommand {
     try {
       TNE.saveManager().save();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     sender.sendMessage("Successfully saved all TNE Data!");
     return true;

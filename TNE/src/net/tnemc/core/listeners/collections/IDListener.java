@@ -29,7 +29,7 @@ public class IDListener implements MapListener {
       try {
         TNE.saveManager().getTNEManager().getTNEProvider().saveID(username, id);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     });
   }
@@ -50,7 +50,7 @@ public class IDListener implements MapListener {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().saveID((String)key, (UUID)value);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 
@@ -60,7 +60,7 @@ public class IDListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadID((String)key);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return null;
   }
@@ -70,7 +70,7 @@ public class IDListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().values();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return new ArrayList();
   }
@@ -104,7 +104,7 @@ public class IDListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().keySet();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return new HashSet<>();
   }
@@ -114,7 +114,7 @@ public class IDListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS().entrySet();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return new HashSet<>();
   }
@@ -124,7 +124,7 @@ public class IDListener implements MapListener {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().removeID((String)key);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 }

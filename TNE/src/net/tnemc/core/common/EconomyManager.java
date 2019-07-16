@@ -185,7 +185,7 @@ public class EconomyManager {
         try {
           TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount(account.identifier());
         } catch (SQLException e) {
-          e.printStackTrace();
+          TNE.debug(e);
         }
         it.remove();
       }

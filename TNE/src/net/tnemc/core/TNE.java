@@ -331,7 +331,7 @@ public class TNE extends TNELib {
     try {
       saveManager().initialize();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     TNE.debug("Preparing modules");
@@ -343,7 +343,7 @@ public class TNE extends TNELib {
           try {
             TNE.saveManager().getTNEManager().getTNEProvider().createTables(value.getModule().getTables().get(configurations().getString("Core.Database.Type").toLowerCase()));
           } catch (SQLException e) {
-            TNE.debug("Failed to create tables on module load.");
+            TNE.debug(e);
           }
         }
       });
@@ -353,7 +353,7 @@ public class TNE extends TNELib {
       try {
         saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     }
 
@@ -366,7 +366,7 @@ public class TNE extends TNELib {
     try {
       saveManager().load();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     //Bukkit Runnables & Workers
@@ -418,13 +418,18 @@ public class TNE extends TNELib {
 
     TNE.debug("Preparing server account");
     if(api.getBoolean("Core.Server.Account.Enabled")) {
+      TNE.debug("Account enabled");
       String world = worldManagers.get(defaultWorld).getBalanceWorld();
+      TNE.debug("Got World");
       UUID id = IDFinder.getID(consoleName);
+      TNE.debug("Got ID: " + id.toString());
 
       if(!manager.exists(id)) {
+        TNE.debug("doesn't exist");
         special.add(id);
-        manager.createAccount(id, consoleName);
+        TNE.debug("added special");
         api.getOrCreate(id);
+        TNE.debug("api.getOrCreate");
         TNEAccount account = manager.getAccount(id);
         TNE.debug("Account Null? " + (account == null));
         TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));
@@ -454,7 +459,7 @@ public class TNE extends TNELib {
       try {
         TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(TNE.manager().getAccount(player.getUniqueId()));
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     }
 
@@ -745,7 +750,7 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) System.out.println(message);
+    if(consoleDebug) TNE.debug(message);
   }
 
   private void setupVault() {

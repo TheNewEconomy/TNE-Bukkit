@@ -53,7 +53,7 @@ public class AdminExtractCommand extends TNECommand {
       try {
         MISCUtils.extract(sender);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     });
     return true;

@@ -115,8 +115,8 @@ public class Message {
 
   public String[] format(String world, CommandSender sender, String id) {
     String found = TNE.instance().api().getString(this.node, world, id);
-    //System.out.println("Node: " + node);
-    //System.out.println("Message: " + found);
+    //TNE.debug("Node: " + node);
+    //TNE.debug("Message: " + found);
 
     String[] message = (found == null || found.trim().equalsIgnoreCase(""))? new String[] { this.node } : found.split("<newline>");
     String[] formatted = new String[message.length];

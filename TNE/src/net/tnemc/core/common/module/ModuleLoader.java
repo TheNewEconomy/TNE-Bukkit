@@ -208,7 +208,7 @@ public class ModuleLoader {
       module = moduleClass.newInstance();
       module.moduleInjectors().forEach(this::registerInjectors);
     } catch (MalformedURLException | IllegalAccessException | InstantiationException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     } catch (ClassNotFoundException e) {
       TNE.logger().info("Unable to locate module main class for file " + file.getName());
     }
@@ -235,7 +235,7 @@ public class ModuleLoader {
 
       main = reader.readLine().split("=")[1].trim();
     } catch (IOException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     } finally {
       if(jar != null) {
         try {

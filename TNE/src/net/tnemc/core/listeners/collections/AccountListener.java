@@ -31,7 +31,7 @@ public class AccountListener implements MapListener {
       try {
         TNE.saveManager().getTNEManager().getTNEProvider().saveAccount(account);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     }
   }
@@ -51,7 +51,7 @@ public class AccountListener implements MapListener {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().saveAccount((TNEAccount)value);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 
@@ -61,7 +61,7 @@ public class AccountListener implements MapListener {
     try {
       account = TNE.saveManager().getTNEManager().getTNEProvider().loadAccount((UUID)key);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     TNE.debug("AccountListener ID? " + ((UUID)key).toString());
@@ -75,7 +75,7 @@ public class AccountListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadAccounts();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return new ArrayList<>();
   }
@@ -124,7 +124,7 @@ public class AccountListener implements MapListener {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().deleteAccount((UUID)key);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 }

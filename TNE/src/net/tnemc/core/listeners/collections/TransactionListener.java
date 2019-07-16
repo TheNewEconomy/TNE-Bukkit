@@ -30,7 +30,7 @@ public class TransactionListener implements MapListener {
       try {
         TNE.saveManager().getTNEManager().getTNEProvider().saveTransaction(transaction);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     });
   }
@@ -50,7 +50,7 @@ public class TransactionListener implements MapListener {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().saveTransaction((TNETransaction)value);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 
@@ -59,7 +59,7 @@ public class TransactionListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadTransaction((UUID)key);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return null;
   }
@@ -69,7 +69,7 @@ public class TransactionListener implements MapListener {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadTransactions();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return new ArrayList<>();
   }
@@ -118,7 +118,7 @@ public class TransactionListener implements MapListener {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().deleteTransaction((UUID)key);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 }

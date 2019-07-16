@@ -236,7 +236,7 @@ public class MISCUtils {
         if(tneAccount.identifier().toString().equalsIgnoreCase(id.toString())) return true;
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return false;
   }
@@ -247,7 +247,7 @@ public class MISCUtils {
         if(tneAccount.displayName().equalsIgnoreCase(name)) return true;
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return false;
   }
@@ -292,7 +292,7 @@ public class MISCUtils {
       try {
         file.createNewFile();
       } catch (IOException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
     }
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
@@ -438,7 +438,7 @@ public class MISCUtils {
       md = null;
       digest = null;
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     return toReturn;
   }

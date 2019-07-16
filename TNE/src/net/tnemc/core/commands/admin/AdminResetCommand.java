@@ -50,7 +50,7 @@ public class AdminResetCommand extends TNECommand {
     try {
       TNE.saveManager().getTNEManager().getTNEProvider().delete(TNE.instance().currentSaveVersion);
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
     sender.sendMessage("All data has been reset.");
     return true;

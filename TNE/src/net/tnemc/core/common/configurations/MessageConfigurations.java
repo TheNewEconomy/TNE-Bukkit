@@ -61,7 +61,7 @@ public class MessageConfigurations extends Configuration {
         try {
           configuration = new CommentedConfiguration(new InputStreamReader(new FileInputStream(langFile), "UTF8"), null);
         } catch (Exception ignore) {
-          System.out.println("Failed to load language: " + name);
+          TNE.debug("Failed to load language: " + name);
         }
 
         if(configuration != null) {

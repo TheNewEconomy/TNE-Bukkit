@@ -402,10 +402,20 @@ public class CurrencyManager {
           ItemStack stack = item.toStack().clone();
           stack.setAmount(configuration.getInt(tierBase + ".Options.Crafting.Amount", 1));
           Recipe recipe = null;
+          final List<String> shape = configuration.getStringList(tierBase + ".Options.Crafting.Recipe");
+
+          Map<Character, Integer> materials = new HashMap<>();
+
           if(shapeless) {
             recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
+
+            for(String str : shape) {
+              for(Character character : str.toCharArray()) {
+                final int count = materials.getOrDefault(character, 0) + 1;
+                materials.put(character, count);
+              }
+            }
           } else {
-            final List<String> shape = configuration.getStringList(tierBase + ".Options.Crafting.Recipe");
             TNE.debug("Shape: " + String.join(",", shape));
             recipe = new ShapedRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
             ((ShapedRecipe)recipe).shape(shape.toArray(new String[shape.size()]));
@@ -418,7 +428,8 @@ public class CurrencyManager {
               TNE.debug("Material: " + material);
               if(split.length >= 2) {
                 if(shapeless) {
-                  ((ShapelessRecipe)recipe).addIngredient(MaterialHelper.getMaterial(split[1]));
+                  final int count = materials.getOrDefault(split[0].charAt(0), 1);
+                  ((ShapelessRecipe)recipe).addIngredient(count, MaterialHelper.getMaterial(split[1]));
                 } else {
                   ((ShapedRecipe)recipe).setIngredient(split[0].charAt(0), MaterialHelper.getMaterial(split[1]));
                 }

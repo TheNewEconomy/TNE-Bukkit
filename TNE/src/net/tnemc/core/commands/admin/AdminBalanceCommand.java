@@ -86,10 +86,13 @@ public class AdminBalanceCommand extends TNECommand {
         new Message("Messages.General.Disabled").translate(world, sender);
         return false;
       }
+      TNE.debug("Pre Transaction");
 
       TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("inquiry"));
       transaction.setRecipientCharge(new TransactionCharge(world, currency, BigDecimal.ZERO));
+      TNE.debug("pre perform");
       TransactionResult result = transaction.perform();
+      TNE.debug("post perform");
       Message message = new Message(result.initiatorMessage());
       message.addVariable("$player", arguments[0]);
       message.addVariable("$world", world);

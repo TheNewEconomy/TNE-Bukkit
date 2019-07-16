@@ -26,7 +26,7 @@ public class SaveWorker extends BukkitRunnable {
     try {
       plugin.getSaveManager().save();
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
   }
 }

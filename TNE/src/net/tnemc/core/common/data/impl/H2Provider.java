@@ -112,82 +112,77 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public void initialize() throws SQLException {
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
+        "`id` INTEGER NOT NULL UNIQUE," +
+        "`version` VARCHAR(10)," +
+        "`server_name` VARCHAR(100)" +
+        ") ENGINE = INNODB;");
+    executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
+        new Object[]{
+            1,
+            TNELib.instance().currentSaveVersion,
+            TNE.instance().getServerName(),
+            TNELib.instance().currentSaveVersion,
+        });
 
-    try {
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_INFO` (" +
-          "`id` INTEGER NOT NULL UNIQUE," +
-          "`version` VARCHAR(10)," +
-          "`server_name` VARCHAR(100)" +
-          ") ENGINE = INNODB;");
-      H2.executePreparedUpdate("INSERT INTO `" + manager.getPrefix() + "_INFO` (id, version, server_name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE version = ?;",
-          new Object[]{
-              1,
-              TNELib.instance().currentSaveVersion,
-              TNE.instance().getServerName(),
-              TNELib.instance().currentSaveVersion,
-          });
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
+        "`username` VARCHAR(100)," +
+        "`uuid` VARCHAR(36) UNIQUE" +
+        ") ENGINE = INNODB;");
 
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_ECOIDS` (" +
-          "`username` VARCHAR(100)," +
-          "`uuid` VARCHAR(36) UNIQUE" +
-          ") ENGINE = INNODB;");
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
+        "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
+        "`display_name` VARCHAR(100)," +
+        "`joined_date` BIGINT(60)," +
+        "`last_online` BIGINT(60)," +
+        "`account_number` INTEGER," +
+        "`account_status` VARCHAR(60)," +
+        "`account_language` VARCHAR(10) NOT NULL DEFAULT 'default'," +
+        //"`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN'," +
+        "`account_player` BOOLEAN" +
+        ") ENGINE = INNODB;");
 
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_USERS` (" +
-          "`uuid` VARCHAR(36) NOT NULL UNIQUE," +
-          "`display_name` VARCHAR(100)," +
-          "`joined_date` BIGINT(60)," +
-          "`last_online` BIGINT(60)," +
-          "`account_number` INTEGER," +
-          "`account_status` VARCHAR(60)," +
-          "`account_language` VARCHAR(10) NOT NULL DEFAULT 'default'," +
-          //"`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN'," +
-          "`account_player` BOOLEAN" +
-          ") ENGINE = INNODB;");
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
+        "`uuid` VARCHAR(36) NOT NULL," +
+        "`server_name` VARCHAR(100) NOT NULL," +
+        "`world` VARCHAR(50) NOT NULL," +
+        "`currency` VARCHAR(100) NOT NULL," +
+        "`balance` DECIMAL(49,4)," +
+        ") ENGINE = INNODB;");
+    executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ADD PRIMARY KEY(uuid, server_name, world, currency);");
 
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES` (" +
-          "`uuid` VARCHAR(36) NOT NULL," +
-          "`server_name` VARCHAR(100) NOT NULL," +
-          "`world` VARCHAR(50) NOT NULL," +
-          "`currency` VARCHAR(100) NOT NULL," +
-          "`balance` DECIMAL(49,4)," +
-          ") ENGINE = INNODB;");
-      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES` ADD PRIMARY KEY(uuid, server_name, world, currency);");
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
+        "`trans_id` VARCHAR(36) NOT NULL," +
+        "`trans_initiator` VARCHAR(36)," +
+        "`trans_initiator_balance` DECIMAL(49,4)," +
+        "`trans_recipient` VARCHAR(36) NOT NULL," +
+        "`trans_recipient_balance` DECIMAL(49,4)," +
+        "`trans_type` VARCHAR(36) NOT NULL," +
+        "`trans_world` VARCHAR(36) NOT NULL," +
+        "`trans_time` BIGINT(60) NOT NULL," +
+        "`trans_voided` BOOLEAN NOT NULL" +
+        ") ENGINE = INNODB;");
+    executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ADD PRIMARY KEY(trans_id);");
 
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_TRANSACTIONS` (" +
-          "`trans_id` VARCHAR(36) NOT NULL," +
-          "`trans_initiator` VARCHAR(36)," +
-          "`trans_initiator_balance` DECIMAL(49,4)," +
-          "`trans_recipient` VARCHAR(36) NOT NULL," +
-          "`trans_recipient_balance` DECIMAL(49,4)," +
-          "`trans_type` VARCHAR(36) NOT NULL," +
-          "`trans_world` VARCHAR(36) NOT NULL," +
-          "`trans_time` BIGINT(60) NOT NULL," +
-          "`trans_voided` BOOLEAN NOT NULL" +
-          ") ENGINE = INNODB;");
-      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_TRANSACTIONS` ADD PRIMARY KEY(trans_id);");
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
+        "`charge_transaction` VARCHAR(36) NOT NULL," +
+        "`charge_player` VARCHAR(36) NOT NULL," +
+        "`charge_currency` VARCHAR(100) NOT NULL," +
+        "`charge_world` VARCHAR(36) NOT NULL," +
+        "`charge_amount` DECIMAL(49,4) NOT NULL," +
+        "`charge_type` VARCHAR(20) NOT NULL" +
+        ") ENGINE = INNODB;");
 
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_CHARGES` (" +
-          "`charge_transaction` VARCHAR(36) NOT NULL," +
-          "`charge_player` VARCHAR(36) NOT NULL," +
-          "`charge_currency` VARCHAR(100) NOT NULL," +
-          "`charge_world` VARCHAR(36) NOT NULL," +
-          "`charge_amount` DECIMAL(49,4) NOT NULL," +
-          "`charge_type` VARCHAR(20) NOT NULL" +
-          ") ENGINE = INNODB;");
-
-      H2.executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
-          "`id` INTEGER NOT NULL auto_increment," +
-          "`uuid` VARCHAR(36) NOT NULL," +
-          "`server_name` VARCHAR(100) NOT NULL," +
-          "`world` VARCHAR(50) NOT NULL," +
-          "`currency` VARCHAR(100) NOT NULL," +
-          "`balance` DECIMAL(49,4)" +
-          ") ENGINE = INNODB;");
-      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
-      H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
-    } finally {
-      H2.connection(manager).close();
-    }
+    executeUpdate("CREATE TABLE IF NOT EXISTS `" + manager.getPrefix() + "_BALANCES_HISTORY` (" +
+        "`id` INTEGER NOT NULL auto_increment," +
+        "`uuid` VARCHAR(36) NOT NULL," +
+        "`server_name` VARCHAR(100) NOT NULL," +
+        "`world` VARCHAR(50) NOT NULL," +
+        "`currency` VARCHAR(100) NOT NULL," +
+        "`balance` DECIMAL(49,4)" +
+        ") ENGINE = INNODB;");
+    executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_CHARGES` ADD PRIMARY KEY(charge_transaction, charge_player);");
+    executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_BALANCES_HISTORY` ADD PRIMARY KEY(id);");
   }
 
   @Override
@@ -429,6 +424,7 @@ public class H2Provider extends TNEDataProvider {
             account.setAccountNumber(results.getInt("account_number"));
             account.setStatus(AccountStatus.fromName(results.getString("account_status")));
             account.setLanguage(results.getString("account_language"));
+            //account.setPin(results.getString("account_pin"));
             account.setJoined(results.getLong("joined_date"));
             account.setLastOnline(results.getLong("last_online"));
             account.setPlayerAccount(results.getBoolean("account_player"));
@@ -437,15 +433,6 @@ public class H2Provider extends TNEDataProvider {
       }
 
       TNE.debug("Load account info time: " + ((System.nanoTime() - startTime) / 1000000));
-
-      try(PreparedStatement balStatement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD)) {
-        try(ResultSet balResults = H2.executePreparedQuery(balStatement, new Object[] { id.toString() })) {
-          while (balResults.next()) {
-            account.setHoldings(balResults.getString("world"), balResults.getString("currency"), balResults.getBigDecimal("balance"), true);
-          }
-        }
-      }
-      TNE.debug("Load balance info time: " + ((System.nanoTime() - startTime) / 1000000));
 
     } catch(Exception e) {
       TNE.debug(e);
@@ -464,23 +451,23 @@ public class H2Provider extends TNEDataProvider {
           TNE.debug("Attempted saving account with null display name.");
           continue;
         }
-        accountStatement.setObject(1, account.identifier().toString());
-        accountStatement.setObject(2, account.displayName());
-        accountStatement.setObject(3, account.getJoined());
-        accountStatement.setObject(4, account.getLastOnline());
-        accountStatement.setObject(5, account.getAccountNumber());
-        accountStatement.setObject(6, account.getStatus().getName());
-        accountStatement.setObject(7, account.getLanguage());
-        //accountStatement.setObject(8, account.getPin());
-        accountStatement.setObject(8, account.playerAccount());
-        accountStatement.setObject(9, account.displayName());
-        accountStatement.setObject(10, account.getJoined());
-        accountStatement.setObject(11, account.getLastOnline());
-        accountStatement.setObject(12, account.getAccountNumber());
-        accountStatement.setObject(13, account.getStatus().getName());
-        accountStatement.setObject(14, account.getLanguage());
-        //accountStatement.setObject(16, account.getPin());
-        accountStatement.setObject(15, account.playerAccount());
+        accountStatement.setString(1, account.identifier().toString());
+        accountStatement.setString(2, account.displayName());
+        accountStatement.setLong(3, account.getJoined());
+        accountStatement.setLong(4, account.getLastOnline());
+        accountStatement.setInt(5, account.getAccountNumber());
+        accountStatement.setString(6, account.getStatus().getName());
+        accountStatement.setString(7, account.getLanguage());
+        //accountStatement.setString(8, account.getPin());
+        accountStatement.setBoolean(8, account.playerAccount());
+        accountStatement.setString(9, account.displayName());
+        accountStatement.setLong(10, account.getJoined());
+        accountStatement.setLong(11, account.getLastOnline());
+        accountStatement.setInt(12, account.getAccountNumber());
+        accountStatement.setString(13, account.getStatus().getName());
+        accountStatement.setString(14, account.getLanguage());
+        //accountStatement.setString(16, account.getPin());
+        accountStatement.setBoolean(15, account.playerAccount());
         accountStatement.addBatch();
       }
       accountStatement.executeBatch();
@@ -547,6 +534,7 @@ public class H2Provider extends TNEDataProvider {
   @Override
   public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
     SQLDatabase.open();
+    TNE.debug("Start saveBalance");
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_SAVE)) {
       final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
           TNE.manager().currencyManager().get(world, currency).getServer() :
@@ -561,6 +549,7 @@ public class H2Provider extends TNEDataProvider {
       statement.executeUpdate();
     }
     SQLDatabase.close();
+    TNE.debug("End saveBalance");
   }
 
   @Override
@@ -763,7 +752,7 @@ public class H2Provider extends TNEDataProvider {
         count = results.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     SQLDatabase.close();
@@ -849,7 +838,7 @@ public class H2Provider extends TNEDataProvider {
         count = results.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      TNE.debug(e);
     }
 
     if(count > 0) {

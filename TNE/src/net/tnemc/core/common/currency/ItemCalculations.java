@@ -7,7 +7,10 @@ import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -63,11 +67,11 @@ public class ItemCalculations {
     return value;
   }
 
-  public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove) {
-    setItems(currency, amount, inventory, remove, TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), ""));
+  public static void setItems(UUID account, TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove) {
+    setItems(account, currency, amount, inventory, remove, TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), ""));
   }
 
-  public static void setItems(TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove, boolean consolidate) {
+  public static void setItems(UUID account, TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove, boolean consolidate) {
     TNE.debug("=====START Account.setItems =====");
     TNE.debug("Holdings: " + amount.toPlainString());
     if(currency.isItem()) {
@@ -86,27 +90,27 @@ public class ItemCalculations {
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
 
       if(consolidate) clearItems(currency, inventory);
-      BigInteger majorChange = (consolidate)? setMajorConsolidate(currency, new BigInteger(split[0]), inventory) :
-          setMajor(currency, new BigInteger(split[0]), add, inventory);
-      BigInteger minorChange = (consolidate)? setMinorConsolidate(currency, new BigInteger(split[1]), inventory) :
-          setMinor(currency, new BigInteger(split[1]), add, inventory);
+      BigInteger majorChange = (consolidate)? setMajorConsolidate(account, currency, new BigInteger(split[0]), inventory) :
+          setMajor(account, currency, new BigInteger(split[0]), add, inventory);
+      BigInteger minorChange = (consolidate)? setMinorConsolidate(account, currency, new BigInteger(split[1]), inventory) :
+          setMinor(account, currency, new BigInteger(split[1]), add, inventory);
 
       TNE.debug("MajorChange: " + majorChange.toString());
       TNE.debug("MinorChange: " + minorChange.toString());
       if(!consolidate && !add) {
         if(majorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMajor(currency, majorChange, true, inventory);
+          setMajor(account, currency, majorChange, true, inventory);
         }
 
         if(minorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMinor(currency, minorChange, true, inventory);
+          setMinor(account, currency, minorChange, true, inventory);
         }
       }
     }
     TNE.debug("=====END Account.setItems =====");
   }
 
-  public static BigInteger setMajorConsolidate(TNECurrency currency, BigInteger amount, Inventory inventory) {
+  public static BigInteger setMajorConsolidate(UUID account, TNECurrency currency, BigInteger amount, Inventory inventory) {
     TNE.debug("===== START setMinorItems =====");
     Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
@@ -120,7 +124,7 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    final int dropped = giveItemsFeedback(items.values(), inventory);
+    final int dropped = giveItemsFeedback(account, items.values(), inventory);
     if(dropped > 0) {
       if(inventory.getHolder() instanceof HumanEntity) {
         ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -129,7 +133,7 @@ public class ItemCalculations {
     return BigInteger.ZERO;
   }
 
-  public static BigInteger setMinorConsolidate(TNECurrency currency, BigInteger amount, Inventory inventory) {
+  public static BigInteger setMinorConsolidate(UUID account, TNECurrency currency, BigInteger amount, Inventory inventory) {
     Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     for(Map.Entry<BigInteger, TNETier> entry : currency.getTNEMinorTiers().entrySet()) {
@@ -142,7 +146,7 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    final int dropped = giveItemsFeedback(items.values(), inventory);
+    final int dropped = giveItemsFeedback(account, items.values(), inventory);
     if(dropped > 0) {
       if(inventory.getHolder() instanceof HumanEntity) {
         ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -151,7 +155,7 @@ public class ItemCalculations {
     return BigInteger.ZERO;
   }
 
-  public static BigInteger setMajor(TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
+  public static BigInteger setMajor(UUID account, TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
     Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     BigInteger actualAmount = BigInteger.ZERO;
@@ -180,7 +184,7 @@ public class ItemCalculations {
       items.put(entry.getKey(), stack);
     }
     if(add) {
-      final int dropped = giveItemsFeedback(items.values(), inventory);
+      final int dropped = giveItemsFeedback(account, items.values(), inventory);
       if(dropped > 0) {
         if(inventory.getHolder() instanceof HumanEntity) {
           ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -194,7 +198,7 @@ public class ItemCalculations {
     return BigInteger.ZERO;
   }
 
-  public static BigInteger setMinor(TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
+  public static BigInteger setMinor(UUID account, TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
     Map<Integer, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
     TNE.debug("workingAmount: " + workingAmount);
@@ -228,7 +232,7 @@ public class ItemCalculations {
     }
     if(add) {
 
-      final int dropped = giveItemsFeedback(items.values(), inventory);
+      final int dropped = giveItemsFeedback(account, items.values(), inventory);
       if(dropped > 0) {
         if(inventory.getHolder() instanceof HumanEntity) {
           ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -240,8 +244,8 @@ public class ItemCalculations {
       TNE.debug("REMOVE 1 MAJOR!!!!!!!!!!!!!!!!!!!!");
       BigInteger minor = new BigInteger(currency.getMinorWeight() - workingAmount.intValue() + "");
       TNE.debug("Minor to add: " + minor);
-      setMajor(currency, BigInteger.ONE, false, inventory);
-      setMinor(currency, minor, true, inventory);
+      setMajor(account, currency, BigInteger.ONE, false, inventory);
+      setMinor(account, currency, minor, true, inventory);
     }
 
     if(add) {
@@ -251,8 +255,8 @@ public class ItemCalculations {
       if (minorAmount.intValue() >= currency.getMinorWeight()) {
         int major = minorAmount.intValue() / currency.getMinorWeight();
         TNE.debug("major to add: " + major);
-        setMajor(currency, BigInteger.valueOf(major), true, inventory);
-        setMinor(currency, BigInteger.valueOf(currency.getMinorWeight() * major), false, inventory);
+        setMajor(account, currency, BigInteger.valueOf(major), true, inventory);
+        setMinor(account, currency, BigInteger.valueOf(currency.getMinorWeight() * major), false, inventory);
       }
     }
 
@@ -308,10 +312,25 @@ public class ItemCalculations {
     }
   }
 
-  public static int giveItemsFeedback(Collection<ItemStack> items, Inventory inventory) {
+  public static int giveItemsFeedback(UUID account, Collection<ItemStack> items, Inventory inventory) {
     int leftAmount = 0;
     for(ItemStack item : items) {
+
       Map<Integer, ItemStack> left = inventory.addItem(item);
+
+      if(inventory.getType() == InventoryType.ENDER_CHEST) {
+
+        Player player = Bukkit.getPlayer(account);
+        if(player != null) {
+
+          left = player.getInventory().addItem(left.values().toArray(new ItemStack[left.size()]));
+
+          if(left.size() > 0) {
+            drop(left, player.getLocation());
+            player.sendMessage(ChatColor.RED + "Your e chest and inventory was full so some items were dropped on the ground.");
+          }
+        }
+      }
 
       if(left.size() > 0) {
         if(inventory instanceof PlayerInventory) {
@@ -326,16 +345,8 @@ public class ItemCalculations {
       if(left.size() > 0) {
         if(inventory instanceof PlayerInventory) {
           final HumanEntity entity = ((HumanEntity)inventory.getHolder());
-          for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
-            final ItemStack i = entry.getValue();
-            Bukkit.getScheduler().runTask(TNE.instance(), () -> {
-              try {
-                entity.getWorld().dropItemNaturally(entity.getLocation(), i);
-              } catch(Exception e) {
-                //attempted to drop air/some crazy/stupid error.
-              }
-            });
-          }
+          drop(left, entity.getLocation());
+          entity.sendMessage(ChatColor.RED + "Your inventory was full so some items were dropped on the ground.");
         }
         leftAmount++;
       }
@@ -350,16 +361,7 @@ public class ItemCalculations {
       if(left.size() > 0) {
         if(inventory instanceof PlayerInventory) {
           final HumanEntity entity = ((HumanEntity)inventory.getHolder());
-          for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
-            final ItemStack i = entry.getValue();
-            Bukkit.getScheduler().runTask(TNE.instance(), () -> {
-              try {
-                entity.getWorld().dropItemNaturally(entity.getLocation(), i);
-              } catch(Exception e) {
-                //attempted to drop air/some crazy/stupid error.
-              }
-            });
-          }
+          drop(left, entity.getLocation());
           entity.sendMessage(ChatColor.RED + "Your inventory was full so some items were dropped on the ground.");
         }
       }
@@ -553,5 +555,19 @@ public class ItemCalculations {
       }
     }
     return left;
+  }
+
+  public static void drop(Map<Integer, ItemStack> left, Location location) {
+
+    for (Map.Entry<Integer, ItemStack> entry : left.entrySet()) {
+      final ItemStack i = entry.getValue();
+      Bukkit.getScheduler().runTask(TNE.instance(), () -> {
+        try {
+          location.getWorld().dropItemNaturally(location, i);
+        } catch(Exception e) {
+          //attempted to drop air/some crazy/stupid error.
+        }
+      });
+    }
   }
 }

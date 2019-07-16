@@ -84,7 +84,7 @@ public class MoneyTopCommand extends TNECommand {
       try {
         max = TNE.saveManager().getTNEManager().getTNEProvider().balanceCount(world, currency.name(), limit);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
       if(max == 0) max = 1;
 
@@ -95,7 +95,7 @@ public class MoneyTopCommand extends TNECommand {
       try {
         values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
       } catch (SQLException e) {
-        e.printStackTrace();
+        TNE.debug(e);
       }
 
       LinkedList<String[]> message = new LinkedList<>();
