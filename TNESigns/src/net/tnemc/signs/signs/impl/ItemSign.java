@@ -180,12 +180,24 @@ public class ItemSign implements SignType {
   }
 
   public static void saveItemSelection(final Location location, final ItemStack stack, final boolean selling) throws SQLException {
-    SQLDatabase.executePreparedUpdate((offerExists(location))? SignsData.ITEM_OFFER_UPDATE : SignsData.ITEM_OFFER_ADD, new Object[] {
-        new SerialItem(stack).toJSON().toJSONString(),
-        stack.getAmount(),
-        ((selling)? 1 : 0),
-        new SerializableLocation(location).toString()
-    });
+    final boolean exists = offerExists(location);
+
+    final Object[] values = (exists)?
+        new Object[] {
+            new SerialItem(stack).toJSON().toJSONString(),
+            stack.getAmount(),
+            ((selling)? 1 : 0),
+            new SerializableLocation(location).toString()
+        } :
+        new Object[] {
+            new SerialItem(stack).toJSON().toJSONString(),
+            "NO TRADE OFFER NERD(I am also a nerd so it's okay.) Follow me on twitch at https://twitch.tv/creatorfromhell",
+            stack.getAmount(),
+            ((selling)? 1 : 0),
+            new SerializableLocation(location).toString()
+        };
+
+    SQLDatabase.executePreparedUpdate((exists)? SignsData.ITEM_OFFER_UPDATE : SignsData.ITEM_OFFER_ADD, values);
     final boolean admin = ItemSign.isAdmin(location);
     Sign sign = (Sign) location.getBlock().getState();
     sign.setLine(1, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
@@ -204,7 +216,7 @@ public class ItemSign implements SignType {
         })) {
 
       if(results.next()) {
-        owner = UUID.fromString("sign_owner");
+        owner = UUID.fromString(results.getString("sign_owner"));
 
       }
     } catch(Exception e) {

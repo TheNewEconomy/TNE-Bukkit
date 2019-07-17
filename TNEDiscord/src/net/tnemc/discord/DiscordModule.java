@@ -50,12 +50,12 @@ public class DiscordModule extends Module {
 
   @Override
   public void load(TNE tne, String version) {
-    Bukkit.getServer().getPluginManager().registerEvents(new TransactionListener(tne), tne);
     //DiscordSRV.getPlugin().getJda().addEventListener(new DiscordMessageListener());
 
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
       manager = new DiscordManager();
       manager.initialize();
+      Bukkit.getServer().getPluginManager().registerEvents(new TransactionListener(tne), tne);
     }
     TNE.logger().info("Discord Module loaded!");
   }

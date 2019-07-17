@@ -58,7 +58,7 @@ public class BlockListener implements Listener {
         final Sign signBlock = (event.getBlock().getState() instanceof Sign) ?
             (Sign) event.getBlock().getState() : SignsManager.getAttachedSign(event.getBlock());
         if (signBlock != null && !SignsModule.manager().getType(sign.getType()).onSignDestroy(sign.getOwner(), event.getPlayer().getUniqueId())
-            && !event.getPlayer().hasPermission("tne.shop.override")) {
+            && !event.getPlayer().hasPermission("tne.sign.antiprotect")) {
           event.setCancelled(true);
         } else {
           if (signBlock != null) {
@@ -107,6 +107,9 @@ public class BlockListener implements Listener {
       if(type != null) {
         Block attached = (event.getBlock() != null && event.getBlock().getState().getData() instanceof org.bukkit.material.Sign)?
             event.getBlock().getRelative(((org.bukkit.material.Sign)event.getBlock().getState().getData()).getAttachedFace()) : null;
+        if(attached == null || attached.getLocation().equals(event.getBlock().getLocation())) {
+          attached = event.getBlock().getWorld().getBlockAt(event.getBlock().getLocation().add(0, -1, 0));
+        }
         if (type.create(event, attached, IDFinder.getID(event.getPlayer()))) {
           event.setLine(0, type.success() + event.getLine(0));
         } else {

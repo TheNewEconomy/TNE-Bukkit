@@ -85,7 +85,7 @@ public class SignsData {
   public static final String ITEM_ADMIN_CHECK = "SELECT sign_admin FROM " + SignsData.prefix + "_SIGNS WHERE sign_location = ?";
   public static final String ITEM_SELLING_CHECK = "SELECT item_selling FROM " + SignsData.prefix + "_SIGNS_ITEMS WHERE sign_location = ?";
   public static final String ITEM_OFFER_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_offer = ?, item_amount = ?, item_selling = ? WHERE sign_location = ?";
-  public static final String ITEM_OFFER_ADD = "INSERT INTO " + SignsData.prefix + "_SIGNS_ITEMS (item_offer, item_amount, item_selling, sign_location) VALUES(?, ?, ?, ?)";
+  public static final String ITEM_OFFER_ADD = "INSERT INTO " + SignsData.prefix + "_SIGNS_ITEMS (item_offer, item_trade, item_amount, item_selling, sign_location) VALUES(?, ?, ?, ?, ?)";
   public static final String ITEM_TRADE_UPDATE = "UPDATE " + SignsData.prefix + "_SIGNS_ITEMS SET item_currency = ?, item_cost = ?, item_trade = ? WHERE sign_location = ?";
 
 

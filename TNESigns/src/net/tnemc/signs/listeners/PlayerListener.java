@@ -71,7 +71,7 @@ public class PlayerListener implements Listener {
         }
       }
     } else {
-      if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getPlayer().isSneaking()) {
+      if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
         if(event.getClickedBlock().getType().equals(Material.CHEST)) {
           if(!SignsModule.manager().getSelectionManager().isSelecting(id, "chest")) {
 
@@ -86,7 +86,7 @@ public class PlayerListener implements Listener {
                 }
                 if (signInstance != null) {
                   if (!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())
-                      && !event.getPlayer().hasPermission("tne.shop.override")) {
+                      && !event.getPlayer().hasPermission("tne.chest.antiprotect")) {
                     event.setCancelled(true);
                   }
                 }
@@ -95,7 +95,7 @@ public class PlayerListener implements Listener {
                   UUID owner = ItemSign.chest(event.getClickedBlock().getLocation());
 
                   if(owner != null) {
-                    if(!owner.equals(id)) {
+                    if(!owner.equals(id) && !event.getPlayer().hasPermission("tne.chest.antiprotect")) {
                       event.setCancelled(true);
                     }
                   }

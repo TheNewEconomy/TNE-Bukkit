@@ -76,7 +76,7 @@ public class PlayerHandler implements HoldingsHandler {
                 ItemCalculations.clearItems(currency, ((Chest)sign.getAttached().getBlock().getState()).getBlockInventory());
                 left = left.subtract(holdings);
               } else {
-                ItemCalculations.setItems(currency, left, ((Chest)sign.getAttached().getBlock().getState()).getBlockInventory(), true);
+                ItemCalculations.setItems(account, currency, left, ((Chest)sign.getAttached().getBlock().getState()).getBlockInventory(), true);
                 return BigDecimal.ZERO;
               }
             }

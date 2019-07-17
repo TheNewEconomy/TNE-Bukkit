@@ -68,7 +68,11 @@ public class TransactionListener implements Listener {
         embed.addField("Initiator", initiatorBuilder.toString(), false);
         embed.addField("Recipient", recipientBuilder.toString(), false);
         embed.setColor(new Color(190, 57, 0));
-        DiscordUtil.getJda().getTextChannelById(TNE.instance().api().getString("Discord.Transactions.Channel")).sendMessage(embed.build()).queue();
+        try {
+          DiscordUtil.getJda().getTextChannelById(TNE.instance().api().getString("Discord.Transactions.Channel")).sendMessage(embed.build()).queue();
+        } catch(Exception ignore) {
+          TNE.logger().warning("Attempted to log TNE transaction to discord, but an invalid channel ID was specified in discord.yml. To remove this message remove plugins/TheNewEconomy/modules/Discord.jar, or configure it properly.");
+        }
       }
     }
   }
