@@ -767,10 +767,22 @@ public class H2Provider extends TNEDataProvider {
   @Override
   public int balanceCount(String world, String currency, int limit) throws SQLException {
     final String balanceTable = manager.getPrefix() + "_BALANCES";
+    final String userTable = manager.getPrefix() + "_USERS";
     int count = 0;
 
     SQLDatabase.open();
-    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement("SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;");
+    final String complex = "SELECT count(*) FROM " + balanceTable + " LEFT JOIN " + userTable + " ON " + balanceTable +
+        ".uuid = " + userTable + ".uuid WHERE " + balanceTable + ".world = ? AND " + balanceTable +
+        ".currency = ? AND " + userTable + ".display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Town") +
+        "%' AND " + userTable + ".display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Nation") + "%' AND "
+        + userTable + ".display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Faction") +
+        "%' AND " + userTable + ".display_name NOT LIKE 'towny-%';";
+
+    final String query = (TNE.instance().api().getBoolean("Core.Server.ThirdParty.TopThirdParty"))?
+        "SELECT count(*) FROM " + balanceTable + " WHERE world = ? AND currency = ?;" :
+        complex;
+
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(query);
         ResultSet results = H2.executePreparedQuery(statement, new Object[] { world, currency })) {
 
       while(results.next()) {
@@ -782,7 +794,7 @@ public class H2Provider extends TNEDataProvider {
 
     SQLDatabase.close();
     if(count > 0) {
-      return (int)Math.ceil(count / limit);
+      return (count % limit > 0)? (count / limit) + 1 : count / limit;
     }
     return count;
   }
@@ -796,15 +808,17 @@ public class H2Provider extends TNEDataProvider {
     LinkedHashMap<UUID, BigDecimal> balances = new LinkedHashMap<>();
 
     final String balanceTable = manager.getPrefix() + "_BALANCES";
+    final String userTable = manager.getPrefix() + "_USERS";
 
     int start = 0;
     if(page > 1) start = ((page - 1) * limit);
 
-    final String complex = "SELECT " + manager.getPrefix() + "_BALANCES.uuid, display_name, balance, world, currency FROM " +
-        balanceTable + ", " + manager.getPrefix() + "_USERS" +
-        " WHERE world = ? AND currency = ? AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Town") + "'" +
-        " AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Nation") +
-        "' AND display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Faction") + "' ORDER BY balance DESC LIMIT ?,?";
+    final String complex = "SELECT TNE_BALANCES.uuid, TNE_USERS.display_name, TNE_BALANCES.balance, TNE_BALANCES.world, TNE_BALANCES.currency FROM " + balanceTable + " LEFT JOIN " + userTable + " ON " + balanceTable +
+        ".uuid = " + userTable + ".uuid WHERE " + balanceTable + ".world = ? AND " + balanceTable +
+        ".currency = ? AND " + userTable + ".display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Town") +
+        "%' AND " + userTable + ".display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Nation") + "%' AND "
+        + userTable + ".display_name NOT LIKE '" + TNE.instance().api().getString("Core.Server.ThirdParty.Faction") +
+        "%' AND " + userTable + ".display_name NOT LIKE 'towny-%' ORDER BY TNE_BALANCES.balance DESC LIMIT ?,?;";
 
     final String query = (TNE.instance().api().getBoolean("Core.Server.ThirdParty.TopThirdParty"))?
         "SELECT uuid, balance FROM " + balanceTable + " WHERE world = ? AND currency = ? ORDER BY balance DESC LIMIT ?,?;" :
