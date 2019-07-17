@@ -305,6 +305,8 @@ public class SerialItem {
   }
 
   public static SerialItem fromJSON(JSONObject json) {
+    TNE.debug(json.toJSONString());
+    TNE.debug("FROM JSON MOTHER FUCKER");
     final JSONHelper helper = new JSONHelper(json);
     TNE.debug("JSON: " + helper.toString());
     TNE.debug("fromJSON");
@@ -314,6 +316,7 @@ public class SerialItem {
     TNE.debug("Stack Created");
     TNE.debug("Stack amount");
     ItemMeta meta = Bukkit.getItemFactory().getItemMeta(stack.getType());
+    TNE.debug("Meta Class: " + meta.getClass().getName());
     TNE.debug("Stack meta");
     TNE.debug("Stack metaz");
     TNE.debug(json.toJSONString());
@@ -374,7 +377,9 @@ public class SerialItem {
     SerialItem serial = new SerialItem(stack, helper.getInteger("slot"));
     if(helper.has("data")) {
       serial.getData().readJSON(helper.getHelper("data"));
+      TNE.debug("Post readJSON");
       serial.getData().build(stack);
+      TNE.debug("Post build");
     }
     TNE.debug("Finished reading item's JSON");
     return serial;

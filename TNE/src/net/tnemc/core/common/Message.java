@@ -118,7 +118,7 @@ public class Message {
     //TNE.debug("Node: " + node);
     //TNE.debug("Message: " + found);
 
-    String[] message = (found == null || found.trim().equalsIgnoreCase(""))? new String[] { this.node } : found.split("<newline>");
+    String[] message = (found == null || found.trim().equalsIgnoreCase(""))? new String[] { this.node } : found.replace("<Newline>", "<newline>").split("<newline>");
     String[] formatted = new String[message.length];
 
     for(int i = 0; i < message.length; i++) {

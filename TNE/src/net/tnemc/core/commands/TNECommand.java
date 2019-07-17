@@ -34,9 +34,9 @@ public abstract class TNECommand {
     return "Command help coming soon!";
   }
 
-  public String[] getHelpLines() {
+  public String[] getHelpLines(final CommandSender sender) {
     //Message message = new Message(getHelp());
-    return new Message(getHelp()).grabWithNew(TNE.instance().defaultWorld, null);
+    return new Message(getHelp()).grabWithNew(TNE.instance().defaultWorld, sender);
   }
 
   public void help(final CommandSender sender) {
@@ -48,12 +48,12 @@ public abstract class TNECommand {
     if(subCommands.size() > 0) {
       for (TNECommand sub : subCommands) {
         if(sub.canExecute(sender)) {
-          help.add(sub.getHelpLines());
+          help.add(sub.getHelpLines(sender));
         }
       }
     } else {
       if(canExecute(sender)) {
-        help.add(getHelpLines());
+        help.add(getHelpLines(sender));
       }
     }
 

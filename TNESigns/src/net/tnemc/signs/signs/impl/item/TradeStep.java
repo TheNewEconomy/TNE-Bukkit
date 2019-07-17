@@ -57,10 +57,10 @@ public class TradeStep implements SignStep {
         final ItemStack item = ItemSign.getItem(sign.getLocation());
 
 
+        TNE.debug("Item Null?: " + (item == null));
         if(item != null) {
           TNE.debug("Trade Enchant Size: " + item.getEnchantments().size());
           TNE.debug("TradeEnchant Size: " + item.getItemMeta().getEnchants().size());
-          TNE.debug("Item Null?: " + (item == null));
           TNE.debug("Damage: " + item.getDurability());
           final boolean selling = ItemSign.isSelling(sign.getLocation());
           TNE.menuManager().setViewerData(player, "shop_owner", loaded.getOwner());
@@ -100,7 +100,7 @@ public class TradeStep implements SignStep {
 
           TNE.menuManager().open("shop_offer_menu", playerInstance);
         } else {
-          System.out.println("Issue with TNE Trade Sign! Invalid sign data for sign at : " + sign.getLocation().toString());
+          TNE.debug("Issue with TNE Trade Sign! Invalid sign data for sign at : " + sign.getLocation().toString());
         }
 
       } catch (SQLException e) {

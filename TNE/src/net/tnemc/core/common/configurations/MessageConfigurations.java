@@ -80,8 +80,8 @@ public class MessageConfigurations extends Configuration {
 
   @Override
   public Object getValue(String node, String world, String player) {
-    TNE.debug("Checking for translation in languages.");
     final String language = (player.trim().equalsIgnoreCase(""))? "Default" : TNE.manager().getAccount(IDFinder.getID(player)).getLanguage();
+
 
     if(languages.containsKey(language)) {
       Language lang = languages.get(language);

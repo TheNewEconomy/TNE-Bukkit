@@ -52,6 +52,11 @@ public class SerialPotionData implements SerialItemData {
 
   @Override
   public ItemStack build(ItemStack stack) {
+    TNE.debug("Potion Meta Building.");
+    TNE.debug("Stack null: " + (stack == null));
+    TNE.debug("Potion Type needed: " + type);
+    TNE.debug("Potion Type needed: " + PotionType.valueOf(type).name());
+    TNE.debug("Valid: " + valid);
     if(valid) {
       PotionMeta meta = (PotionMeta)stack.getItemMeta();
       if(color != null) meta.setColor(color);
@@ -60,6 +65,7 @@ public class SerialPotionData implements SerialItemData {
       meta.setBasePotionData(data);
       stack.setItemMeta(meta);
     }
+    TNE.debug("Stack null: " + (stack == null));
     return stack;
   }
 
@@ -92,24 +98,33 @@ public class SerialPotionData implements SerialItemData {
   @Override
   public void readJSON(JSONHelper json) {
     valid = true;
+    customEffects = new ArrayList<>();
     TNE.debug("Potion Data Reading Start");
     type = json.getString("type");
     TNE.debug("Type?: " + json.has("type"));
     TNE.debug("Type: " + type);
-    if(json.has("colour")) color = Color.fromRGB(json.getInteger("colour"));
+    if (json.has("colour")) color = Color.fromRGB(json.getInteger("colour"));
     extended = json.getBoolean("extended");
     upgraded = json.getBoolean("upgraded");
+    List<PotionEffect> newEffects = new ArrayList<>();
 
-    if(json.has("effects")) {
+    if (json.has("effects")) {
+
       JSONHelper effects = json.getHelper("effects");
-      effects.getObject().forEach((key, value)->{
-        final JSONHelper helperObj = new JSONHelper((JSONObject)value);
-        customEffects.add(new PotionEffect(PotionEffectType.getByName(helperObj.getString("name")),
-            helperObj.getInteger("amplifier"), helperObj.getInteger("duration"),
-            helperObj.getBoolean("ambient"), helperObj.getBoolean("particles"),
-            helperObj.getBoolean("icon")));
-      });
+
+      for(Object value : effects.getObject().values()) {
+        if(value instanceof JSONObject) {
+          final JSONHelper helperObj = new JSONHelper((JSONObject) value);
+
+          final PotionEffect effect = new PotionEffect(PotionEffectType.getByName(helperObj.getString("name")),
+              helperObj.getInteger("amplifier"), helperObj.getInteger("duration"),
+              helperObj.getBoolean("ambient"), helperObj.getBoolean("particles"),
+              helperObj.getBoolean("icon"));
+          newEffects.add(effect);
+        }
+      }
     }
+    customEffects.addAll(newEffects);
     TNE.debug("Potion Data Reading End");
   }
 }
