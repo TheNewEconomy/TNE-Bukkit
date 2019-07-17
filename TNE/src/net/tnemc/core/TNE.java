@@ -137,7 +137,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta118i";
+  public static final String build = "1Beta118j";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
