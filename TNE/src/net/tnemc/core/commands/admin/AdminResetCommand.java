@@ -2,9 +2,14 @@ package net.tnemc.core.commands.admin;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.EconomyManager;
+import net.tnemc.core.common.api.IDFinder;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -48,11 +53,22 @@ public class AdminResetCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     try {
-      TNE.saveManager().getTNEManager().getTNEProvider().delete(TNE.instance().currentSaveVersion);
+      final UUID id = IDFinder.getID(sender);
+      if(EconomyManager.reset.contains(id)) {
+        TNE.saveManager().getTNEManager().getTNEProvider().delete(TNE.instance().currentSaveVersion);
+        sender.sendMessage("All data has been reset.");
+      } else {
+        EconomyManager.reset.add(id);
+        sender.sendMessage(ChatColor.RED + "Are you sure you wish to do this? Have you done /tne extract first? This is not reversible. Type /eco reset again to confirm.");
+        Bukkit.getScheduler().runTaskLaterAsynchronously(TNE.instance(), ()->{
+          if(EconomyManager.reset.contains(id)) {
+            EconomyManager.reset.remove(id);
+          }
+        }, 600);
+      }
     } catch (SQLException e) {
       TNE.debug(e);
     }
-    sender.sendMessage("All data has been reset.");
     return true;
   }
 }

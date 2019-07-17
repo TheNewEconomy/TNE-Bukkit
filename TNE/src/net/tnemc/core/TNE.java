@@ -137,7 +137,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta118g";
+  public static final String build = "1Beta118h";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -750,7 +750,9 @@ public class TNE extends TNELib {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) TNE.debug(message);
+    if(consoleDebug) {
+      System.out.println(message);
+    }
   }
 
   private void setupVault() {

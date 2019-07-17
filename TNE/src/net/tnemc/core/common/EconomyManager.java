@@ -57,6 +57,8 @@ public class EconomyManager {
 
   private TreeMap<Integer, List<HoldingsHandler>> holdingsHandlers = new TreeMap<>();
 
+  public static List<UUID> reset = new ArrayList<>();
+
   private List<UUID> expGain = new ArrayList<>();
 
   public EconomyManager() {

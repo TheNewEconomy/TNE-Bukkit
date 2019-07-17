@@ -54,6 +54,7 @@ public class MySQLProvider extends TNEDataProvider {
       "account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
   private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
+  private final String BALANCE_LOAD_ALL = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
@@ -288,7 +289,7 @@ public class MySQLProvider extends TNEDataProvider {
     String table = manager.getPrefix() + "_ECOIDS";
     try(Statement statement = SQLDatabase.getDb().getConnection().createStatement()) {
 
-      try(ResultSet results = MySQL.executeQuery(statement, "SELECT username, uuid FROM " + table + ";")) {
+      try(ResultSet results = statement.executeQuery("SELECT username, uuid FROM " + table + ";")) {
 
         TNE.debug("Predicted IDs: " + results.getFetchSize());
         while (results.next()) {
@@ -385,7 +386,7 @@ public class MySQLProvider extends TNEDataProvider {
     SQLDatabase.open();
     try(Statement statement = SQLDatabase.getDb().getConnection().createStatement()) {
 
-      try(ResultSet results = MySQL.executeQuery(statement, "SELECT uuid FROM " + table + ";")) {
+      try(ResultSet results = statement.executeQuery("SELECT uuid FROM " + table + ";")) {
         while (results.next()) {
           TNE.debug("Loading account with UUID of " + results.getString("uuid"));
           userIDS.add(UUID.fromString(results.getString("uuid")));
@@ -506,6 +507,29 @@ public class MySQLProvider extends TNEDataProvider {
 
     }
     SQLDatabase.close();
+  }
+
+  @Override
+  public Map<String, BigDecimal> loadAllBalances(UUID id) throws SQLException {
+    Map<String, BigDecimal> balances = new HashMap<>();
+
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD_ALL)) {
+
+      statement.setObject(1, id.toString());
+
+      try(ResultSet results = statement.executeQuery()) {
+
+        while(results.next()) {
+          String builder = results.getString("world") +
+              "@" +
+              results.getString("currency");
+          balances.put(builder, results.getBigDecimal("balance"));
+        }
+      }
+    }
+    SQLDatabase.close();
+    return balances;
   }
 
   @Override

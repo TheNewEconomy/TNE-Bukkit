@@ -298,11 +298,20 @@ public class MISCUtils {
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
     Map<String, UUID> ids = TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS();
     TNE.debug("Accounts Length: " + ids.size());
-
     ids.forEach((username, id)->{
       TNEAccount account = TNE.manager().getAccount(id);
       if(account != null) {
         TNE.debug("Extracting Account: " + username);
+        try {
+          Map<String, BigDecimal> balances = TNE.saveManager().getTNEManager().getTNEProvider().loadAllBalances(id);
+
+          balances.forEach((key, balance)->{
+            String[] split = key.split("\\@");
+            configuration.set("Accounts." + username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%") + ".Balances." + split[0] + "." + split[1], balance.toPlainString());
+          });
+        } catch (SQLException e) {
+          TNE.debug(e);
+        }
         /*TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
         account.getWorldHoldings().forEach((world, holdings) -> {
           holdings.getHoldings().forEach((currency, amount) -> {
@@ -310,6 +319,7 @@ public class MISCUtils {
             configuration.set("Accounts." + username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%") + ".Balances." + world + "." + currency, amount.toPlainString());
           });
         });*/
+
       }
     });
     try {
