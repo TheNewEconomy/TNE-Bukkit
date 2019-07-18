@@ -126,6 +126,7 @@ public class CurrencyManager {
     final String separator = TNE.instance().mainConfigurations().getString(base + ".Options.Major_Separator", ",");
     final Integer minorWeight = TNE.instance().mainConfigurations().getInt(base + ".Options.Minor_Weight", 100);
 
+
     //Currency Note Configurations
     final Boolean notable = TNE.instance().mainConfigurations().getBool(base + ".Note.Notable", false);
     final BigDecimal fee = new BigDecimal(TNE.instance().mainConfigurations().getString(base + ".Note.Fee", "0.00"));
@@ -284,7 +285,7 @@ public class CurrencyManager {
         final BigDecimal maxBalance = ((new BigDecimal(configuration.getString(base + ".Options.MaxBalance", largestSupported.toPlainString())).compareTo(largestSupported) > 0)? largestSupported : new BigDecimal(configuration.getString(base + ".MaxBalance", largestSupported.toPlainString())));
         final BigDecimal balance = new BigDecimal(configuration.getString(base + ".Options.Balance", "200.00"));
         final String decimal = configuration.getString(base + ".Options.Decimal", ".");
-        final Integer decimalPlaces = ((configuration.getInt(base + ".Options.DecimalPlace", 2) > 4)? 4 : configuration.getInt(base + ".DecimalPlace", 2));
+        final Integer decimalPlaces = ((configuration.getInt(base + ".Options.DecimalPlaces", 2) > 4)? 4 : configuration.getInt(base + ".Options.DecimalPlaces", 2));
         final Boolean experience = configuration.getBool(base + ".Options.Experience");
         final Boolean item = configuration.getBool(base + ".Options.ItemCurrency");
         final Boolean ender = configuration.getBool(base + ".Options.EnderChest", true);

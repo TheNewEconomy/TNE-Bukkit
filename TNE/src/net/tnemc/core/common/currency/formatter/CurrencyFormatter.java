@@ -112,6 +112,7 @@ public class CurrencyFormatter {
     majorConversion = majorConversion.divide(new BigInteger(currency.getMinorWeight() + ""));
     major = major.add(majorConversion);
     minor = minor.mod(new BigInteger(currency.getMinorWeight() + ""));
+
     final String minorFinal = String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(minor.toString())).replace(' ', '0');
     return new BigDecimal(major.toString() + "." + minorFinal);
   }
