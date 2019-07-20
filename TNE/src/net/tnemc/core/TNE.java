@@ -292,6 +292,7 @@ public class TNE extends TNELib {
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
     manager = new EconomyManager();
+    manager.currencyManager().loadRecipes();
 
     //General Variables based on configuration values
     TNE.debug("Preparing variables");

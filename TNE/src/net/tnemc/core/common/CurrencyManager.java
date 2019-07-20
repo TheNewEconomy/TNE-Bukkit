@@ -6,21 +6,20 @@ import net.tnemc.core.common.currency.CurrencyNote;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
-import net.tnemc.core.common.material.MaterialHelper;
+import net.tnemc.core.common.currency.recipe.CurrencyRecipe;
+import net.tnemc.core.common.currency.recipe.CurrencyShapedRecipe;
+import net.tnemc.core.common.currency.recipe.CurrencyShapelessRecipe;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
+import net.tnemc.core.event.currency.TNECurrencyCraftingRecipeEvent;
 import net.tnemc.core.event.currency.TNECurrencyLoadEvent;
 import net.tnemc.core.event.currency.TNECurrencyTierLoadedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -48,6 +47,12 @@ import java.util.UUID;
 public class CurrencyManager {
   private static BigDecimal largestSupported;
   private Map<String, TNECurrency> globalCurrencies = new HashMap<>();
+
+  /**
+   * A map containing all of the crafting recipes enabled for TNE currencies.
+   * Format: <CurrencyName:CurrencyTier, CurrencyRecipe instance></CurrencyName:CurrencyTier,>
+   */
+  public Map<String, CurrencyRecipe> currencyRecipes = new HashMap<>();
 
   //Cache-related maps.
   private List<String> globalDisabled = new ArrayList<>();
@@ -84,6 +89,12 @@ public class CurrencyManager {
     Bukkit.getServer().getPluginManager().addPermission(convertParent);
     Bukkit.getServer().getPluginManager().addPermission(noteParent);
     Bukkit.getServer().getPluginManager().addPermission(payParent);
+  }
+
+  public void loadRecipes() {
+    for(CurrencyRecipe recipe : currencyRecipes.values()) {
+      recipe.register();
+    }
   }
 
   public void loadCurrencies() {
@@ -402,42 +413,18 @@ public class CurrencyManager {
           final boolean shapeless = configuration.getBool(tierBase + ".Options.Crafting.Shapeless", false);
           ItemStack stack = item.toStack().clone();
           stack.setAmount(configuration.getInt(tierBase + ".Options.Crafting.Amount", 1));
-          Recipe recipe = null;
-          final List<String> shape = configuration.getStringList(tierBase + ".Options.Crafting.Recipe");
 
-          Map<Character, Integer> materials = new HashMap<>();
+          CurrencyRecipe recipe = (shapeless)? new CurrencyShapelessRecipe(currency.getIdentifier(), tierName, stack) :
+              new CurrencyShapedRecipe(currency.getIdentifier(), tierName, stack);
+          recipe.setCraftingMatrix(configuration.getStringList(tierBase + ".Options.Crafting.Recipe"));
+          recipe.setMaterialsRaw(configuration.getStringList(tierBase + ".Options.Crafting.Materials"));
 
-          if(shapeless) {
-            recipe = new ShapelessRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
+          TNECurrencyCraftingRecipeEvent event = new TNECurrencyCraftingRecipeEvent(world, currency.getIdentifier(),
+              tierName, type, recipe, !Bukkit.isPrimaryThread());
 
-            for(String str : shape) {
-              for(Character character : str.toCharArray()) {
-                final int count = materials.getOrDefault(character, 0) + 1;
-                materials.put(character, count);
-              }
-            }
-          } else {
-            TNE.debug("Shape: " + String.join(",", shape));
-            recipe = new ShapedRecipe(new NamespacedKey(TNE.instance(), "tne_" + currency.getIdentifier() + "_" + tierName), stack);
-            ((ShapedRecipe)recipe).shape(shape.toArray(new String[shape.size()]));
+          Bukkit.getPluginManager().callEvent(event);
 
-          }
-
-          if(recipe != null) {
-            for(String material : configuration.getStringList(tierBase + ".Options.Crafting.Materials")) {
-              final String[] split = material.split(":");
-              TNE.debug("Material: " + material);
-              if(split.length >= 2) {
-                if(shapeless) {
-                  final int count = materials.getOrDefault(split[0].charAt(0), 1);
-                  ((ShapelessRecipe)recipe).addIngredient(count, MaterialHelper.getMaterial(split[1]));
-                } else {
-                  ((ShapedRecipe)recipe).setIngredient(split[0].charAt(0), MaterialHelper.getMaterial(split[1]));
-                }
-              }
-            }
-            Bukkit.addRecipe(recipe);
-          }
+          currencyRecipes.put(currency.getIdentifier() + ":" + tierName, event.getRecipe());
         }
       }
 

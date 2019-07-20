@@ -179,6 +179,7 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
+    TNELib.debug("MOJANG API TIME");
     UUID mojangID = (identifier.equalsIgnoreCase(TNELib.instance().consoleName))? null : Bukkit.getOfflinePlayer(identifier).getUniqueId();
     if(mojangID == null) {
       TNELib.debug("MOJANG API RETURNED NULL VALUE");

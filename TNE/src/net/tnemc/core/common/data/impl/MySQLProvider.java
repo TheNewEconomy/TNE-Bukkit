@@ -239,6 +239,58 @@ public class MySQLProvider extends TNEDataProvider {
     return false;
   }
 
+  /*@Override
+  public void extract() {
+    File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
+    if(!file.exists()) {
+      try {
+        file.createNewFile();
+      } catch (IOException e) {
+        TNE.debug(e);
+      }
+    }
+    YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+    SQLDatabase.open();
+
+    String table = manager.getPrefix() + "_USERS";
+    try(Statement statement = SQLDatabase.getDb().getConnection().createStatement()) {
+
+      try(ResultSet results = statement.executeQuery("SELECT display_name, uuid FROM " + table + ";")) {
+
+        while (results.next()) {
+
+          final UUID id = UUID.fromString(results.getString("uuid"));
+          final String username = results.getString("display_name");
+          TNEAccount account = TNE.manager().getAccount(id);
+          if(account != null) {
+            TNE.debug("Extracting Account: " + username);
+            try {
+              Map<String, BigDecimal> balances = TNE.saveManager().getTNEManager().getTNEProvider().loadAllBalances(id);
+
+              balances.forEach((key, balance)->{
+                String[] split = key.split("\\@");
+                String formattedUser = username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%");
+
+                BigDecimal finalBalance = balance;
+                if(configuration.contains("Accounts." + formattedUser + ".Balances." + split[0] + "." + split[1])) {
+                  finalBalance = finalBalance.add(new BigDecimal(configuration.getString("Accounts." + formattedUser + ".Balances." + split[0] + "." + split[1])));
+                }
+
+                configuration.set("Accounts." + formattedUser + ".Balances." + split[0] + "." + split[1], finalBalance.toPlainString());
+              });
+            } catch (SQLException e) {
+              TNE.debug(e);
+            }
+          }
+        }
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    SQLDatabase.close();
+  }*/
+
   @Override
   public String loadUsername(String identifier) throws SQLException {
     SQLDatabase.open();
@@ -304,6 +356,32 @@ public class MySQLProvider extends TNEDataProvider {
     TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
     return ids;
   }
+
+  @Override
+  public Map<String, UUID> loadEconomyAccountIDS() throws SQLException {
+    Map<String, UUID> ids = new HashMap<>();
+
+    SQLDatabase.open();
+
+    String table = manager.getPrefix() + "_USERS";
+    try(Statement statement = SQLDatabase.getDb().getConnection().createStatement()) {
+
+      try(ResultSet results = statement.executeQuery("SELECT display_name, uuid FROM " + table + ";")) {
+
+        while (results.next()) {
+
+          TNE.debug("Loading EcoID for " + results.getString("display_name"));
+          ids.put(results.getString("display_name"), UUID.fromString(results.getString("uuid")));
+        }
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    SQLDatabase.close();
+    TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
+    return ids;
+  }
+
 
   @Override
   public int accountCount(String username) {

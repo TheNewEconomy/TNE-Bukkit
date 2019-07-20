@@ -45,6 +45,7 @@ public class H2Provider extends TNEDataProvider {
   private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
+  private final String ACCOUNT_LOAD_ID = "SELECTION uuid, display_name FROM " + prefix + "_USERS";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
       "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
       "uuid = ? LIMIT 1";
@@ -241,6 +242,62 @@ public class H2Provider extends TNEDataProvider {
     return false;
   }
 
+  /*@Override
+  public void extract() {
+    File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
+    if(!file.exists()) {
+      try {
+        file.createNewFile();
+      } catch (IOException e) {
+        TNE.debug(e);
+      }
+    }
+    YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+    SQLDatabase.open();
+    final String balanceTable = manager.getPrefix() + "_BALANCES";
+    final String userTable = manager.getPrefix() + "_USERS";
+    final String query = "SELECT " + balanceTable + ".uuid, " + userTable + ".display_name, " + balanceTable + ".balance, " + balanceTable + ".world, " + balanceTable + ".currency FROM " + balanceTable + " LEFT JOIN " + userTable + " ON " + balanceTable +
+        ".uuid = " + userTable + ".uuid";
+
+    try {
+      try (Statement balStatement = SQLDatabase.getDb().getConnection().createStatement()) {
+
+
+        try (ResultSet balResults = balStatement.executeQuery(query)) {
+
+          while (balResults.next()) {
+            ResultSetMetaData rsmd = balResults.getMetaData();
+
+            System.out.println("Column: " + rsmd.getColumnName(0));
+            System.out.println("Column: " + rsmd.getColumnName(1));
+            System.out.println("Column: " + rsmd.getColumnName(2));
+            System.out.println("Column: " + rsmd.getColumnName(3));
+            System.out.println("Column: " + rsmd.getColumnName(4));
+
+            final String username = balResults.getString(2);
+            final BigDecimal balance = balResults.getBigDecimal("balance");
+            final String world = balResults.getString("world");
+            final String currency = balResults.getString("currency");
+            String formattedUser = username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%");
+
+            BigDecimal finalBalance = balance;
+            if (configuration.contains("Accounts." + formattedUser + ".Balances." + world + "." + currency)) {
+              finalBalance = finalBalance.add(new BigDecimal(configuration.getString("Accounts." + formattedUser + ".Balances." + world + "." + currency)));
+            }
+
+            configuration.set("Accounts." + formattedUser + ".Balances." + world + "." + currency, finalBalance.toPlainString());
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    SQLDatabase.close();
+  }*/
+
   @Override
   public String loadUsername(String identifier) throws SQLException {
     SQLDatabase.open();
@@ -266,6 +323,10 @@ public class H2Provider extends TNEDataProvider {
   public UUID loadID(String username) {
     UUID id = null;
     SQLDatabase.open();
+    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+    StackTraceElement element = stackTrace[2];
+    TNELib.debug("loadID called by: [Class: " + element.getClassName() + " via Method: " + element.getMethodName() + " at Line: " + element.getLineNumber());
+    TNELib.debug("Username: " + username);
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ID_LOAD)) {
 
       try(ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
@@ -273,12 +334,14 @@ public class H2Provider extends TNEDataProvider {
       })) {
 
         if(results.next()) {
+          TNELib.debug("UUID IN DB: " + results.getString("uuid"));
           id = UUID.fromString(results.getString("uuid"));
         }
       }
     } catch(Exception e) {
       TNE.debug(e);
     }
+    TNELib.debug("UUID TO RETURN: " + ((id == null)? "null" : id.toString()));
     SQLDatabase.close();
     return id;
   }
@@ -298,6 +361,31 @@ public class H2Provider extends TNEDataProvider {
 
           TNE.debug("Loading EcoID for " + results.getString("username"));
           ids.put(results.getString("username"), UUID.fromString(results.getString("uuid")));
+        }
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    SQLDatabase.close();
+    TNE.debug("Finished loading Eco IDS. Total: " + ids.size());
+    return ids;
+  }
+
+  @Override
+  public Map<String, UUID> loadEconomyAccountIDS() throws SQLException {
+    Map<String, UUID> ids = new HashMap<>();
+
+    SQLDatabase.open();
+
+    String table = manager.getPrefix() + "_USERS";
+    try(Statement statement = SQLDatabase.getDb().getConnection().createStatement()) {
+
+      try(ResultSet results = statement.executeQuery("SELECT display_name, uuid FROM " + table + ";")) {
+
+        while (results.next()) {
+
+          TNE.debug("Loading EcoID for " + results.getString("display_name"));
+          ids.put(results.getString("display_name"), UUID.fromString(results.getString("uuid")));
         }
       }
     } catch(Exception e) {

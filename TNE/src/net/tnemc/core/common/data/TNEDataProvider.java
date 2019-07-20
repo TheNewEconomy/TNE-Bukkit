@@ -37,6 +37,7 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract String loadUsername(String identifier) throws SQLException;
   public abstract UUID loadID(String username) throws SQLException;
   public abstract Map<String, UUID> loadEconomyIDS() throws SQLException;
+  public abstract Map<String, UUID> loadEconomyAccountIDS() throws SQLException;
   public void saveIDS(Map<String, UUID> ids) throws SQLException {
 
   }
@@ -44,7 +45,6 @@ public abstract class TNEDataProvider extends DataProvider {
   public int accountCount(String username) {
     return 0;
   }
-
   public abstract void createTables(List<String> tables) throws SQLException;
   public abstract void saveID(String username, UUID id) throws SQLException;
   public abstract void removeID(String username) throws SQLException;

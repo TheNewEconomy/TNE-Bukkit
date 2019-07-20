@@ -44,7 +44,9 @@ public class TNEUUIDManager extends UUIDManager {
   @Override
   public void addUUID(String username, UUID uuid) {
     TNE.debug("TNEUUIDManager.addUUID(username: " + username + ", uuid: " + uuid.toString() + ")");
-    uuids.put(username, uuid);
+    if(!uuids.containsKey(username)) {
+      uuids.put(username, uuid);
+    }
   }
 
   @Override

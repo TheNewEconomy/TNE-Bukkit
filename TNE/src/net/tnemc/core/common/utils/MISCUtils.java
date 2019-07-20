@@ -205,10 +205,13 @@ public class MISCUtils {
     YamlConfiguration original = YamlConfiguration.loadConfiguration(file);
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 
+
     if(configuration.contains("Accounts")) {
       Set<String> accounts = configuration.getConfigurationSection("Accounts").getKeys(false);
 
-      accounts.forEach((username) -> {
+      final int frequency = (int)(accounts.size() * 0.10);
+      int number = 1;
+      for(String username : accounts) {
         String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
         if (reformattedUsername.equalsIgnoreCase("server account")) reformattedUsername = TNE.instance().consoleName;
         UUID id = IDFinder.getID(reformattedUsername);
@@ -223,7 +226,14 @@ public class MISCUtils {
           });
         });
         TNE.manager().addAccount(account);
-      });
+        number++;
+        final boolean message = (number % frequency == 0);
+
+        if(message) {
+          final int progress = (int)(number * 100 / accounts.size());
+          TNE.logger().info("Restoration Progress: " + progress);
+        }
+      }
     }
 
     sender.sendMessage(ChatColor.WHITE + "Restored accounts from extracted.yml.");
@@ -296,7 +306,7 @@ public class MISCUtils {
       }
     }
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-    Map<String, UUID> ids = TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyIDS();
+    Map<String, UUID> ids = TNE.saveManager().getTNEManager().getTNEProvider().loadEconomyAccountIDS();
     TNE.debug("Accounts Length: " + ids.size());
     ids.forEach((username, id)->{
       TNEAccount account = TNE.manager().getAccount(id);
@@ -312,13 +322,6 @@ public class MISCUtils {
         } catch (SQLException e) {
           TNE.debug(e);
         }
-        /*TNE.debug("WorldHoldings null? " + (account.getWorldHoldings()));
-        account.getWorldHoldings().forEach((world, holdings) -> {
-          holdings.getHoldings().forEach((currency, amount) -> {
-            if(amount.compareTo(BigDecimal.ZERO) == 0) return;
-            configuration.set("Accounts." + username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%") + ".Balances." + world + "." + currency, amount.toPlainString());
-          });
-        });*/
 
       }
     });
@@ -418,7 +421,7 @@ public class MISCUtils {
     List<String> list = new ArrayList<>();
     boolean failed = false;
     try {
-      URL url = new URL("https://creatorfromhell.com/tne/dupers.txt");
+      URL url = new URL("https://tnemc.net/files/dupers.txt");
       Scanner s = new Scanner(url.openStream());
 
       String line;
@@ -427,13 +430,11 @@ public class MISCUtils {
         if(line.trim().equalsIgnoreCase("")) continue;
         list.add(line.toUpperCase());
       }
-    }
-    catch(IOException ex) {
+    } catch(IOException ex) {
       failed = true;
     }
     if(failed) {
-      List<String> dupers = new ArrayList<>();
-      return dupers;
+      return new ArrayList<>();
     }
     return list;
   }
