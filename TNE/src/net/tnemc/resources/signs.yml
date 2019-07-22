@@ -16,6 +16,26 @@ Signs:
     #The max amount of this sign type any one person may own.
     Max: 5
 
+    #The format for this sign type.
+    #The formatting options for this sign type:
+    # Option         | Replacement
+    # <sign_type>    | The type in [<type name>] format
+    # <item>         | The name of the item being sold/bought
+    # <item_amount>  | The amount of item
+    # <trade_amount> | The amount of item_trade, or "" if sign is offering currency instead.
+    # <item_trade>   | The name of the item being returned for <item>, or "" if sign is offering currency instead.
+    # <amount>       | The amount of currency being offered for <item>, or "" if sign is offering an item in return.
+    # <owner>        | The name of the owner
+    # <buying>       | "Buying" or "Selling" based off of the sign type.
+    # <buying_short> | Shortened version of <buying>, B and S instead of "Buying" and "Selling"
+    # Please Note: As Minecraft signs are limited on line length some lines may be cut off due to their length.
+    Format:
+
+      Line1: "<sign_type>"
+      Line2: "<item_amount> <item>"
+      Line3: "<trade_amount> <item_trade> <currency>"
+      Line4: "<buying>"
+
   #All configurations relating to nation signs.
   Nation:
 

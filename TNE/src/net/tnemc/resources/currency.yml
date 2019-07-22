@@ -224,6 +224,7 @@ Currencies:
 
                     #The materials that represent the characters used in the recipe option.
                     #Format: Character:Material Name
+                    #Format For Currencies(only works on 1.13+ and if Shapeless is false): Character:CURRENCY:World Name:Currency Name:Tier Name
                     Materials:
                       - "X:GOLD_NUGGET"
                       - "Y:PAPER"
@@ -300,6 +301,7 @@ Currencies:
 
                     #The materials that represent the characters used in the recipe option.
                     #Format: Character:Material Name
+                    #Format For Currencies(only works on 1.13+ and if Shapeless is false): Character:CURRENCY:World Name:Currency Name:Tier Name
                     Materials:
                       - "X:IRON_NUGGET"
                       - "Y:PAPER"

@@ -6,6 +6,7 @@ import net.tnemc.core.common.currency.CurrencyNote;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
+import net.tnemc.core.common.currency.recipe.CurrencyLegacyShapedRecipe;
 import net.tnemc.core.common.currency.recipe.CurrencyRecipe;
 import net.tnemc.core.common.currency.recipe.CurrencyShapedRecipe;
 import net.tnemc.core.common.currency.recipe.CurrencyShapelessRecipe;
@@ -417,8 +418,18 @@ public class CurrencyManager {
           ItemStack stack = item.toStack().clone();
           stack.setAmount(configuration.getInt(tierBase + ".Options.Crafting.Amount", 1));
 
-          CurrencyRecipe recipe = (shapeless)? new CurrencyShapelessRecipe(currency.getIdentifier(), tierName, stack) :
-              new CurrencyShapedRecipe(currency.getIdentifier(), tierName, stack);
+          CurrencyRecipe recipe = null;
+
+          if(shapeless) {
+            recipe = new CurrencyShapelessRecipe(currency.getIdentifier(), tierName, stack);
+          } else {
+            if(MISCUtils.isOneThirteen()) {
+              recipe = new CurrencyShapedRecipe(currency.getIdentifier(), tierName, stack);
+            } else {
+              recipe = new CurrencyLegacyShapedRecipe(currency.getIdentifier(), tierName, stack);
+            }
+          }
+
           recipe.setCraftingMatrix(configuration.getStringList(tierBase + ".Options.Crafting.Recipe"));
           recipe.setMaterialsRaw(configuration.getStringList(tierBase + ".Options.Crafting.Materials"));
 

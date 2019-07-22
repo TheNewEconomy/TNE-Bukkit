@@ -5,10 +5,7 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.material.MaterialHelper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapelessRecipe;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.inventory.ShapedRecipe;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -20,29 +17,19 @@ import java.util.Map;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class CurrencyShapelessRecipe extends CurrencyRecipe {
+public class CurrencyLegacyShapedRecipe extends CurrencyRecipe {
 
   Recipe recipe = null;
 
-  public CurrencyShapelessRecipe(String currency, String tier, ItemStack result) {
+  public CurrencyLegacyShapedRecipe(String currency, String tier, ItemStack result) {
     super(currency, tier, result);
   }
 
   @Override
   public void parseMaterialsConfig() {
-    Map<Character, Integer> materials = new HashMap<>();
-
-    for(String str : getCraftingMatrix()) {
-      for(Character character : str.toCharArray()) {
-        final int count = materials.getOrDefault(character, 0) + 1;
-        materials.put(character, count);
-      }
-    }
-
     for(String material : getMaterialsRaw()) {
       final String[] split = material.split(":");
-      if (split.length >= 2) {
-        final int count = materials.getOrDefault(split[0].charAt(0), 1);
+      if(split.length >= 2) {
         if (split[1].equalsIgnoreCase("currency")) {
           if(split.length < 5) {
             TNE.logger().warning("Skipping currency crafting material: " + material + " invalid currency ingredient.");
@@ -67,9 +54,9 @@ public class CurrencyShapelessRecipe extends CurrencyRecipe {
           final ItemStack tierStack = (currencyObject.getMajorTier(tier).isPresent())? currencyObject.getMajorTier(tier).get().getItemInfo().toStack() :
               currencyObject.getMinorTier(tier).get().getItemInfo().toStack();
 
-          getEntryList().add(new CurrencyRecipeEntry(split[0].charAt(0), count, tierStack));
+          getEntryList().add(new CurrencyRecipeEntry(split[0].charAt(0), 1, tierStack));
         } else {
-          getEntryList().add(new CurrencyRecipeEntry(split[0].charAt(0), count, new ItemStack(MaterialHelper.getMaterial(split[1]))));
+          getEntryList().add(new CurrencyRecipeEntry(split[0].charAt(0), 1, new ItemStack(MaterialHelper.getMaterial(split[1]))));
         }
       }
     }
@@ -78,13 +65,11 @@ public class CurrencyShapelessRecipe extends CurrencyRecipe {
   @Override
   public Recipe recipe() {
     if(recipe == null) {
-      ShapelessRecipe recipe = new ShapelessRecipe(key, result);
+      ShapedRecipe recipe = new ShapedRecipe(key, result);
+      recipe.shape(getCraftingMatrix().toArray(new String[getCraftingMatrix().size()]));
 
       for (CurrencyRecipeEntry entry : getEntryList()) {
-        int count = entry.getAmount();
-        while(count-- > 0) {
-          recipe.addIngredient(entry.getIngredient().getType());
-        }
+        recipe.setIngredient(entry.getCharacter(), entry.getIngredient().getType());
       }
       this.recipe = recipe;
     }
