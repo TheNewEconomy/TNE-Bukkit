@@ -56,7 +56,6 @@ public class MySQLProvider extends TNEDataProvider {
   private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD_ALL = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
-  private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_SET_ALL = "UPDATE " + prefix + "_BALANCES SET balance = ? WHERE world = ? AND server_name = ?";
@@ -207,7 +206,7 @@ public class MySQLProvider extends TNEDataProvider {
       }
 
       /*if(version < 1116.0) {
-        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
+        executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
       }*/
     }
   }
@@ -501,7 +500,7 @@ public class MySQLProvider extends TNEDataProvider {
             account.setAccountNumber(results.getInt("account_number"));
             account.setStatus(AccountStatus.fromName(results.getString("account_status")));
             account.setLanguage(results.getString("account_language"));
-            //account.setPin(results.getString("account_pin"));
+            account.setPin(results.getString("account_pin"));
             account.setJoined(results.getLong("joined_date"));
             account.setLastOnline(results.getLong("last_online"));
             account.setPlayerAccount(results.getBoolean("account_player"));

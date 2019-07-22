@@ -31,7 +31,7 @@ public class ItemTier {
   private short damage;
   private String name;
   private String lore;
-  private int customModel = -1;
+  private Integer customModel = null;
 
   public ItemTier(String material) {
     this(material, (short)0);
@@ -111,7 +111,7 @@ public class ItemTier {
     if(lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
     meta.setLore(itemLore);
 
-    if(customModel > -1 && MISCUtils.isOneFourteen()) {
+    if(customModel != null && MISCUtils.isOneFourteen()) {
       meta.setCustomModelData(customModel);
     }
 

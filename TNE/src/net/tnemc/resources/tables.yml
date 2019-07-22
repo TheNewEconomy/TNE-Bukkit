@@ -1,0 +1,334 @@
+Tables:
+
+  _INFO:
+
+    Columns:
+
+      id:
+
+        Type: "INTEGER"
+
+        Unique: true
+
+        Increment: true
+
+        Null: false
+
+      version:
+
+        Type: "VARCHAR"
+
+        Length: "10"
+
+        Null: false
+
+      server_name:
+
+        Type: "VARCHAR"
+
+        Length: "100"
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _ECOIDS:
+
+    Columns:
+
+      username:
+
+        Type: "VARCHAR"
+
+        Length: 100
+
+      uuid:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Unique: true
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _USERS:
+
+    Columns:
+
+      uuid:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Unique: true
+
+      display_name:
+
+        Type: "VARCHAR"
+
+        Length: 100
+
+      joined_date:
+
+        Type: "BIGINT"
+
+        Length: 60
+
+      last_online:
+
+        Type: "INTEGER"
+
+        Length: 60
+
+      account_number:
+
+        Type: "BIGINT"
+
+        Length: 60
+
+      account_status:
+
+        Type: "VARCHAR"
+
+        Length: 60
+
+      account_language:
+
+        Type: "VARCHAR"
+
+        Length: 10
+
+        Null: false
+
+        Default: "default"
+
+      account_player:
+
+        Type: "Boolean"
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _BALANCES:
+
+    Columns:
+
+      uuid:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Primary: true
+
+      server_name:
+
+        Type: "VARCHAR"
+
+        Length: 100
+
+        Primary: true
+
+      world:
+
+        Type: "VARCHAR"
+
+        Length: 50
+
+        Primary: true
+
+      currency:
+
+        Type: "VARCHAR"
+
+        Length: 100
+
+        Primary: true
+
+      balance:
+
+        Type: "DECIMAL"
+
+        Length: 49
+
+        Scale: 4
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _TRANSACTIONS:
+
+    Columns:
+
+      trans_id:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+        Primary: true
+
+      trans_initiator:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+      trans_initiator_balance:
+
+        Type: "DECIMAL"
+
+        Length: 49
+
+        Scale: 4
+
+      trans_recipient:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      trans_recipient_balance:
+
+        Type: "DECIMAL"
+
+        Length: 49
+
+        Scale: 4
+
+      trans_type:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      trans_world:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      trans_time:
+
+        Type: "BIGINT"
+
+        Length: 60
+
+        Null: false
+
+      trans_voided:
+
+        Type: "Boolean"
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _CHARGES:
+
+    Columns:
+
+      charge_transaction:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+        Primary: true
+
+      charge_player:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+        Primary: true
+
+      charge_currency:
+
+        Type: "VARCHAR"
+
+        Length: 100
+
+        Null: false
+
+      charge_world:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      charge_amount:
+
+        Type: "DECIMAL"
+
+        Length: 49
+
+        Scale: 4
+
+        Null: false
+
+      charge_type:
+
+        Type: "VARCHAR"
+
+        Length: 20
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+
+Settings:
+
+  Prefix: "TNE"

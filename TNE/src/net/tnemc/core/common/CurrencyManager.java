@@ -396,7 +396,10 @@ public class CurrencyManager {
         item = new ItemTier(material, damage);
         item.setName(customName);
         item.setLore(lore);
-        item.setCustomModel(customModel);
+
+        if(customModel > 0) {
+          item.setCustomModel(customModel);
+        }
 
         if(configuration.contains(tierBase + ".Options.Enchantments")) {
           //TNE.debug("Setting enchantments list: " + configuration.getStringList(tierBase + ".Options.Enchantments").toString());

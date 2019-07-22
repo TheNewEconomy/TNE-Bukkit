@@ -1,29 +1,28 @@
-package net.tnemc.signs.command;
+package net.tnemc.signs.command.sign;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import org.bukkit.command.CommandSender;
 
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
- * Created by creatorfromhell on 6/27/2019.
+ * Created by creatorfromhell on 7/22/2019.
  * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class NoteCommand extends TNECommand {
+public class SignCreateCommand extends TNECommand {
 
-  public NoteCommand(TNE plugin) {
+  public SignCreateCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new NoteCommandCommand(plugin));
-    //subCommands.add(new NoteExperienceCommand(plugin));
   }
 
   @Override
   public String getName() {
-    return "note";
+    return "create";
   }
 
   @Override
@@ -33,11 +32,21 @@ public class NoteCommand extends TNECommand {
 
   @Override
   public String getNode() {
-    return "";
+    return "tne.sign.create";
   }
 
   @Override
   public boolean console() {
     return false;
+  }
+
+  @Override
+  public String getHelp() {
+    return "/sign create <amount> <cost> [type(Buy/Sell)] - Used to create a sign shop while staring at a sign.";
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    return true;
   }
 }

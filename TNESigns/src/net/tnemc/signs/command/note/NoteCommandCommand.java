@@ -1,4 +1,4 @@
-package net.tnemc.signs.command;
+package net.tnemc.signs.command.note;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;

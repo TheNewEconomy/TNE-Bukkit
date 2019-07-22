@@ -63,7 +63,7 @@ public class SerialItem {
   private Integer amount = 1;
   private String display = "";
   private short damage = 0;
-  private int customModelData = -1;
+  private int customModelData = 0;
   private SerialItemData data;
 
   //Cache=related variables
@@ -233,7 +233,7 @@ public class SerialItem {
         }
       }
 
-      if(MISCUtils.isOneFourteen() && customModelData != -1) {
+      if(MISCUtils.isOneFourteen() && customModelData > 0) {
         meta.setCustomModelData(customModelData);
       }
 
@@ -262,7 +262,7 @@ public class SerialItem {
     TNE.debug("display");
     json.put("damage", damage);
     TNE.debug("damage");
-    if(MISCUtils.isOneFourteen() && customModelData != -1) json.put("modelData", customModelData);
+    if(MISCUtils.isOneFourteen() && customModelData > 0) json.put("modelData", customModelData);
     TNE.debug("modelData");
     if(lore != null && lore.size() > 0) json.put("lore", String.join(",", lore));
     TNE.debug("lore");

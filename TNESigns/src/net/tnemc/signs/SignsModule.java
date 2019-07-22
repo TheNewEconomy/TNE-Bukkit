@@ -8,7 +8,7 @@ import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
-import net.tnemc.signs.command.NoteCommand;
+import net.tnemc.signs.command.note.NoteCommand;
 import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.ChestSelectionListener;
 import net.tnemc.signs.listeners.PlayerListener;

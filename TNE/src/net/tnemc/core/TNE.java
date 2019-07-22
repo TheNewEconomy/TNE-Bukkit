@@ -325,8 +325,7 @@ public class TNE extends TNELib {
     TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
 
     TNE.debug("Adding version files.");
-    saveManager().addVersion(1115.0, true);
-    //saveManager().addVersion(1116.0, true);
+    saveManager().addVersion(1116.0, true);
 
     TNE.debug("Initializing Save Manager.");
     try {
@@ -446,6 +445,8 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
+
+    //TODO: Update table to have account_pin column
 
     getLogger().info("The New Economy has been enabled!");
 

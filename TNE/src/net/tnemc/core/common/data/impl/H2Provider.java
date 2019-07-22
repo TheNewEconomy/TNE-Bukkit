@@ -45,7 +45,6 @@ public class H2Provider extends TNEDataProvider {
   private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
-  private final String ACCOUNT_LOAD_ID = "SELECTION uuid, display_name FROM " + prefix + "_USERS";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
       "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
       "uuid = ? LIMIT 1";
@@ -58,7 +57,6 @@ public class H2Provider extends TNEDataProvider {
   private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD_ALL = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
-  private final String BALANCE_LOAD = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
   private final String BALANCE_SET_ALL = "UPDATE " + prefix + "_BALANCES SET balance = ? WHERE world = ?";
@@ -210,7 +208,7 @@ public class H2Provider extends TNEDataProvider {
       }
 
       /*if(version < 1116.0) {
-        H2.executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
+        executeUpdate("ALTER TABLE `" + manager.getPrefix() + "_USERS ADD`account_pin` VARCHAR(60) NOT NULL DEFAULT 'TNEPIN' AFTER `account_language`");
       }*/
     }
   }
