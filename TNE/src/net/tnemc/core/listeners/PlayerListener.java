@@ -31,6 +31,7 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
@@ -125,6 +126,11 @@ public class PlayerListener implements Listener {
       }
     }
     TNE.debug("=====END PlayerListener.onInteractEntityEvent =====");
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onFish(PlayerFishEvent event) {
+    System.out.println(event.getState().name());
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

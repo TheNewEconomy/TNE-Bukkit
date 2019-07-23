@@ -42,7 +42,7 @@ public class TNESaveManager extends SaveManager {
     SQLDatabase.open();
 
     System.out.println("Updating tables, please hold.");
-    TableManager tableManager = new TableManager(manager.getFormat().toLowerCase());
+    TableManager tableManager = new TableManager(manager.getFormat().toLowerCase(), manager.getPrefix());
     tableManager.generateQueriesAndRun(SQLDatabase.getDb().getConnection(), TNE.instance().getResource("tne_tables.yml"));
     System.out.println("Finished updating tables.");
 

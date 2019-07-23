@@ -43,14 +43,14 @@ public class MySQLProvider extends TNEDataProvider {
   private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
-  private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_number, account_status, account_language, " +
+  private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_pin, account_number, account_status, account_language, " +
       "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
       "uuid = ? LIMIT 1";
   private final String ACCOUNT_SAVE = "INSERT INTO " + prefix + "_USERS (uuid, display_name, joined_date, " +
-      "last_online, account_number, account_status, account_language, account_player) " +
-      "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
+      "last_online, account_number, account_status, account_language, account_pin, account_player) " +
+      "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE display_name = ?, " +
       "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
-      "account_player = ?";
+      "account_pin = ?, account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
   private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD_ALL = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
@@ -103,58 +103,6 @@ public class MySQLProvider extends TNEDataProvider {
   public Boolean backupData() {
     return false;
   }
-
-  /*@Override
-  public void extract() {
-    File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
-    if(!file.exists()) {
-      try {
-        file.createNewFile();
-      } catch (IOException e) {
-        TNE.debug(e);
-      }
-    }
-    YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-
-    SQLDatabase.open();
-
-    String table = manager.getPrefix() + "_USERS";
-    try(Statement statement = SQLDatabase.getDb().getConnection().createStatement()) {
-
-      try(ResultSet results = statement.executeQuery("SELECT display_name, uuid FROM " + table + ";")) {
-
-        while (results.next()) {
-
-          final UUID id = UUID.fromString(results.getString("uuid"));
-          final String username = results.getString("display_name");
-          TNEAccount account = TNE.manager().getAccount(id);
-          if(account != null) {
-            TNE.debug("Extracting Account: " + username);
-            try {
-              Map<String, BigDecimal> balances = TNE.saveManager().getTNEManager().getTNEProvider().loadAllBalances(id);
-
-              balances.forEach((key, balance)->{
-                String[] split = key.split("\\@");
-                String formattedUser = username.replaceAll("\\.", "!").replaceAll("\\-", "@").replaceAll("\\_", "%");
-
-                BigDecimal finalBalance = balance;
-                if(configuration.contains("Accounts." + formattedUser + ".Balances." + split[0] + "." + split[1])) {
-                  finalBalance = finalBalance.add(new BigDecimal(configuration.getString("Accounts." + formattedUser + ".Balances." + split[0] + "." + split[1])));
-                }
-
-                configuration.set("Accounts." + formattedUser + ".Balances." + split[0] + "." + split[1], finalBalance.toPlainString());
-              });
-            } catch (SQLException e) {
-              TNE.debug(e);
-            }
-          }
-        }
-      }
-    } catch(Exception e) {
-      TNE.debug(e);
-    }
-    SQLDatabase.close();
-  }*/
 
   @Override
   public String loadUsername(String identifier) throws SQLException {
@@ -400,16 +348,16 @@ public class MySQLProvider extends TNEDataProvider {
         accountStatement.setInt(5, account.getAccountNumber());
         accountStatement.setString(6, account.getStatus().getName());
         accountStatement.setString(7, account.getLanguage());
-        //accountStatement.setString(8, account.getPin());
-        accountStatement.setBoolean(8, account.playerAccount());
-        accountStatement.setString(9, account.displayName());
-        accountStatement.setLong(10, account.getJoined());
-        accountStatement.setLong(11, account.getLastOnline());
-        accountStatement.setInt(12, account.getAccountNumber());
-        accountStatement.setString(13, account.getStatus().getName());
-        accountStatement.setString(14, account.getLanguage());
-        //accountStatement.setString(16, account.getPin());
-        accountStatement.setBoolean(15, account.playerAccount());
+        accountStatement.setString(8, account.getPin());
+        accountStatement.setBoolean(9, account.playerAccount());
+        accountStatement.setString(10, account.displayName());
+        accountStatement.setLong(11, account.getJoined());
+        accountStatement.setLong(12, account.getLastOnline());
+        accountStatement.setInt(13, account.getAccountNumber());
+        accountStatement.setString(14, account.getStatus().getName());
+        accountStatement.setString(15, account.getLanguage());
+        accountStatement.setString(16, account.getPin());
+        accountStatement.setBoolean(17, account.playerAccount());
         accountStatement.addBatch();
       }
       accountStatement.executeBatch();
@@ -427,23 +375,23 @@ public class MySQLProvider extends TNEDataProvider {
     }
     SQLDatabase.open();
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ACCOUNT_SAVE)) {
-      statement.setObject(1, account.identifier().toString());
-      statement.setObject(2, account.displayName());
-      statement.setObject(3, account.getJoined());
-      statement.setObject(4, account.getLastOnline());
-      statement.setObject(5, account.getAccountNumber());
-      statement.setObject(6, account.getStatus().getName());
-      statement.setObject(7, account.getLanguage());
-      //statement.setObject(8, account.getPin());
-      statement.setObject(8, account.playerAccount());
-      statement.setObject(9, account.displayName());
-      statement.setObject(10, account.getJoined());
-      statement.setObject(11, account.getLastOnline());
-      statement.setObject(12, account.getAccountNumber());
-      statement.setObject(13, account.getStatus().getName());
-      statement.setObject(14, account.getLanguage());
-      //statement.setObject(16, account.getPin());
-      statement.setObject(15, account.playerAccount());
+      statement.setString(1, account.identifier().toString());
+      statement.setString(2, account.displayName());
+      statement.setLong(3, account.getJoined());
+      statement.setLong(4, account.getLastOnline());
+      statement.setInt(5, account.getAccountNumber());
+      statement.setString(6, account.getStatus().getName());
+      statement.setString(7, account.getLanguage());
+      statement.setString(8, account.getPin());
+      statement.setBoolean(9, account.playerAccount());
+      statement.setString(10, account.displayName());
+      statement.setLong(11, account.getJoined());
+      statement.setLong(12, account.getLastOnline());
+      statement.setInt(13, account.getAccountNumber());
+      statement.setString(14, account.getStatus().getName());
+      statement.setString(15, account.getLanguage());
+      statement.setString(16, account.getPin());
+      statement.setBoolean(17, account.playerAccount());
 
       statement.executeUpdate();
     } catch(Exception ignore) {
