@@ -8,7 +8,9 @@ Tables:
 
         Type: "INTEGER"
 
-        Unique: true
+        Length: 10
+
+        Primary: true
 
         Increment: true
 
@@ -18,17 +20,13 @@ Tables:
 
         Type: "VARCHAR"
 
-        Length: "10"
-
-        Null: false
+        Length: 10
 
       server_name:
 
         Type: "VARCHAR"
 
-        Length: "100"
-
-        Null: false
+        Length: 100
 
     Settings:
 
@@ -74,7 +72,9 @@ Tables:
 
         Length: 36
 
-        Unique: true
+        Primary: true
+
+        Null: false
 
       display_name:
 
@@ -86,19 +86,19 @@ Tables:
 
         Type: "BIGINT"
 
-        Length: 60
+        Length: 19
 
       last_online:
 
-        Type: "INTEGER"
+        Type: "BIGINT"
 
-        Length: 60
+        Length: 19
 
       account_number:
 
-        Type: "BIGINT"
+        Type: "INTEGER"
 
-        Length: 60
+        Length: 10
 
       account_status:
 
@@ -116,9 +116,21 @@ Tables:
 
         Default: "default"
 
+      account_pin:
+
+        Type: "VARCHAR"
+
+        Length: 60
+
+        Null: false
+
+        Default: "TNEPIN"
+
       account_player:
 
         Type: "Boolean"
+
+        Length: 3
 
     Settings:
 
@@ -140,6 +152,8 @@ Tables:
 
         Primary: true
 
+        Null: false
+
       server_name:
 
         Type: "VARCHAR"
@@ -147,6 +161,8 @@ Tables:
         Length: 100
 
         Primary: true
+
+        Null: false
 
       world:
 
@@ -156,6 +172,8 @@ Tables:
 
         Primary: true
 
+        Null: false
+
       currency:
 
         Type: "VARCHAR"
@@ -163,6 +181,8 @@ Tables:
         Length: 100
 
         Primary: true
+
+        Null: false
 
       balance:
 
@@ -244,7 +264,7 @@ Tables:
 
         Type: "BIGINT"
 
-        Length: 60
+        Length: 19
 
         Null: false
 
@@ -253,6 +273,8 @@ Tables:
         Type: "Boolean"
 
         Null: false
+
+        Length: 3
 
     Settings:
 
@@ -327,7 +349,6 @@ Tables:
       Charset: "utf8mb4"
 
       Collate: "utf8mb4_unicode_ci"
-
 
 Settings:
 

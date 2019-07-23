@@ -3,7 +3,9 @@ package net.tnemc.core.common.data;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.SaveManager;
+import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.core.TNE;
+import net.tnemc.dbupdater.core.TableManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,29 +38,21 @@ public class TNESaveManager extends SaveManager {
     TNE.debug("Manager Null: " + (manager == null));
     TNE.debug("Manager.getDB Null: " + (manager.getDb() == null));
     TNE.debug("First Run: " + manager.getDb().first());
-    if(manager.getDb().first()) {
-      manager.getDb().initialize();
-      return;
-    }
 
-    getTNEManager().getTNEProvider().createTables(getTables(getTNEManager().getTNEProvider().identifier()));
+    SQLDatabase.open();
 
-    TNE.debug("Manager Version Null: " + (manager.getDb().version() == null));
-    saveVersion = manager.getDb().version();
-    TNE.instance().getLogger().info("Save file of version: " + saveVersion + " detected.");
+    System.out.println("Updating tables, please hold.");
+    TableManager tableManager = new TableManager(manager.getFormat().toLowerCase());
+    tableManager.generateQueriesAndRun(SQLDatabase.getDb().getConnection(), TNE.instance().getResource("tne_tables.yml"));
+    System.out.println("Finished updating tables.");
+
+    SQLDatabase.close();
     load();
   }
 
   @Override
   public void load() throws SQLException {
     TNE.debug("====== TNESaveManager.load =======");
-    if(saveVersion < TNELib.instance().currentSaveVersion && saveVersion != 0) {
-      getTNEManager().getTNEProvider().update(saveVersion);
-      TNELib.instance().getLogger().info("Saved data has been updated!");
-    }
-    Double version = (saveVersion != 0.0) ? saveVersion : TNELib.instance().currentSaveVersion;
-    TNE.debug("Current Save Version: " + version);
-    getTNEManager().getTNEProvider().load(version);
     TNELib.instance().getLogger().info("Finished loading data!");
   }
 

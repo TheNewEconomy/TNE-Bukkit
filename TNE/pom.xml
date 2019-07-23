@@ -155,6 +155,18 @@
             <version>0.1.1.44</version>
         </dependency>
         <dependency>
+            <groupId>net.tnemc</groupId>
+            <artifactId>TNDBU</artifactId>
+            <version>0.1.4.24</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.tnemc</groupId>
+                    <artifactId>TheNewConfigLibrary</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>

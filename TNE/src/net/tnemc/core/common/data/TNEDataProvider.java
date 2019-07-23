@@ -83,31 +83,29 @@ public abstract class TNEDataProvider extends DataProvider {
 
   }
 
+  @Override
+  public Double version() throws SQLException {
+    return null;
+  }
+
+  @Override
+  public void initialize() throws SQLException {
+
+  }
+
+  @Override
+  public Boolean first() throws SQLException {
+    return false;
+  }
+
+  @Override
+  public void update(Double aDouble) throws SQLException {
+
+  }
 
   @Override
   public void load(Double version) throws SQLException {
     preLoad(version);
-
-    /*if(!supportUpdate()) {
-      TNE.debug("Inside !supportUpdate() || manager.isCacheData()");
-      Collection<TNEAccount> accounts = loadAccounts();
-      TNE.debug("loadAccounts() size: " + accounts.size());
-
-      accounts.forEach((acc)-> {
-        TNE.manager().addAccount(acc);
-        TNE.debug("Loading account with ID of: " + acc.identifier() + " and username of: " + acc.displayName());
-      });
-
-      Map<String, UUID> ids = loadEconomyIDS();
-      TNE.debug("loadEconomyIDS() size: " + ids.size());
-      ids.forEach((key, value)->{
-        TNE.debug("Loading id: " + value.toString() + " for username: " + key);
-        TNE.uuidManager().addUUID(key, value);
-      });
-
-      Collection<TNETransaction> transactions = loadTransactions();
-      transactions.forEach((value)->TNE.transactionManager().add(value));
-    }*/
   }
 
   @Override
@@ -129,21 +127,7 @@ public abstract class TNEDataProvider extends DataProvider {
       });
       saveIDS(ids);
       saveAccounts(accounts);
-    }/* else {
-      TNE.instance().getServer().getOnlinePlayers().forEach((player)->{
-        UUID id = IDFinder.getID(player);
-        TNE.manager().getAccount(id).saveItemCurrency(WorldFinder.getWorld(player.getName(), WorldVariant.BALANCE));
-    });
-
-      /*TNE.debug("OffLine Length: " + TNE.uuidManager().getUuids().size());
-      for(Map.Entry<String, UUID> entry : TNE.uuidManager().getUuids().entrySet()) {
-        TNE.debug("Saving Offline id: " + entry.getKey() + ", " + entry.getValue().toString());
-        saveID(entry.getKey(), entry.getValue());
-      }
-      for(TNETransaction transaction : TNE.transactionManager().getTransactions().values()) {
-        saveTransaction(transaction);
-      }
-    }*/
+    }
     long end = System.nanoTime();
     TNE.debug("Saving data finished in milis: " + ((end - start) / 1e6));
   }

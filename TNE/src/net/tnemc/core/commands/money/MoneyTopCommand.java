@@ -5,12 +5,14 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -60,6 +62,7 @@ public class MoneyTopCommand extends TNECommand {
   }
 
   @Override
+  @Nullable
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       final Map<String, String> parsed = getArguments(arguments);
@@ -108,7 +111,7 @@ public class MoneyTopCommand extends TNECommand {
       Iterator<Map.Entry<UUID, BigDecimal>> it = values.entrySet().iterator();
       while(it.hasNext()) {
         Map.Entry<UUID, BigDecimal> entry = it.next();
-        topEntry.addVariable("$player", TNE.manager().getAccount(entry.getKey()).displayName());
+        topEntry.addVariable("$player", IDFinder.getUsername(entry.getKey().toString()));
         if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatTop")) {
           topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), ""));
         } else {
