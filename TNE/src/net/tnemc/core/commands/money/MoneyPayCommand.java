@@ -124,7 +124,7 @@ public class MoneyPayCommand extends TNECommand {
 
         BigDecimal value = new BigDecimal(parsed);
 
-        if(value.compareTo(BigDecimal.ZERO) < 0) {
+        if(value.compareTo(BigDecimal.ZERO) <= 0) {
           Message msg = new Message("Messages.Money.Negative");
           msg.addVariable("$currency", currency.name());
           msg.addVariable("$world", world);
