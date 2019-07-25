@@ -7,6 +7,7 @@ import net.tnemc.conversion.impl.BEconomy;
 import net.tnemc.conversion.impl.BOSEconomy;
 import net.tnemc.conversion.impl.BasicEconomy;
 import net.tnemc.conversion.impl.Blings;
+import net.tnemc.conversion.impl.CMI;
 import net.tnemc.conversion.impl.DevCoinSystem;
 import net.tnemc.conversion.impl.ECEconomy;
 import net.tnemc.conversion.impl.EasyCoins;
@@ -58,7 +59,7 @@ import java.util.List;
 @ModuleInfo(
     name = "Conversion",
     author = "creatorfromhell",
-    version = "0.1.0"
+    version = "0.1.1"
 )
 public class ConversionModule extends Module {
 
@@ -82,7 +83,7 @@ public class ConversionModule extends Module {
 
   public Converter getConverter(String name) {
 
-    switch(name) {
+    switch(name.toLowerCase()) {
       case "advancedeconomy":
         return new AdvancedEconomy();
       case "basiceconomy":
@@ -95,6 +96,8 @@ public class ConversionModule extends Module {
         return new Blings();
       case "boseconomy":
         return new BOSEconomy();
+      case "cmi":
+        return new CMI();
       case "devcoinsystem":
         return new DevCoinSystem();
       case "easycoins":

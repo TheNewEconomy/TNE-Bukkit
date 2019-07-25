@@ -227,12 +227,14 @@ public class MISCUtils {
         });
         TNE.manager().addAccount(account);
         number++;
-        final boolean message = (number % frequency == 0);
+        try {
+          final boolean message = (number % frequency == 0);
 
-        if(message) {
-          final int progress = (int)(number * 100 / accounts.size());
-          TNE.logger().info("Restoration Progress: " + progress);
-        }
+          if (message) {
+            final int progress = (int) (number * 100 / accounts.size());
+            TNE.logger().info("Restoration Progress: " + progress);
+          }
+        } catch(Exception ignore) {}
       }
     }
 

@@ -2,6 +2,7 @@ package net.tnemc.conversion;
 
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DataProvider;
+import com.github.tnerevival.core.db.sql.SQLite;
 import net.tnemc.core.TNE;
 import org.javalite.activejdbc.DB;
 
@@ -37,7 +38,12 @@ public abstract class Converter {
     DataProvider provider = TNE.saveManager().getDataManager().getProviders().get(manager.getFormat());
 
     try {
-      db.open(provider.connector().getDriver(), provider.connector().getURL(manager.getFile(), manager.getHost(), manager.getPort(), manager.getDatabase()) + ((manager.getFormat().equalsIgnoreCase("mysql"))? "?useSSL=false" : ""), manager.getUser(), manager.getPassword());
+      if(manager.getFormat().equalsIgnoreCase("sqlite")) {
+        final SQLite sqlite = new SQLite(manager);
+        db.open(sqlite.getDriver(), sqlite.getURL(manager.getFile(), manager.getHost(), manager.getPort(), manager.getDatabase()), null);
+      } else {
+        db.open(provider.connector().getDriver(), provider.connector().getURL(manager.getFile(), manager.getHost(), manager.getPort(), manager.getDatabase()) + ((manager.getFormat().equalsIgnoreCase("mysql")) ? "?useSSL=false" : ""), manager.getUser(), manager.getPassword());
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
