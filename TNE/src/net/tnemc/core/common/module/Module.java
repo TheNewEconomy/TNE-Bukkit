@@ -1,170 +1,105 @@
 package net.tnemc.core.common.module;
 
 import com.github.tnerevival.core.SaveManager;
+import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.data.TNEDataProvider;
-import net.tnemc.core.common.module.injectors.ModuleInjector;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
 import net.tnemc.core.menu.Menu;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
+/**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by creatorfromhell on 7/25/2019.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by creatorfromhell on 07/01/2017.
+ * Created by creatorfromhell on 06/30/2017.
  */
+public interface Module {
 
-/**
- * The base class for all TNE Modules.
- */
-public abstract class Module {
+  default void load(TNE plugin) {}
 
-  protected Map<Configuration, String> configurations = new HashMap<>();
-  protected Map<String, Object> mainConfigurations = new HashMap<>();
-  protected Map<String, String> messages = new HashMap<>();
+  default void postLoad(TNE plugin) {}
 
-  protected List<TNECommand> commands = new ArrayList<>();
-  protected List<ModuleListener> listeners = new ArrayList<>();
+  default void unload(TNE plugin) {}
 
-  public Module() {
-  }
+  default void backup(SaveManager manager) {}
 
-  public String updateURL() {
+  default void enableSave(SaveManager manager) {}
+
+  default void disableSave(SaveManager manager) {}
+
+  default void initializeConfigurations() {}
+
+  default void loadConfigurations() {}
+
+  default void saveConfigurations() {}
+
+  /**
+   * @return A TNDBU(https://github.com/TheNewEconomy/TheNewDBUpdater) compliant YAML file containing the SQL tables required
+   * for the module.
+   */
+  default String tablesFile() {
     return "";
   }
 
   /**
-   * @return a list of the classes that contain {@link net.tnemc.core.common.module.injectors.ModuleInjector module injectors} for this module.
+   * @return A map of messages that should be added to message.yml in the format of YamlNode, Value
    */
-  public List<Class<? extends ModuleInjector>> moduleInjectors() {
+  default Map<String, String> messages() {
+    return new HashMap<>();
+  }
+
+  default Map<Configuration, String> configurations() {
+    return new HashMap<>();
+  }
+
+  /**
+   * @return A list of commands that should be added from this module.
+   */
+  default List<TNECommand> commands() {
     return new ArrayList<>();
   }
 
   /**
-   * Called when this @Module is loaded.
-   * @param tne An instance of the main TNE class.
-   * @param version The last version of this module used on this server.
+   * @return A map of commands that should be added as sub commands to commands found in TNE.jar
+   * Format: TNE Command Name, List of sub commands to add.
    */
-  public void load(TNE tne, String version) {
-
-  }
-
-  /**
-   * Called at the last portion of TNE's onEnable, post initialization.
-   * @param tne An instance of the main TNE class.
-   */
-  public void postLoad(TNE tne) {
-
-  }
-
-  /**
-   * Called when this @Module is unloaded.
-   * @param tne An instance of the main TNE class.
-   */
-  public void unload(TNE tne) {
-
-  }
-
-  /**
-   * Called when data is being backed up to the "backup/" directory.
-   * @param saveManager An instance of TNE's Save Manager.
-   */
-  public void backup(SaveManager saveManager) {
-
-  }
-
-  /**
-   * Used to perform any data loading, manipulation, layout updating, etc.
-   * @param saveManager An instance of TNE's Save Manager
-   */
-  public void enableSave(SaveManager saveManager) {
-
-  }
-
-  /**
-   * Used to save any remaining data to the correct database.
-   * @param saveManager An instance of TNE's Save Manager
-   */
-  public void disableSave(SaveManager saveManager) {
-
-  }
-
-  /**
-   * Used to initialize any configuration files this module may use.
-   */
-  public void initializeConfigurations() {
-
-  }
-
-  /**
-   * Used to load any configuration files this module may use.
-   * This step is for initializing. the File, and YamlConfigurations classes.
-   */
-  public void loadConfigurations() {
-
-  }
-
-  /**
-   * Used to save any configuration files this module may use.
-   */
-  public void saveConfigurations() {
-
-  }
-
-  /**
-   * Returns a map of values that should be added to the MainConfigurations class.
-   */
-  public Map<String, Object> getMainConfigurations() {
-    return mainConfigurations;
-  }
-
-  /**
-   * Returns a map of values that should be added to the MessageConfigurations class.
-   */
-  public Map<String, String> getMessages() {
-    return messages;
-  }
-
-  /**
-   * Returns a map configuration files this module may use.
-   */
-  public Map<Configuration, String> getConfigurations() {
-    return configurations;
-  }
-
-  /**
-   * Returns a list of command instances this module uses.
-   */
-  public List<TNECommand> getCommands() {
-    return commands;
-  }
-
-  /**
-   * Returns a list of event listener instances this module uses.
-   */
-  public List<ModuleListener> getListeners(TNE pluginInstance) {
-    return listeners;
-  }
-
-  /**
-   * @return Returns a list of tables that this module requires.
-   * Format is <Database Type, List of table creation queries.
-   */
-  public Map<String, List<String>> getTables() {
+  default Map<String, List<TNECommand>> subCommands() {
     return new HashMap<>();
   }
 
-  public Map<String, Menu> registerMenus(TNE pluginInstance) {
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A list of event listeners.
+   */
+  default List<ModuleListener> listeners(TNE plugin) {
+    return new ArrayList<>();
+  }
+
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A map containing menus that this module utilize that extend
+   * the TNE Menu class.
+   */
+  default Map<String, Menu> menus(TNE plugin) {
     return new HashMap<>();
   }
 
@@ -172,7 +107,7 @@ public abstract class Module {
    * @return A map containing database providers that this module wishes to add. This allows modules to override current
    * database providers, and provide support for new database types.
    */
-  public Map<String, Class<? extends TNEDataProvider>> registerProviders() {
+  default Map<String, Class<? extends TNEDataProvider>> providers() {
     return new HashMap<>();
   }
 
@@ -180,7 +115,7 @@ public abstract class Module {
    * @return A map containing transaction results that this module wishes to add. This also allows modules to override
    * existing transaction results.
    */
-  public Map<String, TransactionResult> registerResults() {
+  default Map<String, TransactionResult> results() {
     return new HashMap<>();
   }
 
@@ -188,7 +123,40 @@ public abstract class Module {
    * @return A map containing transaction types that this module wishes to add. This also allows modules to override
    * existing transaction types.
    */
-  public Map<String, TransactionType> registerTypes() {
+  default Map<String, TransactionType> types() {
     return new HashMap<>();
+  }
+
+  default CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
+    TNE.debug("Started copying " + file.getName());
+    CommentedConfiguration commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(getResource(defaultFile), StandardCharsets.UTF_8), false);
+    TNE.debug("Initializing commented configuration");
+    if(commentedConfiguration != null) {
+      TNE.debug("Loading commented configuration");
+      commentedConfiguration.load();
+    }
+    TNE.debug("Finished copying " + file.getName());
+    return commentedConfiguration;
+  }
+
+
+  /**
+   * Load a file from the classpath and return the InputStream.
+   * @param filename The name of the file.
+   * @return The input stream for the file.
+   */
+  default InputStream getResource(String filename) {
+    try {
+      URL url = getClass().getClassLoader().getResource(filename);
+      if (url == null) {
+        return null;
+      } else {
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        return connection.getInputStream();
+      }
+    } catch (IOException var4) {
+      return null;
+    }
   }
 }

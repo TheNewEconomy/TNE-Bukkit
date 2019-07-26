@@ -6,7 +6,6 @@ import net.tnemc.core.common.account.history.AccountHistory;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.common.module.injectors.InjectMethod;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.Account;
@@ -83,27 +82,16 @@ public class TNEAccount implements Account {
     TNE.debug("=====START Account.setHoldings(4) =====");
     TNE.debug("Holdings: " + newHoldings.toPlainString());
 
-    InjectMethod injector = new InjectMethod("TNEAccount.setHoldings", new HashMap<>());
-    injector.setParameter("currency", currency);
-    injector.setParameter("holdings", newHoldings);
-    TNE.loader().call(injector);
-    newHoldings = (BigDecimal)injector.getParameter("holdings");
-
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
     TNE.debug("Currency: " + cur.name());
     if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
-      //TNE.debug("virtual currency");
       if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
         final Player player = Bukkit.getPlayer(id);
-        //TNE.debug("experience currency");
-        //TNE.debug("Setting experience to " + newHoldings.intValue());
+
         player.setTotalExperience(newHoldings.intValue());
       }
-      /*WorldHoldings worldHoldings = holdings.containsKey(world) ? holdings.get(world) : new WorldHoldings(world);
-      worldHoldings.setHoldings(currency, newHoldings);
-      holdings.put(world, worldHoldings);
-      TNE.manager().addAccount(this);*/
+
       try {
         TNE.debug("ID: " + identifier());
         TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, newHoldings);
@@ -117,7 +105,6 @@ public class TNEAccount implements Account {
       TNE.debug("Currency Item: " + cur.isItem());
       if (cur.isItem()) {
         final Player player = Bukkit.getPlayer(id);
-        //TNE.debug("physical currency");
         ItemCalculations.setItems(id, cur, newHoldings, player.getInventory(), false);
       }
     }
@@ -154,9 +141,6 @@ public class TNEAccount implements Account {
         TNE.debug(e);
       }
       return holdings != null;
-      /*if (holdings.containsKey(world)) {
-        return holdings.get(world).hasHoldings(currency);
-      }*/
     } else {
       return ItemCalculations.getCurrencyItems(cur, getPlayer().getInventory()).compareTo(BigDecimal.ZERO) > 0;
     }
@@ -203,29 +187,18 @@ public class TNEAccount implements Account {
   public void saveItemCurrency(String world, boolean save, PlayerInventory inventory) {
     TNE.debug("saveItemCurrency for world : " + world + " Save: " + save);
     List<String> currencies = TNE.instance().getWorldManager(world).getItemCurrencies();
-    //WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
 
     currencies.forEach((currency)->{
       TNE.debug("Currency: " + currency);
       final TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-      //worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(cur, inventory));
       try {
         TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, ItemCalculations.getCurrencyItems(cur, inventory));
       } catch (SQLException e) {
         TNE.debug(e);
       }
     });
-    //holdings.put(world, worldHoldings);
     if(save) TNE.manager().addAccount(this);
   }
-
-  /*public Map<String, WorldHoldings> getWorldHoldings() {
-    return holdings;
-  }
-
-  public WorldHoldings getWorldHoldings(String world) {
-    return holdings.get(world);
-  }*/
 
   public static TNEAccount getAccount(String identifier) {
     return TNE.manager().getAccount(IDFinder.getID(identifier));

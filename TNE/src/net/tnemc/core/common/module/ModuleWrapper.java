@@ -1,4 +1,4 @@
-package net.tnemc.core.common.newmodule;
+package net.tnemc.core.common.module;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -10,18 +10,32 @@ package net.tnemc.core.common.newmodule;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class ModuleInformation {
+public class ModuleWrapper {
 
   ModuleInfo info;
   Module module;
-  ClassLoader loader;
+  ModuleClassLoader loader;
 
-  public ModuleInformation(ModuleInfo info, Module module) {
-    this.info = info;
+  public ModuleWrapper(Module module) {
     this.module = module;
   }
 
   public void unload() {
+  }
+
+  public String name() {
+    if(info == null) return "unknown";
+    return info.name();
+  }
+
+  public String version() {
+    if(info == null) return "unknown";
+    return info.version();
+  }
+
+  public String author() {
+    if(info == null) return "unknown";
+    return info.author();
   }
 
   public ModuleInfo getInfo() {
@@ -40,11 +54,11 @@ public class ModuleInformation {
     this.module = module;
   }
 
-  public ClassLoader getLoader() {
+  public ModuleClassLoader getLoader() {
     return loader;
   }
 
-  public void setLoader(ClassLoader loader) {
+  public void setLoader(ModuleClassLoader loader) {
     this.loader = loader;
   }
 }

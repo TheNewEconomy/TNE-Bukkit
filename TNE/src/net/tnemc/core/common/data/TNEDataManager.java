@@ -33,7 +33,7 @@ public class TNEDataManager extends DataManager {
 
     TNE.loader().getModules().forEach((key, value)->{
       TNE.debug("Looping through modules");
-      value.getModule().registerProviders().forEach((identifier, provider)->{
+      value.getModule().providers().forEach((identifier, provider)->{
         TNE.debug("Loading provider: " + provider.getName());
         registerProvider(provider);
       });

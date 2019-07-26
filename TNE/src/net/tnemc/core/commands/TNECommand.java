@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,5 +242,9 @@ public abstract class TNECommand {
       }
     }
     return null;
+  }
+
+  public void addSubCommands(Collection<TNECommand> subs) {
+    subCommands.addAll(subs);
   }
 }
