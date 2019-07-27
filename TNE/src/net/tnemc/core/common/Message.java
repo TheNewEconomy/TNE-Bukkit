@@ -127,7 +127,9 @@ public class Message {
 
       while (it.hasNext()) {
         Map.Entry<String, String> entry = it.next();
-        send = send.replace(entry.getKey(), entry.getValue());
+        if(entry.getValue() != null) {
+          send = send.replace(entry.getKey(), entry.getValue());
+        }
       }
       Boolean strip = !(sender instanceof Player);
       formatted[i] = replaceColours(send, strip);
