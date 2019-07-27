@@ -11,6 +11,7 @@ import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,6 +76,7 @@ public class ModuleLoadCommand extends TNECommand {
       String author = module.getInfo().author();
       String version = module.getInfo().version();
 
+      module.getModule().load(TNE.instance());
       module.getModule().initializeConfigurations();
       module.getModule().loadConfigurations();
       module.getModule().configurations().forEach((configuration, identifier)->{
@@ -82,9 +84,9 @@ public class ModuleLoadCommand extends TNECommand {
       });
 
       for(TNECommand com : module.getModule().commands()) {
-        List<String> accessors = Arrays.asList(com.getAliases());
+        List<String> accessors = new ArrayList<>(Arrays.asList(com.getAliases()));
         accessors.add(com.getName());
-        TNE.instance().registerCommand((String[])accessors.toArray(), com);
+        TNE.instance().getCommandManager().register(accessors.toArray(new String[accessors.size()]), com);
       }
       module.getModule().listeners(TNE.instance()).forEach(listener->{
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());

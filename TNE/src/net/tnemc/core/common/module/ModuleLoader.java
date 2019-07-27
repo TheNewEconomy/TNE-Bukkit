@@ -1,6 +1,7 @@
 package net.tnemc.core.common.module;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -79,7 +80,7 @@ public class ModuleLoader {
   public boolean load(String moduleName) {
     final String path = findPath(moduleName);
     if(path != null) {
-      ModuleWrapper wrapper = getModule(path);
+      ModuleWrapper wrapper = loadModuleWrapper(path);
       if (!wrapper.getModule().getClass().isAnnotationPresent(ModuleInfo.class)) {
         TNE.instance().getLogger().info("Invalid module format! Module File: " + moduleName);
         return false;
@@ -98,18 +99,13 @@ public class ModuleLoader {
       ModuleWrapper wrapper = getModule(moduleName);
       ModuleClassLoader loader = wrapper.getLoader();
       wrapper.getModule().listeners(TNE.instance()).forEach(ModuleListener::unregister);
+      wrapper.getModule().commands().forEach(TNECommand::unregister);
       wrapper.getModule().unload(TNE.instance());
       wrapper.unload();
       wrapper.setModule(null);
       wrapper = null;
 
       modules.remove(moduleName);
-      try {
-        loader.close();
-        System.gc();
-      } catch (IOException ignore) {
-        TNE.logger().info("Module " + moduleName + " unloaded incorrectly.");
-      }
     }
   }
 

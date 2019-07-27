@@ -1,5 +1,9 @@
 package net.tnemc.core.common.module;
 
+import net.tnemc.core.TNE;
+
+import java.io.IOException;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -21,6 +25,12 @@ public class ModuleWrapper {
   }
 
   public void unload() {
+    try {
+      loader.close();
+      System.gc();
+    } catch (IOException ignore) {
+      TNE.logger().info("Module " + info.name() + " unloaded incorrectly.");
+    }
   }
 
   public String name() {

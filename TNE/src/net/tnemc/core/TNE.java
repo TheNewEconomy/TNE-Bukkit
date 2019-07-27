@@ -305,6 +305,7 @@ public class TNE extends TNELib {
       TNE.debug("Command Null?: " + (command == null));
       registerCommand(accessors.toArray(new String[accessors.size()]), command);
     }));
+    commandManager.registerCommands();
 
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
@@ -565,7 +566,13 @@ public class TNE extends TNELib {
       command.addSubCommands(subCommands.get(command.getName()));
 
     commandManager.commands.put(accessors, command);
-    commandManager.registerCommands();
+  }
+
+  public void registerCommandForce(String[] accessors, TNECommand command) {
+    if(subCommands.containsKey(command.getName()))
+      command.addSubCommands(subCommands.get(command.getName()));
+
+    commandManager.commands.put(accessors, command);
   }
 
   public void registerCommands(Map<String[], TNECommand> commands) {

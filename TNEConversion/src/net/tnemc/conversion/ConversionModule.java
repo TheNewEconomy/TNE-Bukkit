@@ -61,12 +61,12 @@ import java.util.List;
     author = "creatorfromhell",
     version = "0.1.1"
 )
-public class ConversionModule extends Module {
+public class ConversionModule implements Module {
 
   private static ConversionModule instance;
 
   @Override
-  public void load(TNE tne, String version) {
+  public void load(TNE tne) {
     tne.getLogger().info("Conversion Module loaded!");
     instance = this;
   }
@@ -77,7 +77,7 @@ public class ConversionModule extends Module {
   }
 
   @Override
-  public List<TNECommand> getCommands() {
+  public List<TNECommand> commands() {
     return Collections.singletonList(new ConvertCommand(TNE.instance()));
   }
 

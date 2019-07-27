@@ -2,6 +2,7 @@ package net.tnemc.discord;
 
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
 import net.tnemc.discord.command.DiscordCommandManager;
@@ -16,6 +17,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -32,7 +35,7 @@ import java.nio.charset.StandardCharsets;
     author = "creatorfromhell",
     version = "0.1.0"
 )
-public class DiscordModule extends Module {
+public class DiscordModule implements Module {
 
   private static DiscordModule instance;
 
@@ -49,8 +52,7 @@ public class DiscordModule extends Module {
   }
 
   @Override
-  public void load(TNE tne, String version) {
-    //DiscordSRV.getPlugin().getJda().addEventListener(new DiscordMessageListener());
+  public void load(TNE tne) {
 
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
       manager = new DiscordManager();
@@ -62,16 +64,18 @@ public class DiscordModule extends Module {
 
   @Override
   public void initializeConfigurations() {
-    super.initializeConfigurations();
     discord = new File(TNE.instance().getDataFolder(), "discord.yml");
     discordFileConfiguration = initializeConfiguration(discord, "discord.yml");
   }
 
   @Override
   public void loadConfigurations() {
-    super.loadConfigurations();
     discordConfiguration = new DiscordConfiguration();
-    configurations.put(discordConfiguration, "Discord");
+  }
+
+  @Override
+  public Map<Configuration, String> configurations() {
+    return Collections.singletonMap(discordConfiguration, "Discord");
   }
 
   @Override

@@ -1,5 +1,7 @@
 package net.tnemc.core.common.module;
 
+import net.tnemc.core.TNE;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -32,6 +34,6 @@ public class ModuleClassLoader extends URLClassLoader {
   protected void finalize() throws Throwable {
     super.finalize();
 
-    System.out.println(this.toString() + " - CL Finalized.");
+    TNE.debug("Module Class Loader has been GC'd");
   }
 }
