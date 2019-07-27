@@ -27,10 +27,12 @@ public class ModuleWrapper {
   public void unload() {
     try {
       loader.close();
+      loader = null;
       System.gc();
     } catch (IOException ignore) {
       TNE.logger().info("Module " + info.name() + " unloaded incorrectly.");
     }
+    info = null;
   }
 
   public String name() {

@@ -64,6 +64,9 @@ import java.util.List;
 public class ConversionModule implements Module {
 
   private static ConversionModule instance;
+  
+  private Converter converter = null;
+
 
   @Override
   public void load(TNE tne) {
@@ -73,6 +76,8 @@ public class ConversionModule implements Module {
 
   @Override
   public void unload(TNE tne) {
+
+    converter = null;
     tne.logger().info("Conversion Module unloaded!");
   }
 
@@ -85,75 +90,75 @@ public class ConversionModule implements Module {
 
     switch(name.toLowerCase()) {
       case "advancedeconomy":
-        return new AdvancedEconomy();
+        converter = new AdvancedEconomy();
       case "basiceconomy":
-        return new BasicEconomy();
+        converter = new BasicEconomy();
       case "bconomy":
-        return new BConomy();
+        converter = new BConomy();
       case "beconomy":
-        return new BEconomy();
+        converter = new BEconomy();
       case "blings":
-        return new Blings();
+        converter = new Blings();
       case "boseconomy":
-        return new BOSEconomy();
+        converter = new BOSEconomy();
       case "cmi":
-        return new CMI();
+        converter = new CMI();
       case "devcoinsystem":
-        return new DevCoinSystem();
+        converter = new DevCoinSystem();
       case "easycoins":
-        return new EasyCoins();
+        converter = new EasyCoins();
       case "ececonomy":
-        return new ECEconomy();
+        converter = new ECEconomy();
       case "economyapi":
-        return new EconomyAPI();
+        converter = new EconomyAPI();
       case "ecoplugin":
-        return new EcoPlugin();
+        converter = new EcoPlugin();
       case "ecosystem":
-        return new EcoSystem();
+        converter = new EcoSystem();
       case "essentials":
-        return new Essentials();
+        converter = new Essentials();
       case "feathereconomy":
-        return new FeatherEconomy();
+        converter = new FeatherEconomy();
       case "feconomy":
-        return new FeConomy();
+        converter = new FeConomy();
       case "gemseconomy":
-        return new GemsEconomy();
+        converter = new GemsEconomy();
       case "iconomy":
-        return new iConomy();
+        converter = new iConomy();
       case "meep":
-        return new Meep();
+        converter = new Meep();
       case "meller":
-        return new Meller();
+        converter = new Meller();
       case "minecoin":
-        return new MineCoin();
+        converter = new MineCoin();
       case "minecoinsyml":
-        return new MineCoinsYML();
+        converter = new MineCoinsYML();
       case "mineconomy":
-        return new MineConomy();
+        converter = new MineConomy();
       case "minetopia":
-        return new MinetopiaEconomy();
+        converter = new MinetopiaEconomy();
       case "moconomy":
-        return new MoConomy();
+        converter = new MoConomy();
       case "realeconomy":
-        return new RealEconomy();
+        converter = new RealEconomy();
       case "saneeconomy":
-        return new SaneEconomy();
+        converter = new SaneEconomy();
       case "simpleconomy":
-        return new SimpleConomy();
+        converter = new SimpleConomy();
       case "simplisticeconomy":
-        return new SimplisticEconomy();
+        converter = new SimplisticEconomy();
       case "sqlconomy":
-        return new SQLConomy();
+        converter = new SQLConomy();
       case "swifteconomy":
-        return new SwiftEconomy();
+        converter = new SwiftEconomy();
       case "tokenseconomy":
-        return new TokensEconomy();
+        converter = new TokensEconomy();
       case "townyeco":
-        return new TownyEco();
+        converter = new TownyEco();
       case "xconomy":
-        return new XConomy();
+        converter = new XConomy();
     }
-    return null;
+    return converter;
   }
 
   public static void convertedAdd(String identifier, String world, String currency, BigDecimal amount) {

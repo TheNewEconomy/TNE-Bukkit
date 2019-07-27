@@ -11,9 +11,11 @@ import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -73,8 +75,8 @@ public class ModuleLoadCommand extends TNECommand {
 
       ModuleWrapper module = TNE.loader().getModule(moduleName);
 
-      String author = module.getInfo().author();
-      String version = module.getInfo().version();
+      final String author = module.getInfo().author();
+      final String version = module.getInfo().version();
 
       module.getModule().load(TNE.instance());
       module.getModule().initializeConfigurations();
@@ -100,6 +102,21 @@ public class ModuleLoadCommand extends TNECommand {
         TableManager manager = new TableManager(TNE.saveManager().getTNEManager().getFormat().toLowerCase(), TNE.saveManager().getTNEManager().getPrefix());
         manager.generateQueriesAndRun(SQLDatabase.getDb().getConnection(), module.getModule().getResource(tablesFile));
         SQLDatabase.close();
+      }
+
+      TNE.loader().getModules().put(module.name(), module);
+      module = null;
+
+      try {
+        Field f = ClassLoader.class.getDeclaredField("classes");
+        f.setAccessible(true);
+
+        Vector<Class> classes =  (Vector<Class>) f.get(TNE.loader().getModule(moduleName).getLoader());
+        for(Class clazz : classes) {
+          System.out.println("Loaded: " + clazz.getName());
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
 
       Message message = new Message("Messages.Module.Loaded");

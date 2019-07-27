@@ -1,7 +1,5 @@
 package net.tnemc.bounty;
 
-import com.github.tnerevival.core.SaveManager;
-import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.bounty.command.BountyCommand;
 import net.tnemc.bounty.configuration.BountyConfiguration;
 import net.tnemc.bounty.configuration.HunterConfiguration;
@@ -13,11 +11,13 @@ import net.tnemc.bounty.menu.BountyHunterMenu;
 import net.tnemc.bounty.menu.BountyViewMenu;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -27,8 +27,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,7 @@ import java.util.Map;
     author = "creatorfromhell",
     version = "0.1.0"
 )
-public class BountyModule extends Module {
+public class BountyModule implements Module {
 
   private static BountyModule instance;
 
@@ -66,20 +66,27 @@ public class BountyModule extends Module {
   }
 
   @Override
-  public void load(TNE tne, String version) {
-
-    commands.add(new BountyCommand(tne));
-
-    Bukkit.getServer().getPluginManager().registerEvents(new InventoryCloseListener(tne), tne);
-    Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeathListener(tne), tne);
-    Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(tne), tne);
+  public void load(TNE tne) {
     TNE.logger().info("Bounty Module loaded!");
   }
 
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A list of event listeners.
+   */
+  @Override
+  public List<ModuleListener> listeners(TNE plugin) {
+    List<ModuleListener> listeners = new ArrayList<>();
+    listeners.add(new InventoryCloseListener(plugin));
+    listeners.add(new PlayerDeathListener(plugin));
+    listeners.add(new PlayerJoinListener(plugin));
+
+    return listeners;
+  }
 
   @Override
-  public Map<String, List<String>> getTables() {
-    Map<String, List<String>> tables = new HashMap<>();
+  public String tablesFile() {
+    /*Map<String, List<String>> tables = new HashMap<>();
 
     List<String> h2 = new ArrayList<>();
     //H2 Tables
@@ -150,33 +157,21 @@ public class BountyModule extends Module {
         "`hunter_rewards` TEXT NOT NULL" +
         ") ENGINE = INNODB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
 
-    tables.put("mysql", mysql);
+    tables.put("mysql", mysql);*/
 
-    return tables;
+    return "bounty_tables.yml";
   }
 
   /**
-   * Used to perform any data loading, manipulation, layout updating, etc.
-   *
-   * @param saveManager An instance of TNE's Save Manager
+   * @return A list of commands that should be added from this module.
    */
   @Override
-  public void enableSave(SaveManager saveManager) {
-    for(String str : getTables().get("h2")) {
-      SQLDatabase.open(SQLDatabase.getDataSource());
-
-      try {
-        SQLDatabase.getDb().getConnection().createStatement().executeUpdate(str);
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-
-      SQLDatabase.close();
-    }
+  public List<TNECommand> commands() {
+    return Collections.singletonList(new BountyCommand(TNE.instance()));
   }
 
   @Override
-  public Map<String, Menu> registerMenus(TNE pluginInstance) {
+  public Map<String, Menu> menus(TNE pluginInstance) {
     Map<String, Menu> menus = new HashMap<>();
     menus.put("bounty_currency_selection", new CurrencySelectionMenu("bounty_currency_selection", "bounty_amount_selection"));
     menus.put("bounty_amount_selection", new AmountSelectionMenu("bounty_amount_selection"));
@@ -188,7 +183,6 @@ public class BountyModule extends Module {
 
   @Override
   public void initializeConfigurations() {
-    super.initializeConfigurations();
     bounty = new File(TNE.instance().getDataFolder(), "bounty.yml");
     hunter = new File(TNE.instance().getDataFolder(), "hunter.yml");
     bountyFileConfiguration = initializeConfiguration(bounty, "bounty.yml");
@@ -199,11 +193,17 @@ public class BountyModule extends Module {
 
   @Override
   public void loadConfigurations() {
-    super.loadConfigurations();
     bountyConfiguration = new BountyConfiguration();
     hunterConfiguration = new HunterConfiguration();
+  }
+
+  @Override
+  public Map<Configuration, String> configurations() {
+    Map<Configuration, String> configurations = new HashMap<>();
     configurations.put(bountyConfiguration, "Bounty");
     configurations.put(hunterConfiguration, "Hunter");
+
+    return configurations;
   }
 
   @Override

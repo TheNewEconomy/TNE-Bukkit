@@ -97,12 +97,13 @@ public class ModuleLoader {
   public void unload(String moduleName) {
     if(hasModule(moduleName)) {
       ModuleWrapper wrapper = getModule(moduleName);
-      ModuleClassLoader loader = wrapper.getLoader();
       wrapper.getModule().listeners(TNE.instance()).forEach(ModuleListener::unregister);
       wrapper.getModule().commands().forEach(TNECommand::unregister);
       wrapper.getModule().unload(TNE.instance());
       wrapper.unload();
       wrapper.setModule(null);
+      wrapper.setInfo(null);
+      wrapper.setLoader(null);
       wrapper = null;
 
       modules.remove(moduleName);

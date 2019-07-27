@@ -2,9 +2,9 @@ package net.tnemc.bounty.listeners;
 
 import net.tnemc.bounty.inventory.RewardCenterHolder;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.module.ModuleListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 /**
@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class InventoryCloseListener implements Listener {
+public class InventoryCloseListener implements ModuleListener {
 
   private TNE plugin;
 
