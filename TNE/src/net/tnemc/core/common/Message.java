@@ -71,6 +71,10 @@ public class Message {
     return ChatColor.translateAlternateColorCodes('&', message);
   }
 
+  public static String replaceUnicode(String str) {
+    return "";
+  }
+
   public void translate(String world, UUID id) {
     if(id.toString().equalsIgnoreCase(IDFinder.getID(TNE.instance().consoleName).toString())) {
       translate(world, Bukkit.getConsoleSender());

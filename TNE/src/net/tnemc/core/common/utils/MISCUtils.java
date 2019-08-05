@@ -399,7 +399,7 @@ public class MISCUtils {
     List<String> list = new ArrayList<>();
     boolean failed = false;
     try {
-      URL url = new URL("https://creatorfromhell.com/tne/blacklist.txt");
+      URL url = new URL("https://tnemc.net/files/blacklist.txt");
       Scanner s = new Scanner(url.openStream());
 
       String line;

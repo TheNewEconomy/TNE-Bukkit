@@ -251,13 +251,15 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onChat(AsyncPlayerChatEvent event) {
-    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.instance().api().getString( "Core.Commands.Triggers", event.getPlayer().getWorld().getName(), event.getPlayer().getUniqueId()).split(",")));
+    if(event.getMessage().length() > 0) {
+      List<String> triggers = new ArrayList<>(Arrays.asList(TNE.instance().api().getString("Core.Commands.Triggers", event.getPlayer().getWorld().getName(), event.getPlayer().getUniqueId()).split(",")));
 
-    if(triggers.contains(event.getMessage().charAt(0) + "")) {
-      String[] parsed = event.getMessage().split(" ");
-      String[] arguments = (parsed.length > 1)? Arrays.copyOfRange(parsed, 1, parsed.length) : new String[0];
-      TNE.instance().customCommand(event.getPlayer(), parsed[0].substring(1), arguments);
-      event.setCancelled(true);
+      if (triggers.contains(event.getMessage().charAt(0) + "")) {
+        String[] parsed = event.getMessage().split(" ");
+        String[] arguments = (parsed.length > 1) ? Arrays.copyOfRange(parsed, 1, parsed.length) : new String[0];
+        TNE.instance().customCommand(event.getPlayer(), parsed[0].substring(1), arguments);
+        event.setCancelled(true);
+      }
     }
   }
 

@@ -137,7 +137,7 @@ public class TNE extends TNELib {
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
 
-  public static final String build = "1Beta118l";
+  public static final String build = "1Beta118M";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -198,7 +198,7 @@ public class TNE extends TNELib {
 
     setUuidManager(new TNEUUIDManager());
 
-    updater = new UpdateChecker("https://cfh.dev/tne/tnebuild.txt", getDescription().getVersion());
+    updater = new UpdateChecker("https://tnemc.net/files/tnebuild.txt", getDescription().getVersion());
 
     //Run the ModuleLoader
     loader = new ModuleLoader();
