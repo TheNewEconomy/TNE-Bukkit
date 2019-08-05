@@ -33,8 +33,7 @@ public class TNECurrency implements Currency {
   private boolean global = true;
   private BigDecimal balance;
   private BigDecimal maxBalance;
-  private boolean item;
-  private boolean xp;
+  private String type;
   private boolean notable;
   private BigDecimal fee;
   private BigDecimal minimum;
@@ -251,12 +250,7 @@ public class TNECurrency implements Currency {
   }
 
   public boolean isItem() {
-    return item;
-  }
-
-  public void setItem(boolean item) {
-    this.item = item;
-    if(item) setXp(false);
+    return type.equalsIgnoreCase("item");
   }
 
   public boolean isNotable() {
@@ -391,12 +385,19 @@ public class TNECurrency implements Currency {
     return decimalPlaces;
   }
 
-  public boolean isXp() {
-    return xp;
+  public CurrencyType getCurrencyType() {
+    return TNE.manager().currencyManager().getType(type.toLowerCase());
   }
 
-  public void setXp(boolean xp) {
-    this.xp = xp;
-    if(xp) setItem(false);
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public boolean isXp() {
+    return type.equalsIgnoreCase("experience");
   }
 }

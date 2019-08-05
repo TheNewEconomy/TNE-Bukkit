@@ -94,11 +94,9 @@ Currencies:
            #The maximum amount of places is 4
            DecimalPlaces: 2
 
-           #Would you like to use experience as the currency?
-           Experience: false
-
-           #Would you like to use an item as the currency?
-           ItemCurrency: false
+           #The currency type to use for this currency.
+           #Valid Types: virtual, item, experience
+           Type: "virtual"
 
            #Would you like your item currency balances to also check the player's ender chest?
            EnderChest: true

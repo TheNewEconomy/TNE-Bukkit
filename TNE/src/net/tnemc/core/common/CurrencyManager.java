@@ -3,6 +3,7 @@ package net.tnemc.core.common;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyNote;
+import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.ItemTier;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
@@ -48,6 +49,7 @@ import java.util.UUID;
 public class CurrencyManager {
   private static BigDecimal largestSupported;
   private Map<String, TNECurrency> globalCurrencies = new HashMap<>();
+  private Map<String, CurrencyType> currencyTypes = new HashMap<>();
 
   /**
    * A map containing all of the crafting recipes enabled for TNE currencies.
@@ -112,6 +114,14 @@ public class CurrencyManager {
     largestSupported = null;
   }
 
+  public void addCurrencyType(CurrencyType type) {
+    currencyTypes.put(type.name().toLowerCase(), type);
+  }
+
+  public CurrencyType getType(String name) {
+    return currencyTypes.getOrDefault(name, currencyTypes.get("virtual"));
+  }
+
   private void loadBasic() {
 
     final String base = "Core.Currency.Basic";
@@ -125,8 +135,7 @@ public class CurrencyManager {
     final String pluralMinor = TNE.instance().mainConfigurations().getString(base + ".Minor_Plural", "Cents");
     final String prefixes = TNE.instance().mainConfigurations().getString(base + ".Prefixes", "kMGTPEZYXWVUN₮").trim();
     final String symbol = TNE.instance().mainConfigurations().getString(base + ".Symbol", "$");
-    final Boolean item = TNE.instance().mainConfigurations().getBool(base + ".ItemCurrency");
-    final Boolean experience = TNE.instance().mainConfigurations().getBool(base + ".ExperienceCurrency");
+    final String currencyType = TNE.instance().mainConfigurations().getString(base + ".Type", "virtual");
 
     //Currency Options Configurations.
     final String format = TNE.instance().mainConfigurations().getString(base + ".Options.Format", "<symbol><major.amount><decimal><minor.amount>").trim();
@@ -181,8 +190,7 @@ public class CurrencyManager {
     currency.setSymbol(symbol);
     currency.setWorldDefault(true);
     currency.setRate(1.0);
-    currency.setItem(item);
-    currency.setXp(experience);
+    currency.setType(currencyType);
     currency.setNotable(notable);
     currency.setFee(fee);
     currency.setMinimum(minimum);
@@ -192,13 +200,13 @@ public class CurrencyManager {
     currency.setMinorWeight(minorWeight);
     TNE.debug("Symbol: " + currency.symbol());
 
-    loadBasicTiers(currency, TNE.instance().mainConfigurations(), item);
+    loadBasicTiers(currency, TNE.instance().mainConfigurations());
 
     addCurrency(TNE.instance().defaultWorld, currency);
   }
 
-  private void loadBasicTiers(TNECurrency currency, CommentedConfiguration configuration, boolean item) {
-    final String baseNode = "Core.Currency.Basic." + ((item)? "Items" : "Virtual");
+  private void loadBasicTiers(TNECurrency currency, CommentedConfiguration configuration) {
+    final String baseNode = "Core.Currency.Basic." + ((currency.isItem())? "Items" : "Virtual");
     Set<String> tiers = configuration.getSection(baseNode).getKeys(false);
 
     for (String tierName : tiers) {
@@ -214,7 +222,7 @@ public class CurrencyManager {
 
       ItemTier itemTier = null;
 
-      if (item) {
+      if (currency.isItem()) {
         itemTier = new ItemTier(tierName, (short)0);
         itemTier.setName(null);
         itemTier.setLore(null);
@@ -298,8 +306,7 @@ public class CurrencyManager {
         final BigDecimal balance = new BigDecimal(configuration.getString(base + ".Options.Balance", "200.00"));
         final String decimal = configuration.getString(base + ".Options.Decimal", ".");
         final Integer decimalPlaces = ((configuration.getInt(base + ".Options.DecimalPlaces", 2) > 4)? 4 : configuration.getInt(base + ".Options.DecimalPlaces", 2));
-        final Boolean experience = configuration.getBool(base + ".Options.Experience");
-        final Boolean item = configuration.getBool(base + ".Options.ItemCurrency");
+        final String currencyType = configuration.getString(base + ".Options.Type", "virtual");
         final Boolean ender = configuration.getBool(base + ".Options.EnderChest", true);
         final Boolean separate = configuration.getBool(base + ".Options.Major_Separate", true);
         final String separator = configuration.getString(base + ".Options.Major_Separator", ",");
@@ -353,8 +360,7 @@ public class CurrencyManager {
         currency.setWorld(currencyWorld);
         currency.setGlobal(global);
         currency.setRate(rate);
-        currency.setItem(item);
-        currency.setXp(experience);
+        currency.setType(currencyType);
         currency.setNotable(notable);
         currency.setFee(fee);
         currency.setMinimum(minimum);
