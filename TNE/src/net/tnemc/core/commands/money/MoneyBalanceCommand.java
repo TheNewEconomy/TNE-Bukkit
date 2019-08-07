@@ -16,6 +16,7 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class MoneyBalanceCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+
       TNE.debug("===START MoneyBalanceCommand  ===");
       String world = (arguments.length >= 1)? arguments[0] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       if(TNE.instance().getWorldManager(world) == null) world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
@@ -86,6 +88,11 @@ public class MoneyBalanceCommand extends TNECommand {
       if(TNE.manager().currencyManager() == null) TNE.debug("TNECurrency Manager is null");
       if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
       String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
+
+      if(sender instanceof Player == false && arguments.length == 0){
+        new Message("Messages.General.IsConsole");
+        return;
+      }
 
       if(arguments.length < 2) {
         currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(id).getLocation());

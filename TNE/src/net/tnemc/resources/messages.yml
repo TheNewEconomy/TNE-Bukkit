@@ -47,6 +47,7 @@ Messages:
        Saved: "<yellow>Successfully saved all TNE Data!"
        NoPlayer: "<red>Unable to locate player \"$player\"!"
        Disabled: "<red>Economy features are currently disabled in this world!"
+       IsConsole: "<red>You can not run this command as in the console!"
 
     Item:
       Invalid: "<red>Invalid item name and/or durability combination entered."
