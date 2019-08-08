@@ -95,6 +95,7 @@ public class TNE extends TNELib {
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   private List<String> dupers;
+  public List<String> exclusions;
 
   private EconomyManager manager;
   private MenuManager menuManager;
@@ -218,6 +219,8 @@ public class TNE extends TNELib {
 
     TNE.debug("Preparing configuration instances");
     main = new MainConfigurations();
+
+    exclusions = main.getConfiguration().getStringList("Core.Commands.Top.Exclusions");
     messages = new MessageConfigurations();
     messages.load(messageConfigurations);
     world = new WorldConfigurations();
