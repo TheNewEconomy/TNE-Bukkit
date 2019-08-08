@@ -53,8 +53,9 @@ Currencies:
            #Whether or not this currency is the default currency for the world.
            Default: true
 
-           #The world this currency belongs to mainly. If Global is true, this is used for the Default value solely.
-           World: "default"
+           #The worlds this currency belongs to, if Global is set to false.
+           Worlds:
+             - "world"
 
            #Whether or not this currency is a global currency.
            Global: true

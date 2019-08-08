@@ -6,8 +6,10 @@ import net.tnemc.core.economy.currency.Tier;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -26,10 +28,11 @@ public class TNECurrency implements Currency {
 
   private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
 
+  private List<String> worlds = new ArrayList<>();
+
   private CurrencyNote note = new CurrencyNote("PAPER");
 
   private boolean worldDefault = true;
-  private String world = TNE.instance().defaultWorld;
   private boolean global = true;
   private BigDecimal balance;
   private BigDecimal maxBalance;
@@ -221,20 +224,20 @@ public class TNECurrency implements Currency {
     this.worldDefault = worldDefault;
   }
 
-  public String getWorld() {
-    return world;
-  }
-
-  public void setWorld(String world) {
-    this.world = world;
-  }
-
   public boolean isGlobal() {
     return global;
   }
 
   public void setGlobal(boolean global) {
     this.global = global;
+  }
+
+  public List<String> getWorlds() {
+    return worlds;
+  }
+
+  public void setWorlds(List<String> worlds) {
+    this.worlds = worlds;
   }
 
   public void setBalance(BigDecimal balance) {

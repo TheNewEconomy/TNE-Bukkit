@@ -83,7 +83,15 @@ public class MoneyOtherCommand extends TNECommand {
         currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
       }
 
-      TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+      final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+
+
+      if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[0])) == null) {
+        Message offlineType = new Message("Messages.Money.TypeOffline");
+        offlineType.addVariable("$type", currency.getCurrencyType().name());
+        offlineType.translate(world, sender);
+        return false;
+      }
 
       if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
         new Message("Messages.General.Disabled").translate(world, sender);
