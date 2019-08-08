@@ -6,8 +6,10 @@ import net.tnemc.core.economy.currency.Tier;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -26,15 +28,15 @@ public class TNECurrency implements Currency {
 
   private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
 
+  private List<String> worlds = new ArrayList<>();
+
   private CurrencyNote note = new CurrencyNote("PAPER");
 
   private boolean worldDefault = true;
-  private String world = TNE.instance().defaultWorld;
   private boolean global = true;
   private BigDecimal balance;
   private BigDecimal maxBalance;
-  private boolean item;
-  private boolean xp;
+  private String type;
   private boolean notable;
   private BigDecimal fee;
   private BigDecimal minimum;
@@ -222,20 +224,20 @@ public class TNECurrency implements Currency {
     this.worldDefault = worldDefault;
   }
 
-  public String getWorld() {
-    return world;
-  }
-
-  public void setWorld(String world) {
-    this.world = world;
-  }
-
   public boolean isGlobal() {
     return global;
   }
 
   public void setGlobal(boolean global) {
     this.global = global;
+  }
+
+  public List<String> getWorlds() {
+    return worlds;
+  }
+
+  public void setWorlds(List<String> worlds) {
+    this.worlds = worlds;
   }
 
   public void setBalance(BigDecimal balance) {
@@ -251,12 +253,7 @@ public class TNECurrency implements Currency {
   }
 
   public boolean isItem() {
-    return item;
-  }
-
-  public void setItem(boolean item) {
-    this.item = item;
-    if(item) setXp(false);
+    return type.equalsIgnoreCase("item");
   }
 
   public boolean isNotable() {
@@ -391,12 +388,19 @@ public class TNECurrency implements Currency {
     return decimalPlaces;
   }
 
-  public boolean isXp() {
-    return xp;
+  public CurrencyType getCurrencyType() {
+    return TNE.manager().currencyManager().getType(type.toLowerCase());
   }
 
-  public void setXp(boolean xp) {
-    this.xp = xp;
-    if(xp) setItem(false);
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public boolean isXp() {
+    return type.equalsIgnoreCase("experience");
   }
 }

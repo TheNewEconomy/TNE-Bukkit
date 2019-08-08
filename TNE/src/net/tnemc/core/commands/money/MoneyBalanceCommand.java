@@ -119,14 +119,16 @@ public class MoneyBalanceCommand extends TNECommand {
       TransactionResult result = null;
 
       for(TNECurrency cur : currencies) {
-        TNE.debug("BalanceCommand Currency Loop.. Currency: " + cur.name());
-        TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("inquiry"));
-        transaction.setRecipientCharge(new TransactionCharge(world, cur, BigDecimal.ZERO));
-        transaction.setRecipientBalance(new CurrencyEntry(world, cur, account.getHoldings(world, cur)));
-        TNE.debug("BalanceCommand RecipientChargeCurrency: " + transaction.recipientCharge().getCurrency().name());
-        TNE.debug("BalanceCommand RecipientCharge: " + transaction.recipientCharge().getAmount().toPlainString());
-        result = TNE.transactionManager().perform(transaction);
-        balances.put(cur.name(), transaction.recipientBalance().getAmount());
+        if(cur.getCurrencyType().offline() || Bukkit.getPlayer(id) != null) {
+          TNE.debug("BalanceCommand Currency Loop.. Currency: " + cur.name());
+          TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("inquiry"));
+          transaction.setRecipientCharge(new TransactionCharge(world, cur, BigDecimal.ZERO));
+          transaction.setRecipientBalance(new CurrencyEntry(world, cur, account.getHoldings(world, cur)));
+          TNE.debug("BalanceCommand RecipientChargeCurrency: " + transaction.recipientCharge().getCurrency().name());
+          TNE.debug("BalanceCommand RecipientCharge: " + transaction.recipientCharge().getAmount().toPlainString());
+          result = TNE.transactionManager().perform(transaction);
+          balances.put(cur.name(), transaction.recipientBalance().getAmount());
+        }
       }
 
       TNE.debug("Balances Size: " + balances.size());
@@ -151,16 +153,21 @@ public class MoneyBalanceCommand extends TNECommand {
         TNE.debug("===END MoneyBalanceCommand ===");
         return;
       }
-      Message message = new Message(result.recipientMessage());
-      message.addVariable("$player", account.displayName());
-      message.addVariable("$world", world);
-      message.addVariable("$currency", currencyName);
-      if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
-        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currencyName), world, balances.get(currencyName), id.toString()));
-      } else {
-        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currencyName), world, balances.get(currencyName), id.toString()));
+
+      if(balances.size() > 0) {
+        Message message = new Message(result.recipientMessage());
+        message.addVariable("$player", account.displayName());
+        message.addVariable("$world", world);
+        message.addVariable("$currency", currencyName);
+        if (TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
+          message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currencyName), world, balances.get(currencyName), id.toString()));
+        } else {
+          message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currencyName), world, balances.get(currencyName), id.toString()));
+        }
+        message.translate(world, sender, id.toString());
+        return;
       }
-      message.translate(world, sender, id.toString());
+      help(sender);
       TNE.debug("===END MoneyBalanceCommand ===");
     });
     return true;

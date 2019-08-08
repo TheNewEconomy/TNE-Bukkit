@@ -176,11 +176,9 @@ Core:
            #The character to use as the symbol for this currency.
            Symbol: '$'
 
-           #Whether or not you wish to use an item as currency.
-           ItemCurrency: false
-
-           #Whether or not you wish to use experience as currency.
-           ExperienceCurrency: false
+           #The currency type to use for this currency.
+           #Valid Types: virtual, item, experience
+           Type: "virtual"
 
            #Configurations relating to item currencies for the basic currency.
            #Format: Material: Value(using a period "." as the decimal)

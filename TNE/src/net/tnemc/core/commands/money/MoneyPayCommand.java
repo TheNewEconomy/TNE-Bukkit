@@ -109,7 +109,14 @@ public class MoneyPayCommand extends TNECommand {
           return;
         }
 
-        TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+        final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+
+        if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[0])) == null) {
+          Message offlineType = new Message("Messages.Money.TypeOffline");
+          offlineType.addVariable("$type", currency.getCurrencyType().name());
+          offlineType.translate(world, sender);
+          return;
+        }
 
         String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[1]);
         if(parsed.contains("Messages")) {

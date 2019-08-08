@@ -6,6 +6,7 @@ import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -71,7 +72,16 @@ public class MoneySetAllCommand extends TNECommand {
           new Message("Messages.General.Disabled").translate(world, sender);
           return;
         }
-        final String parsed = CurrencyFormatter.parseAmount(TNE.manager().currencyManager().get(world), world, arguments[0]);
+        final TNECurrency currency = TNE.manager().currencyManager().get(world);
+
+        if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[0])) == null) {
+          Message offlineType = new Message("Messages.Money.TypeOffline");
+          offlineType.addVariable("$type", currency.getCurrencyType().name());
+          offlineType.translate(world, sender);
+          return;
+        }
+
+        final String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
 
         BigDecimal value = new BigDecimal(parsed);
         if(TNE.manager().currencyManager().get(world).getTNEMinorTiers().size() <= 0) {
@@ -86,7 +96,7 @@ public class MoneySetAllCommand extends TNECommand {
         }
 
         Message message = new Message("Messages.Money.SetAll");
-        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world), world, value, arguments[0]));
+        message.addVariable("$amount", CurrencyFormatter.format(currency, world, value, arguments[0]));
         message.addVariable("$world", world);
         message.translate(world, IDFinder.getID(sender));
         return;

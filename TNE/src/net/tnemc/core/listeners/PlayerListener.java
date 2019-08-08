@@ -271,7 +271,7 @@ public class PlayerListener implements Listener {
       final TNEAccount account = TNE.manager().getAccount(IDFinder.getID(event.getPlayer()));
       for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
         if(currency.isXp()) {
-          account.setHoldings(world, currency.name(), new BigDecimal(event.getNewLevel()), true, false);
+          account.setHoldings(world, currency.name(), new BigDecimal(event.getNewLevel()), true);
         }
       }
     }

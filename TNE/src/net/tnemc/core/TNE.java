@@ -446,8 +446,6 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
-    //TODO: Update table to have account_pin column
-
     getLogger().info("The New Economy has been enabled!");
 
     /*SQLDebug.testLoad(500);
@@ -735,26 +733,41 @@ public class TNE extends TNELib {
 
   public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
     TNE.debug("Started copying " + file.getName());
-    CommentedConfiguration commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8), false);
-    TNE.debug("Initializing commented configuration");
-    if(commentedConfiguration != null) {
-      TNE.debug("Loading commented configuration");
-      commentedConfiguration.load();
+    CommentedConfiguration commentedConfiguration = null;
+
+    try {
+      commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8), false);
+      TNE.debug("Initializing commented configuration");
+      if (commentedConfiguration != null) {
+        TNE.debug("Loading commented configuration");
+        commentedConfiguration.load();
+      }
+      TNE.debug("Finished copying " + file.getName());
+    } catch(Exception e) {
+      System.out.println("Error while trying to load: " + defaultFile);
+      debug(e.getStackTrace());
+
     }
-    TNE.debug("Finished copying " + file.getName());
     return commentedConfiguration;
   }
 
   public static void debug(StackTraceElement[] stack) {
+    System.out.println("Please let a professional know about the following:");
+    System.out.println("------------------- TNE Error Log -------------------");
     for(StackTraceElement element : stack) {
       logger().warning(element.toString());
     }
+    System.out.println("----------------- End of Error Log -----------------");
   }
 
   public static void debug(String message) {
     if(consoleDebug) {
       System.out.println(message);
     }
+  }
+
+  public static void debug(Exception e) {
+    debug(e.getStackTrace());
   }
 
   private void setupVault() {
