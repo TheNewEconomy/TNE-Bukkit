@@ -1,5 +1,7 @@
 package net.tnemc.core.common.utils;
 
+import java.math.BigDecimal;
+
 /**
  * The New Economy Minecraft Server Plugin
  *
@@ -10,9 +12,9 @@ package net.tnemc.core.common.utils;
  */
 public class TopBalance {
   private String username;
-  private double balance;
+  private BigDecimal balance;
 
-  public TopBalance(String username, double balance) {
+  public TopBalance(String username, BigDecimal balance) {
     this.username = username;
     this.balance = balance;
   }
@@ -25,11 +27,11 @@ public class TopBalance {
     this.username = username;
   }
 
-  public double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 }

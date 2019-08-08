@@ -8,6 +8,7 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.TopBalance;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -70,7 +72,7 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract String nullAccounts() throws SQLException;
   //balances
   public abstract int balanceCount(String world, String currency, int limit) throws SQLException;
-  public abstract LinkedHashMap<UUID, BigDecimal> topBalances(String world, String currency, int limit, int page) throws SQLException;
+  public abstract LinkedList<TopBalance> topBalances(String world, String currency, int limit, int page) throws SQLException;
   //transactions
   public abstract int transactionCount(UUID recipient, String world, String type, String time, int limit) throws SQLException;
   public abstract LinkedHashMap<UUID, TNETransaction> transactionHistory(UUID recipient, String world, String type, String time, int limit, int page) throws SQLException;
@@ -106,6 +108,20 @@ public abstract class TNEDataProvider extends DataProvider {
   @Override
   public void load(Double version) throws SQLException {
     preLoad(version);
+  }
+
+  protected String generateLike(String column, List<String> like, boolean not) {
+    StringBuilder builder = new StringBuilder();
+
+    for(String l : like) {
+
+      builder.append(" AND ");
+      builder.append(column + " ");
+      if(not) builder.append("NOT ");
+      builder.append("LIKE '" + l + "'");
+    }
+    builder.append(" ");
+    return builder.toString();
   }
 
   @Override
