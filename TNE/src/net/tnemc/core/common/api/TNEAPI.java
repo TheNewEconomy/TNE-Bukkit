@@ -2,6 +2,7 @@ package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
@@ -606,6 +607,22 @@ public class TNEAPI {
   public boolean registerTransactionResult(TransactionResult result) {
     TNE.transactionManager().addResult(result);
     return true;
+  }
+
+  /**
+   * Register a {@link CurrencyType} to be used with TNE.
+   * @param type The {@link CurrencyType} to register.
+   */
+  public void registerCurrencyType(CurrencyType type) {
+    TNE.manager().currencyManager().addCurrencyType(type);
+  }
+
+  /**
+   * @param name The name of the {@link CurrencyType} to look for.
+   * @return an {@link CurrencyType} object if founder, otherwise false.
+   */
+  public CurrencyType getType(String name) {
+    return TNE.manager().currencyManager().getType(name);
   }
 
   /**

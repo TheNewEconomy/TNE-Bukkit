@@ -11,6 +11,9 @@ import net.tnemc.core.common.currency.recipe.CurrencyLegacyShapedRecipe;
 import net.tnemc.core.common.currency.recipe.CurrencyRecipe;
 import net.tnemc.core.common.currency.recipe.CurrencyShapedRecipe;
 import net.tnemc.core.common.currency.recipe.CurrencyShapelessRecipe;
+import net.tnemc.core.common.currency.type.ItemType;
+import net.tnemc.core.common.currency.type.VirtualType;
+import net.tnemc.core.common.currency.type.XPType;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
@@ -73,6 +76,8 @@ public class CurrencyManager {
   public CurrencyManager() {
     initPermissions();
 
+    initTypes();
+
     loadCurrencies();
   }
 
@@ -92,6 +97,12 @@ public class CurrencyManager {
     Bukkit.getServer().getPluginManager().addPermission(convertParent);
     Bukkit.getServer().getPluginManager().addPermission(noteParent);
     Bukkit.getServer().getPluginManager().addPermission(payParent);
+  }
+
+  public void initTypes() {
+    addCurrencyType(new ItemType());
+    addCurrencyType(new VirtualType());
+    addCurrencyType(new XPType());
   }
 
   public void loadRecipes() {

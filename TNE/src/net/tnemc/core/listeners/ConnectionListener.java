@@ -113,9 +113,15 @@ public class ConnectionListener implements Listener {
 
       boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
       if(!noEconomy) {
-        TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-          ItemCalculations.setItems(id, TNE.manager().currencyManager().get(world, value),
-              account.getHoldings(world, value, true, true), player.getInventory(), false);
+        TNE.instance().getWorldManager(world).getCurrencies().forEach(value -> {
+          if(value.getCurrencyType().loginCalculation()) {
+            try {
+              value.getCurrencyType().setHoldings(id, world, value, value.getCurrencyType().getHoldings(id,
+                  world, value, true), false);
+            } catch (Exception e) {
+              TNE.debug(e);
+            }
+          }
         });
       }
 
