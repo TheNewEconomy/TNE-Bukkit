@@ -2,6 +2,7 @@ package net.tnemc.signs.command.note;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.currency.Experience;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -78,18 +79,14 @@ public class NoteExperienceCommand extends TNECommand {
 
     Player player = getPlayer(sender);
 
-    int xp = 0;
+    int xp = Experience.getExperience(player);
 
-    System.out.println("XP: " + xp);
     if(xp < amount) {
       sender.sendMessage(ChatColor.RED + "You don't have enough experience.");
       return false;
     }
 
-
-    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "experience set " + player.getName() + " " + xp + " points");
-
-    //ExperienceCalculation.setTotalExperience(player, xp);
+    Experience.changeExperience(player, amount, true);
 
     ItemStack stack = new ItemStack(Material.PAPER, 1);
 

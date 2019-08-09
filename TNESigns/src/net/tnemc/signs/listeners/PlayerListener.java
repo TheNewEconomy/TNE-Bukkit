@@ -2,6 +2,7 @@ package net.tnemc.signs.listeners;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.Experience;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.signs.ChestHelper;
@@ -126,7 +127,7 @@ public class PlayerListener implements ModuleListener {
               if(meta.getLore().get(0).contains("Amount:")) {
                 final Integer amount = Integer.valueOf(meta.getLore().get(0).split("\\:")[1].trim());
                 ItemCalculations.removeItem(stack, player.getInventory());
-                player.giveExp(amount);
+                Experience.changeExperience(player, amount, false);
               }
             }
             break;
