@@ -38,7 +38,7 @@ import java.util.Map;
 @ModuleInfo(
     name = "Signs",
     author = "creatorfromhell",
-    version = "0.1.1",
+    version = "0.1.2",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class SignsModule implements Module {
@@ -87,7 +87,7 @@ public class SignsModule implements Module {
   @Override
   public void initializeConfigurations() {
     signs = new File(TNE.instance().getDataFolder(), "signs.yml");
-    fileConfiguration = TNE.instance().initializeConfiguration(signs, "signs.yml");
+    fileConfiguration = initializeConfiguration(signs, "signs.yml");
   }
 
   @Override

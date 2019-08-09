@@ -34,7 +34,7 @@ import java.util.UUID;
 @ModuleInfo(
     name = "Mobs",
     author = "creatorfromhell",
-    version = "0.1.1",
+    version = "0.1.2",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class MobsModule implements Module {

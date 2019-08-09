@@ -55,15 +55,15 @@ public class ModuleUnloadCommand extends TNECommand {
       String moduleName = arguments[0];
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
       ModuleWrapper module = TNE.loader().getModule(moduleName);
-      final String author = module.author();
-      final String version = module.version();
 
-      if(TNE.instance().loader().getModule(moduleName) == null) {
+      if(module == null) {
         Message message = new Message("Messages.Module.Invalid");
         message.addVariable("$module", moduleName);
         message.translate(world, sender);
         return false;
       }
+      final String author = module.author();
+      final String version = module.version();
 
       module = null;
       TNE.loader().unload(moduleName);

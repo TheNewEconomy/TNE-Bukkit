@@ -11,11 +11,9 @@ import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -106,7 +104,7 @@ public class ModuleLoadCommand extends TNECommand {
       TNE.loader().getModules().put(module.name(), module);
       module = null;
 
-      try {
+      /*try {
         Field f = ClassLoader.class.getDeclaredField("classes");
         f.setAccessible(true);
 
@@ -116,7 +114,7 @@ public class ModuleLoadCommand extends TNECommand {
         }
       } catch (Exception e) {
         e.printStackTrace();
-      }
+      }*/
 
       Message message = new Message("Messages.Module.Loaded");
       message.addVariable("$module", moduleName);

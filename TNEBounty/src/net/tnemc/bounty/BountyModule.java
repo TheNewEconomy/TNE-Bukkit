@@ -46,7 +46,7 @@ import java.util.Map;
 @ModuleInfo(
     name = "Bounty",
     author = "creatorfromhell",
-    version = "0.1.1",
+    version = "0.1.2",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class BountyModule implements Module {

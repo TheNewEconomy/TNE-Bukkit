@@ -33,7 +33,7 @@ import java.util.Map;
 @ModuleInfo(
     name = "Discord",
     author = "creatorfromhell",
-    version = "0.1.1",
+    version = "0.1.2",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class DiscordModule implements Module {

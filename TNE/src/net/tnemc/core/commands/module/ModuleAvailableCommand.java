@@ -59,13 +59,13 @@ public class ModuleAvailableCommand extends TNECommand {
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       List<ModuleFile> available = TNE.instance().moduleCache().getModules(url);
 
-      Message header = new Message("Core.Module.AvailableHeader");
+      Message header = new Message("Messages.Module.AvailableHeader");
       header.addVariable("$url", url);
       header.translate(TNE.instance().defaultWorld, sender);
 
       for(ModuleFile file : available) {
 
-        Message entry = new Message("Core.Module.AvailableEntry");
+        Message entry = new Message("Messages.Module.AvailableEntry");
         entry.addVariable("$module", file.getName());
         entry.addVariable("$version", file.getVersion());
         entry.translate(TNE.instance().defaultWorld, sender);

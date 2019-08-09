@@ -9,10 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -115,12 +117,26 @@ public class ModuleLoader {
       ModuleWrapper wrapper = getModule(moduleName);
       wrapper.getModule().listeners(TNE.instance()).forEach(ModuleListener::unregister);
       wrapper.getModule().commands().forEach(TNECommand::unregister);
+      wrapper.getModule().configurations().values().forEach(config->TNE.configurations().configurations.remove(config));
       wrapper.getModule().unload(TNE.instance());
+
+      try {
+        Field f = ClassLoader.class.getDeclaredField("classes");
+        f.setAccessible(true);
+
+        Vector<Class> classes =  (Vector<Class>) f.get(TNE.loader().getModule(moduleName).getLoader());
+        for(Class clazz : classes) {
+          System.out.println("Loaded: " + clazz.getName());
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       wrapper.unload();
       wrapper.setModule(null);
       wrapper.setInfo(null);
       wrapper.setLoader(null);
       wrapper = null;
+      System.gc();
 
       modules.remove(moduleName);
     }
