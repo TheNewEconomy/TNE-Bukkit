@@ -44,13 +44,22 @@ import net.tnemc.core.compatibility.item.ItemCompatibility13;
 import net.tnemc.core.compatibility.item.ItemCompatibility7;
 import net.tnemc.core.event.module.TNEModuleLoadEvent;
 import net.tnemc.core.event.module.TNEModuleUnloadEvent;
-import net.tnemc.core.listeners.ConnectionListener;
-import net.tnemc.core.listeners.ExperienceCancelListener;
-import net.tnemc.core.listeners.ExperienceListener;
-import net.tnemc.core.listeners.MCMMOListener;
-import net.tnemc.core.listeners.PlayerListener;
-import net.tnemc.core.listeners.TNEMessageListener;
+import net.tnemc.core.listeners.entity.EntityDeathListener;
+import net.tnemc.core.listeners.entity.EntityPortalListener;
+import net.tnemc.core.listeners.inventory.InventoryClickListener;
 import net.tnemc.core.listeners.item.CraftItemListener;
+import net.tnemc.core.listeners.mcmmo.PlayerFishingTreasureListener;
+import net.tnemc.core.listeners.message.TNEMessageListener;
+import net.tnemc.core.listeners.player.PlayerChangedWorldListener;
+import net.tnemc.core.listeners.player.PlayerChannelListener;
+import net.tnemc.core.listeners.player.PlayerChatListener;
+import net.tnemc.core.listeners.player.PlayerInteractEntityListener;
+import net.tnemc.core.listeners.player.PlayerInteractListener;
+import net.tnemc.core.listeners.player.PlayerJoinListener;
+import net.tnemc.core.listeners.player.PlayerPreLoginListener;
+import net.tnemc.core.listeners.player.PlayerQuitListener;
+import net.tnemc.core.listeners.player.PlayerTeleportListener;
+import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import org.bukkit.Bukkit;
@@ -158,13 +167,6 @@ public class TNE extends TNELib {
     }
 
     fawe = true;
-    /*if(getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") != null) {
-      fawe = true;
-    }*/
-
-    /*if(!fawe && getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-      //TODO: World Guard is the most idiotic plugin to hook into apparently.WorldGuardManager.init();
-    }*/
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
     instance = this;
@@ -380,24 +382,35 @@ public class TNE extends TNELib {
     }
 
     if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.ThirdParty.McMMORewards")) {
-      getServer().getPluginManager().registerEvents(new MCMMOListener(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerFishingTreasureListener(this), this);
     }
 
     TNE.debug("Preparing events");
-    //Our new Listener Setup
+
+    //Entity
+    getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
+    getServer().getPluginManager().registerEvents(new EntityPortalListener(this), this);
+
+    //Inventory
+    getServer().getPluginManager().registerEvents(new InventoryClickListener(this), this);
 
     //Item
     getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
 
+    //Player
+    getServer().getPluginManager().registerEvents(new PlayerChangedWorldListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerChannelListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerPreLoginListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+    getServer().getPluginManager().registerEvents(new PlayerTeleportListener(this), this);
 
-    //Old Listener Setup
-    getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
-    getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-    if(configurations().getBoolean("Core.Server.ExperienceGain")) {
-      getServer().getPluginManager().registerEvents(new ExperienceCancelListener(this), this);
-    } else {
-      getServer().getPluginManager().registerEvents(new ExperienceListener(this), this);
-    }
+    //World
+    getServer().getPluginManager().registerEvents(new WorldLoadListener(this), this);
+
     loader.getModules().forEach((key, value)->{
       value.getModule().getListeners(this).forEach(listener->{
         getServer().getPluginManager().registerEvents(listener, this);
