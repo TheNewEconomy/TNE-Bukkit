@@ -71,7 +71,6 @@ public class ModuleLoadCommand extends TNECommand {
         message.translate(world, sender);
         return false;
       }
-      TNE.loader().load(moduleName);
 
       ModuleWrapper module = TNE.loader().getModule(moduleName);
 

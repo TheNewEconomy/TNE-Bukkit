@@ -80,16 +80,20 @@ public class ModuleLoader {
   public boolean load(String moduleName) {
     final String path = findPath(moduleName);
     if(path != null) {
-      ModuleWrapper wrapper = loadModuleWrapper(path);
-      if (!wrapper.getModule().getClass().isAnnotationPresent(ModuleInfo.class)) {
-        TNE.instance().getLogger().info("Invalid module format! Module File: " + moduleName);
-        return false;
-      }
+      try {
+        ModuleWrapper wrapper = loadModuleWrapper(path);
+        if (!wrapper.getModule().getClass().isAnnotationPresent(ModuleInfo.class)) {
+          TNE.instance().getLogger().info("Invalid module format! Module File: " + moduleName);
+          return false;
+        }
 
-      wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
-      TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
-      modules.put(wrapper.name(), wrapper);
-      return true;
+        wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
+        TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
+        modules.put(wrapper.name(), wrapper);
+        return true;
+      } catch(Exception e) {
+        TNE.logger().info("Unable to load module: " + moduleName + ". Are you sure it exists?");
+      }
     }
     return false;
   }
