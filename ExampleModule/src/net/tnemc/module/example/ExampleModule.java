@@ -17,10 +17,10 @@ import net.tnemc.core.common.module.ModuleInfo;
     author = "creatorfromhell",
     version = "1.0.0"
 )
-public class ExampleModule extends Module {
+public class ExampleModule implements Module {
 
   @Override
-  public void load(TNE tne, String version) {
+  public void load(TNE tne) {
   }
 
   @Override
