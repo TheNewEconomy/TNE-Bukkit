@@ -2,10 +2,12 @@ package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.utils.TopBalance;
 import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.EconomyAPI;
 import net.tnemc.core.economy.currency.Tier;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -609,6 +612,22 @@ public class TNEAPI {
   }
 
   /**
+   * Register a {@link CurrencyType} to be used with TNE.
+   * @param type The {@link CurrencyType} to register.
+   */
+  public void registerCurrencyType(CurrencyType type) {
+    TNE.manager().currencyManager().addCurrencyType(type);
+  }
+
+  /**
+   * @param name The name of the {@link CurrencyType} to look for.
+   * @return an {@link CurrencyType} object if founder, otherwise false.
+   */
+  public CurrencyType getType(String name) {
+    return TNE.manager().currencyManager().getType(name);
+  }
+
+  /**
    * Register a {@link TNECurrency}  to be used by other plugins.
    *
    * @param currency The {@link TNECurrency} to register.
@@ -671,11 +690,11 @@ public class TNEAPI {
    * @param page The page you wish to grab.
    * @return {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
    */
-  public LinkedHashMap<UUID, BigDecimal> getBalTopPage(int pageLimit, int page) {
+  public LinkedList<TopBalance> getBalTopPage(int pageLimit, int page) {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name(), pageLimit, page);
     } catch (SQLException e) {
-      return new LinkedHashMap<>();
+      return new LinkedList<>();
     }
   }
 
@@ -686,27 +705,27 @@ public class TNEAPI {
    * @param page The page you wish to grab.
    * @return {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
    */
-  public LinkedHashMap<UUID, BigDecimal> getBalTopPage(String world, int pageLimit, int page) {
+  public LinkedList<TopBalance> getBalTopPage(String world, int pageLimit, int page) {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, TNE.manager().currencyManager().get(world).name(), pageLimit, page);
     } catch (SQLException e) {
-      return new LinkedHashMap<>();
+      return new LinkedList<>();
     }
   }
 
   /**
-   * Returns a {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   * Returns a {@link LinkedList} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
    * @param world The world to use for the bal top check.
    * @param currency The currency to use for the bal top check.
    * @param pageLimit The amount of entries per page.
    * @param page The page you wish to grab.
-   * @return {@link LinkedHashMap} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
+   * @return {@link LinkedList} containing each user's UUID and balance, in the form of a {@link BigDecimal} object.
    */
-  public LinkedHashMap<UUID, BigDecimal> getBalTopPage(String world, String currency, int pageLimit, int page) {
+  public LinkedList<TopBalance> getBalTopPage(String world, String currency, int pageLimit, int page) {
     try {
       return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency, pageLimit, page);
     } catch (SQLException e) {
-      return new LinkedHashMap<>();
+      return new LinkedList<>();
     }
   }
 

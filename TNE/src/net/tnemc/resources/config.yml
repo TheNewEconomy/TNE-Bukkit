@@ -67,9 +67,6 @@ Core:
             #Whether or not mcmmo skill rewards that are a currency item should be disabled.
             McMMORewards: true
 
-            #Whether or not baltop should contain third-party accounts.
-            TopThirdParty: true
-
     #All configurations relating to TNE commands
     Commands:
 
@@ -85,6 +82,16 @@ Core:
 
         #Whether or not players should be able to use /baltop instead of /money top
         TopShort: true
+
+        #Configurations relating to the money top command.
+        Top:
+
+          #A list of values to use to exclude certain users from baltop if the username contains these values.
+          Exclusions:
+            - "town-%"
+            - "nation-%"
+            - "faction-%"
+            - "towny-%"
 
         #Extra configurations regarding the pay command
         Pay:
@@ -176,11 +183,9 @@ Core:
            #The character to use as the symbol for this currency.
            Symbol: '$'
 
-           #Whether or not you wish to use an item as currency.
-           ItemCurrency: false
-
-           #Whether or not you wish to use experience as currency.
-           ExperienceCurrency: false
+           #The currency type to use for this currency.
+           #Valid Types: virtual, item, experience
+           Type: "virtual"
 
            #Configurations relating to item currencies for the basic currency.
            #Format: Material: Value(using a period "." as the decimal)

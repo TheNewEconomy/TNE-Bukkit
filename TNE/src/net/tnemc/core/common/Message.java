@@ -71,6 +71,10 @@ public class Message {
     return ChatColor.translateAlternateColorCodes('&', message);
   }
 
+  public static String replaceUnicode(String str) {
+    return "";
+  }
+
   public void translate(String world, UUID id) {
     if(id.toString().equalsIgnoreCase(IDFinder.getID(TNE.instance().consoleName).toString())) {
       translate(world, Bukkit.getConsoleSender());
@@ -115,8 +119,6 @@ public class Message {
 
   public String[] format(String world, CommandSender sender, String id) {
     String found = TNE.instance().api().getString(this.node, world, id);
-    //TNE.debug("Node: " + node);
-    //TNE.debug("Message: " + found);
 
     String[] message = (found == null || found.trim().equalsIgnoreCase(""))? new String[] { this.node } : found.replace("<Newline>", "<newline>").split("<newline>");
     String[] formatted = new String[message.length];

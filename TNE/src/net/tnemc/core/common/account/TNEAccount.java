@@ -12,7 +12,6 @@ import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -35,7 +34,6 @@ import java.util.UUID;
 
 public class TNEAccount implements Account {
   private Map<UUID, AccountAccessor> accessors = new HashMap<>();
-  //private Map<String, WorldHoldings> holdings = new HashMap<>();
   private AccountHistory history;
 
   private int accountNumber = 0;
@@ -73,40 +71,18 @@ public class TNEAccount implements Account {
     TNE.debug("=====END Account.setHoldings =====");
   }
 
-  public void setHoldings(String world, String currency, BigDecimal newHoldings, boolean skipInventory) {
-    setHoldings(world, currency, newHoldings, skipInventory, false);
-  }
-
-  public void setHoldings(String world, String currency, BigDecimal newHoldings, boolean skipInventory, boolean skipXP) {
+  public void setHoldings(String world, String currency, BigDecimal amount, boolean skip) {
     world = TNE.instance().getWorldManager(world).getBalanceWorld();
     TNE.debug("=====START Account.setHoldings(4) =====");
-    TNE.debug("Holdings: " + newHoldings.toPlainString());
+    TNE.debug("Holdings: " + amount.toPlainString());
 
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
     TNE.debug("Currency: " + cur.name());
-    if(skipInventory || !cur.isItem() || !MISCUtils.isOnline(id, world)) {
-      if(!skipXP && cur.isXp() && MISCUtils.isOnline(identifier(), world)) {
-        final Player player = Bukkit.getPlayer(id);
-
-        player.setTotalExperience(newHoldings.intValue());
-      }
-
-      try {
-        TNE.debug("ID: " + identifier());
-        TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, newHoldings);
-      } catch (SQLException e) {
-        TNE.debug(e);
-      }
-    } else {
-      TNE.debug("item currency");
-      TNE.debug("Skip: " + skipInventory);
-      TNE.debug("Online: " + MISCUtils.isOnline(id, world));
-      TNE.debug("Currency Item: " + cur.isItem());
-      if (cur.isItem()) {
-        final Player player = Bukkit.getPlayer(id);
-        ItemCalculations.setItems(id, cur, newHoldings, player.getInventory(), false);
-      }
+    try {
+      cur.getCurrencyType().setHoldings(identifier(), world, cur, amount, skip);
+    } catch (SQLException e) {
+      TNE.debug(e);
     }
     TNE.debug("=====END Account.setHoldings =====");
   }

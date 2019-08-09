@@ -47,6 +47,7 @@ Messages:
        Saved: "<yellow>Successfully saved all TNE Data!"
        NoPlayer: "<red>Unable to locate player \"$player\"!"
        Disabled: "<red>Economy features are currently disabled in this world!"
+       IsConsole: "<red>You can not run this command as in the console!"
 
     Item:
       Invalid: "<red>Invalid item name and/or durability combination entered."
@@ -114,6 +115,7 @@ Messages:
        Unloaded: "<white>Unloaded module \"$module\"."
 
     Money:
+       TypeOffline: "<red>This currency type does not allow offline interaction."
        Failed: "<red>Unable to process your transaction at this time."
        Given: "<white>You were given <gold>$amount<white>."
        Received: "<white>You were paid <gold>$amount <white> by <white> $player."

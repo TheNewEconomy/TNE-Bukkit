@@ -20,6 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.MetadataValue;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +37,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -399,8 +405,20 @@ public class MISCUtils {
     List<String> list = new ArrayList<>();
     boolean failed = false;
     try {
-      URL url = new URL("https://cfh.dev/tne/blacklist.txt");
-      Scanner s = new Scanner(url.openStream());
+
+      TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
+        public X509Certificate[] getAcceptedIssuers(){return null;}
+        public void checkClientTrusted(X509Certificate[] certs, String authType){}
+        public void checkServerTrusted(X509Certificate[] certs, String authType){}
+      }};
+
+      SSLContext sc = SSLContext.getInstance("TLS");
+      sc.init(null, trustAllCerts, new SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+      URL url = new URL("https://tnemc.net/files/blacklist.txt");
+      HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+      Scanner s = new Scanner(connection.getInputStream());
 
       String line;
       while(s.hasNext()) {
@@ -409,7 +427,7 @@ public class MISCUtils {
         list.add(line);
       }
     }
-    catch(IOException ex) {
+    catch(Exception ex) {
       failed = true;
     }
     if(failed) {
@@ -423,8 +441,20 @@ public class MISCUtils {
     List<String> list = new ArrayList<>();
     boolean failed = false;
     try {
+
+      TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
+        public X509Certificate[] getAcceptedIssuers(){return null;}
+        public void checkClientTrusted(X509Certificate[] certs, String authType){}
+        public void checkServerTrusted(X509Certificate[] certs, String authType){}
+      }};
+
+      SSLContext sc = SSLContext.getInstance("TLS");
+      sc.init(null, trustAllCerts, new SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
       URL url = new URL("https://tnemc.net/files/dupers.txt");
-      Scanner s = new Scanner(url.openStream());
+      HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+      Scanner s = new Scanner(connection.getInputStream());
 
       String line;
       while(s.hasNext()) {
@@ -432,7 +462,7 @@ public class MISCUtils {
         if(line.trim().equalsIgnoreCase("")) continue;
         list.add(line.toUpperCase());
       }
-    } catch(IOException ex) {
+    } catch(Exception ex) {
       failed = true;
     }
     if(failed) {

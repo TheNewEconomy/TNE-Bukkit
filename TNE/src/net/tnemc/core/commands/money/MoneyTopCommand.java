@@ -5,22 +5,19 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.common.utils.TopBalance;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -94,7 +91,7 @@ public class MoneyTopCommand extends TNECommand {
       if(page > max) page = max;
       TNE.debug("MoneyTopCommand.java(87): Max Pages - " + max);
 
-      LinkedHashMap<UUID, BigDecimal> values = new LinkedHashMap<>();
+      LinkedList<TopBalance> values = new LinkedList<>();
       try {
         values = TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency.name(), limit, page);
       } catch (SQLException e) {
@@ -108,14 +105,14 @@ public class MoneyTopCommand extends TNECommand {
       top.addVariable("$page_top", max + "");
       message.add(top.grabWithNew(world, sender));
       Message topEntry = new Message("Messages.Money.TopEntry");
-      Iterator<Map.Entry<UUID, BigDecimal>> it = values.entrySet().iterator();
+      Iterator<TopBalance> it = values.iterator();
       while(it.hasNext()) {
-        Map.Entry<UUID, BigDecimal> entry = it.next();
-        topEntry.addVariable("$player", IDFinder.getUsername(entry.getKey().toString()));
+        TopBalance entry = it.next();
+        topEntry.addVariable("$player", entry.getUsername());
         if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatTop")) {
-          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), ""));
+          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getBalance(), ""));
         } else {
-          topEntry.addVariable("$amount", CurrencyFormatter.format(currency, world, entry.getValue(), ""));
+          topEntry.addVariable("$amount", entry.getBalance().toPlainString());
         }
         message.add(topEntry.grabWithNew(world, sender));
       }

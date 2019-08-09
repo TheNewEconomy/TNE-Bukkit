@@ -53,8 +53,9 @@ Currencies:
            #Whether or not this currency is the default currency for the world.
            Default: true
 
-           #The world this currency belongs to mainly. If Global is true, this is used for the Default value solely.
-           World: "default"
+           #The worlds this currency belongs to, if Global is set to false.
+           Worlds:
+             - "world"
 
            #Whether or not this currency is a global currency.
            Global: true
@@ -94,11 +95,9 @@ Currencies:
            #The maximum amount of places is 4
            DecimalPlaces: 2
 
-           #Would you like to use experience as the currency?
-           Experience: false
-
-           #Would you like to use an item as the currency?
-           ItemCurrency: false
+           #The currency type to use for this currency.
+           #Valid Types: virtual, item, experience
+           Type: "virtual"
 
            #Would you like your item currency balances to also check the player's ender chest?
            EnderChest: true
