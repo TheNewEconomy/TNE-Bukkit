@@ -1,4 +1,4 @@
-package net.tnemc.core.listeners;
+package net.tnemc.core.listeners.message;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;

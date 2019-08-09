@@ -1,0 +1,109 @@
+package net.tnemc.core.listeners.player;
+
+import com.github.tnerevival.core.version.ReleaseType;
+import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.account.WorldFinder;
+import net.tnemc.core.common.api.IDFinder;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.sql.SQLException;
+import java.util.UUID;
+
+/**
+ * The New Economy Minecraft Server Plugin
+ * <p>
+ * Created by creatorfromhell on 8/8/2019.
+ * <p>
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+ * Created by creatorfromhell on 06/30/2017.
+ */
+public class PlayerJoinListener implements Listener {
+
+  TNE plugin;
+
+  public PlayerJoinListener(TNE plugin) {
+    this.plugin = plugin;
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onJoin(final PlayerJoinEvent event) {
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      TNE.debug("=====START ConnectionListener.onJoin =====");
+      TNE.debug("Player null: " + (event.getPlayer() == null));
+      final Player player = event.getPlayer();
+
+      final UUID id = IDFinder.getID(player);
+      final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+      TNE.debug(id + "");
+      boolean first = !TNE.manager().exists(id);
+      TNEAccount account;
+
+      if(first) {
+        if(!TNE.manager().createAccount(id, player.getName())) {
+          TNE.debug("Unable to create player account for " + player.getName());
+        }
+      }
+      account = TNE.manager().getAccount(id);
+
+      if (!first) {
+        if(!account.displayName().equals(player.getName())) {
+          account.setDisplayName(player.getName());
+          try {
+            TNE.saveManager().getTNEManager().getTNEProvider().removeID(id);
+            TNE.saveManager().getTNEManager().getTNEProvider().saveID(player.getName(), id);
+          } catch (SQLException e) {
+            TNE.debug("Something went wrong while trying to update the player's display name.");
+          }
+          //TNE.instance().getUuidManager().addUUID(player.getName(), id);
+        }
+        /*if(player.isDead()) {
+          TNE.manager().addDead(player.getUniqueId());
+          return;
+        }*/
+      }
+
+      TNE.manager().addAccount(account);
+      if(first) account.initializeHoldings(world);
+      if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
+        String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
+        if(TNE.instance().updater.getRelease().equals(ReleaseType.PRERELEASE)) {
+          message = ChatColor.GREEN + "[TNE] Prerelease! Thank you for testing TNE Build: " + TNE.instance().updater.getCurrentBuild() + ".";
+        }
+        player.sendMessage(message);
+      }
+
+      boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+      if(!noEconomy) {
+        TNE.instance().getWorldManager(world).getCurrencies().forEach(value -> {
+          if(value.getCurrencyType().loginCalculation()) {
+            try {
+              value.getCurrencyType().setHoldings(id, world, value, value.getCurrencyType().getHoldings(id,
+                  world, value, true), false);
+            } catch (Exception e) {
+              TNE.debug(e);
+            }
+          }
+        });
+      }
+
+      if(!first) {
+        try {
+          account.getHistory().populateAway(account.getLastOnline());
+        } catch (SQLException e) {
+          TNE.debug(e);
+        }
+      }
+      TNE.manager().addAccount(account);
+    });
+  }
+}
