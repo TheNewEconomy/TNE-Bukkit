@@ -132,21 +132,6 @@ public class SignsModule implements Module {
    */
   @Override
   public String tablesFile() {
-    /*Map<String, List<String>> tables = new HashMap<>();
-    tables.put("h2", Collections.singletonList(SignsData.SIGNS_TABLE_H2));
-    tables.put("mysql", Collections.singletonList(SignsData.SIGNS_TABLE));
-
-    for(SignType type : manager.getSignTypes().values()) {
-      if(type.tables().size() > 0) {
-        for(Map.Entry<String, List<String>> entry : type.tables().entrySet()) {
-          List<String> query = new ArrayList<>();
-          query.addAll(entry.getValue());
-          if(tables.containsKey(entry.getKey())) query.addAll(tables.get(entry.getKey()));
-          tables.put(entry.getKey(), query);
-        }
-      }
-    }*/
-
     return "signs_tables.yml";
   }
 
