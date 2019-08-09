@@ -73,6 +73,12 @@ public class ModuleLoader {
         wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
         TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
         modules.put(wrapper.name(), wrapper);
+
+        if(!wrapper.getInfo().updateURL().trim().equalsIgnoreCase("")) {
+          TNE.logger().info("Checking for updates for module " + wrapper.info.name());
+          ModuleUpdateChecker checker = new ModuleUpdateChecker(wrapper.info.name(), wrapper.info.updateURL(), wrapper.version());
+          checker.check();
+        }
       }
     }
   }
@@ -90,6 +96,12 @@ public class ModuleLoader {
         wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
         TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
         modules.put(wrapper.name(), wrapper);
+
+        if(!wrapper.getInfo().updateURL().trim().equalsIgnoreCase("")) {
+          TNE.logger().info("Checking for updates for module " + moduleName);
+          ModuleUpdateChecker checker = new ModuleUpdateChecker(moduleName, wrapper.info.updateURL(), wrapper.version());
+          checker.check();
+        }
         return true;
       } catch(Exception e) {
         TNE.logger().info("Unable to load module: " + moduleName + ". Are you sure it exists?");

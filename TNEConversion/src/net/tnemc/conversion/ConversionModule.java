@@ -59,7 +59,8 @@ import java.util.List;
 @ModuleInfo(
     name = "Conversion",
     author = "creatorfromhell",
-    version = "0.1.1"
+    version = "0.1.0",
+    updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class ConversionModule implements Module {
 
