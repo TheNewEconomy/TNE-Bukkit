@@ -15,6 +15,7 @@ public class ModuleCommand extends TNECommand {
 
   public ModuleCommand(TNE plugin) {
     super(plugin);
+    subCommands.add(new ModuleAvailableCommand(plugin));
     subCommands.add(new ModuleDownloadCommand(plugin));
     subCommands.add(new ModuleInfoCommand(plugin));
     subCommands.add(new ModuleListCommand(plugin));

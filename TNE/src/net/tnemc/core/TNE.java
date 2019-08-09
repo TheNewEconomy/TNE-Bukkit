@@ -36,6 +36,7 @@ import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.module.ModuleLoader;
+import net.tnemc.core.common.module.cache.ModuleFileCache;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.compatibility.ItemCompatibility;
@@ -101,12 +102,17 @@ import java.util.logging.Logger;
  */
 public class TNE extends TNELib {
 
+  //constants
+  public static final String coreURL = "https://tnemc.net/files/module-version.xml";
+
+  public static final String build = "1Beta118M";
+  public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
+
   //Map containing module sub commands to add to our core commands
   private Map<String, List<TNECommand>> subCommands = new HashMap<>();
 
   private Map<String, WorldManager> worldManagers = new HashMap<>();
   private List<UUID> tnemodUsers = new ArrayList<>();
-  public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   private List<String> dupers;
   public List<String> exclusions;
@@ -115,6 +121,8 @@ public class TNE extends TNELib {
   private MenuManager menuManager;
   private static net.tnemc.core.common.configurations.ConfigurationManager configurations;
   protected CommandManager commandManager;
+
+  protected ModuleFileCache moduleCache;
 
   private ModuleLoader loader;
   public UpdateChecker updater;
@@ -151,8 +159,6 @@ public class TNE extends TNELib {
 
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
-
-  public static final String build = "1Beta118M";
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -445,6 +451,8 @@ public class TNE extends TNELib {
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       new EconomyPlaceholders().register();
     }
+
+    moduleCache = new ModuleFileCache();
 
     //Metrics
     TNE.debug("Preparing metrics");
@@ -854,6 +862,10 @@ public class TNE extends TNELib {
 
   public File getWorlds() {
     return worlds;
+  }
+
+  public ModuleFileCache moduleCache() {
+    return moduleCache;
   }
 
   public static ItemCompatibility item() {

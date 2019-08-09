@@ -105,6 +105,8 @@ Messages:
        Set: "<white>Successfully set your language to $language."
 
     Module:
+       AvailableHeader: "=== Modules Available at $url ==="
+       AvailableEntry: "$module ~ $version"
        Downloaded: "$module has been downloaded successfully."
        FailedDownload: "$module couldn't be downloaded successfully."
        Info: "<white>==== Module Info for $module ====<newline>Author: $author<newline>Version: $version"
@@ -198,6 +200,8 @@ Messages:
           Reload: "/language reload - Reloads all language files."
           Set: "/language set <name> - Sets your current language to the one specified."
        Module:
+          Available: "/tnem available [url] - Displays available modules at the specified url, or defaults to TNE's core modules.<newline>- url ~ The url to use for the check, only use if you know what you're doing."
+          Download: "/tnem download <name> [url] - Attempts to download the specified module.<newline>- url ~ The url to use, only use if you know what you're doing, defaults to TNE's core modules url."
           Info: "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up."
           List: "/tnem list - Lists all loaded TNE modules."
           Load: "/tnem load <module> - Load a module from the modules directory.<newline>- Module ~ The module to load."

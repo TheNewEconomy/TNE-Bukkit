@@ -5,9 +5,12 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.module.ModuleWrapper;
+import net.tnemc.core.common.module.ModuleUpdateChecker;
+import net.tnemc.core.common.module.cache.ModuleFile;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+
+import java.util.Optional;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -55,23 +58,31 @@ public class ModuleDownloadCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
+      final String url = (arguments.length > 1)? arguments[1] : TNE.coreURL;
       final String moduleName = arguments[0].toLowerCase().trim();
       final String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-      ModuleWrapper module = TNE.loader().getModule(moduleName);
-      if(module == null) {
-        Message message = new Message("Messages.Module.Invalid");
-        message.addVariable("$module", moduleName);
-        message.translate(world, sender);
-        return false;
-      }
 
       Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-        final boolean downloaded = TNE.loader().downloadModule(moduleName);
-        final String messageNode = (downloaded)? "Messages.Module.Downloaded" : "Messages.Module.FailedDownload";
+        TNE.instance().moduleCache().getModules(url);
 
-        Message message = new Message(messageNode);
-        message.addVariable("$module", moduleName);
-        message.translate(world, sender);
+        Optional<ModuleFile> module = TNE.instance().moduleCache().getModule(url, moduleName);
+        if(!module.isPresent()) {
+          Message invalid = new Message("Messages.Module.Invalid");
+          invalid.addVariable("$module", moduleName);
+          invalid.translate(world, sender);
+          return;
+        }
+
+        if(!ModuleUpdateChecker.download(module.get().getName(), module.get().getUrl())) {
+          Message invalid = new Message("Messages.Module.FailedDownload");
+          invalid.addVariable("$module", moduleName);
+          invalid.translate(world, sender);
+          return;
+        }
+        Message invalid = new Message("Messages.Module.Downloaded");
+        invalid.addVariable("$module", moduleName);
+        invalid.translate(world, sender);
+
       });
       return true;
     }

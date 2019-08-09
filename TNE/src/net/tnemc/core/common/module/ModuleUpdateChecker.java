@@ -49,7 +49,7 @@ public class ModuleUpdateChecker {
     if(readInformation()) {
       if(!upToDate()) {
         TNE.logger().info("Updating module: " + module);
-        if(download()) {
+        if(download(module, jarURL)) {
           TNE.logger().info("Downloaded module update for " + module);
         } else {
           TNE.logger().info("Failed to download module update for " + module);
@@ -77,7 +77,7 @@ public class ModuleUpdateChecker {
     return true;
   }
 
-  public boolean download() {
+  public static boolean download(String module, String jarURL) {
     if(jarURL.trim().equalsIgnoreCase("")) {
       return false;
     }
@@ -138,7 +138,7 @@ public class ModuleUpdateChecker {
   }
 
   public boolean readInformation() {
-    Optional<Document> document = readUpdateURL();
+    Optional<Document> document = readUpdateURL(updateURL);
     if(document.isPresent()) {
       Document doc = document.get();
 
@@ -215,7 +215,7 @@ public class ModuleUpdateChecker {
     return false;
   }
 
-  public Optional<Document> readUpdateURL() {
+  public static Optional<Document> readUpdateURL(String updateURL) {
     try {
 
       TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
