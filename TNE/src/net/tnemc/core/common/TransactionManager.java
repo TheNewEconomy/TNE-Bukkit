@@ -80,7 +80,7 @@ public class TransactionManager {
     results.put("worldchange", new TransactionResultWorldChange());
 
     TNE.loader().getModules().forEach((key, value)->{
-      value.getModule().registerResults().forEach((k, v)->{
+      value.getModule().results().forEach((k, v)->{
         results.put(k, v);
       });
     });
@@ -99,7 +99,7 @@ public class TransactionManager {
     types.put("worldchange", new TransactionWorldChange());
 
     TNE.loader().getModules().forEach((key, value)->{
-      value.getModule().registerTypes().forEach((k, v)->{
+      value.getModule().types().forEach((k, v)->{
         types.put(k, v);
       });
     });

@@ -18,9 +18,10 @@ import java.io.File;
 @ModuleInfo(
     name = "Web",
     author = "creatorfromhell",
-    version = "0.1.0"
+    version = "0.1.1",
+    updateURL = "https://tnemc.net/files/module-version.xml"
 )
-public class WebModule extends Module {
+public class WebModule implements Module {
 
   private static WebModule instance;
 
@@ -29,7 +30,7 @@ public class WebModule extends Module {
   private WebManager manager;
 
   @Override
-  public void load(TNE tne, String version) {
+  public void load(TNE tne) {
     instance = this;
     webFile = new File(TNE.instance().getDataFolder(), "web.yml");
     fileConfiguration = TNE.instance().initializeConfiguration(webFile, "web.yml");
@@ -63,14 +64,6 @@ public class WebModule extends Module {
 
   public WebManager getManager() {
     return manager;
-  }
-
-  /**
-   * Used to initialize any configuration files this module may use.
-   */
-  @Override
-  public void initializeConfigurations() {
-    super.initializeConfigurations();
   }
 
   public File getWebFile() {

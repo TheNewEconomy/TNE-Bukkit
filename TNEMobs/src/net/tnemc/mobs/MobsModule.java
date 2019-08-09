@@ -3,8 +3,10 @@ package net.tnemc.mobs;
 import com.sun.istack.internal.NotNull;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.common.utils.MISCUtils;
 
 import java.io.File;
@@ -15,6 +17,9 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,9 +34,10 @@ import java.util.UUID;
 @ModuleInfo(
     name = "Mobs",
     author = "creatorfromhell",
-    version = "0.1.0"
+    version = "0.1.1",
+    updateURL = "https://tnemc.net/files/module-version.xml"
 )
-public class MobsModule extends Module {
+public class MobsModule implements Module {
 
   File mobs;
   CommentedConfiguration fileConfiguration;
@@ -40,23 +46,30 @@ public class MobsModule extends Module {
   private static MobsModule instance;
 
   @Override
-  public void load(TNE tne, String version) {
+  public void load(TNE plugin) {
     TNE.logger().info("Mobs Module loaded!");
     instance = this;
-    listeners.add(new MobsListener(tne));
   }
 
   @Override
-  public void unload(TNE tne) {
+  public void unload(TNE plugin) {
     TNE.logger().info("Mobs Module unloaded!");
     if(!mobs.exists()) {
       configuration.save(fileConfiguration);
     }
   }
 
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A list of event listeners.
+   */
+  @Override
+  public List<ModuleListener> listeners(TNE plugin) {
+    return Collections.singletonList(new MobsListener(plugin));
+  }
+
   @Override
   public void initializeConfigurations() {
-    super.initializeConfigurations();
     final String mobsFile = (MISCUtils.isOneThirteen())? "mobs.yml" : "mobs-1.12.yml";
     mobs = new File(TNE.instance().getDataFolder(), "mobs.yml");
     fileConfiguration = initializeConfiguration(mobs, mobsFile);
@@ -64,9 +77,12 @@ public class MobsModule extends Module {
 
   @Override
   public void loadConfigurations() {
-    super.loadConfigurations();
     configuration = new MobConfiguration();
-    configurations.put(configuration, "Mobs");
+  }
+
+  @Override
+  public Map<Configuration, String> configurations() {
+    return Collections.singletonMap(configuration, "Mobs");
   }
 
   @Override

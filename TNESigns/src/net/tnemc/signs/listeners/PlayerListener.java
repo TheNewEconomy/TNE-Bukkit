@@ -3,6 +3,7 @@ package net.tnemc.signs.listeners;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
+import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.signs.ChestHelper;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
@@ -19,7 +20,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -39,7 +39,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class PlayerListener implements Listener {
+public class PlayerListener implements ModuleListener {
 
   private TNE plugin;
 

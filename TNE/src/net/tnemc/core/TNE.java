@@ -62,6 +62,7 @@ import net.tnemc.core.listeners.player.PlayerTeleportListener;
 import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
+import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -99,6 +100,10 @@ import java.util.logging.Logger;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class TNE extends TNELib {
+
+  //Map containing module sub commands to add to our core commands
+  private Map<String, List<TNECommand>> subCommands = new HashMap<>();
+
   private Map<String, WorldManager> worldManagers = new HashMap<>();
   private List<UUID> tnemodUsers = new ArrayList<>();
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
@@ -212,7 +217,7 @@ public class TNE extends TNELib {
       TNEModuleLoadEvent event = new TNEModuleLoadEvent(key, value.getInfo().version(), !Bukkit.getServer().isPrimaryThread());
       Bukkit.getServer().getPluginManager().callEvent(event);
       if(!event.isCancelled()) {
-        value.getModule().load(this, loader.getLastVersion(value.getInfo().name()));
+        value.getModule().load(this);
       }
     });
 
@@ -241,7 +246,7 @@ public class TNE extends TNELib {
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
       value.getModule().loadConfigurations();
-      value.getModule().getConfigurations().forEach((configuration, identifier)->{
+      value.getModule().configurations().forEach((configuration, identifier)->{
         configurations().add(configuration, identifier);
       });
     });
@@ -270,6 +275,16 @@ public class TNE extends TNELib {
       moneyArguments.add("baltop");
     }
 
+
+    //Load Module Sub Commands
+    loader.getModules().forEach((key, value)-> {
+      value.getModule().subCommands().forEach((command, moduleSubs)->{
+        List<TNECommand> subs = (subCommands.containsKey(command))? subCommands.get(command) : new ArrayList<>();
+        subs.addAll(moduleSubs);
+        subCommands.put(command, subs);
+      });
+    });
+
     //Commands
     TNE.debug("Preparing commands2");
     registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
@@ -282,7 +297,9 @@ public class TNE extends TNELib {
     registerCommand(moneyArguments.toArray(new String[moneyArguments.size()]), new MoneyCommand(this));
     registerCommand(new String[] { "transaction", "trans" }, new TransactionCommand(this));
     registerCommand(new String[] { "yediot" }, new YetiCommand(this));
-    loader.getModules().forEach((key, value)-> value.getModule().getCommands().forEach((command)->{
+
+    //Load Module Commands
+    loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{
       List<String> accessors = new ArrayList<>();
       for(String string : command.getAliases()) {
         accessors.add(string);
@@ -293,6 +310,7 @@ public class TNE extends TNELib {
       TNE.debug("Command Null?: " + (command == null));
       registerCommand(accessors.toArray(new String[accessors.size()]), command);
     }));
+    commandManager.registerCommands();
 
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
@@ -341,17 +359,16 @@ public class TNE extends TNELib {
 
     TNE.debug("Preparing modules");
     loader.getModules().forEach((key, value)->{
-      value.getModule().getTables().forEach((type, tables)->{
-        saveManager().registerTables(type, tables);
 
-        if(value.getModule().getTables().containsKey(configurations().getString("Core.Database.Type").toLowerCase())) {
-          try {
-            TNE.saveManager().getTNEManager().getTNEProvider().createTables(value.getModule().getTables().get(configurations().getString("Core.Database.Type").toLowerCase()));
-          } catch (SQLException e) {
-            TNE.debug(e);
-          }
-        }
-      });
+      final String tablesFile = value.getModule().tablesFile();
+
+      if(!tablesFile.trim().equalsIgnoreCase("")) {
+
+        SQLDatabase.open();
+        TableManager manager = new TableManager(sManager.getTNEManager().getFormat().toLowerCase(), sManager.getTNEManager().getPrefix());
+        manager.generateQueriesAndRun(SQLDatabase.getDb().getConnection(), value.getModule().getResource(tablesFile));
+        SQLDatabase.close();
+      }
     });
 
     if(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()).size() > 0) {
@@ -412,11 +429,12 @@ public class TNE extends TNELib {
     getServer().getPluginManager().registerEvents(new WorldLoadListener(this), this);
 
     loader.getModules().forEach((key, value)->{
-      value.getModule().getListeners(this).forEach(listener->{
+      value.getModule().listeners(this).forEach(listener->{
         getServer().getPluginManager().registerEvents(listener, this);
         TNE.debug("Registering Listener");
       });
     });
+
 
     TNE.debug("Preparing postLoad");
     loader.getModules().forEach((key, value)->
@@ -463,10 +481,6 @@ public class TNE extends TNELib {
     }
 
     getLogger().info("The New Economy has been enabled!");
-
-    /*SQLDebug.testLoad(500);
-    SQLDebug.loadAccountTest(500);
-    SQLDebug.loadSaveAccountTest(500);*/
   }
 
   public void onDisable() {
@@ -564,8 +578,17 @@ public class TNE extends TNELib {
   }
 
   public void registerCommand(String[] accessors, TNECommand command) {
+    if(subCommands.containsKey(command.getName()))
+      command.addSubCommands(subCommands.get(command.getName()));
+
     commandManager.commands.put(accessors, command);
-    commandManager.registerCommands();
+  }
+
+  public void registerCommandForce(String[] accessors, TNECommand command) {
+    if(subCommands.containsKey(command.getName()))
+      command.addSubCommands(subCommands.get(command.getName()));
+
+    commandManager.commands.put(accessors, command);
   }
 
   public void registerCommands(Map<String[], TNECommand> commands) {
@@ -734,7 +757,7 @@ public class TNE extends TNELib {
         menuManager = new MenuManager();
         TNE.debug("Preparing menus");
         loader.getModules().forEach((key, value) ->
-            value.getModule().registerMenus(this).forEach((name, menu) -> {
+            value.getModule().menus(this).forEach((name, menu) -> {
               menuManager.menus.put(name, menu);
             })
         );

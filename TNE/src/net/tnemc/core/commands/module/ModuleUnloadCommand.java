@@ -5,7 +5,7 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.module.ModuleEntry;
+import net.tnemc.core.common.module.ModuleWrapper;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -54,9 +54,9 @@ public class ModuleUnloadCommand extends TNECommand {
     if(arguments.length >= 1) {
       String moduleName = arguments[0];
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-      ModuleEntry module = TNE.instance().loader().getModule(moduleName);
-      String author = module.getInfo().author();
-      String version = module.getInfo().version();
+      ModuleWrapper module = TNE.loader().getModule(moduleName);
+      final String author = module.author();
+      final String version = module.version();
 
       if(TNE.instance().loader().getModule(moduleName) == null) {
         Message message = new Message("Messages.Module.Invalid");
@@ -65,7 +65,8 @@ public class ModuleUnloadCommand extends TNECommand {
         return false;
       }
 
-      TNE.instance().loader().unload(moduleName);
+      module = null;
+      TNE.loader().unload(moduleName);
       Message message = new Message("Messages.Module.Unloaded");
       message.addVariable("$module", moduleName);
       message.addVariable("$author", author);

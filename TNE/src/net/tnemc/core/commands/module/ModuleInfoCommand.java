@@ -5,7 +5,7 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.module.ModuleEntry;
+import net.tnemc.core.common.module.ModuleWrapper;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -52,9 +52,9 @@ public class ModuleInfoCommand extends TNECommand {
   @Override
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     if(arguments.length >= 1) {
-      String moduleName = arguments[0];
-      String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-      ModuleEntry module = TNE.instance().loader().getModule(moduleName);
+      final String moduleName = arguments[0];
+      final String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
+      ModuleWrapper module = TNE.loader().getModule(moduleName);
       if(module == null) {
         Message message = new Message("Messages.Module.Invalid");
         message.addVariable("$module", moduleName);
@@ -64,8 +64,8 @@ public class ModuleInfoCommand extends TNECommand {
 
       Message message = new Message("Messages.Module.Info");
       message.addVariable("$module", moduleName);
-      message.addVariable("$author", module.getInfo().author());
-      message.addVariable("$version", module.getInfo().version());
+      message.addVariable("$author", module.author());
+      message.addVariable("$version", module.version());
       message.translate(world, sender);
       return true;
     }

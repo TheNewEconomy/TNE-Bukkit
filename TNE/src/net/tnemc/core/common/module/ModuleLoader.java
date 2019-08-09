@@ -1,12 +1,7 @@
 package net.tnemc.core.common.module;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.module.injectors.InjectMethod;
-import net.tnemc.core.common.module.injectors.ModuleInjector;
-import net.tnemc.core.common.module.injectors.ModuleInjectorHandler;
-import net.tnemc.core.common.module.injectors.ModuleInjectorWrapper;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import net.tnemc.core.commands.TNECommand;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,87 +9,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/*
+/**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by creatorfromhell on 7/26/2019.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by creatorfromhell on 07/01/2017.
+ * Created by creatorfromhell on 06/30/2017.
  */
-
-/**
- * This class loads all modules from the modules directory, and loads the main class based on @Module.
- **/
 public class ModuleLoader {
 
-  public static Map<String, String> modulePaths = new HashMap<>();
-
-  static {
-    modulePaths.put("conversion", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Conversion/Conversion.jar");
-    modulePaths.put("h2", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/H2/H2.jar");
-    modulePaths.put("mobs", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/Mobs/Mobs.jar");
-    modulePaths.put("mysql", "https://github.com/TheNewEconomy/TNE-Bukkit/releases/download/mysql/MySQL.jar");
-  }
-
-  private File modulesYAML;
-  private FileConfiguration moduleConfigurations;
-  private Map<String, ModuleEntry> modules = new HashMap<>();
-
-  private Map<String, ModuleInjectorHandler> injectors = new HashMap<>();
-
-  public ModuleLoader() {
-    modulesYAML = new File("plugins/TheNewEconomy/modules.yml");
-    if(!modulesYAML.exists()) {
-      try {
-        modulesYAML.createNewFile();
-      } catch (IOException e) {
-        TNE.logger().info("Error occured while try to create modules.yml.");
-        TNE.debug(e);
-      }
-    }
-    moduleConfigurations = YamlConfiguration.loadConfiguration(modulesYAML);
-  }
-
-  /**
-   * Loads all modules into a map for later usage.
-   * @return The map containing every module in format Name, ModuleInstance
-   */
-  public void load() {
-    File directory = new File("plugins/TheNewEconomy/modules");
-    File[] jars = directory.listFiles((dir, name) -> name.endsWith(".jar"));
-
-    if(jars != null) {
-      for (File jar : jars) {
-        Module module = getModuleClass(jar.getAbsolutePath());
-        if(module == null || module.getClass() == null) continue;
-        if(jar.getName().contains("outdated-")) continue;
-        if (!module.getClass().isAnnotationPresent(ModuleInfo.class)) {
-          TNE.instance().getLogger().info("Invalid module format! Module File: " + jar.getName());
-          continue;
-        }
-        ModuleInfo info = module.getClass().getAnnotation(ModuleInfo.class);
-
-        if(info.name().equalsIgnoreCase("h2") || info.name().equalsIgnoreCase("mysql")) {
-          continue;
-        }
-
-        ModuleEntry entry = new ModuleEntry(info, module);
-        TNE.instance().getLogger().info("Found module: " + info.name() + " version: " + info.version());
-        modules.put(entry.getInfo().name(), entry);
-      }
-    }
-  }
+  Map<String, ModuleWrapper> modules = new HashMap<>();
 
   public boolean hasModule(String moduleName) {
     return modules.containsKey(moduleName);
@@ -107,12 +41,93 @@ public class ModuleLoader {
     return false;
   }
 
-  public ModuleEntry getModule(String moduleName) {
-    return modules.get(moduleName);
+  public ModuleWrapper getModule(String name) {
+    return modules.get(name);
   }
 
-  public String findPath(String moduleName) {
-    File directory = new File("plugins/TheNewEconomy/modules");
+  public Map<String, ModuleWrapper> getModules() {
+    return modules;
+  }
+
+  public void load() {
+    File directory = new File(TNE.instance().getDataFolder(), "modules");
+    File[] jars = directory.listFiles((dir, name)->name.endsWith(".jar"));
+
+    if(jars != null) {
+      for(File jar : jars) {
+
+        ModuleWrapper wrapper = loadModuleWrapper(jar.getAbsolutePath());
+
+        if(wrapper.getModule() == null || wrapper.getModule().getClass() == null) {
+          TNE.logger().info("Skipping file due to invalid module: " + jar.getName());
+          continue;
+        }
+
+        if(jar.getName().contains("old-")) continue;
+
+        if (!wrapper.getModule().getClass().isAnnotationPresent(net.tnemc.core.common.module.ModuleInfo.class)) {
+          TNE.instance().getLogger().info("Invalid module format! Module File: " + jar.getName());
+          continue;
+        }
+
+        wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
+        TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
+        modules.put(wrapper.name(), wrapper);
+
+        if(!wrapper.getInfo().updateURL().trim().equalsIgnoreCase("")) {
+          TNE.logger().info("Checking for updates for module " + wrapper.info.name());
+          ModuleUpdateChecker checker = new ModuleUpdateChecker(wrapper.info.name(), wrapper.info.updateURL(), wrapper.version());
+          checker.check();
+        }
+      }
+    }
+  }
+
+  public boolean load(String moduleName) {
+    final String path = findPath(moduleName);
+    if(path != null) {
+      try {
+        ModuleWrapper wrapper = loadModuleWrapper(path);
+        if (!wrapper.getModule().getClass().isAnnotationPresent(ModuleInfo.class)) {
+          TNE.instance().getLogger().info("Invalid module format! Module File: " + moduleName);
+          return false;
+        }
+
+        wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
+        TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
+        modules.put(wrapper.name(), wrapper);
+
+        if(!wrapper.getInfo().updateURL().trim().equalsIgnoreCase("")) {
+          TNE.logger().info("Checking for updates for module " + moduleName);
+          ModuleUpdateChecker checker = new ModuleUpdateChecker(moduleName, wrapper.info.updateURL(), wrapper.version());
+          checker.check();
+        }
+        return true;
+      } catch(Exception e) {
+        TNE.logger().info("Unable to load module: " + moduleName + ". Are you sure it exists?");
+      }
+    }
+    return false;
+  }
+
+  public void unload(String moduleName) {
+    if(hasModule(moduleName)) {
+      ModuleWrapper wrapper = getModule(moduleName);
+      wrapper.getModule().listeners(TNE.instance()).forEach(ModuleListener::unregister);
+      wrapper.getModule().commands().forEach(TNECommand::unregister);
+      wrapper.getModule().unload(TNE.instance());
+      wrapper.unload();
+      wrapper.setModule(null);
+      wrapper.setInfo(null);
+      wrapper.setLoader(null);
+      wrapper = null;
+
+      modules.remove(moduleName);
+    }
+  }
+
+  protected String findPath(String moduleName) {
+    File directory = new File(TNE.instance().getDataFolder(), "modules");
     File[] jars = directory.listFiles((dir, name) -> name.endsWith(".jar"));
 
     if(jars != null) {
@@ -125,94 +140,63 @@ public class ModuleLoader {
     return null;
   }
 
-  public void unload(String moduleName) {
-    if(hasModule(moduleName)) {
-      ModuleEntry entry = getModule(moduleName);
-      entry.getModule().getListeners(TNE.instance()).forEach(ModuleListener::unregister);
-      entry.getModule().unload(TNE.instance());
-      entry.unload();
+  private ModuleWrapper loadModuleWrapper(String modulePath) {
+    ModuleWrapper wrapper;
 
+    Module module = null;
 
-      moduleConfigurations.set("Modules.DONTMODIFY." + entry.getInfo().name(), entry.getInfo().version());
-      try {
-        moduleConfigurations.save(modulesYAML);
-      } catch (IOException e) {
-        TNE.logger().info("Error occured while saving modules.yml.");
-        TNE.debug(e);
-      }
+    final File file = new File(modulePath);
+    Class<? extends Module> moduleClass;
 
-      modules.remove(moduleName);
+    ModuleClassLoader classLoader = null;
+    try {
+      classLoader = new ModuleClassLoader(file.toURI().toURL());
+      moduleClass = classLoader.loadClass(getModuleMain(new File(modulePath))).asSubclass(Module.class);
+      module = moduleClass.newInstance();
+    } catch (Exception ignore) {
+      TNE.logger().info("Unable to locate module main class for file " + file.getName());
     }
+    wrapper = new ModuleWrapper(module);
+    wrapper.setLoader(classLoader);
+    return wrapper;
   }
 
-  public boolean load(String moduleName) {
-    String path = findPath(moduleName);
-    if(path != null) {
-      Module module = getModuleClass(path);
-      if (!module.getClass().isAnnotationPresent(ModuleInfo.class)) {
-        TNE.instance().getLogger().info("Invalid module format! Module File: " + moduleName);
+  public boolean downloadModule(String module) {
+    if(modules.containsKey(module)) {
+      try {
+        final String fileURL = modules.get(module).info.updateURL();
+        final URL url = new URL(fileURL);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        int responseCode = httpConn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+          String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+
+          InputStream in = httpConn.getInputStream();
+          File file = new File(TNE.instance().getDataFolder() + File.separator + "modules", fileName);
+
+          if(file.exists()) {
+            if(!file.renameTo(new File(TNE.instance().getDataFolder() + File.separator + "modules", "outdated-" + fileName))) {
+              return false;
+            }
+          }
+
+          FileOutputStream out = new FileOutputStream(file);
+
+          int bytesRead = -1;
+          byte[] buffer = new byte[4096];
+          while ((bytesRead = in.read(buffer)) != -1) {
+            out.write(buffer, 0, bytesRead);
+          }
+
+          out.close();
+          in.close();
+        }
+      } catch (Exception e) {
         return false;
       }
-      ModuleInfo info = module.getClass().getAnnotation(ModuleInfo.class);
-      ModuleEntry entry = new ModuleEntry(info, module);
-      TNE.instance().getLogger().info("Found module: " + info.name() + " version: " + info.version());
-      modules.put(entry.getInfo().name(), entry);
       return true;
     }
     return false;
-  }
-
-  public void call(InjectMethod method) {
-    if(injectors.containsKey(method.getIdentifier())) {
-      injectors.get(method.getIdentifier()).call(method);
-    }
-  }
-
-  private void registerInjectors(Class clazz) {
-    for(final Method m : clazz.getMethods()) {
-      if(m.isAnnotationPresent(ModuleInjector.class)) {
-        ModuleInjector injector = m.getAnnotation(ModuleInjector.class);
-        ModuleInjectorWrapper wrapper = new ModuleInjectorWrapper(clazz, m);
-        addInjector(injector, wrapper);
-      }
-    }
-  }
-
-  private void addInjector(ModuleInjector injector, ModuleInjectorWrapper wrapper) {
-    ModuleInjectorHandler handler = (injectors.containsKey(injector.method()))? injectors.get(injector.method())
-                                                                              : new ModuleInjectorHandler();
-    handler.addInjector(injector, wrapper);
-
-    injectors.put(injector.method(), handler);
-  }
-
-  private Module getModuleClass(String modulePath) {
-    Module module = null;
-
-    File file = new File(modulePath);
-    String moduleMain = getModuleMain(file);
-    Class<? extends Module> moduleClass;
-    Class<?> mainClass;
-
-    try {
-      mainClass = Class.forName(moduleMain, true, getClass().getClassLoader());
-    } catch (ClassNotFoundException e) {
-      TNE.debug(e);
-    }
-
-    URLClassLoader urlClassLoader = null;
-    try {
-      urlClassLoader = new URLClassLoader(new URL[] { file.toURI().toURL()}, Module.class.getClassLoader());
-      mainClass = urlClassLoader.loadClass(moduleMain);
-      moduleClass = mainClass.asSubclass(Module.class);
-      module = moduleClass.newInstance();
-      module.moduleInjectors().forEach(this::registerInjectors);
-    } catch (MalformedURLException | IllegalAccessException | InstantiationException e) {
-      TNE.debug(e);
-    } catch (ClassNotFoundException e) {
-      TNE.logger().info("Unable to locate module main class for file " + file.getName());
-    }
-    return module;
   }
 
   private String getModuleMain(File jarFile) {
@@ -262,51 +246,5 @@ public class ModuleLoader {
       }
     }
     return main;
-  }
-
-  public Map<String, ModuleEntry> getModules() {
-    return modules;
-  }
-
-  public String getLastVersion(String name) {
-    return moduleConfigurations.getString("Modules.DONTMODIFY." + name, modules.get(name).getInfo().version());
-  }
-
-  public static boolean downloadModule(String module) {
-    if(modulePaths.containsKey(module)) {
-      try {
-        final String fileURL = modulePaths.get(module);
-        final URL url = new URL(fileURL);
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        int responseCode = httpConn.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-          String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
-
-          InputStream in = httpConn.getInputStream();
-          File file = new File(TNE.instance().getDataFolder() + File.separator + "modules", fileName);
-
-          if(file.exists()) {
-            if(!file.renameTo(new File(TNE.instance().getDataFolder() + File.separator + "modules", "outdated-" + fileName))) {
-              return false;
-            }
-          }
-
-          FileOutputStream out = new FileOutputStream(file);
-
-          int bytesRead = -1;
-          byte[] buffer = new byte[4096];
-          while ((bytesRead = in.read(buffer)) != -1) {
-            out.write(buffer, 0, bytesRead);
-          }
-
-          out.close();
-          in.close();
-        }
-      } catch (Exception e) {
-        return false;
-      }
-      return true;
-    }
-    return false;
   }
 }

@@ -1,17 +1,21 @@
 package net.tnemc.core.commands.module;
 
+import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.module.ModuleEntry;
+import net.tnemc.core.common.module.ModuleWrapper;
+import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.sql.SQLException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -67,35 +71,51 @@ public class ModuleLoadCommand extends TNECommand {
         message.translate(world, sender);
         return false;
       }
-      TNE.loader().load(moduleName);
 
-      ModuleEntry module = TNE.loader().getModule(moduleName);
+      ModuleWrapper module = TNE.loader().getModule(moduleName);
 
-      String author = module.getInfo().author();
-      String version = module.getInfo().version();
+      final String author = module.getInfo().author();
+      final String version = module.getInfo().version();
 
+      module.getModule().load(TNE.instance());
       module.getModule().initializeConfigurations();
       module.getModule().loadConfigurations();
-      module.getModule().getConfigurations().forEach((configuration, identifier)->{
+      module.getModule().configurations().forEach((configuration, identifier)->{
         TNE.configurations().add(configuration, identifier);
       });
 
-      for(TNECommand com : module.getModule().getCommands()) {
-        List<String> accessors = Arrays.asList(com.getAliases());
+      for(TNECommand com : module.getModule().commands()) {
+        List<String> accessors = new ArrayList<>(Arrays.asList(com.getAliases()));
         accessors.add(com.getName());
-        TNE.instance().registerCommand((String[])accessors.toArray(), com);
+        TNE.instance().getCommandManager().register(accessors.toArray(new String[accessors.size()]), com);
       }
-      module.getModule().getListeners(TNE.instance()).forEach(listener->{
+      module.getModule().listeners(TNE.instance()).forEach(listener->{
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());
         TNE.debug("Registering Listener");
       });
+      final String tablesFile = module.getModule().tablesFile();
 
-      if(module.getModule().getTables().containsKey(TNE.saveManager().getTNEManager().getFormat())) {
-        try {
-          TNE.saveManager().getTNEManager().getTNEProvider().createTables(module.getModule().getTables().get(TNE.saveManager().getTNEManager().getFormat()));
-        } catch (SQLException e) {
-          TNE.debug("Failed to create tables on module load.");
+      if(!tablesFile.trim().equalsIgnoreCase("")) {
+
+        SQLDatabase.open();
+        TableManager manager = new TableManager(TNE.saveManager().getTNEManager().getFormat().toLowerCase(), TNE.saveManager().getTNEManager().getPrefix());
+        manager.generateQueriesAndRun(SQLDatabase.getDb().getConnection(), module.getModule().getResource(tablesFile));
+        SQLDatabase.close();
+      }
+
+      TNE.loader().getModules().put(module.name(), module);
+      module = null;
+
+      try {
+        Field f = ClassLoader.class.getDeclaredField("classes");
+        f.setAccessible(true);
+
+        Vector<Class> classes =  (Vector<Class>) f.get(TNE.loader().getModule(moduleName).getLoader());
+        for(Class clazz : classes) {
+          System.out.println("Loaded: " + clazz.getName());
         }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
 
       Message message = new Message("Messages.Module.Loaded");

@@ -5,7 +5,7 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.module.ModuleLoader;
+import net.tnemc.core.common.module.ModuleWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -57,14 +57,16 @@ public class ModuleDownloadCommand extends TNECommand {
     if(arguments.length >= 1) {
       final String moduleName = arguments[0].toLowerCase().trim();
       final String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-      if(!ModuleLoader.modulePaths.containsKey(moduleName)) {
+      ModuleWrapper module = TNE.loader().getModule(moduleName);
+      if(module == null) {
         Message message = new Message("Messages.Module.Invalid");
         message.addVariable("$module", moduleName);
         message.translate(world, sender);
         return false;
       }
+
       Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-        final boolean downloaded = ModuleLoader.downloadModule(moduleName);
+        final boolean downloaded = TNE.loader().downloadModule(moduleName);
         final String messageNode = (downloaded)? "Messages.Module.Downloaded" : "Messages.Module.FailedDownload";
 
         Message message = new Message(messageNode);

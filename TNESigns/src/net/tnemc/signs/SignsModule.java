@@ -1,25 +1,24 @@
 package net.tnemc.signs;
 
-import com.github.tnerevival.core.SaveManager;
-import com.github.tnerevival.core.db.SQLDatabase;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
+import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.impl.CurrencySelectionMenu;
 import net.tnemc.signs.command.note.NoteCommand;
 import net.tnemc.signs.listeners.BlockListener;
 import net.tnemc.signs.listeners.ChestSelectionListener;
 import net.tnemc.signs.listeners.PlayerListener;
-import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.impl.item.menu.AmountSelectionMenu;
 import net.tnemc.signs.signs.impl.item.menu.ItemAmountSelection;
 import net.tnemc.signs.signs.impl.item.menu.OfferMenu;
 import net.tnemc.signs.signs.impl.item.menu.ShulkerPreviewMenu;
 import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmIcon;
 import net.tnemc.signs.signs.impl.item.menu.itemselection.ConfirmTradeIcon;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,9 +38,10 @@ import java.util.Map;
 @ModuleInfo(
     name = "Signs",
     author = "creatorfromhell",
-    version = "0.1.0"
+    version = "0.1.1",
+    updateURL = "https://tnemc.net/files/module-version.xml"
 )
-public class SignsModule extends Module {
+public class SignsModule implements Module {
 
 
   private File signs;
@@ -58,15 +58,22 @@ public class SignsModule extends Module {
   }
 
   @Override
-  public void load(TNE tne, String version) {
-    commands.add(new NoteCommand(tne));
-    Bukkit.getServer().getPluginManager().registerEvents(new BlockListener(tne), tne);
-    Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(tne), tne);
-    Bukkit.getServer().getPluginManager().registerEvents(new ChestSelectionListener(tne), tne);
-
-
-
+  public void load(TNE tne) {
     TNE.logger().info("Signs Module loaded!");
+  }
+
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A list of event listeners.
+   */
+  @Override
+  public List<ModuleListener> listeners(TNE plugin) {
+    List<ModuleListener> listeners = new ArrayList<>();
+    listeners.add(new BlockListener(plugin));
+    listeners.add(new PlayerListener(plugin));
+    listeners.add(new ChestSelectionListener(plugin));
+
+    return listeners;
   }
 
   @Override
@@ -79,20 +86,30 @@ public class SignsModule extends Module {
 
   @Override
   public void initializeConfigurations() {
-    super.initializeConfigurations();
     signs = new File(TNE.instance().getDataFolder(), "signs.yml");
     fileConfiguration = TNE.instance().initializeConfiguration(signs, "signs.yml");
   }
 
   @Override
   public void loadConfigurations() {
-    super.loadConfigurations();
     configuration = new SignsConfiguration();
-    configurations.put(configuration, "Signs");
   }
 
   @Override
-  public Map<String, Menu> registerMenus(TNE pluginInstance) {
+  public Map<Configuration, String> configurations() {
+    return Collections.singletonMap(configuration, "Signs");
+  }
+
+  /**
+   * @return A list of commands that should be added from this module.
+   */
+  @Override
+  public List<TNECommand> commands() {
+    return Collections.singletonList(new NoteCommand(TNE.instance()));
+  }
+
+  @Override
+  public Map<String, Menu> menus(TNE pluginInstance) {
     Map<String, Menu> menus = new HashMap<>();
     menus.put("shop_currency_selection", new CurrencySelectionMenu("shop_currency_selection", "shop_amount_selection"));
     menus.put("shop_amount_selection", new AmountSelectionMenu("shop_amount_selection"));
@@ -114,8 +131,8 @@ public class SignsModule extends Module {
    * Format is <Database Type, List of table creation queries.
    */
   @Override
-  public Map<String, List<String>> getTables() {
-    Map<String, List<String>> tables = new HashMap<>();
+  public String tablesFile() {
+    /*Map<String, List<String>> tables = new HashMap<>();
     tables.put("h2", Collections.singletonList(SignsData.SIGNS_TABLE_H2));
     tables.put("mysql", Collections.singletonList(SignsData.SIGNS_TABLE));
 
@@ -128,26 +145,9 @@ public class SignsModule extends Module {
           tables.put(entry.getKey(), query);
         }
       }
-    }
+    }*/
 
-    return tables;
-  }
-
-  /**
-   * Used to perform any data loading, manipulation, layout updating, etc.
-   *
-   * @param saveManager An instance of TNE's Save Manager
-   */
-  @Override
-  public void enableSave(SaveManager saveManager) {
-    for(String table : getTables().get(saveManager.getDataManager().getFormat().toLowerCase())) {
-      SQLDatabase.executeUpdate(table);
-      TNE.debug("Creating table: " + table);
-    }
-
-    if(!SignsData.hasColumn()) {
-      SQLDatabase.executeUpdate("ALTER TABLE `" + SignsData.prefix + "_SIGNS` ADD COLUMN `sign_admin` BOOLEAN NOT NULL DEFAULT 0 AFTER `sign_step`");
-    }
+    return "signs_tables.yml";
   }
 
   public static SignsModule instance() {

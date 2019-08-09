@@ -117,9 +117,6 @@ public class TNEAccount implements Account {
         TNE.debug(e);
       }
       return holdings != null;
-      /*if (holdings.containsKey(world)) {
-        return holdings.get(world).hasHoldings(currency);
-      }*/
     } else {
       return ItemCalculations.getCurrencyItems(cur, getPlayer().getInventory()).compareTo(BigDecimal.ZERO) > 0;
     }
@@ -166,29 +163,18 @@ public class TNEAccount implements Account {
   public void saveItemCurrency(String world, boolean save, PlayerInventory inventory) {
     TNE.debug("saveItemCurrency for world : " + world + " Save: " + save);
     List<String> currencies = TNE.instance().getWorldManager(world).getItemCurrencies();
-    //WorldHoldings worldHoldings = holdings.containsKey(world)? holdings.get(world) : new WorldHoldings(world);
 
     currencies.forEach((currency)->{
       TNE.debug("Currency: " + currency);
       final TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
-      //worldHoldings.setHoldings(currency, ItemCalculations.getCurrencyItems(cur, inventory));
       try {
         TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, ItemCalculations.getCurrencyItems(cur, inventory));
       } catch (SQLException e) {
         TNE.debug(e);
       }
     });
-    //holdings.put(world, worldHoldings);
     if(save) TNE.manager().addAccount(this);
   }
-
-  /*public Map<String, WorldHoldings> getWorldHoldings() {
-    return holdings;
-  }
-
-  public WorldHoldings getWorldHoldings(String world) {
-    return holdings.get(world);
-  }*/
 
   public static TNEAccount getAccount(String identifier) {
     return TNE.manager().getAccount(IDFinder.getID(identifier));

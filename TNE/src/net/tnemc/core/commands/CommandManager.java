@@ -29,7 +29,7 @@ public class CommandManager {
       commandMap.setAccessible(true);
       knownCommands = SimpleCommandMap.class.getDeclaredField("knownCommands");
       knownCommands.setAccessible(true);
-    } catch (Exception e) {
+    } catch (Exception ignore) {
       /* do nothing */
     }
 
@@ -43,7 +43,7 @@ public class CommandManager {
         for (String s : entry.getKey()) {
           if(entry.getValue().activated("", "")) {
             if(registered(s)) {
-              unregister(s);
+              unregister(s, false);
             }
             register(s);
           }
@@ -53,8 +53,25 @@ public class CommandManager {
   }
 
   public void unregister(String[] accessors) {
+    unregister(accessors, false);
+  }
+
+  public void unregister(String[] accessors, boolean commandsMap) {
     for(String s : accessors) {
-      unregister(s);
+      unregister(s, commandsMap);
+    }
+  }
+
+  public void register(String[] accessors, TNECommand command) {
+    commands.put(accessors, command);
+
+    for (String s : accessors) {
+      if(command.activated("", "")) {
+        if(registered(s)) {
+          unregister(s, false);
+        }
+        register(s);
+      }
     }
   }
 
@@ -71,9 +88,26 @@ public class CommandManager {
     }
   }
 
-  private void unregister(String command) {
+  public void unregister(String command, boolean commandsMap) {
     try {
+
+      if(commandsMap) {
+        Iterator<Map.Entry<String[], TNECommand>> it = commands.entrySet().iterator();
+
+        while (it.hasNext()) {
+          Map.Entry<String[], TNECommand> entry = it.next();
+
+          boolean remove = false;
+          for (String str : entry.getKey()) {
+            if (str.equalsIgnoreCase(command)) {
+              remove = true;
+            }
+          }
+          if (remove) it.remove();
+        }
+      }
       ((Map<String, Command>) knownCommands.get(commandMap.get(Bukkit.getServer()))).remove(command);
+      knownCommands.set(commandMap.get(Bukkit.getServer()), knownCommands);
     } catch(Exception e) {
       //nothing to see here;
     }

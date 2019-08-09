@@ -5,7 +5,7 @@ import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import net.tnemc.core.common.module.ModuleEntry;
+import net.tnemc.core.common.module.ModuleWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -58,7 +58,7 @@ public class ModuleReloadCommand extends TNECommand {
     if(arguments.length >= 1) {
       String moduleName = arguments[0];
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
-      ModuleEntry module = TNE.instance().loader().getModule(moduleName);
+      ModuleWrapper module = TNE.loader().getModule(moduleName);
       if(module == null) {
         Message message = new Message("Messages.Module.Invalid");
         message.addVariable("$module", moduleName);
@@ -79,16 +79,16 @@ public class ModuleReloadCommand extends TNECommand {
 
       module.getModule().initializeConfigurations();
       module.getModule().loadConfigurations();
-      module.getModule().getConfigurations().forEach((configuration, identifier)->{
+      module.getModule().configurations().forEach((configuration, identifier)->{
         TNE.configurations().add(configuration, identifier);
       });
-      module.getModule().getCommands().forEach((com)->{
+      module.getModule().commands().forEach((com)->{
         List<String> accessors = Arrays.asList(com.getAliases());
         accessors.add(com.getName());
         TNE.instance().registerCommand((String[])accessors.toArray(), com);
       });
       module.getModule().enableSave(TNE.saveManager());
-      module.getModule().getListeners(TNE.instance()).forEach(listener->{
+      module.getModule().listeners(TNE.instance()).forEach(listener->{
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());
         TNE.debug("Registering Listener");
       });

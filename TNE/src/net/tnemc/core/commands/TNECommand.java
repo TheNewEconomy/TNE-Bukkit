@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,6 +189,12 @@ public abstract class TNECommand {
     return null;
   }
 
+  public void unregister() {
+    List<String> accessors = new ArrayList<>(Arrays.asList(getAliases()));
+    accessors.add(getName());
+    TNE.instance().getCommandManager().unregister(accessors.toArray(new String[accessors.size()]), true);
+  }
+
   public Integer getPage(String pageValue) {
     Integer page;
     try {
@@ -241,5 +249,9 @@ public abstract class TNECommand {
       }
     }
     return null;
+  }
+
+  public void addSubCommands(Collection<TNECommand> subs) {
+    subCommands.addAll(subs);
   }
 }
