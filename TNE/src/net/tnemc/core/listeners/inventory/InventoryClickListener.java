@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -42,9 +43,11 @@ public class InventoryClickListener implements Listener {
       if(event.getInventory().getType().equals(InventoryType.MERCHANT) &&
           !TNE.configurations().getBoolean("Core.Server.CurrencyTrading")) {
         final String world = WorldFinder.getWorld(event.getWhoClicked(), WorldVariant.BALANCE);
-        if(event.getCurrentItem() != null &&
-            TNE.manager().currencyManager().currencyFromItem(world, event.getCurrentItem()).isPresent()) {
-          event.setCancelled(true);
+        if(event.getCurrentItem() != null) {
+          final ItemStack currencyCheck = event.getCurrentItem().clone();
+          if (TNE.manager().currencyManager().currencyFromItem(world, currencyCheck).isPresent()) {
+            event.setCancelled(true);
+          }
         }
       }
     }
