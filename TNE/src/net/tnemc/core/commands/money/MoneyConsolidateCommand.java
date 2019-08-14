@@ -3,6 +3,7 @@ package net.tnemc.core.commands.money;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
@@ -77,10 +78,11 @@ public class MoneyConsolidateCommand extends TNECommand {
       }
       final String world = WorldFinder.getWorld(id, WorldVariant.CONFIGURATION);
       final String balWorld = WorldFinder.getWorld(id, WorldVariant.BALANCE);
+      TNEAccount account = TNE.manager().getAccount(id);
 
       for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
         if(currency.isItem()) {
-          ItemCalculations.setItems(id, currency, TNE.instance().api().getHoldings(id.toString(), balWorld, currency), player.getInventory(), false, true);
+          ItemCalculations.setItems(id, currency, account.getHoldings(balWorld, currency.getIdentifier(), true, false), player.getInventory(), false, true);
         }
       }
 
