@@ -365,6 +365,19 @@ public class ItemSign implements SignType {
     sign.update(true);
   }
 
+  public static void saveItemOffer(final Location location, final String currencyName, final boolean currency, final BigDecimal amount) throws SQLException {
+    SQLDatabase.executePreparedUpdate(SignsData.ITEM_TRADE_UPDATE, new Object[] {
+        currency,
+        amount,
+        currencyName,
+        new SerializableLocation(location).toString()
+    });
+    Sign sign = (Sign) location.getBlock().getState();
+    sign.setLine(2, ChatColor.GOLD + CurrencyFormatter.format(TNE.manager().currencyManager().get(location.getWorld().getName()), location.getWorld().getName(),
+        amount, "<symbol><short.amount>"));
+    sign.update(true);
+  }
+
   public static boolean canOffer(final Player player, final Material material) {
     if(TNE.hasPermssion(player, "tne.item.sign")) {
       if(TNE.instance().itemConfiguration().contains("tne.item." + material.name().toLowerCase() + ".sign")) {
