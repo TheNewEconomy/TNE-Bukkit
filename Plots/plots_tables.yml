@@ -1,0 +1,209 @@
+Tables:
+
+  _PLOTS:
+
+    Columns:
+
+      hunter_id:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Unique: true
+
+        Null: false
+
+      hunter_rewards:
+
+        Type: "TEXT"
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _PLOTS_USER:
+
+    Columns:
+
+      hunter_id:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Unique: true
+
+      hunter_last_bounty:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+      hunter_experience:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+      hunter_bounties:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+      hunter_last_track:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+      hunter_message:
+
+        Type: "TEXT"
+
+      hunter_level:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _PLOT_ACCESS:
+
+    Columns:
+
+      bounty_id:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Unique: true
+
+        Null: false
+
+      bounty_target:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      bounty_benefactor:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      bounty_created:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+        Null: false
+
+      bounty_head:
+
+        Type: "Boolean"
+
+        Null: false
+
+        Default: 0
+
+        Length: 3
+
+      bounty_finished:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+      bounty_claimed:
+
+        Type: "Boolean"
+
+        Null: false
+
+        Default: 0
+
+        Length: 3
+
+      bounty_claimant:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      bounty_currency:
+
+        Type: "Boolean"
+
+        Null: false
+
+        Default: 0
+
+        Length: 3
+
+      bounty_currency_name:
+
+        Type: "VARCHAR"
+
+        Length: 70
+
+        Null: false
+
+      bounty_world:
+
+        Type: "VARCHAR"
+
+        Length: 70
+
+        Null: false
+
+      bounty_amount:
+
+        Type: "DECIMAL"
+
+        Default: 0
+
+        Length: 49
+
+        Scale: 4
+
+      bounty_reward:
+
+        Type: "TEXT"
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+Settings:
+
+  Prefix: "TNE"
