@@ -33,19 +33,19 @@ public class AdminBalanceCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "balance";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "bal"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.balance";
   }
 
@@ -55,7 +55,7 @@ public class AdminBalanceCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Admin.Balance";
   }
 

@@ -31,19 +31,19 @@ public class MoneySetAllCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "setall";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "=a"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.money.setall";
   }
 
@@ -53,7 +53,7 @@ public class MoneySetAllCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Money.SetAll";
   }
 

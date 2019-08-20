@@ -21,17 +21,17 @@ public class AdminAccountCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "account";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.account";
   }
 
@@ -41,7 +41,7 @@ public class AdminAccountCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/tne account <username> - Returns a count of how many accounts are associated with a display name, debug command.";
   }
 

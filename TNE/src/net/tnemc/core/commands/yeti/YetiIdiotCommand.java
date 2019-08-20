@@ -25,17 +25,17 @@ public class YetiIdiotCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "idiot";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 
@@ -45,7 +45,7 @@ public class YetiIdiotCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return ChatColor.GREEN + "/yediot" + ChatColor.WHITE + " - Determine if a Yediot is near. http://www.urbandictionary.com/define.php?term=yediot";
   }
 

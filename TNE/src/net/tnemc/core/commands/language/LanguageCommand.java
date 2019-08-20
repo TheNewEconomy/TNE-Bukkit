@@ -15,26 +15,26 @@ public class LanguageCommand extends TNECommand {
 
   public LanguageCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new LanguageCurrentCommand(plugin));
-    subCommands.add(new LanguageListCommand(plugin));
-    subCommands.add(new LanguageReloadCommand(plugin));
-    subCommands.add(new LanguageSetCommand(plugin));
+    addSub(new LanguageCurrentCommand(plugin));
+    addSub(new LanguageListCommand(plugin));
+    addSub(new LanguageReloadCommand(plugin));
+    addSub(new LanguageSetCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "language";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "lang"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

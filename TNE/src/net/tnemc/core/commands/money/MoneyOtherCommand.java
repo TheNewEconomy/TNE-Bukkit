@@ -35,19 +35,19 @@ public class MoneyOtherCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "other";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "balo", "balother", "balanceother"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.money.other";
   }
 
@@ -57,7 +57,7 @@ public class MoneyOtherCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Admin.Balance";
   }
 

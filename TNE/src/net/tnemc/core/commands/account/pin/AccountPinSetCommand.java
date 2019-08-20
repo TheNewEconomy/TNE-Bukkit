@@ -28,17 +28,17 @@ public class AccountPinSetCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "set";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.account.pin.set";
   }
 
@@ -48,7 +48,7 @@ public class AccountPinSetCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Account.PinSet";
   }
 

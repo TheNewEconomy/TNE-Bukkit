@@ -26,19 +26,19 @@ public class ModuleAvailableCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "available";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "avail"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.module.available";
   }
 
@@ -48,7 +48,7 @@ public class ModuleAvailableCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Module.Available";
   }
 

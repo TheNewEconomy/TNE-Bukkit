@@ -26,19 +26,19 @@ public class AdminUploadCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "upload";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "up"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.upload";
   }
 
@@ -48,7 +48,7 @@ public class AdminUploadCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Admin.Upload";
   }
 

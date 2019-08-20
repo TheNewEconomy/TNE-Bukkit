@@ -41,12 +41,10 @@ public class CommandManager {
         Map.Entry<String[], TNECommand> entry = i.next();
 
         for (String s : entry.getKey()) {
-          if(entry.getValue().activated("", "")) {
-            if(registered(s)) {
-              unregister(s, false);
-            }
-            register(s);
+          if(registered(s)) {
+            unregister(s, false);
           }
+          register(s);
         }
       }
     }
@@ -66,12 +64,10 @@ public class CommandManager {
     commands.put(accessors, command);
 
     for (String s : accessors) {
-      if(command.activated("", "")) {
-        if(registered(s)) {
-          unregister(s, false);
-        }
-        register(s);
+      if(registered(s)) {
+        unregister(s, false);
       }
+      register(s);
     }
   }
 
@@ -124,12 +120,12 @@ public class CommandManager {
 
   public TNECommand find(String name) {
     for(TNECommand c : commands.values()) {
-      if(c.getName().equalsIgnoreCase(name)) {
+      if(c.name().equalsIgnoreCase(name)) {
         return c;
       }
     }
     for(TNECommand c : commands.values()) {
-      for(String s : c.getAliases()) {
+      for(String s : c.aliases()) {
         if(s.equalsIgnoreCase(name)) {
           return c;
         }

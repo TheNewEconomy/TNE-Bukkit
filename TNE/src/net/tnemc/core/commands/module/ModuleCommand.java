@@ -15,29 +15,29 @@ public class ModuleCommand extends TNECommand {
 
   public ModuleCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new ModuleAvailableCommand(plugin));
-    subCommands.add(new ModuleDownloadCommand(plugin));
-    subCommands.add(new ModuleInfoCommand(plugin));
-    subCommands.add(new ModuleListCommand(plugin));
-    subCommands.add(new ModuleLoadCommand(plugin));
-    subCommands.add(new ModuleReloadCommand(plugin));
-    subCommands.add(new ModuleUnloadCommand(plugin));
+    addSub(new ModuleAvailableCommand(plugin));
+    addSub(new ModuleDownloadCommand(plugin));
+    addSub(new ModuleInfoCommand(plugin));
+    addSub(new ModuleListCommand(plugin));
+    addSub(new ModuleLoadCommand(plugin));
+    addSub(new ModuleReloadCommand(plugin));
+    addSub(new ModuleUnloadCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "tnemodule";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "tnem"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

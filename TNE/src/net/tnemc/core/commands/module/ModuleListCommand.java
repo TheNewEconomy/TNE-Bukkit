@@ -22,19 +22,19 @@ public class ModuleListCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "list";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "i"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.module.list";
   }
 
@@ -44,7 +44,7 @@ public class ModuleListCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Module.List";
   }
 

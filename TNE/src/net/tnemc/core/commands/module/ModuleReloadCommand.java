@@ -27,19 +27,19 @@ public class ModuleReloadCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "reload";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "r"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.module.reload";
   }
 
@@ -49,7 +49,7 @@ public class ModuleReloadCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Module.Reload";
   }
 
@@ -66,9 +66,9 @@ public class ModuleReloadCommand extends TNECommand {
         return false;
       }
 
-      TNE.instance().loader().unload(moduleName);
+      TNE.loader().unload(moduleName);
 
-      boolean loaded = TNE.instance().loader().load(moduleName);
+      boolean loaded = TNE.loader().load(moduleName);
       if(!loaded) {
         Message message = new Message("Messages.Module.Invalid");
         message.addVariable("$module", moduleName);
@@ -83,8 +83,8 @@ public class ModuleReloadCommand extends TNECommand {
         TNE.configurations().add(configuration, identifier);
       });
       module.getModule().commands().forEach((com)->{
-        List<String> accessors = Arrays.asList(com.getAliases());
-        accessors.add(com.getName());
+        List<String> accessors = Arrays.asList(com.aliases());
+        accessors.add(com.name());
         TNE.instance().registerCommand((String[])accessors.toArray(), com);
       });
       module.getModule().enableSave(TNE.saveManager());

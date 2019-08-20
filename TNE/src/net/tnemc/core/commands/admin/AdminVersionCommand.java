@@ -19,19 +19,19 @@ public class AdminVersionCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "version";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "v"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.version";
   }
 
@@ -41,7 +41,7 @@ public class AdminVersionCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Admin.Version";
   }
 

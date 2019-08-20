@@ -20,22 +20,22 @@ public class AccountPinCommand extends TNECommand {
   public AccountPinCommand(TNE plugin) {
     super(plugin);
 
-    subCommands.add(new AccountPinResetCommand(plugin));
-    subCommands.add(new AccountPinSetCommand(plugin));
+    addSub(new AccountPinResetCommand(plugin));
+    addSub(new AccountPinSetCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "pin";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 
