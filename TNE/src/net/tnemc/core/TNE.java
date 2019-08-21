@@ -307,10 +307,10 @@ public class TNE extends TNELib {
     //Load Module Commands
     loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{
       List<String> accessors = new ArrayList<>();
-      for(String string : command.getAliases()) {
+      for(String string : command.aliases()) {
         accessors.add(string);
       }
-      accessors.add(command.getName());
+      accessors.add(command.name());
       TNE.debug("Command Manager Null?: " + (commandManager == null));
       TNE.debug("Accessors?: " + accessors.size());
       TNE.debug("Command Null?: " + (command == null));
@@ -586,15 +586,15 @@ public class TNE extends TNELib {
   }
 
   public void registerCommand(String[] accessors, TNECommand command) {
-    if(subCommands.containsKey(command.getName()))
-      command.addSubCommands(subCommands.get(command.getName()));
+    if(subCommands.containsKey(command.name()))
+      command.addSubs(subCommands.get(command.name()));
 
     commandManager.commands.put(accessors, command);
   }
 
   public void registerCommandForce(String[] accessors, TNECommand command) {
-    if(subCommands.containsKey(command.getName()))
-      command.addSubCommands(subCommands.get(command.getName()));
+    if(subCommands.containsKey(command.name()))
+      command.addSubs(subCommands.get(command.name()));
 
     commandManager.commands.put(accessors, command);
   }

@@ -31,7 +31,6 @@ public class AdminCommand extends TNECommand {
     addSub(new AdminMenuCommand(plugin));
     addSub(new AdminPlayerCommand(plugin));
     addSub(new AdminPurgeCommand(plugin));
-    addSub(new AdminReloadCommand(plugin));
     addSub(new AdminReportCommand(plugin));
     addSub(new AdminResetCommand(plugin));
     addSub(new AdminRestoreCommand(plugin));
