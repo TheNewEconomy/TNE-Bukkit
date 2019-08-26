@@ -311,6 +311,9 @@ Core:
             
             #The MySQL host
             Host: localhost
+
+            #Whether or not to use SSL.
+            SSL: false
             
             #The MySQL port
             Port: 3306
