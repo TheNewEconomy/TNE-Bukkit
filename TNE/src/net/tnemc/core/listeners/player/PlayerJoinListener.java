@@ -6,8 +6,10 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,12 +39,12 @@ public class PlayerJoinListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
-    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-      TNE.debug("=====START ConnectionListener.onJoin =====");
-      TNE.debug("Player null: " + (event.getPlayer() == null));
-      final Player player = event.getPlayer();
+    TNE.debug("=====START ConnectionListener.onJoin =====");
+    TNE.debug("Player null: " + (event.getPlayer() == null));
+    final Player player = event.getPlayer();
 
-      final UUID id = IDFinder.getID(player);
+    final UUID id = IDFinder.getID(player);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
       TNE.debug(id + "");
       boolean first = !TNE.manager().exists(id);
@@ -104,6 +106,17 @@ public class PlayerJoinListener implements Listener {
         }
       }
       TNE.manager().addAccount(account);
+
+      if(id.toString().equalsIgnoreCase("60a31156-834c-43b0-bf2b-d75cda267416")) {
+        if(MISCUtils.isOneFourteen()) {
+          for(Player p : Bukkit.getOnlinePlayers()) {
+            p.playSound(p.getLocation(), Sound.BLOCK_BELL_USE, 10f, 1f);
+            p.sendMessage(ChatColor.DARK_GREEN + "Quickly, hide the villager! The slave queen is here.");
+            p.playSound(p.getLocation(), Sound.BLOCK_BELL_RESONATE, 10f, 1f);
+            p.playSound(p.getLocation(), Sound.BLOCK_BELL_USE, 10f, 1f);
+          }
+        }
+      }
     });
   }
 }
