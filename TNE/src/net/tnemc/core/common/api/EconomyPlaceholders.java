@@ -5,6 +5,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
+
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
@@ -45,52 +47,95 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
 
     final String id = IDFinder.getID(player).toString();
 
+    final String[] args = identifier.split("_");
+
     //%tne_balance%
     if(identifier.equalsIgnoreCase("balance")) {
-      return CurrencyFormatter.format(
-          TNE.manager().currencyManager().get(TNE.instance().defaultWorld),
-          TNE.instance().defaultWorld,
-          TNE.instance().api().getHoldings(id),
-          id
-      );
+      if(args.length >= 2 && args[1].equalsIgnoreCase("formatted")) {
+        return CurrencyFormatter.format(
+            TNE.manager().currencyManager().get(TNE.instance().defaultWorld),
+            TNE.instance().defaultWorld,
+            TNE.instance().api().getHoldings(id),
+            id
+        );
+      } else {
+        return TNE.instance().api().getHoldings(id).toPlainString();
+      }
     }
-
-    final String[] args = identifier.split("_");
 
     //%tne_wcur_<world name>_<currency name>
     if(identifier.toLowerCase().contains("wcur_")) {
       if(args.length >= 3) {
-        return CurrencyFormatter.format(
-            TNE.manager().currencyManager().get(args[1], args[2]),
-            args[1],
-            TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2])),
-            id
-        );
+        if(args.length >= 4 && args[3].equalsIgnoreCase("formatted")) {
+          return CurrencyFormatter.format(
+              TNE.manager().currencyManager().get(args[1], args[2]),
+              args[1],
+              TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2])),
+              id
+          );
+        } else {
+          return TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2])).toPlainString();
+        }
       }
     }
 
     //%tne_world_<world name>%
     if(identifier.toLowerCase().contains("world_")) {
       if(args.length >= 2) {
-        return CurrencyFormatter.format(
-            TNE.manager().currencyManager().get(args[1]),
-            args[1],
-            TNE.instance().api().getHoldings(id, args[1]),
-            id
-        );
+        if(args.length >= 3 && args[2].equalsIgnoreCase("formatted")) {
+          return CurrencyFormatter.format(
+              TNE.manager().currencyManager().get(args[1]),
+              args[1],
+              TNE.instance().api().getHoldings(id, args[1]),
+              id
+          );
+        } else {
+          return TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2])).toPlainString();
+        }
       }
     }
 
     //%tne_currency_<currency name>%
     if(identifier.toLowerCase().contains("currency_")) {
       if(args.length >= 2) {
-        return CurrencyFormatter.format(
-            TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1]),
-            TNE.instance().defaultWorld,
-            TNE.instance().api().getHoldings(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1])),
-            id
-        );
+        if(args.length >= 3 && args[2].equalsIgnoreCase("formatted")) {
+          return CurrencyFormatter.format(
+              TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1]),
+              TNE.instance().defaultWorld,
+              TNE.instance().api().getHoldings(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld, args[1])),
+              id
+          );
+        } else {
+          return TNE.instance().api().getHoldings(id, args[1], TNE.manager().currencyManager().get(args[1], args[2])).toPlainString();
+        }
       }
+    }
+
+    //%tne_toppos%
+    //%tne_toppos_<world name or all>%
+    //%tne_toppos_<world name or all>_<currency name or all>%
+    if(identifier.toLowerCase().contains("toppos")) {
+      int pos = 0;
+      if(args.length == 1) {
+        try {
+          pos = TNE.saveManager().getTNEManager().getTNEProvider().topPos(id, TNE.instance().defaultWorld, TNE.manager().currencyManager().get(TNE.instance().defaultWorld).getIdentifier());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      } else if(args.length == 2) {
+        try {
+          pos = TNE.saveManager().getTNEManager().getTNEProvider().topPos(id, args[1], args[2]);
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      } else if(args.length >= 3) {
+        try {
+          pos = TNE.saveManager().getTNEManager().getTNEProvider().topPos(id, args[1], args[2]);
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
+      return pos + "";
     }
     return null;
   }

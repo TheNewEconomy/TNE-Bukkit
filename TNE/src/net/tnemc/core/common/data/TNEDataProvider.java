@@ -71,6 +71,7 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract void deleteTransaction(UUID id) throws SQLException;
   public abstract String nullAccounts() throws SQLException;
   //balances
+  public abstract int topPos(String identifier, String world, String currency) throws SQLException;
   public abstract int balanceCount(String world, String currency, int limit) throws SQLException;
   public abstract LinkedList<TopBalance> topBalances(String world, String currency, int limit, int page) throws SQLException;
   //transactions
@@ -110,15 +111,17 @@ public abstract class TNEDataProvider extends DataProvider {
     preLoad(version);
   }
 
-  protected String generateLike(String column, List<String> like, boolean not) {
+  protected String generateLike(String column, List<String> like, boolean not, boolean andStart) {
     StringBuilder builder = new StringBuilder();
 
+    int i = 0;
     for(String l : like) {
 
-      builder.append(" AND ");
+      if(andStart || i > 0) builder.append(" AND ");
       builder.append(column + " ");
       if(not) builder.append("NOT ");
       builder.append("LIKE '" + l + "'");
+      i++;
     }
     builder.append(" ");
     return builder.toString();
