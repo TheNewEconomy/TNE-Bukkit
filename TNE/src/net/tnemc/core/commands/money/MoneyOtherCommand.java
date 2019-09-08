@@ -58,7 +58,7 @@ public class MoneyOtherCommand extends TNECommand {
 
   @Override
   public String helpLine() {
-    return "Messages.Commands.Admin.Balance";
+    return "/money other <player> - Check the balance of another player.";
   }
 
   /*@Override

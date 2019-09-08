@@ -52,8 +52,8 @@ public abstract class TNECommand {
   }
 
   public void addSub(TNECommand sub) {
-    List<String> aliases = Arrays.asList(sub.aliases());
-    aliases.add(name());
+    List<String> aliases = new ArrayList<>(Arrays.asList(sub.aliases()));
+    aliases.add(sub.name());
 
     subCommands.put(aliases, sub);
   }
@@ -81,7 +81,18 @@ public abstract class TNECommand {
 
     final LinkedList<TNECommand> commands = new LinkedList<>(subCommands.values());
 
-    List<String[]> helpLines = new ArrayList<>();
+    int possible = 0;
+
+    for(TNECommand command : commands) {
+      if(command.canExecute(sender)) {
+        possible ++;
+      }
+    }
+
+    int max = possible / linesPerPage;
+    if(possible % linesPerPage > 0) max++;
+
+    LinkedList<String[]> helpLines = new LinkedList<>();
 
     int min = page * (linesPerPage - 1);
     if(min > subCommands.size()) min = 0;
@@ -109,7 +120,7 @@ public abstract class TNECommand {
     if(subCommands.size() > 0) {
       String name = name();
       String formatted = name.substring(0, 1).toUpperCase() + name.substring(1);
-      sender.sendMessage(ChatColor.GOLD + "~~~" + ChatColor.WHITE + formatted + ChatColor.GOLD + "~~~");
+      sender.sendMessage(ChatColor.GOLD + "~~~ " + ChatColor.WHITE + formatted + ChatColor.GOLD + " | " + ChatColor.WHITE + page + ChatColor.GOLD + "/" + ChatColor.WHITE + max + ChatColor.GOLD + " ~~~");
     }
 
     for(String[] help : helpLines) {
@@ -181,13 +192,15 @@ public abstract class TNECommand {
 
   public TNECommand findSub(String name) {
     for(Map.Entry<List<String>, TNECommand> entry : subCommands.entrySet()) {
-      if(entry.getKey().contains(name.toLowerCase()));
+      if(entry.getKey().contains(name.toLowerCase())) {
+        return entry.getValue();
+      }
     }
     return null;
   }
 
   public void unregister() {
-    List<String> aliases = Arrays.asList(aliases());
+    List<String> aliases = new ArrayList<>(Arrays.asList(aliases()));
     aliases.add(name());
     TNE.instance().getCommandManager().unregister(aliases.toArray(new String[aliases.size()]), true);
   }
