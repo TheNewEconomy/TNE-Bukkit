@@ -124,7 +124,7 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
         }
       } else if(args.length == 2) {
         try {
-          pos = TNE.saveManager().getTNEManager().getTNEProvider().topPos(id, args[1], args[2]);
+          pos = TNE.saveManager().getTNEManager().getTNEProvider().topPos(id, args[1], TNE.manager().currencyManager().get(args[1]).getIdentifier());
         } catch (SQLException e) {
           e.printStackTrace();
         }
