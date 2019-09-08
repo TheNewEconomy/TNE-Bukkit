@@ -54,8 +54,8 @@ public class CoreHoldingsHandler implements HoldingsHandler {
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
     BigDecimal amount = BigDecimal.ZERO;
     try {
-      System.out.println("Currency: " + currency);
-      System.out.println("Currency Type: " + currency.getCurrencyType());
+      TNE.debug("Currency: " + currency);
+      TNE.debug("Currency Type: " + currency.getCurrencyType());
       amount = currency.getCurrencyType().getHoldings(account, world, currency, database);
     } catch (SQLException e) {
       TNE.debug(e);
