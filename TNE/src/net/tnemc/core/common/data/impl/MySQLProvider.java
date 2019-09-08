@@ -426,7 +426,7 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
-    BigDecimal balance = null;
+    BigDecimal balance = BigDecimal.ZERO;
     SQLDatabase.open();
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
 
