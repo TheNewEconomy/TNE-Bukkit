@@ -129,6 +129,10 @@ public class TNEAccount implements Account {
         if (!core || handler.coreHandler()) {
           if (handler.userContains().equalsIgnoreCase("") ||
               displayName().contains(handler.userContains())) {
+            TNE.debug("Currency: " + currency);
+            TNE.debug("Currency: " + TNE.manager().currencyManager().get(world, currency));
+            TNE.debug("identifier(): " + identifier());
+            TNE.debug("world: " + world);
             holdings = holdings.add(handler.getHoldings(identifier(), world, TNE.manager().currencyManager().get(world, currency), database));
           }
         }

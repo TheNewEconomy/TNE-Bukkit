@@ -426,7 +426,7 @@ public class MySQLProvider extends TNEDataProvider {
 
   @Override
   public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
-    BigDecimal balance = null;
+    BigDecimal balance = BigDecimal.ZERO;
     SQLDatabase.open();
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
 
@@ -652,7 +652,7 @@ public class MySQLProvider extends TNEDataProvider {
 
     SQLDatabase.open();
     final String query = "SELECT count(*) as bal_count FROM " + balanceTable + " LEFT JOIN " + userTable + " ON " + balanceTable + ".uuid = " + userTable + ".uuid WHERE " + balanceTable + ".world = ? AND " + balanceTable +
-        ".currency = ?" + generateLike(userTable + ".display_name", TNE.instance().exclusions, true);
+        ".currency = ?" + generateLike(userTable + ".display_name", TNE.instance().exclusions, true, true);
 
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(query);
         ResultSet results = MySQL.executePreparedQuery(statement, new Object[] { world, currency })) {
@@ -671,6 +671,56 @@ public class MySQLProvider extends TNEDataProvider {
     return count;
   }
 
+
+
+  @Override
+  public int topPos(String identifier, String world, String currency) throws SQLException {
+    final String balanceTable = manager.getPrefix() + "_BALANCES";
+    final String userTable = manager.getPrefix() + "_USERS";
+    int pos = 0;
+
+    SQLDatabase.open();
+    String query = "SELECT uuid FROM " + balanceTable + " LEFT JOIN " + userTable + " ON " + balanceTable + ".uuid = " + userTable + ".uuid WHERE ";
+
+    final boolean useWorld = !world.equalsIgnoreCase("all");
+    final boolean useCurrency = !currency.equalsIgnoreCase("all");
+
+    if(useWorld) {
+      query = query +  balanceTable + ".world = ?";
+    }
+
+    if(useCurrency) {
+      if(useWorld) query = query + " AND ";
+      query = query +  balanceTable + ".currency = ?";
+    }
+
+    final boolean andStart = useWorld || useCurrency;
+    query = query + generateLike(userTable + ".display_name", TNE.instance().exclusions, true, andStart);
+
+    int iteration = 1;
+    List<Object> objects = new ArrayList<>();
+    if(useWorld) objects.add(world);
+    if(useCurrency) objects.add(currency);
+
+
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(query);
+        ResultSet results = MySQL.executePreparedQuery(statement, objects.toArray(new Object[objects.size()]))) {
+
+      while(results.next()) {
+        if(results.getString("uuid").equalsIgnoreCase(identifier)) {
+          pos = iteration;
+          break;
+        }
+        iteration++;
+      }
+    } catch (SQLException e) {
+      TNE.debug(e);
+    }
+
+    SQLDatabase.close();
+    return pos;
+  }
+
   //Page 1 = 0 -> 9
   //Page 2 = 10 -> 19
   //Page 3 = 20 -> 29
@@ -686,7 +736,7 @@ public class MySQLProvider extends TNEDataProvider {
     if(page > 1) start = ((page - 1) * limit);
 
     final String query = "SELECT " + balanceTable + ".uuid, " + userTable + ".display_name, " + balanceTable + ".balance, " + balanceTable + ".world, " + balanceTable + ".currency FROM " + balanceTable + " LEFT JOIN " + userTable + " ON " + balanceTable + ".uuid = " + userTable + ".uuid WHERE " + balanceTable + ".world = ? AND " + balanceTable +
-        ".currency = ?" + generateLike(userTable + ".display_name", TNE.instance().exclusions, true) + " ORDER BY " + balanceTable + ".balance DESC LIMIT ?,?";
+        ".currency = ?" + generateLike(userTable + ".display_name", TNE.instance().exclusions, true, true) + " ORDER BY " + balanceTable + ".balance DESC LIMIT ?,?";
 
     SQLDatabase.open();
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(query);
