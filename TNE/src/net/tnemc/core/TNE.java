@@ -105,7 +105,7 @@ public class TNE extends TNELib {
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
-  public static final String build = "1Beta118M";
+  public static final String build = "2Beta118M";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   //Map containing module sub commands to add to our core commands
