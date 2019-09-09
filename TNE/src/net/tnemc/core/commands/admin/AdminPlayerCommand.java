@@ -25,17 +25,17 @@ public class AdminPlayerCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "player";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.player";
   }
 
@@ -45,7 +45,7 @@ public class AdminPlayerCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/tne player <username> - Checks if the specified account is a player or not.";
   }
 

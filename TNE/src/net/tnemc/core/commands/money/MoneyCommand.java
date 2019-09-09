@@ -16,26 +16,26 @@ public class MoneyCommand extends TNECommand {
 
   public MoneyCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new MoneyBalanceCommand(plugin));
-    subCommands.add(new MoneyConvertCommand(plugin));
-    subCommands.add(new MoneyConsolidateCommand(plugin));
-    subCommands.add(new MoneyGiveCommand(plugin));
-    subCommands.add(new MoneyNoteCommand(plugin));
-    subCommands.add(new MoneyOtherCommand(plugin));
-    subCommands.add(new MoneyPayCommand(plugin));
-    subCommands.add(new MoneySetCommand(plugin));
-    subCommands.add(new MoneySetAllCommand(plugin));
-    subCommands.add(new MoneyTakeCommand(plugin));
-    subCommands.add(new MoneyTopCommand(plugin));
+    addSub(new MoneyBalanceCommand(plugin));
+    addSub(new MoneyConvertCommand(plugin));
+    addSub(new MoneyConsolidateCommand(plugin));
+    addSub(new MoneyGiveCommand(plugin));
+    addSub(new MoneyNoteCommand(plugin));
+    addSub(new MoneyOtherCommand(plugin));
+    addSub(new MoneyPayCommand(plugin));
+    addSub(new MoneySetCommand(plugin));
+    addSub(new MoneySetAllCommand(plugin));
+    addSub(new MoneyTakeCommand(plugin));
+    addSub(new MoneyTopCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "money";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "bal", "balance", "pay", "baltop",
         "balother", "balo", "balanceother",
@@ -45,7 +45,7 @@ public class MoneyCommand extends TNECommand {
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

@@ -39,12 +39,12 @@ public class PlayerJoinListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
-    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
-      TNE.debug("=====START ConnectionListener.onJoin =====");
-      TNE.debug("Player null: " + (event.getPlayer() == null));
-      final Player player = event.getPlayer();
+    TNE.debug("=====START ConnectionListener.onJoin =====");
+    TNE.debug("Player null: " + (event.getPlayer() == null));
+    final Player player = event.getPlayer();
 
-      final UUID id = IDFinder.getID(player);
+    final UUID id = IDFinder.getID(player);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
       TNE.debug(id + "");
       boolean first = !TNE.manager().exists(id);
@@ -106,7 +106,6 @@ public class PlayerJoinListener implements Listener {
         }
       }
       TNE.manager().addAccount(account);
-
       if(TNE.instance().developers.contains(id.toString())) {
         for(final Player p : Bukkit.getOnlinePlayers()) {
           Bukkit.getScheduler().runTask(plugin, ()-> p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 10f, 1f));

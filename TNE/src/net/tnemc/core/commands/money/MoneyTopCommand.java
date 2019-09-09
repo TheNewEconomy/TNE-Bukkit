@@ -34,17 +34,17 @@ public class MoneyTopCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "top";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.money.top";
   }
 
@@ -54,7 +54,7 @@ public class MoneyTopCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Money.Top";
   }
 

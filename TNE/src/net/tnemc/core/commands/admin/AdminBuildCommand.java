@@ -19,19 +19,19 @@ public class AdminBuildCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "build";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "b"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.build";
   }
 
@@ -41,7 +41,7 @@ public class AdminBuildCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Admin.Build";
   }
 

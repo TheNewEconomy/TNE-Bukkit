@@ -29,19 +29,19 @@ public class ModuleDownloadCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "download";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "dl"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.module.download";
   }
 
@@ -51,7 +51,7 @@ public class ModuleDownloadCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Module.Download";
   }
 

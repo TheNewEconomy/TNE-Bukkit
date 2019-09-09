@@ -27,6 +27,7 @@ public class TNESaveManager extends SaveManager {
 
   public TNESaveManager(DataManager manager) {
     super(manager);
+    manager.setSsl(TNE.configurations().getBoolean("Core.Database.MySQL.SSL"));
   }
 
   @Override

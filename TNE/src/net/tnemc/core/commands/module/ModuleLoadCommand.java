@@ -30,19 +30,19 @@ public class ModuleLoadCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "load";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "l"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.module.load";
   }
 
@@ -52,7 +52,7 @@ public class ModuleLoadCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Module.Load";
   }
 
@@ -83,8 +83,8 @@ public class ModuleLoadCommand extends TNECommand {
       });
 
       for(TNECommand com : module.getModule().commands()) {
-        List<String> accessors = new ArrayList<>(Arrays.asList(com.getAliases()));
-        accessors.add(com.getName());
+        List<String> accessors = new ArrayList<>(Arrays.asList(com.aliases()));
+        accessors.add(com.name());
         TNE.instance().getCommandManager().register(accessors.toArray(new String[accessors.size()]), com);
       }
       module.getModule().listeners(TNE.instance()).forEach(listener->{
@@ -103,18 +103,6 @@ public class ModuleLoadCommand extends TNECommand {
 
       TNE.loader().getModules().put(module.name(), module);
       module = null;
-
-      /*try {
-        Field f = ClassLoader.class.getDeclaredField("classes");
-        f.setAccessible(true);
-
-        Vector<Class> classes =  (Vector<Class>) f.get(TNE.loader().getModule(moduleName).getLoader());
-        for(Class clazz : classes) {
-          System.out.println("Loaded: " + clazz.getName());
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }*/
 
       Message message = new Message("Messages.Module.Loaded");
       message.addVariable("$module", moduleName);

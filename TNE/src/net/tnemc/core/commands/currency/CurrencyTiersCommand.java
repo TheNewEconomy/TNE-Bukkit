@@ -22,19 +22,19 @@ public class CurrencyTiersCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "tiers";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "t"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.currency.tiers";
   }
 
@@ -44,7 +44,7 @@ public class CurrencyTiersCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Currency.Tiers";
   }
 

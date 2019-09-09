@@ -15,47 +15,46 @@ public class AdminCommand extends TNECommand {
 
   public AdminCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new AdminAccountCommand(plugin));
-    subCommands.add(new AdminBackupCommand(plugin));
-    subCommands.add(new AdminBalanceCommand(plugin));
-    subCommands.add(new AdminBuildCommand(plugin));
-    subCommands.add(new AdminCaveatsCommand(plugin));
-    subCommands.add(new AdminCreateCommand(plugin));
-    subCommands.add(new AdminDebugCommand(plugin));
-    subCommands.add(new AdminDeleteCommand(plugin));
-    subCommands.add(new AdminExtractCommand(plugin));
-    subCommands.add(new AdminIDCommand(plugin));
-    subCommands.add(new AdminIDExportCommand(plugin));
-    //subCommands.add(new AdminIndependenceCommand(plugin));
-    subCommands.add(new AdminMaintenanceMode(plugin));
-    subCommands.add(new AdminMenuCommand(plugin));
-    subCommands.add(new AdminPlayerCommand(plugin));
-    subCommands.add(new AdminPurgeCommand(plugin));
-    subCommands.add(new AdminReloadCommand(plugin));
-    subCommands.add(new AdminReportCommand(plugin));
-    subCommands.add(new AdminResetCommand(plugin));
-    subCommands.add(new AdminRestoreCommand(plugin));
-    subCommands.add(new AdminSaveCommand(plugin));
-    subCommands.add(new AdminStatusCommand(plugin));
-    subCommands.add(new AdminTestCommand(plugin));
-    subCommands.add(new AdminUploadCommand(plugin));
-    subCommands.add(new AdminVersionCommand(plugin));
+    addSub(new AdminAccountCommand(plugin));
+    addSub(new AdminBackupCommand(plugin));
+    addSub(new AdminBalanceCommand(plugin));
+    addSub(new AdminBuildCommand(plugin));
+    addSub(new AdminCaveatsCommand(plugin));
+    addSub(new AdminCreateCommand(plugin));
+    addSub(new AdminDebugCommand(plugin));
+    addSub(new AdminDeleteCommand(plugin));
+    addSub(new AdminExtractCommand(plugin));
+    addSub(new AdminIDCommand(plugin));
+    addSub(new AdminIDExportCommand(plugin));
+    //addSub(new AdminIndependenceCommand(plugin));
+    addSub(new AdminMaintenanceMode(plugin));
+    addSub(new AdminMenuCommand(plugin));
+    addSub(new AdminPlayerCommand(plugin));
+    addSub(new AdminPurgeCommand(plugin));
+    addSub(new AdminReportCommand(plugin));
+    addSub(new AdminResetCommand(plugin));
+    addSub(new AdminRestoreCommand(plugin));
+    addSub(new AdminSaveCommand(plugin));
+    addSub(new AdminStatusCommand(plugin));
+    addSub(new AdminTestCommand(plugin));
+    addSub(new AdminUploadCommand(plugin));
+    addSub(new AdminVersionCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "tne";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "eco", "theneweconomy"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin";
   }
 

@@ -36,17 +36,17 @@ public class MoneyNoteCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "note";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.money.note";
   }
 
@@ -56,7 +56,7 @@ public class MoneyNoteCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Money.Note";
   }
 
@@ -89,7 +89,7 @@ public class MoneyNoteCommand extends TNECommand {
 
         if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.note." + currencyName)) {
           Message unable = new Message("Messages.Command.Unable");
-          unable.addVariable("$commands", "/" + getName());
+          unable.addVariable("$commands", "/" + name());
           unable.translate(world, sender);
           return;
         }

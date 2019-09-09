@@ -16,21 +16,21 @@ public class YetiCommand extends TNECommand {
 
   public YetiCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new YetiIdiotCommand(plugin));
+    addSub(new YetiIdiotCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "yediot";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

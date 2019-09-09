@@ -32,19 +32,19 @@ public class TransactionHistoryCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "history";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "h"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.transaction.history";
   }
 
@@ -54,7 +54,7 @@ public class TransactionHistoryCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Transaction.History";
   }
 

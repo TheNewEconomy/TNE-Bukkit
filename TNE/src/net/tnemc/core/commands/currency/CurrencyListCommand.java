@@ -21,19 +21,19 @@ public class CurrencyListCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "list";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "l"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.currency.list";
   }
 
@@ -43,7 +43,7 @@ public class CurrencyListCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Currency.List";
   }
 

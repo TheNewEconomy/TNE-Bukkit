@@ -25,19 +25,19 @@ public class TransactionInfoCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "info";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "i"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.transaction.info";
   }
 
@@ -47,7 +47,7 @@ public class TransactionInfoCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Transaction.Info";
   }
 

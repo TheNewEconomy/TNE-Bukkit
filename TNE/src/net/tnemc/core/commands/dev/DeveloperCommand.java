@@ -15,23 +15,23 @@ public class DeveloperCommand extends TNECommand {
 
   public DeveloperCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new DeveloperDebugCommand(plugin));
+    addSub(new DeveloperDebugCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "tnedev";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "theneweconomydev"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

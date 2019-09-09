@@ -105,7 +105,7 @@ public class TNE extends TNELib {
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
-  public static final String build = "1Beta118M";
+  public static final String build = "2Beta118M";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   //Map containing module sub commands to add to our core commands
@@ -307,10 +307,10 @@ public class TNE extends TNELib {
     //Load Module Commands
     loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{
       List<String> accessors = new ArrayList<>();
-      for(String string : command.getAliases()) {
+      for(String string : command.aliases()) {
         accessors.add(string);
       }
-      accessors.add(command.getName());
+      accessors.add(command.name());
       TNE.debug("Command Manager Null?: " + (commandManager == null));
       TNE.debug("Accessors?: " + accessors.size());
       TNE.debug("Command Null?: " + (command == null));
@@ -586,15 +586,15 @@ public class TNE extends TNELib {
   }
 
   public void registerCommand(String[] accessors, TNECommand command) {
-    if(subCommands.containsKey(command.getName()))
-      command.addSubCommands(subCommands.get(command.getName()));
+    if(subCommands.containsKey(command.name()))
+      command.addSubs(subCommands.get(command.name()));
 
     commandManager.commands.put(accessors, command);
   }
 
   public void registerCommandForce(String[] accessors, TNECommand command) {
-    if(subCommands.containsKey(command.getName()))
-      command.addSubCommands(subCommands.get(command.getName()));
+    if(subCommands.containsKey(command.name()))
+      command.addSubs(subCommands.get(command.name()));
 
     commandManager.commands.put(accessors, command);
   }
@@ -738,20 +738,23 @@ public class TNE extends TNELib {
     worlds = new File(getDataFolder(), "worlds.yml");
 
     TNE.logger().info("Initializing Configurations.");
-    mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
+    List<String> skip = new ArrayList<>();
+    skip.add("Items");
+    skip.add("Virtual");
+    mainConfigurations = initializeConfiguration(mainConfig, "config.yml", true, skip);
     TNE.logger().info("Initialized config.yml");
-    currencyConfigurations = initializeConfiguration(currencies, "currency.yml");
+    currencyConfigurations = initializeConfiguration(currencies, "currency.yml", false, new ArrayList<>());
     TNE.logger().info("Initialized currency.yml");
-    messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
+    messageConfigurations = initializeConfiguration(messagesFile, "messages.yml", true, new ArrayList<>());
     TNE.logger().info("Initialized messages.yml");
-    playerConfigurations = initializeConfiguration(players, "players.yml");
+    playerConfigurations = initializeConfiguration(players, "players.yml", false, new ArrayList<>());
     TNE.logger().info("Initialized players.yml");
-    worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
+    worldConfigurations = initializeConfiguration(worlds, "worlds.yml", false, new ArrayList<>());
     TNE.logger().info("Initialized worlds.yml");
     if(item) {
       Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
         final String itemsFile = (MISCUtils.isOneThirteen()) ? "items.yml" : "items-1.12.yml";
-        itemConfigurations = initializeConfiguration(items, itemsFile);
+        itemConfigurations = initializeConfiguration(items, itemsFile, true, new ArrayList<>());
         MaterialHelper.initialize();
 
         if (MISCUtils.isOneThirteen()) {
@@ -778,7 +781,7 @@ public class TNE extends TNELib {
     }
   }
 
-  public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
+  public CommentedConfiguration initializeConfiguration(File file, String defaultFile, boolean copyDefaults, List<String> ignore) {
     TNE.debug("Started copying " + file.getName());
     CommentedConfiguration commentedConfiguration = null;
 
@@ -787,7 +790,7 @@ public class TNE extends TNELib {
       TNE.debug("Initializing commented configuration");
       if (commentedConfiguration != null) {
         TNE.debug("Loading commented configuration");
-        commentedConfiguration.load();
+        commentedConfiguration.load(copyDefaults, ignore);
       }
       TNE.debug("Finished copying " + file.getName());
     } catch(Exception e) {

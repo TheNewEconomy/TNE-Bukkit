@@ -15,25 +15,25 @@ public class CurrencyCommand extends TNECommand {
 
   public CurrencyCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new CurrencyListCommand(plugin));
-    subCommands.add(new CurrencyRenameCommand(plugin));
-    subCommands.add(new CurrencyTiersCommand(plugin));
+    addSub(new CurrencyListCommand(plugin));
+    addSub(new CurrencyRenameCommand(plugin));
+    addSub(new CurrencyTiersCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "currency";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "cur", "tnecur"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

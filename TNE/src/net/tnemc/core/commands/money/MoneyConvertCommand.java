@@ -36,17 +36,17 @@ public class MoneyConvertCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "convert";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.money.convert";
   }
 
@@ -56,7 +56,7 @@ public class MoneyConvertCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "Messages.Commands.Money.Convert";
   }
 
@@ -83,7 +83,7 @@ public class MoneyConvertCommand extends TNECommand {
 
         if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.convert." + from.name())) {
           Message unable = new Message("Messages.Command.Unable");
-          unable.addVariable("$commands", "/" + getName());
+          unable.addVariable("$commands", "/" + name());
           unable.translate(worldFrom, sender);
           return;
         }

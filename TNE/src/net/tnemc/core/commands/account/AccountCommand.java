@@ -18,23 +18,23 @@ public class AccountCommand extends TNECommand {
   public AccountCommand(TNE plugin) {
     super(plugin);
 
-    subCommands.add(new AccountPinCommand(plugin));
+    addSub(new AccountPinCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "account";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "acc"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

@@ -1,0 +1,64 @@
+Plots:
+
+  Ownership:
+
+    #The maximum amount of plots able to be owned.
+    Max: 10
+
+    #Configurations relating to claiming/unclaiming plots
+    Claim:
+
+      #The default claim price.
+      Cost: 500
+
+      #The percentage returned for unclaiming a plot.
+      Unclaim: 75
+
+    #Configurations relating to purchasing extra plots.
+    Extra:
+
+        #Whether or not players may but extra plots for money.
+        Buy: true
+
+        #The currency to use for extra plot purchasing.
+        Currency: "Dollar"
+
+        #The amount of currency required to buy extra plots.
+        Cost: 10000
+
+    #Configurations relating to selling plots.
+    Sell:
+
+      #Whether or not players may sell plots
+      Enabled: true
+
+      #Whether or not the Min/Max values should be utilized for plot selling
+      Limit: true
+
+      #The maximum amount of currency that players may sell a plot for
+      Max: 1000
+
+      #The minimum amount of currency that players may sell a plot for
+      Min: 10
+
+    #Configurations relating to renting out plots.
+    Rent:
+
+      #Whether or not players may rent out plots.
+      Enabled: true
+
+      #Whether or not the Min/Max values should be utilized for plot renting
+      Limit: true
+
+      #The maximum amount of currency, per day that players may rent a plot for.
+      Max: 1000
+
+      #The minimum amount of currency, per day, that players may lease a plot for.
+      Min: 10
+
+  MaxPermissions:
+
+    #Permissions that grant an increased maximum amount of plots.
+    #Format: - "node:max plots"
+    Available:
+      - "tne.plots.admin:900000000"

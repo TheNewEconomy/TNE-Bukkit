@@ -23,19 +23,19 @@ public class AdminIDExportCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "idexport";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[] {
         "ide"
     };
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.admin.ide";
   }
 
@@ -45,7 +45,7 @@ public class AdminIDExportCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/tne idexport";
   }
 
