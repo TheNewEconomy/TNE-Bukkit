@@ -178,7 +178,7 @@ public class MaterialUtils {
       }
       return false;
     } else if(originalClone.getType().equals(Material.WRITTEN_BOOK) ||
-        originalClone.getType().equals(Material.WRITABLE_BOOK)) {
+        MISCUtils.isOneThirteen() && originalClone.getType().equals(Material.WRITABLE_BOOK)) {
       if(originalCloneMeta instanceof BookMeta && compareCloneMeta instanceof BookMeta) {
         return new SerialItem(originalClone).serialize().equals(new SerialItem(compareClone).serialize());
       }

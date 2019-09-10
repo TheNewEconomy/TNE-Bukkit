@@ -31,17 +31,17 @@ public class NoteExperienceCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "experience";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.note.experience";
   }
 
@@ -51,7 +51,7 @@ public class NoteExperienceCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/note experience <amount> - Creates a note that will add experience on right click.";
   }
 

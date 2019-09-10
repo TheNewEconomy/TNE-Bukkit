@@ -17,22 +17,22 @@ public class NoteCommand extends TNECommand {
 
   public NoteCommand(TNE plugin) {
     super(plugin);
-    subCommands.add(new NoteCommandCommand(plugin));
+    addSub(new NoteCommandCommand(plugin));
     //subCommands.add(new NoteExperienceCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "note";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

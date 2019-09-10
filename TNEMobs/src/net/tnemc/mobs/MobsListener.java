@@ -127,21 +127,25 @@ public class MobsListener implements ModuleListener {
             //TNE.debug("Mob: " + mob);
             final TNECurrency currencyObject = TNE.manager().currencyManager().get(world, currency);
 
-            if(reward.compareTo(BigDecimal.ZERO) > 0) {
-              if (currencyObject.isItem()) {
-                for (ItemStack stack : ItemCalculations.getItemsForAmount(currencyObject, reward)) {
+            AsyncMobRewardEvent mobRewardEvent = new AsyncMobRewardEvent(type, name, world, currency, currencyObject.getType(), reward);
+            Bukkit.getPluginManager().callEvent(mobRewardEvent);
+
+            if(mobRewardEvent.getReward().compareTo(BigDecimal.ZERO) > 0) {
+
+              if (mobRewardEvent.currencyType.equalsIgnoreCase("item")) {
+                for (ItemStack stack : ItemCalculations.getItemsForAmount(currencyObject, mobRewardEvent.getReward())) {
                   if (stack == null || stack.getType().equals(Material.AIR) || stack.getAmount() == 0) continue;
                   Bukkit.getScheduler().runTask(plugin, () -> entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), stack));
                 }
-              } else if (currencyObject.isXp()) {
-                event.setDroppedExp(reward.intValue());
+              } else if (mobRewardEvent.currencyType.equalsIgnoreCase("experience")) {
+                event.setDroppedExp(mobRewardEvent.getReward().intValue());
               } else {
                 if(TNE.instance().api().hasConfiguration("Mobs.Note") && TNE.instance().api().getBoolean("Mobs.Note")) {
-                  final BigDecimal rewardFinal = reward;
+                  final BigDecimal rewardFinal = mobRewardEvent.getReward();
                   Bukkit.getScheduler().runTask(plugin, () -> entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), TNE.manager().currencyManager().createNote(currencyObject.name(), world, rewardFinal)));
                 } else {
                   TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("give"));
-                  transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), reward, TransactionChargeType.GAIN));
+                  transaction.setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, currency), mobRewardEvent.getReward(), TransactionChargeType.GAIN));
                   TransactionResult result = TNE.transactionManager().perform(transaction);
                 }
               }
@@ -151,7 +155,7 @@ public class MobsListener implements ModuleListener {
               if (reward.compareTo(BigDecimal.ZERO) > 0 || TNE.instance().api().getBoolean("Mobs.MessageZero")) {
                 Message mobKilled = new Message(TNE.instance().api().getString(messageNode));
                 mobKilled.addVariable("$mob", MaterialUtils.formatMaterialNameWithSpace(formatted));
-                mobKilled.addVariable("$reward", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), currency, reward, id.toString()));
+                mobKilled.addVariable("$reward", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), currency, mobRewardEvent.getReward(), id.toString()));
                 mobKilled.translate(world, killer);
               }
             }
