@@ -127,10 +127,10 @@ public class MobsListener implements ModuleListener {
             //TNE.debug("Mob: " + mob);
             final TNECurrency currencyObject = TNE.manager().currencyManager().get(world, currency);
 
-            AsyncMobRewardEvent mobRewardEvent = new AsyncMobRewardEvent(type, name, world, currency, currencyObject.getType(), reward);
+            AsyncMobRewardEvent mobRewardEvent = new AsyncMobRewardEvent(entity, killer, world, currency, currencyObject.getType(), reward);
             Bukkit.getPluginManager().callEvent(mobRewardEvent);
 
-            if(mobRewardEvent.getReward().compareTo(BigDecimal.ZERO) > 0) {
+            if(!mobRewardEvent.isCancelled() && mobRewardEvent.getReward().compareTo(BigDecimal.ZERO) > 0) {
 
               if (mobRewardEvent.currencyType.equalsIgnoreCase("item")) {
                 for (ItemStack stack : ItemCalculations.getItemsForAmount(currencyObject, mobRewardEvent.getReward())) {
@@ -151,7 +151,7 @@ public class MobsListener implements ModuleListener {
               }
             }
 
-            if(TNE.instance().api().getBoolean("Mobs.Message")) {
+            if(!mobRewardEvent.isCancelled() && TNE.instance().api().getBoolean("Mobs.Message")) {
               if (reward.compareTo(BigDecimal.ZERO) > 0 || TNE.instance().api().getBoolean("Mobs.MessageZero")) {
                 Message mobKilled = new Message(TNE.instance().api().getString(messageNode));
                 mobKilled.addVariable("$mob", MaterialUtils.formatMaterialNameWithSpace(formatted));

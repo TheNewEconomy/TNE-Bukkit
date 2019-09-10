@@ -1,6 +1,9 @@
 package net.tnemc.mobs;
 
 import net.tnemc.core.event.TNEEvent;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
 import java.math.BigDecimal;
 
@@ -14,45 +17,33 @@ import java.math.BigDecimal;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AsyncMobRewardEvent extends TNEEvent {
+public class AsyncMobRewardEvent extends TNEEvent implements Cancellable {
 
-  protected String mobType;
-  protected String mobName;
+  protected final LivingEntity entity;
+  protected final Player killer;
   protected String world;
   protected String currency;
   protected String currencyType;
   protected BigDecimal reward;
 
-  public AsyncMobRewardEvent(String mobType, String mobName, String world, String currency, String currencyType, BigDecimal reward) {
+  private boolean cancelled = false;
+
+  public AsyncMobRewardEvent(final LivingEntity entity, final Player killer, String world, String currency, String currencyType, BigDecimal reward) {
     super(true);
-    this.mobType = mobType;
-    this.mobName = mobName;
+    this.entity = entity;
+    this.killer = killer;
     this.world = world;
     this.currency = currency;
     this.currencyType = currencyType;
     this.reward = reward;
   }
 
-  /**
-   * @return This is the mob type of the mob as outlined in {@EntityType entity type}.
-   */
-  public String getMobType() {
-    return mobType;
+  public LivingEntity getEntity() {
+    return entity;
   }
 
-  public void setMobType(String mobType) {
-    this.mobType = mobType;
-  }
-
-  /**
-   * @return The name attached to the mob if applicable, could be null.
-   */
-  public String getMobName() {
-    return mobName;
-  }
-
-  public void setMobName(String mobName) {
-    this.mobName = mobName;
+  public Player getKiller() {
+    return killer;
   }
 
   public String getWorld() {
@@ -88,5 +79,15 @@ public class AsyncMobRewardEvent extends TNEEvent {
 
   public void setReward(BigDecimal reward) {
     this.reward = reward;
+  }
+
+  @Override
+  public boolean isCancelled() {
+    return cancelled;
+  }
+
+  @Override
+  public void setCancelled(boolean cancelled) {
+    this.cancelled = cancelled;
   }
 }

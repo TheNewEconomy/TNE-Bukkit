@@ -15,6 +15,11 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <sourceDirectory>src/</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/resources/</directory>
+            </resource>
+        </resources>
         <testSourceDirectory>src/test/</testSourceDirectory>
         <testResources>
             <testResource>
@@ -54,7 +59,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.20</version>
+            <version>1.1.8.21</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
