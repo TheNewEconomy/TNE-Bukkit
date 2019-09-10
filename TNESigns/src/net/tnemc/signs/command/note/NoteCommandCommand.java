@@ -29,17 +29,17 @@ public class NoteCommandCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "command";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.note.command";
   }
 
@@ -49,7 +49,7 @@ public class NoteCommandCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/note command <command> - Creates a note that will run a specific command on right click. Use $player to include player usernames in the command.";
   }
 

@@ -25,17 +25,17 @@ public class ConvertCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "convert";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.command.convert";
   }
 
@@ -45,7 +45,7 @@ public class ConvertCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/convert <from> - Converts all data from plugin <from>.";
   }
 

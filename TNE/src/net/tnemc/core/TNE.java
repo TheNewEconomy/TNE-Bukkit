@@ -741,20 +741,20 @@ public class TNE extends TNELib {
     List<String> skip = new ArrayList<>();
     skip.add("Items");
     skip.add("Virtual");
-    mainConfigurations = initializeConfiguration(mainConfig, "config.yml", true, skip);
+    mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
     TNE.logger().info("Initialized config.yml");
-    currencyConfigurations = initializeConfiguration(currencies, "currency.yml", false, new ArrayList<>());
+    currencyConfigurations = initializeConfiguration(currencies, "currency.yml");
     TNE.logger().info("Initialized currency.yml");
-    messageConfigurations = initializeConfiguration(messagesFile, "messages.yml", true, new ArrayList<>());
+    messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
-    playerConfigurations = initializeConfiguration(players, "players.yml", false, new ArrayList<>());
+    playerConfigurations = initializeConfiguration(players, "players.yml");
     TNE.logger().info("Initialized players.yml");
-    worldConfigurations = initializeConfiguration(worlds, "worlds.yml", false, new ArrayList<>());
+    worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
     TNE.logger().info("Initialized worlds.yml");
     if(item) {
       Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
         final String itemsFile = (MISCUtils.isOneThirteen()) ? "items.yml" : "items-1.12.yml";
-        itemConfigurations = initializeConfiguration(items, itemsFile, true, new ArrayList<>());
+        itemConfigurations = initializeConfiguration(items, itemsFile);
         MaterialHelper.initialize();
 
         if (MISCUtils.isOneThirteen()) {
@@ -781,7 +781,7 @@ public class TNE extends TNELib {
     }
   }
 
-  public CommentedConfiguration initializeConfiguration(File file, String defaultFile, boolean copyDefaults, List<String> ignore) {
+  public CommentedConfiguration initializeConfiguration(File file, String defaultFile) {
     TNE.debug("Started copying " + file.getName());
     CommentedConfiguration commentedConfiguration = null;
 
@@ -790,7 +790,7 @@ public class TNE extends TNELib {
       TNE.debug("Initializing commented configuration");
       if (commentedConfiguration != null) {
         TNE.debug("Loading commented configuration");
-        commentedConfiguration.load(copyDefaults, ignore);
+        commentedConfiguration.load();
       }
       TNE.debug("Finished copying " + file.getName());
     } catch(Exception e) {

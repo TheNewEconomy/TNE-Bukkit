@@ -365,7 +365,7 @@ public class ItemSign implements SignType {
     sign.update(true);
   }
 
-  public static void saveItemOffer(final Location location, final String currencyName, final boolean currency, final BigDecimal amount) throws SQLException {
+  public static void saveItemOfferCurrency(final Location location, final String currencyName, final boolean currency, final BigDecimal amount) throws SQLException {
     SQLDatabase.executePreparedUpdate(SignsData.ITEM_TRADE_UPDATE, new Object[] {
         currency,
         amount,
