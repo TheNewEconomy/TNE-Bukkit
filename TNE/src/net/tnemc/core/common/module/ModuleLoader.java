@@ -12,7 +12,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.jar.JarEntry;
@@ -31,6 +33,8 @@ import java.util.jar.JarFile;
 public class ModuleLoader {
 
   Map<String, ModuleWrapper> modules = new HashMap<>();
+
+  private List<String> supportedEvents = new ArrayList<>();
 
   public boolean hasModule(String moduleName) {
     return modules.containsKey(moduleName);
@@ -172,6 +176,7 @@ public class ModuleLoader {
     } catch (Exception ignore) {
       TNE.logger().info("Unable to locate module main class for file " + file.getName());
     }
+    supportedEvents.addAll(module.events());
     wrapper = new ModuleWrapper(module);
     wrapper.setLoader(classLoader);
     return wrapper;
@@ -262,5 +267,9 @@ public class ModuleLoader {
       }
     }
     return main;
+  }
+
+  public boolean hasModuleEvent(String name) {
+    return supportedEvents.contains(name);
   }
 }

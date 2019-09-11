@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -39,6 +40,17 @@ public class IDFinder {
       }
       final UUID id = UUID.fromString(identifier);
       final OfflinePlayer player = Bukkit.getOfflinePlayer(id);
+
+      String username = null;
+      try {
+        username = TNE.saveManager().getTNEManager().getTNEProvider().loadUsername(id.toString());
+      } catch (SQLException ignore) {
+      }
+
+      if(username != null) {
+        return username;
+      }
+
       if(player == null) {
         return MojangAPI.getPlayerUsername(id);
       }

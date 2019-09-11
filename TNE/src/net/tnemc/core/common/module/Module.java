@@ -67,6 +67,11 @@ public interface Module {
     return new HashMap<>();
   }
 
+
+  default List<String> events() {
+    return new ArrayList<>();
+  }
+
   default Map<Configuration, String> configurations() {
     return new HashMap<>();
   }

@@ -14,6 +14,8 @@ import net.tnemc.core.economy.currency.Tier;
 import net.tnemc.core.economy.transaction.Transaction;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
+import net.tnemc.core.event.TNEEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.math.BigDecimal;
@@ -41,6 +43,39 @@ public class TNEAPI {
 
   public TNEAPI(TNE plugin) {
     this.plugin = plugin;
+  }
+
+  public void callEvent(TNEEvent event) {
+    Bukkit.getPluginManager().callEvent(event);
+  }
+
+  public boolean hasModule(String name) {
+    return TNE.loader().hasModule(name);
+  }
+
+  public boolean hasModuleVersion(String name, String version) {
+    String[] check = version.split("\\.");
+    String[] current = TNE.loader().getModule(name).version().split("\\.");
+
+    int i = 0;
+    for(String str : current) {
+
+      int checkTest = 0;
+      int currentTest = 0;
+      try {
+        if(i >= check.length) return true;
+        checkTest = Integer.valueOf(check[i]);
+        currentTest = Integer.valueOf(str);
+
+      } catch(Exception ignore) {
+
+      }
+      if(currentTest > checkTest) return true;
+      if(currentTest < checkTest) return false;
+
+      i++;
+    }
+    return false;
   }
 
   /**

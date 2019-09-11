@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>Mobs</artifactId>
-    <version>0.0.1.0</version>
+    <version>0.1.2.0</version>
     <packaging>jar</packaging>
     <name>Mobs</name>
     <properties>
@@ -38,6 +38,14 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-theneweconomy-java</id>
+            <name>theneweconomy-java</name>
+            <url>https://api.bintray.com/maven/theneweconomy/java/TNE-Mobs/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -59,7 +67,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.21</version>
+            <version>1.1.8.23</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

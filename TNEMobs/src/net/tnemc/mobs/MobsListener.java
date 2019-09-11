@@ -128,7 +128,7 @@ public class MobsListener implements ModuleListener {
             final TNECurrency currencyObject = TNE.manager().currencyManager().get(world, currency);
 
             AsyncMobRewardEvent mobRewardEvent = new AsyncMobRewardEvent(entity, killer, world, currency, currencyObject.getType(), reward);
-            Bukkit.getPluginManager().callEvent(mobRewardEvent);
+            TNE.instance().api().callEvent(mobRewardEvent);
 
             if(!mobRewardEvent.isCancelled() && mobRewardEvent.getReward().compareTo(BigDecimal.ZERO) > 0) {
 

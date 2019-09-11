@@ -1,6 +1,5 @@
 package net.tnemc.mobs;
 
-import com.sun.istack.internal.NotNull;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.configurations.Configuration;
@@ -34,7 +33,7 @@ import java.util.UUID;
 @ModuleInfo(
     name = "Mobs",
     author = "creatorfromhell",
-    version = "0.1.2",
+    version = "0.1.3",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class MobsModule implements Module {
@@ -57,6 +56,11 @@ public class MobsModule implements Module {
     if(!mobs.exists()) {
       configuration.save(fileConfiguration);
     }
+  }
+
+  @Override
+  public List<String> events() {
+    return Collections.singletonList("AsyncMobRewardEvent");
   }
 
   /**
@@ -107,7 +111,7 @@ public class MobsModule implements Module {
   }
 
 
-  public InputStream getResource(@NotNull String filename) {
+  public InputStream getResource(String filename) {
     try {
       URL url = getClass().getClassLoader().getResource(filename);
       if (url == null) {
