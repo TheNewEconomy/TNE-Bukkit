@@ -6,9 +6,14 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.economy.transaction.charge.TransactionCharge;
+import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import net.tnemc.core.event.currency.TNECurrencyNoteClaimedEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -56,41 +61,56 @@ public class PlayerInteractListener implements Listener {
           Optional<TNETransaction> transaction = TNE.manager().currencyManager().claimNote(id, stack);
           if(transaction == null) TNE.debug("Transaction is null");
           if(!transaction.isPresent()) TNE.debug("Transaction is empty");
-          TransactionResult result = null;
-          if(transaction.isPresent()) result = transaction.get().perform();
-          boolean proceed = result != null && result.proceed();
-          String message = (proceed)? "Messages.Money.NoteClaimed" : "Messages.Money.NoteFailed";
 
-          Message note = new Message(message);
-          if(proceed) {
-            TNE.debug("=====START PlayerListener.onInteract->proceed");
-            TNETransaction trans = transaction.get();
-            TNE.debug("World: " + trans.getWorld());
-            TNE.debug("RAW: " + trans.recipientCharge().toString());
-            TNE.debug("Currency: " + trans.recipientCharge().getCurrency().name());
-            TNE.debug("Amount: " + trans.recipientCharge().getAmount().toPlainString());
-            note.addVariable("$world", trans.getWorld());
-            note.addVariable("$currency", trans.recipientCharge().getCurrency().name());
-            note.addVariable("$amount", trans.recipientCharge().getAmount().toPlainString());
-            note.addVariable("$balance", TNE.instance().api().getHoldings(id.toString(),
-                trans.getWorld(), TNECurrency.fromReserve(trans.recipientCharge().getCurrency())).toPlainString()
-            );
-            event.setCancelled(true);
-            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
-            if(stack.getAmount() > 1) {
-              stack.setAmount(stack.getAmount() - 1);
-            } else {
-              if(player.getInventory().getItemInOffHand() != null
-                  && !player.getInventory().getItemInOffHand().getType().equals(Material.AIR)
-                  && MaterialUtils.itemsEqual(stack, player.getInventory().getItemInOffHand())) {
-                player.getInventory().setItemInOffHand(null);
-              } else {
-                player.getInventory().clear(player.getInventory().getHeldItemSlot());
+          if(transaction.isPresent()) {
+
+            TNECurrencyNoteClaimedEvent noteClaimedEvent = new TNECurrencyNoteClaimedEvent(world,
+                transaction.get().recipientCharge().getCurrency().name(), player, transaction.get().recipientCharge().getAmount(),
+                !Bukkit.isPrimaryThread());
+            Bukkit.getPluginManager().callEvent(noteClaimedEvent);
+
+            if (!event.isCancelled()) {
+              transaction.get().setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, noteClaimedEvent.getCurrency()),
+                  noteClaimedEvent.getAmount(), TransactionChargeType.GAIN));
+
+              TransactionResult result = null;
+              if (transaction.isPresent()) result = transaction.get().perform();
+              boolean proceed = result != null && result.proceed();
+              String message = (proceed) ? "Messages.Money.NoteClaimed" : "Messages.Money.NoteFailed";
+
+              Message note = new Message(message);
+              if (proceed) {
+                TNE.debug("=====START PlayerListener.onInteract->proceed");
+                TNETransaction trans = transaction.get();
+                TNE.debug("World: " + trans.getWorld());
+                TNE.debug("RAW: " + trans.recipientCharge().toString());
+                TNE.debug("Currency: " + trans.recipientCharge().getCurrency().name());
+                TNE.debug("Amount: " + trans.recipientCharge().getAmount().toPlainString());
+                note.addVariable("$world", trans.getWorld());
+                note.addVariable("$currency", trans.recipientCharge().getCurrency().name());
+                note.addVariable("$amount", trans.recipientCharge().getAmount().toPlainString());
+                note.addVariable("$balance", CurrencyFormatter.format(TNECurrency.fromReserve(trans.recipientCharge().getCurrency()), world,
+                    TNE.instance().api().getHoldings(id.toString(),
+                        trans.getWorld(), TNECurrency.fromReserve(trans.recipientCharge().getCurrency())), "")
+                );
+                event.setCancelled(true);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
+                if (stack.getAmount() > 1) {
+                  stack.setAmount(stack.getAmount() - 1);
+                } else {
+                  if (player.getInventory().getItemInOffHand() != null
+                      && !player.getInventory().getItemInOffHand().getType().equals(Material.AIR)
+                      && MaterialUtils.itemsEqual(stack, player.getInventory().getItemInOffHand())) {
+                    player.getInventory().setItemInOffHand(null);
+                  } else {
+                    player.getInventory().clear(player.getInventory().getHeldItemSlot());
+                  }
+                }
+                TNE.debug("=====END PlayerListener.onInteract->proceed");
               }
+              note.translate(world, id);
             }
-            TNE.debug("=====END PlayerListener.onInteract->proceed");
           }
-          note.translate(world, id);
         }
       }
     }
