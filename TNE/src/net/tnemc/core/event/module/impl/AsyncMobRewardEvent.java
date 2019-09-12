@@ -1,4 +1,4 @@
-package net.tnemc.mobs;
+package net.tnemc.core.event.module.impl;
 
 import net.tnemc.core.event.TNEEvent;
 import org.bukkit.entity.LivingEntity;

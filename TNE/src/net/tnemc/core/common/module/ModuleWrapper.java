@@ -3,6 +3,7 @@ package net.tnemc.core.common.module;
 import net.tnemc.core.TNE;
 
 import java.io.IOException;
+import java.net.URLClassLoader;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -18,7 +19,7 @@ public class ModuleWrapper {
 
   ModuleInfo info;
   Module module;
-  ModuleClassLoader loader;
+  URLClassLoader loader;
 
   public ModuleWrapper(Module module) {
     this.module = module;
@@ -66,11 +67,11 @@ public class ModuleWrapper {
     this.module = module;
   }
 
-  public ModuleClassLoader getLoader() {
+  public URLClassLoader getLoader() {
     return loader;
   }
 
-  public void setLoader(ModuleClassLoader loader) {
+  public void setLoader(URLClassLoader loader) {
     this.loader = loader;
   }
 }

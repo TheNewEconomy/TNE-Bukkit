@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,15 +169,15 @@ public class ModuleLoader {
     final File file = new File(modulePath);
     Class<? extends Module> moduleClass;
 
-    ModuleClassLoader classLoader = null;
+    URLClassLoader classLoader = null;
     try {
-      classLoader = new ModuleClassLoader(file.toURI().toURL());
+      classLoader = new URLClassLoader(new URL[]{ file.toURI().toURL() }, TNE.instance().getClass().getClassLoader());
       moduleClass = classLoader.loadClass(getModuleMain(new File(modulePath))).asSubclass(Module.class);
       module = moduleClass.newInstance();
+      supportedEvents.addAll(module.events());
     } catch (Exception ignore) {
       TNE.logger().info("Unable to locate module main class for file " + file.getName());
     }
-    supportedEvents.addAll(module.events());
     wrapper = new ModuleWrapper(module);
     wrapper.setLoader(classLoader);
     return wrapper;

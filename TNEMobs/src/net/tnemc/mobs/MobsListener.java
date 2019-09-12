@@ -16,6 +16,7 @@ import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import net.tnemc.core.event.module.impl.AsyncMobRewardEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Ageable;
@@ -132,12 +133,12 @@ public class MobsListener implements ModuleListener {
 
             if(!mobRewardEvent.isCancelled() && mobRewardEvent.getReward().compareTo(BigDecimal.ZERO) > 0) {
 
-              if (mobRewardEvent.currencyType.equalsIgnoreCase("item")) {
+              if (mobRewardEvent.getCurrencyType().equalsIgnoreCase("item")) {
                 for (ItemStack stack : ItemCalculations.getItemsForAmount(currencyObject, mobRewardEvent.getReward())) {
                   if (stack == null || stack.getType().equals(Material.AIR) || stack.getAmount() == 0) continue;
                   Bukkit.getScheduler().runTask(plugin, () -> entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), stack));
                 }
-              } else if (mobRewardEvent.currencyType.equalsIgnoreCase("experience")) {
+              } else if (mobRewardEvent.getCurrencyType().equalsIgnoreCase("experience")) {
                 event.setDroppedExp(mobRewardEvent.getReward().intValue());
               } else {
                 if(TNE.instance().api().hasConfiguration("Mobs.Note") && TNE.instance().api().getBoolean("Mobs.Note")) {

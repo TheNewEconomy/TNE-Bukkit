@@ -18,7 +18,7 @@ import java.net.URLClassLoader;
 public class ModuleClassLoader extends URLClassLoader {
 
   public ModuleClassLoader(URL url) {
-    super(new URL[]{url}, Module.class.getClassLoader());
+    super(new URL[]{url}, TNE.instance().getClass().getClassLoader());
   }
 
   @Override
