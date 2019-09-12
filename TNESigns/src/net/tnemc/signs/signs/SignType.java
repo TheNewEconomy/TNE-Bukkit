@@ -99,7 +99,7 @@ public interface SignType {
     }
 
     try {
-      if(max() >= 0 && SignsData.loadSignsCreator(player.toString(), name()).size() >= max()) {
+      if(!Bukkit.getPlayer(player).hasPermission("tne.sign." + name() + ".unlimited") && max() >= 0 && SignsData.loadSignsCreator(player.toString(), name()).size() >= max()) {
         Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "You have reached your max limit for this sign type.");
         return false;
       }
