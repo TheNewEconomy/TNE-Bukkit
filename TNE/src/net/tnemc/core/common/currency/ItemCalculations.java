@@ -67,49 +67,6 @@ public class ItemCalculations {
     return value;
   }
 
-  public static void setItems(UUID account, TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove) {
-    setItems(account, currency, amount, inventory, remove, TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), ""));
-  }
-
-  public static void setItems(UUID account, TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove, boolean consolidate) {
-    TNE.debug("=====START Account.setItems =====");
-    TNE.debug("Holdings: " + amount.toPlainString());
-    if(currency.isItem()) {
-      BigDecimal old = getCurrencyItems(currency, inventory);
-      TNE.debug("Old: " + old.toPlainString());
-      BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
-      TNE.debug("difference: " + difference);
-      if(remove) difference = amount;
-      TNE.debug("difference: " + difference);
-      String differenceString = difference.toPlainString();
-      TNE.debug("differenceString: " + differenceString);
-      String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
-      boolean add = (consolidate) || amount.compareTo(old) >= 0;
-      if(remove) add = false;
-
-      if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
-
-      if(consolidate) clearItems(currency, inventory);
-      BigInteger majorChange = (consolidate)? setMajorConsolidate(account, currency, new BigInteger(split[0]), inventory) :
-          setMajor(account, currency, new BigInteger(split[0]), add, inventory);
-      BigInteger minorChange = (consolidate)? setMinorConsolidate(account, currency, new BigInteger(split[1]), inventory) :
-          setMinor(account, currency, new BigInteger(split[1]), add, inventory);
-
-      TNE.debug("MajorChange: " + majorChange.toString());
-      TNE.debug("MinorChange: " + minorChange.toString());
-      if(!consolidate && !add) {
-        if(majorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMajor(account, currency, majorChange, true, inventory);
-        }
-
-        if(minorChange.compareTo(BigInteger.ZERO) > 0) {
-          setMinor(account, currency, minorChange, true, inventory);
-        }
-      }
-    }
-    TNE.debug("=====END Account.setItems =====");
-  }
-
   public static BigInteger setMajorConsolidate(UUID account, TNECurrency currency, BigInteger amount, Inventory inventory) {
     TNE.debug("===== START setMinorItems =====");
     Map<BigInteger, ItemStack> items = new HashMap<>();
@@ -155,6 +112,49 @@ public class ItemCalculations {
     return BigInteger.ZERO;
   }
 
+  public static void setItems(UUID account, TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove) {
+    setItems(account, currency, amount, inventory, remove, TNE.instance().api().getBoolean("Core.Server.Consolidate", WorldFinder.getWorldName(TNE.instance().defaultWorld, WorldVariant.CONFIGURATION), ""));
+  }
+
+  public static void setItems(UUID account, TNECurrency currency, BigDecimal amount, Inventory inventory, boolean remove, boolean consolidate) {
+    TNE.debug("=====START Account.setItems =====");
+    TNE.debug("Holdings: " + amount.toPlainString());
+    if(currency.isItem()) {
+      BigDecimal old = getCurrencyItems(currency, inventory);
+      TNE.debug("Old: " + old.toPlainString());
+      BigDecimal difference = (amount.compareTo(old) >= 0)? amount.subtract(old) : old.subtract(amount);
+      TNE.debug("difference: " + difference);
+      if(remove) difference = amount;
+      TNE.debug("difference: " + difference);
+      String differenceString = difference.toPlainString();
+      TNE.debug("differenceString: " + differenceString);
+      String[] split = (differenceString + (differenceString.contains(".")? "" : ".00")).split("\\.");
+      boolean add = (consolidate) || amount.compareTo(old) >= 0;
+      if(remove) add = false;
+
+      if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
+
+      if(consolidate) clearItems(currency, inventory);
+      BigInteger majorChange = (consolidate)? setMajorConsolidate(account, currency, new BigInteger(split[0]), inventory) :
+          setMajor(account, currency, new BigInteger(split[0]), add, inventory);
+      BigInteger minorChange = (consolidate)? setMinorConsolidate(account, currency, new BigInteger(split[1]), inventory) :
+          setMinor(account, currency, new BigInteger(split[1]), add, inventory);
+
+      TNE.debug("MajorChange: " + majorChange.toString());
+      TNE.debug("MinorChange: " + minorChange.toString());
+      if(!consolidate && !add) {
+        if(majorChange.compareTo(BigInteger.ZERO) > 0) {
+          setMajor(account, currency, majorChange, true, inventory);
+        }
+
+        if(minorChange.compareTo(BigInteger.ZERO) > 0) {
+          setMinor(account, currency, minorChange, true, inventory);
+        }
+      }
+    }
+    TNE.debug("=====END Account.setItems =====");
+  }
+
   public static BigInteger setMajor(UUID account, TNECurrency currency, BigInteger amount, boolean add, Inventory inventory) {
     Map<BigInteger, ItemStack> items = new HashMap<>();
     BigInteger workingAmount = new BigInteger(amount.toString());
@@ -190,9 +190,17 @@ public class ItemCalculations {
           ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
         }
       }
-    } else takeItems(items.values(), inventory);
+    } else {
+      takeItems(items.values(), inventory);
+
+      if(!add && workingAmount.compareTo(BigInteger.ZERO) > 0) {
+        setMinor(account, currency, workingAmount.multiply(new BigInteger(currency.getMinorWeight() + "")), add, inventory);
+      }
+    }
 
     if(actualAmount.compareTo(amount) > 0) {
+      System.out.println("actualAmount~: " + actualAmount);
+      System.out.println("amount~: " + amount);
       return actualAmount.subtract(amount);
     }
     return BigInteger.ZERO;

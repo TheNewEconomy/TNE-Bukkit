@@ -138,6 +138,6 @@ public class CurrencyFormatter {
   }
 
   public static BigDecimal translateBigDecimal(String value, TNECurrency currency) {
-    return new BigDecimal(value.replace(currency.getDecimal(), ".").replace(currency.getMajorSeparator(), ""));
+    return new BigDecimal(value);
   }
 }

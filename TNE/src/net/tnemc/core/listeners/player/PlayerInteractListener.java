@@ -80,6 +80,8 @@ public class PlayerInteractListener implements Listener {
 
               Message note = new Message(message);
               if (proceed) {
+
+                final TNECurrency currency = TNE.manager().currencyManager().get(world, noteClaimedEvent.getCurrency());
                 TNE.debug("=====START PlayerListener.onInteract->proceed");
                 TNETransaction trans = transaction.get();
                 TNE.debug("World: " + trans.getWorld());
@@ -89,9 +91,9 @@ public class PlayerInteractListener implements Listener {
                 note.addVariable("$world", trans.getWorld());
                 note.addVariable("$currency", trans.recipientCharge().getCurrency().name());
                 note.addVariable("$amount", trans.recipientCharge().getAmount().toPlainString());
-                note.addVariable("$balance", CurrencyFormatter.format(TNECurrency.fromReserve(trans.recipientCharge().getCurrency()), world,
+                note.addVariable("$balance", CurrencyFormatter.format(currency, world,
                     TNE.instance().api().getHoldings(id.toString(),
-                        trans.getWorld(), TNECurrency.fromReserve(trans.recipientCharge().getCurrency())), "")
+                        trans.getWorld(), currency), "")
                 );
                 event.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 1f);
