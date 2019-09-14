@@ -13,6 +13,9 @@ Core:
     #Whether or not players should have different balances, banks, etc in different worlds
     Multiworld: false
 
+    #The name of the world to use if multiworld is set to false. Setting to TNE_SYSTEM will let TNE decide the default world.
+    DefaultWorld: "TNE_SYSTEM"
+
     #Whether or not to load TNE in debug mode.
     Debug: false
 

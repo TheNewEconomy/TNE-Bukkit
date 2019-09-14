@@ -242,6 +242,10 @@ public class TNE extends TNELib {
     TNE.debug("Preparing debug mode");
     this.debugMode = mainConfigurations.getBool("Core.Debug");
 
+    if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
+      defaultWorld = mainConfigurations.getString("Core.DefaultWorld");
+    }
+
     if(!mainConfigurations.contains("Core.Currency.Basic.Identifier")) {
       LinkedList<String> comments = new LinkedList<>();
       comments.add("The identifier for the basic currency, used for data handling.");

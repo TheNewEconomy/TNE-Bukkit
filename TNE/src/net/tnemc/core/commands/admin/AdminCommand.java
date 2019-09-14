@@ -16,7 +16,6 @@ public class AdminCommand extends TNECommand {
   public AdminCommand(TNE plugin) {
     super(plugin);
     addSub(new AdminAccountCommand(plugin));
-    addSub(new AdminBackupCommand(plugin));
     addSub(new AdminBalanceCommand(plugin));
     addSub(new AdminBuildCommand(plugin));
     addSub(new AdminCaveatsCommand(plugin));
