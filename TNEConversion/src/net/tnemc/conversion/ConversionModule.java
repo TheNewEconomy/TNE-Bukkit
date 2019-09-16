@@ -35,6 +35,7 @@ import net.tnemc.conversion.impl.TokensEconomy;
 import net.tnemc.conversion.impl.TownyEco;
 import net.tnemc.conversion.impl.XConomy;
 import net.tnemc.conversion.impl.iConomy;
+import net.tnemc.conversion.impl.iConomy7;
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.module.Module;
@@ -92,72 +93,109 @@ public class ConversionModule implements Module {
     switch(name.toLowerCase()) {
       case "advancedeconomy":
         converter = new AdvancedEconomy();
+        break;
       case "basiceconomy":
         converter = new BasicEconomy();
+        break;
       case "bconomy":
         converter = new BConomy();
+        break;
       case "beconomy":
         converter = new BEconomy();
+        break;
       case "blings":
         converter = new Blings();
+        break;
       case "boseconomy":
         converter = new BOSEconomy();
+        break;
       case "cmi":
         converter = new CMI();
+        break;
       case "devcoinsystem":
         converter = new DevCoinSystem();
+        break;
       case "easycoins":
         converter = new EasyCoins();
+        break;
       case "ececonomy":
         converter = new ECEconomy();
+        break;
       case "economyapi":
         converter = new EconomyAPI();
+        break;
       case "ecoplugin":
         converter = new EcoPlugin();
+        break;
       case "ecosystem":
         converter = new EcoSystem();
+        break;
       case "essentials":
         converter = new Essentials();
+        break;
       case "feathereconomy":
         converter = new FeatherEconomy();
+        break;
       case "feconomy":
         converter = new FeConomy();
+        break;
       case "gemseconomy":
         converter = new GemsEconomy();
+        break;
+      case "iconomy7":
+        converter = new iConomy7();
+        break;
       case "iconomy":
         converter = new iConomy();
+        break;
       case "meep":
         converter = new Meep();
+        break;
       case "meller":
         converter = new Meller();
+        break;
       case "minecoin":
         converter = new MineCoin();
+        break;
       case "minecoinsyml":
         converter = new MineCoinsYML();
+        break;
       case "mineconomy":
         converter = new MineConomy();
+        break;
       case "minetopia":
         converter = new MinetopiaEconomy();
+        break;
       case "moconomy":
         converter = new MoConomy();
+        break;
       case "realeconomy":
         converter = new RealEconomy();
+        break;
       case "saneeconomy":
         converter = new SaneEconomy();
+        break;
       case "simpleconomy":
         converter = new SimpleConomy();
+        break;
       case "simplisticeconomy":
         converter = new SimplisticEconomy();
+        break;
       case "sqlconomy":
         converter = new SQLConomy();
+        break;
       case "swifteconomy":
         converter = new SwiftEconomy();
+        break;
       case "tokenseconomy":
         converter = new TokensEconomy();
+        break;
       case "townyeco":
         converter = new TownyEco();
+        break;
       case "xconomy":
         converter = new XConomy();
+        break;
     }
     return converter;
   }

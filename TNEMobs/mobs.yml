@@ -82,8 +82,30 @@ Mobs:
     #Negative will take money from player
     Reward: 10.00
 
-  CAVE_SPIDER:
+  CAT:
     
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
+  CAVE_SPIDER:
+
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -269,6 +291,27 @@ Mobs:
     #Negative will take money from player
     Reward: 10.00
 
+  FOX:
+
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
   GHAST:
     
     Enabled: true
@@ -488,6 +531,28 @@ Mobs:
       #Negative will take money from player
       Reward: 10.00
 
+  PANDA:
+
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+    #Configurations relating to baby versions of this entity.
+    Baby:
+      Enabled: true
+
+      #The currency to use for the money dropped by this entity
+      RewardCurrency: Default
+
+      #The amount of money this mob should drop.
+      #Negative will take money from player
+      Reward: 10.00
+
   PARROT:
     
     Enabled: true
@@ -553,6 +618,17 @@ Mobs:
       #The amount of money this mob should drop.
       #Negative will take money from player
       Reward: 10.00
+
+  PILLAGER:
+
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
 
   PLAYER:
     
@@ -625,6 +701,17 @@ Mobs:
       #The amount of money this mob should drop.
       #Negative will take money from player
       Reward: 10.00
+
+  RAVAGER:
+
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
 
   SALMON:
     
@@ -790,8 +877,19 @@ Mobs:
     #Negative will take money from player
     Reward: 10.00
 
-  TROPICAL_FISH:
+  TRADER_LLAMA:
     
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  TROPICAL_FISH:
+
     Enabled: true
 
     #The currency to use for the money dropped by this entity
@@ -1155,6 +1253,17 @@ Mobs:
 
   WITCH:
     
+    Enabled: true
+
+    #The currency to use for the money dropped by this entity
+    RewardCurrency: Default
+
+    #The amount of money this mob should drop.
+    #Negative will take money from player
+    Reward: 10.00
+
+  WANDERING_TRADER:
+
     Enabled: true
 
     #The currency to use for the money dropped by this entity
