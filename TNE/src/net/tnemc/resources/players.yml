@@ -14,5 +14,13 @@ Players:
     player-uuid-here:
         #Now we Simply override and configurations we want for this specific player.
         #This allows us even more control over our server.
-        Shops:
-            Enabled: false
+        Signs:
+
+            #All configurations relating to item signs.
+            Item:
+
+                #Whether or not this sign type is enabled.
+                Enabled: true
+
+                #The max amount of this sign type any one person may own.
+                Max: 20

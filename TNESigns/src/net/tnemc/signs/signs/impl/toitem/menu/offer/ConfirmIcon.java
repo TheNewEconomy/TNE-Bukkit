@@ -44,72 +44,75 @@ public class ConfirmIcon extends Icon {
     TNE.debug("Click Enchant Size: " + item.getEnchantments().size());
     TNE.debug("Click Enchant Size: " + item.getItemMeta().getEnchants().size());
     final int amount = item.getAmount();
-    boolean complete = false;
     final Boolean currency = (Boolean)TNE.menuManager().getViewerData(id, "shop_currency");
-    ItemStack trade = null;
-    try {
-      trade = (currency)? null : ItemSign.getTrade((Location)TNE.menuManager().getViewerData(id, "shop_location"));
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return;
-    }
-    final int tradeAmount = (trade != null)? trade.getAmount() : 0;
 
-    if(!admin && ItemCalculations.getCount(item, ItemSign.getChestInventory(chest)) < amount) {
-      player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
-      player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
-      return;
-    }
-
-    if(!currency) {
-      if(!admin && ItemSign.getChestInventory(chest).firstEmpty() == -1) {
-        player.sendMessage(ChatColor.RED + "Shop doesn't have any free space.");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      boolean complete = false;
+      ItemStack trade = null;
+      try {
+        trade = (currency)? null : ItemSign.getTrade((Location)TNE.menuManager().getViewerData(id, "shop_location"));
+      } catch (SQLException e) {
+        e.printStackTrace();
         return;
       }
-    }
+      final int tradeAmount = (trade != null)? trade.getAmount() : 0;
 
-    if(currency) {
-      final BigDecimal cost = (BigDecimal)TNE.menuManager().getViewerData(id, "shop_currency_cost");
-      if (!TNE.instance().api().hasHoldings(id.toString(), cost)) {
-        player.sendMessage(ChatColor.RED + "Insufficient funds.");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
-        return;
-      }
-      if(!admin) TNE.instance().api().addHoldings(owner.toString(), cost);
-      complete = TNE.instance().api().removeHoldings(id.toString(), cost);
-    } else {
-
-      if(ItemCalculations.getCount(trade, player.getInventory()) < trade.getAmount()) {
-        player.sendMessage(ChatColor.RED + "You don't have enough of the trade item to buy from this shop.");
+      if(!admin && ItemCalculations.getCount(item, ItemSign.getChestInventory(chest)) < amount) {
+        player.sendMessage(ChatColor.RED + "Shop doesn't have enough items in storage to offer.");
         player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
         return;
       }
 
-      ItemCalculations.removeItemAmount(trade, player.getInventory(), tradeAmount);
-      if(!admin) ItemCalculations.giveItem(trade, ItemSign.getChestInventory(chest), tradeAmount);
-      complete = true;
-    }
+      if(!currency) {
+        if(!admin && ItemSign.getChestInventory(chest).firstEmpty() == -1) {
+          player.sendMessage(ChatColor.RED + "Shop doesn't have any free space.");
+          player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+          return;
+        }
+      }
 
-    if (complete) {
-      TNE.debug("Complete Enchant Size: " + item.getEnchantments().size());
-      TNE.debug("Complete Enchant Size: " + item.getItemMeta().getEnchants().size());
-      ItemCalculations.giveItem(item, player.getInventory(), amount);
-      TNE.debug("Post Enchant Size: " + item.getEnchantments().size());
-      TNE.debug("Post Enchant Size: " + item.getItemMeta().getEnchants().size());
-      if(!admin) ItemCalculations.removeItemAmount(item, ItemSign.getChestInventory(chest), amount);
+      if(currency) {
+        final BigDecimal cost = (BigDecimal)TNE.menuManager().getViewerData(id, "shop_currency_cost");
+        if (!TNE.instance().api().hasHoldings(id.toString(), cost)) {
+          player.sendMessage(ChatColor.RED + "Insufficient funds.");
+          player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+          return;
+        }
+        if(!admin) TNE.instance().api().addHoldings(owner.toString(), cost);
+        complete = TNE.instance().api().removeHoldings(id.toString(), cost);
+      } else {
 
-      player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
-      player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
+        if(ItemCalculations.getCount(trade, player.getInventory()) < trade.getAmount()) {
+          player.sendMessage(ChatColor.RED + "You don't have enough of the trade item to buy from this shop.");
+          player.playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 5f, 5f);
+          return;
+        }
 
-      final Player ownerInstance = Bukkit.getPlayer(owner);
-      if(!admin && ownerInstance != null) {
-        ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just purchased some " + item.getType().name() + " from your shop.");
+        ItemCalculations.removeItemAmount(trade, player.getInventory(), tradeAmount);
+        if(!admin) ItemCalculations.giveItem(trade, ItemSign.getChestInventory(chest), tradeAmount);
+        complete = true;
+      }
+
+      if (complete) {
+        TNE.debug("Complete Enchant Size: " + item.getEnchantments().size());
+        TNE.debug("Complete Enchant Size: " + item.getItemMeta().getEnchants().size());
+        ItemCalculations.giveItem(item, player.getInventory(), amount);
+        TNE.debug("Post Enchant Size: " + item.getEnchantments().size());
+        TNE.debug("Post Enchant Size: " + item.getItemMeta().getEnchants().size());
+        if(!admin) ItemCalculations.removeItemAmount(item, ItemSign.getChestInventory(chest), amount);
+
+        player.sendMessage(ChatColor.GREEN + "Successfully bought item.");
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
-      }
-      return;
-    }
 
-    super.onClick(menu, player);
+        final Player ownerInstance = Bukkit.getPlayer(owner);
+        if(!admin && ownerInstance != null) {
+          ownerInstance.sendMessage(player.getDisplayName() + ChatColor.GREEN + " just purchased some " + item.getType().name() + " from your shop.");
+          player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 5f);
+        }
+        return;
+      }
+
+      super.onClick(menu, player);
+    });
   }
 }

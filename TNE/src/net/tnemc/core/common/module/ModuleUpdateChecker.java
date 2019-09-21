@@ -55,6 +55,8 @@ public class ModuleUpdateChecker {
           TNE.logger().info("Failed to download module update for " + module);
         }
         TNE.loader().load(module);
+      } else {
+        TNE.logger().info("Module " + module + " is up to date.");
       }
     }
   }

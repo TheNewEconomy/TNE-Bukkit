@@ -38,7 +38,7 @@ import java.util.Map;
 @ModuleInfo(
     name = "Signs",
     author = "creatorfromhell",
-    version = "0.1.2",
+    version = "0.1.3",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class SignsModule implements Module {

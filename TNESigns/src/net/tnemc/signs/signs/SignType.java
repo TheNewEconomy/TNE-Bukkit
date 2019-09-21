@@ -1,8 +1,8 @@
 package net.tnemc.signs.signs;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.menu.Menu;
 import net.tnemc.signs.SignsData;
-import net.tnemc.signs.SignsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -44,24 +44,27 @@ public interface SignType {
     return ChatColor.DARK_BLUE;
   }
 
-  default boolean enabled() {
+  default boolean enabled(final UUID player) {
     String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
-    return !SignsModule.instance().getFileConfiguration().contains("Signs." + formatted + ".Enabled")
-        || (boolean) SignsModule.instance().getFileConfiguration().getBool("Signs." + formatted + ".Enabled");
+    if(TNE.instance().api().getConfiguration("Signs." + formatted + ".Enabled", TNE.instance().defaultWorld, player) != null) {
+      return TNE.instance().api().getBoolean("Signs." + formatted + ".Enabled", TNE.instance().defaultWorld, player);
+    }
+    return false;
   }
 
-  default int max() {
+  default int max(final UUID player) {
     String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
-    if(SignsModule.instance().getFileConfiguration().contains("Signs." + formatted + ".Max")) {
-      return SignsModule.instance().getFileConfiguration().getInt("Signs." + formatted + ".Max");
+    if(TNE.instance().api().getConfiguration("Signs." + formatted + ".Max", TNE.instance().defaultWorld, player) != null) {
+      return TNE.instance().api().getInteger("Signs." + formatted + ".Max", TNE.instance().defaultWorld, player);
     }
     return 5;
   }
 
-  default BigDecimal cost() {
+  default BigDecimal cost(final UUID player) {
     String formatted = name().substring(0, 1).toUpperCase() + name().substring(1);
-    if(SignsModule.instance().getFileConfiguration().contains("Signs." + formatted + ".PlaceCost")) {
-      return SignsModule.instance().getFileConfiguration().getBigDecimal("Signs." + formatted + ".PlaceCost");
+
+    if(TNE.instance().api().getConfiguration("Signs." + formatted + ".PlaceCost", TNE.instance().defaultWorld, player) != null) {
+      return TNE.instance().api().getBigDecimal("Signs." + formatted + ".PlaceCost", TNE.instance().defaultWorld, player);
     }
     return BigDecimal.ZERO;
   }
@@ -93,15 +96,17 @@ public interface SignType {
   }
 
   default boolean create(final SignChangeEvent event, final Block attached, final UUID player) {
-    if(!enabled()) {
+    if(!enabled(player)) {
       Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "This sign type is not enabled.");
       return false;
     }
 
     try {
-      if(!Bukkit.getPlayer(player).hasPermission("tne.sign." + name() + ".unlimited") && max() >= 0 && SignsData.loadSignsCreator(player.toString(), name()).size() >= max()) {
-        Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "You have reached your max limit for this sign type.");
-        return false;
+      if(!Bukkit.getPlayer(player).hasPermission("tne.sign." + name() + ".unlimited")) {
+        if (max(player) == 0 || SignsData.loadSignsCreator(player.toString(), name()).size() >= max(player)) {
+          Bukkit.getPlayer(player).sendMessage(ChatColor.RED + "You have reached your max limit for this sign type.");
+          return false;
+        }
       }
     } catch (SQLException e) {
       e.printStackTrace();

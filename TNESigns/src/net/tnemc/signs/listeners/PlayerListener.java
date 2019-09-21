@@ -77,13 +77,16 @@ public class PlayerListener implements ModuleListener {
           if(!SignsModule.manager().getSelectionManager().isSelecting(id, "chest")) {
 
             if (event.getClickedBlock().getState() instanceof Chest) {
-              Sign sign = new ChestHelper((Chest) event.getClickedBlock().getState()).getSign();
+              final Chest chest = (Chest)event.getClickedBlock().getState();
+              final ChestHelper helper = new ChestHelper(chest);
+              Sign sign = helper.getSign();
+
               if (sign != null) {
                 TNESign signInstance = null;
                 try {
                   signInstance = SignsData.loadSign(sign.getBlock().getLocation());
                 } catch (SQLException e) {
-                  e.printStackTrace();
+                  TNE.debug(e.getStackTrace());
                 }
                 if (signInstance != null) {
                   if (!SignsModule.manager().getType(signInstance.getType()).onChest(signInstance.getOwner(), event.getPlayer().getUniqueId())
@@ -95,13 +98,18 @@ public class PlayerListener implements ModuleListener {
                 try {
                   UUID owner = ItemSign.chest(event.getClickedBlock().getLocation());
 
+                  if(owner == null && helper.isDouble()) {
+                    ItemSign.chest(helper.getDoubleChest().getLocation());
+                  }
+
+
                   if(owner != null) {
                     if(!owner.equals(id) && !event.getPlayer().hasPermission("tne.chest.antiprotect")) {
                       event.setCancelled(true);
                     }
                   }
                 } catch (SQLException e) {
-                  TNE.debug(e);
+                  TNE.debug(e.getStackTrace());
                 }
               }
             }

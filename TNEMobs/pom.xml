@@ -37,12 +37,11 @@
             </plugin>
         </plugins>
     </build>
-
     <distributionManagement>
         <repository>
-            <id>bintray-theneweconomy-java</id>
-            <name>theneweconomy-java</name>
-            <url>https://api.bintray.com/maven/theneweconomy/java/TNE-Mobs/;publish=1</url>
+            <id>github</id>
+            <name>GitHub TheNewEconomy Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
         </repository>
     </distributionManagement>
 
@@ -52,8 +51,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>reserve-repo</id>
-            <url>https://dl.bintray.com/theneweconomy/java/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TheNewEconomy</url>
         </repository>
     </repositories>
 
@@ -67,7 +66,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.24</version>
+            <version>1.1.8.26</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -85,7 +85,7 @@ public class Icon {
   public void onClick(String menu, Player player) {
     if(!switchMenu.equalsIgnoreCase("")) close = false;
     if(close) {
-      player.closeInventory();
+      Bukkit.getScheduler().runTask(TNE.instance(), player::closeInventory);
       TNE.menuManager().removeData(IDFinder.getID(player));
     }
     if(!switchMenu.equalsIgnoreCase("")) {

@@ -8,6 +8,7 @@ import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.menu.icons.Icon;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.impl.ItemSign;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -38,25 +39,28 @@ public class ConfirmIcon extends Icon {
     final BigDecimal amount = (BigDecimal)TNE.menuManager().getViewerData(id, "action_amount");
     final Location location = (Location) TNE.menuManager().getViewerData(id, "action_shop");
 
-    try {
-      ItemSign.saveItemOffer(location, null, true, amount);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
 
-      if(ItemSign.isAdmin(location)) {
-        SignsData.updateStep(location, 4);
-        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount, player.getUniqueId().toString());
-      } else {
-        SignsData.updateStep(location, 3);
+      try {
+        ItemSign.saveItemOffer(location, null, true, amount);
 
-        this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount, player.getUniqueId().toString()) +
-            ". Now right click your shop sign, followed by a chest to mark your shop's storage.";
+        if(ItemSign.isAdmin(location)) {
+          SignsData.updateStep(location, 4);
+          this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount, player.getUniqueId().toString());
+        } else {
+          SignsData.updateStep(location, 3);
+
+          this.message = ChatColor.WHITE + "Set currency offer to " + CurrencyFormatter.format(TNE.manager().currencyManager().get(world, currency), world, amount, player.getUniqueId().toString()) +
+              ". Now right click your shop sign, followed by a chest to mark your shop's storage.";
+        }
+
+      } catch (SQLException e) {
+        this.message = ChatColor.RED + "Error while changing shop's currency offer.";
       }
+      player.sendMessage(message);
+      this.message = "";
 
-    } catch (SQLException e) {
-      this.message = ChatColor.RED + "Error while changing shop's currency offer.";
-    }
-    player.sendMessage(message);
-    this.message = "";
-
-    super.onClick(menu, player);
+      super.onClick(menu, player);
+    });
   }
 }

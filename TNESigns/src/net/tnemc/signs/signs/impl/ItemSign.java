@@ -199,11 +199,13 @@ public class ItemSign implements SignType {
 
     SQLDatabase.executePreparedUpdate((exists)? SignsData.ITEM_OFFER_UPDATE : SignsData.ITEM_OFFER_ADD, values);
     final boolean admin = ItemSign.isAdmin(location);
-    Sign sign = (Sign) location.getBlock().getState();
-    sign.setLine(1, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
-    if(selling) sign.setLine(3, "Selling" + ((admin)? " | Admin" : ""));
-    else sign.setLine(3, "Buying" + ((admin)? " | Admin" : ""));
-    sign.update(true);
+    Bukkit.getScheduler().runTask(TNE.instance(), ()->{
+      Sign sign = (Sign) location.getBlock().getState();
+      sign.setLine(1, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
+      if(selling) sign.setLine(3, "Selling" + ((admin)? " | Admin" : ""));
+      else sign.setLine(3, "Buying" + ((admin)? " | Admin" : ""));
+      sign.update(true);
+    });
   }
 
   public static UUID chest(Location location) throws SQLException {
@@ -355,14 +357,16 @@ public class ItemSign implements SignType {
         ((stack == null)? "" : new SerialItem(stack).toJSON().toJSONString()),
         new SerializableLocation(location).toString()
     });
-    Sign sign = (Sign) location.getBlock().getState();
-    if(stack != null) {
-      sign.setLine(2, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
-    } else {
-      sign.setLine(2, ChatColor.GOLD + CurrencyFormatter.format(TNE.manager().currencyManager().get(location.getWorld().getName()), location.getWorld().getName(),
-                                                amount, "<symbol><short.amount>"));
-    }
-    sign.update(true);
+
+    Bukkit.getScheduler().runTask(TNE.instance(), ()->{Sign sign = (Sign) location.getBlock().getState();
+      if(stack != null) {
+        sign.setLine(2, MaterialHelper.getShopName(stack.getType()) + ":" + stack.getAmount());
+      } else {
+        sign.setLine(2, ChatColor.GOLD + CurrencyFormatter.format(TNE.manager().currencyManager().get(location.getWorld().getName()), location.getWorld().getName(),
+            amount, "<symbol><short.amount>"));
+      }
+      sign.update(true);
+    });
   }
 
   public static void saveItemOfferCurrency(final Location location, final String currencyName, final boolean currency, final BigDecimal amount) throws SQLException {

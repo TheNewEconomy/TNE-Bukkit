@@ -5,6 +5,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.impl.ItemSign;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -44,19 +45,22 @@ public class ConfirmIcon extends Icon {
     stack.setAmount(amount);
     final Location location = (Location) TNE.menuManager().getViewerData(id, "action_shop");
 
-    try {
-      ItemSign.saveItemSelection(location, stack, selling);
-      SignsData.updateStep(location, 2);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
 
-      this.message = ChatColor.WHITE + "Changed shop offer to " + amount + " of " + stack.getType().name() + "."
-                     + " Right click with item to trade, or left click to enter currency amount.";
+      try {
+        ItemSign.saveItemSelection(location, stack, selling);
+        SignsData.updateStep(location, 2);
 
-    } catch (SQLException e) {
-      this.message = ChatColor.RED + "Unable to update your shop's offer amount.";
-    }
-    player.sendMessage(message);
-    this.message = "";
+        this.message = ChatColor.WHITE + "Changed shop offer to " + amount + " of " + stack.getType().name() + "."
+            + " Right click with item to trade, or left click to enter currency amount.";
 
-    super.onClick(menu, player);
+      } catch (SQLException e) {
+        this.message = ChatColor.RED + "Unable to update your shop's offer amount.";
+      }
+      player.sendMessage(message);
+      this.message = "";
+
+      super.onClick(menu, player);
+    });
   }
 }

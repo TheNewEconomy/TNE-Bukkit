@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>1.1.8.26</version>
+    <version>1.1.8.28</version>
     <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>
@@ -69,9 +69,9 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-theneweconomy-java</id>
-            <name>theneweconomy-java</name>
-            <url>https://api.bintray.com/maven/theneweconomy/java/TNECore/;publish=1</url>
+            <id>github</id>
+            <name>GitHub TheNewEconomy Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
         </repository>
     </distributionManagement>
 
@@ -89,8 +89,8 @@
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
-            <id>reserve-repo</id>
-            <url>https://dl.bintray.com/theneweconomy/java/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TheNewEconomy</url>
         </repository>
         <repository>
             <id>placeholderapi</id>

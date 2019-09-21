@@ -5,6 +5,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.signs.impl.ItemSign;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -44,26 +45,29 @@ public class ConfirmTradeIcon extends Icon {
     stack.setAmount(amount);
     final Location location = (Location) TNE.menuManager().getViewerData(id, "action_shop");
 
-    try {
-      ItemSign.saveItemOffer(location, stack, false, BigDecimal.ZERO);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
 
-      if(ItemSign.isAdmin(location)) {
-        SignsData.updateStep(location, 4);
+      try {
+        ItemSign.saveItemOffer(location, stack, false, BigDecimal.ZERO);
 
-        this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name();
-      } else {
-        SignsData.updateStep(location, 3);
+        if(ItemSign.isAdmin(location)) {
+          SignsData.updateStep(location, 4);
 
-        this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name() + "."
-            + " Now right click your shop sign, followed by a chest to mark your shop's storage.";
+          this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name();
+        } else {
+          SignsData.updateStep(location, 3);
+
+          this.message = ChatColor.WHITE + "Changed shop trade to " + amount + " of " + stack.getType().name() + "."
+              + " Now right click your shop sign, followed by a chest to mark your shop's storage.";
+        }
+
+      } catch (SQLException e) {
+        this.message = ChatColor.RED + "Unable to update your shop's offer amount.";
       }
+      player.sendMessage(message);
+      this.message = "";
 
-    } catch (SQLException e) {
-      this.message = ChatColor.RED + "Unable to update your shop's offer amount.";
-    }
-    player.sendMessage(message);
-    this.message = "";
-
-    super.onClick(menu, player);
+      super.onClick(menu, player);
+    });
   }
 }

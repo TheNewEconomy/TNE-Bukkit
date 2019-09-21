@@ -3,6 +3,7 @@ package net.tnemc.signs.listeners;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.module.ModuleListener;
+import net.tnemc.core.event.module.TNEModuleDataEvent;
 import net.tnemc.signs.ChestHelper;
 import net.tnemc.signs.SignsData;
 import net.tnemc.signs.SignsManager;
@@ -10,11 +11,14 @@ import net.tnemc.signs.SignsModule;
 import net.tnemc.signs.signs.SignType;
 import net.tnemc.signs.signs.TNESign;
 import net.tnemc.signs.signs.impl.ItemSign;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -26,6 +30,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -102,21 +107,47 @@ public class BlockListener implements ModuleListener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onChange(SignChangeEvent event) {
-    if(SignsManager.validSign(event.getLine(0))) {
-      SignType type = SignsModule.manager().getType(event.getLine(0));
-      if(type != null) {
-        Block attached = (event.getBlock() != null && event.getBlock().getState().getData() instanceof org.bukkit.material.Sign)?
-            event.getBlock().getRelative(((org.bukkit.material.Sign)event.getBlock().getState().getData()).getAttachedFace()) : null;
-        if(attached == null || attached.getLocation().equals(event.getBlock().getLocation())) {
-          attached = event.getBlock().getWorld().getBlockAt(event.getBlock().getLocation().add(0, -1, 0));
-        }
-        if (type.create(event, attached, IDFinder.getID(event.getPlayer()))) {
-          event.setLine(0, type.success() + event.getLine(0));
-        } else {
-          event.setLine(0, ChatColor.RED + "Failed");
+    final Player player = event.getPlayer();
+    final Block block = event.getBlock();
+    final String[] lines = event.getLines();
+    final Location location = event.getBlock().getLocation();
+    Block basicAttached = (block != null && block.getState().getData() instanceof org.bukkit.material.Sign)?
+        block.getRelative(((org.bukkit.material.Sign)block.getState().getData()).getAttachedFace()) : null;
+    final Block attached = (basicAttached == null || basicAttached.getLocation().equals(block.getLocation()))? block.getWorld().getBlockAt(block.getLocation().add(0, -1, 0)) : basicAttached;
+
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      if(lines.length > 0 && SignsManager.validSign(lines[0])) {
+        SignType type = SignsModule.manager().getType(lines[0]);
+        if(type != null) {
+
+          TNEModuleDataEvent dataEvent = new TNEModuleDataEvent("SignCreate", new HashMap<>(), !Bukkit.isPrimaryThread());
+          dataEvent.addData("type", type.name());
+          dataEvent.addData("location", location);
+          dataEvent.addData("creator", player.getUniqueId());
+
+          if(attached != null) {
+            dataEvent.addData("attached", attached);
+          }
+          Bukkit.getPluginManager().callEvent(dataEvent);
+
+          if (!dataEvent.isCancelled() && type.create(event, attached, IDFinder.getID(player))) {
+
+            Bukkit.getScheduler().runTask(TNE.instance(), ()->{
+              Sign sign = (Sign)block.getState();
+              sign.setLine(0, type.success() + lines[0]);
+              sign.update(true);
+            });
+          } else {
+
+            Bukkit.getScheduler().runTask(TNE.instance(), ()->{
+              Sign sign = (Sign)block.getState();
+              sign.setLine(0, ChatColor.RED + "Failed");
+              sign.update(true);
+            });
+          }
         }
       }
-    }
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
