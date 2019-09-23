@@ -130,6 +130,10 @@ public class MISCUtils {
     return player.getInventory().getItemInHand().getType();
   }
 
+  public static File[] getYAMLs(final File directory) {
+    return directory.listFiles((dir, name) -> name.endsWith(".yml"));
+  }
+
   public static Boolean isBoolean(String value) {
     return value.equalsIgnoreCase(String.valueOf(true)) || value.equalsIgnoreCase(String.valueOf(false));
   }
