@@ -10,8 +10,5 @@ Web:
     #The name for the server to be sent to the TNE Server Database.
     Server: Example Server
 
-    #The address of the web panel, including port if needed.
-    Address: http://127.0.0.1:8896
-
     #The port to be used for the web panel.
     Port: 8896

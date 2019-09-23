@@ -17,7 +17,7 @@
         <sourceDirectory>src/</sourceDirectory>
         <resources>
             <resource>
-                <directory>src/net/tnemc/resources/</directory>
+                <directory>src/resources/</directory>
             </resource>
         </resources>
         <testResources>
@@ -43,10 +43,18 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>reserve-repo</id>
-            <url>https://dl.bintray.com/theneweconomy/java/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TheNewEconomy</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub TheNewEconomy Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -57,13 +65,13 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.14-pre5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.20</version>
+            <version>1.1.8.29</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
