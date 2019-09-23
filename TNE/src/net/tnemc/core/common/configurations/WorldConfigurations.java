@@ -58,7 +58,7 @@ public class WorldConfigurations extends Configuration {
       for(String s : configurations) {
         String node = "Worlds." + world + "." + s;
         if(!configurationFile.isConfigurationSection(node) && !node.contains("Worlds." + world + ".Currency")) {
-          manager.setConfiguration(node, configurationFile.getString(node));
+          manager.setConfiguration(s, configurationFile.getString(node));
         }
       }
 
@@ -107,19 +107,5 @@ public class WorldConfigurations extends Configuration {
 
       TNE.instance().addWorldManager(manager);
     }
-
-    /*TNE.instance().getWorldManagersMap().keySet().forEach((world)->{
-      WorldManager manager = TNE.instance().getWorldManager(world);
-      if(balanceShare.containsKey(manager.getWorld())) {
-        TNE.debug("Setting balance share for " + manager.getWorld() + " to " + balanceShare.get(manager.getWorld()));
-        manager.setBalanceWorld(balanceShare.get(manager.getWorld()));
-      }
-
-      if(configurationShare.containsKey(manager.getWorld())) {
-        TNE.debug("Setting config share for " + manager.getWorld() + " to " + configurationShare.get(manager.getWorld()));
-        manager.setConfigurationWorld(configurationShare.get(manager.getWorld()));
-      }
-      TNE.instance().addWorldManager(manager);
-    });*/
   }
 }

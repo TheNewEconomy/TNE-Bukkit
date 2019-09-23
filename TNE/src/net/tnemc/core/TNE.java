@@ -31,6 +31,7 @@ import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
 import net.tnemc.core.common.configurations.MainConfigurations;
 import net.tnemc.core.common.configurations.MessageConfigurations;
+import net.tnemc.core.common.configurations.PlayerConfigurations;
 import net.tnemc.core.common.configurations.WorldConfigurations;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.common.data.TNESaveManager;
@@ -105,7 +106,7 @@ public class TNE extends TNELib {
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
-  public static final String build = "5Beta118M";
+  public static final String build = "1Beta119";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   //Map containing module sub commands to add to our core commands
@@ -140,14 +141,12 @@ public class TNE extends TNELib {
 
   // Files & Custom Configuration Files
   private File mainConfig;
-  private File currencies;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
   private CommentedConfiguration mainConfigurations;
-  private CommentedConfiguration currencyConfigurations;
   private CommentedConfiguration itemConfigurations;
   private CommentedConfiguration messageConfigurations;
   private CommentedConfiguration playerConfigurations;
@@ -156,6 +155,7 @@ public class TNE extends TNELib {
   private MainConfigurations main;
   private MessageConfigurations messages;
   private WorldConfigurations world;
+  private PlayerConfigurations player;
 
   //BukkitRunnable Workers
   private SaveWorker saveWorker;
@@ -236,6 +236,8 @@ public class TNE extends TNELib {
     exclusions = main.getConfiguration().getStringList("Core.Commands.Top.Exclusions");
     messages = new MessageConfigurations();
     messages.load(messageConfigurations);
+    player = new PlayerConfigurations();
+    player.load(playerConfigurations);
     world = new WorldConfigurations();
     world.load(worldConfigurations);
 
@@ -263,6 +265,7 @@ public class TNE extends TNELib {
     TNE.debug("Preparing configurations for manager");
     configurations().add(main, "main");
     configurations().add(messages, "messages");
+    configurations().add(player, "player");
     configurations().add(world, "world");
 
     getServer().getWorlds().forEach(world-> worldManagers.put(world.getName(), new WorldManager(world.getName())));
@@ -321,6 +324,23 @@ public class TNE extends TNELib {
       registerCommand(accessors.toArray(new String[accessors.size()]), command);
     }));
     commandManager.registerCommands();
+
+    //Check to see if the currencies directory exists, and if not create it and add the default USD currency.
+    final File currenciesDirectory = new File(getDataFolder(), "currencies");
+    if(!currenciesDirectory.exists()) {
+      final File tiersDirectory = new File(currenciesDirectory, "USD");
+      tiersDirectory.mkdirs();
+
+      final CommentedConfiguration usd = new CommentedConfiguration(new File(currenciesDirectory, "USD.yml"), new InputStreamReader(this.getResource("currency/USD.yml"), StandardCharsets.UTF_8));
+      usd.load();
+
+      final CommentedConfiguration one = new CommentedConfiguration(new File(tiersDirectory, "one.yml"), new InputStreamReader(this.getResource("currency/USD/one.yml"), StandardCharsets.UTF_8));
+      one.load();
+
+      final CommentedConfiguration penny = new CommentedConfiguration(new File(tiersDirectory, "penny.yml"), new InputStreamReader(this.getResource("currency/USD/penny.yml"), StandardCharsets.UTF_8));
+      penny.load();
+
+    }
 
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
@@ -725,10 +745,6 @@ public class TNE extends TNELib {
     return worldConfigurations;
   }
 
-  public CommentedConfiguration getCurrencyConfigurations() {
-    return currencyConfigurations;
-  }
-
   public void initializeConfigurations() {
     initializeConfigurations(true);
   }
@@ -736,7 +752,6 @@ public class TNE extends TNELib {
   public void initializeConfigurations(boolean item) {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
-    currencies = new File(getDataFolder(), "currency.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
     players = new File(getDataFolder(), "players.yml");
@@ -748,8 +763,6 @@ public class TNE extends TNELib {
     skip.add("Virtual");
     mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
     TNE.logger().info("Initialized config.yml");
-    currencyConfigurations = initializeConfiguration(currencies, "currency.yml");
-    TNE.logger().info("Initialized currency.yml");
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
     playerConfigurations = initializeConfiguration(players, "players.yml");
@@ -870,6 +883,14 @@ public class TNE extends TNELib {
 
   public File getWorlds() {
     return worlds;
+  }
+
+  public File getPlayers() {
+    return players;
+  }
+
+  public PlayerConfigurations playerConfigurations() {
+    return player;
   }
 
   public ModuleFileCache moduleCache() {
