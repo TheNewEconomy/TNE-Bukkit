@@ -40,8 +40,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -310,6 +312,17 @@ public class MISCUtils {
 
   public static void extract(CommandSender sender) throws SQLException {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
+
+    if(file.exists()) {
+      final File directory = new File(TNE.instance().getDataFolder(), "extractions");
+      directory.mkdir();
+
+      final String fileName = "extracted-" + new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()) + ".yml";
+      final File moved = new File(TNE.instance().getDataFolder(), "extractions/" + fileName);
+
+      file.renameTo(moved);
+    }
+
     if(!file.exists()) {
       try {
         file.createNewFile();
@@ -343,14 +356,11 @@ public class MISCUtils {
       TNE.debug(e);
     }
 
-    LocalDateTime now = LocalDateTime.now();
-    int year = now.getYear();
-    int month = now.getMonthValue();
-    int day = now.getDayOfMonth();
+    final LocalDateTime now = LocalDateTime.now();
 
     StringBuilder content = new StringBuilder();
 
-    String name = TNE.instance().getServerName() + "-" + year + "-" + month + "-" + day + "-extracted.yml";
+    String name = TNE.instance().getServerName() + "-" + now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth() + "-extracted.yml";
     try (BufferedReader br = new BufferedReader(new FileReader(new File(TNE.instance().getDataFolder(),"extracted.yml")))){
       String line;
       while ((line = br.readLine()) != null) {

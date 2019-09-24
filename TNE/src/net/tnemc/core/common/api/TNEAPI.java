@@ -2,6 +2,8 @@ package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
@@ -282,7 +284,7 @@ public class TNEAPI {
    * @return The balance of the account.
    */
   public BigDecimal getHoldings(String identifier, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -293,7 +295,7 @@ public class TNEAPI {
    * @return The balance of the account.
    */
   public BigDecimal getHoldings(String identifier, String world, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(world, currency);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(WorldFinder.getWorldName(world, WorldVariant.BALANCE), currency);
   }
 
   /**
@@ -304,7 +306,7 @@ public class TNEAPI {
    */
   public BigDecimal getHoldings(String identifier, TNECurrency currency) {
     UUID id = IDFinder.getID(identifier);
-    return TNE.manager().getAccount(id).getHoldings(plugin.defaultWorld, currency);
+    return TNE.manager().getAccount(id).getHoldings(WorldFinder.getWorldName(plugin.defaultWorld, WorldVariant.BALANCE), currency);
   }
 
   /**
@@ -325,7 +327,7 @@ public class TNEAPI {
    * @return True if the account has at least the specified amount of funds, otherwise false.
    */
   public boolean hasHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).hasHoldings(amount, world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).hasHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -348,7 +350,7 @@ public class TNEAPI {
    * @return True if the account has at least the specified amount of funds, otherwise false.
    */
   public boolean hasHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).hasHoldings(amount, currency, world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).hasHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -369,7 +371,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -392,7 +394,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency, world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -465,7 +467,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -488,7 +490,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency, world);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -502,7 +504,7 @@ public class TNEAPI {
   public boolean canRemoveHoldings(String identifier, BigDecimal amount) {
     String world = plugin.defaultWorld;
     TNECurrency currency = TNE.manager().currencyManager().get(world);
-    return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, world);
+    return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -516,7 +518,7 @@ public class TNEAPI {
    */
   public boolean canRemoveHoldings(String identifier, BigDecimal amount, String world) {
     TNECurrency currency = TNE.manager().currencyManager().get(world);
-    return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, world);
+    return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -543,7 +545,7 @@ public class TNEAPI {
    * @return True if a call to the corresponding removeHoldings method would return true, otherwise false.
    */
   public boolean canRemoveHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, world);
+    return hasCurrency(currency.name(), world) && hasHoldings(identifier, amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -742,7 +744,7 @@ public class TNEAPI {
    */
   public LinkedList<TopBalance> getBalTopPage(String world, int pageLimit, int page) {
     try {
-      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, TNE.manager().currencyManager().get(world).name(), pageLimit, page);
+      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(WorldFinder.getWorldName(world, WorldVariant.BALANCE), TNE.manager().currencyManager().get(world).name(), pageLimit, page);
     } catch (SQLException e) {
       return new LinkedList<>();
     }
@@ -758,7 +760,7 @@ public class TNEAPI {
    */
   public LinkedList<TopBalance> getBalTopPage(String world, String currency, int pageLimit, int page) {
     try {
-      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(world, currency, pageLimit, page);
+      return TNE.saveManager().getTNEManager().getTNEProvider().topBalances(WorldFinder.getWorldName(world, WorldVariant.BALANCE), currency, pageLimit, page);
     } catch (SQLException e) {
       return new LinkedList<>();
     }
