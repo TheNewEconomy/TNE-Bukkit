@@ -115,7 +115,7 @@ public class ConfigurationManager {
       return TNE.instance().playerConfigurations().getValue(player, node);
     }
 
-    if(TNE.instance().getWorldManager(WorldFinder.getWorldName(world, WorldVariant.CONFIGURATION)).configExists(node)) {
+    if(TNE.instance().hasWorldManager(world) && TNE.instance().getWorldManager(WorldFinder.getWorldName(world, WorldVariant.CONFIGURATION)).configExists(node)) {
       return TNE.instance().getWorldManager(WorldFinder.getWorldName(world, WorldVariant.CONFIGURATION)).getConfiguration(node);
     }
 
