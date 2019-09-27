@@ -36,16 +36,16 @@ Basic Information
 ----------
 Some basic information you might want to look over.
 - [Bugs/Feature Requests/Suggestions](https://github.com/TheNewEconomy/TNE-Bukkit/issues)
-- [Permission Nodes](https://github.com/TheNewEconomy/TNEDocumentation/blob/master/Permissions.md)
-- [Commands](https://github.com/TheNewEconomy/TNEDocumentation/blob/master/Commands.md)
+- [Permission Nodes](https://github.com/TheNewEconomy/TNE-Bukkit/wiki/Permissions-&-Commands)
+- [Commands](https://github.com/TheNewEconomy/TNE-Bukkit/wiki/Permissions-&-Commands)
 
 Default Configurations
 ----------
-- [config.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/config.yml)
-- [items.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/items.yml)
-- [messages.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/messages.yml)
-- [players.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/players.yml)
-- [worlds.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/src/com/github/resources/worlds.yml)
+- [config.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/config.yml)
+- [items.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/items.yml)
+- [messages.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/messages.yml)
+- [players.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/players.yml)
+- [worlds.yml](https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/worlds.yml)
 
 Features
 ----------
