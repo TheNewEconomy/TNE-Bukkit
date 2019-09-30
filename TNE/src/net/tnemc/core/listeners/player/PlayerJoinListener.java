@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -89,8 +90,10 @@ public class PlayerJoinListener implements Listener {
         TNE.instance().getWorldManager(world).getCurrencies().forEach(value -> {
           if(value.getCurrencyType().loginCalculation()) {
             try {
-              value.getCurrencyType().setHoldings(id, world, value, value.getCurrencyType().getHoldings(id,
-                  world, value, true), false);
+              BigDecimal amount = value.getCurrencyType().getHoldings(id,
+                  world, value, true);
+              if(amount == null) amount = BigDecimal.ZERO;
+              value.getCurrencyType().setHoldings(id, world, value, amount, false);
             } catch (Exception e) {
               TNE.debug(e);
             }

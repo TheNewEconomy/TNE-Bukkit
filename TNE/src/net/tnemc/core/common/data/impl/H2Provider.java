@@ -434,7 +434,7 @@ public class H2Provider extends TNEDataProvider {
 
   @Override
   public BigDecimal loadBalance(UUID id, String world, String currency) throws SQLException {
-    BigDecimal balance = BigDecimal.ZERO;
+    BigDecimal balance = null;
     SQLDatabase.open();
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
 

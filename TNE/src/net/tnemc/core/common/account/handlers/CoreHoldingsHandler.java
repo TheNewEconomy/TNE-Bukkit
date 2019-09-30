@@ -52,11 +52,12 @@ public class CoreHoldingsHandler implements HoldingsHandler {
    */
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
-    BigDecimal amount = BigDecimal.ZERO;
+    BigDecimal amount = null;
     try {
       TNE.debug("Currency: " + currency);
       TNE.debug("Currency Type: " + currency.getCurrencyType());
       amount = currency.getCurrencyType().getHoldings(account, world, currency, database);
+      if(amount == null) amount = BigDecimal.ZERO;
     } catch (SQLException e) {
       TNE.debug(e);
     }
