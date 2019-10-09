@@ -8,6 +8,8 @@ import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.ExtendedEconomyAPI;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
+import net.tnemc.core.economy.tax.TaxEntry;
+import net.tnemc.core.economy.tax.TaxType;
 import net.tnemc.core.economy.transaction.Transaction;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.economy.transaction.type.TransactionType;
@@ -940,6 +942,32 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   @Override
   public boolean registerTransactionResult(TransactionResult transactionResult) {
     return TNE.instance().api().registerTransactionResult(transactionResult);
+  }
+
+  //TODO: implement the new methods.
+  @Override
+  public Optional<TransactionResult> findTransactionResult(String name) {
+    return TNE.instance().api().findTransactionResult(name);
+  }
+
+  @Override
+  public boolean removeTaxException(String identifier, String transactionType) {
+    return TNE.instance().api().removeTaxException(identifier, transactionType);
+  }
+
+  @Override
+  public boolean registerTaxException(String identifier, String transactionType, TaxEntry taxEntry) {
+    return TNE.instance().api().registerTaxException(identifier, transactionType, taxEntry);
+  }
+
+  @Override
+  public boolean registerTaxType(TaxType taxType) {
+    return TNE.instance().api().registerTaxType(taxType);
+  }
+
+  @Override
+  public Optional<TaxType> findTaxType(String name) {
+    return TNE.instance().api().findTaxType(name);
   }
 
   @Override

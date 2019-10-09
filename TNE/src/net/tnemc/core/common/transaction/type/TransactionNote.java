@@ -1,8 +1,15 @@
 package net.tnemc.core.common.transaction.type;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.economy.tax.TaxEntry;
+import net.tnemc.core.economy.tax.type.FlatType;
 import net.tnemc.core.economy.transaction.TransactionAffected;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -14,6 +21,11 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
  */
 public class TransactionNote implements TNETransactionType {
   @Override
+  public Map<String, TaxEntry> taxExceptions() {
+    return new HashMap<>();
+  }
+
+  @Override
   public String name() {
     return "note";
   }
@@ -21,6 +33,16 @@ public class TransactionNote implements TNETransactionType {
   @Override
   public boolean console() {
     return false;
+  }
+
+  @Override
+  public Optional<TaxEntry> initiatorTax() {
+    return Optional.of(new TaxEntry(new FlatType(), "Default", TNE.instance().defaultWorld, BigDecimal.ZERO));
+  }
+
+  @Override
+  public Optional<TaxEntry> recipientTax() {
+    return Optional.of(new TaxEntry(new FlatType(), "Default", TNE.instance().defaultWorld, BigDecimal.ZERO));
   }
 
   @Override
