@@ -345,6 +345,7 @@ public class TNECurrency implements Currency {
   }
 
   public void setSymbol(String symbol) {
+    System.out.println("Set Symbol: " + symbol);
     this.symbol = symbol;
   }
 

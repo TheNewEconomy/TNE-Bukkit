@@ -1,0 +1,54 @@
+Commands:
+
+  Hello:
+
+    Name: "Hello"
+
+    Alias:
+      - H
+      - E
+
+    Author: "creatorfromhell"
+
+    Permission: "hello"
+
+    Console: true
+
+    Developer: false
+
+    Description: "Used to say hello"
+
+    Executor: "hello_exe"
+
+    Params:
+
+      Message:
+
+        Optional: true
+
+        Complete: true
+
+        CompleteType: "hello_messages"
+
+
+    Sub:
+
+      World:
+
+        Name: "World"
+
+        Alias:
+          - H
+          - E
+
+        Author: "creatorfromhell"
+
+        Permission: "hello.world"
+
+        Console: true
+
+        Developer: false
+
+        Description: "Used to say hello to the world"
+
+        Executor: "world_exe"

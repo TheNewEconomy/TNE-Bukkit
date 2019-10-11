@@ -1,6 +1,7 @@
 package net.tnemc.conversion;
 
 import net.tnemc.conversion.command.ConvertCommand;
+import net.tnemc.conversion.impl.AConomy;
 import net.tnemc.conversion.impl.AdvancedEconomy;
 import net.tnemc.conversion.impl.BConomy;
 import net.tnemc.conversion.impl.BEconomy;
@@ -91,6 +92,9 @@ public class ConversionModule implements Module {
   public Converter getConverter(String name) {
 
     switch(name.toLowerCase()) {
+      case "aconomy":
+        converter = new AConomy();
+        break;
       case "advancedeconomy":
         converter = new AdvancedEconomy();
         break;

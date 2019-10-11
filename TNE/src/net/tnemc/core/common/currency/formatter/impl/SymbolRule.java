@@ -24,6 +24,8 @@ public class SymbolRule implements FormatRule {
 
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
+    System.out.println("Symbol: " + currency.symbol());
+    System.out.println("Formatted: " + formatted.replace("<symbol>", currency.symbol()));
     return formatted.replace("<symbol>", currency.symbol());
   }
 }
