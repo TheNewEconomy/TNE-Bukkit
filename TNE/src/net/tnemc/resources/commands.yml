@@ -2,8 +2,6 @@ Commands:
 
   Hello:
 
-    Name: "Hello"
-
     Alias:
       - H
       - E
@@ -35,8 +33,6 @@ Commands:
 
       World:
 
-        Name: "World"
-
         Alias:
           - H
           - E
@@ -52,3 +48,27 @@ Commands:
         Description: "Used to say hello to the world"
 
         Executor: "world_exe"
+
+Completion:
+
+  Player:
+
+    Limit: 5
+
+  Int:
+
+    Values:
+      - 1
+      - 5
+      - 10
+      - 50
+      - 100
+
+  Decimal:
+
+    Values:
+      - .5
+      - 1
+      - 25
+      - 50
+      - 100

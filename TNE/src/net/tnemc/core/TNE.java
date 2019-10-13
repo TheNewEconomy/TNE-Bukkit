@@ -141,12 +141,14 @@ public class TNE extends TNELib {
 
   // Files & Custom Configuration Files
   private File mainConfig;
+  private File commandsFile;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
   private CommentedConfiguration mainConfigurations;
+  private CommentedConfiguration commandsConfigurations;
   private CommentedConfiguration itemConfigurations;
   private CommentedConfiguration messageConfigurations;
   private CommentedConfiguration playerConfigurations;
@@ -654,6 +656,26 @@ public class TNE extends TNELib {
     return false;
   }
 
+  public boolean onCustard(CommandSender sender, Command command, String label, String[] arguments) {
+    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.configurations().getString( "Core.Commands.Triggers", "main", "", "").split(",")));
+
+    if(sender instanceof Player && !triggers.contains("/")) return false;
+    return custardCommand(sender, label, arguments);
+  }
+
+  public boolean custardCommand(CommandSender sender, String label, String[] arguments) {
+
+    TNECommand ecoCommand = commandManager.find(label);
+    if(ecoCommand != null) {
+      if(!ecoCommand.canExecute(sender)) {
+        sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
+        return false;
+      }
+      return ecoCommand.execute(sender, label, arguments);
+    }
+    return false;
+  }
+
   public String sanitizeWorld(String world) {
     if(hasWorldManager(world)) return getWorldManager(world).getBalanceWorld();
     return world;
@@ -752,6 +774,7 @@ public class TNE extends TNELib {
   public void initializeConfigurations(boolean item) {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
+    commandsFile = new File(getDataFolder(), "commands.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
     players = new File(getDataFolder(), "players.yml");
@@ -763,6 +786,8 @@ public class TNE extends TNELib {
     skip.add("Virtual");
     mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
     TNE.logger().info("Initialized config.yml");
+    commandsConfigurations = initializeConfiguration(commandsFile, "commands.yml");
+    TNE.logger().info("Initialized commands.yml");
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
     playerConfigurations = initializeConfiguration(players, "players.yml");
@@ -891,6 +916,10 @@ public class TNE extends TNELib {
 
   public PlayerConfigurations playerConfigurations() {
     return player;
+  }
+
+  public static CommentedConfiguration commandsConfig() {
+    return instance().commandsConfigurations;
   }
 
   public ModuleFileCache moduleCache() {

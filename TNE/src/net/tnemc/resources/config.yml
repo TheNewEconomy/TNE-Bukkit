@@ -77,15 +77,6 @@ Core:
         #To use multiple triggers, separate with comma, i.e. /,!.
         Triggers: "/"
 
-        #Whether or not players should be able to use /pay instead of /money pay
-        PayShort: true
-
-        #Whether or not players should be able to use /balance instead of /money
-        BalanceShort: true
-
-        #Whether or not players should be able to use /baltop instead of /money top
-        TopShort: true
-
         #Configurations relating to the money top command.
         Top:
 

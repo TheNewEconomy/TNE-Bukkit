@@ -336,7 +336,7 @@ public class TNEAccount implements Account {
 
   @Override
   public BigDecimal getHoldings(String world, Currency currency) {
-    TNE.debug("=====START Account.getHoldings w/ World & Currency param =====");
+    TNE.debug("=====START Account.getHoldings w/ World & Currency parameter =====");
     return getHoldings(world, currency.name(), false, false);
   }
 
