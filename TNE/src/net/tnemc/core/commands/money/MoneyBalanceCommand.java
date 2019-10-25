@@ -116,7 +116,7 @@ public class MoneyBalanceCommand extends TNECommand {
         currencies.addAll(TNE.instance().getWorldManager(world).getCurrencies());
       }
 
-      System.out.println("Currencies: " + currencies.size());
+      TNE.debug("Currencies: " + currencies.size());
       TNE.debug("Pre transactions of MoneyBalanceCommand");
       TransactionResult result = null;
 
@@ -133,7 +133,7 @@ public class MoneyBalanceCommand extends TNECommand {
         }
       }
 
-      System.out.println("Balances Size: " + balances.size());
+      TNE.debug("Balances Size: " + balances.size());
       TNE.debug("Post transactions of MoneyBalanceCommand");
       if(balances.size() > 1) {
         final String w = world;

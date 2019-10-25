@@ -333,7 +333,7 @@ public class CurrencyManager {
   }
 
   public Optional<TNECurrency> currencyFromItem(String world, ItemStack stack) {
-    ItemStack clone = stack;
+    ItemStack clone = stack.clone();
     clone.setAmount(1);
     for(TNECurrency currency : TNE.instance().getWorldManager(world).getCurrencies()) {
       if(currency.isItem() && (isMajorItem(world, currency.name(), clone) ||

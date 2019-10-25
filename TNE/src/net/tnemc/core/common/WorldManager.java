@@ -40,6 +40,15 @@ public class WorldManager {
     this.configurationWorld = world;
   }
 
+  public WorldManager(String world, boolean multi) {
+    this.world = world;
+    this.balanceWorld = world;
+    if(!multi) {
+      this.balanceWorld = TNE.instance().defaultWorld;
+    }
+    this.configurationWorld = world;
+  }
+
   public void addCurrency(TNECurrency currency) {
     TNE.debug("WorldManager.addCurrency: " + currency.name() + " Size: " + currencies.size());
     if(currency.isItem()) {

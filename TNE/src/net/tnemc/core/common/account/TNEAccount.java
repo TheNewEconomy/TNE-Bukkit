@@ -186,12 +186,12 @@ public class TNEAccount implements Account {
 
   public void initializeHoldings(String world) {
     TNE.manager().currencyManager().getWorldCurrencies(world).forEach((currency)->{
-      System.out.println("Currency: " + currency.name());
-      System.out.println("Balance: " + currency.defaultBalance().toPlainString());
-      System.out.println("Comparison: " + (currency.defaultBalance().compareTo(BigDecimal.ZERO) > 0));
-      System.out.println("Has: " + hasHoldings(world, currency.name()));
+      TNE.debug("Currency: " + currency.name());
+      TNE.debug("Balance: " + currency.defaultBalance().toPlainString());
+      TNE.debug("Comparison: " + (currency.defaultBalance().compareTo(BigDecimal.ZERO) > 0));
+      TNE.debug("Has: " + hasHoldings(world, currency.name()));
       if(currency.defaultBalance().compareTo(BigDecimal.ZERO) > 0 && !hasHoldings(world, currency.name())) {
-        System.out.println("Adding default");
+        TNE.debug("Adding default");
         addHoldings(currency.defaultBalance(), currency, world);
       }
     });

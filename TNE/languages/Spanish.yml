@@ -1,0 +1,229 @@
+# The New Economy v0.1.0.0
+# Author: creatorfromhell
+# License: http://creativecommons.org/licenses/by-nc-nd/4.0/
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+# To donate to the continued development of TNE with perks, https://patreon.com/creatorfromhell
+# To view a commented version of this file, visit https://github.com/TheNewEconomy/TNE-Bukkit/blob/master/TNE/src/net/tnemc/resources/messages.yml.
+# All configurable messages in TNE
+# Colour characters are supported, just use the colour code preceded by an ampersand character('&')
+# An alternate colouring format is also viable, just oldtype out the name of the colour inside a less than and greater than symbol
+#
+# Colour chart
+# Char  |   Alt
+# ------|-----------
+#  &b   |  <aqua>
+#  &0   |  <black>
+#  &9   |  <blue>
+#  &3   |  <dark_aqua>
+#  &1   |  <dark_blue>
+#  &8   |  <dark_gray>
+#  &2   |  <dark_green>
+#  &5   |  <dark_purple>
+#  &4   |  <dark_red>
+#  &6   |  <gold>
+#  &7   |  <gray>
+#  &a   |  <green>
+#  &d   |  <purple>
+#  &c   |  <red>
+#  &f   |  <white>
+#  &e   |  <yellow>
+#  &k   |  <magic>
+#  &l   |  <bold>
+#  &o   |  <italic>
+#  &r   |  <reset>
+#  &m   |  <strike>
+#  &n   |  <underline>
+Messages:
+
+    Command:
+       Unable: "<red>Lo sentimos, pero no se le permite usar ese comando."
+       None: "<yellow>El comando $command $arguments no ha sido encontrado! Intente usar la ayuda de $command help."
+       InActive: "<red>El comando $command $arguments ha sido desactivado! Intente usar la ayuda de $command help."
+       Charge: "<white>Se le ha cobrado <gold>$amount<white> por usar $command."
+
+    General:
+       NoPerm: "<red>Lo sentimos, pero no tienes permiso para hacer eso."
+       Saved: "<yellow>Se han guardado con éxito todos los datos de TNE!"
+       NoPlayer: "<red>No es posible localizar al jugador \"$player\"!"
+       Disabled: "<red>Las funciones económicas están desactivadas en este mundo!"
+       IsConsole: "<red>No se puede ejecutar este comando como en la consola!"
+
+    Item:
+      Invalid: "<red>Nombre de artículo no válido y/o combinación de durabilidad introducida."
+      InvalidAmount: "<red>Importe de artículo introducido incorrecto."
+
+    Admin:
+       NoHoldings: "<red>$player no tiene posesiones en el mundo \"$world\"!"
+       Holdings: "<white>$player actualmente tiene <gold>$amount <white>en el mundo \"$world\"!"
+       NoTransactions: "<white>$player no tiene transacciones que mostrar."
+       Configuration: "<white>El valor de $node es actualmente $value."
+       SetConfiguration: "<white>El valor de $node se ha fijado en $value."
+       ID: "<white>El UUID para $player es $id."
+       Exists: "<red>Un jugador con ese nombre ya existe."
+       Created: "<white>Cuenta creada exitosamente para $player."
+       Deleted: "<white>La cuenta de $player se ha eliminado exitosamente."
+       PurgeWorld: "<white>Se han purgado exitosamente las cuentas de la economía en el mundo $world."
+       StatusChange: "<white>El estado para $player ha sido cambiado a <green>$status<white>."
+       Status: "<white>El estado para $player es <green>$status<white>."
+       Reset: "<white>Se ha realizado un restablecimiento de la economía usando estos parámetros - mundo = $world, moneda = $currency, y jugador = $player."
+
+    Account:
+       PinSetAlready: "<red>Ya has colocado un marcador, por favor, proporciona el anterior para colocar uno nuevo."
+       PinSet: "<white>Tu marcador ha sido establecido en $pin."
+       PinReset: "<white>El maracdor de $player ha sido reestablecido."
+       PinMax: "<red>Los marcadores deben tener menos de 60 caracteres."
+       PinIncorrect: "<red>El marcador dado es incorrecto."
+       PinInvalid: "<red>El marcador solicitado no es válido."
+       Locked: "<red>No es posible realizar esto con una cuenta bloqueada ($player)!"
+       NoTransactions: "<white>No hay transacciones que visualizar en este momento."
+       StatusChange: "<white>Su estado de cuenta ha cambiado a <green>$status<white>."
+
+    Configuration:
+       NoSuch: "El nodo de configuración $node no existe."
+       Invalid: "El valor especificado para $node no es válido."
+       InvalidFile: "El archivo de configuración especificado no es válido."
+       Get: "EI valor del nodo $node es $value."
+       Set: "Se ha establecido con éxito el valor de $node a $value."
+       TNEGet: "El valor analizado para el nodo $node es $value."
+       Saved: "Se han guardado con éxito todos los nodos modificados para el fichero $configuration."
+       SavedAll: "Se han guardado correctamente todas las modificaciones de configuración."
+       Undone: "Se han deshecho con éxito todas las modificaciones de configuración en $modified."
+       UndoneAll: "Se han deshecho con éxito todas las modificaciones de configuración."
+
+    Currency:
+       List: "<white>Las actuales monedas para $world son: $currencies."
+       Tiers: "<white>La moneda \"$currency\" tiene actualmente estos niveles; <newline>Mayor: $major_tiers<newline>Menor: $minor_tiers"
+       AlreadyExists: "<white>Una moneda con el nombre $currency ya existe en el mundo $world."
+       Renamed: "<white>Se ha renombrado correctamente $currency en el mundo $world a $new_Name."
+
+    Language:
+       Current: "<white>El idioma está actualmente configurado como $language."
+       List: "<white>Los idiomas disponibles son $languages."
+       None: "<red>No hay ningún idioma de nombre \"$language\" disponible."
+       Reload: "<white>Se han recargado con éxito todos los archivos de idioma."
+       Set: "<white>Se ha establecido correctamente el idioma como $language."
+
+    Module:
+       AvailableHeader: "=== Módulos disponibles en $url ==="
+       AvailableEntry: "$module ~ $version"
+       Downloaded: "$module ha sido descargado correctamente."
+       FailedDownload: "$module no se ha podido descargar correctamente."
+       Info: "<white>==== Información del módulo $module ====<newline>Autor: $author<newline>Version: $version"
+       Invalid: "<red>No se ha podido encontrar un módulo de nombre \"$module\"."
+       List: "<white>Este servidor utiliza actualmente los siguientes módulos TNE: $modules."
+       Loaded: "<white>Modulo cargado \"$module\" $version creado por \"$author\"."
+       Reloaded: "<white>Modulo recargado \"$module\"."
+       Unloaded: "<white>Modulo no cargado \"$module\"."
+
+    Money:
+       TypeOffline: "<red>Este tipo de moneda no permite la interacción offline."
+       Failed: "<red>No es posible procesar su transacción en este momento."
+       Given: "<white>Has recibido <gold>$amount<white>."
+       Received: "<white>Has recibido un pago de <gold>$amount <white> de <white> $player."
+       Taken: "<white>$player ha recibido <gold>$amount<white> de ti."
+       Insufficient: "<red>Lo sentimos, pero no tienes <gold>$amount<red>."
+       HoldingsMulti: "<white>Tus balances actuales para el mundo \"$world\" son:"
+       HoldingsMultiSingle: "<white>$currency: <gold>$amount"
+       Holdings: "<white>Actualmente posees <gold>$amount<white>."
+       Gave: "<white>Has dado a $player <gold>$amount<white> correctamente."
+       RecipientSet: "<white>$player ha ajustado tu saldo a <gold>$amount<white>."
+       Set: "<white>Se ha establecido correctamente el saldo de $player a <gold>$amount<white>."
+       SetAll: "<white>Se han establecido correctamente todos los balances de los jugadores en el mundo $world a <gold>$amount<white>."
+       Paid: "<white>Has pagado correctamente a $player <gold>$amount<white>."
+       Took: "<white>Has obtenido <gold>$amount<white> de $player."
+       Negative: "<red>¡La cantidad no puede ser negativa!"
+       SelfPay: "<red>¡No puedes pagarte a ti mismo!"
+       NoCurrency: "<red>la moneda \"$currency\" no ha sido encontrada en el mundo \"$world\"."
+       Noted: "<white>Has recibido un billete de <gold>$amount<white> para la moneda <green>$currency<white>."
+       NoteClaimed: "<white>Billete de <gold>$amount<white> reclamada con éxito para la moneda <green>$currency<white>.<newline>Tu nuevo saldo es de <gold>$balance<white>."
+       NoteFailed: "<red>¡Lo siento, pero su intento de reclamar ese billete ha fallado!"
+       NoteMinimum: "<red>No se ha alcanzado el importe mínimo requerido de $amount para el billete."
+       Converted: "<white>Cambiado correctamente de \"<gold>$from_amount<white>\" a \"<gold>$amount<white>\"."
+       Top: "<white>=====[<gold>Top Economia<white>]===== $page/$page_top"
+       TopEntry: "<white>$player tiene $amount"
+       InvalidFormat: "<red>Lo siento, pero el valor monetario que ha introducido es incorrecto."
+       ExceedsCurrencyMaximum: "<red>Lo siento, pero el valor monetario que ha ingresado excede el saldo máximo posible."
+       ExceedsPlayerMaximum: "<red>Lo sentimos, pero realizar esta transacción colocará su saldo por encima del máximo permitido."
+       ExceedsOtherPlayerMaximum: "<red>Lo sentimos, pero realizar esta transacción colocará el saldo de $player por encima del máximo permitido."
+
+    Transaction:
+       Already: "<red>La transacción con el ID de $transaction ha sido anulada."
+       Away: "<white>=====[<green>Transacciones Fallidas<white>]===== $page/$page_top<newline>ID | Tipo"
+       AwayEntry: "<green>$id <white>| <green>$type"
+       AwayNone: "<red>No se han producido transacciones mientras estabas desconectado."
+       History: "<white>=====[<green>Transacciones<white>]===== $page/$page_top<newline>ID | Tipo | Origen | Receptor"
+       HistoryEntry: "<green>$id <white>| <green>$type <white>| <green>$initiator <white>| <green>$recipient"
+       Info: "<white>Informacion de Transaccion:<newline><white>ID: <green>$id<newline><white>Tipo: <green>$type"
+       Invalid: "<red>No hay ninguna transacción con ID $transaction."
+       Unable: "<red>No se puede anular esta transacción en este momento."
+       Voided: "<white>Se ha anulado correctamente la transacción con ID <green>$transaction<white>."
+
+    Commands:
+       Account:
+          PinReset: "/account pin reset <username/UUID> - Changes an account's pin to the default one."
+          PinSet: "/account pin set <pin> [old pin] - Used to change your account's pin."
+       Admin:
+          Backup: "/tne backup - Creates a backup of all server data."
+          Balance: "/tne balance <player> [world] [currency] - Retrieves the balance of a player.<newline>- Player ~ The account owner.<newline>- World ~ The world to retrieve the balance from.<newline>- currency ~ The currency to retrieve the balance of."
+          Build: "/tne build - Displays the version of TNE currently running."
+          Caveats: "/tne caveats - Displays all known caveats for this version of TNE."
+          Create: "/tne create <player> [balance] - Creates a new economy account.<newline>- Player ~ The account owner.<newline>- Balance ~ The starting balance of the account."
+          Debug: "/tne debug - Toggles console debug mode."
+          Delete: "/tne delete <player> - Deletes a player account.<newline>- Player ~ The account owner."
+          Extract: "/tne extract - Extracts all player balances with their username attached for database-related debugging."
+          ID: "/tne id <player> - Retrieves a player's TNE UUID.<newline>- Player ~ The player you wish to discover the UUID of."
+          Maintenance: "tne maintenance - Toggles economy maintenance mode, which disables all economy functionality."
+          Menu: "/tne menu <player> - Opens a GUI for performing basic transactions on the specified player.<newline>-Player ~ The name/uuid of the player you wish to perform transactions with in the GUI."
+          Purge: "/tne purge - Deletes all player accounts that have the default balance"
+          Recreate: "/tne recreate - Attempts to recreate database tables. WARNING: This will delete all data in the database."
+          Reload: "/tne reload <configuration> - Saves modifications made via command, and reloads a configuration file.<newline>- Configuration ~ The identifier of the configuration to reload. Default is all."
+          Reset: "/tne reset - Deletes all economy-related data from the database."
+          Restore: "/tne restore - Restores all balances that are located in extracted.yml after /tne extract."
+          Save: "/tne save - Force saves all TNE data."
+          Status: "/tne status <player> [status] - Displays, or sets, the current account status of an account.<newline>- Player ~ The account owner."
+          Upload: "/tne upload - Uploads the TNE debug & latest server log to pastebin.com, and provides a link to each."
+          Version: "/tne version - Displays the version of TNE currently running."
+       Config:
+          Get: "/tnec get <node> [configuration] - Returns the value of a configuration.<newline>- Node ~ The configuration node to use.<newline>- Configuration ~ The configuration identifier to retrieve the value from. This may be retrieved automatically."
+          Save: "/tnec save [configuration] - Saves modifications made to a configuration value via command.<newline>- Configuration ~ The configuration identifier to retrieve the value from."
+          Set: "/tnec set <node> <value> [configuration] - Sets a configuration value. This will not save until you do /tnec save."
+          TNEGet: "/tnec tneget <node> [world] [player] - Returns the value of a configuration after TNE takes into account player & world configurations.<newline>- Node ~ The configuration node to use.<newline>- World ~ The name of the world to use for parsing.<newline>- Player ~ The name of the world to use for parsing."
+          Undo: "/tnec undo [configuration/all] - Undoes modifications made to configurations.<newline>- Configuration ~ The configuration identifier to retrieve the value from. This may be retrieved automatically."
+       Currency:
+          Rename: "/currency rename <currency> <new name> - Renames a currency to a different name."
+          List: "/currency list [world] - Displays the currencies available for a world.<newline> - World ~ The world to use."
+          Tiers: "/currency tiers [currency] [world] - Displays the tiers for a currency.<newline>- currency ~ The Currency to check.<newline>- World ~ The world that the Currency belongs to."
+       Language:
+          Current: "/language current - Displays your current language as set for your account."
+          List: "/language list - Lists available languages on this server."
+          Reload: "/language reload - Reloads all language files."
+          Set: "/language set <name> - Sets your current language to the one specified."
+       Module:
+          Available: "/tnem available [url] - Displays available modules at the specified url, or defaults to TNE's core modules.<newline>- url ~ The url to use for the check, only use if you know what you're doing."
+          Download: "/tnem download <name> [url] - Attempts to download the specified module.<newline>- url ~ The url to use, only use if you know what you're doing, defaults to TNE's core modules url."
+          Info: "/tnem info <module> - Displays some information about a module.<newline>- Module ~ The module to look up."
+          List: "/tnem list - Lists all loaded TNE modules."
+          Load: "/tnem load <module> - Load a module from the modules directory.<newline>- Module ~ The module to load."
+          Reload: "/tnem reload <module> - Reloads a module from the modules directory.<newline>- Module ~ The module to reload."
+          Unload: "/tnem unload <module> - Unload a module from the server.<newline>- Module ~ The module to unload."
+       Money:
+          Balance: "/money balance [world] [currency] - Displays your current holdings."
+          Consolidate: "/money consolidate [player] - Consolidate your item currency into the least number of items."
+          Convert: "/money convert <amount> <to currency[world:]> [from currency[world:] - Convert some of your holdings to another currency.]"
+          Give: "/money give <player> <amount> [world] [currency] - Adds money into your economy, and gives it to a player."
+          Note: "/money note <amount> [currency] - Makes your virtual currency physical, for storage/trading purposes."
+          Pay: "/money pay <player> <amount> [currency] - Use some of your holdings to pay another player."
+          Set: "/money set <player> <amount> [world] [currency] - Set the holdings of a player."
+          SetAll: "/money setall <amount> [world] - Set the holdings of all players."
+          Take: "/money take <player> <amount> [world] [currency] - Removes money from your economy, specifically from a player's balance."
+          Top: "/money top [page] [currency:name] [world:world] [limit:#] - A list of players with the highest balances.<newline>[page] - The page number to view. Defaults to 1.<newline>[Currency] - The name of the Currency to get balances from. Defaults to world default. Use overall for all currencies.<newline>[world] - The world name you wish to filter, or all for every world. Defaults to current world. Use overall for all worlds.<newline>[limit] - Limit changes how many players are displayed. Defaults to 10."
+       Transaction:
+          Away: "/transaction away [page #] - Displays transactions that you missed since the last time you were on."
+          History: "/transaction history [player:name] [page:#] [world:name/all] - See a detailed break down of your transaction history.<newline>- Page ~ The page number you wish to view.<newline>- World ~ The world name you wish to filter, or all for every world. Defaults to current world."
+          Info: "/transaction info <uuid> - Displays information about a transaction.<newline>- UUID ~ The id of the transaction."
+          Void: "/transaction void <uuid> - Undoes a previously completed transaction.<newline>- UUID ~ The id of the transaction."
+
+    World:
+       Change: "<red>Le ha sido cobrado <gold> $amount<red> por cambiar de mundo."
+       ChangeFailed: "<red>Lo sentimos, pero necesitas al menos <gold>$amount<red> para cambiar de mundo."

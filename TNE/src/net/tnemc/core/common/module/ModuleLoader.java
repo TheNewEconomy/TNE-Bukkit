@@ -131,7 +131,7 @@ public class ModuleLoader {
 
         Vector<Class> classes =  (Vector<Class>) f.get(TNE.loader().getModule(moduleName).getLoader());
         for(Class clazz : classes) {
-          System.out.println("Loaded: " + clazz.getName());
+          TNE.debug("Loaded: " + clazz.getName());
         }
       } catch (Exception e) {
         e.printStackTrace();

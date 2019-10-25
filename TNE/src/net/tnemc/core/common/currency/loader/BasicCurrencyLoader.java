@@ -38,7 +38,7 @@ public class BasicCurrencyLoader implements CurrencyLoader {
     final String pluralMinor = TNE.instance().mainConfigurations().getString(base + ".Minor_Plural", "Cents");
     final String prefixes = TNE.instance().mainConfigurations().getString(base + ".Prefixes", "kMGTPEZYXWVUN₮").trim();
     final String symbol = TNE.instance().mainConfigurations().getString(base + ".Symbol", "$");
-    System.out.println("Basic Symbol: " + symbol);
+    TNE.debug("Basic Symbol: " + symbol);
     final String currencyType = TNE.instance().mainConfigurations().getString(base + ".Type", "virtual");
 
     //Currency Options Configurations.

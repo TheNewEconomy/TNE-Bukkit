@@ -199,8 +199,8 @@ public class ItemCalculations {
     }
 
     if(actualAmount.compareTo(amount) > 0) {
-      System.out.println("actualAmount~: " + actualAmount);
-      System.out.println("amount~: " + amount);
+      TNE.debug("actualAmount~: " + actualAmount);
+      TNE.debug("amount~: " + amount);
       return actualAmount.subtract(amount);
     }
     return BigInteger.ZERO;

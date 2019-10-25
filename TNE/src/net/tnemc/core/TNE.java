@@ -141,14 +141,12 @@ public class TNE extends TNELib {
 
   // Files & Custom Configuration Files
   private File mainConfig;
-  private File commandsFile;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
   private CommentedConfiguration mainConfigurations;
-  private CommentedConfiguration commandsConfigurations;
   private CommentedConfiguration itemConfigurations;
   private CommentedConfiguration messageConfigurations;
   private CommentedConfiguration playerConfigurations;
@@ -270,6 +268,9 @@ public class TNE extends TNELib {
     configurations().add(player, "player");
     configurations().add(world, "world");
 
+    if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
+      addWorldManager(new WorldManager(defaultWorld));
+    }
     getServer().getWorlds().forEach(world-> worldManagers.put(world.getName(), new WorldManager(world.getName())));
 
     TNE.debug("Preparing commands");
@@ -774,7 +775,6 @@ public class TNE extends TNELib {
   public void initializeConfigurations(boolean item) {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
-    commandsFile = new File(getDataFolder(), "commands.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
     players = new File(getDataFolder(), "players.yml");
@@ -786,7 +786,6 @@ public class TNE extends TNELib {
     skip.add("Virtual");
     mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
     TNE.logger().info("Initialized config.yml");
-    commandsConfigurations = initializeConfiguration(commandsFile, "commands.yml");
     TNE.logger().info("Initialized commands.yml");
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
@@ -916,10 +915,6 @@ public class TNE extends TNELib {
 
   public PlayerConfigurations playerConfigurations() {
     return player;
-  }
-
-  public static CommentedConfiguration commandsConfig() {
-    return instance().commandsConfigurations;
   }
 
   public ModuleFileCache moduleCache() {
