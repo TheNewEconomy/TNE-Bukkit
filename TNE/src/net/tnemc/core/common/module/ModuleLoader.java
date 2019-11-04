@@ -58,35 +58,41 @@ public class ModuleLoader {
 
   public void load() {
     File directory = new File(TNE.instance().getDataFolder(), "modules");
-    File[] jars = directory.listFiles((dir, name)->name.endsWith(".jar"));
 
-    if(jars != null) {
-      for(File jar : jars) {
+    if(directory.exists()) {
 
-        ModuleWrapper wrapper = loadModuleWrapper(jar.getAbsolutePath());
+      File[] jars = directory.listFiles((dir, name) -> name.endsWith(".jar"));
 
-        if(wrapper.getModule() == null || wrapper.getModule().getClass() == null) {
-          TNE.logger().info("Skipping file due to invalid module: " + jar.getName());
-          continue;
-        }
+      if (jars != null) {
+        for (File jar : jars) {
 
-        if(jar.getName().contains("old-")) continue;
+          ModuleWrapper wrapper = loadModuleWrapper(jar.getAbsolutePath());
 
-        if (!wrapper.getModule().getClass().isAnnotationPresent(net.tnemc.core.common.module.ModuleInfo.class)) {
-          TNE.instance().getLogger().info("Invalid module format! Module File: " + jar.getName());
-          continue;
-        }
+          if (wrapper.getModule() == null || wrapper.getModule().getClass() == null) {
+            TNE.logger().info("Skipping file due to invalid module: " + jar.getName());
+            continue;
+          }
 
-        wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
-        TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
-        modules.put(wrapper.name(), wrapper);
+          if (jar.getName().contains("old-")) continue;
 
-        if(!wrapper.getInfo().updateURL().trim().equalsIgnoreCase("")) {
-          TNE.logger().info("Checking for updates for module " + wrapper.info.name());
-          ModuleUpdateChecker checker = new ModuleUpdateChecker(wrapper.info.name(), wrapper.info.updateURL(), wrapper.version());
-          checker.check();
+          if (!wrapper.getModule().getClass().isAnnotationPresent(net.tnemc.core.common.module.ModuleInfo.class)) {
+            TNE.instance().getLogger().info("Invalid module format! Module File: " + jar.getName());
+            continue;
+          }
+
+          wrapper.setInfo(wrapper.getModule().getClass().getAnnotation(ModuleInfo.class));
+          TNE.instance().getLogger().info("Found module: " + wrapper.name() + " version: " + wrapper.version());
+          modules.put(wrapper.name(), wrapper);
+
+          if (!wrapper.getInfo().updateURL().trim().equalsIgnoreCase("")) {
+            TNE.logger().info("Checking for updates for module " + wrapper.info.name());
+            ModuleUpdateChecker checker = new ModuleUpdateChecker(wrapper.info.name(), wrapper.info.updateURL(), wrapper.version());
+            checker.check();
+          }
         }
       }
+    } else {
+      directory.mkdir();
     }
   }
 

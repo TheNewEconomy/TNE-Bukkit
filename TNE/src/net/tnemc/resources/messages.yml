@@ -111,7 +111,7 @@ Messages:
        FailedDownload: "$module couldn't be downloaded successfully."
        Info: "<white>==== Module Info for $module ====<newline>Author: $author<newline>Version: $version"
        Invalid: "<red>Unable to find a module with the name of \"$module\"."
-       List: "<white>This server is currently uses these TNE Modules: $modules."
+       List: "<white>This server is currently using these TNE Modules: $modules."
        Loaded: "<white>Loaded module \"$module\" $version created by \"$author\"."
        Reloaded: "<white>Reloaded module \"$module\"."
        Unloaded: "<white>Unloaded module \"$module\"."
