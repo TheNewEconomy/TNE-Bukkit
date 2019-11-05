@@ -120,7 +120,7 @@ public class WorldManager {
   }
 
   public String getBalanceWorld() {
-    if(!TNE.configurations().getBoolean("Core.Multiworld")) {
+    if(!TNE.instance().mainConfigurations().getBool("Core.Multiworld")) {
       TNE.debug("Default World returned.");
       return TNE.instance().defaultWorld;
     }
@@ -130,7 +130,7 @@ public class WorldManager {
 
   public void setBalanceWorld(String balanceWorld) {
 
-    if(!TNE.configurations().getBoolean("Core.Multiworld")) {
+    if(!TNE.instance().mainConfigurations().getBool("Core.Multiworld")) {
       this.balanceWorld = TNE.instance().defaultWorld;
     }
     this.balanceWorld = balanceWorld;

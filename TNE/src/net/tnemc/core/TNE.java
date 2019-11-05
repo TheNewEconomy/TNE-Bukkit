@@ -238,6 +238,14 @@ public class TNE extends TNELib {
     messages.load(messageConfigurations);
     player = new PlayerConfigurations();
     player.load(playerConfigurations);
+
+
+
+    if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
+      addWorldManager(new WorldManager(defaultWorld));
+    }
+    getServer().getWorlds().forEach(world-> worldManagers.put(world.getName(), new WorldManager(world.getName(), mainConfigurations.getBool("Core.Multiworld"))));
+
     world = new WorldConfigurations();
     world.load(worldConfigurations);
 
@@ -267,11 +275,6 @@ public class TNE extends TNELib {
     configurations().add(messages, "messages");
     configurations().add(player, "player");
     configurations().add(world, "world");
-
-    if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
-      addWorldManager(new WorldManager(defaultWorld));
-    }
-    getServer().getWorlds().forEach(world-> worldManagers.put(world.getName(), new WorldManager(world.getName())));
 
     TNE.debug("Preparing commands");
     List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
@@ -884,13 +887,8 @@ public class TNE extends TNELib {
   }
 
   public WorldManager getWorldManager(String world) {
-    for(WorldManager manager : this.worldManagers.values()) {
-      if(manager.getWorld().equalsIgnoreCase(world)) {
-        debug("Return World Manager for world " + world);
-        return manager;
-      }
-    }
-    return worldManagers.get(defaultWorld);
+    TNE.debug("Returning World Manager for World: " + world);
+    return worldManagers.getOrDefault(world, new WorldManager(world, mainConfigurations.getBool("Core.Multiworld")));
   }
 
   public Collection<WorldManager> getWorldManagers() {

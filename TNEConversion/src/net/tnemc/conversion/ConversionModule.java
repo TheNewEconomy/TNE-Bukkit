@@ -9,6 +9,7 @@ import net.tnemc.conversion.impl.BOSEconomy;
 import net.tnemc.conversion.impl.BasicEconomy;
 import net.tnemc.conversion.impl.Blings;
 import net.tnemc.conversion.impl.CMI;
+import net.tnemc.conversion.impl.CraftConomy;
 import net.tnemc.conversion.impl.DevCoinSystem;
 import net.tnemc.conversion.impl.ECEconomy;
 import net.tnemc.conversion.impl.EasyCoins;
@@ -115,6 +116,9 @@ public class ConversionModule implements Module {
         break;
       case "cmi":
         converter = new CMI();
+        break;
+      case "craftconomy":
+        converter = new CraftConomy();
         break;
       case "devcoinsystem":
         converter = new DevCoinSystem();

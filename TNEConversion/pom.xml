@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>Conversion</artifactId>
-    <version>0.0.1.3</version>
+    <version>0.0.1.4</version>
     <packaging>jar</packaging>
     <name>Conversion</name>
     <properties>
