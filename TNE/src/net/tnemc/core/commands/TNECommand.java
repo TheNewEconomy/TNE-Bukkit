@@ -224,6 +224,10 @@ public abstract class TNECommand {
     return console();
   }
 
+  public LinkedHashMap<List<String>, TNECommand> getSubCommands() {
+    return subCommands;
+  }
+
   protected Map<String, String> getArguments(String[] arguments) {
     Map<String, String> parsed = new HashMap<>();
     for(int i = 0; i < arguments.length; i++) {

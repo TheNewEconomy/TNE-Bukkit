@@ -18,6 +18,12 @@ import java.sql.SQLException;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class EconomyPlaceholders extends PlaceholderExpansion {
+
+  private TNE plugin;
+
+  public EconomyPlaceholders(TNE plugin) {
+    this.plugin = plugin;
+  }
   @Override
   public String getIdentifier() {
     return "tne";
@@ -25,7 +31,7 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
 
   @Override
   public String getPlugin() {
-    return null;
+    return "TheNewEconomy";
   }
 
   @Override
@@ -36,6 +42,16 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
   @Override
   public String getVersion() {
     return "0.1.1.3";
+  }
+
+  @Override
+  public boolean persist() {
+    return true;
+  }
+
+  @Override
+  public boolean canRegister() {
+    return true;
   }
 
   @Override
@@ -50,7 +66,7 @@ public class EconomyPlaceholders extends PlaceholderExpansion {
     final String[] args = identifier.split("_");
 
     //%tne_balance%
-    if(identifier.equalsIgnoreCase("balance")) {
+    if(identifier.contains("balance")) {
       if(args.length >= 2 && args[1].equalsIgnoreCase("formatted")) {
         return CurrencyFormatter.format(
             TNE.manager().currencyManager().get(TNE.instance().defaultWorld),

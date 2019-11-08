@@ -34,7 +34,7 @@ public class WorldManager {
   public WorldManager(String world) {
     this.world = world;
     this.balanceWorld = world;
-    if(!TNE.configurations().getBoolean("Core.Multiworld")) {
+    if(!TNE.instance().mainConfigurations().getBool("Core.Multiworld")) {
       this.balanceWorld = TNE.instance().defaultWorld;
     }
     this.configurationWorld = world;

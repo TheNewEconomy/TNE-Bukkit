@@ -478,11 +478,6 @@ public class TNE extends TNELib {
         value.getModule().postLoad(this)
     );
 
-    TNE.debug("Preparing placeholders");
-    if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      new EconomyPlaceholders().register();
-    }
-
     moduleCache = new ModuleFileCache();
 
     //Metrics
@@ -519,7 +514,19 @@ public class TNE extends TNELib {
       Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
     }
 
+
+
+    TNE.debug("Preparing placeholders");
+    if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      new EconomyPlaceholders(this).register();
+    }
+
     getLogger().info("The New Economy has been enabled!");
+    try {
+      writeCommands();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void onDisable() {
@@ -544,6 +551,51 @@ public class TNE extends TNELib {
     SQLDatabase.getDataSource().close();
     getLogger().info("The New Economy has been disabled!");
     super.onDisable();
+  }
+
+  private void writeCommands() throws IOException {
+    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(getDataFolder(), "commands.txt")));
+    final String newLine = System.getProperty("line.separator");
+
+    for(TNECommand command : commandManager.commands.values()) {
+      writer.write(newLine);
+      writer.write("  " + command.name() + ":" + newLine);
+
+      if(command.aliases().length > 0) {
+        writer.write("    Alias:" + newLine);
+
+        for(String alias : command.aliases()) {
+          writer.write("      - " + alias + newLine);
+        }
+      }
+      writer.write("    Permission: \"" + command.node() + "\"" + newLine);
+      writer.write("    Console: " + command.console() + newLine);
+      writer.write("    Player: true" + newLine);
+      writer.write("    Developer: " + command.developer() + newLine);
+      writer.write("    Description: \"" + command.helpLine() + "\"" + newLine);
+      writer.write("    Executor: \"" + command.name() + "_exe\"" + newLine);
+
+      if(command.getSubCommands().size() > 0) {
+        writer.write("    Sub:" + newLine);
+        for(TNECommand sub : command.getSubCommands().values()) {
+          writer.write("      " + sub.name() + ":" + newLine);
+
+          if(sub.aliases().length > 0) {
+            writer.write("        Alias:" + newLine);
+
+            for(String alias : sub.aliases()) {
+              writer.write("          - " + alias + newLine);
+            }
+          }
+          writer.write("        Permission: \"" + sub.node() + "\"" + newLine);
+          writer.write("        Console: " + sub.console() + newLine);
+          writer.write("        Player: true" + newLine);
+          writer.write("        Developer: " + sub.developer() + newLine);
+          writer.write("        Description: \"" + sub.helpLine() + "\"" + newLine);
+          writer.write("        Executor: \"" + sub.name() + "_exe\"" + newLine);
+        }
+      }
+    }
   }
 
   private void writeMobs() throws IOException {

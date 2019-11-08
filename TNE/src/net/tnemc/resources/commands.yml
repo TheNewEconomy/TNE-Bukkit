@@ -1,74 +1,298 @@
 Commands:
-
-  Hello:
-
+  account:
     Alias:
-      - H
-      - E
-
-    Author: "creatorfromhell"
-
-    Permission: "hello"
-
-    Console: true
-
+      - acc
+    Permission: ""
+    Console: false
+    Player: true
     Developer: false
-
-    Description: "Used to say hello"
-
-    Executor: "hello_exe"
-
-    Params:
-
-      Message:
-
-        Optional: true
-
-        Complete: true
-
-        CompleteType: "hello_messages"
-
-
+    Description: "Command help is currently not implemented for this."
+    Executor: "account_exe"
     Sub:
-
-      World:
-
-        Alias:
-          - H
-          - E
-
-        Author: "creatorfromhell"
-
-        Permission: "hello.world"
-
-        Console: true
-
+      pin:
+        Permission: ""
+        Console: false
+        Player: true
         Developer: false
+        Description: "Command help is currently not implemented for this."
+        Executor: "pin_exe"
 
-        Description: "Used to say hello to the world"
+  currency:
+    Alias:
+      - cur
+      - tnecur
+    Permission: ""
+    Console: true
+    Player: true
+    Developer: false
+    Description: "Command help is currently not implemented for this."
+    Executor: "currency_exe"
+    Sub:
+      list:
+        Alias:
+          - l
+        Permission: "tne.currency.list"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Currency.List"
+        Executor: "list_exe"
+      rename:
+        Permission: "tne.currency.rename"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Currency.Rename"
+        Executor: "rename_exe"
+      tiers:
+        Alias:
+          - t
+        Permission: "tne.currency.tiers"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Currency.Tiers"
+        Executor: "tiers_exe"
 
-        Executor: "world_exe"
+  tnemodule:
+    Alias:
+      - tnem
+    Permission: ""
+    Console: true
+    Player: true
+    Developer: false
+    Description: "Command help is currently not implemented for this."
+    Executor: "tnemodule_exe"
+    Sub:
+      available:
+        Alias:
+          - avail
+        Permission: "tne.module.available"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.Available"
+        Executor: "available_exe"
+      download:
+        Alias:
+          - dl
+        Permission: "tne.module.download"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.Download"
+        Executor: "download_exe"
+      info:
+        Alias:
+          - i
+        Permission: "tne.module.info"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.Info"
+        Executor: "info_exe"
+      list:
+        Alias:
+          - i
+        Permission: "tne.module.list"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.List"
+        Executor: "list_exe"
+      load:
+        Alias:
+          - l
+        Permission: "tne.module.load"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.Load"
+        Executor: "load_exe"
+      reload:
+        Alias:
+          - r
+        Permission: "tne.module.reload"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.Reload"
+        Executor: "reload_exe"
+      unload:
+        Alias:
+          - u
+        Permission: "tne.module.unload"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Module.Unload"
+        Executor: "unload_exe"
 
-Completion:
+  convert:
+    Permission: "tne.command.convert"
+    Console: true
+    Player: true
+    Developer: false
+    Description: "/convert <from> - Converts all data from plugin <from>."
+    Executor: "convert_exe"
 
-  Player:
+  transaction:
+    Alias:
+      - trans
+    Permission: ""
+    Console: true
+    Player: true
+    Developer: false
+    Description: "Command help is currently not implemented for this."
+    Executor: "transaction_exe"
+    Sub:
+      away:
+        Permission: "tne.transaction.away"
+        Console: false
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Transaction.Away"
+        Executor: "away_exe"
+      history:
+        Alias:
+          - h
+        Permission: "tne.transaction.history"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Transaction.History"
+        Executor: "history_exe"
+      info:
+        Alias:
+          - i
+        Permission: "tne.transaction.info"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Transaction.Info"
+        Executor: "info_exe"
+      void:
+        Permission: "tne.transaction.void"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Transaction.Void"
+        Executor: "void_exe"
 
-    Limit: 5
+  yediot:
+    Permission: ""
+    Console: false
+    Player: true
+    Developer: false
+    Description: "Command help is currently not implemented for this."
+    Executor: "yediot_exe"
+    Sub:
+      idiot:
+        Permission: ""
+        Console: true
+        Player: true
+        Developer: false
+        Description: "§a/yediot§f - Determine if a Yediot is near. http://www.urbandictionary.com/define.php?term=yediot"
+        Executor: "idiot_exe"
 
-  Int:
-
-    Values:
-      - 1
-      - 5
-      - 10
-      - 50
-      - 100
-
-  Decimal:
-
-    Values:
-      - .5
-      - 1
-      - 25
-      - 50
-      - 100
+  tne:
+    Alias:
+      - eco
+      - theneweconomy
+    Permission: "tne.admin"
+    Console: true
+    Player: true
+    Developer: false
+    Description: "Command help is currently not implemented for this."
+    Executor: "tne_exe"
+    Sub:
+      account:
+        Permission: "tne.admin.account"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "/tne account <username> - Returns a count of how many accounts are associated with a display name, debug command."
+        Executor: "account_exe"
+      balance:
+        Alias:
+          - bal
+        Permission: "tne.admin.balance"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Balance"
+        Executor: "balance_exe"
+      build:
+        Alias:
+          - b
+        Permission: "tne.admin.build"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Build"
+        Executor: "build_exe"
+      caveats:
+        Permission: "tne.admin.caveats"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Caveats"
+        Executor: "caveats_exe"
+      create:
+        Permission: "tne.admin.create"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Create"
+        Executor: "create_exe"
+      debug:
+        Permission: "tne.admin.debug"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Debug"
+        Executor: "debug_exe"
+      delete:
+        Permission: "tne.admin.delete"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Delete"
+        Executor: "delete_exe"
+      extract:
+        Permission: "tne.admin.extract"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Extract"
+        Executor: "extract_exe"
+      id:
+        Permission: "tne.admin.id"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.ID"
+        Executor: "id_exe"
+      idexport:
+        Alias:
+          - ide
+        Permission: "tne.admin.ide"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "/tne idexport"
+        Executor: "idexport_exe"
+      maintenance:
+        Permission: "tne.admin.maintenance"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Maintenance"
+        Executor: "maintenance_exe"
+      menu:
+        Permission: "tne.admin.menu"
+        Console: true
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Admin.Menu"
+        Executor: "menu_exe"
