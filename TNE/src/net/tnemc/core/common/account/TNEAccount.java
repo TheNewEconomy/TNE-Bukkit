@@ -78,6 +78,9 @@ public class TNEAccount implements Account {
 
     TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
 
+    if(cur == null) cur = TNE.manager().currencyManager().get(world);
+    if(cur == null) cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+
     TNE.debug("Currency: " + cur.name());
     try {
       cur.getCurrencyType().setHoldings(identifier(), world, cur, amount, skip);

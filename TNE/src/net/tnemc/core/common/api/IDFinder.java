@@ -139,49 +139,49 @@ public class IDFinder {
 
     if(identifier.contains("discord-")) {
       TNELib.debug("Discord Economy");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains(TNELib.instance().factionPrefix)) {
       TNELib.debug("Faction");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains("towny-war-chest")) {
       TNELib.debug("Towny War Chest");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains(TNELib.instance().townPrefix)) {
       TNELib.debug("Towny Town");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains(TNELib.instance().nationPrefix)) {
       TNELib.debug("Towny Nation");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains("kingdom-")) {
       TNELib.debug("Kingdom");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains("village-")) {
       TNELib.debug("Village");
-      UUID id = ecoID(identifier);
+      UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
