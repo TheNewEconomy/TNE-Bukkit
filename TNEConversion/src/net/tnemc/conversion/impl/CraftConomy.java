@@ -49,7 +49,7 @@ public class CraftConomy extends Converter {
     initialize(new TNEDataManager(type(), config.getString("System.Database.Address"),
         config.getInt("System.Database.Port"), config.getString("System.Database.Db"),
         config.getString("System.Database.Username"), config.getString("System.Database.Password"),
-        accTable, "database.db",
+        accTable, "database.h2.db",
         false, false, 60, false));
 
     open();
@@ -72,9 +72,12 @@ public class CraftConomy extends Converter {
   public void h2() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("System.Database.Address"),
         config.getInt("System.Database.Port"), config.getString("System.Database.Db"),
-        config.getString("System.Database.Username"), config.getString("System.Database.Password"),
-        accTable, "database.db",
+        "SA", "",
+        accTable, new File(TNE.instance().getDataFolder(), "../Craftconomy3/database.h2").getAbsolutePath(),
         false, false, 60, false));
+    System.out.println("File: " + this.manager.getFile());
+    System.out.println("Username: " + this.manager.getUser());
+    System.out.println("Password: " + this.manager.getPassword());
 
     open();
     try(Connection connection = db.getConnection();

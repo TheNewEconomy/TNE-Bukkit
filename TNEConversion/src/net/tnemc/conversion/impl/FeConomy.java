@@ -31,8 +31,6 @@ public class FeConomy extends Converter {
   private String table = config.getString("mysql.tables.accounts");
   private String nameColumn = config.getString("mysql.columns.accounts.username");
   private String balanceColumn = config.getString("mysql.columns.accounts.money");
-  private Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
-  private double rate = 1.0;
 
   @Override
   public String name() {
@@ -46,9 +44,9 @@ public class FeConomy extends Converter {
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    initialize(new TNEDataManager(type(), config.getString("host"),
-        config.getInt("port"), config.getString("database"),
-        config.getString("user"), config.getString("password"),
+    initialize(new TNEDataManager(type(), config.getString("mysql.host"),
+        config.getInt("mysql.port"), config.getString("mysql.database"),
+        config.getString("mysql.user"), config.getString("mysql.password"),
         table, "database.db",
         false, false, 60, false));
 
@@ -69,9 +67,9 @@ public class FeConomy extends Converter {
 
   @Override
   public void sqlite() throws InvalidDatabaseImport {
-    initialize(new TNEDataManager(type(), config.getString("host"),
-        config.getInt("port"), config.getString("database"),
-        config.getString("user"), config.getString("password"),
+    initialize(new TNEDataManager(type(), config.getString("mysql.host"),
+        config.getInt("mysql.port"), config.getString("mysql.database"),
+        config.getString("mysql.user"), config.getString("mysql.password"),
         table, "database.db",
         false, false, 60, false));
 

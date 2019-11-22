@@ -27,7 +27,7 @@ import java.util.logging.Level;
 public abstract class Converter {
 
   protected DB db;
-  private DataManager manager;
+  protected DataManager manager;
 
 
   public void initialize(DataManager manager) {
