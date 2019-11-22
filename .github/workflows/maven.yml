@@ -1,11 +1,5 @@
 name: Java CI
-on:
-  push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
+on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,10 +10,10 @@ jobs:
       with:
         java-version: 1.8
     - name: Build TNE Core
-      run: mvn package --file tree/master/TNE/pom.xml
+      run: mvn package --file TNE/pom.xml
     - name: Build Conversion Module
-      run: mvn package --file tree/master/TNEConversion/pom.xml
+      run: mvn package --file TNEConversion/pom.xml
     - name: Build Signs Module
-      run: mvn package --file tree/master/TNESigns/pom.xml
+      run: mvn package --file TNESigns/pom.xml
     - name: Build Mobs Module
-      run: mvn package --file tree/master/TNEMobs/pom.xml
+      run: mvn package --file TNEMobs/pom.xml
