@@ -90,7 +90,7 @@
         </repository>
         <repository>
             <id>reserve</id>
-            <url>https://maven.pkg.github.com/TheNewEconomy</url>
+            <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
@@ -104,19 +104,9 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>articdive-repo</id>
-            <url>https://nexus.articdive.de/repository/maven-releases</url>
-        </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.palmergames</groupId>
-            <artifactId>Towny</artifactId>
-            <version>0.94.0.3</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Part of Java EE, removed from Java SE in JDK11 -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
