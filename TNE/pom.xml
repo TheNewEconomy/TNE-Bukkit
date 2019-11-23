@@ -89,8 +89,12 @@
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
-            <id>reserve</id>
+            <id>github</id>
             <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TownyAdvanced/packages</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
@@ -107,6 +111,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.95.1.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Part of Java EE, removed from Java SE in JDK11 -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
