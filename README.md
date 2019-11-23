@@ -8,7 +8,7 @@ About
 --------------
 The New Economy is a feature-packed modular economy plugin that is currently under development. TNE is meant to offer an all-in-one solution for server owners, while also providing an easy-to-use modular system, which allows
 server owners to simply disable features they don't wish to use, or even remove the module's jar to save disk space. TNE's modular system also allows third-party developers to easily add additional features without
-the need for additional dependencies. Developers, of course, are welcome to add functionality via TNE's custom events, API, Vault, or Reserve(Recommended).
+the need for additional dependencies. Developers, of course, are welcome to add functionality via TNE's custom events, API, Vault, or Reserve(Recommended)..
 
 Special Thanks
 --------------
