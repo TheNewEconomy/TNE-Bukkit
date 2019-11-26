@@ -39,8 +39,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>reserve-repo</id>
-            <url>https://dl.bintray.com/theneweconomy/java/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
         </repository>
     </repositories>
 
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.20</version>
+            <version>1.1.9.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -44,12 +44,12 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>TNE</id>
-            <url>https://maven.pkg.github.com/TheNewEconomy</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
         </repository>
         <repository>
-            <id>articdive-repo</id>
-            <url>https://nexus.articdive.de/repository/maven-releases</url>
+            <id>githubTowny</id>
+            <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
         </repository>
     </repositories>
 
@@ -63,9 +63,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.palmergames</groupId>
+            <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.94.0.3</version>
+            <version>0.95.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>1.1.8.28</version>
+            <version>1.1.9.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
