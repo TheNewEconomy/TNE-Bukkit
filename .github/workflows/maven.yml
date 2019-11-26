@@ -10,10 +10,30 @@ jobs:
       with:
         java-version: 1.8
     - name: Build TNE Core
-      run: mvn package --file TNE/pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+           mkdir ~/.m2
+           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xml
+           mvn package --file TNE/pom.xml
     - name: Build Conversion Module
-      run: mvn package --file TNEConversion/pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+           mkdir ~/.m2
+           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xm
+           mvn package --file TNEConversion/pom.xml
     - name: Build Signs Module
-      run: mvn package --file TNESigns/pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+           mkdir ~/.m2
+           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xm
+           mvn package --file TNESigns/pom.xml
     - name: Build Mobs Module
-      run: mvn package --file TNEMobs/pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+           mkdir ~/.m2
+           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xm
+           mvn package --file TNEMobs/pom.xml
