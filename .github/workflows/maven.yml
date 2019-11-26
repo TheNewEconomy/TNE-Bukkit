@@ -19,21 +19,12 @@ jobs:
     - name: Build Conversion Module
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-           mkdir ~/.m2
-           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xm
-           mvn package --file TNEConversion/pom.xml
+      run: mvn package --file TNEConversion/pom.xml
     - name: Build Signs Module
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-           mkdir ~/.m2
-           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xm
-           mvn package --file TNESigns/pom.xml
+      run: mvn package --file TNESigns/pom.xml
     - name: Build Mobs Module
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-           mkdir ~/.m2
-           echo "<settings><servers><server><id>github</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server><server><id>githubTowny</id><username>TheNewEconomy</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xm
-           mvn package --file TNEMobs/pom.xml
+      run: mvn package --file TNEMobs/pom.xml
