@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>1.1.9.1</version>
+    <version>1.1.9.2</version>
     <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>
@@ -69,7 +69,7 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
+            <id>github-TNE</id>
             <name>GitHub TheNewEconomy Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
         </repository>
@@ -93,8 +93,8 @@
             <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
         </repository>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/TownyAdvanced/packages</url>
+            <id>githubTowny</id>
+            <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
