@@ -24,17 +24,17 @@ public class BountyHunterCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "hunter";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.bounty.hunter";
   }
 
@@ -44,7 +44,7 @@ public class BountyHunterCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/bounty hunter [player] - Opens up the bounty hunter menu.";
   }
 

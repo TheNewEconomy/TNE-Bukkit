@@ -26,6 +26,7 @@ public class MultiTransactionHandler {
   private TNECurrency currency;
   private String world;
   private TNEAccount initiator;
+  private TNEAccount messageReceiver;
 
   public MultiTransactionHandler(Collection<TNEAccount> affected, String transactionType, BigDecimal amount, TNECurrency currency, String world, TNEAccount initiator) {
     this.data = new MultiTransactionData(affected);
@@ -34,6 +35,21 @@ public class MultiTransactionHandler {
     this.currency = currency;
     this.world = world;
     this.initiator = initiator;
+    this.messageReceiver = initiator;
+
+    if(currency.getTNEMinorTiers().size() <= 0) {
+      this.amount = this.amount.setScale(0, BigDecimal.ROUND_FLOOR);
+    }
+  }
+
+  public MultiTransactionHandler(Collection<TNEAccount> affected, String transactionType, BigDecimal amount, TNECurrency currency, String world, TNEAccount initiator, TNEAccount messageReceiver) {
+    this.data = new MultiTransactionData(affected);
+    this.transactionType = transactionType.toLowerCase().trim();
+    this.amount = amount;
+    this.currency = currency;
+    this.world = world;
+    this.initiator = initiator;
+    this.messageReceiver = messageReceiver;
 
     if(currency.getTNEMinorTiers().size() <= 0) {
       this.amount = this.amount.setScale(0, BigDecimal.ROUND_FLOOR);
@@ -116,6 +132,14 @@ public class MultiTransactionHandler {
 
   public void setWorld(String world) {
     this.world = world;
+  }
+
+  public TNEAccount getMessageReceiver() {
+    return messageReceiver;
+  }
+
+  public void setMessageReceiver(TNEAccount messageReceiver) {
+    this.messageReceiver = messageReceiver;
   }
 
   public TNEAccount getInitiator() {

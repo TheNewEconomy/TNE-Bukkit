@@ -72,7 +72,7 @@ public class CraftConomy extends Converter {
   public void h2() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("System.Database.Address"),
         config.getInt("System.Database.Port"), config.getString("System.Database.Db"),
-        "SA", "",
+        "sa", "",
         accTable, new File(TNE.instance().getDataFolder(), "../Craftconomy3/database.h2").getAbsolutePath(),
         false, false, 60, false));
     System.out.println("File: " + this.manager.getFile());

@@ -132,69 +132,69 @@ public class IDFinder {
 
   public static UUID getID(String identifier) {
     identifier = ChatColor.stripColor(identifier.replaceAll("\\[.*?\\] ?", "")).trim();
-    TNELib.debug("GETID: " + identifier);
+    TNE.debug("GETID: " + identifier);
     if(isUUID(identifier)) {
       return UUID.fromString(identifier);
     }
 
     if(identifier.contains("discord-")) {
-      TNELib.debug("Discord Economy");
+      TNE.debug("Discord Economy");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains(TNELib.instance().factionPrefix)) {
-      TNELib.debug("Faction");
+      TNE.debug("Faction");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains("towny-war-chest")) {
-      TNELib.debug("Towny War Chest");
+      TNE.debug("Towny War Chest");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains(TNELib.instance().townPrefix)) {
-      TNELib.debug("Towny Town");
+      TNE.debug("Towny Town");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains(TNELib.instance().nationPrefix)) {
-      TNELib.debug("Towny Nation");
+      TNE.debug("Towny Nation");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains("kingdom-")) {
-      TNELib.debug("Kingdom");
+      TNE.debug("Kingdom");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(identifier.contains("village-")) {
-      TNELib.debug("Village");
+      TNE.debug("Village");
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
     }
 
     if(!TNELib.instance().useUUID) {
-      TNELib.debug("ECO ID RETURNED");
+      TNE.debug("ECO ID RETURNED");
       return ecoID(identifier);
     }
 
-    TNELib.debug("MOJANG API TIME");
-    UUID mojangID = (identifier.equalsIgnoreCase(TNELib.instance().consoleName))? null : Bukkit.getOfflinePlayer(identifier).getUniqueId();
+    TNE.debug("MOJANG API TIME");
+    UUID mojangID = (identifier.equalsIgnoreCase(TNELib.instance().consoleName))? null : MojangAPI.getPlayerUUID(identifier);
     if(mojangID == null) {
-      TNELib.debug("MOJANG API RETURNED NULL VALUE");
+      TNE.debug("MOJANG API RETURNED NULL VALUE");
       return ecoID(identifier);
     }
     //TNELib.instance().getUuidManager().addUUID(identifier, mojangID);

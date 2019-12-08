@@ -25,17 +25,17 @@ public class BountyListCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "view";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.bounty.view";
   }
 
@@ -45,7 +45,7 @@ public class BountyListCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/bounty view [player] - Views a list of the active bounties.";
   }
 

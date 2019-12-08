@@ -214,6 +214,7 @@ Messages:
           Give: "/money give <player> <amount> [world] [currency] - Adds money into your economy, and gives it to a player."
           Note: "/money note <amount> [currency] - Makes your virtual currency physical, for storage/trading purposes."
           Pay: "/money pay <player> <amount> [currency] - Use some of your holdings to pay another player."
+          PayFrom: "/money payfrom <account> <player> <amount> [currency] - Use some of an account's holdings to pay another player."
           Set: "/money set <player> <amount> [world] [currency] - Set the holdings of a player."
           SetAll: "/money setall <amount> [world] - Set the holdings of all players."
           Take: "/money take <player> <amount> [world] [currency] - Removes money from your economy, specifically from a player's balance."

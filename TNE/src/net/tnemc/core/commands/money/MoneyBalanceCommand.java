@@ -10,7 +10,6 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.currency.CurrencyEntry;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -94,9 +93,9 @@ public class MoneyBalanceCommand extends TNECommand {
         return;
       }
 
-      if(arguments.length < 2) {
+      /*if(arguments.length < 2) {
         currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(id).getLocation());
-      }
+      }*/
 
       final TNEAccount account = TNE.manager().getAccount(id);
       TNE.debug("World: " + world);

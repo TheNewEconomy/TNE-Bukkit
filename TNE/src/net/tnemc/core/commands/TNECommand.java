@@ -138,7 +138,7 @@ public abstract class TNECommand {
     String world = TNE.instance().defaultWorld;
 
     if(developer()) {
-      if(!TNE.instance().developers.contains(IDFinder.getID(sender).toString())) {
+      if(!(sender instanceof Player) || !TNE.instance().developers.contains(((Player)sender).getUniqueId().toString())) {
         sender.sendMessage(ChatColor.RED + "You must be a TNE developer to use this commands.");
         return false;
       }

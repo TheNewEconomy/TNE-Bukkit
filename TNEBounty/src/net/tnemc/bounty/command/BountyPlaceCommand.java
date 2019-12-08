@@ -35,17 +35,17 @@ public class BountyPlaceCommand extends TNECommand {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "place";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "tne.bounty.place";
   }
 
@@ -55,7 +55,7 @@ public class BountyPlaceCommand extends TNECommand {
   }
 
   @Override
-  public String getHelp() {
+  public String helpLine() {
     return "/bounty place <player> [item(uses the item in your hand as a reward)/currency(defaults to currency)] - Opens the bounty creation menu to set a bounty on the specified player.";
   }
 

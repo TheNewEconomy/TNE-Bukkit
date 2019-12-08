@@ -15,7 +15,6 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <sourceDirectory>src/</sourceDirectory>
-        <testSourceDirectory>src/test/</testSourceDirectory>
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
@@ -42,7 +41,19 @@
             <id>github</id>
             <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
         </repository>
+        <repository>
+            <id>githubTowny</id>
+            <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
+        </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub TheNewEconomy Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -70,9 +81,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.palmergames</groupId>
+            <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.89.2.0</version>
+            <version>0.95.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

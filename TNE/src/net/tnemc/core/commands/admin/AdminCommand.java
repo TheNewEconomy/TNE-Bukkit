@@ -23,7 +23,8 @@ public class AdminCommand extends TNECommand {
     addSub(new AdminDebugCommand(plugin));
     addSub(new AdminDeleteCommand(plugin));
     addSub(new AdminExtractCommand(plugin));
-    addSub(new AdminIDCommand(plugin));
+    //addSub(new AdminIDCommand(plugin));
+    addSub(new DeveloperIDCommand(plugin));
     addSub(new AdminIDExportCommand(plugin));
     //addSub(new AdminIndependenceCommand(plugin));
     addSub(new AdminMaintenanceMode(plugin));

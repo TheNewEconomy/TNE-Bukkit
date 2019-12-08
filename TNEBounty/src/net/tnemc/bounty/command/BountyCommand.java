@@ -17,24 +17,24 @@ public class BountyCommand extends TNECommand {
   public BountyCommand(TNE plugin) {
     super(plugin);
 
-    subCommands.add(new BountyHunterCommand(plugin));
-    subCommands.add(new BountyListCommand(plugin));
-    subCommands.add(new BountyPlaceCommand(plugin));
-    subCommands.add(new BountyRewardsCommand(plugin));
+    addSub(new BountyHunterCommand(plugin));
+    addSub(new BountyListCommand(plugin));
+    addSub(new BountyPlaceCommand(plugin));
+    addSub(new BountyRewardsCommand(plugin));
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return "bounty";
   }
 
   @Override
-  public String[] getAliases() {
+  public String[] aliases() {
     return new String[0];
   }
 
   @Override
-  public String getNode() {
+  public String node() {
     return "";
   }
 

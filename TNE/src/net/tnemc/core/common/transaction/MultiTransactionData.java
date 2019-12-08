@@ -37,14 +37,14 @@ public class MultiTransactionData {
   public void handle(MultiTransactionHandler handler) {
 
     if(affected == null || affected.size() == 0) {
-      messages.put(handler.getInitiator().identifier(),
+      messages.put(handler.getMessageReceiver().identifier(),
           TNE.transactionManager().getResult("failed").initiatorMessage());
       return;
     }
 
     if(!TNE.instance().api().hasHoldings(handler.getInitiator().identifier().toString(),
        handler.initiatorCost(), handler.getCurrency(), handler.getWorld())) {
-      messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
+      messages.put(handler.getMessageReceiver().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
       return;
     }
 
@@ -52,7 +52,7 @@ public class MultiTransactionData {
       if(handler.getInitiator() != null) {
         for (TNEAccount affect : affected) {
           if(affect.identifier().toString().equalsIgnoreCase(handler.getInitiator().identifier().toString())) {
-            messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
+            messages.put(handler.getMessageReceiver().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
             return;
           }
         }
@@ -64,7 +64,7 @@ public class MultiTransactionData {
     }
 
     if(succeed.size() == 0) {
-      messages.put(handler.getInitiator().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
+      messages.put(handler.getMessageReceiver().identifier(), TNE.transactionManager().getResult("failed").initiatorMessage());
       return;
     }
   }
@@ -79,12 +79,12 @@ public class MultiTransactionData {
 
       if (!TNE.instance().mainConfigurations().getBool("Core.Commands.Pay.Offline", true) || radius > 0) {
         if (!MISCUtils.isOnline(account.identifier())) {
-          messages.put(handler.getInitiator().identifier(), ChatColor.RED + "Some players were offline, and you're not able to send them money while they are offline in this world.");
+          messages.put(handler.getMessageReceiver().identifier(), ChatColor.RED + "Some players were offline, and you're not able to send them money while they are offline in this world.");
           return;
         }
 
         if (radius > 0 && IDFinder.getPlayer(account.identifier().toString()).getLocation().distance(IDFinder.getPlayer(handler.getInitiator().identifier().toString()).getLocation()) > radius) {
-          messages.put(handler.getInitiator().identifier(), ChatColor.RED + "Some players were out of the " + radius + " block distance set for this world., and did not get paid.");
+          messages.put(handler.getMessageReceiver().identifier(), ChatColor.RED + "Some players were out of the " + radius + " block distance set for this world., and did not get paid.");
           return;
         }
       }
@@ -114,7 +114,7 @@ public class MultiTransactionData {
       proceed = true;
       succeed.add(account.displayName());
       messages.put(account.identifier(), result.recipientMessage());
-      messages.put(handler.getInitiator().identifier(), result.initiatorMessage());
+      messages.put(handler.getMessageReceiver().identifier(), result.initiatorMessage());
     }
   }
 
