@@ -87,10 +87,14 @@ public class CurrencyNote {
     }
 
     enchantments.forEach((name)->{
-      Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
-      if(enchantment == null) {
-      } else {
-        stack.addUnsafeEnchantment(enchantment, 1);
+      try {
+        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
+        if (enchantment == null) {
+        } else {
+          stack.addUnsafeEnchantment(enchantment, 1);
+        }
+      } catch(Exception ignore) {
+        TNE.debug("Invalid Enchantment name: " + name.toLowerCase());
       }
     });
 

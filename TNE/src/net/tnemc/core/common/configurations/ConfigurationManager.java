@@ -93,10 +93,11 @@ public class ConfigurationManager {
 
   public boolean reload(String configID) {
     if(configID.equalsIgnoreCase("all")) {
-      TNE.instance().initializeConfigurations(false);
+      TNE.instance().loadConfigurations();
       return true;
     } else if(configID.equalsIgnoreCase("currency")) {
-
+      TNE.manager().currencyManager().loadCurrencies();
+      TNE.manager().currencyManager().loadRecipes();
     } else if(loaded.contains(configID)) {
       load(configurations.get(configID).getConfiguration(), configID);
       return true;

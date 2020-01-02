@@ -8,6 +8,9 @@ import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.ExtendedEconomyAPI;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
+import net.tnemc.core.economy.response.AccountResponse;
+import net.tnemc.core.economy.response.EconomyResponse;
+import net.tnemc.core.economy.response.GeneralResponse;
 import net.tnemc.core.economy.tax.TaxEntry;
 import net.tnemc.core.economy.tax.TaxType;
 import net.tnemc.core.economy.transaction.Transaction;
@@ -16,12 +19,10 @@ import net.tnemc.core.economy.transaction.type.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -46,7 +47,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public String version() {
-    return "0.1.3.0";
+    return "0.1.4.4";
   }
 
   @Override
@@ -82,16 +83,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   @Override
   public boolean hasCurrency(String name, String world) {
     return TNE.instance().api().hasCurrency(name, world);
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasCurrency(String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasCurrency(String s, String s1) {
-    return null;
   }
 
   @Override
@@ -143,23 +134,15 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public boolean hasAccount(String identifier) {
-    return TNE.instance().api().hasAccount(identifier);
+  public EconomyResponse hasAccountDetail(String identifier) {
+    if(TNE.instance().api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
+    return AccountResponse.DOESNT_EXIST;
   }
 
   @Override
-  public boolean hasAccount(UUID identifier) {
-    return TNE.instance().api().hasAccount(identifier);
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasAccount(String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasAccount(UUID uuid) {
-    return null;
+  public EconomyResponse hasAccountDetail(UUID identifier) {
+    if(TNE.instance().api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
+    return AccountResponse.DOESNT_EXIST;
   }
 
   @Override
@@ -183,682 +166,218 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncCreateAccount(String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCreateAccount(UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public boolean deleteAccount(String identifier) {
-    return TNE.manager().deleteAccount(IDFinder.getID(identifier));
-  }
-
-  @Override
-  public boolean deleteAccount(UUID identifier) {
-    return TNE.manager().deleteAccount(identifier);
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncDeleteAccount(String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncDeleteAccount(UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanWithdraw(String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanWithdraw(String s, UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanWithdraw(UUID uuid, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanWithdraw(UUID uuid, UUID uuid1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanDeposit(String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanDeposit(String s, UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanDeposit(UUID uuid, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanDeposit(UUID uuid, UUID uuid1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<BigDecimal> asyncGetHoldings(String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<BigDecimal> asyncGetHoldings(UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<BigDecimal> asyncGetHoldings(String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<BigDecimal> asyncGetHoldings(UUID uuid, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<BigDecimal> asyncGetHoldings(String s, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<BigDecimal> asyncGetHoldings(UUID uuid, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasHoldings(String s, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasHoldings(String s, BigDecimal bigDecimal, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncSetHoldings(String s, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncSetHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncSetHoldings(String s, BigDecimal bigDecimal, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncSetHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncSetHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncSetHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncAddHoldings(String s, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncAddHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncAddHoldings(String s, BigDecimal bigDecimal, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncAddHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncAddHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncAddHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanAddHoldings(String s, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanAddHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanAddHoldings(String s, BigDecimal bigDecimal, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanAddHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanAddHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanAddHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncRemoveHoldings(String s, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncRemoveHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncRemoveHoldings(String s, BigDecimal bigDecimal, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncRemoveHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncRemoveHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncRemoveHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanRemoveHoldings(String s, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanRemoveHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanRemoveHoldings(String s, BigDecimal bigDecimal, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanRemoveHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanRemoveHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanRemoveHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncTransferHoldings(String s, String s1, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncTransferHoldings(String s, String s1, BigDecimal bigDecimal, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncTransferHoldings(String s, String s1, BigDecimal bigDecimal, String s2, String s3) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncTransferHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncTransferHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncTransferHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanTransferHoldings(String s, String s1, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanTransferHoldings(String s, String s1, BigDecimal bigDecimal, String s2) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanTransferHoldings(String s, String s1, BigDecimal bigDecimal, String s2, String s3) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanTransferHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanTransferHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncCanTransferHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1) {
-    return null;
+  public EconomyResponse createAccountDetail(String identifier) {
+    if(hasAccount(identifier)) return AccountResponse.ALREADY_EXISTS;
+    if(TNE.instance().api().createAccount(identifier)) return AccountResponse.CREATED;
+    return AccountResponse.CREATION_FAILED;
   }
 
   @Override
-  public List<String> getBanks() {
-    return null;
-  }
-
-  @Override
-  public List<String> getBanks(String s) {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<List<String>> asyncGetBanks() {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<List<String>> asyncGetBanks(String s) {
-    return null;
-  }
-
-  @Override
-  public List<String> acceptedBankCurrencies() {
-    return null;
-  }
-
-  @Override
-  public List<String> acceptedBankCurrencies(String s) {
-    return null;
+  public EconomyResponse createAccountDetail(UUID identifier) {
+    if(hasAccount(identifier)) return AccountResponse.ALREADY_EXISTS;
+    if(TNE.instance().api().createAccount(identifier)) return AccountResponse.CREATED;
+    return AccountResponse.CREATION_FAILED;
   }
 
   @Override
-  public List<String> acceptedBankCurrencies(String s, String s1) {
-    return null;
+  public EconomyResponse deleteAccountDetail(String identifier) {
+    if(TNE.manager().deleteAccount(IDFinder.getID(identifier))) return GeneralResponse.SUCCESS;
+    return GeneralResponse.FAILED;
   }
 
   @Override
-  public CompletableFuture<List<String>> asyncAcceptedBankCurrencies() {
-    return null;
+  public EconomyResponse deleteAccountDetail(UUID identifier) {
+    if(TNE.manager().deleteAccount(identifier)) return GeneralResponse.SUCCESS;
+    return GeneralResponse.FAILED;
   }
 
   @Override
-  public CompletableFuture<List<String>> asyncAcceptedBankCurrencies(String s) {
+  public EconomyResponse canWithdrawDetail(String s, String s1) {
     return null;
   }
 
   @Override
-  public CompletableFuture<List<String>> asyncAcceptedBankCurrencies(String s, String s1) {
+  public EconomyResponse canWithdrawDetail(String s, UUID uuid) {
     return null;
   }
 
   @Override
-  public List<UUID> availableBankAccounts(UUID uuid) {
+  public EconomyResponse canWithdrawDetail(UUID uuid, String s) {
     return null;
   }
 
   @Override
-  public List<UUID> availableBankAccounts(UUID uuid, String s) {
+  public EconomyResponse canWithdrawDetail(UUID uuid, UUID uuid1) {
     return null;
   }
 
   @Override
-  public List<UUID> availableBankAccounts(UUID uuid, String s, String s1) {
+  public EconomyResponse canDepositDetail(String s, String s1) {
     return null;
   }
 
   @Override
-  public CompletableFuture<List<UUID>> asyncAvailableBankAccounts(UUID uuid) {
+  public EconomyResponse canDepositDetail(String s, UUID uuid) {
     return null;
   }
 
   @Override
-  public CompletableFuture<List<UUID>> asyncAvailableBankAccounts(UUID uuid, String s) {
+  public EconomyResponse canDepositDetail(UUID uuid, String s) {
     return null;
   }
 
   @Override
-  public CompletableFuture<List<UUID>> asyncAvailableBankAccounts(UUID uuid, String s, String s1) {
+  public EconomyResponse canDepositDetail(UUID uuid, UUID uuid1) {
     return null;
-  }
-
-  @Override
-  public boolean isBankOwner(UUID uuid, String s) {
-    return false;
-  }
-
-  @Override
-  public boolean isBankOwner(UUID uuid, String s, String s1) {
-    return false;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncIsBankOwner(UUID uuid, String s) {
+  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncIsBankOwner(UUID uuid, String s, String s1) {
+  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount) {
     return null;
-  }
-
-  @Override
-  public Optional<UUID> createBankAccount(UUID uuid) {
-    return Optional.empty();
-  }
-
-  @Override
-  public Optional<UUID> createBankAccount(UUID uuid, String s) {
-    return Optional.empty();
-  }
-
-  @Override
-  public Optional<UUID> createBankAccount(UUID uuid, String s, String s1) {
-    return Optional.empty();
   }
 
   @Override
-  public CompletableFuture<Optional<UUID>> asyncCreateBankAccount(UUID uuid) {
+  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Optional<UUID>> asyncCreateBankAccount(UUID uuid, String s) {
+  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Optional<UUID>> asyncCreateBankAccount(UUID uuid, String s, String s1) {
+  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
     return null;
-  }
-
-  @Override
-  public boolean hasBankAccount(UUID uuid) {
-    return false;
-  }
-
-  @Override
-  public boolean hasBankAccount(UUID uuid, String s) {
-    return false;
   }
 
   @Override
-  public boolean hasBankAccount(UUID uuid, String s, String s1) {
-    return false;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncHasBankAccount(UUID uuid) {
+  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncHasBankAccount(UUID uuid, String s) {
+  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncHasBankAccount(UUID uuid, String s, String s1) {
+  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount) {
     return null;
-  }
-
-  @Override
-  public boolean isBankAccountOwner(UUID uuid, UUID uuid1) {
-    return false;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncIsBankAccountOwner(UUID uuid, UUID uuid1) {
+  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount, String world) {
     return null;
-  }
-
-  @Override
-  public boolean isBankAccountMember(UUID uuid, UUID uuid1) {
-    return false;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncIsBankAccountMember(UUID uuid, UUID uuid1) {
+  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public BigDecimal getBankHoldings(UUID uuid) {
+  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public BigDecimal getBankHoldings(UUID uuid, String s) {
+  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public BigDecimal getBankHoldings(UUID uuid, String s, String s1) {
+  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public BigDecimal getBankHoldings(UUID uuid, String s, String s1, String s2) {
+  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public CompletableFuture<BigDecimal> asyncGetBankHoldings(UUID uuid) {
+  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<BigDecimal> asyncGetBankHoldings(UUID uuid, String s) {
+  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<BigDecimal> asyncGetBankHoldings(UUID uuid, String s, String s1) {
+  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public CompletableFuture<BigDecimal> asyncGetBankHoldings(UUID uuid, String s, String s1, String s2) {
+  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
     return null;
-  }
-
-  @Override
-  public boolean bankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal) {
-    return false;
-  }
-
-  @Override
-  public boolean bankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s) {
-    return false;
-  }
-
-  @Override
-  public boolean bankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1) {
-    return false;
-  }
-
-  @Override
-  public boolean bankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1, String s2) {
-    return false;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal) {
+  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s) {
+  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1) {
+  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankAddHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1, String s2) {
+  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
     return null;
-  }
-
-  @Override
-  public boolean bankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal) {
-    return false;
-  }
-
-  @Override
-  public boolean bankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s) {
-    return false;
-  }
-
-  @Override
-  public boolean bankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1) {
-    return false;
-  }
-
-  @Override
-  public boolean bankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1, String s2) {
-    return false;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal) {
+  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s) {
+  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1) {
+  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankRemoveHoldings(UUID uuid, UUID uuid1, BigDecimal bigDecimal, String s, String s1, String s2) {
+  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount) {
     return null;
-  }
-
-  @Override
-  public boolean bankSetHoldings(UUID uuid, BigDecimal bigDecimal) {
-    return false;
-  }
-
-  @Override
-  public boolean bankSetHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
-    return false;
-  }
-
-  @Override
-  public boolean bankSetHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
-    return false;
-  }
-
-  @Override
-  public boolean bankSetHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1, String s2) {
-    return false;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankSetHoldings(UUID uuid, BigDecimal bigDecimal) {
+  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankSetHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
+  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankSetHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
   @Override
-  public CompletableFuture<Boolean> asyncBankSetHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1, String s2) {
+  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
     return null;
   }
 
@@ -892,16 +411,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   @Override
   public boolean purgeAccountsUnder(BigDecimal bigDecimal) {
     return false;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncPurgeAccounts() {
-    return null;
-  }
-
-  @Override
-  public CompletableFuture<Boolean> asyncPurgeAccountsUnder(BigDecimal bigDecimal) {
-    return null;
   }
 
   @Override
@@ -944,7 +453,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
     return TNE.instance().api().registerTransactionResult(transactionResult);
   }
 
-  //TODO: implement the new methods.
   @Override
   public Optional<TransactionResult> findTransactionResult(String name) {
     return TNE.instance().api().findTransactionResult(name);
@@ -1004,6 +512,4 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   public Optional<Transaction> getTransaction(UUID uuid) {
     return TNE.instance().api().getTransaction(uuid);
   }
-
-
 }

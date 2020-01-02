@@ -28,6 +28,7 @@ public abstract class Configuration {
   }
 
   public Object getValue(String node) {
+    System.out.println("Value: " + getConfiguration().getString(node));
     return getConfiguration().getString(node);
   }
 

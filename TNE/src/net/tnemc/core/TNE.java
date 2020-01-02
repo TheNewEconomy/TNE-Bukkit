@@ -228,16 +228,7 @@ public class TNE extends TNELib {
     });
 
     //Configurations
-    initializeConfigurations();
-
-    TNE.debug("Preparing configuration instances");
-    main = new MainConfigurations();
-
-    exclusions = main.getConfiguration().getStringList("Core.Commands.Top.Exclusions");
-    messages = new MessageConfigurations();
-    messages.load(messageConfigurations);
-    player = new PlayerConfigurations();
-    player.load(playerConfigurations);
+    loadConfigurations();
 
 
 
@@ -821,6 +812,23 @@ public class TNE extends TNELib {
 
   public CommentedConfiguration worldConfiguration() {
     return worldConfigurations;
+  }
+
+  public void loadConfigurations() {
+    initializeConfigurations();
+
+    TNE.debug("Preparing configuration instances");
+    main = new MainConfigurations();
+
+    exclusions = main.getConfiguration().getStringList("Core.Commands.Top.Exclusions");
+    messages = new MessageConfigurations();
+    messages.load(messageConfigurations);
+    player = new PlayerConfigurations();
+    player.load(playerConfigurations);
+  }
+
+  public void loadCurrencies() {
+
   }
 
   public void initializeConfigurations() {
