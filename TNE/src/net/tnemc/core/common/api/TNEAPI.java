@@ -362,7 +362,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount).success();
   }
 
   /**
@@ -373,7 +373,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
   }
 
   /**
@@ -384,7 +384,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency).success();
   }
 
   /**
@@ -396,7 +396,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
   }
 
   /**
@@ -458,7 +458,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount).success();
   }
 
   /**
@@ -469,7 +469,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
   }
 
   /**
@@ -480,7 +480,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency);
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency).success();
   }
 
   /**
@@ -492,7 +492,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
   }
 
   /**

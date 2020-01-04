@@ -47,7 +47,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public String version() {
-    return "0.1.4.4";
+    return "0.1.4.6";
   }
 
   @Override
@@ -192,196 +192,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public EconomyResponse canWithdrawDetail(String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canWithdrawDetail(String s, UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canWithdrawDetail(UUID uuid, String s) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canWithdrawDetail(UUID uuid, UUID uuid1) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canDepositDetail(String s, String s1) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canDepositDetail(String s, UUID uuid) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canDepositDetail(UUID uuid, String s) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canDepositDetail(UUID uuid, UUID uuid1) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return null;
-  }
-
-  @Override
   public Account createIfNotExists(String identifier) {
     if(!hasAccount(identifier)) createAccount(identifier);
     return getAccount(identifier);
@@ -430,7 +240,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public TransactionResult performTransaction(Transaction transaction) {
-    return null;
+    return transaction.perform();
   }
 
   @Override

@@ -150,7 +150,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
-            <version>0.1.4.4</version>
+            <version>0.1.4.6</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TheNewConfigLibrary</artifactId>
-            <version>0.1.1.55</version>
+            <version>0.1.1.61</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

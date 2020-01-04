@@ -78,7 +78,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -904,6 +907,21 @@ public class TNE extends TNELib {
 
     }
     return commentedConfiguration;
+  }
+
+  InputStream getResourceUTF8(String filename) {
+    try {
+      URL url = getClass().getClassLoader().getResource(filename);
+      if (url == null) {
+        return null;
+      } else {
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        return connection.getInputStream();
+      }
+    } catch (IOException var4) {
+      return null;
+    }
   }
 
   public static void debug(StackTraceElement[] stack) {

@@ -26,11 +26,11 @@ public interface TNETransactionType extends TransactionType {
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
-      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true));
+      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true)).success();
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true));
+        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true)).success();
       }
     }
 
