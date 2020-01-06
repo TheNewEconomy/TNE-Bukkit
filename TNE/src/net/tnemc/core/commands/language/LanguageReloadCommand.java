@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 1/27/2018.
  */
-public class LanguageReloadCommand extends TNECommand {
+public class LanguageReloadCommand implements CommandExecution {
 
   public LanguageReloadCommand(TNE plugin) {
     super(plugin);
@@ -47,7 +47,7 @@ public class LanguageReloadCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     TNE.instance().messages().loadLanguages();
     Message message = new Message("Messages.Language.Reload");
     message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);

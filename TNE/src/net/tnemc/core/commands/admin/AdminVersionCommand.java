@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminVersionCommand extends TNECommand {
+public class AdminVersionCommand implements CommandExecution {
 
   public AdminVersionCommand(TNE plugin) {
     super(plugin);
@@ -46,7 +46,7 @@ public class AdminVersionCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     sender.sendMessage("You're currently running TNE version " + TNE.instance().getDescription().getVersion());
     return true;
   }

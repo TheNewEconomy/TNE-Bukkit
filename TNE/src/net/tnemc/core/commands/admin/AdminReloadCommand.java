@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AdminReloadCommand extends TNECommand {
+public class AdminReloadCommand implements CommandExecution {
 
   public AdminReloadCommand(TNE plugin) {
     super(plugin);
@@ -47,13 +47,13 @@ public class AdminReloadCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     String id = (arguments.length == 1)? arguments[0] : "all";
     if(TNE.configurations().reload(id)) {
       sender.sendMessage(ChatColor.WHITE + "Successfully reload configuration with id of: " + id + ".");
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

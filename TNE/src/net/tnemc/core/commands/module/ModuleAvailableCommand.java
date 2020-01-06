@@ -19,7 +19,7 @@ import java.util.List;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class ModuleAvailableCommand extends TNECommand {
+public class ModuleAvailableCommand implements CommandExecution {
 
   public ModuleAvailableCommand(TNE plugin) {
     super(plugin);
@@ -53,7 +53,7 @@ public class ModuleAvailableCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     final String url = (arguments.length > 0)? arguments[0] : TNE.coreURL;
 
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{

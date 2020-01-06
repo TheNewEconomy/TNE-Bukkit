@@ -18,7 +18,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class TransactionInfoCommand extends TNECommand {
+public class TransactionInfoCommand implements CommandExecution {
 
   public TransactionInfoCommand(TNE plugin) {
     super(plugin);
@@ -52,7 +52,7 @@ public class TransactionInfoCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID uuid = null;
@@ -81,7 +81,7 @@ public class TransactionInfoCommand extends TNECommand {
       message.translate(world, sender);
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

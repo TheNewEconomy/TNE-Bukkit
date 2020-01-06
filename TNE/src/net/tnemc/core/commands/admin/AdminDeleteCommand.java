@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminDeleteCommand extends TNECommand {
+public class AdminDeleteCommand implements CommandExecution {
 
   public AdminDeleteCommand(TNE plugin) {
     super(plugin);
@@ -48,7 +48,7 @@ public class AdminDeleteCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       if(TNE.manager().exists(IDFinder.getID(arguments[0]))) {
@@ -64,7 +64,7 @@ public class AdminDeleteCommand extends TNECommand {
       m.translate(world, sender);
       return false;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

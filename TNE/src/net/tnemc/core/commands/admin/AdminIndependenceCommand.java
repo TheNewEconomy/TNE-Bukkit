@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AdminIndependenceCommand extends TNECommand {
+public class AdminIndependenceCommand implements CommandExecution {
 
   public AdminIndependenceCommand(TNE plugin) {
     super(plugin);
@@ -50,8 +50,8 @@ public class AdminIndependenceCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
-    final Player player = getPlayer(sender);
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+    final Player player = MISCUtils.getPlayer(sender);
     Bukkit.broadcastMessage(ChatColor.RED + "Happy " + ChatColor.WHITE + "Independence " + ChatColor.BLUE + "Day!");
     IndependenceUtils.play(player.getLocation());
     return true;

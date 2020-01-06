@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminSaveCommand extends TNECommand {
+public class AdminSaveCommand implements CommandExecution {
 
   public AdminSaveCommand(TNE plugin) {
     super(plugin);
@@ -46,7 +46,7 @@ public class AdminSaveCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     try {
       TNE.saveManager().save();
     } catch (SQLException e) {

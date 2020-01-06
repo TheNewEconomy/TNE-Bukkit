@@ -1,12 +1,14 @@
 package net.tnemc.core.commands.account.pin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -21,41 +23,12 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AccountPinSetCommand extends TNECommand {
-
-  public AccountPinSetCommand(TNE plugin) {
-    super(plugin);
-  }
+public class AccountPinSetCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "set";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.account.pin.set";
-  }
-
-  @Override
-  public boolean console() {
-    return false;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Account.PinSet";
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length < 1) {
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       return false;
     }
 

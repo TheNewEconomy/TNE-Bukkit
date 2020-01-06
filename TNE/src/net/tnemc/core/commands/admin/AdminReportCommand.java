@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AdminReportCommand extends TNECommand {
+public class AdminReportCommand implements CommandExecution {
 
   public AdminReportCommand(TNE plugin) {
     super(plugin);
@@ -54,7 +54,7 @@ public class AdminReportCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     boolean succeeded = true;
     String serverLog = "";
     String configLog = "";

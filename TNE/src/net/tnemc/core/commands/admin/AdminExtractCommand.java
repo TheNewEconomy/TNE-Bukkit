@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 2/8/2018.
  */
-public class AdminExtractCommand extends TNECommand {
+public class AdminExtractCommand implements CommandExecution {
 
   public AdminExtractCommand(TNE plugin) {
     super(plugin);
@@ -48,7 +48,7 @@ public class AdminExtractCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> {
       try {
         MISCUtils.extract(sender);

@@ -29,7 +29,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/31/2017.
  */
-public class MoneyNoteCommand extends TNECommand {
+public class MoneyNoteCommand implements CommandExecution {
 
   public MoneyNoteCommand(TNE plugin) {
     super(plugin);
@@ -69,7 +69,7 @@ public class MoneyNoteCommand extends TNECommand {
   }*/
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       if(arguments.length >= 1) {
         final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
@@ -113,7 +113,7 @@ public class MoneyNoteCommand extends TNECommand {
           Message max = new Message(parsed);
           max.addVariable("$currency", currency.name());
           max.addVariable("$world", world);
-          max.addVariable("$player", getPlayer(sender).getDisplayName());
+          max.addVariable("$player", MISCUtils.getPlayer(sender).getDisplayName());
           max.translate(world, sender);
           return;
         }
@@ -121,7 +121,7 @@ public class MoneyNoteCommand extends TNECommand {
         final BigDecimal value = new BigDecimal(parsed);
         if(value.compareTo(currency.getMinimum()) < 0) {
           Message minimum = new Message("Messages.Money.NoteMinimum");
-          minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum(), getPlayer(sender).getUniqueId().toString()));
+          minimum.addVariable("$amount", CurrencyFormatter.format(currency, world, currency.getMinimum(), MISCUtils.getPlayer(sender).getUniqueId().toString()));
           minimum.translate(world, sender);
           return;
         }
@@ -133,7 +133,7 @@ public class MoneyNoteCommand extends TNECommand {
 
         if(result.proceed()) {
           ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
-          Bukkit.getScheduler().runTask(plugin,()->getPlayer(sender).getInventory().addItem(stack));
+          Bukkit.getScheduler().runTask(plugin,()->MISCUtils.getPlayer(sender).getInventory().addItem(stack));
           Message message = new Message(result.recipientMessage());
           message.addVariable("$player", arguments[0]);
           message.addVariable("$world", world);
@@ -146,7 +146,7 @@ public class MoneyNoteCommand extends TNECommand {
         message.translate(world, sender);
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       return;
     });
     return true;

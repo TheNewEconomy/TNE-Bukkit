@@ -1,10 +1,11 @@
 package net.tnemc.core.commands.yeti;
 
-import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,40 +19,11 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 10/17/2017.
  */
-public class YetiIdiotCommand extends TNECommand {
-
-  public YetiIdiotCommand(TNE plugin) {
-    super(plugin);
-  }
+public class YetiIdiotCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "idiot";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return ChatColor.GREEN + "/yediot" + ChatColor.WHITE + " - Determine if a Yediot is near. http://www.urbandictionary.com/define.php?term=yediot";
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
-    Player player = getPlayer(sender);
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+    Player player = MISCUtils.getPlayer(sender);
     Player yeti = Bukkit.getPlayer(IDFinder.getID("TheNetYeti"));
     Player growlf = Bukkit.getPlayer(IDFinder.getID("growlf"));
     Player yediot = Bukkit.getPlayer(UUID.fromString("66a7e812-fb82-409c-88c4-9edc34bb5c39"));

@@ -25,7 +25,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class TransactionHistoryCommand extends TNECommand {
+public class TransactionHistoryCommand implements CommandExecution {
 
   public TransactionHistoryCommand(TNE plugin) {
     super(plugin);
@@ -59,9 +59,9 @@ public class TransactionHistoryCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Map<String, String> parsed = getArguments(arguments);
-    Player player = getPlayer(sender);
+    Player player = MISCUtils.getPlayer(sender);
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     String type = "all";
     int page = 1;

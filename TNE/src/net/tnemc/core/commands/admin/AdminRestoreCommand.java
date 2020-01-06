@@ -17,7 +17,7 @@ import java.io.File;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 2/8/2018.
  */
-public class AdminRestoreCommand extends TNECommand {
+public class AdminRestoreCommand implements CommandExecution {
 
   public AdminRestoreCommand(TNE plugin) {
     super(plugin);
@@ -49,7 +49,7 @@ public class AdminRestoreCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
     if(file.exists()) {
       Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> MISCUtils.restore(sender));

@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class MoneySetAllCommand extends TNECommand {
+public class MoneySetAllCommand implements CommandExecution {
 
   public MoneySetAllCommand(TNE plugin) {
     super(plugin);
@@ -58,13 +58,13 @@ public class MoneySetAllCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       if(arguments.length >= 1) {
         final String world = (arguments.length >= 2)? TNE.instance().getWorldManager(arguments[1]).getBalanceWorld() : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 
         if(world == null) {
-          help(sender);
+          MISCUtils.help(sender, label, arguments);
           return;
         }
 
@@ -91,7 +91,7 @@ public class MoneySetAllCommand extends TNECommand {
         try {
           TNE.saveManager().getTNEManager().getTNEProvider().setAllBalance(world, value);
         } catch (SQLException ignore) {
-          help(sender);
+          MISCUtils.help(sender, label, arguments);
           return;
         }
 
@@ -101,7 +101,7 @@ public class MoneySetAllCommand extends TNECommand {
         message.translate(world, IDFinder.getID(sender));
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
     });
     return true;
   }

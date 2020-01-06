@@ -29,7 +29,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class MoneyConvertCommand extends TNECommand {
+public class MoneyConvertCommand implements CommandExecution {
 
   public MoneyConvertCommand(TNE plugin) {
     super(plugin);
@@ -61,9 +61,9 @@ public class MoneyConvertCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
-      final Player player = getPlayer(sender);
+      final Player player = MISCUtils.getPlayer(sender);
       if(arguments.length >= 2) {
         final UUID id = IDFinder.getID(sender);
         final TNEAccount account = TNE.manager().getAccount(id);
@@ -71,7 +71,7 @@ public class MoneyConvertCommand extends TNECommand {
         final String currencyTo = (arguments[1].contains(":"))? arguments[1].split(":")[0] : arguments[1];
 
         if(!TNE.manager().currencyManager().contains(worldTo, currencyTo)) {
-          help(sender);
+          MISCUtils.help(sender, label, arguments);
           return;
         }
 
@@ -103,7 +103,7 @@ public class MoneyConvertCommand extends TNECommand {
           String currencyFrom = (arguments[2].contains(":"))? arguments[2].split(":")[0] : arguments[2];
 
           if(!TNE.manager().currencyManager().contains(worldTo, currencyTo)) {
-            help(sender);
+            MISCUtils.help(sender, label, arguments);
             return;
           }
 
@@ -136,7 +136,7 @@ public class MoneyConvertCommand extends TNECommand {
         message.translate(worldTo, IDFinder.getID(sender));
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
     });
     return true;
   }

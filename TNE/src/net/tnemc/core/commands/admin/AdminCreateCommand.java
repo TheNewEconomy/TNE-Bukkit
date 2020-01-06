@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
@@ -9,6 +9,7 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,39 +24,10 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminCreateCommand extends TNECommand {
-
-  public AdminCreateCommand(TNE plugin) {
-    super(plugin);
-  }
+public class AdminCreateCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "create";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.create";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Create";
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID id = IDFinder.getID(arguments[0]);
@@ -89,7 +61,7 @@ public class AdminCreateCommand extends TNECommand {
       new Message("Messages.Admin.Exists").translate(world, sender);
       return false;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

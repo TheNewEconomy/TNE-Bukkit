@@ -25,7 +25,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class MoneyConsolidateCommand extends TNECommand {
+public class MoneyConsolidateCommand implements CommandExecution {
 
   public MoneyConsolidateCommand(TNE plugin) {
     super(plugin);
@@ -57,23 +57,23 @@ public class MoneyConsolidateCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       if(!(sender instanceof Player) && arguments.length < 1) {
-        help(sender);
+        MISCUtils.help(sender, label, arguments);
         return;
       }
 
       if(arguments.length >= 1 && !sender.hasPermission("tne.money.consolidate.other")) {
-        help(sender);
+        MISCUtils.help(sender, label, arguments);
         return;
       }
 
-      final UUID id = (arguments.length >= 1)? IDFinder.getID(arguments[0]) : IDFinder.getID(getPlayer(sender));
+      final UUID id = (arguments.length >= 1)? IDFinder.getID(arguments[0]) : IDFinder.getID(MISCUtils.getPlayer(sender));
       Player player = Bukkit.getPlayer(id);
 
       if(player == null) {
-        help(sender);
+        MISCUtils.help(sender, label, arguments);
         return;
       }
       final String world = WorldFinder.getWorld(id, WorldVariant.CONFIGURATION);

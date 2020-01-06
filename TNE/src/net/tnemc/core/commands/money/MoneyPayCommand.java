@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class MoneyPayCommand extends TNECommand {
+public class MoneyPayCommand implements CommandExecution {
 
   public MoneyPayCommand(TNE plugin) {
     super(plugin);
@@ -66,9 +66,9 @@ public class MoneyPayCommand extends TNECommand {
   }*/
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length <= 0) {
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       return false;
     }
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
@@ -123,7 +123,7 @@ public class MoneyPayCommand extends TNECommand {
           Message msg = new Message(parsed);
           msg.addVariable("$currency", currency.name());
           msg.addVariable("$world", world);
-          msg.addVariable("$player", getPlayer(sender).getDisplayName());
+          msg.addVariable("$player", MISCUtils.getPlayer(sender).getDisplayName());
           msg.translate(world, sender);
           TNE.debug("===END MoneyPayCommand ===");
           return;
@@ -135,7 +135,7 @@ public class MoneyPayCommand extends TNECommand {
           Message msg = new Message("Messages.Money.Negative");
           msg.addVariable("$currency", currency.name());
           msg.addVariable("$world", world);
-          msg.addVariable("$player", getPlayer(sender).getDisplayName());
+          msg.addVariable("$player", MISCUtils.getPlayer(sender).getDisplayName());
           msg.translate(world, sender);
           return;
         }
@@ -147,7 +147,7 @@ public class MoneyPayCommand extends TNECommand {
         TNE.debug("===END MoneyPayCommand ===");
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       TNE.debug("===END MoneyPayCommand ===");
     });
     return true;

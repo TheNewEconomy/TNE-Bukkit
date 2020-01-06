@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class MoneyGiveCommand extends TNECommand {
+public class MoneyGiveCommand implements CommandExecution {
 
   public MoneyGiveCommand(TNE plugin) {
     super(plugin);
@@ -67,7 +67,7 @@ public class MoneyGiveCommand extends TNECommand {
   }*/
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       TNE.debug("===START MoneyGiveCommand ===");
       if(arguments.length >= 2) {
@@ -119,7 +119,7 @@ public class MoneyGiveCommand extends TNECommand {
           Message max = new Message(parsed);
           max.addVariable("$currency", currency.name());
           max.addVariable("$world", world);
-          max.addVariable("$player", getPlayer(sender).getDisplayName());
+          max.addVariable("$player", MISCUtils.getPlayer(sender).getDisplayName());
           max.translate(world, sender);
           TNE.debug("===END MoneyGiveCommand ===");
           return;
@@ -134,7 +134,7 @@ public class MoneyGiveCommand extends TNECommand {
         TNE.debug("===END MoneyGiveCommand ===");
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       TNE.debug("===END MoneyGiveCommand ===");
     });
     return true;

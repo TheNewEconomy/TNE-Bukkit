@@ -19,7 +19,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 11/8/2017.
  */
-public class AdminMenuCommand extends TNECommand {
+public class AdminMenuCommand implements CommandExecution {
 
   public AdminMenuCommand(TNE plugin) {
     super(plugin);
@@ -58,13 +58,13 @@ public class AdminMenuCommand extends TNECommand {
   }*/
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 
       if(TNE.manager().exists(IDFinder.getID(arguments[0]))) {
         UUID id = IDFinder.getID(sender);
-        Player player = getPlayer(sender);
+        Player player = MISCUtils.getPlayer(sender);
 
         TNE.menuManager().open("main", player);
         TNE.menuManager().setViewerData(id, "action_player",IDFinder.getID(arguments[0]));
@@ -76,7 +76,7 @@ public class AdminMenuCommand extends TNECommand {
       m.translate(world, sender);
       return false;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

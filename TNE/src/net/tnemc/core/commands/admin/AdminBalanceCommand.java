@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -13,6 +13,7 @@ import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -26,50 +27,10 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminBalanceCommand extends TNECommand {
-
-  public AdminBalanceCommand(TNE plugin) {
-    super(plugin);
-  }
+public class AdminBalanceCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "balance";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "bal"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.balance";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Balance";
-  }
-
-  /*@Override
-  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
-    Map<Integer, String> argTypes = new HashMap<>();
-    argTypes.put(0, "player");
-    argTypes.put(1, "world");
-    argTypes.put(2, "currency");
-    return buildSuggestions(sender, shortened, arguments, argTypes, 1);
-  }*/
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     TNE.debug("===START AdminBalanceCommand  ===");
     if(arguments.length >= 1 && arguments.length <= 3) {
 
@@ -105,7 +66,7 @@ public class AdminBalanceCommand extends TNECommand {
       TNE.debug("===END AdminBalanceCommand  ===");
       return result.proceed();
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     TNE.debug("===END AdminBalanceCommand  ===");
     return false;
   }

@@ -21,7 +21,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminTestCommand extends TNECommand {
+public class AdminTestCommand implements CommandExecution {
 
   public AdminTestCommand(TNE plugin) {
     super(plugin);
@@ -53,7 +53,7 @@ public class AdminTestCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(sender instanceof Player) {
       String world = (arguments.length >= 1)? arguments[0] : TNE.instance().defaultWorld;
       String nether = (arguments.length >= 2)? arguments[1] : world + "_nether";

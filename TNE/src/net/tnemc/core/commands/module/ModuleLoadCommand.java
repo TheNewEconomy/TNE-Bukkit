@@ -23,7 +23,7 @@ import java.util.List;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class ModuleLoadCommand extends TNECommand {
+public class ModuleLoadCommand implements CommandExecution {
 
   public ModuleLoadCommand(TNE plugin) {
     super(plugin);
@@ -57,7 +57,7 @@ public class ModuleLoadCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       String moduleName = arguments[0];
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
@@ -111,7 +111,7 @@ public class ModuleLoadCommand extends TNECommand {
       message.translate(world, sender);
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

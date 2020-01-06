@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 1/27/2018.
  */
-public class LanguageCurrentCommand extends TNECommand {
+public class LanguageCurrentCommand implements CommandExecution {
 
   public LanguageCurrentCommand(TNE plugin) {
     super(plugin);
@@ -48,7 +48,7 @@ public class LanguageCurrentCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     String language = TNE.manager().getAccount(IDFinder.getID(sender)).getLanguage();
 
     Message message = new Message("Messages.Language.Current");

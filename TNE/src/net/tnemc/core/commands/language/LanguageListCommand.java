@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 1/27/2018.
  */
-public class LanguageListCommand extends TNECommand {
+public class LanguageListCommand implements CommandExecution {
 
   public LanguageListCommand(TNE plugin) {
     super(plugin);
@@ -47,7 +47,7 @@ public class LanguageListCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Message message = new Message("Messages.Language.List");
     message.addVariable("$languages", String.join(",", TNE.instance().messages().getLanguages().keySet()) + " and Default");
     message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);

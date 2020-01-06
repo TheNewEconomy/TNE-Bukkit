@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 2/7/2018.
  */
-public class AdminUploadCommand extends TNECommand {
+public class AdminUploadCommand implements CommandExecution {
 
   public AdminUploadCommand(TNE plugin) {
     super(plugin);
@@ -53,7 +53,7 @@ public class AdminUploadCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
 
     boolean succeeded = true;
     String serverLog = "";

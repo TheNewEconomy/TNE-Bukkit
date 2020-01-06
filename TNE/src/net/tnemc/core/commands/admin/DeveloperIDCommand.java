@@ -17,7 +17,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class DeveloperIDCommand extends TNECommand {
+public class DeveloperIDCommand implements CommandExecution {
 
   public DeveloperIDCommand(TNE plugin) {
     super(plugin);
@@ -54,7 +54,7 @@ public class DeveloperIDCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
 
       final String original = arguments[0];
@@ -77,7 +77,7 @@ public class DeveloperIDCommand extends TNECommand {
 
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

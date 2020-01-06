@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 1/27/2018.
  */
-public class LanguageSetCommand extends TNECommand {
+public class LanguageSetCommand implements CommandExecution {
 
   public LanguageSetCommand(TNE plugin) {
     super(plugin);
@@ -49,7 +49,7 @@ public class LanguageSetCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.ACTUAL);
       String language = arguments[0];
@@ -69,7 +69,7 @@ public class LanguageSetCommand extends TNECommand {
       message.translate(world, sender);
       return false;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

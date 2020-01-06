@@ -19,7 +19,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 2/8/2018.
  */
-public class AdminResetCommand extends TNECommand {
+public class AdminResetCommand implements CommandExecution {
 
   public AdminResetCommand(TNE plugin) {
     super(plugin);
@@ -51,7 +51,7 @@ public class AdminResetCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     try {
       final UUID id = IDFinder.getID(sender);
       if(EconomyManager.reset.contains(id)) {

@@ -1,7 +1,8 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -12,41 +13,10 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 2/7/2018.
  */
-public class AdminBuildCommand extends TNECommand {
-
-  public AdminBuildCommand(TNE plugin) {
-    super(plugin);
-  }
+public class AdminBuildCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "build";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "b"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.build";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Build";
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     sender.sendMessage("You're currently running TNE build " + TNE.build);
     return true;
   }

@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AdminDebugCommand extends TNECommand {
+public class AdminDebugCommand implements CommandExecution {
 
   public AdminDebugCommand(TNE plugin) {
     super(plugin);
@@ -47,7 +47,7 @@ public class AdminDebugCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     TNE.consoleDebug = !TNE.consoleDebug;
 
     final String status = (TNE.consoleDebug)? "on" : "off";

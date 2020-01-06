@@ -32,7 +32,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class MoneyBalanceCommand extends TNECommand {
+public class MoneyBalanceCommand implements CommandExecution {
 
   public MoneyBalanceCommand(TNE plugin) {
     super(plugin);
@@ -74,7 +74,7 @@ public class MoneyBalanceCommand extends TNECommand {
   }*/
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
 
       TNE.debug("===START MoneyBalanceCommand  ===");
@@ -168,7 +168,7 @@ public class MoneyBalanceCommand extends TNECommand {
         message.translate(world, sender, id.toString());
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       TNE.debug("===END MoneyBalanceCommand ===");
     });
     return true;

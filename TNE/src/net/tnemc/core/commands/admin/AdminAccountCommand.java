@@ -1,7 +1,9 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -14,44 +16,15 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AdminAccountCommand extends TNECommand {
-
-  public AdminAccountCommand(TNE plugin) {
-    super(plugin);
-  }
+public class AdminAccountCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "account";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.account";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "/tne account <username> - Returns a count of how many accounts are associated with a display name, debug command.";
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       sender.sendMessage("Accounts associated with " + arguments[0] + ": " + TNE.saveManager().getTNEManager().getTNEProvider().accountCount(arguments[0]));
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

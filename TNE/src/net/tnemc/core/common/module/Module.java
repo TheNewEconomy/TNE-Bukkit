@@ -1,9 +1,10 @@
 package net.tnemc.core.common.module;
 
 import com.github.tnerevival.core.SaveManager;
+import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.CommandInformation;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
@@ -79,7 +80,7 @@ public interface Module {
   /**
    * @return A list of commands that should be added from this module.
    */
-  default List<TNECommand> commands() {
+  default List<CommandInformation> commands() {
     return new ArrayList<>();
   }
 
@@ -87,7 +88,15 @@ public interface Module {
    * @return A map of commands that should be added as sub commands to commands found in TNE.jar
    * Format: TNE Command Name, List of sub commands to add.
    */
-  default Map<String, List<TNECommand>> subCommands() {
+  default Map<String, List<CommandInformation>> subCommands() {
+    return new HashMap<>();
+  }
+
+  /**
+   * @return A map of command executors that should be added.
+   * Format: Executor Name, Executor
+   */
+  default Map<String, CommandExecution> commandExecutors() {
     return new HashMap<>();
   }
 

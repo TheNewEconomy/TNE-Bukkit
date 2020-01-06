@@ -25,7 +25,7 @@ import java.math.BigDecimal;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class MoneyPayFromCommand extends TNECommand {
+public class MoneyPayFromCommand implements CommandExecution {
 
   public MoneyPayFromCommand(TNE plugin) {
     super(plugin);
@@ -59,9 +59,9 @@ public class MoneyPayFromCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length <= 0) {
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       return false;
     }
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
@@ -121,7 +121,7 @@ public class MoneyPayFromCommand extends TNECommand {
           Message msg = new Message(parsed);
           msg.addVariable("$currency", currency.name());
           msg.addVariable("$world", world);
-          msg.addVariable("$player", getPlayer(sender).getDisplayName());
+          msg.addVariable("$player", MISCUtils.getPlayer(sender).getDisplayName());
           msg.translate(world, sender);
           TNE.debug("===END MoneyPayCommand ===");
           return;
@@ -133,7 +133,7 @@ public class MoneyPayFromCommand extends TNECommand {
           Message msg = new Message("Messages.Money.Negative");
           msg.addVariable("$currency", currency.name());
           msg.addVariable("$world", world);
-          msg.addVariable("$player", getPlayer(sender).getDisplayName());
+          msg.addVariable("$player", MISCUtils.getPlayer(sender).getDisplayName());
           msg.translate(world, sender);
           return;
         }
@@ -145,7 +145,7 @@ public class MoneyPayFromCommand extends TNECommand {
         TNE.debug("===END MoneyPayCommand ===");
         return;
       }
-      help(sender);
+      MISCUtils.help(sender, label, arguments);
       TNE.debug("===END MoneyPayCommand ===");
     });
     return true;

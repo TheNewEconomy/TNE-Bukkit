@@ -2,6 +2,8 @@ package net.tnemc.core.common.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import net.tnemc.commands.core.CommandSearchInformation;
+import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.core.TNE;
 import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.WorldVariant;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
@@ -61,6 +64,18 @@ import static com.google.common.net.HttpHeaders.USER_AGENT;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class MISCUtils {
+
+  public static Player getPlayer(CommandSender sender) {
+    if(sender instanceof Player) {
+      return (Player)sender;
+    }
+    return null;
+  }
+
+  public static void help(CommandSender sender, String label, String[] arguments) {
+    Optional<CommandSearchInformation> search = CommandsHandler.manager().search(label, arguments);
+    sender.sendMessage(search.get().getInformation().get().buildHelp(sender));
+  }
 
   //Minecraft Version Utils
 

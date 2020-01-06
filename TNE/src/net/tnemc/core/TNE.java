@@ -6,20 +6,11 @@ import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.db.SQLDatabase;
 import com.hellyard.cuttlefish.grammar.yaml.YamlValue;
 import net.milkbowl.vault.economy.Economy;
+import net.tnemc.commands.core.CommandInformation;
+import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.config.CommentedConfiguration;
-import net.tnemc.core.commands.CommandManager;
-import net.tnemc.core.commands.TNECommand;
-import net.tnemc.core.commands.account.AccountCommand;
-import net.tnemc.core.commands.admin.AdminCommand;
-import net.tnemc.core.commands.config.ConfigCommand;
-import net.tnemc.core.commands.currency.CurrencyCommand;
-import net.tnemc.core.commands.dev.DeveloperCommand;
-import net.tnemc.core.commands.language.LanguageCommand;
-import net.tnemc.core.commands.module.ModuleCommand;
-import net.tnemc.core.commands.money.MoneyCommand;
-import net.tnemc.core.commands.transaction.TransactionCommand;
-import net.tnemc.core.commands.yeti.YetiCommand;
 import net.tnemc.core.common.EconomyManager;
+import net.tnemc.core.common.Message;
 import net.tnemc.core.common.TNEUUIDManager;
 import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
@@ -66,10 +57,10 @@ import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -92,6 +83,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -104,16 +96,13 @@ import java.util.logging.Logger;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class TNE extends TNELib {
+public class TNE extends TNELib implements TabCompleter {
 
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
   public static final String build = "1Beta119b";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
-
-  //Map containing module sub commands to add to our core commands
-  private Map<String, List<TNECommand>> subCommands = new HashMap<>();
 
   private Map<String, WorldManager> worldManagers = new HashMap<>();
   private List<UUID> tnemodUsers = new ArrayList<>();
@@ -124,7 +113,8 @@ public class TNE extends TNELib {
   private EconomyManager manager;
   private MenuManager menuManager;
   private static net.tnemc.core.common.configurations.ConfigurationManager configurations;
-  protected CommandManager commandManager;
+
+  private CommandsHandler handler;
 
   protected ModuleFileCache moduleCache;
 
@@ -209,7 +199,6 @@ public class TNE extends TNELib {
     if(!getDataFolder().exists()) getDataFolder().mkdirs();
 
     configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
-    commandManager = new CommandManager();
 
     currentSaveVersion = 1116.0;
 
@@ -265,6 +254,7 @@ public class TNE extends TNELib {
         configurations().add(configuration, identifier);
       });
     });
+
     TNE.debug("Preparing configurations for manager");
     configurations().add(main, "main");
     configurations().add(messages, "messages");
@@ -272,59 +262,36 @@ public class TNE extends TNELib {
     configurations().add(world, "world");
 
     TNE.debug("Preparing commands");
-    List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
-    if(configurations().getBoolean("Core.Commands.PayShort")) {
-      moneyArguments.add("pay");
-    }
-
-    if(configurations().getBoolean("Core.Commands.BalanceShort")) {
-      moneyArguments.add("bal");
-      moneyArguments.add("balance");
-      moneyArguments.add("balo");
-      moneyArguments.add("balother");
-      moneyArguments.add("balanceother");
-    }
-
-    if(configurations().getBoolean("Core.Commands.TopShort")) {
-      moneyArguments.add("baltop");
-    }
+    handler = new CommandsHandler(this,
+        new CommentedConfiguration(new File(getDataFolder(), "commands.yml"),
+            new InputStreamReader(this.getResource("commands.yml"),
+                StandardCharsets.UTF_8), false)).withTranslator((text, sender)-> Optional.of(new Message(text).grab(defaultWorld, sender.get())));
 
 
     //Load Module Sub Commands
     loader.getModules().forEach((key, value)-> {
       value.getModule().subCommands().forEach((command, moduleSubs)->{
-        List<TNECommand> subs = (subCommands.containsKey(command))? subCommands.get(command) : new ArrayList<>();
-        subs.addAll(moduleSubs);
-        subCommands.put(command, subs);
+        Optional<CommandInformation> find = CommandsHandler.manager().find(command);
+        if(find.isPresent()) {
+          moduleSubs.forEach((sub)->find.get().addSub(sub));
+        }
+
+        CommandsHandler.manager().register(find.get().getIdentifiers(true), find.get());
       });
     });
 
-    //Commands
-    TNE.debug("Preparing commands2");
-    registerCommand(new String[] { "language", "lang" }, new LanguageCommand(this));
-    registerCommand(new String[] { "acc", "account" }, new AccountCommand(this));
-    registerCommand(new String[] { "tne", "theneweconomy", "eco" }, new AdminCommand(this));
-    registerCommand(new String[] { "tnedev", "theneweconomydev" }, new DeveloperCommand(this));
-    registerCommand(new String[] { "tneconfig", "tnec" }, new ConfigCommand(this));
-    registerCommand(new String[] { "currency", "cur" }, new CurrencyCommand(this));
-    registerCommand(new String[] { "tnemodule", "tnem" }, new ModuleCommand(this));
-    registerCommand(moneyArguments.toArray(new String[moneyArguments.size()]), new MoneyCommand(this));
-    registerCommand(new String[] { "transaction", "trans" }, new TransactionCommand(this));
-    registerCommand(new String[] { "yediot" }, new YetiCommand(this));
+    //Executors
 
     //Load Module Commands
     loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{
-      List<String> accessors = new ArrayList<>();
-      for(String string : command.aliases()) {
-        accessors.add(string);
-      }
-      accessors.add(command.name());
-      TNE.debug("Command Manager Null?: " + (commandManager == null));
-      TNE.debug("Accessors?: " + accessors.size());
-      TNE.debug("Command Null?: " + (command == null));
-      registerCommand(accessors.toArray(new String[accessors.size()]), command);
+      CommandsHandler.manager().register(command.getIdentifiers(true), command);
     }));
-    commandManager.registerCommands();
+
+    //Load Module Executors
+    loader.getModules().forEach((key, value)-> value.getModule().commandExecutors().forEach((name, executor)->{
+      CommandsHandler.instance().addExecutor(name, executor);
+    }));
+    handler.load();
 
     //Check to see if the currencies directory exists, and if not create it and add the default USD currency.
     final File currenciesDirectory = new File(getDataFolder(), "currencies");
@@ -517,11 +484,6 @@ public class TNE extends TNELib {
     }
 
     getLogger().info("The New Economy has been enabled!");
-    try {
-      writeCommands();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   public void onDisable() {
@@ -546,51 +508,6 @@ public class TNE extends TNELib {
     SQLDatabase.getDataSource().close();
     getLogger().info("The New Economy has been disabled!");
     super.onDisable();
-  }
-
-  private void writeCommands() throws IOException {
-    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(getDataFolder(), "commands.txt")));
-    final String newLine = System.getProperty("line.separator");
-
-    for(TNECommand command : commandManager.commands.values()) {
-      writer.write(newLine);
-      writer.write("  " + command.name() + ":" + newLine);
-
-      if(command.aliases().length > 0) {
-        writer.write("    Alias:" + newLine);
-
-        for(String alias : command.aliases()) {
-          writer.write("      - " + alias + newLine);
-        }
-      }
-      writer.write("    Permission: \"" + command.node() + "\"" + newLine);
-      writer.write("    Console: " + command.console() + newLine);
-      writer.write("    Player: true" + newLine);
-      writer.write("    Developer: " + command.developer() + newLine);
-      writer.write("    Description: \"" + command.helpLine() + "\"" + newLine);
-      writer.write("    Executor: \"" + command.name() + "_exe\"" + newLine);
-
-      if(command.getSubCommands().size() > 0) {
-        writer.write("    Sub:" + newLine);
-        for(TNECommand sub : command.getSubCommands().values()) {
-          writer.write("      " + sub.name() + ":" + newLine);
-
-          if(sub.aliases().length > 0) {
-            writer.write("        Alias:" + newLine);
-
-            for(String alias : sub.aliases()) {
-              writer.write("          - " + alias + newLine);
-            }
-          }
-          writer.write("        Permission: \"" + sub.node() + "\"" + newLine);
-          writer.write("        Console: " + sub.console() + newLine);
-          writer.write("        Player: true" + newLine);
-          writer.write("        Developer: " + sub.developer() + newLine);
-          writer.write("        Description: \"" + sub.helpLine() + "\"" + newLine);
-          writer.write("        Executor: \"" + sub.name() + "_exe\"" + newLine);
-        }
-      }
-    }
   }
 
   private void writeMobs() throws IOException {
@@ -659,31 +576,10 @@ public class TNE extends TNELib {
     return api;
   }
 
-  public CommandManager getCommandManager() {
-    return commandManager;
-  }
-
-  public void registerCommand(String[] accessors, TNECommand command) {
-    if(subCommands.containsKey(command.name()))
-      command.addSubs(subCommands.get(command.name()));
-
-    commandManager.commands.put(accessors, command);
-  }
-
-  public void registerCommandForce(String[] accessors, TNECommand command) {
-    if(subCommands.containsKey(command.name()))
-      command.addSubs(subCommands.get(command.name()));
-
-    commandManager.commands.put(accessors, command);
-  }
-
-  public void registerCommands(Map<String[], TNECommand> commands) {
-    commandManager.commands = commands;
-    commandManager.registerCommands();
-  }
-
-  public void unregisterCommand(String[] accessors) {
-    commandManager.unregister(accessors);
+  @Override
+  public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] arguments) {
+    System.out.println("Tab Complete");
+    return handler.tab(sender, command, alias, arguments);
   }
 
   @Override
@@ -695,36 +591,7 @@ public class TNE extends TNELib {
   }
 
   public boolean customCommand(CommandSender sender, String label, String[] arguments) {
-
-    TNECommand ecoCommand = commandManager.find(label);
-    if(ecoCommand != null) {
-      if(!ecoCommand.canExecute(sender)) {
-        sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
-        return false;
-      }
-      return ecoCommand.execute(sender, label, arguments);
-    }
-    return false;
-  }
-
-  public boolean onCustard(CommandSender sender, Command command, String label, String[] arguments) {
-    List<String> triggers = new ArrayList<>(Arrays.asList(TNE.configurations().getString( "Core.Commands.Triggers", "main", "", "").split(",")));
-
-    if(sender instanceof Player && !triggers.contains("/")) return false;
-    return custardCommand(sender, label, arguments);
-  }
-
-  public boolean custardCommand(CommandSender sender, String label, String[] arguments) {
-
-    TNECommand ecoCommand = commandManager.find(label);
-    if(ecoCommand != null) {
-      if(!ecoCommand.canExecute(sender)) {
-        sender.sendMessage(ChatColor.RED + "I'm sorry, but you're not allowed to use that command.");
-        return false;
-      }
-      return ecoCommand.execute(sender, label, arguments);
-    }
-    return false;
+    return handler.handle(sender, null, label, arguments);
   }
 
   public String sanitizeWorld(String world) {

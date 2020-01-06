@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.admin;
 
-import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import net.tnemc.commands.core.CommandExecution;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -12,39 +12,10 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminCaveatsCommand extends TNECommand {
-
-  public AdminCaveatsCommand(TNE plugin) {
-    super(plugin);
-  }
+public class AdminCaveatsCommand implements CommandExecution {
 
   @Override
-  public String name() {
-    return "caveats";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.caveats";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Caveats";
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     sender.sendMessage("No known caveats at this point.");
     return true;
   }

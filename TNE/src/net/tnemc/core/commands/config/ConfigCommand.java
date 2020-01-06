@@ -11,7 +11,7 @@ import net.tnemc.core.commands.TNECommand;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class ConfigCommand extends TNECommand {
+public class ConfigCommand implements CommandExecution {
 
   public ConfigCommand(TNE plugin) {
     super(plugin);

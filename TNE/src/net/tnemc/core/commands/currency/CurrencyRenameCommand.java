@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/16/2017.
  */
-public class CurrencyRenameCommand extends TNECommand {
+public class CurrencyRenameCommand implements CommandExecution {
 
   public CurrencyRenameCommand(TNE plugin) {
     super(plugin);
@@ -47,7 +47,7 @@ public class CurrencyRenameCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 2) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       String currency = arguments[0];
@@ -82,7 +82,7 @@ public class CurrencyRenameCommand extends TNECommand {
       m.translate(world, sender);
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

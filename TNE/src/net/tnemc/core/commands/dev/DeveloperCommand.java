@@ -11,7 +11,7 @@ import net.tnemc.core.commands.TNECommand;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 1/27/2018.
  */
-public class DeveloperCommand extends TNECommand {
+public class DeveloperCommand implements CommandExecution {
 
   public DeveloperCommand(TNE plugin) {
     super(plugin);

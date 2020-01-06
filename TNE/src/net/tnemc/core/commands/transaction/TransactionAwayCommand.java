@@ -25,7 +25,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/12/2017.
  */
-public class TransactionAwayCommand extends TNECommand {
+public class TransactionAwayCommand implements CommandExecution {
 
   public TransactionAwayCommand(TNE plugin) {
     super(plugin);
@@ -57,9 +57,9 @@ public class TransactionAwayCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-    Player player = getPlayer(sender);
+    Player player = MISCUtils.getPlayer(sender);
     int page = 1;
 
     if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {

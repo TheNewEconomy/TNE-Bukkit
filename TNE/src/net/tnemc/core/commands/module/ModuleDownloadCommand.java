@@ -22,7 +22,7 @@ import java.util.Optional;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class ModuleDownloadCommand extends TNECommand {
+public class ModuleDownloadCommand implements CommandExecution {
 
   public ModuleDownloadCommand(TNE plugin) {
     super(plugin);
@@ -56,7 +56,7 @@ public class ModuleDownloadCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length >= 1) {
       final String url = (arguments.length > 1)? arguments[1] : TNE.coreURL;
       final String moduleName = arguments[0].toLowerCase().trim();
@@ -86,7 +86,7 @@ public class ModuleDownloadCommand extends TNECommand {
       });
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return false;
   }
 }

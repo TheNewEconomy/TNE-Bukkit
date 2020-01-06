@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class AdminPurgeCommand extends TNECommand {
+public class AdminPurgeCommand implements CommandExecution {
 
   public AdminPurgeCommand(TNE plugin) {
     super(plugin);
@@ -49,7 +49,7 @@ public class AdminPurgeCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     if(arguments.length >= 1) {
       if (Bukkit.getWorld(arguments[0]) == null)
@@ -60,7 +60,7 @@ public class AdminPurgeCommand extends TNECommand {
       m.translate(world, IDFinder.getID(sender));
       return true;
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     return true;
   }
 }

@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class CurrencyTiersCommand extends TNECommand {
+public class CurrencyTiersCommand implements CommandExecution {
 
   public CurrencyTiersCommand(TNE plugin) {
     super(plugin);
@@ -49,7 +49,7 @@ public class CurrencyTiersCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     String world = (arguments.length >= 2)? arguments[1] : TNE.instance().defaultWorld;
     String currencyName = (arguments.length >= 1)? arguments[0] : TNE.manager().currencyManager().get(world).name();
     TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);

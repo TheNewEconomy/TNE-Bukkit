@@ -18,7 +18,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class AdminPlayerCommand extends TNECommand {
+public class AdminPlayerCommand implements CommandExecution {
 
   public AdminPlayerCommand(TNE plugin) {
     super(plugin);
@@ -59,7 +59,7 @@ public class AdminPlayerCommand extends TNECommand {
   }*/
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     TNE.debug("===START AdminBalanceCommand  ===");
     if(arguments.length >= 1 && arguments.length <= 3) {
 
@@ -68,7 +68,7 @@ public class AdminPlayerCommand extends TNECommand {
       final String not = (player)? "" : " not";
       sender.sendMessage(ChatColor.WHITE + arguments[0] + " is" + not + " a player.");
     }
-    help(sender);
+    MISCUtils.help(sender, label, arguments);
     TNE.debug("===END AdminBalanceCommand  ===");
     return false;
   }

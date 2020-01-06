@@ -11,7 +11,7 @@ import net.tnemc.core.commands.TNECommand;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class TransactionCommand extends TNECommand {
+public class TransactionCommand implements CommandExecution {
 
   public TransactionCommand(TNE plugin) {
     super(plugin);

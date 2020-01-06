@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 7/10/2017.
  */
-public class MoneyCommand extends TNECommand {
+public class MoneyCommand implements CommandExecution {
 
   public MoneyCommand(TNE plugin) {
     super(plugin);
@@ -56,7 +56,7 @@ public class MoneyCommand extends TNECommand {
   }
 
   @Override
-  public boolean execute(CommandSender sender, String command, String[] arguments) {
+  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(command.equalsIgnoreCase("givemoney") ||
         command.equalsIgnoreCase("givebal")) {
       TNECommand sub = findSub("give");
