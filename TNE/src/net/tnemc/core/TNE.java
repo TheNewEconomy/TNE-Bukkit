@@ -109,7 +109,7 @@ public class TNE extends TNELib {
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
-  public static final String build = "2Beta119";
+  public static final String build = "1Beta119b";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   //Map containing module sub commands to add to our core commands
@@ -236,8 +236,9 @@ public class TNE extends TNELib {
 
 
     if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
-      addWorldManager(new WorldManager(defaultWorld));
+      addWorldManager(new WorldManager(mainConfigurations.getString("Core.DefaultWorld")));
     }
+
     getServer().getWorlds().forEach(world-> worldManagers.put(world.getName(), new WorldManager(world.getName(), mainConfigurations.getBool("Core.Multiworld"))));
 
     world = new WorldConfigurations();
@@ -516,11 +517,11 @@ public class TNE extends TNELib {
     }
 
     getLogger().info("The New Economy has been enabled!");
-    /*try {
+    try {
       writeCommands();
     } catch (IOException e) {
       e.printStackTrace();
-    }*/
+    }
   }
 
   public void onDisable() {
