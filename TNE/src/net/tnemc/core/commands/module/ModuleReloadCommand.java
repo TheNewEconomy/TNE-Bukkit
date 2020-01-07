@@ -1,16 +1,16 @@
 package net.tnemc.core.commands.module;
 
+import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.module.ModuleWrapper;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -21,37 +21,6 @@ import java.util.List;
  * Created by Daniel on 7/10/2017.
  */
 public class ModuleReloadCommand implements CommandExecution {
-
-  public ModuleReloadCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "reload";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "r"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.module.reload";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Module.Reload";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
@@ -82,11 +51,13 @@ public class ModuleReloadCommand implements CommandExecution {
       module.getModule().configurations().forEach((configuration, identifier)->{
         TNE.configurations().add(configuration, identifier);
       });
-      module.getModule().commands().forEach((com)->{
-        List<String> accessors = Arrays.asList(com.aliases());
-        accessors.add(com.name());
-        TNE.instance().registerCommand((String[])accessors.toArray(), com);
-      });
+
+      //Load Module Commands
+      module.getModule().commands().forEach((com)-> CommandsHandler.manager().register(com.getIdentifiers(true), com));
+
+      //Load Module Executors
+      module.getModule().commandExecutors().forEach((name, executor)-> CommandsHandler.instance().addExecutor(name, executor));
+
       module.getModule().enableSave(TNE.saveManager());
       module.getModule().listeners(TNE.instance()).forEach(listener->{
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());

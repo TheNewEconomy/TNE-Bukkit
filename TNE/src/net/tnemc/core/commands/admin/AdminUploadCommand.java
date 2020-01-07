@@ -1,9 +1,10 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.io.BufferedReader;
@@ -20,37 +21,6 @@ import java.time.LocalDateTime;
  * Created by Daniel on 2/7/2018.
  */
 public class AdminUploadCommand implements CommandExecution {
-
-  public AdminUploadCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "upload";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "up"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.upload";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Upload";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

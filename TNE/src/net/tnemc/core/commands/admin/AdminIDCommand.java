@@ -1,11 +1,13 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -17,42 +19,6 @@ import org.bukkit.command.CommandSender;
  * Created by Daniel on 7/10/2017.
  */
 public class AdminIDCommand implements CommandExecution {
-
-  public AdminIDCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "id";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.id";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.ID";
-  }
-
-  /*@Override
-  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
-    Map<Integer, String> argTypes = new HashMap<>();
-    argTypes.put(0, "player");
-    return buildSuggestions(sender, shortened, arguments, argTypes, 2);
-  }*/
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

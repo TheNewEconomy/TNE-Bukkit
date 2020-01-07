@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,6 +71,19 @@ public class MISCUtils {
       return (Player)sender;
     }
     return null;
+  }
+
+  public static Map<String, String> getArguments(String[] arguments) {
+    Map<String, String> parsed = new HashMap<>();
+    for(int i = 0; i < arguments.length; i++) {
+      if(arguments[i].contains(":")) {
+        String[] broken = arguments[i].split(":");
+        parsed.put(broken[0], broken[1]);
+        continue;
+      }
+      parsed.put(i + "", arguments[i]);
+    }
+    return parsed;
   }
 
   public static void help(CommandSender sender, String label, String[] arguments) {

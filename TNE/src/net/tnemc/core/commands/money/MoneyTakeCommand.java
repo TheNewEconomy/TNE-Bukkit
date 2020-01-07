@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.money;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -11,6 +11,7 @@ import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -25,50 +26,9 @@ import java.math.BigDecimal;
  */
 public class MoneyTakeCommand implements CommandExecution {
 
-  public MoneyTakeCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "take";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "-"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.money.take";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Money.Take";
-  }
-
-  /*@Override
-  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
-    Map<Integer, String> argTypes = new HashMap<>();
-    argTypes.put(0, "player");
-    argTypes.put(1, "amount");
-    argTypes.put(2, "world");
-    argTypes.put(3, "currency");
-    return buildSuggestions(sender, shortened, arguments, argTypes, 2);
-  }*/
-
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       if(arguments.length >= 2) {
         final String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
@@ -99,7 +59,7 @@ public class MoneyTakeCommand implements CommandExecution {
 
         if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.take." + currencyName)) {
           Message unable = new Message("Messages.Command.Unable");
-          unable.addVariable("$commands", "/" + name());
+          unable.addVariable("$commands", "/" + label);
           unable.translate(world, sender);
           return;
         }

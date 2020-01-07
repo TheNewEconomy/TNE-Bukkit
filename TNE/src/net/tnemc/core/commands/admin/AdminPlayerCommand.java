@@ -1,9 +1,11 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -19,44 +21,6 @@ import java.util.UUID;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class AdminPlayerCommand implements CommandExecution {
-
-  public AdminPlayerCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "player";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.player";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "/tne player <username> - Checks if the specified account is a player or not.";
-  }
-
-  /*@Override
-  public List<String> onTab(CommandSender sender, Command command, String alias, String[] arguments, boolean shortened) {
-    Map<Integer, String> argTypes = new HashMap<>();
-    argTypes.put(0, "player");
-    argTypes.put(1, "world");
-    argTypes.put(2, "currency");
-    return buildSuggestions(sender, shortened, arguments, argTypes, 1);
-  }*/
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

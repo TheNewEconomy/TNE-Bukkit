@@ -1,10 +1,11 @@
 package net.tnemc.core.commands.module;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.module.cache.ModuleFile;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -20,37 +21,6 @@ import java.util.List;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class ModuleAvailableCommand implements CommandExecution {
-
-  public ModuleAvailableCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "available";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "avail"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.module.available";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Module.Available";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

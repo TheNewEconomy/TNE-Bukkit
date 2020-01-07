@@ -1,8 +1,10 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -16,35 +18,6 @@ import org.bukkit.command.CommandSender;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class AdminReloadCommand implements CommandExecution {
-
-  public AdminReloadCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "reload";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.reload";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Reload";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

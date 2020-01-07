@@ -1,11 +1,13 @@
 package net.tnemc.core.commands.module;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.module.ModuleWrapper;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -17,37 +19,6 @@ import org.bukkit.command.CommandSender;
  * Created by Daniel on 7/10/2017.
  */
 public class ModuleInfoCommand implements CommandExecution {
-
-  public ModuleInfoCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "info";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "i"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.module.info";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Module.Info";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

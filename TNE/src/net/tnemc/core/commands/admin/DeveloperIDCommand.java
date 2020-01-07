@@ -1,8 +1,10 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -18,40 +20,6 @@ import java.util.UUID;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class DeveloperIDCommand implements CommandExecution {
-
-  public DeveloperIDCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "id";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "";
-  }
-
-  @Override
-  public boolean console() {
-    return false;
-  }
-
-  @Override
-  public boolean developer() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "/tnedev id <username> - Display debug information regarding a username and their UUID.";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

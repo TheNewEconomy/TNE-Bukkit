@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.money;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
@@ -15,6 +15,7 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,38 +32,9 @@ import java.util.UUID;
  */
 public class MoneyConvertCommand implements CommandExecution {
 
-  public MoneyConvertCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "convert";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.money.convert";
-  }
-
-  @Override
-  public boolean console() {
-    return false;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Money.Convert";
-  }
-
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       final Player player = MISCUtils.getPlayer(sender);
       if(arguments.length >= 2) {
         final UUID id = IDFinder.getID(sender);
@@ -83,7 +55,7 @@ public class MoneyConvertCommand implements CommandExecution {
 
         if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.convert." + from.name())) {
           Message unable = new Message("Messages.Command.Unable");
-          unable.addVariable("$commands", "/" + name());
+          unable.addVariable("$commands", "/" + label);
           unable.translate(worldFrom, sender);
           return;
         }

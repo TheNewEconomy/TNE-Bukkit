@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.transaction;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -9,6 +9,7 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -27,40 +28,9 @@ import java.util.UUID;
  */
 public class TransactionHistoryCommand implements CommandExecution {
 
-  public TransactionHistoryCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "history";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "h"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.transaction.history";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Transaction.History";
-  }
-
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
-    Map<String, String> parsed = getArguments(arguments);
+    Map<String, String> parsed = MISCUtils.getArguments(arguments);
     Player player = MISCUtils.getPlayer(sender);
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     String type = "all";

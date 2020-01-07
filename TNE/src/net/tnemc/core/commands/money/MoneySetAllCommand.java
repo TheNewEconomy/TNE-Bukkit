@@ -1,14 +1,16 @@
 package net.tnemc.core.commands.money;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -26,40 +28,9 @@ import java.sql.SQLException;
  */
 public class MoneySetAllCommand implements CommandExecution {
 
-  public MoneySetAllCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "setall";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "=a"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.money.setall";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Money.SetAll";
-  }
-
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       if(arguments.length >= 1) {
         final String world = (arguments.length >= 2)? TNE.instance().getWorldManager(arguments[1]).getBalanceWorld() : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 

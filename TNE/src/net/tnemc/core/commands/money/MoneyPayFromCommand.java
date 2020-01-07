@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.money;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -11,6 +11,7 @@ import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -27,44 +28,13 @@ import java.math.BigDecimal;
  */
 public class MoneyPayFromCommand implements CommandExecution {
 
-  public MoneyPayFromCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "payfrom";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "payf", "payg", "ghostpay"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.money.payfrom";
-  }
-
-  @Override
-  public boolean console() {
-    return false;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Money.PayFrom";
-  }
-
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     if(arguments.length <= 0) {
       MISCUtils.help(sender, label, arguments);
       return false;
     }
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       TNE.debug("===START MoneyPayCommand ===");
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 
@@ -102,7 +72,7 @@ public class MoneyPayFromCommand implements CommandExecution {
 
         if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.payfrom." + currencyName)) {
           Message unable = new Message("Messages.Command.Unable");
-          unable.addVariable("$commands", "/" + name());
+          unable.addVariable("$commands", "/" + label);
           unable.translate(world, sender);
           return;
         }

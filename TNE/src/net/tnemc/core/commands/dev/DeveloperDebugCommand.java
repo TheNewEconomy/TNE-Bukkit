@@ -1,7 +1,9 @@
 package net.tnemc.core.commands.dev;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -13,40 +15,6 @@ import org.bukkit.command.CommandSender;
  * Created by Daniel on 1/27/2018.
  */
 public class DeveloperDebugCommand implements CommandExecution {
-
-  public DeveloperDebugCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "debug";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "";
-  }
-
-  @Override
-  public boolean console() {
-    return false;
-  }
-
-  @Override
-  public boolean developer() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "/tnedev debug <console/log> - Display the configuration, or balance sharing worlds for this world.";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

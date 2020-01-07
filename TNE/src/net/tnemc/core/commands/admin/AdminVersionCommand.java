@@ -1,7 +1,8 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -13,37 +14,6 @@ import org.bukkit.command.CommandSender;
  * Created by Daniel on 7/10/2017.
  */
 public class AdminVersionCommand implements CommandExecution {
-
-  public AdminVersionCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "version";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "v"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.version";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Version";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

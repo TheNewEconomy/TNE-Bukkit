@@ -1,10 +1,11 @@
 package net.tnemc.core.commands.currency;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -16,37 +17,6 @@ import org.bukkit.command.CommandSender;
  * Created by Daniel on 7/10/2017.
  */
 public class CurrencyTiersCommand implements CommandExecution {
-
-  public CurrencyTiersCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "tiers";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "t"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.currency.tiers";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Currency.Tiers";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

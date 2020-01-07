@@ -1,7 +1,7 @@
 package net.tnemc.core.commands.money;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
@@ -10,9 +10,9 @@ import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.TopBalance;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -29,40 +29,10 @@ import java.util.Map;
  */
 public class MoneyTopCommand implements CommandExecution {
 
-  public MoneyTopCommand(TNE plugin) {
-    super(plugin);
-  }
-
   @Override
-  public String name() {
-    return "top";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.money.top";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Money.Top";
-  }
-
-  @Override
-  @Nullable
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
-      final Map<String, String> parsed = getArguments(arguments);
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      final Map<String, String> parsed = MISCUtils.getArguments(arguments);
 
       int page = 1;
       int limit = (parsed.containsKey("limit") && MISCUtils.isInteger(parsed.get("limit")))? Integer.valueOf(parsed.get("limit")) : 10;

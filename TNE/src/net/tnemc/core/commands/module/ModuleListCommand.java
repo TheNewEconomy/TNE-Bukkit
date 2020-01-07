@@ -1,10 +1,11 @@
 package net.tnemc.core.commands.module;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -16,37 +17,6 @@ import org.bukkit.command.CommandSender;
  * Created by Daniel on 7/27/2017.
  */
 public class ModuleListCommand implements CommandExecution {
-
-  public ModuleListCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "list";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "i"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.module.list";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Module.List";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

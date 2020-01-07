@@ -1,7 +1,8 @@
 package net.tnemc.core.commands.admin;
 
+import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.sql.SQLException;
@@ -15,35 +16,6 @@ import java.sql.SQLException;
  * Created by Daniel on 7/10/2017.
  */
 public class AdminSaveCommand implements CommandExecution {
-
-  public AdminSaveCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "save";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.admin.save";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Admin.Save";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {

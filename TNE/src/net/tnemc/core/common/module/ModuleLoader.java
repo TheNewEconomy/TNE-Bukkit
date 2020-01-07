@@ -1,7 +1,6 @@
 package net.tnemc.core.common.module;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -127,7 +126,7 @@ public class ModuleLoader {
     if(hasModule(moduleName)) {
       ModuleWrapper wrapper = getModule(moduleName);
       wrapper.getModule().listeners(TNE.instance()).forEach(ModuleListener::unregister);
-      wrapper.getModule().commands().forEach(TNECommand::unregister);
+      //wrapper.getModule().commands().forEach(TNECommand::unregister);
       wrapper.getModule().configurations().values().forEach(config->TNE.configurations().configurations.remove(config));
       wrapper.getModule().unload(TNE.instance());
 

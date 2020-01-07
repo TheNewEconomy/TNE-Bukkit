@@ -1,19 +1,18 @@
 package net.tnemc.core.commands.module;
 
 import com.github.tnerevival.core.db.SQLDatabase;
+import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.module.ModuleWrapper;
+import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -24,37 +23,6 @@ import java.util.List;
  * Created by Daniel on 7/10/2017.
  */
 public class ModuleLoadCommand implements CommandExecution {
-
-  public ModuleLoadCommand(TNE plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "load";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[] {
-        "l"
-    };
-  }
-
-  @Override
-  public String node() {
-    return "tne.module.load";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "Messages.Commands.Module.Load";
-  }
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
@@ -82,11 +50,13 @@ public class ModuleLoadCommand implements CommandExecution {
         TNE.configurations().add(configuration, identifier);
       });
 
-      for(TNECommand com : module.getModule().commands()) {
-        List<String> accessors = new ArrayList<>(Arrays.asList(com.aliases()));
-        accessors.add(com.name());
-        TNE.instance().getCommandManager().register(accessors.toArray(new String[accessors.size()]), com);
-      }
+
+      //Load Module Commands
+      module.getModule().commands().forEach((com)-> CommandsHandler.manager().register(com.getIdentifiers(true), com));
+
+      //Load Module Executors
+      module.getModule().commandExecutors().forEach((name, executor)-> CommandsHandler.instance().addExecutor(name, executor));
+
       module.getModule().listeners(TNE.instance()).forEach(listener->{
         Bukkit.getServer().getPluginManager().registerEvents(listener, TNE.instance());
         TNE.debug("Registering Listener");
