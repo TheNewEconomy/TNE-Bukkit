@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.tnemc.commands.core.CommandInformation;
 import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.config.CommentedConfiguration;
+import net.tnemc.core.commands.ExecutorsRegistry;
 import net.tnemc.core.common.EconomyManager;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.TNEUUIDManager;
@@ -281,7 +282,7 @@ public class TNE extends TNELib implements TabCompleter {
     });
 
     //Executors
-
+    ExecutorsRegistry.register();
 
     //Load Module Commands
     loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{

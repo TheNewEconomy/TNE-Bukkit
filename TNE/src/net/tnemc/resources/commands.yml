@@ -87,7 +87,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Currency.List"
-        Executor: "list_exe"
+        Executor: "currency_list_exe"
         Params:
           World:
             Order: 0
@@ -106,7 +106,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Currency.Rename"
-        Executor: "rename_exe"
+        Executor: "currency_rename_exe"
         Params:
           Name:
             Order: 0
@@ -138,7 +138,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Currency.Tiers"
-        Executor: "tiers_exe"
+        Executor: "currency_tiers_exe"
         Params:
           Name:
             Order: 0
@@ -180,7 +180,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.Available"
-        Executor: "available_exe"
+        Executor: "module_available_exe"
         Params:
           URL:
             Order: 0
@@ -201,7 +201,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.Download"
-        Executor: "download_exe"
+        Executor: "module_download_exe"
         Params:
           Name:
             Order: 0
@@ -233,7 +233,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.Info"
-        Executor: "info_exe"
+        Executor: "module_info_exe"
         Params:
           Name:
             Order: 0
@@ -254,7 +254,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.List"
-        Executor: "list_exe"
+        Executor: "module_list_exe"
       load:
         Alias:
           - l
@@ -263,7 +263,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.Load"
-        Executor: "load_exe"
+        Executor: "module_load_exe"
         Params:
           Name:
             Order: 0
@@ -284,7 +284,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.Reload"
-        Executor: "reload_exe"
+        Executor: "module_reload_exe"
         Params:
           Name:
             Order: 0
@@ -305,7 +305,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Module.Unload"
-        Executor: "unload_exe"
+        Executor: "module_unload_exe"
         Params:
           Name:
             Order: 0
@@ -343,7 +343,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Transaction.Away"
-        Executor: "away_exe"
+        Executor: "transaction_away_exe"
       history:
         Alias:
           - h
@@ -352,7 +352,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Transaction.History"
-        Executor: "history_exe"
+        Executor: "transaction_history_exe"
       info:
         Alias:
           - i
@@ -361,14 +361,14 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Transaction.Info"
-        Executor: "info_exe"
+        Executor: "transaction_info_exe"
       void:
         Permission: "tne.transaction.void"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Transaction.Void"
-        Executor: "void_exe"
+        Executor: "transaction_void_exe"
 
   yediot:
     Permission: ""
@@ -384,7 +384,7 @@ Commands:
         Player: true
         Developer: false
         Description: "§a/yediot§f - Determine if a Yediot is near. http://www.urbandictionary.com/define.php?term=yediot"
-        Executor: "idiot_exe"
+        Executor: "yediot_idiot_exe"
   language:
     Alias:
       - lang
@@ -401,28 +401,28 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Language.Current"
-        Executor: "current_exe"
+        Executor: "language_current_exe"
       list:
         Permission: "tne.language.list"
         Console: false
         Player: true
         Developer: false
         Description: "Messages.Commands.Language.List"
-        Executor: "list_exe"
+        Executor: "language_list_exe"
       reload:
         Permission: "tne.language.reload"
         Console: false
         Player: true
         Developer: false
         Description: "Messages.Commands.Language.Reload"
-        Executor: "reload_exe"
+        Executor: "language_reload_exe"
       set:
         Permission: "tne.language.set"
         Console: false
         Player: true
         Developer: false
         Description: "Messages.Commands.Language.Set"
-        Executor: "set_exe"
+        Executor: "language_set_exe"
         Params:
           Name:
             Order: 0
@@ -451,7 +451,7 @@ Commands:
         Player: true
         Developer: true
         Description: "/tnedev debug <console/log> - Display the configuration, or balance sharing worlds for this world."
-        Executor: "debug_exe"
+        Executor: "dev_debug_exe"
         Params:
           Name:
             Order: 0
@@ -494,7 +494,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Balance"
-        Executor: "balance_exe"
+        Executor: "money_balance_exe"
         Params:
           World:
             Order: 0
@@ -524,7 +524,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Convert"
-        Executor: "convert_exe"
+        Executor: "money_convert_exe"
         Params:
           Amount:
             Order: 0
@@ -565,7 +565,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Consolidate"
-        Executor: "consolidate_exe"
+        Executor: "money_consolidate_exe"
         Params:
           Player:
             Order: 0
@@ -586,7 +586,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Give"
-        Executor: "give_exe"
+        Executor: "money_give_exe"
         Params:
           Player:
             Order: 0
@@ -638,7 +638,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Note"
-        Executor: "note_exe"
+        Executor: "money_note_exe"
         Params:
           Amount:
             Order: 0
@@ -672,7 +672,7 @@ Commands:
         Player: true
         Developer: false
         Description: "/money other <player> - Check the balance of another player."
-        Executor: "other_exe"
+        Executor: "money_other_exe"
         Params:
           Player:
             Order: 0
@@ -693,7 +693,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Pay"
-        Executor: "pay_exe"
+        Executor: "money_pay_exe"
         Params:
           Player:
             Order: 0
@@ -738,7 +738,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.PayFrom"
-        Executor: "payfrom_exe"
+        Executor: "money_payfrom_exe"
         Params:
           Account:
             Order: 0
@@ -792,7 +792,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Set"
-        Executor: "set_exe"
+        Executor: "money_set_exe"
         Params:
           Player:
             Order: 0
@@ -846,7 +846,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.SetAll"
-        Executor: "setall_exe"
+        Executor: "money_setall_exe"
         Params:
           Amount:
             Order: 0
@@ -878,7 +878,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Take"
-        Executor: "take_exe"
+        Executor: "money_take_exe"
         Params:
           Player:
             Order: 0
@@ -930,7 +930,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Top"
-        Executor: "top_exe"
+        Executor: "money_top_exe"
         Params:
           Page:
             Order: 0
@@ -959,7 +959,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Config.Get"
-        Executor: "get_exe"
+        Executor: "config_get_exe"
         Params:
           Node:
             Order: 0
@@ -989,7 +989,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Config.Save"
-        Executor: "save_exe"
+        Executor: "config_save_exe"
         Params:
           Configuration:
             Order: 0
@@ -1008,7 +1008,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Config.Set"
-        Executor: "set_exe"
+        Executor: "config_set_exe"
         Params:
           Node:
             Order: 0
@@ -1051,7 +1051,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Config.TNEGet"
-        Executor: "tneget_exe"
+        Executor: "config_tneget_exe"
         Params:
           Node:
             Order: 0
@@ -1103,7 +1103,7 @@ Commands:
         Player: true
         Developer: false
         Description: "/tne account <username> - Returns a count of how many accounts are associated with a display name, debug command."
-        Executor: "account_exe"
+        Executor: "admin_account_exe"
       balance:
         Alias:
           - bal
@@ -1112,7 +1112,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Balance"
-        Executor: "balance_exe"
+        Executor: "admin_balance_exe"
         Params:
           Player:
             Order: 0
@@ -1155,21 +1155,21 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Build"
-        Executor: "build_exe"
+        Executor: "admin_build_exe"
       caveats:
         Permission: "tne.admin.caveats"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Caveats"
-        Executor: "caveats_exe"
+        Executor: "admin_caveats_exe"
       create:
         Permission: "tne.admin.create"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Create"
-        Executor: "create_exe"
+        Executor: "admin_create_exe"
         Params:
           Player:
             Order: 0
@@ -1199,14 +1199,14 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Debug"
-        Executor: "debug_exe"
+        Executor: "admin_debug_exe"
       delete:
         Permission: "tne.admin.delete"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Delete"
-        Executor: "delete_exe"
+        Executor: "admin_delete_exe"
         Params:
           Player:
             Order: 0
@@ -1225,14 +1225,14 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Extract"
-        Executor: "extract_exe"
+        Executor: "admin_extract_exe"
       id:
         Permission: "tne.admin.id"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.ID"
-        Executor: "id_exe"
+        Executor: "admin_id_exe"
         Params:
           Player:
             Order: 0
@@ -1253,21 +1253,21 @@ Commands:
         Player: true
         Developer: false
         Description: "/tne idexport"
-        Executor: "idexport_exe"
+        Executor: "admin_idexport_exe"
       maintenance:
         Permission: "tne.admin.maintenance"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Maintenance"
-        Executor: "maintenance_exe"
+        Executor: "admin_maintenance_exe"
       menu:
         Permission: "tne.admin.menu"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Menu"
-        Executor: "menu_exe"
+        Executor: "admin_menu_exe"
         Params:
           Player:
             Order: 0
@@ -1286,7 +1286,7 @@ Commands:
         Player: true
         Developer: false
         Description: "/tne player <username> - Checks if the specified account is a player or not."
-        Executor: "player_exe"
+        Executor: "admin_player_exe"
         Params:
           Player:
             Order: 0
@@ -1305,14 +1305,14 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Purge"
-        Executor: "purge_exe"
+        Executor: "admin_purge_exe"
       reload:
         Permission: "tne.admin.reload"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Reload"
-        Executor: "reload_exe"
+        Executor: "admin_reload_exe"
         Params:
           Configuration:
             Order: 0
@@ -1331,28 +1331,28 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Reset"
-        Executor: "reset_exe"
+        Executor: "admin_reset_exe"
       restore:
         Permission: "tne.admin.restore"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Restore"
-        Executor: "restore_exe"
+        Executor: "admin_restore_exe"
       save:
         Permission: "tne.admin.save"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Save"
-        Executor: "save_exe"
+        Executor: "admin_save_exe"
       status:
         Permission: "tne.admin.status"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Status"
-        Executor: "status_exe"
+        Executor: "admin_status_exe"
         Params:
           Player:
             Order: 0
@@ -1384,7 +1384,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Upload"
-        Executor: "upload_exe"
+        Executor: "admin_upload_exe"
       version:
         Alias:
           - v
@@ -1393,7 +1393,7 @@ Commands:
         Player: true
         Developer: false
         Description: "Messages.Commands.Admin.Version"
-        Executor: "version_exe"
+        Executor: "admin_version_exe"
 
 Completion:
 
