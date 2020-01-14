@@ -1,6 +1,7 @@
 package net.tnemc.core.compatibility;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -16,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 public interface ItemCompatibility {
 
   ItemStack build(String material);
+
+  Enchantment find(String name);
 
   boolean isShulker(Material material);
 }

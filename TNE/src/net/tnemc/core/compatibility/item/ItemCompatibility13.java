@@ -2,6 +2,8 @@ package net.tnemc.core.compatibility.item;
 
 import net.tnemc.core.compatibility.ItemCompatibility;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -50,6 +52,11 @@ public class ItemCompatibility13 implements ItemCompatibility {
     }
 
     return new ItemStack(Material.AIR);
+  }
+
+  @Override
+  public Enchantment find(String name) {
+    return Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
   }
 
   @Override

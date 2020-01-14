@@ -135,12 +135,14 @@ public class TNE extends TNELib implements TabCompleter {
 
   // Files & Custom Configuration Files
   private File mainConfig;
+  private File commands;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
   private CommentedConfiguration mainConfigurations;
+  private CommentedConfiguration commandsConfigurations;
   private CommentedConfiguration itemConfigurations;
   private CommentedConfiguration messageConfigurations;
   private CommentedConfiguration playerConfigurations;
@@ -264,9 +266,12 @@ public class TNE extends TNELib implements TabCompleter {
 
     TNE.debug("Preparing commands");
     handler = new CommandsHandler(this,
-        new CommentedConfiguration(new File(getDataFolder(), "commands.yml"),
-            new InputStreamReader(this.getResource("commands.yml"),
-                StandardCharsets.UTF_8), false)).withTranslator((text, sender)-> Optional.of(new Message(text).grab(defaultWorld, sender.get())));
+        commandsConfigurations).withTranslator((text, sender)->{
+          if(sender.isPresent()) {
+            return Optional.of(new Message(text).grab(defaultWorld, sender.get()));
+          }
+          return Optional.empty();
+    });
 
 
     //Load Module Sub Commands
@@ -711,6 +716,7 @@ public class TNE extends TNELib implements TabCompleter {
   public void initializeConfigurations(boolean item) {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
+    commands = new File(getDataFolder(), "commands.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
     players = new File(getDataFolder(), "players.yml");
@@ -722,6 +728,7 @@ public class TNE extends TNELib implements TabCompleter {
     skip.add("Virtual");
     mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
     TNE.logger().info("Initialized config.yml");
+    commandsConfigurations = initializeConfiguration(commands, "commands.yml");
     TNE.logger().info("Initialized commands.yml");
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");

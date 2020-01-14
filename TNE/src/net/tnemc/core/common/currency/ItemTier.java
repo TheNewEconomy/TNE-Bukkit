@@ -5,7 +5,6 @@ import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -132,7 +131,7 @@ public class ItemTier {
     //TNE.debug("ENCHANTMENTS SIZE: " + enchantments.size());
     if(enchantments.size() > 0) {
       enchantments.forEach((name)->{
-        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
+        Enchantment enchantment = TNE.item().find(name.toLowerCase());
         //TNE.debug("ENCHANTMENT NULL: " + (enchantment == null));
         if(enchantment == null) {
           //TNE.debug("Unable to apply enchantment to item tier: " + name);

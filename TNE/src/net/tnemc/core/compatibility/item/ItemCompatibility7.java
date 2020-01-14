@@ -3,6 +3,7 @@ package net.tnemc.core.compatibility.item;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.compatibility.ItemCompatibility;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -71,5 +72,10 @@ public class ItemCompatibility7 implements ItemCompatibility {
       material.name().equalsIgnoreCase("GREEN_SHULKER_BOX") ||
       material.name().equalsIgnoreCase("RED_SHULKER_BOX") ||
       material.name().equalsIgnoreCase("BLACK_SHULKER_BOX");
+  }
+
+  @Override
+  public Enchantment find(String name) {
+    return Enchantment.getByName(name);
   }
 }
