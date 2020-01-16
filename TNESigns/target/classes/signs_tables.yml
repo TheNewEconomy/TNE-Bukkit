@@ -1,0 +1,163 @@
+Tables:
+
+  _SIGNS:
+
+    Columns:
+
+      sign_location:
+
+        Type: "VARCHAR"
+
+        Length: 255
+
+        Unique: true
+
+        Null: false
+
+      sign_attached:
+
+        Type: "VARCHAR"
+
+        Length: 255
+
+      sign_chest:
+
+        Type: "VARCHAR"
+
+        Length: 255
+
+        Null: false
+
+        Default: ""
+
+      sign_owner:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      sign_type:
+
+        Type: "VARCHAR"
+
+        Length: 100
+
+        Null: false
+
+      sign_creator:
+
+        Type: "VARCHAR"
+
+        Length: 36
+
+        Null: false
+
+      sign_created:
+
+        Type: "BIGINT"
+
+        Length: 19
+
+      sign_step:
+
+        Type: "INTEGER"
+
+      sign_admin:
+
+        Type: "BOOLEAN"
+
+        Default: 0
+
+        Length: 3
+
+      sign_data:
+
+        Type: "TEXT"
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+  _SIGNS_ITEMS:
+
+    Columns:
+
+      sign_location:
+
+        Type: "VARCHAR"
+
+        Length: 255
+
+        Null: false
+
+        Unique: true
+
+      item_selling:
+
+        Type: "BOOLEAN"
+
+        Default: 1
+
+        Length: 3
+
+        Null: false
+
+      item_amount:
+
+        Type: "BIGINT"
+
+        Default: 1
+
+        Null: false
+
+      item_currency:
+
+        Type: "BOOLEAN"
+
+        Default: 1
+
+        Length: 3
+
+        Null: false
+
+      item_cost:
+
+        Type: "DECIMAL"
+
+        Default: 10
+
+        Length: 49
+
+        Scale: 4
+
+      item_offer:
+
+        Type: "TEXT"
+
+        Null: false
+
+      item_trade:
+
+        Type: "TEXT"
+
+        Null: false
+
+    Settings:
+
+      Engine: "INNODB"
+
+      Charset: "utf8mb4"
+
+      Collate: "utf8mb4_unicode_ci"
+
+Settings:
+
+  Prefix: "TNE"
