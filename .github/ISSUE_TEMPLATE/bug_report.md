@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: 'Type: Bug'
+assignees: ''
+
+---
+
 ## Bug Report Format
 #### What is the issue/bug you're experiencing?
 #### How can the issue be reproduced?(i.e. the steps to make the issue occur again)

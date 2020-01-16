@@ -1,3 +1,12 @@
+---
+name: Feature request
+about: Suggest an idea for this project
+title: ''
+labels: 'Type: Feature'
+assignees: ''
+
+---
+
 ## Feature Request Format
 #### What feature are you suggesting be added?
 #### Expected use-case for said feature?
