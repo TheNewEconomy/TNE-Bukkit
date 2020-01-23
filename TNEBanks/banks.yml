@@ -4,7 +4,55 @@ Banks:
   #default world.
   MultiWorld: false
 
+  #Currencies that may not be put into any bank on the server.
+  Blacklist:
+    - "example"
+
+  #Configurations relating to the robbery functionality.
+  Robbery:
+
+    #Whether or not robberies are enabled.
+    Enabled: true
+
+    #Currencies that may not be stolen during a robbery.
+    Withheld:
+      - "example"
+
+    #The maximum amount of each currency that may be stolen during a robbery.
+    #Use % after the number to use a percentile.
+    Max: "200"
+
+    #Algorithm for calculating a player's robbery experience gain for each
+    #robbery.
+    Algorithm: "$amount_stolen * .2 + $bank_security * .4 + $robbery_level"
+
   #All configurations relating to regional banks.
   Regional:
 
-    #Whether or not regional banks have to be setup in a regional
+    #The maximum amount of Regional Banks in a world. Or server-wise if multiworld
+    #is set to false.
+    Max: 10
+
+    #Configurations relating to cost.
+    Cost:
+
+      #The currency to use for the cost of a regional bank
+      Currency: "Default"
+
+      #The cost to open a regional bank
+      Cost: 5000
+
+    #Configurations relating to the money required to be put into a regional
+    #bank's world bank account when first starting.
+    Starting:
+      #The amount of money required to startup a regional bank. This money will
+      #be added to the regional bank's account within the world bank.
+      Fund: 500
+
+      #The currencies that the player must have the starting fund for.
+      Currencies:
+        - "default"
+
+    #Configurations relating to bank security levels.
+    Security:
+
