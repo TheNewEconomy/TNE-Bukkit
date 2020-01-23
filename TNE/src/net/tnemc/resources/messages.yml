@@ -120,7 +120,7 @@ Messages:
        TypeOffline: "<red>This currency type does not allow offline interaction."
        Failed: "<red>Unable to process your transaction at this time."
        Given: "<white>You were given <gold>$amount<white>."
-       Received: "<white>You were paid <gold>$amount <white> by <white> $player."
+       Received: "<white>You were paid <gold>$amount <white>by<white> $player."
        Taken: "<white>$player took <gold>$amount<white> from you."
        Insufficient: "<red>I'm sorry, but you do not have <gold>$amount<red>."
        HoldingsMulti: "<white>Your current balances for world \"$world\" are: "
