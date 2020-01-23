@@ -40,7 +40,7 @@ public class MoneyNoteCommand implements CommandExecution {
         String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
 
         if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 2) {
-          currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
         }
 
         if (!TNE.manager().currencyManager().contains(world, currencyName)) {

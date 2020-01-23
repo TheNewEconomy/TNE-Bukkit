@@ -1,6 +1,5 @@
 package net.tnemc.core.common.data.impl;
 
-import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.DataManager;
 import com.github.tnerevival.core.db.DatabaseConnector;
 import com.github.tnerevival.core.db.SQLDatabase;
@@ -134,8 +133,6 @@ public class H2Provider extends TNEDataProvider {
     SQLDatabase.open();
     StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
     StackTraceElement element = stackTrace[2];
-    TNELib.debug("loadID called by: [Class: " + element.getClassName() + " via Method: " + element.getMethodName() + " at Line: " + element.getLineNumber());
-    TNELib.debug("Username: " + username);
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ID_LOAD)) {
 
       try(ResultSet results = SQLDatabase.executePreparedQuery(statement, new Object[] {
@@ -143,14 +140,12 @@ public class H2Provider extends TNEDataProvider {
       })) {
 
         if(results.next()) {
-          TNELib.debug("UUID IN DB: " + results.getString("uuid"));
           id = UUID.fromString(results.getString("uuid"));
         }
       }
     } catch(Exception e) {
       TNE.debug(e);
     }
-    TNELib.debug("UUID TO RETURN: " + ((id == null)? "null" : id.toString()));
     SQLDatabase.close();
     return id;
   }

@@ -465,20 +465,6 @@ Commands:
             Complete: false
             CompleteType: "module"
   money:
-    Alias:
-      - bal
-      - balance
-      - pay
-      - baltop
-      - balother
-      - balo
-      - balanceother
-      - givemoney
-      - givebal
-      - setbal
-      - setmoney
-      - takemoney
-      - takebal
     Permission: ""
     Console: true
     Player: true
@@ -489,12 +475,17 @@ Commands:
       balance:
         Alias:
           - bal
+          - mybal
         Permission: "tne.money.balance"
         Console: true
         Player: true
         Developer: false
         Description: "Messages.Commands.Money.Balance"
         Executor: "money_balance_exe"
+        Short:
+          - bal
+          - balance
+          - mybal
         Params:
           World:
             Order: 0
@@ -663,7 +654,7 @@ Commands:
             Complete: true
             CompleteType: "currency"
       other:
-        Alias:
+        Short:
           - balo
           - balother
           - balanceother
@@ -729,7 +720,7 @@ Commands:
             Complete: true
             CompleteType: "currency"
       payfrom:
-        Alias:
+        Short:
           - payf
           - payg
           - ghostpay
@@ -1410,7 +1401,7 @@ Completion:
       - 50
       - 100
 
-  Decimal:
+  decimal:
 
     Values:
       - .5

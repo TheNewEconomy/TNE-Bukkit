@@ -4,7 +4,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import org.bukkit.Bukkit;
+import net.tnemc.core.common.utils.MISCUtils;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -40,10 +40,14 @@ public class ItemType implements CurrencyType {
    */
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) throws SQLException {
-    if(database || Bukkit.getPlayer(account) == null) {
+    TNE.debug("======================== getHoldings ===========================");
+    if(database || MISCUtils.getPlayer(account) == null) {
+      TNE.debug("Loading Balance from Database due to player being null.");
+      TNE.debug("UUID: " + account.toString());
       return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
     }
-    return ItemCalculations.getCurrencyItems(currency, Bukkit.getPlayer(account).getInventory());
+    TNE.debug("Loading Balance from inventory");
+    return ItemCalculations.getCurrencyItems(currency, MISCUtils.getPlayer(account).getInventory());
   }
 
   /**
@@ -57,8 +61,8 @@ public class ItemType implements CurrencyType {
   public void setHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount, boolean skipUpdate) throws SQLException {
     TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(account, world, currency.getIdentifier(), amount);
 
-    if(!skipUpdate && Bukkit.getPlayer(account) != null) {
-      ItemCalculations.setItems(account, currency, amount, Bukkit.getPlayer(account).getInventory(), false);
+    if(!skipUpdate && MISCUtils.getPlayer(account) != null) {
+      ItemCalculations.setItems(account, currency, amount, MISCUtils.getPlayer(account).getInventory(), false);
     }
   }
 }

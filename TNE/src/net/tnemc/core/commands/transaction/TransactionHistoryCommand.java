@@ -42,8 +42,8 @@ public class TransactionHistoryCommand implements CommandExecution {
     }
 
     if(parsed.containsKey("player") && sender.hasPermission("tne.transactions.history.other")) {
-      if(Bukkit.getPlayer(parsed.get("player")) != null) {
-        player = Bukkit.getPlayer(parsed.get("player"));
+      if(Bukkit.getServer().getPlayer(parsed.get("player")) != null) {
+        player = Bukkit.getServer().getPlayer(parsed.get("player"));
       }
     }
 

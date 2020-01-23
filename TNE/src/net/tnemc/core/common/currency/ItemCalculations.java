@@ -328,7 +328,7 @@ public class ItemCalculations {
 
       if(inventory.getType() == InventoryType.ENDER_CHEST) {
 
-        Player player = Bukkit.getPlayer(account);
+        Player player = MISCUtils.getPlayer(account);
         if(player != null) {
 
           left = player.getInventory().addItem(left.values().toArray(new ItemStack[left.size()]));

@@ -46,7 +46,7 @@ public class AdminStatusCommand implements CommandExecution {
         }
         String message = (changed)? "Messages.Admin.StatusChange" : "Messages.Admin.Status";
 
-        if(changed && Bukkit.getPlayer(target) != null && Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(target))) {
+        if(changed && MISCUtils.getPlayer(target) != null && Bukkit.getOnlinePlayers().contains(MISCUtils.getPlayer(target))) {
           String world = WorldFinder.getWorld(target, WorldVariant.ACTUAL);
           Message m = new Message("Messages.Account.StatusChange");
           m.addVariable("$status", status.getName());

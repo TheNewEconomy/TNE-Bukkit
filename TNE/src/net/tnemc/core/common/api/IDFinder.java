@@ -4,6 +4,7 @@ package net.tnemc.core.common.api;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.api.MojangAPI;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -111,12 +112,12 @@ public class IDFinder {
   public static Player getPlayer(String identifier) {
     final UUID id = getID(identifier);
     if(!TNELib.instance().useUUID) {
-      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
+      return Bukkit.getServer().getPlayer(IDFinder.ecoToUsername(id));
     }
     if(!Bukkit.getServer().getOnlineMode()) {
-      return Bukkit.getPlayer(IDFinder.ecoToUsername(id));
+      return Bukkit.getServer().getPlayer(IDFinder.ecoToUsername(id));
     }
-    return Bukkit.getPlayer(id);
+    return MISCUtils.getPlayer(id);
   }
 
   public static OfflinePlayer getOffline(String identifier, boolean username) {
@@ -131,8 +132,9 @@ public class IDFinder {
   }
 
   public static UUID getID(String identifier) {
-    identifier = ChatColor.stripColor(identifier.replaceAll("\\[.*?\\] ?", "")).trim();
     TNE.debug("GETID: " + identifier);
+    identifier = ChatColor.stripColor(identifier.replaceAll("\\[.*?\\] ?", "")).trim();
+
     if(isUUID(identifier)) {
       return UUID.fromString(identifier);
     }

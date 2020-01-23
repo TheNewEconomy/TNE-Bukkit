@@ -45,7 +45,7 @@ public class MoneySetAllCommand implements CommandExecution {
         }
         final TNECurrency currency = TNE.manager().currencyManager().get(world);
 
-        if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[0])) == null) {
+        if(!currency.getCurrencyType().offline() && MISCUtils.getPlayer(IDFinder.getID(arguments[0])) == null) {
           Message offlineType = new Message("Messages.Money.TypeOffline");
           offlineType.addVariable("$type", currency.getCurrencyType().name());
           offlineType.translate(world, sender);

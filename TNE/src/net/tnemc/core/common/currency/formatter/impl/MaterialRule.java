@@ -5,7 +5,7 @@ import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.currency.formatter.FormatRule;
-import org.bukkit.Bukkit;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -35,7 +35,7 @@ public class MaterialRule implements FormatRule {
     if(player != null && !player.equalsIgnoreCase("") && currency.isItem()) {
       final UUID id = IDFinder.getID(player);
       if(id != null) {
-        Player p = Bukkit.getPlayer(id);
+        Player p = MISCUtils.getPlayer(id);
         if(p != null) {
           for(TNETier tier : currency.getTNETiers()) {
             if(format.contains("<" + tier.singular() + ">")) {

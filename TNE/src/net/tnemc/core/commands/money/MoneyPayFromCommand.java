@@ -59,7 +59,7 @@ public class MoneyPayFromCommand implements CommandExecution {
         String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
 
         if(MISCUtils.isSingularPlayer(arguments[1]) && arguments.length < 4) {
-          currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[1])).getLocation());
+          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[1])).getLocation());
         }
 
         if (!TNE.manager().currencyManager().contains(world, currencyName)) {
@@ -79,7 +79,7 @@ public class MoneyPayFromCommand implements CommandExecution {
 
         final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
-        if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[1])) == null) {
+        if(!currency.getCurrencyType().offline() && MISCUtils.getPlayer(IDFinder.getID(arguments[1])) == null) {
           Message offlineType = new Message("Messages.Money.TypeOffline");
           offlineType.addVariable("$type", currency.getCurrencyType().name());
           offlineType.translate(world, sender);

@@ -43,7 +43,7 @@ public class MoneyConsolidateCommand implements CommandExecution {
       }
 
       final UUID id = (arguments.length >= 1)? IDFinder.getID(arguments[0]) : IDFinder.getID(MISCUtils.getPlayer(sender));
-      Player player = Bukkit.getPlayer(id);
+      Player player = MISCUtils.getPlayer(id);
 
       if(player == null) {
         MISCUtils.help(sender, label, arguments);

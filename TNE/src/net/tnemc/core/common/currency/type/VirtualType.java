@@ -47,6 +47,7 @@ public class VirtualType implements CurrencyType {
    */
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) throws SQLException {
+    TNE.debug("======================== getHoldings(virtual) ===========================");
     return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
   }
 

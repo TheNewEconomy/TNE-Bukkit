@@ -83,30 +83,30 @@ public class ExecutorsRegistry {
     CommandsHandler.instance().addExecutor("pin_set_exe", new AccountPinSetCommand());
 
     //Admin
-    CommandsHandler.instance().addExecutor("admin_account_command", new AdminAccountCommand());
-    CommandsHandler.instance().addExecutor("admin_balance_command", new AdminBalanceCommand());
-    CommandsHandler.instance().addExecutor("admin_build_command", new AdminBuildCommand());
-    CommandsHandler.instance().addExecutor("admin_caveats_command", new AdminCaveatsCommand());
-    CommandsHandler.instance().addExecutor("admin_create_command", new AdminCreateCommand());
-    CommandsHandler.instance().addExecutor("admin_debug_command", new AdminDebugCommand());
-    CommandsHandler.instance().addExecutor("admin_delete_command", new AdminDeleteCommand());
-    CommandsHandler.instance().addExecutor("admin_extract_command", new AdminExtractCommand());
-    CommandsHandler.instance().addExecutor("admin_id_command", new AdminIDCommand());
-    CommandsHandler.instance().addExecutor("admin_idexport_command", new AdminIDExportCommand());
-    CommandsHandler.instance().addExecutor("admin_maintenance_command", new AdminMaintenanceMode());
-    CommandsHandler.instance().addExecutor("admin_menu_command", new AdminMenuCommand());
-    CommandsHandler.instance().addExecutor("admin_player_command", new AdminPlayerCommand());
-    CommandsHandler.instance().addExecutor("admin_purge_command", new AdminPurgeCommand());
-    CommandsHandler.instance().addExecutor("admin_reload_command", new AdminReloadCommand());
-    CommandsHandler.instance().addExecutor("admin_report_command", new AdminReportCommand());
-    CommandsHandler.instance().addExecutor("admin_reset_command", new AdminResetCommand());
-    CommandsHandler.instance().addExecutor("admin_restore_command", new AdminRestoreCommand());
-    CommandsHandler.instance().addExecutor("admin_save_command", new AdminSaveCommand());
-    CommandsHandler.instance().addExecutor("admin_status_command", new AdminStatusCommand());
-    CommandsHandler.instance().addExecutor("admin_test_command", new AdminTestCommand());
-    CommandsHandler.instance().addExecutor("admin_upload_command", new AdminUploadCommand());
-    CommandsHandler.instance().addExecutor("admin_version_command", new AdminVersionCommand());
-    CommandsHandler.instance().addExecutor("admin_devid_command", new DeveloperIDCommand());
+    CommandsHandler.instance().addExecutor("admin_account_exe", new AdminAccountCommand());
+    CommandsHandler.instance().addExecutor("admin_balance_exe", new AdminBalanceCommand());
+    CommandsHandler.instance().addExecutor("admin_build_exe", new AdminBuildCommand());
+    CommandsHandler.instance().addExecutor("admin_caveats_exe", new AdminCaveatsCommand());
+    CommandsHandler.instance().addExecutor("admin_create_exe", new AdminCreateCommand());
+    CommandsHandler.instance().addExecutor("admin_debug_exe", new AdminDebugCommand());
+    CommandsHandler.instance().addExecutor("admin_delete_exe", new AdminDeleteCommand());
+    CommandsHandler.instance().addExecutor("admin_extract_exe", new AdminExtractCommand());
+    CommandsHandler.instance().addExecutor("admin_id_exe", new AdminIDCommand());
+    CommandsHandler.instance().addExecutor("admin_idexport_exe", new AdminIDExportCommand());
+    CommandsHandler.instance().addExecutor("admin_maintenance_exe", new AdminMaintenanceMode());
+    CommandsHandler.instance().addExecutor("admin_menu_exe", new AdminMenuCommand());
+    CommandsHandler.instance().addExecutor("admin_player_exe", new AdminPlayerCommand());
+    CommandsHandler.instance().addExecutor("admin_purge_exe", new AdminPurgeCommand());
+    CommandsHandler.instance().addExecutor("admin_reload_exe", new AdminReloadCommand());
+    CommandsHandler.instance().addExecutor("admin_report_exe", new AdminReportCommand());
+    CommandsHandler.instance().addExecutor("admin_reset_exe", new AdminResetCommand());
+    CommandsHandler.instance().addExecutor("admin_restore_exe", new AdminRestoreCommand());
+    CommandsHandler.instance().addExecutor("admin_save_exe", new AdminSaveCommand());
+    CommandsHandler.instance().addExecutor("admin_status_exe", new AdminStatusCommand());
+    CommandsHandler.instance().addExecutor("admin_test_exe", new AdminTestCommand());
+    CommandsHandler.instance().addExecutor("admin_upload_exe", new AdminUploadCommand());
+    CommandsHandler.instance().addExecutor("admin_version_exe", new AdminVersionCommand());
+    CommandsHandler.instance().addExecutor("admin_devid_exe", new DeveloperIDCommand());
 
     //Config
     CommandsHandler.instance().addExecutor("config_get_exe", new ConfigGetCommand());

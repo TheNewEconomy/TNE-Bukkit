@@ -66,6 +66,16 @@ import static com.google.common.net.HttpHeaders.USER_AGENT;
  */
 public class MISCUtils {
 
+  public static Player getPlayer(UUID id) {
+    if(Bukkit.getServer().getPlayer(id) == null) {
+      if(Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString())) == null) {
+        return null;
+      }
+      return Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString()));
+    }
+    return Bukkit.getServer().getPlayer(id);
+  }
+
   public static Player getPlayer(CommandSender sender) {
     if(sender instanceof Player) {
       return (Player)sender;
@@ -240,7 +250,7 @@ public class MISCUtils {
     if(!argument.contains(",") && !argument.contains(TNE.instance().api().getString("Core.Server.ThirdParty.Faction")) &&
         !argument.contains(TNE.instance().api().getString("Core.Server.ThirdParty.Town")) &&
         !argument.contains(TNE.instance().api().getString("Core.Server.ThirdParty.Nation"))) {
-      return Bukkit.getPlayer(IDFinder.getID(argument)) != null;
+      return MISCUtils.getPlayer(IDFinder.getID(argument)) != null;
     }
     return false;
   }

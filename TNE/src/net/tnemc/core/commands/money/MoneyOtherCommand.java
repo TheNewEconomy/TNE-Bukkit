@@ -12,7 +12,6 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -41,13 +40,13 @@ public class MoneyOtherCommand implements CommandExecution {
       String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
 
       if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
-        currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
       }
 
       final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
 
 
-      if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[0])) == null) {
+      if(!currency.getCurrencyType().offline() && MISCUtils.getPlayer(IDFinder.getID(arguments[0])) == null) {
         Message offlineType = new Message("Messages.Money.TypeOffline");
         offlineType.addVariable("$type", currency.getCurrencyType().name());
         offlineType.translate(world, sender);

@@ -62,6 +62,8 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -72,6 +74,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -121,7 +124,7 @@ public class TNE extends TNELib implements TabCompleter {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = false;
+  public static boolean consoleDebug = true;
   public static boolean maintenance = false;
   private String serverName;
 
@@ -142,7 +145,7 @@ public class TNE extends TNELib implements TabCompleter {
   private File worlds;
 
   private CommentedConfiguration mainConfigurations;
-  private CommentedConfiguration commandsConfigurations;
+  private FileConfiguration commandsConfigurations;
   private CommentedConfiguration itemConfigurations;
   private CommentedConfiguration messageConfigurations;
   private CommentedConfiguration playerConfigurations;
@@ -728,7 +731,10 @@ public class TNE extends TNELib implements TabCompleter {
     skip.add("Virtual");
     mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
     TNE.logger().info("Initialized config.yml");
-    commandsConfigurations = initializeConfiguration(commands, "commands.yml");
+    try {
+      commandsConfigurations = initializeConfigurationBukkit(commands, "commands.yml");
+    } catch (IOException ignore) {
+    }
     TNE.logger().info("Initialized commands.yml");
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
@@ -784,6 +790,24 @@ public class TNE extends TNELib implements TabCompleter {
 
     }
     return commentedConfiguration;
+  }
+
+  public FileConfiguration initializeConfigurationBukkit(File file, String defaultFile) throws IOException {
+
+    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+
+    Reader commandsStream = new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8);
+
+    if(!commands.exists() && commandsStream != null) {
+      YamlConfiguration defaults = YamlConfiguration.loadConfiguration(commandsStream);
+
+      config.setDefaults(defaults);
+    }
+    config.options().copyDefaults(true);
+    config.save(file);
+
+    return config;
   }
 
   InputStream getResourceUTF8(String filename) {

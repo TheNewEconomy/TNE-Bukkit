@@ -168,7 +168,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNCH</artifactId>
-            <version>0.1.9.41</version>
+            <version>0.1.9.48</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

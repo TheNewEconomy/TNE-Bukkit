@@ -57,7 +57,7 @@ public class MoneyBalanceCommand implements CommandExecution {
       }
 
       /*if(arguments.length < 2) {
-        currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(id).getLocation());
+        currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(id).getLocation());
       }*/
 
       final TNEAccount account = TNE.manager().getAccount(id);
@@ -83,7 +83,7 @@ public class MoneyBalanceCommand implements CommandExecution {
       TransactionResult result = null;
 
       for(TNECurrency cur : currencies) {
-        if(cur.getCurrencyType().offline() || Bukkit.getPlayer(id) != null) {
+        if(cur.getCurrencyType().offline() || MISCUtils.getPlayer(id) != null) {
           TNE.debug("BalanceCommand Currency Loop.. Currency: " + cur.name());
           TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("inquiry"));
           transaction.setRecipientCharge(new TransactionCharge(world, cur, BigDecimal.ZERO));

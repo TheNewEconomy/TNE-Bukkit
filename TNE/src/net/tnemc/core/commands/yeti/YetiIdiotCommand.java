@@ -3,7 +3,6 @@ package net.tnemc.core.commands.yeti;
 import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.utils.MISCUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,9 +23,9 @@ public class YetiIdiotCommand implements CommandExecution {
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
     Player player = MISCUtils.getPlayer(sender);
-    Player yeti = Bukkit.getPlayer(IDFinder.getID("TheNetYeti"));
-    Player growlf = Bukkit.getPlayer(IDFinder.getID("growlf"));
-    Player yediot = Bukkit.getPlayer(UUID.fromString("66a7e812-fb82-409c-88c4-9edc34bb5c39"));
+    Player yeti = MISCUtils.getPlayer(IDFinder.getID("TheNetYeti"));
+    Player growlf = MISCUtils.getPlayer(IDFinder.getID("growlf"));
+    Player yediot = MISCUtils.getPlayer(UUID.fromString("66a7e812-fb82-409c-88c4-9edc34bb5c39"));
 
     if(player.getDisplayName().equalsIgnoreCase("TheNetYeti")) {
       sender.sendMessage(ChatColor.GREEN + "Congratulations you have found the Yediot.");

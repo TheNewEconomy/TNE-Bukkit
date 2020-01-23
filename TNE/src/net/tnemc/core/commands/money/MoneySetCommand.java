@@ -40,7 +40,7 @@ public class MoneySetCommand implements CommandExecution {
         String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
 
         if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 4) {
-          currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
         }
 
         final UUID id = IDFinder.getID(arguments[0]);
@@ -78,7 +78,7 @@ public class MoneySetCommand implements CommandExecution {
 
 
 
-        if(!currency.getCurrencyType().offline() && Bukkit.getPlayer(IDFinder.getID(arguments[0])) == null) {
+        if(!currency.getCurrencyType().offline() && MISCUtils.getPlayer(IDFinder.getID(arguments[0])) == null) {
           Message offlineType = new Message("Messages.Money.TypeOffline");
           offlineType.addVariable("$type", currency.getCurrencyType().name());
           offlineType.translate(world, sender);

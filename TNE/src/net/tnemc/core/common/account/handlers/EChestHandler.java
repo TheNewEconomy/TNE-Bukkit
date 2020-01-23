@@ -2,7 +2,7 @@ package net.tnemc.core.common.account.handlers;
 
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import org.bukkit.Bukkit;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -30,7 +30,7 @@ public class EChestHandler implements HoldingsHandler {
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
     if(currency.canEnderChest()) {
-      Player player = Bukkit.getPlayer(account);
+      Player player = MISCUtils.getPlayer(account);
       if(player != null) {
         return ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
       }
@@ -51,7 +51,7 @@ public class EChestHandler implements HoldingsHandler {
   @Override
   public BigDecimal removeHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount) {
     if(currency.canEnderChest()) {
-      final Player player = Bukkit.getPlayer(account);
+      final Player player = MISCUtils.getPlayer(account);
       if(player != null) {
         BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
 

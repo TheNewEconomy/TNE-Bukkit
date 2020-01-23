@@ -5,7 +5,7 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.Experience;
 import net.tnemc.core.common.currency.TNECurrency;
-import org.bukkit.Bukkit;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -42,10 +42,10 @@ public class XPType implements CurrencyType {
    */
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) throws SQLException {
-    if(database || Bukkit.getPlayer(account) == null) {
+    if(database || MISCUtils.getPlayer(account) == null) {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
     }
-    return new BigDecimal(Experience.getExperience(Bukkit.getPlayer(account)));
+    return new BigDecimal(Experience.getExperience(MISCUtils.getPlayer(account)));
   }
 
   /**
@@ -59,7 +59,7 @@ public class XPType implements CurrencyType {
   public void setHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount, boolean skipUpdate) throws SQLException {
     TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(account, world, currency.getIdentifier(), amount);
 
-    final Player player = Bukkit.getPlayer(account);
+    final Player player = MISCUtils.getPlayer(account);
     if(!skipUpdate && player != null) {
 
       if(WorldFinder.getBalanceWorld(player).equalsIgnoreCase(world)) {
