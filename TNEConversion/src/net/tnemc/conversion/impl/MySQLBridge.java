@@ -6,7 +6,6 @@ import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.data.TNEDataManager;
 import net.tnemc.core.economy.currency.Currency;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -19,35 +18,36 @@ import java.sql.Statement;
 
 /**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by creatorfromhell on 1/25/2020.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class Essentials extends Converter {
-  private File dataDirectory = new File(TNE.instance().getDataFolder(), "../Essentials/userdata");
+public class MySQLBridge extends Converter {
 
   @Override
   public String name() {
-    return "Essentials";
+    return "MySQLBridge";
   }
 
   @Override
   public String type() {
-    return (Bukkit.getServer().getPluginManager().isPluginEnabled("EssentialsMysqlStorage"))? "mysql" : "yaml";
+    return "mysql";
   }
 
   @Override
   public void mysql() throws InvalidDatabaseImport {
-    File configFile = new File(TNE.instance().getDataFolder(), "../EssentialsMysqlStorage/config.yml");
+    File configFile = new File(TNE.instance().getDataFolder(), "../MysqlPlayerDataBridge/config.yml");
     FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
-    final String table = config.getString("Database.Mysql.TableName");
+    final String table = config.getString("database.mysql.TablesNames.economyTableName");
 
-    initialize(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
-        config.getInt("Database.Mysql.Port"), config.getString("Database.Mysql.DatabaseName"),
-        config.getString("Database.Mysql.User"), config.getString("Database.Mysql.Password"),
+    initialize(new TNEDataManager(type(), config.getString("database.mysql.host"),
+        config.getInt("database.mysql.port"), config.getString("database.mysql.databaseName"),
+        config.getString("database.mysql.user"), config.getString("database.mysql.password"),
         table, "accounts.db",
         false, false, 60, false));
     open();
@@ -67,23 +67,5 @@ public class Essentials extends Converter {
     } catch(SQLException ignore) {}
     close();
 
-  }
-
-  @Override
-  public void yaml() throws InvalidDatabaseImport {
-    if(!dataDirectory.isDirectory() || dataDirectory.listFiles() == null || dataDirectory.listFiles().length == 0) return;
-
-    for(File accountFile : dataDirectory.listFiles()) {
-
-      FileConfiguration acc = YamlConfiguration.loadConfiguration(accountFile);
-
-      final String name = (acc.contains("lastAccountName"))? acc.getString("lastAccountName")
-          : accountFile.getName().substring(0, accountFile.getName().lastIndexOf("."));
-
-      final BigDecimal money = acc.contains("money")? new BigDecimal(acc.getString("money")) : BigDecimal.ZERO;
-      String currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
-
-      ConversionModule.convertedAdd(name, TNE.instance().defaultWorld, currency, money);
-    }
   }
 }

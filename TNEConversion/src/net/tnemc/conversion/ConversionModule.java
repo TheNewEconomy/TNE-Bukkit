@@ -27,6 +27,7 @@ import net.tnemc.conversion.impl.MineCoinsYML;
 import net.tnemc.conversion.impl.MineConomy;
 import net.tnemc.conversion.impl.MinetopiaEconomy;
 import net.tnemc.conversion.impl.MoConomy;
+import net.tnemc.conversion.impl.MySQLBridge;
 import net.tnemc.conversion.impl.RealEconomy;
 import net.tnemc.conversion.impl.SQLConomy;
 import net.tnemc.conversion.impl.SaneEconomy;
@@ -176,6 +177,10 @@ public class ConversionModule implements Module {
         break;
       case "moconomy":
         converter = new MoConomy();
+        break;
+      case "mysqlbridge":
+      case "ecobridge":
+        converter = new MySQLBridge();
         break;
       case "realeconomy":
         converter = new RealEconomy();

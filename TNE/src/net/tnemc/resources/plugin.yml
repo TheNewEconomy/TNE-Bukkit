@@ -7,7 +7,7 @@ api-version: 1.13
 
 #Plugin Data
 main: net.tnemc.core.TNE
-softdepend: [AdvancedAchievements, NoteBlockAPI, WorldEdit, WorldGuard, FastAsyncWorldEdit, PlaceholderAPI, Vault, Reserve, Towny, mcMMO, GUIShop, DiscordSRV, Multiverse-Core]
+softdepend: [AdvancedAchievements, NoteBlockAPI, WorldEdit, CMI, WorldGuard, FastAsyncWorldEdit, PlaceholderAPI, Vault, Reserve, Towny, mcMMO, GUIShop, DiscordSRV, Multiverse-Core]
 permissions:
     tne.*:
         description: Grants full access to all TNE functionality.

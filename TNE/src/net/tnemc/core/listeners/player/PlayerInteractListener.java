@@ -48,13 +48,13 @@ public class PlayerInteractListener implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onInteract(final PlayerInteractEvent event) {
     TNE.debug("=====START PlayerListener.onInteract =====");
-    Player player = event.getPlayer();
-    UUID id = IDFinder.getID(player);
-    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
-    boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+    final Player player = event.getPlayer();
+    final UUID id = IDFinder.getID(player);
+    final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    final boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+    final ItemStack stack = event.getItem();
 
     if(!noEconomy && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
-      ItemStack stack = event.getItem();
 
       if(stack != null && stack.hasItemMeta()) {
         if(stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Currency Note")) {
