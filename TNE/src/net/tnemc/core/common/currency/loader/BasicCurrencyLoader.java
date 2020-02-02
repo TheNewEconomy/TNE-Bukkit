@@ -30,7 +30,6 @@ public class BasicCurrencyLoader implements CurrencyLoader {
     final String base = "Core.Currency.Basic";
 
     //Currency Info Configurations.
-    final String server = TNE.instance().mainConfigurations().getString(base + ".Info.Server", "Main Server");
     final String identifier = TNE.instance().mainConfigurations().getString(base + ".Identifier", "Dollar");
     final String single = TNE.instance().mainConfigurations().getString(base + ".Major_Single", "Dollar");
     final String plural = TNE.instance().mainConfigurations().getString(base + ".Major_Plural", "Dollars");
@@ -90,7 +89,6 @@ public class BasicCurrencyLoader implements CurrencyLoader {
     currency.setPlural(plural);
     currency.setSingleMinor(singleMinor);
     currency.setPluralMinor(pluralMinor);
-    currency.setServer(server);
     currency.setSymbol(symbol);
     currency.setWorldDefault(true);
     currency.setRate(1.0);

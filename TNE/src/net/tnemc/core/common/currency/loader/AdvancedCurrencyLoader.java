@@ -89,7 +89,6 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
         Bukkit.getServer().getPluginManager().addPermission(pay);
 
         //Currency Info configs.
-        final String server = config.getString("Info.Server", "Main Server");
         final String single = config.getString("Info.Major_Single", "Dollar");
         final String plural = config.getString("Info.Major_Plural", "Dollars");
         final String singleMinor = config.getString("Info.Minor_Single", "Cent");
@@ -157,7 +156,6 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
         currency.setPlural(plural);
         currency.setSingleMinor(singleMinor);
         currency.setPluralMinor(pluralMinor);
-        currency.setServer(server);
         currency.setSymbol(symbol);
         currency.setWorldDefault(worldDefault);
         currency.setWorlds(worlds);

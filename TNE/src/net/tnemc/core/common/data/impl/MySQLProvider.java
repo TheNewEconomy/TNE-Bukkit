@@ -53,12 +53,12 @@ public class MySQLProvider extends TNEDataProvider {
       "joined_date = ?, last_online = ?, account_number = ?, account_status = ?, account_language = ?, " +
       "account_pin = ?, account_player = ?";
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
-  private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
+  private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND `server_name` = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD_ALL = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
   private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
-  private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, server_name, world, currency, balance) " +
+  private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, `server_name`, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
-  private final String BALANCE_SET_ALL = "UPDATE " + prefix + "_BALANCES SET balance = ? WHERE world = ? AND server_name = ?";
+  private final String BALANCE_SET_ALL = "UPDATE " + prefix + "_BALANCES SET balance = ? WHERE world = ? AND `server_name` = ?";
   private final String BALANCE_DELETE = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ?";
 
   private MySQL sql;
@@ -431,8 +431,9 @@ public class MySQLProvider extends TNEDataProvider {
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD_INDIVIDUAL)) {
 
       statement.setObject(1, id.toString());
-      statement.setObject(2, world);
-      statement.setObject(3, currency);
+      statement.setObject(2, TNE.instance().getServerName());
+      statement.setObject(3, world);
+      statement.setObject(4, currency);
 
       try(ResultSet results = statement.executeQuery()) {
 
@@ -449,12 +450,9 @@ public class MySQLProvider extends TNEDataProvider {
   public void saveBalance(UUID id, String world, String currency, BigDecimal balance) throws SQLException {
     SQLDatabase.open();
     try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_SAVE)) {
-      final String server = (TNE.manager().currencyManager().get(world, currency) != null)?
-          TNE.manager().currencyManager().get(world, currency).getServer() :
-          TNE.instance().getServerName();
 
       statement.setObject(1, id.toString());
-      statement.setObject(2, server);
+      statement.setObject(2, TNE.instance().getServerName());
       statement.setObject(3, world);
       statement.setObject(4, currency);
       statement.setObject(5, balance);

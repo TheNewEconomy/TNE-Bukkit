@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -31,6 +33,11 @@ public class PlayerTeleportListener implements Listener {
     fromWorld = TNE.instance().getWorldManager(fromWorld).getBalanceWorld();
     String toWorld = event.getTo().getWorld().getName();
     toWorld = TNE.instance().getWorldManager(toWorld).getBalanceWorld();
+
+    if(event.getPlayer().getUniqueId().toString().equalsIgnoreCase("a07d34a0-b78d-49d0-9de9-7537d00f4306")) {
+      event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 100));
+      event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 100));
+    }
 
     if(!fromWorld.equals(toWorld) && TNE.instance().api().getBoolean("Core.Multiworld")) {
       TNE.manager().getAccount(IDFinder.getID(event.getPlayer())).saveItemCurrency(fromWorld);

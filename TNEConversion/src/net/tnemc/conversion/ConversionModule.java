@@ -19,6 +19,7 @@ import net.tnemc.conversion.impl.EconomyAPI;
 import net.tnemc.conversion.impl.Essentials;
 import net.tnemc.conversion.impl.FeConomy;
 import net.tnemc.conversion.impl.FeatherEconomy;
+import net.tnemc.conversion.impl.GMoney;
 import net.tnemc.conversion.impl.GemsEconomy;
 import net.tnemc.conversion.impl.Meep;
 import net.tnemc.conversion.impl.Meller;
@@ -150,6 +151,9 @@ public class ConversionModule implements Module {
         break;
       case "gemseconomy":
         converter = new GemsEconomy();
+        break;
+      case "gmoney":
+        converter = new GMoney();
         break;
       case "iconomy7":
         converter = new iConomy7();

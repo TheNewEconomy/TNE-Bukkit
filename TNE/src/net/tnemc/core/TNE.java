@@ -328,8 +328,8 @@ public class TNE extends TNELib implements TabCompleter {
 
     //General Variables based on configuration values
     TNE.debug("Preparing variables");
-    serverName = (configurations().getString("Core.Server.Name").length() <= 100)? configurations().getString("Core.Server.Name") : "Main Server";
-    consoleName = (configurations().getString("Core.Server.Account.Name").length() <= 100)? configurations().getString("Core.Server.Account.Name") : "Server_Account";
+    serverName = mainConfigurations.getString("Core.Server.Name", "Main Server");
+    consoleName = mainConfigurations.getString("Core.Server.Account.Name", "Server_Account");
     useUUID = configurations().getBoolean("Core.UUID");
 
     if(MISCUtils.isOneSix()) useUUID = false;

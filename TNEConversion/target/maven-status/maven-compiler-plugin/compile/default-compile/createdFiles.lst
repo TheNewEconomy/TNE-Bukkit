@@ -17,6 +17,7 @@ net\tnemc\conversion\impl\EcoSystem.class
 net\tnemc\conversion\impl\ECEconomy.class
 net\tnemc\conversion\impl\EconomyAPI.class
 net\tnemc\conversion\impl\Meller.class
+net\tnemc\conversion\impl\MySQLBridge.class
 net\tnemc\conversion\ConversionModule.class
 net\tnemc\conversion\impl\CraftConomy.class
 net\tnemc\conversion\impl\GMoney.class

@@ -282,7 +282,7 @@ public class MISCUtils {
       int number = 1;
       for(String username : accounts) {
         String reformattedUsername = username.replaceAll("\\!", ".").replaceAll("\\@", "-").replaceAll("\\%", "_");
-        if (reformattedUsername.equalsIgnoreCase("server account")) reformattedUsername = TNE.instance().consoleName;
+        if (reformattedUsername.equalsIgnoreCase("server_account")) reformattedUsername = TNE.instance().consoleName;
         UUID id = IDFinder.getID(reformattedUsername);
         TNEAccount account = new TNEAccount(id, reformattedUsername);
         Set<String> worlds = configuration.getConfigurationSection("Accounts." + username + ".Balances").getKeys(false);

@@ -43,6 +43,34 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>net.tnemc.libs.com.zaxxer.hikari</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.json.simple</pattern>
+                            <shadedPattern>net.tnemc.libs.org.json.simple</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>javax.xml.bind</pattern>
+                            <shadedPattern>net.tnemc.libs.javax.xml.bind</shadedPattern>
+                        </relocation>
+                        <!--<relocation>
+                            <pattern>net.tnemc.commands.core</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.commands.core</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.tnemc.dbupdater.core</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.dbupdater.core</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.tnemc.config</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.config</shadedPattern>
+                        </relocation>-->
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
     </build>
