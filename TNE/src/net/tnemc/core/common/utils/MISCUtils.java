@@ -62,8 +62,24 @@ import static com.google.common.net.HttpHeaders.USER_AGENT;
  */
 public class MISCUtils {
 
-  //Minecraft Version Utils
+  public static Player getPlayer(UUID id) {
+    if(Bukkit.getServer().getPlayer(id) == null) {
+      if(Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString())) == null) {
+        return null;
+      }
+      return Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString()));
+    }
+    return Bukkit.getServer().getPlayer(id);
+  }
 
+  public static Player getPlayer(CommandSender sender) {
+    if(sender instanceof Player) {
+      return (Player)sender;
+    }
+    return null;
+  }
+
+  //Minecraft Version Utils
   /**
    * @return Whether the bukkit in use is for MC >= 1.8
    */

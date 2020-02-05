@@ -25,7 +25,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -34,7 +34,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -43,6 +43,38 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>net.tnemc.libs.com.zaxxer.hikari</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.json.simple</pattern>
+                            <shadedPattern>net.tnemc.libs.org.json.simple</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.h2</pattern>
+                            <shadedPattern>net.tnemc.libs.org.h2</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.javalite</pattern>
+                            <shadedPattern>net.tnemc.libs.org.javalite</shadedPattern>
+                        </relocation>
+                        <!--<relocation>
+                            <pattern>net.tnemc.commands.core</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.commands.core</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.tnemc.dbupdater.core</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.dbupdater.core</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.tnemc.config</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.config</shadedPattern>
+                        </relocation>-->
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
     </build>
