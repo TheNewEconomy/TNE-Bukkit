@@ -58,6 +58,7 @@ import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -175,6 +176,13 @@ public class TNE extends TNELib implements TabCompleter {
       blacklisted = true;
       return;
     }
+
+    System.out.println("===========================================");
+    final String cyrillic = "фгччддхвмффдб";
+    System.out.println(cyrillic);
+    System.out.println(ChatColor.stripColor(cyrillic.replaceAll("\\[.*?\\] ?", "")).trim());
+    System.out.println(ChatColor.stripColor(cyrillic).trim());
+    System.out.println("===========================================");
 
     fawe = true;
 

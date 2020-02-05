@@ -68,10 +68,12 @@ public class IDFinder {
       if(id != null) return id;
     }
 
-    UUID id = MojangAPI.getPlayerUUID(name);
-    if(id != null) {
-      TNELib.debug("genUUID: Mojang");
-      return id;
+    if(!isNonPlayer(name)) {
+      UUID id = MojangAPI.getPlayerUUID(name);
+      if (id != null) {
+        TNELib.debug("genUUID: Mojang");
+        return id;
+      }
     }
 
     TNELib.debug("genUUID: gen");
@@ -139,50 +141,8 @@ public class IDFinder {
       return UUID.fromString(identifier);
     }
 
-    if(identifier.contains("discord-")) {
-      TNE.debug("Discord Economy");
-      UUID id = ecoID(identifier, true);
-      checkSpecial(id);
-      return id;
-    }
-
-    if(identifier.contains(TNELib.instance().factionPrefix)) {
-      TNE.debug("Faction");
-      UUID id = ecoID(identifier, true);
-      checkSpecial(id);
-      return id;
-    }
-
-    if(identifier.contains("towny-war-chest")) {
-      TNE.debug("Towny War Chest");
-      UUID id = ecoID(identifier, true);
-      checkSpecial(id);
-      return id;
-    }
-
-    if(identifier.contains(TNELib.instance().townPrefix)) {
-      TNE.debug("Towny Town");
-      UUID id = ecoID(identifier, true);
-      checkSpecial(id);
-      return id;
-    }
-
-    if(identifier.contains(TNELib.instance().nationPrefix)) {
-      TNE.debug("Towny Nation");
-      UUID id = ecoID(identifier, true);
-      checkSpecial(id);
-      return id;
-    }
-
-    if(identifier.contains("kingdom-")) {
-      TNE.debug("Kingdom");
-      UUID id = ecoID(identifier, true);
-      checkSpecial(id);
-      return id;
-    }
-
-    if(identifier.contains("village-")) {
-      TNE.debug("Village");
+    if(isNonPlayer(identifier)) {
+      TNE.debug("Non Player Identifier Found: " + identifier);
       UUID id = ecoID(identifier, true);
       checkSpecial(id);
       return id;
@@ -193,14 +153,14 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
-    TNE.debug("MOJANG API TIME");
-    UUID mojangID = (identifier.equalsIgnoreCase(TNELib.instance().consoleName))? null : MojangAPI.getPlayerUUID(identifier);
-    if(mojangID == null) {
-      TNE.debug("MOJANG API RETURNED NULL VALUE");
-      return ecoID(identifier);
-    }
-    //TNELib.instance().getUuidManager().addUUID(identifier, mojangID);
-    return mojangID;
+    return Bukkit.getOfflinePlayer(identifier).getUniqueId();
+  }
+
+  public static boolean isNonPlayer(String identifier) {
+    return identifier.contains("discord-") || identifier.contains(TNELib.instance().factionPrefix) ||
+        identifier.contains("towny-war-chest") || identifier.contains(TNELib.instance().townPrefix) ||
+        identifier.contains(TNELib.instance().nationPrefix) || identifier.contains("kingdom-") ||
+        identifier.contains("village-");
   }
 
   private static void checkSpecial(UUID id) {
