@@ -146,7 +146,7 @@
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.95.1.0</version>
+            <version>0.95.2.14</version>
             <scope>provided</scope>
         </dependency>
         <!-- Part of Java EE, removed from Java SE in JDK11 -->

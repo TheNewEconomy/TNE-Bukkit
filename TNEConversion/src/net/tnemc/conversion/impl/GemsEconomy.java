@@ -39,7 +39,7 @@ public class GemsEconomy extends Converter {
 
   @Override
   public String type() {
-    return config.getString("storage");
+    return config.getString("storage").toLowerCase();
   }
 
   @Override
@@ -86,7 +86,15 @@ public class GemsEconomy extends Converter {
             if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, currency)) {
               cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency);
             }
-            ConversionModule.convertedAdd(IDFinder.getUsername(uuid), TNE.instance().defaultWorld, cur.name(), new BigDecimal(config.getString("accounts." + uuid + ".balances." + currency)));
+
+            BigDecimal value = BigDecimal.ZERO;
+            try {
+              value = new BigDecimal(config.getString("accounts." + uuid + ".balances." + currency));
+            } catch(Exception ignore) {
+              System.out.println("Couldn't parse balance value for node: " + "accounts." + uuid + ".balances." + currency + ". This balance will have to be manually converted using /money give");
+            }
+
+            ConversionModule.convertedAdd(IDFinder.getUsername(uuid), TNE.instance().defaultWorld, cur.name(), value);
           }
         }
       }

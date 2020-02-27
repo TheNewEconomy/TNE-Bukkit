@@ -157,8 +157,7 @@ public class TNE extends TNELib implements TabCompleter {
   private WorldConfigurations world;
   private PlayerConfigurations player;
 
-  //BukkitRunnable Workers
-  private SaveWorker saveWorker;
+  private Thread autoSaver;
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -411,8 +410,8 @@ public class TNE extends TNELib implements TabCompleter {
     //Bukkit Runnables & Workers
     TNE.debug("Preparing autosavers");
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
-      saveWorker = new SaveWorker(this);
-      saveWorker.runTaskTimer(this, configurations().getLong("Core.AutoSaver.Interval") * 20, configurations().getLong("Core.AutoSaver.Interval") * 20);
+      autoSaver = new Thread(new SaveWorker(this, configurations().getLong("Core.AutoSaver.Interval")));
+      autoSaver.start();
     }
 
     if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.ThirdParty.McMMORewards")) {
@@ -904,6 +903,10 @@ public class TNE extends TNELib implements TabCompleter {
 
   public ModuleFileCache moduleCache() {
     return moduleCache;
+  }
+
+  public Thread autoSaver() {
+    return autoSaver;
   }
 
   public static ItemCompatibility item() {

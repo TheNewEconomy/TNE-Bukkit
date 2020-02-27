@@ -1,7 +1,6 @@
 package net.tnemc.core.worker;
 
 import net.tnemc.core.TNE;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
 
@@ -13,20 +12,27 @@ import java.sql.SQLException;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 8/3/2017.
  */
-public class SaveWorker extends BukkitRunnable {
+public class SaveWorker implements Runnable {
 
   private TNE plugin;
+  private long time;
 
-  public SaveWorker(TNE plugin) {
+  public SaveWorker(TNE plugin, final long seconds) {
     this.plugin = plugin;
+    this.time = seconds;
   }
 
   @Override
   public void run() {
+    System.out.println("Running TNE AutoSaver...");
     try {
       plugin.getSaveManager().save();
     } catch (SQLException e) {
       TNE.debug(e);
+    }
+    try {
+      Thread.sleep(time * 1000);
+    } catch (InterruptedException ignore) {
     }
   }
 }
