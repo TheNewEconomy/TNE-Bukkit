@@ -17,6 +17,7 @@ import org.bukkit.Location;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 /**
@@ -107,7 +108,14 @@ public class CurrencyFormatter {
   private static BigDecimal parseWeight(TNECurrency currency, BigDecimal decimal) {
     String[] amountStr = (decimal.toPlainString() + (decimal.toPlainString().contains(".")? "" : ".00")).split("\\.");
     BigInteger major = new BigInteger(amountStr[0]);
-    BigInteger minor = new BigInteger(String.format("%-" + currency.getDecimalPlaces() + "s", amountStr[1]).replace(' ', '0'));
+    // Get a string that is exactly as long as there are decimal points.
+    final String truncatedMinor =
+            // make it longer
+            (amountStr[1] + String.join("",
+                    Collections.nCopies(Math.max(0, currency.getDecimalPlaces() - amountStr[1].length()), "0")))
+            // make it shorter
+            .substring(0, currency.getDecimalPlaces());
+    BigInteger minor = new BigInteger(truncatedMinor);
     BigInteger majorConversion = minor;
     majorConversion = majorConversion.divide(new BigInteger(currency.getMinorWeight() + ""));
     major = major.add(majorConversion);
