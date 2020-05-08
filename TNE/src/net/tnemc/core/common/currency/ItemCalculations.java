@@ -133,7 +133,7 @@ public class ItemCalculations {
       boolean add = (consolidate) || amount.compareTo(old) >= 0;
       if(remove) add = false;
 
-      if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : "0.00")).split("\\.");
+      if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
 
       // Get a string that is exactly as long as there are decimal points.
       final String truncatedMinor =
