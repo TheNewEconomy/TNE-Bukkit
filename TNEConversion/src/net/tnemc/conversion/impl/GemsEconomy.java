@@ -89,7 +89,7 @@ public class GemsEconomy extends Converter {
 
             BigDecimal value = BigDecimal.ZERO;
             try {
-              value = new BigDecimal(config.getString("accounts." + uuid + ".balances." + currency));
+              value = new BigDecimal(dataConfiguration.getDouble("accounts." + uuid + ".balances." + currency));
             } catch(Exception ignore) {
               System.out.println("Couldn't parse balance value for node: " + "accounts." + uuid + ".balances." + currency + ". This balance will have to be manually converted using /money give");
             }

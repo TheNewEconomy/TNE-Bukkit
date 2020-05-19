@@ -125,7 +125,7 @@ public class TNE extends TNELib implements TabCompleter {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = true;
+  public static boolean consoleDebug = false;
   public static boolean maintenance = false;
   private String serverName;
 
