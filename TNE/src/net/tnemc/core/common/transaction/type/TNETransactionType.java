@@ -22,6 +22,10 @@ import java.math.BigDecimal;
  */
 public interface TNETransactionType extends TransactionType {
 
+  TransactionResult success();
+
+  TransactionResult fail();
+
   default boolean voidTransaction(TNETransaction transaction) {
     boolean proceed = false;
 

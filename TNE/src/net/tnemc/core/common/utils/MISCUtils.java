@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -74,6 +75,16 @@ public class MISCUtils {
       return Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString()));
     }
     return Bukkit.getServer().getPlayer(id);
+  }
+
+  public static OfflinePlayer getOfflinePlayer(UUID id) {
+    if(Bukkit.getServer().getOfflinePlayer(id) == null) {
+      if(Bukkit.getServer().getOfflinePlayer(IDFinder.getUsername(id.toString())) == null) {
+        return null;
+      }
+      return Bukkit.getServer().getOfflinePlayer(IDFinder.getUsername(id.toString()));
+    }
+    return Bukkit.getServer().getOfflinePlayer(id);
   }
 
   public static Player getPlayer(CommandSender sender) {

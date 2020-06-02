@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>1.1.9.2</version>
+    <version>1.1.9.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>
@@ -100,10 +100,13 @@
     </developers>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>github-TNE</id>
-            <name>GitHub TheNewEconomy Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
@@ -119,10 +122,6 @@
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
         </repository>
         <repository>
             <id>githubTowny</id>
@@ -182,7 +181,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
-            <version>0.1.4.6</version>
+            <version>0.1.5.0</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>

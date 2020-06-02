@@ -3,6 +3,7 @@ package net.tnemc.core.common.account.handlers;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -33,6 +34,11 @@ public class EChestHandler implements HoldingsHandler {
       Player player = MISCUtils.getPlayer(account);
       if(player != null) {
         return ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
+      } else {
+        final OfflinePlayer offlinePlayer = MISCUtils.getOfflinePlayer(account);
+        if(offlinePlayer != null) {
+
+        }
       }
     }
     return BigDecimal.ZERO;
@@ -61,6 +67,11 @@ public class EChestHandler implements HoldingsHandler {
         }
         ItemCalculations.setItems(account, currency, amount, player.getEnderChest(), true);
         return BigDecimal.ZERO;
+      } else {
+        final OfflinePlayer offlinePlayer = MISCUtils.getOfflinePlayer(account);
+        if(offlinePlayer != null) {
+
+        }
       }
     }
     return amount;

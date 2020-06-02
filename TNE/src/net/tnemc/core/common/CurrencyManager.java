@@ -72,13 +72,6 @@ public class CurrencyManager {
   }
 
   public void initPermissions() {
-    giveParent.addParent("tne.money.*", true);
-    setParent.addParent("tne.money.*", true);
-    takeParent.addParent("tne.money.*", true);
-
-    convertParent.addParent("tne.money.*", true);
-    noteParent.addParent("tne.money.*", true);
-    payParent.addParent("tne.money.*", true);
 
     Bukkit.getServer().getPluginManager().addPermission(giveParent);
     Bukkit.getServer().getPluginManager().addPermission(setParent);
