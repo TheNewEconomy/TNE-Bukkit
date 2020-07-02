@@ -29,7 +29,7 @@ import java.sql.Statement;
  */
 public class CMI extends Converter {
 
-  private File configFile = new File(TNE.instance().getDataFolder(), "../CMI/config.yml");
+  private File configFile = new File(TNE.instance().getDataFolder(), "../CMI/dataBaseInfo.yml");
   private FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
   @Override
