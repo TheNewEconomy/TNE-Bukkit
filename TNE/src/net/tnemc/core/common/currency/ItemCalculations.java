@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -134,11 +135,19 @@ public class ItemCalculations {
 
       if(consolidate) split = (amount.toPlainString() + (amount.toPlainString().contains(".")? "" : ".00")).split("\\.");
 
+      // Get a string that is exactly as long as there are decimal points.
+      final String truncatedMinor =
+          // make it longer
+          (split[1] + String.join("",
+              Collections.nCopies(Math.max(0, currency.getDecimalPlaces() - split[1].length()), "0")))
+              // make it shorter
+              .substring(0, currency.getDecimalPlaces());
+
       if(consolidate) clearItems(currency, inventory);
       BigInteger majorChange = (consolidate)? setMajorConsolidate(account, currency, new BigInteger(split[0]), inventory) :
           setMajor(account, currency, new BigInteger(split[0]), add, inventory);
-      BigInteger minorChange = (consolidate)? setMinorConsolidate(account, currency, new BigInteger(split[1]), inventory) :
-          setMinor(account, currency, new BigInteger(split[1]), add, inventory);
+      BigInteger minorChange = (consolidate)? setMinorConsolidate(account, currency, new BigInteger(truncatedMinor), inventory) :
+          setMinor(account, currency, new BigInteger(truncatedMinor), add, inventory);
 
       TNE.debug("MajorChange: " + majorChange.toString());
       TNE.debug("MinorChange: " + minorChange.toString());
