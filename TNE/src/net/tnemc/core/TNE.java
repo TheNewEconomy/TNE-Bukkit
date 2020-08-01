@@ -248,6 +248,7 @@ public class TNE extends TNELib {
 
     if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
       defaultWorld = mainConfigurations.getString("Core.DefaultWorld");
+      addWorldManager(new WorldManager(defaultWorld));
     }
 
     if(!mainConfigurations.contains("Core.Currency.Basic.Identifier")) {

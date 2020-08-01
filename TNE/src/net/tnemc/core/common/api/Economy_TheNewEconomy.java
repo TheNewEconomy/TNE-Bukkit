@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -70,7 +71,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public boolean hasAccount(OfflinePlayer offlinePlayer) {
-    return api.hasAccount(IDFinder.getID(offlinePlayer).toString());
+    return api.hasAccount(offlinePlayer.getUniqueId().toString());
   }
 
   @Override
@@ -80,7 +81,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public boolean hasAccount(OfflinePlayer offlinePlayer, String world) {
-    return api.hasAccount(IDFinder.getID(offlinePlayer).toString());
+    return api.hasAccount(offlinePlayer.getUniqueId().toString());
   }
 
   @Override
@@ -90,7 +91,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public double getBalance(OfflinePlayer offlinePlayer) {
-    return getBalance(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), TNE.instance().defaultWorld);
+    return api.getHoldings(offlinePlayer.getUniqueId().toString(), TNE.instance().defaultWorld).doubleValue();
   }
 
   @Override
@@ -100,7 +101,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public double getBalance(OfflinePlayer offlinePlayer, String world) {
-    return getBalance(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), world);
+    return api.getHoldings(offlinePlayer.getUniqueId().toString(), world).doubleValue();
   }
 
   @Override
@@ -179,7 +180,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount) {
-    return depositPlayer(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), TNE.instance().defaultWorld, amount);
+    return depositPlayer(offlinePlayer.getUniqueId(), TNE.instance().defaultWorld, amount);
   }
 
   @Override
@@ -200,7 +201,22 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String world, double amount) {
-    return depositPlayer(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), world, amount);
+    return depositPlayer(offlinePlayer.getUniqueId(), world, amount);
+  }
+
+  public EconomyResponse depositPlayer(final UUID id, String world, double amount) {
+    if(TNE.maintenance) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Economy is in maintenance mode.");
+    if(!api.hasAccount(id)) {
+      return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "That account does not exist!");
+    }
+
+    if(amount < 0) {
+      return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot deposit negative amounts.");
+    }
+    if(api.addHoldings(id.toString(), new BigDecimal(amount + ""), world)) {
+      return new EconomyResponse(amount, api.getHoldings(id.toString(), world).doubleValue(), EconomyResponse.ResponseType.SUCCESS, "");
+    }
+    return new EconomyResponse(amount, api.getHoldings(id.toString(), world).doubleValue(), EconomyResponse.ResponseType.FAILURE, "Unable to complete transaction!");
   }
 
   @Override
