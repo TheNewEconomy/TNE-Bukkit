@@ -473,7 +473,7 @@ public class TNEAccount implements Account {
   @Override
   public EconomyResponse removeHoldings(BigDecimal amount, Currency currency) {
     if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
-    if(hasHoldings(amount)) {
+    if(hasHoldings(amount, currency)) {
       String world = TNE.instance().defaultWorld;
       removeHoldings(amount, world, currency.name(), false);
       return GeneralResponse.SUCCESS;
@@ -484,7 +484,7 @@ public class TNEAccount implements Account {
   @Override
   public EconomyResponse removeHoldings(BigDecimal amount, Currency currency, String world) {
     if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
-    if(hasHoldings(amount)) {
+    if(hasHoldings(amount, currency)) {
       removeHoldings(amount, world, currency.name(), false);
       return GeneralResponse.SUCCESS;
     }
