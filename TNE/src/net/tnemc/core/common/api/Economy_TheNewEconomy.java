@@ -3,7 +3,9 @@ package net.tnemc.core.common.api;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.tnemc.core.TNE;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -117,7 +119,11 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("Economy_TheNewEconomy.has(offlinePlayer, amount)");
     TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("Amount: " + amount);
-    return has(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), TNE.instance().defaultWorld, amount);
+    String world = TNE.instance().defaultWorld;
+    if(offlinePlayer.isOnline()) {
+      world = offlinePlayer.getPlayer().getWorld().getName();
+    }
+    return has(offlinePlayer.getName(), world, amount);
   }
 
   @Override
@@ -135,17 +141,26 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
-    return has(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), world, amount);
+    return has(offlinePlayer.getName(), world, amount);
   }
 
   @Override
   public EconomyResponse withdrawPlayer(String username, double amount) {
-    return withdrawPlayer(username, TNE.instance().defaultWorld, amount);
+    String world = TNE.instance().defaultWorld;
+    final Player player = Bukkit.getPlayer(username);
+    if(player != null) {
+      world = player.getWorld().getName();
+    }
+    return withdrawPlayer(username, world, amount);
   }
 
   @Override
   public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount) {
-    return withdrawPlayer(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), TNE.instance().defaultWorld, amount);
+    String world = TNE.instance().defaultWorld;
+    if(offlinePlayer.isOnline()) {
+      world = offlinePlayer.getPlayer().getWorld().getName();
+    }
+    return withdrawPlayer(offlinePlayer.getName(), world, amount);
   }
 
   @Override
@@ -170,12 +185,17 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String world, double amount) {
-    return withdrawPlayer(IDFinder.getUsername(IDFinder.getID(offlinePlayer).toString()), world, amount);
+    return withdrawPlayer(offlinePlayer.getName(), world, amount);
   }
 
   @Override
   public EconomyResponse depositPlayer(String username, double amount) {
-    return depositPlayer(username, TNE.instance().defaultWorld, amount);
+    String world = TNE.instance().defaultWorld;
+    final Player player = Bukkit.getPlayer(username);
+    if(player != null) {
+      world = player.getWorld().getName();
+    }
+    return depositPlayer(username, world, amount);
   }
 
   @Override
