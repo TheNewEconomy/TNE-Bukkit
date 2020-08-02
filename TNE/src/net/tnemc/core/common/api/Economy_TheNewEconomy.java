@@ -180,7 +180,11 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount) {
-    return depositPlayer(offlinePlayer.getUniqueId(), TNE.instance().defaultWorld, amount);
+    String world = TNE.instance().defaultWorld;
+    if(offlinePlayer.isOnline()) {
+      offlinePlayer.getPlayer().getWorld().getName();
+    }
+    return depositPlayer(offlinePlayer.getUniqueId(), world, amount);
   }
 
   @Override
