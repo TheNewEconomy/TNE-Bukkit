@@ -73,7 +73,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public boolean hasAccount(OfflinePlayer offlinePlayer) {
-    return api.hasAccount(offlinePlayer.getUniqueId().toString());
+    return api.hasAccount(offlinePlayer.getUniqueId());
   }
 
   @Override
@@ -83,7 +83,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public boolean hasAccount(OfflinePlayer offlinePlayer, String world) {
-    return api.hasAccount(offlinePlayer.getUniqueId().toString());
+    return api.hasAccount(offlinePlayer.getUniqueId());
   }
 
   @Override
@@ -93,6 +93,9 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public double getBalance(OfflinePlayer offlinePlayer) {
+    TNE.debug("Economy_TheNewEconomy.getBalance(offlinePlayer)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
     return api.getHoldings(offlinePlayer.getUniqueId().toString(), TNE.instance().defaultWorld).doubleValue();
   }
 
@@ -103,6 +106,15 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public double getBalance(OfflinePlayer offlinePlayer, String world) {
+    TNE.debug("Economy_TheNewEconomy.getBalance(offlinePlayer, world)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("world: " + world);
+
+    if(offlinePlayer.getName().contains("faction-")) {
+      return getBalance(offlinePlayer.getName(), world);
+    }
+
     return api.getHoldings(offlinePlayer.getUniqueId().toString(), world).doubleValue();
   }
 
@@ -111,6 +123,7 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("Economy_TheNewEconomy.has(username, amount)");
     TNE.debug("username: " + username);
     TNE.debug("Amount: " + amount);
+
     return has(username, TNE.instance().defaultWorld, amount);
   }
 
@@ -123,7 +136,12 @@ public class Economy_TheNewEconomy implements Economy {
     if(offlinePlayer.isOnline()) {
       world = offlinePlayer.getPlayer().getWorld().getName();
     }
-    return has(offlinePlayer.getName(), world, amount);
+
+    if(offlinePlayer.getName().contains("faction-")) {
+      return has(offlinePlayer.getName(), world, amount);
+    }
+
+    return has(offlinePlayer.getUniqueId().toString(), world, amount);
   }
 
   @Override
@@ -139,9 +157,14 @@ public class Economy_TheNewEconomy implements Economy {
   public boolean has(OfflinePlayer offlinePlayer, String world, double amount) {
     TNE.debug("Economy_TheNewEconomy.has(offlinePlayer, world, amount)");
     TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
-    return has(offlinePlayer.getName(), world, amount);
+
+    if(offlinePlayer.getName().contains("faction-")) {
+      return has(offlinePlayer.getName(), world, amount);
+    }
+    return has(offlinePlayer.getUniqueId().toString(), world, amount);
   }
 
   @Override
@@ -151,6 +174,10 @@ public class Economy_TheNewEconomy implements Economy {
     if(player != null) {
       world = player.getWorld().getName();
     }
+    TNE.debug("Economy_TheNewEconomy.withdrawPlayer(username, amount)");
+    TNE.debug("username: " + username);
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
     return withdrawPlayer(username, world, amount);
   }
 
@@ -160,11 +187,26 @@ public class Economy_TheNewEconomy implements Economy {
     if(offlinePlayer.isOnline()) {
       world = offlinePlayer.getPlayer().getWorld().getName();
     }
-    return withdrawPlayer(offlinePlayer.getName(), world, amount);
+
+    TNE.debug("Economy_TheNewEconomy.withdrawPlayer(offlinePlayer, amount)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
+
+    if(offlinePlayer.getName().contains("faction-")) {
+      return withdrawPlayer(offlinePlayer.getName(), world, amount);
+    }
+
+    return withdrawPlayer(offlinePlayer.getUniqueId().toString(), world, amount);
   }
 
   @Override
   public EconomyResponse withdrawPlayer(String username, String world, double amount) {
+    TNE.debug("Economy_TheNewEconomy.withdrawPlayer(username, world, amount)");
+    TNE.debug("username: " + username);
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
     if(TNE.maintenance) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Economy is in maintenance mode.");
     if(!hasAccount(username)) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "That account does not exist!");
@@ -185,11 +227,19 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String world, double amount) {
-    return withdrawPlayer(offlinePlayer.getName(), world, amount);
+    TNE.debug("Economy_TheNewEconomy.withdrawPlayer(offlinePlayer, world, amount)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
+    return withdrawPlayer(offlinePlayer.getUniqueId().toString(), world, amount);
   }
 
   @Override
   public EconomyResponse depositPlayer(String username, double amount) {
+    TNE.debug("Economy_TheNewEconomy.depositPlayer(username, amount)");
+    TNE.debug("username: " + username);
+    TNE.debug("Amount: " + amount);
     String world = TNE.instance().defaultWorld;
     final Player player = Bukkit.getPlayer(username);
     if(player != null) {
@@ -204,11 +254,25 @@ public class Economy_TheNewEconomy implements Economy {
     if(offlinePlayer.isOnline()) {
       offlinePlayer.getPlayer().getWorld().getName();
     }
+    TNE.debug("Economy_TheNewEconomy.depositPlayer(offlinePlayer, amount)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
+
+    if(offlinePlayer.getName().contains("faction-")) {
+      return depositPlayer(offlinePlayer.getName(), world, amount);
+    }
+
     return depositPlayer(offlinePlayer.getUniqueId(), world, amount);
   }
 
   @Override
   public EconomyResponse depositPlayer(String username, String world, double amount) {
+    TNE.debug("Economy_TheNewEconomy.depositPlayer(username, world, amount)");
+    TNE.debug("username: " + username);
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
     if(TNE.maintenance) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Economy is in maintenance mode.");
     if(!hasAccount(username)) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "That account does not exist!");
@@ -225,6 +289,16 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String world, double amount) {
+    TNE.debug("Economy_TheNewEconomy.depositPlayer(offlinePlayer, world, amount)");
+    TNE.debug("username: " + offlinePlayer.getName());
+    TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("world: " + world);
+    TNE.debug("Amount: " + amount);
+
+    if(offlinePlayer.getName().contains("faction-")) {
+      return depositPlayer(offlinePlayer.getName(), world, amount);
+    }
+
     return depositPlayer(offlinePlayer.getUniqueId(), world, amount);
   }
 
@@ -310,7 +384,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public boolean createPlayerAccount(OfflinePlayer offlinePlayer) {
-    return api.createAccount(IDFinder.getID(offlinePlayer).toString());
+    return api.createAccount(offlinePlayer.getUniqueId(), offlinePlayer.getName());
   }
 
   @Override
@@ -320,6 +394,6 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public boolean createPlayerAccount(OfflinePlayer offlinePlayer, String world) {
-    return api.createAccount(IDFinder.getID(offlinePlayer).toString());
+    return api.createAccount(offlinePlayer.getUniqueId(), offlinePlayer.getName());
   }
 }
