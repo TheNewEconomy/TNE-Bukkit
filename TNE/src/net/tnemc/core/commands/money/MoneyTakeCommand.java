@@ -70,8 +70,20 @@ public class MoneyTakeCommand extends TNECommand {
   public boolean execute(CommandSender sender, String command, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
       if(arguments.length >= 2) {
-        final String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
+
+        if(arguments.length == 3 && !TNE.instance().hasWorldManager(world)) {
+          world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+          currencyName = arguments[2];
+        }
+
+        if (!TNE.instance().hasWorldManager(world)) {
+          Message m = new Message("Messages.Money.NoWorld");
+          m.addVariable("$world", world);
+          m.translate(world, sender);
+          return;
+        }
 
         if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 4) {
           currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
