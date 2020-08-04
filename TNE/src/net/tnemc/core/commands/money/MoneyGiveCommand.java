@@ -72,7 +72,7 @@ public class MoneyGiveCommand extends TNECommand {
       TNE.debug("===START MoneyGiveCommand ===");
       if(arguments.length >= 2) {
         String world = (arguments.length >= 3) ? arguments[2] : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-        String currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
+        String currencyName = "";
 
         if(arguments.length == 3 && !TNE.instance().hasWorldManager(world)) {
           world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
@@ -86,8 +86,12 @@ public class MoneyGiveCommand extends TNECommand {
           return;
         }
 
-        if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 4) {
-          currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        if(currencyName.equalsIgnoreCase("")) {
+          currencyName = (arguments.length >= 4) ? arguments[3] : TNE.manager().currencyManager().get(world).name();
+
+          if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 4) {
+            currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+          }
         }
 
         if (!TNE.manager().currencyManager().contains(world, currencyName)) {
