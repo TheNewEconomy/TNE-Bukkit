@@ -1,6 +1,5 @@
 package net.tnemc.core;
 
-import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.db.SQLDatabase;
@@ -38,6 +37,7 @@ import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.module.cache.ModuleFileCache;
+import net.tnemc.core.common.utils.BStats;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
 import net.tnemc.core.compatibility.ItemCompatibility;
@@ -469,7 +469,7 @@ public class TNE extends TNELib {
 
     //Metrics
     TNE.debug("Preparing metrics");
-    new Metrics(this);
+    new BStats(this, 602);
 
     TNE.debug("Preparing server account");
     if(api.getBoolean("Core.Server.Account.Enabled")) {
