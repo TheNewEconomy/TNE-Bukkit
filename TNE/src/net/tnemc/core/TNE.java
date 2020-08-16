@@ -109,7 +109,7 @@ public class TNE extends TNELib {
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
-  public static final String build = "0.1.1.11";
+  public static final String build = "0.1.1.12";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   //Map containing module sub commands to add to our core commands
@@ -273,21 +273,13 @@ public class TNE extends TNELib {
 
     TNE.debug("Preparing commands");
     List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
-    if(configurations().getBoolean("Core.Commands.PayShort")) {
-      moneyArguments.add("pay");
-    }
-
-    if(configurations().getBoolean("Core.Commands.BalanceShort")) {
-      moneyArguments.add("bal");
-      moneyArguments.add("balance");
-      moneyArguments.add("balo");
-      moneyArguments.add("balother");
-      moneyArguments.add("balanceother");
-    }
-
-    if(configurations().getBoolean("Core.Commands.TopShort")) {
-      moneyArguments.add("baltop");
-    }
+    moneyArguments.add("pay");
+    moneyArguments.add("bal");
+    moneyArguments.add("balance");
+    moneyArguments.add("balo");
+    moneyArguments.add("balother");
+    moneyArguments.add("balanceother");
+    moneyArguments.add("baltop");
 
 
     //Load Module Sub Commands
