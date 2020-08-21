@@ -21,8 +21,7 @@ Build Status
 --------------
 [![Build Status](https://travis-ci.org/TheNewEconomy/TNE-Bukkit.svg?branch=master)](https://travis-ci.org/TheNewEconomy/TNE-Bukkit)
 
-If you've switched from another economy plugin to TNE, please take a moment to tell us which one:
-What economy plugin did you switch from?
+If you've switched from another economy plugin to TNE, please take a moment to tell us from which economy plugin you switched from.
 
 Support
 -------------
