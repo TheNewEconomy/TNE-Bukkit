@@ -63,7 +63,6 @@ import net.tnemc.core.listeners.player.PlayerJoinListener;
 import net.tnemc.core.listeners.player.PlayerPreLoginListener;
 import net.tnemc.core.listeners.player.PlayerQuitListener;
 import net.tnemc.core.listeners.player.PlayerTeleportListener;
-import net.tnemc.core.listeners.test.AreaEffectCloudApplyListener;
 import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
@@ -461,7 +460,6 @@ public class TNE extends TNELib {
     getServer().getPluginManager().registerEvents(new WorldLoadListener(this), this);
 
     //Test
-    getServer().getPluginManager().registerEvents(new AreaEffectCloudApplyListener(this), this);
 
 
     loader.getModules().forEach((key, value)->{
