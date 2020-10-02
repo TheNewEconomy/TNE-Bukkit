@@ -154,14 +154,18 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
+    if(!Bukkit.getOfflinePlayer(identifier).hasPlayedBefore()) {
+      return TNE.uuidAPI.getUUID(identifier);
+    }
+
     return Bukkit.getOfflinePlayer(identifier).getUniqueId();
   }
 
   public static boolean isNonPlayer(String identifier) {
-    return identifier.contains("discord-") || identifier.contains(TNELib.instance().factionPrefix) ||
-        identifier.contains("towny-war-chest") || identifier.contains(TNELib.instance().townPrefix) ||
-        identifier.contains(TNELib.instance().nationPrefix) || identifier.contains("kingdom-") ||
-        identifier.contains("village-");
+    if(identifier.length() >= 3 && identifier.length() <= 16) {
+      return !TNE.USERNAME_PATTERN.matcher(identifier).matches();
+    }
+    return true;
   }
 
   private static void checkSpecial(UUID id) {

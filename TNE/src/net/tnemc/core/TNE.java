@@ -40,6 +40,8 @@ import net.tnemc.core.common.module.cache.ModuleFileCache;
 import net.tnemc.core.common.utils.BStats;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.common.uuid.UUIDAPI;
+import net.tnemc.core.common.uuid.impl.AshconAPI;
 import net.tnemc.core.compatibility.ItemCompatibility;
 import net.tnemc.core.compatibility.item.ItemCompatibility12;
 import net.tnemc.core.compatibility.item.ItemCompatibility13;
@@ -61,6 +63,7 @@ import net.tnemc.core.listeners.player.PlayerJoinListener;
 import net.tnemc.core.listeners.player.PlayerPreLoginListener;
 import net.tnemc.core.listeners.player.PlayerQuitListener;
 import net.tnemc.core.listeners.player.PlayerTeleportListener;
+import net.tnemc.core.listeners.test.AreaEffectCloudApplyListener;
 import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
@@ -95,6 +98,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -108,6 +112,10 @@ public class TNE extends TNELib {
 
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
+
+  public static final Pattern USERNAME_PATTERN = Pattern.compile("^\\w*$");
+
+  public static final UUIDAPI uuidAPI = new AshconAPI();
 
   public static final String build = "0.1.1.12";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
@@ -451,6 +459,10 @@ public class TNE extends TNELib {
 
     //World
     getServer().getPluginManager().registerEvents(new WorldLoadListener(this), this);
+
+    //Test
+    getServer().getPluginManager().registerEvents(new AreaEffectCloudApplyListener(this), this);
+
 
     loader.getModules().forEach((key, value)->{
       value.getModule().listeners(this).forEach(listener->{
