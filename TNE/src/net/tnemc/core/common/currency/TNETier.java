@@ -72,7 +72,7 @@ public class TNETier implements Tier {
   }
 
   @Override
-  public int weight() {
-    return weight.intValue();
+  public double weight() {
+    return weight.doubleValue();
   }
 }
