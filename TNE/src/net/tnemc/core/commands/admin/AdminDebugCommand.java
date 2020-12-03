@@ -20,9 +20,9 @@ public class AdminDebugCommand implements CommandExecution {
 
   @Override
   public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
-    TNE.consoleDebug = !TNE.consoleDebug;
+    TNE.instance().debugMode = !TNE.instance().debugMode;
 
-    final String status = (TNE.consoleDebug)? "on" : "off";
+    final String status = (TNE.instance().debugMode)? "on" : "off";
 
     sender.sendMessage(ChatColor.WHITE + "TNE Debug Mode has been toggled " + status + ".");
     return true;

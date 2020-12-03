@@ -21,7 +21,7 @@ public class DeveloperDebugCommand implements CommandExecution {
     if(arguments.length >= 1) {
       boolean console = arguments[0].equalsIgnoreCase("console");
 
-      TNE.consoleDebug = console;
+      TNE.instance().debugMode = console;
       sender.sendMessage("The debug configuration has been changed to " + arguments[0]);
       return true;
     }

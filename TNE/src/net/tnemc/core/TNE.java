@@ -125,7 +125,6 @@ public class TNE extends TNELib implements TabCompleter {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = false;
   public static boolean maintenance = false;
   private String serverName;
 
@@ -842,7 +841,7 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) {
+    if(instance().debugMode) {
       System.out.println(message);
     }
   }
