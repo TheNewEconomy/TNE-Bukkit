@@ -175,13 +175,6 @@ public class TNE extends TNELib implements TabCompleter {
       return;
     }
 
-    System.out.println("===========================================");
-    final String cyrillic = "фгччддхвмффдб";
-    System.out.println(cyrillic);
-    System.out.println(ChatColor.stripColor(cyrillic.replaceAll("\\[.*?\\] ?", "")).trim());
-    System.out.println(ChatColor.stripColor(cyrillic).trim());
-    System.out.println("===========================================");
-
     fawe = true;
 
     getLogger().info("Loading The New Economy with Java Version: " + System.getProperty("java.version"));
