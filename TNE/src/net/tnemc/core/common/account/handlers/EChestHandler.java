@@ -65,7 +65,7 @@ public class EChestHandler implements HoldingsHandler {
           ItemCalculations.clearItems(currency, player.getEnderChest());
           return amount.subtract(holdings);
         }
-        ItemCalculations.setItems(account, currency, amount, player.getEnderChest(), true);
+        ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
         return BigDecimal.ZERO;
       } else {
         final OfflinePlayer offlinePlayer = MISCUtils.getOfflinePlayer(account);
