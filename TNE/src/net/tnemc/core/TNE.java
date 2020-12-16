@@ -125,7 +125,6 @@ public class TNE extends TNELib implements TabCompleter {
 
   private ModuleLoader loader;
   public UpdateChecker updater;
-  public static boolean consoleDebug = false;
   public static boolean maintenance = false;
   private String serverName;
 
@@ -175,13 +174,6 @@ public class TNE extends TNELib implements TabCompleter {
       blacklisted = true;
       return;
     }
-
-    System.out.println("===========================================");
-    final String cyrillic = "фгччддхвмффдб";
-    System.out.println(cyrillic);
-    System.out.println(ChatColor.stripColor(cyrillic.replaceAll("\\[.*?\\] ?", "")).trim());
-    System.out.println(ChatColor.stripColor(cyrillic).trim());
-    System.out.println("===========================================");
 
     fawe = true;
 
@@ -842,7 +834,7 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   public static void debug(String message) {
-    if(consoleDebug) {
+    if(instance().debugMode) {
       System.out.println(message);
     }
   }

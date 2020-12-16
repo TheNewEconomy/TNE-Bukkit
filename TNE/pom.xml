@@ -124,10 +124,6 @@
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
-            <id>githubTowny</id>
-            <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
-        </repository>
-        <repository>
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
@@ -142,12 +138,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.palmergames.bukkit.towny</groupId>
-            <artifactId>Towny</artifactId>
-            <version>0.95.2.14</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Part of Java EE, removed from Java SE in JDK11 -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
