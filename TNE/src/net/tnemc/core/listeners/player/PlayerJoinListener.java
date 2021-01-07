@@ -44,7 +44,7 @@ public class PlayerJoinListener implements Listener {
     TNE.debug("Player null: " + (event.getPlayer() == null));
     final Player player = event.getPlayer();
 
-    final UUID id = IDFinder.getID(player);
+    final UUID id = IDFinder.getID(player.getUniqueId().toString());
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
       TNE.debug(id + "");

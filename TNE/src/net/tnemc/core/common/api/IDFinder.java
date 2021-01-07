@@ -31,6 +31,7 @@ public class IDFinder {
     UUID eco = (skip)? genUUID() : genUUID(username);
     TNELib.debug("Eco: " + eco.toString());
     //TNELib.instance().getUuidManager().addUUID(username, eco);
+    TNE.uuidManager().addUUID(username, eco);
     return eco;
   }
 
@@ -61,14 +62,15 @@ public class IDFinder {
   }
 
   public static UUID genUUID(String name) {
-    OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-    if(player.hasPlayedBefore()) {
-      TNELib.debug("genUUID: OfflinePlayer");
-      final UUID id = player.getUniqueId();
-      if(id != null) return id;
-    }
-
     if(!isNonPlayer(name)) {
+
+      OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+      if(player.hasPlayedBefore()) {
+        TNELib.debug("genUUID: OfflinePlayer");
+        final UUID id = player.getUniqueId();
+        if(id != null) return id;
+      }
+
       UUID id = MojangAPI.getPlayerUUID(name);
       if (id != null) {
         TNELib.debug("genUUID: Mojang");

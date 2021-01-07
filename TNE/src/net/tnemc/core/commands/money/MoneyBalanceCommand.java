@@ -88,7 +88,7 @@ public class MoneyBalanceCommand extends TNECommand {
       if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
       String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
 
-      if(sender instanceof Player == false && arguments.length == 0){
+      if(!(sender instanceof Player) && arguments.length == 0){
         new Message("Messages.General.IsConsole");
         return;
       }
