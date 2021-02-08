@@ -1,11 +1,12 @@
 package net.tnemc.core.common.currency;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.calculations.CalculationProvider;
+import net.tnemc.core.common.currency.calculations.impl.BasicCalculation;
 import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.currency.Tier;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,13 +25,13 @@ import java.util.TreeMap;
  */
 public class TNECurrency implements Currency {
 
-  private TreeMap<BigInteger, TNETier> majorTiers = new TreeMap<>(Collections.reverseOrder());
-
-  private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
+  private TreeMap<BigDecimal, TNETier> tiers = new TreeMap<>(Collections.reverseOrder());
 
   private List<String> worlds = new ArrayList<>();
 
   private CurrencyNote note = new CurrencyNote("PAPER");
+
+  private CalculationProvider calculationProvider = new BasicCalculation();
 
   private boolean worldDefault = true;
   private boolean global = true;
@@ -56,77 +57,49 @@ public class TNECurrency implements Currency {
   private double rate;
   private String decimal;
   private int decimalPlaces;
+  private boolean decimalSupport = false;
+
+  public TreeMap<BigDecimal, TNETier> getTiers() {
+    return tiers;
+  }
+
+  public void setTiers(TreeMap<BigDecimal, TNETier> tiers) {
+    this.tiers = tiers;
+  }
 
   //TNETier-related methods.
-  public Set<TNETier> getTNETiers() {
+  public Set<TNETier> getTNETiersSet() {
     Set<TNETier> tiers = new HashSet<>();
-    tiers.addAll(majorTiers.values());
-    tiers.addAll(minorTiers.values());
+    tiers.addAll(this.tiers.values());
     return tiers;
   }
 
-  public TreeMap<BigInteger, TNETier> getTNEMajorTiers() {
-    return majorTiers;
+  public void addTier(TNETier tier) {
+    tiers.put(tier.getTNEWeight(), tier);
+    if(tier.getTNEWeight().compareTo(BigDecimal.ONE) < 0) decimalSupport = true;
   }
 
-  public void setTNEMajorTiers(TreeMap<BigInteger, TNETier> tiers) {
-    majorTiers = tiers;
+  public Optional<TNETier> getTier(Integer weight) {
+    return Optional.of(tiers.get(weight));
   }
 
-  public void addTNEMajorTier(TNETier tier) {
-    majorTiers.put(tier.getTNEWeight(), tier);
-  }
-
-  public Optional<TNETier> getMajorTier(Integer weight) {
-    return Optional.of(majorTiers.get(weight));
-  }
-
-  public Optional<TNETier> getMajorTier(String name) {
-    for(TNETier tier : majorTiers.values()) {
-      if(tier.singular().equalsIgnoreCase(name) || tier.plural().equalsIgnoreCase(name))
-        return Optional.of(tier);
-    }
-    return Optional.empty();
-  }
-
-  public TreeMap<BigInteger, TNETier> getTNEMinorTiers() {
-    return minorTiers;
-  }
-
-  public void setTNEMinorTiers(TreeMap<BigInteger, TNETier> tiers) {
-    minorTiers = tiers;
-  }
-
-  public void addTNEMinorTier(TNETier tier) {
-    minorTiers.put(tier.getTNEWeight(), tier);
-  }
-
-  public Optional<TNETier> getMinorTier(Integer weight) {
-    return Optional.of(minorTiers.get(weight));
-  }
-
-  public Optional<TNETier> getMinorTier(String name) {
-    for(TNETier tier : minorTiers.values()) {
-      if(tier.singular().equalsIgnoreCase(name) || tier.plural().equalsIgnoreCase(name))
-        return Optional.of(tier);
-    }
-    return Optional.empty();
-  }
-
-  public Set<Tier> getTiers() {
+  public Set<Tier> getTiersSet() {
     Set<Tier> tiers = new HashSet<>();
-    tiers.addAll(majorTiers.values());
-    tiers.addAll(minorTiers.values());
+    tiers.addAll(this.tiers.values());
 
     return tiers;
+  }
+  public Optional<TNETier> getTier(String name) {
+    for(TNETier tier : tiers.values()) {
+      if(tier.singular().equalsIgnoreCase(name) || tier.plural().equalsIgnoreCase(name))
+        return Optional.of(tier);
+    }
+    return Optional.empty();
   }
 
   public boolean hasTier(String name) {
-    for(TNETier tier : majorTiers.values()) {
-      if(tier.singular().equals(name)) return true;
-    }
 
-    for(TNETier tier : minorTiers.values()) {
+    for(TNETier tier : tiers.values()) {
       if(tier.singular().equals(name)) return true;
     }
     return false;
@@ -145,15 +118,11 @@ public class TNECurrency implements Currency {
     tneCurrency.setFormat("<symbol><major.amount><decimal><minor.amount>");
 
     if(currency.getMajorTiers() != null) {
-      currency.getMajorTiers().forEach((weight, tier) -> {
-        tneCurrency.addTNEMajorTier(TNETier.fromReserve(tier));
-      });
+      currency.getMajorTiers().forEach((weight, tier) -> tneCurrency.addTier(TNETier.fromReserve(tier)));
     }
 
     if(currency.getMinorTiers() != null) {
-      currency.getMinorTiers().forEach((weight, tier) -> {
-        tneCurrency.addTNEMinorTier(TNETier.fromReserve(tier));
-      });
+      currency.getMinorTiers().forEach((weight, tier) -> tneCurrency.addTier(TNETier.fromReserve(tier)));
     }
 
     return tneCurrency;
@@ -214,6 +183,10 @@ public class TNECurrency implements Currency {
   @Override
   public TreeMap<Integer, Tier> getMinorTiers() {
     return null;
+  }
+
+  public boolean hasDecimalSupport() {
+    return decimalSupport;
   }
 
   public boolean shorten() {
@@ -403,5 +376,13 @@ public class TNECurrency implements Currency {
 
   public boolean isXp() {
     return type.equalsIgnoreCase("experience");
+  }
+
+  public CalculationProvider calculation() {
+    return calculationProvider;
+  }
+
+  public void setCalculationProvider(CalculationProvider calculationProvider) {
+    this.calculationProvider = calculationProvider;
   }
 }

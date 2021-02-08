@@ -6,7 +6,6 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -82,7 +81,9 @@ public class MoneyConsolidateCommand extends TNECommand {
 
       for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
         if(currency.isItem()) {
-          ItemCalculations.setItems(id, currency, account.getHoldings(balWorld, currency.getIdentifier(), true, false), player.getInventory(), false, true);
+          //TODO: Consolidation.
+          //ItemCalculations.setItems(id, currency, account.getHoldings(balWorld, currency.getIdentifier(), true, false), player.getInventory(), false, true);
+
         }
       }
 

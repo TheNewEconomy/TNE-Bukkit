@@ -152,7 +152,7 @@ public class MoneySetCommand extends TNECommand {
         }
 
         BigDecimal value = new BigDecimal(parsed);
-        if(currency.getTNEMinorTiers().size() <= 0) {
+        if(!currency.hasDecimalSupport()) {
           value = value.setScale(0, BigDecimal.ROUND_FLOOR);
         }
 

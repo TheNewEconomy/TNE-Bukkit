@@ -2,8 +2,8 @@ package net.tnemc.core.common.currency.type;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.CurrencyType;
-import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.calculations.PlayerCurrencyData;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
@@ -43,7 +43,7 @@ public class ItemType implements CurrencyType {
     if(database || Bukkit.getPlayer(account) == null) {
       return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
     }
-    return ItemCalculations.getCurrencyItems(currency, Bukkit.getPlayer(account).getInventory());
+    return currency.calculation().calculateHoldings(new PlayerCurrencyData(Bukkit.getPlayer(account).getInventory(), currency));
   }
 
   /**
@@ -58,7 +58,8 @@ public class ItemType implements CurrencyType {
     TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(account, world, currency.getIdentifier(), amount);
 
     if(!skipUpdate && Bukkit.getPlayer(account) != null) {
-      ItemCalculations.setItems(account, currency, amount, Bukkit.getPlayer(account).getInventory(), false);
+      final PlayerCurrencyData data = new PlayerCurrencyData(Bukkit.getPlayer(account).getInventory(), currency);
+      currency.calculation().setItems(data, amount);
     }
   }
 }

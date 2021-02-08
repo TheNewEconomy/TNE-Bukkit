@@ -1,7 +1,6 @@
 package net.tnemc.core.common.currency.formatter.impl;
 
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.currency.formatter.FormatRule;
@@ -37,9 +36,9 @@ public class MaterialRule implements FormatRule {
       if(id != null) {
         Player p = Bukkit.getPlayer(id);
         if(p != null) {
-          for(TNETier tier : currency.getTNETiers()) {
+          for(TNETier tier : currency.getTNETiersSet()) {
             if(format.contains("<" + tier.singular() + ">")) {
-              format = format.replace("<" + tier.singular() + ">", "" + ItemCalculations.getCount(tier.getItemInfo().toStack(), p.getInventory()));
+              format = format.replace("<" + tier.singular() + ">", "" + currency.calculation().getCount(tier.getItemInfo().toStack(), p.getInventory()));
             }
           }
         }

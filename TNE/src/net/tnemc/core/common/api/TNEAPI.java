@@ -170,7 +170,7 @@ public class TNEAPI {
    * @return A Set containing all the {@link TNETier} objects belonging to this {@link TNECurrency}.
    */
   public Set<Tier> getTiers(TNECurrency currency) {
-    return currency.getTiers();
+    return currency.getTiersSet();
   }
 
   /**
@@ -769,11 +769,7 @@ public class TNEAPI {
    */
   public boolean registerTier(TNETier tier, TNECurrency currency, String world) {
     if(TNE.manager().currencyManager().contains(world, currency.name())) {
-      if(tier.isMajor()) {
-        TNE.manager().currencyManager().get(world, currency.name()).addTNEMajorTier(tier);
-      } else {
-        TNE.manager().currencyManager().get(world, currency.name()).addTNEMinorTier(tier);
-      }
+      TNE.manager().currencyManager().get(world, currency.name()).addTier(tier);
       return true;
     }
     return false;

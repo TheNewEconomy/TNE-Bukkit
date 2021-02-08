@@ -7,7 +7,8 @@ import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.currency.ItemCalculations;
+import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.calculations.PlayerCurrencyData;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
@@ -69,8 +70,9 @@ public class PlayerChangedWorldListener implements Listener {
       if (!noEconomy && TNE.instance().api().getBoolean("Core.Multiworld") &&
           !TNE.instance().getWorldManager(event.getFrom().getName()).getBalanceWorld().equalsIgnoreCase(world)) {
         TNE.instance().getWorldManager(world).getItemCurrencies().forEach(value -> {
-          ItemCalculations.setItems(id, TNE.manager().currencyManager().get(world, value),
-              account.getHoldings(world, value, true, true), player.getInventory(), false);
+          final TNECurrency currency = TNE.manager().currencyManager().get(world, value);
+          final PlayerCurrencyData data = new PlayerCurrencyData(player.getInventory(), currency);
+          currency.calculation().setItems(data, account.getHoldings(world, value, true, true));
         });
       }
     }

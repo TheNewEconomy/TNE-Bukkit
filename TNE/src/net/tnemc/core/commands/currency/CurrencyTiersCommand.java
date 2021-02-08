@@ -70,15 +70,11 @@ public class CurrencyTiersCommand extends TNECommand {
     StringBuilder major = new StringBuilder();
     StringBuilder minor = new StringBuilder();
 
-    for(TNETier tier : currency.getTNEMajorTiers().values()) {
+    for(TNETier tier : currency.getTNETiersSet()) {
       if(major.length() > 0) major.append(", ");
       major.append(tier.singular());
     }
 
-    for(TNETier tier : currency.getTNEMinorTiers().values()) {
-      if(minor.length() > 0) minor.append(", ");
-      minor.append(tier.singular());
-    }
     Message message = new Message("Messages.Currency.Tiers");
     message.addVariable("$currency", world);
     message.addVariable("$major_tiers", major.toString());

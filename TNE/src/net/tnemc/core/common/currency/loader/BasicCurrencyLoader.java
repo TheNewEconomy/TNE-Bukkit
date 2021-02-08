@@ -8,7 +8,6 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Set;
 
 import static net.tnemc.core.common.CurrencyManager.largestSupported;
@@ -119,11 +118,6 @@ public class BasicCurrencyLoader implements CurrencyLoader {
       //Normal TNETier variables
       String unparsedValue = TNE.instance().mainConfigurations().getString(baseNode + "." + tierName);
 
-      final String type = (unparsedValue.contains("."))? "Minor" : "Major";
-
-      if(type.equalsIgnoreCase("minor")) {
-        unparsedValue = unparsedValue.split("\\.")[1];
-      }
 
       ItemTier itemTier = null;
 
@@ -134,17 +128,11 @@ public class BasicCurrencyLoader implements CurrencyLoader {
       }
 
       TNETier tier = new TNETier();
-      tier.setMajor(type.equalsIgnoreCase("major"));
       tier.setItemInfo(itemTier);
       tier.setSingle(tierName);
       tier.setPlural(tierName + "s");
-      tier.setWeight(new BigInteger(unparsedValue));
-
-      if (type.equalsIgnoreCase("minor")) {
-        currency.addTNEMinorTier(tier);
-        continue;
-      }
-      currency.addTNEMajorTier(tier);
+      tier.setWeight(new BigDecimal(unparsedValue));
+      currency.addTier(tier);
     }
     return true;
   }

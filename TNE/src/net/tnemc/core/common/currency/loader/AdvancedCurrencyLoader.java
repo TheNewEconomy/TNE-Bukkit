@@ -23,7 +23,6 @@ import org.bukkit.permissions.PermissionDefault;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,10 +198,13 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
           config.load(false);
 
           //Normal TNETier variables
-          String type = config.getString("Info.Type", "Major");
+          String type = config.getString("Info.Type", "");
           String single = config.getString("Info.Single", "Dollar");
           String plural = config.getString("Info.Plural", "Dollars");
-          BigInteger weight = new BigInteger(config.getString("Options.Weight", "1"));
+          BigDecimal weight = new BigDecimal(config.getString("Options.Weight", "1"));
+          if(type.equalsIgnoreCase("minor")) {
+            weight = new BigDecimal(Double.valueOf(config.getString("Options.Weight")) /currency.getMinorWeight());
+          }
           ItemTier item = null;
 
           if(currency.isItem()) {
@@ -210,7 +212,7 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
             String material = config.getString("Options.Material", "PAPER");
             short damage = (short) config.getInt("Options.Damage", 0);
             String customName = config.getString("Options.Name", null);
-            String lore = config.getString("Options.Lore", null);
+            List<String> lore = config.getStringList("Options.Lore");
             int customModel = config.getInt("Options.ModelData", -1);
 
             item = new ItemTier(material, damage);
@@ -262,7 +264,6 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
           }
 
           TNETier tier = new TNETier();
-          tier.setMajor(type.equalsIgnoreCase("major"));
           tier.setItemInfo(item);
           tier.setSingle(single);
           tier.setPlural(plural);
@@ -272,11 +273,7 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
           Bukkit.getServer().getPluginManager().callEvent(event);
 
           if(!event.isCancelled()) {
-            if (type.equalsIgnoreCase("minor")) {
-              currency.addTNEMinorTier(tier);
-              continue;
-            }
-            currency.addTNEMajorTier(tier);
+            currency.addTier(tier);
           }
         }
         return true;

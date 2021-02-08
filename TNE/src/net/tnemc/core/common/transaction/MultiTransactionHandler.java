@@ -37,7 +37,7 @@ public class MultiTransactionHandler {
     this.initiator = initiator;
     this.messageReceiver = initiator;
 
-    if(currency.getTNEMinorTiers().size() <= 0) {
+    if(!currency.hasDecimalSupport()) {
       this.amount = this.amount.setScale(0, BigDecimal.ROUND_FLOOR);
     }
   }
@@ -51,7 +51,7 @@ public class MultiTransactionHandler {
     this.initiator = initiator;
     this.messageReceiver = messageReceiver;
 
-    if(currency.getTNEMinorTiers().size() <= 0) {
+    if(!currency.hasDecimalSupport()) {
       this.amount = this.amount.setScale(0, BigDecimal.ROUND_FLOOR);
     }
   }
