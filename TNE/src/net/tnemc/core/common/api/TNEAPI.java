@@ -127,6 +127,19 @@ public class TNEAPI {
   }
 
   /**
+   * Used to find a currency by name and world.
+   * @param world The world to use for the search
+   * @param name The name of the currency to use for the search
+   * @return Optional containing the currency if it exists, otherwise an empty optional.
+   */
+  public Optional<TNECurrency> getCurrency(String world, String name) {
+    for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
+      if(currency.getIdentifier().equalsIgnoreCase(name)) return Optional.of(currency);
+    }
+    return Optional.empty();
+  }
+
+  /**
    * Grabs a {@link Set} of {@link TNECurrency} objects that exist.
    * @return A Set containing all the {@link TNECurrency} objects that exist on this server.
    */
