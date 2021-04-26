@@ -32,7 +32,7 @@ public interface CalculationProvider {
     BigDecimal holdings = BigDecimal.ZERO;
 
     for(Map.Entry<BigDecimal, TNETier> entry : data.getMaterialValues().entrySet()) {
-      final int amount = data.getInventoryMaterials().getOrDefault(entry.getValue().singular(), 0);
+      final int amount = data.getInventoryMaterials().getOrDefault(entry.getValue().getItemInfo().getMaterial(), 0);
 
       if(amount > 0) {
         holdings = holdings.add(entry.getKey().multiply(new BigDecimal("" + amount)));
@@ -43,7 +43,9 @@ public interface CalculationProvider {
 
   default void clearItems(PlayerCurrencyData data) {
     for(Map.Entry<String, Integer> entry : data.getInventoryMaterials().entrySet()) {
-      removeMaterials(data, entry.getKey(), entry.getValue());
+      final Optional<TNETier> tier = data.getCurrency().getTierByMaterial(entry.getKey());
+
+      tier.ifPresent(tneTier -> removeMaterials(data, tneTier, entry.getValue()));
     }
   }
 
@@ -75,12 +77,12 @@ public interface CalculationProvider {
     do {
 
       if(instance > 0) {
-        if(!data.getInventoryMaterials().containsKey(lowestWhole.getValue().singular())) {
+        if(!data.getInventoryMaterials().containsKey(lowestWhole.getValue().getItemInfo().getMaterial())) {
           lowestWhole = findLowestGreaterThan(data, BigDecimal.ONE);
         }
         provideMaterials(data, workingAmount, Optional.of(new BigDecimal(1)));
         provideMaterials(data, lowestWhole.getKey().subtract(workingAmount), Optional.of(new BigDecimal(1)));
-        removeMaterials(data, lowestWhole.getValue().singular(), 1);
+        removeMaterials(data, lowestWhole.getValue(), 1);
       }
 
       for(Map.Entry<BigDecimal, TNETier> entry : values.entrySet()) {
@@ -93,11 +95,11 @@ public interface CalculationProvider {
           continue;
         }
 
-        if(!data.getInventoryMaterials().containsKey(entry.getValue().singular())) {
+        if(!data.getInventoryMaterials().containsKey(entry.getValue().getItemInfo().getMaterial())) {
           continue;
         }
 
-        final int max = data.getInventoryMaterials().get(entry.getValue().singular());
+        final int max = data.getInventoryMaterials().get(entry.getValue().getItemInfo().getMaterial());
 
         int amountPossible = workingAmount.divide(entry.getKey(), RoundingMode.DOWN).toBigInteger().intValue();
 
@@ -106,7 +108,7 @@ public interface CalculationProvider {
         }
 
         workingAmount = workingAmount.subtract(entry.getKey().multiply(new BigDecimal(amountPossible)));
-        removeMaterials(data, entry.getValue().singular(), amountPossible);
+        removeMaterials(data, entry.getValue(), amountPossible);
       }
       instance++;
     } while(workingAmount.compareTo(BigDecimal.ZERO) != 0 && data.getInventoryMaterials().size() > 0);
@@ -142,9 +144,9 @@ public interface CalculationProvider {
 
       final int amountPossible = workingAmount.divide(entry.getKey(), RoundingMode.DOWN).toBigInteger().intValue();
       workingAmount = workingAmount.subtract(entry.getKey().multiply(new BigDecimal(amountPossible)));
-      int holding = data.getInventoryMaterials().getOrDefault(entry.getValue().singular(), 0);
-      data.getInventoryMaterials().put(entry.getValue().singular(), holding + amountPossible);
-      data.addTier(entry.getValue().singular(), holding + amountPossible);
+      int holding = data.getInventoryMaterials().getOrDefault(entry.getValue().getItemInfo().getMaterial(), 0);
+      data.getInventoryMaterials().put(entry.getValue().getItemInfo().getMaterial(), holding + amountPossible);
+      data.provideMaterials(entry.getValue(), amountPossible);
     }
   }
 
@@ -153,15 +155,8 @@ public interface CalculationProvider {
    * @param tier The tier name in String form.
    * @param amount The amount of the material to remove from working materials.
    */
-  default void removeMaterials(PlayerCurrencyData data, String tier, Integer amount) {
-    final int contains = data.getInventoryMaterials().get(tier);
-
-    data.removeTier(tier, amount);
-    if(contains == amount) {
-      data.getInventoryMaterials().remove(tier);
-      return;
-    }
-    data.getInventoryMaterials().put(tier, contains - amount);
+  default void removeMaterials(PlayerCurrencyData data, TNETier tier, Integer amount) {
+    data.removeMaterials(tier, amount);
   }
 
   /**
@@ -176,7 +171,7 @@ public interface CalculationProvider {
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet()) {
 
       if(entryLowest == null || entryLowest.getKey().compareTo(entry.getKey()) > 0) {
-        if(data.getInventoryMaterials().containsKey(entry.getValue().singular())) {
+        if(data.getInventoryMaterials().containsKey(entry.getValue().getItemInfo().getMaterial())) {
           entryLowest = entry;
         }
       }

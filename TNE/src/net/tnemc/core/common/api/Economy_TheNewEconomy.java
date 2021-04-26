@@ -96,6 +96,8 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("Economy_TheNewEconomy.getBalance(offlinePlayer)");
     TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+
+
     return api.getHoldings(offlinePlayer.getUniqueId().toString(), TNE.instance().defaultWorld).doubleValue();
   }
 
@@ -107,11 +109,11 @@ public class Economy_TheNewEconomy implements Economy {
   @Override
   public double getBalance(OfflinePlayer offlinePlayer, String world) {
     TNE.debug("Economy_TheNewEconomy.getBalance(offlinePlayer, world)");
-    TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("world: " + world);
 
-    if(offlinePlayer.getName().contains("faction-")) {
+    if(offlinePlayer.getName() != null && offlinePlayer.getName().contains("faction-")) {
       return getBalance(offlinePlayer.getName(), world);
     }
 
@@ -137,7 +139,7 @@ public class Economy_TheNewEconomy implements Economy {
       world = offlinePlayer.getPlayer().getWorld().getName();
     }
 
-    if(offlinePlayer.getName().contains("faction-")) {
+    if(offlinePlayer.getName() != null && offlinePlayer.getName().contains("faction-")) {
       return has(offlinePlayer.getName(), world, amount);
     }
 
@@ -156,12 +158,12 @@ public class Economy_TheNewEconomy implements Economy {
   @Override
   public boolean has(OfflinePlayer offlinePlayer, String world, double amount) {
     TNE.debug("Economy_TheNewEconomy.has(offlinePlayer, world, amount)");
-    TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
 
-    if(offlinePlayer.getName().contains("faction-")) {
+    if(offlinePlayer.getName() != null && offlinePlayer.getName().contains("faction-")) {
       return has(offlinePlayer.getName(), world, amount);
     }
     return has(offlinePlayer.getUniqueId().toString(), world, amount);
@@ -189,12 +191,12 @@ public class Economy_TheNewEconomy implements Economy {
     }
 
     TNE.debug("Economy_TheNewEconomy.withdrawPlayer(offlinePlayer, amount)");
-    TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("id: " + offlinePlayer.getUniqueId().toString());
+    TNE.debug("username: " + offlinePlayer.getName());
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
 
-    if(offlinePlayer.getName().contains("faction-")) {
+    if(offlinePlayer.getName() != null && offlinePlayer.getName().contains("faction-")) {
       return withdrawPlayer(offlinePlayer.getName(), world, amount);
     }
 
@@ -260,7 +262,7 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
 
-    if(offlinePlayer.getName().contains("faction-")) {
+    if(offlinePlayer.getName() != null && offlinePlayer.getName().contains("faction-")) {
       return depositPlayer(offlinePlayer.getName(), world, amount);
     }
 
@@ -295,7 +297,7 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
 
-    if(offlinePlayer.getName().contains("faction-")) {
+    if(offlinePlayer.getName() != null && offlinePlayer.getName().contains("faction-")) {
       return depositPlayer(offlinePlayer.getName(), world, amount);
     }
 

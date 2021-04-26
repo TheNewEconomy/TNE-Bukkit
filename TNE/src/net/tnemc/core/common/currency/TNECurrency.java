@@ -79,7 +79,7 @@ public class TNECurrency implements Currency {
     if(tier.getTNEWeight().compareTo(BigDecimal.ONE) < 0) decimalSupport = true;
   }
 
-  public Optional<TNETier> getTier(Integer weight) {
+  public Optional<TNETier> getTier(BigDecimal weight) {
     return Optional.of(tiers.get(weight));
   }
 
@@ -89,10 +89,21 @@ public class TNECurrency implements Currency {
 
     return tiers;
   }
+
   public Optional<TNETier> getTier(String name) {
     for(TNETier tier : tiers.values()) {
       if(tier.singular().equalsIgnoreCase(name) || tier.plural().equalsIgnoreCase(name))
         return Optional.of(tier);
+    }
+    return Optional.empty();
+  }
+
+  public Optional<TNETier> getTierByMaterial(String material) {
+    for(TNETier tier : tiers.values()) {
+      if(tier.getItemInfo() != null) {
+        if (tier.getItemInfo().getMaterial().equalsIgnoreCase(material))
+          return Optional.of(tier);
+      }
     }
     return Optional.empty();
   }
