@@ -34,8 +34,6 @@ public class PlayerCurrencyData {
 
   private Map<String, Integer> inventoryMaterials = new HashMap<>();
 
-  private Map<BigDecimal, CalculationChange> inventoryChanges = new HashMap<>();
-
   private TreeMap<BigDecimal, TNETier> materialValues = new TreeMap<>();
 
   private Inventory inventory;
@@ -85,8 +83,10 @@ public class PlayerCurrencyData {
     removeItemAmount(tier.getItemInfo().toStack(), inventory, amount);
   }
 
-  public void provideMaterials(TNETier tier, Integer amount) {
-    if(giveItems(Collections.singletonList(tier.getItemInfo().toStack()), inventory)) {
+  public void provideMaterials(final TNETier tier, Integer amount) {
+    ItemStack stack = tier.getItemInfo().toStack().clone();
+    stack.setAmount(amount);
+    if(giveItems(Collections.singletonList(stack), inventory)) {
       dropped = true;
     }
   }
@@ -101,14 +101,6 @@ public class PlayerCurrencyData {
 
   public void setMaterialValues(TreeMap<BigDecimal, TNETier> materialValues) {
     this.materialValues = materialValues;
-  }
-
-  public Map<BigDecimal, CalculationChange> getInventoryChanges() {
-    return inventoryChanges;
-  }
-
-  public void setInventoryChanges(Map<BigDecimal, CalculationChange> inventoryChanges) {
-    this.inventoryChanges = inventoryChanges;
   }
 
   public Inventory getInventory() {
