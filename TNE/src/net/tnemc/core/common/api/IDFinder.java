@@ -3,6 +3,8 @@ package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.api.MojangAPI;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
@@ -13,11 +15,18 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by creatorfromhell on 11/6/2016.
  **/
 public class IDFinder {
+
+  private static final Cache<String, UUID> usernameCache = CacheBuilder.newBuilder()
+    .expireAfterWrite(1, TimeUnit.HOURS)
+    .maximumSize(1024)
+    .build();
 
   public static UUID ecoID(String username) {
     return ecoID(username, false);
@@ -153,7 +162,12 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
-    return Bukkit.getOfflinePlayer(identifier).getUniqueId();
+    String finalIdentifier = identifier;
+    try {
+      return usernameCache.get(identifier, () -> Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId());
+    } catch (ExecutionException e) { // shouldn't throw, but add a backup anyways
+      return Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId();
+    }
   }
 
   public static boolean isNonPlayer(String identifier) {
