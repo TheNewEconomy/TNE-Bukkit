@@ -73,6 +73,11 @@ public class PlayerCurrencyData {
 
   public void removeMaterials(TNETier tier, Integer amount) {
     final int contains = inventoryMaterials.get(tier.getItemInfo().getMaterial());
+
+    System.out.println("Item To Remove: " + tier.singular() + " Value: " + tier.getTNEWeight().toPlainString());
+    System.out.println("Amount to Remove: " + amount);
+    System.out.println("Amount Contained: " + contains);
+
     if(contains == amount) {
       inventoryMaterials.remove(tier.getItemInfo().getMaterial());
       removeAllItem(tier.getItemInfo().toStack(), inventory);
@@ -177,23 +182,35 @@ public class PlayerCurrencyData {
 
   public static Integer removeItemAmount(ItemStack stack, Inventory inventory, final Integer amount) {
     int left = amount;
-    TNE.debug("Amount: " + amount);
+    System.out.println("Amount: " + amount);
 
     for(int i = 0; i < inventory.getStorageContents().length; i++) {
       if(left <= 0) break;
       ItemStack item = inventory.getItem(i);
-      TNE.debug("Null?: " + (item == null));
-      if(item == null || !MaterialUtils.itemsEqual(stack, item)) {
-        TNE.debug("Skipping item in removeITemAmount due to not equaling.");
+      System.out.println("Null?: " + (item == null));
+
+      if(item == null) {
+        System.out.println("Item is null, skip.");
         continue;
       }
-      TNE.debug("Items Equal, go onwards.");
+
+      System.out.println("Item Finding: " + stack.getType().name());
+      System.out.println("Item Current: " + item.getType().name());
+      System.out.println("Items Amount: " + item.getAmount());
+      System.out.println("Amount to remove: " + left);
+
+      if(!MaterialUtils.itemsEqual(stack, item)) {
+        System.out.println("Skipping item in removeITemAmount due to not equaling.");
+        continue;
+      }
+      System.out.println("Items Equal, go onwards.");
 
       if(item.getAmount() <= left) {
         left -= item.getAmount();
-        TNE.debug("remove stack from inventory");
+        System.out.println("remove stack from inventory");
         inventory.setItem(i, null);
       } else {
+        System.out.println("");
         item.setAmount(item.getAmount() - left);
         inventory.setItem(i, item);
         left = 0;
