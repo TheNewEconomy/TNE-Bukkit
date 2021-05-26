@@ -46,9 +46,9 @@ public class EntityDeathListener implements Listener {
 
         while (it.hasNext()) {
           ItemStack stack = it.next();
-          TNE.debug("Material: " + stack.getType().name());
 
           if (stack != null) {
+            TNE.debug("Material: " + stack.getType().name());
             Optional<TNECurrency> currency = TNE.manager().currencyManager().currencyFromItem(world, stack);
 
             if (currency.isPresent()) {

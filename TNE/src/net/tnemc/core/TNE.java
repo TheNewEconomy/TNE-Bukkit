@@ -1,6 +1,5 @@
 package net.tnemc.core;
 
-import com.github.tnerevival.Metrics;
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.db.SQLDatabase;
@@ -30,8 +29,11 @@ import net.tnemc.core.common.data.TNESaveManager;
 import net.tnemc.core.common.material.MaterialHelper;
 import net.tnemc.core.common.module.ModuleLoader;
 import net.tnemc.core.common.module.cache.ModuleFileCache;
+import net.tnemc.core.common.utils.BStats;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.common.uuid.UUIDAPI;
+import net.tnemc.core.common.uuid.impl.AshconAPI;
 import net.tnemc.core.compatibility.ItemCompatibility;
 import net.tnemc.core.compatibility.item.ItemCompatibility12;
 import net.tnemc.core.compatibility.item.ItemCompatibility13;
@@ -92,6 +94,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -106,7 +109,11 @@ public class TNE extends TNELib implements TabCompleter {
   //constants
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
-  public static final String build = "1Beta119b";
+  public static final Pattern USERNAME_PATTERN = Pattern.compile("^\\w*$");
+
+  public static final UUIDAPI uuidAPI = new AshconAPI();
+
+  public static final String build = "0.1.1.13-PRE-1";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   private Map<String, WorldManager> worldManagers = new HashMap<>();
@@ -243,6 +250,7 @@ public class TNE extends TNELib implements TabCompleter {
 
     if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
       defaultWorld = mainConfigurations.getString("Core.DefaultWorld");
+      addWorldManager(new WorldManager(defaultWorld));
     }
 
     if(!mainConfigurations.contains("Core.Currency.Basic.Identifier")) {
@@ -267,13 +275,14 @@ public class TNE extends TNELib implements TabCompleter {
     configurations().add(world, "world");
 
     TNE.debug("Preparing commands");
-    handler = new CommandsHandler(this,
-        commandsConfigurations).withTranslator((text, sender)->{
-          if(sender.isPresent()) {
-            return Optional.of(new Message(text).grab(defaultWorld, sender.get()));
-          }
-          return Optional.empty();
-    });
+    List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
+    moneyArguments.add("pay");
+    moneyArguments.add("bal");
+    moneyArguments.add("balance");
+    moneyArguments.add("balo");
+    moneyArguments.add("balother");
+    moneyArguments.add("balanceother");
+    moneyArguments.add("baltop");
 
 
     //Load Module Sub Commands
@@ -436,6 +445,9 @@ public class TNE extends TNELib implements TabCompleter {
     //World
     getServer().getPluginManager().registerEvents(new WorldLoadListener(this), this);
 
+    //Test
+
+
     loader.getModules().forEach((key, value)->{
       value.getModule().listeners(this).forEach(listener->{
         getServer().getPluginManager().registerEvents(listener, this);
@@ -453,7 +465,7 @@ public class TNE extends TNELib implements TabCompleter {
 
     //Metrics
     TNE.debug("Preparing metrics");
-    new Metrics(this);
+    new BStats(this, 602);
 
     TNE.debug("Preparing server account");
     if(api.getBoolean("Core.Server.Account.Enabled")) {

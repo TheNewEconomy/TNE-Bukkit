@@ -26,6 +26,10 @@ public class ShortenRule implements FormatRule {
   @Override
   public String format(TNECurrency currency, BigDecimal amount, Location location, String player, String formatted) {
     final BigInteger wholeNum = amount.toBigInteger();
+
+    if(formatted.contains("<shorten>")) {
+      formatted = "<symbol><short.amount>";
+    }
     if (wholeNum.compareTo(new BigInteger("1009")) <= 0) {
       return formatted.replace("<short.amount>", wholeNum.toString());
     }

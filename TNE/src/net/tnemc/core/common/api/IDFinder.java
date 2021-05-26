@@ -3,6 +3,8 @@ package net.tnemc.core.common.api;
 
 import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.api.MojangAPI;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
@@ -13,11 +15,15 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by creatorfromhell on 11/6/2016.
  **/
 public class IDFinder {
+
+  private static final Cache<String, UUID> uuidCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).maximumSize(1024).build();
 
   public static UUID ecoID(String username) {
     return ecoID(username, false);
@@ -31,6 +37,7 @@ public class IDFinder {
     UUID eco = (skip)? genUUID() : genUUID(username);
     TNELib.debug("Eco: " + eco.toString());
     //TNELib.instance().getUuidManager().addUUID(username, eco);
+    TNE.uuidManager().addUUID(username, eco);
     return eco;
   }
 
@@ -61,14 +68,14 @@ public class IDFinder {
   }
 
   public static UUID genUUID(String name) {
-    OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-    if(player.hasPlayedBefore()) {
-      TNELib.debug("genUUID: OfflinePlayer");
-      final UUID id = player.getUniqueId();
-      if(id != null) return id;
-    }
-
     if(!isNonPlayer(name)) {
+      OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+      if(player.hasPlayedBefore()) {
+        TNELib.debug("genUUID: OfflinePlayer");
+        final UUID id = player.getUniqueId();
+        if(id != null) return id;
+      }
+
       UUID id = MojangAPI.getPlayerUUID(name);
       if (id != null) {
         TNELib.debug("genUUID: Mojang");
@@ -116,6 +123,7 @@ public class IDFinder {
     if(!TNELib.instance().useUUID) {
       return Bukkit.getServer().getPlayer(IDFinder.ecoToUsername(id));
     }
+
     if(!Bukkit.getServer().getOnlineMode()) {
       return Bukkit.getServer().getPlayer(IDFinder.ecoToUsername(id));
     }
@@ -153,14 +161,25 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
-    return Bukkit.getOfflinePlayer(identifier).getUniqueId();
-  }
+    if(uuidCache.getIfPresent(identifier) == null && !Bukkit.getOfflinePlayer(identifier).hasPlayedBefore()) {
+      UUID uuid = TNE.uuidAPI.getUUID(identifier);
+      uuidCache.put(identifier, uuid);
+      return uuid;
+    }
 
+    String finalIdentifier = identifier;
+    try {
+      return uuidCache.get(identifier, () -> Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId());
+    } catch (ExecutionException e) { // shouldn't throw, but add a backup anyways
+      return Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId();
+    }
+  }
+  
   public static boolean isNonPlayer(String identifier) {
-    return identifier.contains("discord-") || identifier.contains(TNELib.instance().factionPrefix) ||
-        identifier.contains("towny-war-chest") || identifier.contains(TNELib.instance().townPrefix) ||
-        identifier.contains(TNELib.instance().nationPrefix) || identifier.contains("kingdom-") ||
-        identifier.contains("village-");
+    if(identifier.length() >= 3 && identifier.length() <= 16) {
+      return !TNE.USERNAME_PATTERN.matcher(identifier).matches();
+    }
+    return true;
   }
 
   private static void checkSpecial(UUID id) {

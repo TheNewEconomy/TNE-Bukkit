@@ -48,10 +48,10 @@ public class PlayerInteractListener implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onInteract(final PlayerInteractEvent event) {
     TNE.debug("=====START PlayerListener.onInteract =====");
-    final Player player = event.getPlayer();
-    final UUID id = IDFinder.getID(player);
-    final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
-    final boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
+    Player player = event.getPlayer();
+    UUID id = IDFinder.getID(player.getUniqueId().toString());
+    String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
+    boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
     final ItemStack stack = event.getItem();
 
     if(!noEconomy && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
@@ -73,7 +73,7 @@ public class PlayerInteractListener implements Listener {
               transaction.get().setRecipientCharge(new TransactionCharge(world, TNE.manager().currencyManager().get(world, noteClaimedEvent.getCurrency()),
                   noteClaimedEvent.getAmount(), TransactionChargeType.GAIN));
 
-              Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()-> {
+              Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> {
                 TransactionResult result = null;
                 if (transaction.isPresent()) result = transaction.get().perform();
                 final boolean proceed = result != null && result.proceed();

@@ -110,9 +110,9 @@ public class CurrencyFormatter {
     BigInteger major = new BigInteger(amountStr[0]);
     // Get a string that is exactly as long as there are decimal points.
     final String truncatedMinor =
-            // make it longer
-            (amountStr[1] + String.join("",
-                    Collections.nCopies(Math.max(0, currency.getDecimalPlaces() - amountStr[1].length()), "0")))
+        // make it longer
+        (amountStr[1] + String.join("",
+            Collections.nCopies(Math.max(0, currency.getDecimalPlaces() - amountStr[1].length()), "0")))
             // make it shorter
             .substring(0, currency.getDecimalPlaces());
     BigInteger minor = new BigInteger(truncatedMinor);

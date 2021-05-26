@@ -77,15 +77,7 @@ public class MISCUtils {
     return Bukkit.getServer().getPlayer(id);
   }
 
-  public static OfflinePlayer getOfflinePlayer(UUID id) {
-    if(Bukkit.getServer().getOfflinePlayer(id) == null) {
-      if(Bukkit.getServer().getOfflinePlayer(IDFinder.getUsername(id.toString())) == null) {
-        return null;
-      }
-      return Bukkit.getServer().getOfflinePlayer(IDFinder.getUsername(id.toString()));
-    }
-    return Bukkit.getServer().getOfflinePlayer(id);
-  }
+  //Minecraft Version Utils
 
   public static Player getPlayer(CommandSender sender) {
     if(sender instanceof Player) {
@@ -94,26 +86,7 @@ public class MISCUtils {
     return null;
   }
 
-  public static Map<String, String> getArguments(String[] arguments) {
-    Map<String, String> parsed = new HashMap<>();
-    for(int i = 0; i < arguments.length; i++) {
-      if(arguments[i].contains(":")) {
-        String[] broken = arguments[i].split(":");
-        parsed.put(broken[0], broken[1]);
-        continue;
-      }
-      parsed.put(i + "", arguments[i]);
-    }
-    return parsed;
-  }
-
-  public static void help(CommandSender sender, String label, String[] arguments) {
-    Optional<CommandSearchInformation> search = CommandsHandler.manager().search(label, arguments);
-    sender.sendMessage(search.get().getInformation().get().buildHelp(sender));
-  }
-
   //Minecraft Version Utils
-
   /**
    * @return Whether the bukkit in use is for MC >= 1.8
    */

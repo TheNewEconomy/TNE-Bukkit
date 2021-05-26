@@ -137,11 +137,11 @@ public class ItemCalculations {
 
       // Get a string that is exactly as long as there are decimal points.
       final String truncatedMinor =
-              // make it longer
-              (split[1] + String.join("",
-                      Collections.nCopies(Math.max(0, currency.getDecimalPlaces() - split[1].length()), "0")))
-                      // make it shorter
-                      .substring(0, currency.getDecimalPlaces());
+          // make it longer
+          (split[1] + String.join("",
+              Collections.nCopies(Math.max(0, currency.getDecimalPlaces() - split[1].length()), "0")))
+              // make it shorter
+              .substring(0, currency.getDecimalPlaces());
 
       if(consolidate) clearItems(currency, inventory);
       BigInteger majorChange = (consolidate)? setMajorConsolidate(account, currency, new BigInteger(split[0]), inventory) :

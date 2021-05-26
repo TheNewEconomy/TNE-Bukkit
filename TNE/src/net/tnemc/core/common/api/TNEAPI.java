@@ -228,6 +228,16 @@ public class TNEAPI {
   }
 
   /**
+   * Attempts to create an account for this identifier. This method should be used for player accounts.
+   * @param identifier The {@link UUID} of the account.
+   * @param username The username to use
+   * @return True if an account was created, else false.
+   */
+  public boolean createAccount(UUID identifier, String username) {
+    return TNE.manager().createAccount(identifier, username);
+  }
+
+  /**
    * This is a shortcut method that combines getAccount with createAccount. This method should be used for non-player
    * Accounts.
    * @param identifier The of the account.

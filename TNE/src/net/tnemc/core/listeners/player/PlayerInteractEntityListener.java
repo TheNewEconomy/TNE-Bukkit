@@ -37,7 +37,7 @@ public class PlayerInteractEntityListener implements Listener {
   public void onInteractEntityEvent(final PlayerInteractEntityEvent event) {
     TNE.debug("=====START PlayerListener.onInteractEntityEvent =====");
     Player player = event.getPlayer();
-    UUID id = IDFinder.getID(player);
+    UUID id = IDFinder.getID(player.getUniqueId().toString());
     String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
     TNE.debug("World: " + world);
     boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();
