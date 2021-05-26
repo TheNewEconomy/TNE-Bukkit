@@ -51,7 +51,8 @@ public class CurrencyLegacyShapedRecipe extends CurrencyRecipe {
             continue;
           }
 
-          final ItemStack tierStack = currencyObject.getTier(tier).get().getItemInfo().toStack();
+          final ItemStack tierStack = (currencyObject.getMajorTier(tier).isPresent())? currencyObject.getMajorTier(tier).get().getItemInfo().toStack() :
+              currencyObject.getMinorTier(tier).get().getItemInfo().toStack();
 
           getEntryList().add(new CurrencyRecipeEntry(split[0].charAt(0), 1, tierStack));
         } else {

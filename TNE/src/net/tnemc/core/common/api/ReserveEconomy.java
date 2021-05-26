@@ -130,7 +130,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public Set<Tier> getTiers(Currency currency) {
-    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency.name()).getTiersSet();
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency.name()).getTiers();
   }
 
   @Override

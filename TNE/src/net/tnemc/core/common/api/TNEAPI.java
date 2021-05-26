@@ -127,19 +127,6 @@ public class TNEAPI {
   }
 
   /**
-   * Used to find a currency by name and world.
-   * @param world The world to use for the search
-   * @param name The name of the currency to use for the search
-   * @return Optional containing the currency if it exists, otherwise an empty optional.
-   */
-  public Optional<TNECurrency> getCurrency(String world, String name) {
-    for(TNECurrency currency : TNE.manager().currencyManager().getWorldCurrencies(world)) {
-      if(currency.getIdentifier().equalsIgnoreCase(name)) return Optional.of(currency);
-    }
-    return Optional.empty();
-  }
-
-  /**
    * Grabs a {@link Set} of {@link TNECurrency} objects that exist.
    * @return A Set containing all the {@link TNECurrency} objects that exist on this server.
    */
@@ -183,7 +170,7 @@ public class TNEAPI {
    * @return A Set containing all the {@link TNETier} objects belonging to this {@link TNECurrency}.
    */
   public Set<Tier> getTiers(TNECurrency currency) {
-    return currency.getTiersSet();
+    return currency.getTiers();
   }
 
   /**
@@ -782,7 +769,11 @@ public class TNEAPI {
    */
   public boolean registerTier(TNETier tier, TNECurrency currency, String world) {
     if(TNE.manager().currencyManager().contains(world, currency.name())) {
-      TNE.manager().currencyManager().get(world, currency.name()).addTier(tier);
+      if(tier.isMajor()) {
+        TNE.manager().currencyManager().get(world, currency.name()).addTNEMajorTier(tier);
+      } else {
+        TNE.manager().currencyManager().get(world, currency.name()).addTNEMinorTier(tier);
+      }
       return true;
     }
     return false;

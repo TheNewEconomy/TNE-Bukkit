@@ -146,7 +146,6 @@ Note:
 #All configurations relating to conversion to other currencies.
 Conversion:
 
-  #How this currency converts to other currencies
-  #Leaved commented to not allow conversion of this currency.
-  #In the below example this currency converts to ExampleCurrency as 1 = .5 of ExampleCurrency
-  ExampleCurrency: .5
+  #The conversion power of this currency to other currencies.
+  #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+  Rate: 1.0

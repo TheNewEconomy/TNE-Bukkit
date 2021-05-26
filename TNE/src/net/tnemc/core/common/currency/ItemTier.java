@@ -30,7 +30,7 @@ public class ItemTier {
   private String material;
   private short damage;
   private String name;
-  private List<String> lore;
+  private String lore;
   private Integer customModel = null;
 
   public ItemTier(String material) {
@@ -41,7 +41,7 @@ public class ItemTier {
     this.material = material;
     this.damage = damage;
     this.name = null;
-    this.lore = new ArrayList<>();
+    this.lore = "";
   }
 
   public List<String> getEnchantments() {
@@ -84,11 +84,11 @@ public class ItemTier {
     this.name = name;
   }
 
-  public List<String> getLore() {
+  public String getLore() {
     return lore;
   }
 
-  public void setLore(List<String> lore) {
+  public void setLore(String lore) {
     this.lore = lore;
   }
 
@@ -108,11 +108,7 @@ public class ItemTier {
     List<String> itemLore = (meta != null && meta.getLore() != null)? meta.getLore() : new ArrayList<>();
 
     if(name != null && !name.trim().equals("")) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-    if(lore.size() > 0) {
-      for(String str : lore) {
-        itemLore.add(ChatColor.translateAlternateColorCodes('&', str));
-      }
-    }
+    if(lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
     meta.setLore(itemLore);
 
     if(customModel != null && MISCUtils.isOneFourteen()) {

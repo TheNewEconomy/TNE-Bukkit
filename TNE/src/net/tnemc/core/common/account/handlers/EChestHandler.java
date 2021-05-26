@@ -1,7 +1,7 @@
 package net.tnemc.core.common.account.handlers;
 
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.common.currency.calculations.PlayerCurrencyData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -32,7 +32,7 @@ public class EChestHandler implements HoldingsHandler {
     if(currency.canEnderChest()) {
       Player player = Bukkit.getPlayer(account);
       if(player != null) {
-        return currency.calculation().calculateHoldings(new PlayerCurrencyData(player.getEnderChest(), currency));
+        return ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
       }
     }
     return BigDecimal.ZERO;
@@ -53,20 +53,13 @@ public class EChestHandler implements HoldingsHandler {
     if(currency.canEnderChest()) {
       final Player player = Bukkit.getPlayer(account);
       if(player != null) {
-        final PlayerCurrencyData data = new PlayerCurrencyData(player.getEnderChest(), currency);
-        final BigDecimal holdings = currency.calculation().calculateHoldings(data);
+        BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
 
         if(holdings.compareTo(amount) < 0) {
-          currency.calculation().clearItems(data);
+          ItemCalculations.clearItems(currency, player.getEnderChest());
           return amount.subtract(holdings);
         }
-        final BigDecimal newHoldings = holdings.subtract(amount);
-        System.out.println("Amount:" + amount.toPlainString());
-        System.out.println("Holdings:" + holdings.toPlainString());
-        System.out.println("Holdings:" + newHoldings.toPlainString());
-        System.out.println("Holdings Sub:" + holdings.subtract(amount).toPlainString());
-        currency.calculation().setItems(data, newHoldings);
-
+        ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
         return BigDecimal.ZERO;
       }
     }

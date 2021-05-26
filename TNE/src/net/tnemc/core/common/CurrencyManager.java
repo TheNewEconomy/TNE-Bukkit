@@ -345,9 +345,8 @@ public class CurrencyManager {
   }
 
   public boolean isMajorItem(String world, String currency, ItemStack stack) {
-    for(Object tier : TNE.instance().getWorldManager(world).getCurrency(currency).getTNETiersSet()) {
-      if((tier instanceof TNETier) && ((TNETier)tier).getItemInfo().toStack().equals(stack)
-      && ((TNETier) tier).getTNEWeight().compareTo(BigDecimal.ONE) >= 0) {
+    for(Object tier : TNE.instance().getWorldManager(world).getCurrency(currency).getTNEMajorTiers().values()) {
+      if((tier instanceof TNETier) && ((TNETier)tier).getItemInfo().toStack().equals(stack)) {
         return true;
       }
     }
@@ -355,9 +354,8 @@ public class CurrencyManager {
   }
 
   public boolean isMinorItem(String world, String currency, ItemStack stack) {
-    for(Object tier : TNE.instance().getWorldManager(world).getCurrency(currency).getTNETiersSet()) {
-      if((tier instanceof TNETier) && ((TNETier)tier).getItemInfo().toStack().equals(stack)
-          && ((TNETier) tier).getTNEWeight().compareTo(BigDecimal.ONE) < 0) {
+    for(Object tier : TNE.instance().getWorldManager(world).getCurrency(currency).getTNEMinorTiers().values()) {
+      if((tier instanceof TNETier) && ((TNETier)tier).getItemInfo().toStack().equals(stack)) {
         return true;
       }
     }

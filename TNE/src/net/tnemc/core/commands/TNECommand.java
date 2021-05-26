@@ -40,6 +40,7 @@ public abstract class TNECommand {
   public abstract String[] aliases();
   public abstract String node();
   public abstract boolean console();
+
   public boolean developer() {
     return false;
   }

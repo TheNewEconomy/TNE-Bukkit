@@ -84,7 +84,7 @@ public class MoneySetAllCommand extends TNECommand {
         final String parsed = CurrencyFormatter.parseAmount(currency, world, arguments[0]);
 
         BigDecimal value = new BigDecimal(parsed);
-        if(!TNE.manager().currencyManager().get(world).hasDecimalSupport()) {
+        if(TNE.manager().currencyManager().get(world).getTNEMinorTiers().size() <= 0) {
           value = value.setScale(0, BigDecimal.ROUND_FLOOR);
         }
 

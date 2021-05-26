@@ -4,8 +4,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.account.history.AccountHistory;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.common.currency.calculations.PlayerCurrencyData;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.Account;
@@ -123,8 +123,7 @@ public class TNEAccount implements Account {
       }
       return holdings != null;
     } else {
-      final PlayerCurrencyData data = new PlayerCurrencyData(getPlayer().getInventory(), cur);
-      return cur.calculation().calculateHoldings(data).compareTo(BigDecimal.ZERO) > 0;
+      return ItemCalculations.getCurrencyItems(cur, getPlayer().getInventory()).compareTo(BigDecimal.ZERO) > 0;
     }
   }
 
@@ -178,7 +177,7 @@ public class TNEAccount implements Account {
       TNE.debug("Currency: " + currency);
       final TNECurrency cur = TNE.manager().currencyManager().get(world, currency);
       try {
-        TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, cur.calculation().calculateHoldings(new PlayerCurrencyData(inventory, cur)));
+        TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(identifier(), world, currency, ItemCalculations.getCurrencyItems(cur, inventory));
       } catch (SQLException e) {
         TNE.debug(e);
       }
