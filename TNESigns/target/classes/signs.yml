@@ -1,0 +1,17 @@
+# The New Economy v0.1.0.0
+# Author: creatorfromhell
+# License: http://creativecommons.org/licenses/by-nc-nd/4.0/
+# If you would like to contribute to the plugin
+# you can do so via Github at https://github.com/TheNewEconomy/TNE-Bukkit
+# To view a commented version of this file, visit https://github.com/TheNewEconomy/TNE-Bukkit/.
+#All configurations relating to signs.
+Signs:
+
+  #All configurations relating to item signs.
+  Item:
+
+    #Whether or not this sign type is enabled.
+    Enabled: true
+
+    #The max amount of this sign type any one person may own.
+    Max: 5
