@@ -1,10 +1,12 @@
 package net.tnemc.core.menu;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.menu.impl.AmountSelectionMenu;
-import net.tnemc.core.menu.impl.CurrencySelectionMenu;
-import net.tnemc.core.menu.impl.DisplayMenu;
-import net.tnemc.core.menu.impl.MainMenu;
+import net.tnemc.core.menu.impl.currency.InfoMenu;
+import net.tnemc.core.menu.impl.currency.ListMenu;
+import net.tnemc.core.menu.impl.player.AmountSelectionMenu;
+import net.tnemc.core.menu.impl.player.CurrencySelectionMenu;
+import net.tnemc.core.menu.impl.player.DisplayMenu;
+import net.tnemc.core.menu.impl.player.MainMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -37,6 +39,7 @@ public class MenuManager {
     setMeta.setDisplayName(ChatColor.WHITE + "'member borders?");
     border.setItemMeta(setMeta);
 
+    //Player Menu
     menus.put("main", new MainMenu());
     menus.put("display", new DisplayMenu());
     menus.put("cur_selection_give", new CurrencySelectionMenu("cur_selection_give", "give"));
@@ -47,6 +50,10 @@ public class MenuManager {
     menus.put("pay", new AmountSelectionMenu("pay"));
     menus.put("set", new AmountSelectionMenu("set"));
     menus.put("take", new AmountSelectionMenu("take"));
+
+    //Currency Editor
+    menus.put("currency_list", new ListMenu());
+    menus.put("currency_info", new InfoMenu());
   }
 
   public void open(String menu, Player player) {

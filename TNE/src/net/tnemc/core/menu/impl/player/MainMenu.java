@@ -1,7 +1,11 @@
-package net.tnemc.core.menu.impl;
+package net.tnemc.core.menu.impl.player;
 
 import net.tnemc.core.menu.Menu;
-import net.tnemc.core.menu.icons.main.*;
+import net.tnemc.core.menu.icons.main.DisplayIcon;
+import net.tnemc.core.menu.icons.main.GiveIcon;
+import net.tnemc.core.menu.icons.main.PayIcon;
+import net.tnemc.core.menu.icons.main.SetIcon;
+import net.tnemc.core.menu.icons.main.TakeIcon;
 
 /**
  * The New Economy Minecraft Server Plugin

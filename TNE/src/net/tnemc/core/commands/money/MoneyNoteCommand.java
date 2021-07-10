@@ -133,7 +133,13 @@ public class MoneyNoteCommand extends TNECommand {
 
         if(result.proceed()) {
           ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
-          Bukkit.getScheduler().runTask(plugin,()->getPlayer(sender).getInventory().addItem(stack));
+          Bukkit.getScheduler().runTask(plugin,()->{
+            if(getPlayer(sender).getInventory().firstEmpty() == -1) {
+              getPlayer(sender).getWorld().dropItemNaturally(getPlayer(sender).getLocation(), stack);
+            } else {
+              getPlayer(sender).getInventory().addItem(stack);
+            }
+          });
           Message message = new Message(result.recipientMessage());
           message.addVariable("$player", arguments[0]);
           message.addVariable("$world", world);

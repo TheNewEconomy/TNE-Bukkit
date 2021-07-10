@@ -2,44 +2,55 @@ package net.tnemc.core.commands.currency;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.commands.TNECommand;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * The New Economy Minecraft Server Plugin
- *
+ * <p>
+ * Created by creatorfromhell on 7/9/2021.
+ * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by Daniel on 7/10/2017.
+ * Created by creatorfromhell on 06/30/2017.
  */
-public class CurrencyCommand extends TNECommand {
+public class CurrencyEditorCommand extends TNECommand {
 
-  public CurrencyCommand(TNE plugin) {
+  public CurrencyEditorCommand(TNE plugin) {
     super(plugin);
-    addSub(new CurrencyEditorCommand(plugin));
-    addSub(new CurrencyListCommand(plugin));
-    addSub(new CurrencyRenameCommand(plugin));
-    addSub(new CurrencyTiersCommand(plugin));
   }
 
   @Override
   public String name() {
-    return "currency";
+    return "editor";
   }
 
   @Override
   public String[] aliases() {
     return new String[] {
-        "cur", "tnecur"
+        "edit"
     };
   }
 
   @Override
   public String node() {
-    return "";
+    return "tne.currency.editor";
   }
 
   @Override
   public boolean console() {
+    return true;
+  }
+
+  @Override
+  public String helpLine() {
+    return "Messages.Commands.Currency.Editor";
+  }
+
+  @Override
+  public boolean execute(CommandSender sender, String command, String[] arguments) {
+    TNE.menuManager().open("currency_list", (Player)sender);
     return true;
   }
 }

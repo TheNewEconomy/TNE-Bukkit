@@ -3,6 +3,7 @@ package net.tnemc.core.menu.icons;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.menu.consumables.IconClick;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -32,6 +34,8 @@ public class Icon {
   protected short damage;
   protected String display;
   protected List<String> lore;
+
+  protected Consumer<IconClick> clickAction;
 
   protected String node;
   protected String switchMenu;
@@ -94,6 +98,10 @@ public class Icon {
     if(!message.equalsIgnoreCase("")) {
       Message m = new Message(message);
       m.translate(player.getWorld().getName(), player);
+    }
+
+    if(clickAction != null) {
+      clickAction.accept(new IconClick(this, menu, player));
     }
 
     if(data.size() > 0) {

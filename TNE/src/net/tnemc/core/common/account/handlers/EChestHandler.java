@@ -54,11 +54,15 @@ public class EChestHandler implements HoldingsHandler {
       final Player player = Bukkit.getPlayer(account);
       if(player != null) {
         BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
+        System.out.println("Echest to: " + holdings.toPlainString());
+        System.out.println("To Remove: " + amount.toPlainString());
 
         if(holdings.compareTo(amount) < 0) {
           ItemCalculations.clearItems(currency, player.getEnderChest());
           return amount.subtract(holdings);
         }
+
+        System.out.println("Setting echest to: " + holdings.subtract(amount).toPlainString());
         ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
         return BigDecimal.ZERO;
       }

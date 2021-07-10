@@ -151,6 +151,7 @@ public class CurrencyManager {
     }
   }
 
+
   public void initializeWorld(String world) {
     TNE.debug("Initializing World: " + world);
     if(!TNE.instance().getWorldManagersMap().containsKey(world)) {
