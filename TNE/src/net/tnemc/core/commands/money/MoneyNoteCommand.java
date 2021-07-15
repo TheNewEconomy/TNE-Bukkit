@@ -75,8 +75,8 @@ public class MoneyNoteCommand extends TNECommand {
         final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
 
-        if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 2) {
-          currencyName = MISCUtils.findCurrencyName(world, Bukkit.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        if(arguments.length < 2) {
+          currencyName = MISCUtils.findCurrencyName(world, getPlayer(sender).getLocation());
         }
 
         if (!TNE.manager().currencyManager().contains(world, currencyName)) {
@@ -126,7 +126,7 @@ public class MoneyNoteCommand extends TNECommand {
           return;
         }
 
-        TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("note"));
+        TNETransaction transaction = new TNETransaction(null, account, world, TNE.transactionManager().getType("note"));
         transaction.setRecipientCharge(new TransactionCharge(world, currency, value.add(currency.getFee()), TransactionChargeType.LOSE));
         final TransactionResult result = TNE.transactionManager().perform(transaction);
 

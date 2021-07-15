@@ -37,7 +37,7 @@ public class TNECurrency implements Currency {
   private BigDecimal balance;
   private BigDecimal maxBalance;
   private String type;
-  private boolean notable;
+  private boolean notable = true;
   private BigDecimal fee;
   private BigDecimal minimum;
   private boolean enderChest;
