@@ -275,14 +275,13 @@ public class TNE extends TNELib implements TabCompleter {
     configurations().add(world, "world");
 
     TNE.debug("Preparing commands");
-    List<String> moneyArguments = new ArrayList<>(Arrays.asList("money", "givemoney", "givebal", "setbal", "setmoney", "takemoney", "takebal"));
-    moneyArguments.add("pay");
-    moneyArguments.add("bal");
-    moneyArguments.add("balance");
-    moneyArguments.add("balo");
-    moneyArguments.add("balother");
-    moneyArguments.add("balanceother");
-    moneyArguments.add("baltop");
+    handler = new CommandsHandler(this,
+        commandsConfigurations).withTranslator((text, sender)->{
+      if(sender.isPresent()) {
+        return Optional.of(new Message(text).grab(defaultWorld, sender.get()));
+      }
+      return Optional.empty();
+    });
 
 
     //Load Module Sub Commands

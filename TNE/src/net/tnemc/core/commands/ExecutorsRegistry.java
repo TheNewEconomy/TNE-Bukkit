@@ -31,6 +31,7 @@ import net.tnemc.core.commands.config.ConfigGetCommand;
 import net.tnemc.core.commands.config.ConfigSaveCommand;
 import net.tnemc.core.commands.config.ConfigSetCommand;
 import net.tnemc.core.commands.config.ConfigTNEGetCommand;
+import net.tnemc.core.commands.currency.CurrencyEditorCommand;
 import net.tnemc.core.commands.currency.CurrencyListCommand;
 import net.tnemc.core.commands.currency.CurrencyRenameCommand;
 import net.tnemc.core.commands.currency.CurrencyTiersCommand;
@@ -115,6 +116,7 @@ public class ExecutorsRegistry {
     CommandsHandler.instance().addExecutor("config_tneget_exe", new ConfigTNEGetCommand());
 
     //Currency
+    CommandsHandler.instance().addExecutor("currency_editor_exe", new CurrencyEditorCommand());
     CommandsHandler.instance().addExecutor("currency_list_exe", new CurrencyListCommand());
     CommandsHandler.instance().addExecutor("currency_rename_exe", new CurrencyRenameCommand());
     CommandsHandler.instance().addExecutor("currency_tiers_exe", new CurrencyTiersCommand());
