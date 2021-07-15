@@ -63,7 +63,8 @@ public class EChestHandler implements HoldingsHandler {
         }
 
         System.out.println("Setting echest to: " + holdings.subtract(amount).toPlainString());
-        ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
+        //ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
+        ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), false);
         return BigDecimal.ZERO;
       }
     }

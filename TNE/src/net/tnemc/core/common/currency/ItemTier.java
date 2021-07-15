@@ -104,29 +104,31 @@ public class ItemTier {
     //TNE.debug("========= START ItemTier.toStack ===========");
     ItemStack stack = new ItemStack(MaterialHelper.getMaterial(material));
     stack.setDurability(damage);
-    ItemMeta meta = (stack.hasItemMeta())? stack.getItemMeta() : Bukkit.getServer().getItemFactory().getItemMeta(stack.getType());
-    List<String> itemLore = (meta != null && meta.getLore() != null)? meta.getLore() : new ArrayList<>();
+    ItemMeta meta = (stack.hasItemMeta() && stack.getItemMeta() != null)? stack.getItemMeta() : Bukkit.getServer().getItemFactory().getItemMeta(stack.getType());
 
-    if(name != null && !name.trim().equals("")) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-    if(lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
-    meta.setLore(itemLore);
+    if(meta != null) {
+      List<String> itemLore = (meta.getLore() != null) ? meta.getLore() : new ArrayList<>();
 
-    if(customModel != null && MISCUtils.isOneFourteen()) {
-      meta.setCustomModelData(customModel);
-    }
+      if (name != null && !name.trim().equals(""))
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+      if (lore != null && !lore.trim().equals("")) itemLore.add(ChatColor.translateAlternateColorCodes('&', lore));
+      meta.setLore(itemLore);
 
-    for(String str : flags) {
-      try {
-        final ItemFlag flag = ItemFlag.valueOf(str);
-        if (flag != null) {
-          meta.addItemFlags(flag);
-        }
-      } catch(Exception ignore) {
-        TNE.debug("Invalid ItemFlag name: " + str);
+      if (customModel != null && MISCUtils.isOneFourteen()) {
+        meta.setCustomModelData(customModel);
       }
-    }
 
-    stack.setItemMeta(meta);
+      for (String str : flags) {
+        try {
+          final ItemFlag flag = ItemFlag.valueOf(str);
+          meta.addItemFlags(flag);
+        } catch (Exception ignore) {
+          TNE.debug("Invalid ItemFlag name: " + str);
+        }
+      }
+
+      stack.setItemMeta(meta);
+    }
 
 
     //TNE.debug("ENCHANTMENTS SIZE: " + enchantments.size());

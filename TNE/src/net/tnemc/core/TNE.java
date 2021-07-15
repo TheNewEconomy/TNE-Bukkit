@@ -116,7 +116,7 @@ public class TNE extends TNELib {
 
   public static final UUIDAPI uuidAPI = new AshconAPI();
 
-  public static final String build = "0.1.1.13-PRE-1";
+  public static final String build = "0.1.1.13";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   //Map containing module sub commands to add to our core commands
