@@ -1,4 +1,4 @@
-package net.tnemc.core.menu.impl;
+package net.tnemc.core.menu.impl.player;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;

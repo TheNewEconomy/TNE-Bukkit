@@ -105,11 +105,13 @@ public class TNETransaction implements Transaction {
 
   @Override
   public String initiator() {
+    if(initiator == null) return "None";
     return initiator.identifier().toString();
   }
 
   @Override
   public String recipient() {
+    if(recipient == null) return "None";
     return recipient.identifier().toString();
   }
 

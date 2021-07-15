@@ -4,7 +4,7 @@
   <groupId>net.tnemc</groupId>
   <artifactId>TNE</artifactId>
   <name>The New Economy</name>
-  <version>0.1.1.13-PRE-3</version>
+  <version>0.1.1.13-PRE-4</version>
   <developers>
     <developer>
       <id>creatorfromhell</id>
@@ -91,14 +91,6 @@
       <url>http://nexus.hc.to/content/repositories/pub_releases</url>
     </repository>
     <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/TheNewEconomy/packages</url>
-    </repository>
-    <repository>
-      <id>githubTowny</id>
-      <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
-    </repository>
-    <repository>
       <id>placeholderapi</id>
       <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
@@ -110,14 +102,12 @@
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </repository>
+    <repository>
+      <id>codemc-releases</id>
+      <url>https://repo.codemc.io/repository/maven-public/</url>
+    </repository>
   </repositories>
   <dependencies>
-    <dependency>
-      <groupId>com.palmergames.bukkit.towny</groupId>
-      <artifactId>Towny</artifactId>
-      <version>0.95.1.0</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
@@ -198,14 +188,36 @@
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
-      <artifactId>spigot</artifactId>
-      <version>1.15.1-R0.1-SNAPSHOT</version>
+      <artifactId>spigot-api</artifactId>
+      <version>1.17-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>bungeecord-chat</artifactId>
+          <groupId>net.md-5</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-lang</artifactId>
+          <groupId>commons-lang</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>snakeyaml</artifactId>
+          <groupId>org.yaml</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>4.13.1</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -255,10 +267,13 @@
   </dependencies>
   <distributionManagement>
     <repository>
-      <id>github-TNE</id>
-      <name>GitHub TheNewEconomy Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/TheNewEconomy/TNE-Bukkit</url>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -112,7 +112,7 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
         final Integer minorWeight = config.getInt("Options.Minor_Weight", 100);
 
         //Currency Note configs
-        final Boolean notable = config.getBool("Note.Notable", false);
+        final Boolean notable = config.getBool("Note.Notable", true);
         final BigDecimal fee = new BigDecimal(config.getString("Note.Fee", "0.00"));
         final BigDecimal minimum = new BigDecimal(config.getString("Note.Minimum", "0.00"));
 

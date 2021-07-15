@@ -1,0 +1,25 @@
+package net.tnemc.core.menu.icons.currency;
+
+import net.tnemc.core.menu.icons.Icon;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+/**
+ * The New Economy Minecraft Server Plugin
+ * <p>
+ * Created by creatorfromhell on 7/8/2021.
+ * <p>
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+ * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+ * Created by creatorfromhell on 06/30/2017.
+ */
+public class DeleteIcon extends Icon {
+  public DeleteIcon(Integer slot) {
+    super(slot, new ItemStack(Material.LAVA_BUCKET), "Delete Currency");
+
+
+
+    this.switchMenu = "confirm_currency_delete";
+  }
+}

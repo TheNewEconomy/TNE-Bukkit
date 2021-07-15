@@ -100,6 +100,26 @@ Commands:
             Optional: true
             Complete: true
             CompleteType: "world"
+      editor:
+        Permission: "tne.currency.editor"
+        Console: false
+        Player: true
+        Developer: false
+        Description: "Messages.Commands.Currency.Editor"
+        Executor: "currency_editor_exe"
+        Params:
+          Name:
+            Order: 0
+            Validation:
+              Type: "String"
+              MaxLength: 0
+              Regex:
+                Use: false
+                Statement: ""
+            Optional: true
+            Complete: true
+            CompleteType: "currency"
+
       rename:
         Permission: "tne.currency.rename"
         Console: true

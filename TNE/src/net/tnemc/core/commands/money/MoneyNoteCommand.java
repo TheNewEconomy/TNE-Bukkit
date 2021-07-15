@@ -39,8 +39,8 @@ public class MoneyNoteCommand implements CommandExecution {
         final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
 
-        if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 2) {
-          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        if(arguments.length < 2) {
+          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(sender).getLocation());
         }
 
         if (!TNE.manager().currencyManager().contains(world, currencyName)) {
@@ -90,14 +90,20 @@ public class MoneyNoteCommand implements CommandExecution {
           return;
         }
 
-        TNETransaction transaction = new TNETransaction(account, account, world, TNE.transactionManager().getType("note"));
+        TNETransaction transaction = new TNETransaction(null, account, world, TNE.transactionManager().getType("note"));
         transaction.setRecipientCharge(new TransactionCharge(world, currency, value.add(currency.getFee()), TransactionChargeType.LOSE));
         final TransactionResult result = TNE.transactionManager().perform(transaction);
 
 
         if(result.proceed()) {
           ItemStack stack = TNE.manager().currencyManager().createNote(currency.name(), world, value);
-          Bukkit.getScheduler().runTask(TNE.instance(),()->MISCUtils.getPlayer(sender).getInventory().addItem(stack));
+          Bukkit.getScheduler().runTask(TNE.instance(),()->{
+            if(MISCUtils.getPlayer(sender).getInventory().firstEmpty() == -1) {
+              MISCUtils.getPlayer(sender).getWorld().dropItemNaturally(MISCUtils.getPlayer(sender).getLocation(), stack);
+            } else {
+              MISCUtils.getPlayer(sender).getInventory().addItem(stack);
+            }
+          });
           Message message = new Message(result.recipientMessage());
           message.addVariable("$player", arguments[0]);
           message.addVariable("$world", world);
