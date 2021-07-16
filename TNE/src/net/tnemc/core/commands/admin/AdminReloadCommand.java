@@ -1,10 +1,10 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -20,7 +20,8 @@ import org.bukkit.command.CommandSender;
 public class AdminReloadCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     String id = (arguments.length == 1)? arguments[0] : "all";
     if(TNE.configurations().reload(id)) {
       sender.sendMessage(ChatColor.WHITE + "Successfully reload configuration with id of: " + id + ".");

@@ -1,13 +1,13 @@
 package net.tnemc.core.commands.transaction;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -23,7 +23,8 @@ import java.util.UUID;
 public class TransactionInfoCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     if(arguments.length >= 1) {
       String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       UUID uuid = null;

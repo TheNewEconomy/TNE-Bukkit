@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
@@ -11,7 +12,6 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -30,8 +30,9 @@ import java.util.UUID;
 public class MoneyConsolidateCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      CommandSender sender = MISCUtils.getSender(provider);
       if(!(sender instanceof Player) && arguments.length < 1) {
         MISCUtils.help(sender, label, arguments);
         return;

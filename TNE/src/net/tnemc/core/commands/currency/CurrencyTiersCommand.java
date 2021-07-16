@@ -1,11 +1,12 @@
 package net.tnemc.core.commands.currency;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
-import org.bukkit.command.Command;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -19,7 +20,8 @@ import org.bukkit.command.CommandSender;
 public class CurrencyTiersCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     String world = (arguments.length >= 2)? arguments[1] : TNE.instance().defaultWorld;
     String currencyName = (arguments.length >= 1)? arguments[0] : TNE.manager().currencyManager().get(world).name();
     TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);

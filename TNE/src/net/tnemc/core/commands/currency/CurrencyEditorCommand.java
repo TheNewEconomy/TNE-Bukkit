@@ -1,8 +1,9 @@
 package net.tnemc.core.commands.currency;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
-import org.bukkit.command.Command;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,7 +20,8 @@ import org.bukkit.entity.Player;
 public class CurrencyEditorCommand  implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     TNE.menuManager().open("currency_list", (Player)sender);
     return true;
   }

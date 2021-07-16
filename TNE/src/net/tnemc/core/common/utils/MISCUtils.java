@@ -2,8 +2,10 @@ package net.tnemc.core.common.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import net.tnemc.commands.bukkit.provider.BukkitPlayerProvider;
 import net.tnemc.commands.core.CommandSearchInformation;
 import net.tnemc.commands.core.CommandsHandler;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.WorldGuardManager;
 import net.tnemc.core.common.WorldVariant;
@@ -15,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -67,6 +68,13 @@ import static com.google.common.net.HttpHeaders.USER_AGENT;
  */
 public class MISCUtils {
 
+  public static CommandSender getSender(PlayerProvider provider) {
+    if(!provider.isPlayer()) {
+      return Bukkit.getConsoleSender();
+    }
+    return Bukkit.getPlayer(provider.getUUID());
+  }
+
   public static Player getPlayer(UUID id) {
     if(Bukkit.getServer().getPlayer(id) == null) {
       if(Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString())) == null) {
@@ -101,7 +109,7 @@ public class MISCUtils {
 
   public static void help(CommandSender sender, String label, String[] arguments) {
     Optional<CommandSearchInformation> search = CommandsHandler.manager().search(label, arguments);
-    sender.sendMessage(search.get().getInformation().get().buildHelp(sender));
+    sender.sendMessage(search.get().getInformation().get().buildHelp(new BukkitPlayerProvider(sender)));
   }
 
   //Minecraft Version Utils

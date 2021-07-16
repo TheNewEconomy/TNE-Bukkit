@@ -5,6 +5,8 @@ import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.db.SQLDatabase;
 import com.hellyard.cuttlefish.grammar.yaml.YamlValue;
 import net.milkbowl.vault.economy.Economy;
+import net.tnemc.commands.bukkit.BukkitCommandsHandler;
+import net.tnemc.commands.bukkit.provider.BukkitPlayerProvider;
 import net.tnemc.commands.core.CommandInformation;
 import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.config.CommentedConfiguration;
@@ -60,7 +62,6 @@ import net.tnemc.core.menu.MenuManager;
 import net.tnemc.core.worker.SaveWorker;
 import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -275,10 +276,12 @@ public class TNE extends TNELib implements TabCompleter {
     configurations().add(world, "world");
 
     TNE.debug("Preparing commands");
-    handler = new CommandsHandler(this,
-        commandsConfigurations).withTranslator((text, sender)->{
+    handler = new BukkitCommandsHandler(commandsConfigurations, this).withTranslator((text, sender)->{
       if(sender.isPresent()) {
-        return Optional.of(new Message(text).grab(defaultWorld, sender.get()));
+
+        CommandSender bukkitSender = (sender.get().isPlayer())? Bukkit.getPlayer(sender.get().getUUID())
+                                                              : Bukkit.getConsoleSender();
+        return Optional.of(new Message(text).grab(defaultWorld, bukkitSender));
       }
       return Optional.empty();
     });
@@ -330,8 +333,6 @@ public class TNE extends TNELib implements TabCompleter {
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
     manager = new EconomyManager();
-    manager.currencyManager().loadCurrencies();
-    manager.currencyManager().loadRecipes();
 
     //General Variables based on configuration values
     TNE.debug("Preparing variables");
@@ -466,27 +467,6 @@ public class TNE extends TNELib implements TabCompleter {
     TNE.debug("Preparing metrics");
     new BStats(this, 602);
 
-    TNE.debug("Preparing server account");
-    if(api.getBoolean("Core.Server.Account.Enabled")) {
-      TNE.debug("Account enabled");
-      String world = worldManagers.get(defaultWorld).getBalanceWorld();
-      TNE.debug("Got World");
-      UUID id = IDFinder.getID(consoleName);
-      TNE.debug("Got ID: " + id.toString());
-
-      if(!manager.exists(id)) {
-        TNE.debug("doesn't exist");
-        special.add(id);
-        TNE.debug("added special");
-        api.getOrCreate(id);
-        TNE.debug("api.getOrCreate");
-        TNEAccount account = manager.getAccount(id);
-        TNE.debug("Account Null? " + (account == null));
-        TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));
-        account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("Core.Server.Account.Balance"), true);
-        getLogger().info("Created server economy account.");
-      }
-    }
 
     TNE.debug("Preparing TNE Forge Mod support");
     useMod = configurations.getBoolean("Core.Server.TNEMod");
@@ -599,7 +579,7 @@ public class TNE extends TNELib implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] arguments) {
     System.out.println("Tab Complete");
-    return handler.tab(sender, command, alias, arguments);
+    return handler.tab(new BukkitPlayerProvider(sender), alias, arguments);
   }
 
   @Override
@@ -611,7 +591,7 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   public boolean customCommand(CommandSender sender, String label, String[] arguments) {
-    return handler.handle(sender, null, label, arguments);
+    return handler.handle(new BukkitPlayerProvider(sender), label, arguments);
   }
 
   public String sanitizeWorld(String world) {
@@ -718,10 +698,6 @@ public class TNE extends TNELib implements TabCompleter {
     player.load(playerConfigurations);
   }
 
-  public void loadCurrencies() {
-
-  }
-
   public void initializeConfigurations() {
     initializeConfigurations(true);
   }
@@ -774,6 +750,34 @@ public class TNE extends TNELib implements TabCompleter {
             })
         );
         TNE.logger().info("Initialized items.yml");
+
+        manager.currencyManager().loadCurrencies();
+
+        Bukkit.getScheduler().runTask(this, ()->{
+          manager.currencyManager().loadRecipes();
+        });
+
+        TNE.debug("Preparing server account");
+        if(api.getBoolean("Core.Server.Account.Enabled")) {
+          TNE.debug("Account enabled");
+          String world = worldManagers.get(defaultWorld).getBalanceWorld();
+          TNE.debug("Got World");
+          UUID id = IDFinder.getID(consoleName);
+          TNE.debug("Got ID: " + id.toString());
+
+          if(!manager.exists(id)) {
+            TNE.debug("doesn't exist");
+            special.add(id);
+            TNE.debug("added special");
+            api.getOrCreate(id);
+            TNE.debug("api.getOrCreate");
+            TNEAccount account = manager.getAccount(id);
+            TNE.debug("Account Null? " + (account == null));
+            TNE.debug("Balance Config Null? " + (api.getBigDecimal("Core.Server.Account.Balance") == null));
+            account.setHoldings(world, manager.currencyManager().get(world).name(), api.getBigDecimal("Core.Server.Account.Balance"), true);
+            getLogger().info("Created server economy account.");
+          }
+        }
 
         loader.getModules().forEach((key, value) -> {
           value.getModule().initializeConfigurations();

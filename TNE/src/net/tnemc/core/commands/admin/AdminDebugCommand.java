@@ -1,9 +1,10 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -19,7 +20,8 @@ import org.bukkit.command.CommandSender;
 public class AdminDebugCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     TNE.instance().debugMode = !TNE.instance().debugMode;
 
     final String status = (TNE.instance().debugMode)? "on" : "off";

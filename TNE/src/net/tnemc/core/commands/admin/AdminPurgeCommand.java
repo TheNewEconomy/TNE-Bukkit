@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -8,7 +9,6 @@ import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -22,7 +22,8 @@ import org.bukkit.command.CommandSender;
 public class AdminPurgeCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
     if(arguments.length >= 1) {
       if (Bukkit.getWorld(arguments[0]) == null)

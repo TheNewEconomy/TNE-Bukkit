@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.module;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -9,7 +10,6 @@ import net.tnemc.core.common.module.ModuleUpdateChecker;
 import net.tnemc.core.common.module.cache.ModuleFile;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.Optional;
@@ -27,7 +27,8 @@ import java.util.Optional;
 public class ModuleDownloadCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     if(arguments.length >= 1) {
       final String url = (arguments.length > 1)? arguments[1] : TNE.coreURL;
       final String moduleName = arguments[0].toLowerCase().trim();

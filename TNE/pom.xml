@@ -193,8 +193,8 @@
         </dependency>
         <dependency>
             <groupId>net.tnemc</groupId>
-            <artifactId>TNCH</artifactId>
-            <version>0.1.9.48</version>
+            <artifactId>TNCH-Bukkit</artifactId>
+            <version>0.1.14.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

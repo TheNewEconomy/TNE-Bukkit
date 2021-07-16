@@ -1,7 +1,8 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.commands.core.CommandExecution;
-import org.bukkit.command.Command;
+import net.tnemc.commands.core.provider.PlayerProvider;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -15,7 +16,8 @@ import org.bukkit.command.CommandSender;
 public class AdminCaveatsCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     sender.sendMessage("No known caveats at this point.");
     return true;
   }

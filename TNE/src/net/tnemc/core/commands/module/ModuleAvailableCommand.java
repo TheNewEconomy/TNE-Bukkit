@@ -1,11 +1,12 @@
 package net.tnemc.core.commands.module;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.module.cache.ModuleFile;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -23,7 +24,8 @@ import java.util.List;
 public class ModuleAvailableCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     final String url = (arguments.length > 0)? arguments[0] : TNE.coreURL;
 
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{

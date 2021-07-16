@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -10,7 +11,6 @@ import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -29,8 +29,9 @@ import java.sql.SQLException;
 public class MoneySetAllCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      CommandSender sender = MISCUtils.getSender(provider);
       if(arguments.length >= 1) {
         final String world = (arguments.length >= 2)? TNE.instance().getWorldManager(arguments[1]).getBalanceWorld() : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
 

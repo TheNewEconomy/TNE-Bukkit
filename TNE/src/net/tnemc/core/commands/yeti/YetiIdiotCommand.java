@@ -1,10 +1,10 @@
 package net.tnemc.core.commands.yeti;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,7 +21,8 @@ import java.util.UUID;
 public class YetiIdiotCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     Player player = MISCUtils.getPlayer(sender);
     Player yeti = MISCUtils.getPlayer(IDFinder.getID("TheNetYeti"));
     Player growlf = MISCUtils.getPlayer(IDFinder.getID("growlf"));

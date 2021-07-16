@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -11,7 +12,6 @@ import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.MultiTransactionHandler;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -27,7 +27,8 @@ import java.math.BigDecimal;
 public class MoneyPayCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     if(arguments.length <= 0) {
       MISCUtils.help(sender, label, arguments);
       return false;

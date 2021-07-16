@@ -1,6 +1,6 @@
 1.1.13
 
-New Command System //still needs completed.
+New Command System
 - New system gives control to the server owner
   - modifiable command names, shortcuts, permissions, etc
   - disable commands by modifying commands.yml, or change the permission

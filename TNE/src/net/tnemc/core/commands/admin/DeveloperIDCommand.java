@@ -1,10 +1,10 @@
 package net.tnemc.core.commands.admin;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.utils.MISCUtils;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -22,7 +22,8 @@ import java.util.UUID;
 public class DeveloperIDCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     if(arguments.length >= 1) {
 
       final String original = arguments[0];

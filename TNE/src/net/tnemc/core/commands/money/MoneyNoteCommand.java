@@ -1,6 +1,7 @@
 package net.tnemc.core.commands.money;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
@@ -15,7 +16,6 @@ import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,8 +33,9 @@ import java.util.UUID;
 public class MoneyNoteCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      CommandSender sender = MISCUtils.getSender(provider);
       if(arguments.length >= 1) {
         final String world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();

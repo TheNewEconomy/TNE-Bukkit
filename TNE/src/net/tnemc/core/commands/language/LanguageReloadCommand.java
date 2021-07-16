@@ -1,11 +1,12 @@
 package net.tnemc.core.commands.language;
 
 import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.WorldFinder;
-import org.bukkit.command.Command;
+import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -19,7 +20,8 @@ import org.bukkit.command.CommandSender;
 public class LanguageReloadCommand implements CommandExecution {
 
   @Override
-  public boolean execute(CommandSender sender, Command command, String label, String[] arguments) {
+  public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+    CommandSender sender = MISCUtils.getSender(provider);
     TNE.instance().messages().loadLanguages();
     Message message = new Message("Messages.Language.Reload");
     message.translate(WorldFinder.getWorld(sender, WorldVariant.ACTUAL), sender);
