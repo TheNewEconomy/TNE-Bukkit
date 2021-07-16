@@ -35,12 +35,25 @@
 #  &m   |  <strike>
 #  &n   |  <underline>
 Messages:
+
+    Parameter:
+      InvalidType: "<red>Parameter \"$parameter\" is of type $parameter_type."
+      InvalidLength: "<red>The max length of parameter \"$parameter\" is $max_length."
+      ParameterOption: "[$parameter]"
+      ParameterRequired: "<$parameter>"
     
     Command:
        Unable: "<red>I'm sorry, but you're not allowed to use that command."
        None: "<yellow>Command $command $arguments could not be found! Try using $command help."
        InActive: "<red>Command $command $arguments has been deactivated! Try using $command help."
        Charge: "<white>You have been charged <gold>$amount<white> for using $command."
+       Cooldown: "<red>This registration is on cooldown."
+       CommandHelp: "Correct usage: /$registration $parameters - $description"
+       CommandHelpHeader: "Command Help for $command"
+       Developer: "<red>You must be a developer to use that registration."
+       Console: "<red>This registration is not usable from console."
+       Player: "<red>This registration is not usable from in-game."
+       InvalidPermission: "<red>I'm sorry, but you're not allowed to use that registration."
     
     General:
        NoPerm: "<red>I'm sorry, but you do not have permission to do that."

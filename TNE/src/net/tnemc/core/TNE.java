@@ -281,7 +281,7 @@ public class TNE extends TNELib implements TabCompleter {
 
         CommandSender bukkitSender = (sender.get().isPlayer())? Bukkit.getPlayer(sender.get().getUUID())
                                                               : Bukkit.getConsoleSender();
-        return Optional.of(new Message(text).grab(defaultWorld, bukkitSender));
+        return Optional.of(Message.replaceColours(new Message(text).grab(defaultWorld, bukkitSender), false));
       }
       return Optional.empty();
     });
