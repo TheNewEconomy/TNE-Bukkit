@@ -8,6 +8,7 @@ import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.WorldGuardManager;
+import net.tnemc.core.common.Message;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
@@ -109,7 +110,11 @@ public class MISCUtils {
 
   public static void help(CommandSender sender, String label, String[] arguments) {
     Optional<CommandSearchInformation> search = CommandsHandler.manager().search(label, arguments);
-    sender.sendMessage(search.get().getInformation().get().buildHelp(new BukkitPlayerProvider(sender)));
+
+    final List<String> messages = search.get().getInformation().get().buildHelp(new BukkitPlayerProvider(sender));
+    for(String message : messages) {
+      sender.sendMessage(Message.replaceColours(message, false));
+    }
   }
 
   //Minecraft Version Utils

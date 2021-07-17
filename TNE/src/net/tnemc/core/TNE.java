@@ -12,7 +12,6 @@ import net.tnemc.commands.core.CommandsHandler;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.commands.ExecutorsRegistry;
 import net.tnemc.core.common.EconomyManager;
-import net.tnemc.core.common.Message;
 import net.tnemc.core.common.TNEUUIDManager;
 import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
@@ -34,6 +33,7 @@ import net.tnemc.core.common.module.cache.ModuleFileCache;
 import net.tnemc.core.common.utils.BStats;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.common.utils.MaterialUtils;
+import net.tnemc.core.common.utils.TNETranslator;
 import net.tnemc.core.common.uuid.UUIDAPI;
 import net.tnemc.core.common.uuid.impl.AshconAPI;
 import net.tnemc.core.compatibility.ItemCompatibility;
@@ -276,15 +276,7 @@ public class TNE extends TNELib implements TabCompleter {
     configurations().add(world, "world");
 
     TNE.debug("Preparing commands");
-    handler = new BukkitCommandsHandler(commandsConfigurations, this).withTranslator((text, sender)->{
-      if(sender.isPresent()) {
-
-        CommandSender bukkitSender = (sender.get().isPlayer())? Bukkit.getPlayer(sender.get().getUUID())
-                                                              : Bukkit.getConsoleSender();
-        return Optional.of(Message.replaceColours(new Message(text).grab(defaultWorld, bukkitSender), false));
-      }
-      return Optional.empty();
-    });
+    handler = new BukkitCommandsHandler(commandsConfigurations, this).withTranslator(new TNETranslator());
 
 
     //Load Module Sub Commands
