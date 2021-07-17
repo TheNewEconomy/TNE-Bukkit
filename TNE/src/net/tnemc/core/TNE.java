@@ -261,6 +261,22 @@ public class TNE extends TNELib implements TabCompleter {
       mainConfigurations.save(main.getFile());
     }
 
+    if(!messageConfigurations.contains("Messages.Parameter.InvalidType")) {
+      messageConfigurations.setOrCreate("Messages.Parameter.InvalidType", "<red>Parameter \\\"$parameter\\\" is of type $parameter_type.");
+      messageConfigurations.setOrCreate("Messages.Parameter.InvalidLength", "<red>The max length of parameter \\\"$parameter\\\" is $max_length.");
+      messageConfigurations.setOrCreate("Messages.Parameter.ParameterOption", "[$parameter]");
+      messageConfigurations.setOrCreate("Messages.Parameter.ParameterRequired", "<$parameter>");
+
+      messageConfigurations.setOrCreate("Messages.Command.Cooldown", "<red>This command is on cooldown.");
+      messageConfigurations.setOrCreate("Messages.Command.CommandHelp", "<gold>Correct usage: <white>$description");
+      messageConfigurations.setOrCreate("Messages.Command.CommandHelpHeader", "===== <gold>[<white>$command<gold>]<white> $page<gold>/<white>$max =====");
+      messageConfigurations.setOrCreate("Messages.Command.Developer", "<red>You must be a developer to use that command.");
+      messageConfigurations.setOrCreate("Messages.Command.Console", "<red>This command is not usable from console.");
+      messageConfigurations.setOrCreate("Messages.Command.Player", "<red>This command is not usable from in-game.");
+      messageConfigurations.setOrCreate("Messages.Command.InvalidPermission", "<red>I'm sorry, but you're not allowed to use that command.");
+      messageConfigurations.save(messagesFile);
+    }
+
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
       value.getModule().loadConfigurations();
