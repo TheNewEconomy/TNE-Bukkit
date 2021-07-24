@@ -11,6 +11,7 @@ import net.tnemc.core.economy.Account;
 import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -202,6 +203,13 @@ public class EconomyManager {
     if(argument.equalsIgnoreCase("all")) return getAccounts().values();
 
     List<TNEAccount> accounts = new ArrayList<>();
+
+    if(argument.equalsIgnoreCase("online")) {
+      for(Player player : Bukkit.getOnlinePlayers()) {
+        accounts.add(getAccount(player.getUniqueId()));
+      }
+    }
+
     if(argument.contains(",")) {
       String[] names = argument.split(",");
 
