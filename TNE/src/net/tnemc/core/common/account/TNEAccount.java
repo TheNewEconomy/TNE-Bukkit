@@ -434,6 +434,11 @@ public class TNEAccount implements Account {
 
   @Override
   public EconomyResponse canAddHoldings(BigDecimal amount, String world) {
+    final BigDecimal max = TNE.manager().currencyManager().get(world).getMaxBalance();
+
+    if(getHoldings(world).add(amount).compareTo(max) > 0) {
+      return GeneralResponse.FAILED;
+    }
     return GeneralResponse.SUCCESS;
   }
 
@@ -444,6 +449,11 @@ public class TNEAccount implements Account {
 
   @Override
   public EconomyResponse canAddHoldings(BigDecimal amount, Currency currency, String world) {
+    final BigDecimal max = TNE.manager().currencyManager().get(world, currency.name()).getMaxBalance();
+
+    if(getHoldings(world, currency).add(amount).compareTo(max) > 0) {
+      return GeneralResponse.FAILED;
+    }
     return GeneralResponse.SUCCESS;
   }
 
