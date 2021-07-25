@@ -200,7 +200,7 @@ public class EconomyManager {
   public Collection<TNEAccount> parsePlayerArgument(String argument, boolean existing) {
     TNE.debug("EconomyManager.parsePlayerArgument: " + argument);
     argument = argument.trim();
-    if(argument.equalsIgnoreCase("all")) return getAccounts().values();
+    if(argument.equalsIgnoreCase("all") || argument.equalsIgnoreCase("*")) return getAccounts().values();
 
     List<TNEAccount> accounts = new ArrayList<>();
 
