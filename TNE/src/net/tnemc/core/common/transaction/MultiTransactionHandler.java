@@ -5,6 +5,8 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
+import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.economy.currency.Currency;
 import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 
 import java.math.BigDecimal;
@@ -23,6 +25,7 @@ public class MultiTransactionHandler {
   private MultiTransactionData data;
   private String transactionType;
   private BigDecimal amount;
+  private String modifier;
   private TNECurrency currency;
   private String world;
   private TNEAccount initiator;
@@ -32,6 +35,20 @@ public class MultiTransactionHandler {
     this.data = new MultiTransactionData(affected);
     this.transactionType = transactionType.toLowerCase().trim();
     this.amount = amount;
+    this.currency = currency;
+    this.world = world;
+    this.initiator = initiator;
+    this.messageReceiver = initiator;
+
+    if(currency.getTNEMinorTiers().size() <= 0) {
+      this.amount = this.amount.setScale(0, BigDecimal.ROUND_FLOOR);
+    }
+  }
+
+  public MultiTransactionHandler(Collection<TNEAccount> affected, String transactionType, String modifier, TNECurrency currency, String world, TNEAccount initiator) {
+    this.data = new MultiTransactionData(affected);
+    this.transactionType = transactionType.toLowerCase().trim();
+    this.modifier = modifier;
     this.currency = currency;
     this.world = world;
     this.initiator = initiator;
@@ -110,7 +127,13 @@ public class MultiTransactionHandler {
     this.transactionType = transactionType;
   }
 
-  public BigDecimal getAmount() {
+  public BigDecimal getAmount(TNEAccount recipient, String world, Currency currency) {
+    if(amount == null && modifier != null) {
+      if(modifier.contains("\\%")) {
+        return MISCUtils.percent(recipient.getHoldings(world, currency), new BigDecimal(modifier.replace("\\%", "")));
+      }
+      return BigDecimal.ZERO;
+    }
     return amount;
   }
 

@@ -15,7 +15,7 @@ Mobs:
 
   #Whether or not to send a message stating how much money a player got for killing a mob
   Message: true
-
+'
   #Whether a message should be sent if the reward is set to zero.
   MessageZero: false
 

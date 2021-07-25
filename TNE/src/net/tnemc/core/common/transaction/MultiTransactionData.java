@@ -99,7 +99,7 @@ public class MultiTransactionData {
 
     transaction.setRecipientCharge(new TransactionCharge(handler.getWorld(),
                                                          handler.getCurrency(),
-                                                         handler.getAmount(),
+                                                         handler.getAmount(account, handler.getWorld(), handler.getCurrency()),
                                                          handler.getChargeType()));
 
     if(handler.getInitiator() != null) {

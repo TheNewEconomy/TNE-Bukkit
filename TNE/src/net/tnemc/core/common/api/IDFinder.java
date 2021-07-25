@@ -161,6 +161,7 @@ public class IDFinder {
       return ecoID(identifier);
     }
 
+    TNE.debug("CACHE");
     if(uuidCache.getIfPresent(identifier) == null && !Bukkit.getOfflinePlayer(identifier).hasPlayedBefore()) {
       UUID uuid = TNE.uuidAPI.getUUID(identifier);
       uuidCache.put(identifier, uuid);
@@ -168,6 +169,7 @@ public class IDFinder {
     }
 
     String finalIdentifier = identifier;
+    TNE.debug("offline");
     try {
       return uuidCache.get(identifier, () -> Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId());
     } catch (ExecutionException e) { // shouldn't throw, but add a backup anyways

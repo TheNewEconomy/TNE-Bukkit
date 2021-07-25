@@ -100,11 +100,18 @@ public class MoneyTakeCommand implements CommandExecution {
           return;
         }
 
-        final BigDecimal value = new BigDecimal(parsed);
+        MultiTransactionHandler handler;
+        if(!parsed.contains("\\%")) {
+          final BigDecimal value = new BigDecimal(parsed);
 
-        final MultiTransactionHandler handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
-            "take", value, currency, world,
-            TNE.manager().getAccount(IDFinder.getID(sender)));
+          handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
+              "take", value, currency, world,
+              TNE.manager().getAccount(IDFinder.getID(sender)));
+        } else {
+          handler = new MultiTransactionHandler(TNE.manager().parsePlayerArgument(arguments[0]),
+              "take", parsed, currency, world,
+              TNE.manager().getAccount(IDFinder.getID(sender)));
+        }
         handler.handle(true);
         return;
       }

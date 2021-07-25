@@ -79,6 +79,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -111,6 +112,8 @@ public class TNE extends TNELib implements TabCompleter {
   public static final String coreURL = "https://tnemc.net/files/module-version.xml";
 
   public static final Pattern USERNAME_PATTERN = Pattern.compile("^\\w*$");
+
+  public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
   public static final UUIDAPI uuidAPI = new AshconAPI();
 

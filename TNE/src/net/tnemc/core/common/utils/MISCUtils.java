@@ -117,6 +117,10 @@ public class MISCUtils {
     }
   }
 
+  public static BigDecimal percent(BigDecimal amount, BigDecimal percent) {
+    return amount.multiply(percent).divide(TNE.ONE_HUNDRED, BigDecimal.ROUND_DOWN);
+  }
+
   //Minecraft Version Utils
   /**
    * @return Whether the bukkit in use is for MC >= 1.8

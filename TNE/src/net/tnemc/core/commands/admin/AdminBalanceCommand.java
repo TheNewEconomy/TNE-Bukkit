@@ -13,6 +13,7 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.utils.MISCUtils;
 import net.tnemc.core.economy.transaction.charge.TransactionCharge;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
@@ -30,44 +31,46 @@ public class AdminBalanceCommand implements CommandExecution {
 
   @Override
   public boolean execute(PlayerProvider provider, String label, String[] arguments) {
-    CommandSender sender = MISCUtils.getSender(provider);
-    TNE.debug("===START AdminBalanceCommand  ===");
-    if(arguments.length >= 1 && arguments.length <= 3) {
+    Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+      CommandSender sender = MISCUtils.getSender(provider);
+      TNE.debug("===START AdminBalanceCommand  ===");
+      if (arguments.length >= 1 && arguments.length <= 3) {
 
-      UUID id = IDFinder.getID(arguments[0]);
-      String world = (arguments.length >= 2) ? WorldFinder.getWorldName(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
-      String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
-      if(MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
-        currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        UUID id = IDFinder.getID(arguments[0]);
+        String world = (arguments.length >= 2) ? WorldFinder.getWorldName(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
+        String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
+        if (MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
+          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        }
+
+        TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
+
+        if (TNE.instance().getWorldManager(world).isEconomyDisabled()) {
+          new Message("Messages.General.Disabled").translate(world, sender);
+          return;
+        }
+        TNE.debug("Pre Transaction");
+
+        TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("inquiry"));
+        transaction.setRecipientCharge(new TransactionCharge(world, currency, BigDecimal.ZERO));
+        TNE.debug("pre perform");
+        TransactionResult result = transaction.perform();
+        TNE.debug("post perform");
+        Message message = new Message(result.initiatorMessage());
+        message.addVariable("$player", arguments[0]);
+        message.addVariable("$world", world);
+        if (TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
+          message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientBalance().getCurrency().name()), world, transaction.recipientBalance().getAmount(), transaction.recipient()));
+        } else {
+          message.addVariable("$amount", transaction.recipientBalance().getAmount().toPlainString());
+        }
+        message.translate(world, IDFinder.getID(sender));
+        TNE.debug("===END AdminBalanceCommand  ===");
+        return;
       }
-
-      TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);
-
-      if(TNE.instance().getWorldManager(world).isEconomyDisabled()) {
-        new Message("Messages.General.Disabled").translate(world, sender);
-        return false;
-      }
-      TNE.debug("Pre Transaction");
-
-      TNETransaction transaction = new TNETransaction(TNE.manager().getAccount(IDFinder.getID(sender)), TNE.manager().getAccount(id), world, TNE.transactionManager().getType("inquiry"));
-      transaction.setRecipientCharge(new TransactionCharge(world, currency, BigDecimal.ZERO));
-      TNE.debug("pre perform");
-      TransactionResult result = transaction.perform();
-      TNE.debug("post perform");
-      Message message = new Message(result.initiatorMessage());
-      message.addVariable("$player", arguments[0]);
-      message.addVariable("$world", world);
-      if(TNE.instance().api().getBoolean("Core.Currency.Info.FormatMoney")) {
-        message.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientBalance().getCurrency().name()), world, transaction.recipientBalance().getAmount(), transaction.recipient()));
-      } else {
-        message.addVariable("$amount", transaction.recipientBalance().getAmount().toPlainString());
-      }
-      message.translate(world, IDFinder.getID(sender));
+      MISCUtils.help(sender, label, arguments);
       TNE.debug("===END AdminBalanceCommand  ===");
-      return result.proceed();
-    }
-    MISCUtils.help(sender, label, arguments);
-    TNE.debug("===END AdminBalanceCommand  ===");
-    return false;
+    });
+    return true;
   }
 }
