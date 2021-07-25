@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>0.1.1.13-PRE-4</version>
+    <version>0.1.1.13-PRE-6</version>
     <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>

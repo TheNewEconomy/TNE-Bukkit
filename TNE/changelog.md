@@ -7,6 +7,10 @@ New Command System
     node, add a new shortcut to run it.
 - Adds tab completion 
 - Adds the ability to do @a - online players and @r which is a random player in commands.
+- Added parameter validation to /money balance.
+- Added * as an alternative to all in money give/take commands
+- Added percentage support to /money give and take commands.
+  - Example: /money take <player> 5% - Will take 5% of their balance.
 
 New Item Currency System // still needs completed
 - No longer required to declare minor/major
@@ -20,3 +24,4 @@ Fixes
 - Cache implementation for UUIDs(Thanks to PaulBGD)
 - Fixes balance issues occurring with ender chest balances.
 - Fixed issue where /money note did not properly work.
+- Fixed issue where max balance wasn't being enforced.
