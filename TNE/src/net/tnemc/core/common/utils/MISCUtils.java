@@ -288,6 +288,15 @@ public class MISCUtils {
     return TNE.manager().currencyManager().get(world).name();
   }
 
+  public static String findCurrencyName(String world, Location location, String defaultCurrency) {
+    if(!TNE.fawe && TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+      return WorldGuardManager.findCurrencyName(world, location);
+    }
+
+    if(!defaultCurrency.trim().equalsIgnoreCase("")) return defaultCurrency;
+    return TNE.manager().currencyManager().get(world).name();
+  }
+
   public static void restore(CommandSender sender) {
     File file = new File(TNE.instance().getDataFolder(), "extracted.yml");
     YamlConfiguration original = YamlConfiguration.loadConfiguration(file);

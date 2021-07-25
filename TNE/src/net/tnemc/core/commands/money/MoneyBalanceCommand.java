@@ -46,11 +46,31 @@ public class MoneyBalanceCommand implements CommandExecution {
       if(TNE.instance().getWorldManager(world) == null) world = WorldFinder.getWorld(sender, WorldVariant.BALANCE);
       world = TNE.instance().getWorldManager(world).getBalanceWorld();
       TNE.debug("MoneyBalanceCommand.execute, World: " + world);
+
+      if (!TNE.instance().hasWorldManager(world)) {
+        Message m = new Message("Messages.Money.NoWorld");
+        m.addVariable("$world", world);
+        m.translate(world, sender);
+        return;
+      }
+
       final UUID id = IDFinder.getID(sender);
       if(TNE.manager() == null) TNE.debug("Economy Manager is null");
       if(TNE.manager().currencyManager() == null) TNE.debug("TNECurrency Manager is null");
       if(TNE.manager().currencyManager().get(world) == null) TNE.debug("World TNECurrency is null");
-      String currencyName = (arguments.length >= 2)? arguments[1] : TNE.manager().currencyManager().get(world).name();
+      String currencyName = (arguments.length >= 2) ? arguments[1] : TNE.manager().currencyManager().get(world).name();
+
+      if(sender instanceof Player) {
+        currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(sender).getLocation(), currencyName);
+      }
+
+      if (!TNE.manager().currencyManager().contains(world, currencyName)) {
+        Message m = new Message("Messages.Money.NoCurrency");
+        m.addVariable("$currency", currencyName);
+        m.addVariable("$world", world);
+        m.translate(world, sender);
+        return;
+      }
 
       if(!(sender instanceof Player) && arguments.length == 0){
         new Message("Messages.General.IsConsole");
