@@ -3,6 +3,7 @@ package net.tnemc.core.common.module;
 import com.github.tnerevival.core.SaveManager;
 import net.tnemc.commands.core.CommandExecution;
 import net.tnemc.commands.core.CommandInformation;
+import net.tnemc.commands.core.TabCompleter;
 import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.configurations.Configuration;
@@ -97,6 +98,14 @@ public interface Module {
    * Format: Executor Name, Executor
    */
   default Map<String, CommandExecution> commandExecutors() {
+    return new HashMap<>();
+  }
+
+  /**
+   * @return A map of command tab completers that should be added.
+   * Format: Completer Name, {@link TabCompleter}
+   */
+  default Map<String, TabCompleter> tabCompleters() {
     return new HashMap<>();
   }
 

@@ -37,6 +37,11 @@ public class EcoPlugin extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../EcoPlugin/config.yml");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
 
     final ConfigurationSection accountSection = config.getConfigurationSection("Balance");

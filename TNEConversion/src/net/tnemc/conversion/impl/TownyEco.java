@@ -41,6 +41,11 @@ public class TownyEco extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../TownyEco/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(null);
     String table = prefix + "balances";

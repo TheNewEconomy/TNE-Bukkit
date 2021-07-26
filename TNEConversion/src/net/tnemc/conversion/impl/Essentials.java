@@ -39,6 +39,11 @@ public class Essentials extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../Essentials/userdata");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     File configFile = new File(TNE.instance().getDataFolder(), "../EssentialsMysqlStorage/config.yml");
     FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);

@@ -34,6 +34,11 @@ public class EasyCoins extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../EasyCoins/players");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
     if(!dataDirectory.isDirectory() || dataDirectory.listFiles() == null || dataDirectory.listFiles().length == 0) return;
 

@@ -43,6 +43,11 @@ public class FeConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../Fe/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("mysql.host"),
         config.getInt("mysql.port"), config.getString("mysql.database"),

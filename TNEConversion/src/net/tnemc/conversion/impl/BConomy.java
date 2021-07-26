@@ -42,6 +42,11 @@ public class BConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../BConomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("Database.Mysql.Host"),
         config.getInt("Database.Mysql.Port"), config.getString("Database.Mysql.Database"),

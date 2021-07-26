@@ -43,6 +43,11 @@ public class iConomy7 extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../iConomy/Config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
 
     final String url = config.getString("System.Database.URL").replace("mysql://", "");

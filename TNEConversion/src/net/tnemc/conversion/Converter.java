@@ -133,6 +133,8 @@ public abstract class Converter {
 
   public abstract String type();
 
+  public abstract File dataFolder();
+
   public void convert() {
     try {
       new File(TNE.instance().getDataFolder(), "extracted.yml").createNewFile();
