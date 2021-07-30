@@ -24,34 +24,6 @@ import java.util.Optional;
  * Created by creatorfromhell on 06/30/2017.
  */
 public class ConvertCommand implements CommandExecution {
-  /*public ConvertCommand(TNELib plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public String name() {
-    return "convert";
-  }
-
-  @Override
-  public String[] aliases() {
-    return new String[0];
-  }
-
-  @Override
-  public String node() {
-    return "tne.command.convert";
-  }
-
-  @Override
-  public boolean console() {
-    return true;
-  }
-
-  @Override
-  public String helpLine() {
-    return "/convert <from> - Converts all data from plugin <from>.";
-  }*/
 
   @Override
   public boolean execute(PlayerProvider provider, String label, String[] arguments) {
@@ -73,6 +45,7 @@ public class ConvertCommand implements CommandExecution {
     } else {
       if(sender instanceof Player) {
         TNE.menuManager().open("conversion_menu", (Player)sender);
+        return true;
       }
     }
     MISCUtils.help(sender, label, arguments);
