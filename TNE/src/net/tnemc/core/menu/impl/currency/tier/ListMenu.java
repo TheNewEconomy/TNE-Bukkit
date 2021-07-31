@@ -1,7 +1,4 @@
-package net.tnemc.core.menu.icons.shared;
-
-import net.tnemc.core.menu.icons.Icon;
-import org.bukkit.inventory.ItemStack;
+package net.tnemc.core.menu.impl.currency.tier;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -13,11 +10,5 @@ import org.bukkit.inventory.ItemStack;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class ToggleIcon extends Icon {
-
-  public ToggleIcon(ItemStack stack, String display, String menu, ItemStack toggled, Integer slot) {
-    super(slot, stack, display);
-
-    this.switchMenu = menu;
-  }
+public class ListMenu {
 }
