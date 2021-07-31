@@ -1,5 +1,7 @@
 package net.tnemc.core.menu.icons.curselection;
 
+import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Material;
 
@@ -13,11 +15,16 @@ import org.bukkit.Material;
  */
 public class CurrencyIcon extends Icon {
 
-  public CurrencyIcon(String currency, Integer slot, String switchMenu) {
+  public CurrencyIcon(String currency, String world, Integer slot, String switchMenu) {
     super(slot, Material.PAPER, currency);
     data.put("action_currency", currency);
+    data.put("action_world", world);
 
 
     this.switchMenu = switchMenu;
+
+    this.clickAction = (click)->{
+      final TNECurrency curObject = TNE.manager().currencyManager().get(world, currency);
+    };
   }
 }

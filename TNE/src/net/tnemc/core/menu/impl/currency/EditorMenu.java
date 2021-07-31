@@ -4,6 +4,8 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.item.ItemStackBuilder;
 import net.tnemc.core.menu.Menu;
+import net.tnemc.core.menu.icons.currency.DeleteIcon;
+import net.tnemc.core.menu.icons.shared.ActionIcon;
 import net.tnemc.core.menu.icons.shared.BackIcon;
 import net.tnemc.core.menu.icons.shared.ChatResponseIcon;
 import net.tnemc.core.menu.icons.shared.InformIcon;
@@ -20,17 +22,17 @@ import java.util.UUID;
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
- * Created by creatorfromhell on 7/31/2021.
+ * Created by creatorfromhell on 7/4/2021.
  * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class InfoMenu extends Menu {
+public class EditorMenu extends Menu {
 
-  public InfoMenu() {
-    super("currency_info", "Currency Info", 6);
+  public EditorMenu() {
+    super("currency_editor", "Currency Editor", 6);
   }
 
   @Override
@@ -39,7 +41,7 @@ public class InfoMenu extends Menu {
 
     final String currency = (String) TNE.menuManager().getViewerData(viewer, "action_currency");
 
-    this.setTitle("Info: " + currency);
+    this.setTitle("Currency Editor: " + currency);
 
     //Row 1
     icons.put(4, new ChatResponseIcon(new ItemStackBuilder(Material.NAME_TAG)
@@ -61,7 +63,12 @@ public class InfoMenu extends Menu {
 
 
     //Row 6
-    icons.put(45, new BackIcon("currency_editor", 45));
+    icons.put(45, new BackIcon("currency_list", 45));
+    icons.put(49, new ActionIcon(TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Save Currency", 49, (iconClick)->{
+      //TODO: Save currency
+    }));
+    icons.put(53, new DeleteIcon(53));
+
     return super.buildInventory(player);
   }
 }

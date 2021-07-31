@@ -1,7 +1,7 @@
 package net.tnemc.core.menu;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.menu.impl.currency.InfoMenu;
+import net.tnemc.core.menu.impl.currency.EditorMenu;
 import net.tnemc.core.menu.impl.currency.ListMenu;
 import net.tnemc.core.menu.impl.player.AmountSelectionMenu;
 import net.tnemc.core.menu.impl.player.CurrencySelectionMenu;
@@ -54,7 +54,7 @@ public class MenuManager {
 
     //Currency Editor
     menus.put("currency_list", new ListMenu());
-    menus.put("currency_info", new InfoMenu());
+    menus.put("currency_editor", new EditorMenu());
   }
 
   public void open(String menu, Player player) {
