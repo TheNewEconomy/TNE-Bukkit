@@ -3,6 +3,7 @@ package net.tnemc.core.menu.icons;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.menu.ResponseData;
 import net.tnemc.core.menu.consumables.IconClick;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,6 +41,8 @@ public class Icon {
   protected String node;
   protected String switchMenu;
   protected String message;
+  protected String chat = "";
+  protected boolean removeViewer = true;
   protected boolean close;
 
   public Icon(Integer slot, Material material, String display) {
@@ -87,10 +90,23 @@ public class Icon {
   }
 
   public void onClick(String menu, Player player) {
-    if(!switchMenu.equalsIgnoreCase("")) close = false;
+    if(!switchMenu.trim().equalsIgnoreCase("")) close = false;
+    if(!chat.trim().equalsIgnoreCase("")) {
+
+      final String toGo = (switchMenu.trim().equalsIgnoreCase(""))? menu : switchMenu;
+      switchMenu = "";
+
+      close = true;
+      removeViewer = false;
+      TNE.menuManager().response.put(player.getUniqueId(), new ResponseData(chat, toGo));
+    }
+
     if(close) {
       Bukkit.getScheduler().runTask(TNE.instance(), player::closeInventory);
-      TNE.menuManager().removeData(IDFinder.getID(player));
+
+      if(removeViewer) {
+        TNE.menuManager().removeData(IDFinder.getID(player));
+      }
     }
     if(!switchMenu.equalsIgnoreCase("")) {
       TNE.menuManager().open(switchMenu, player);
@@ -165,5 +181,6 @@ public class Icon {
 
   public void setClose(boolean close) {
     this.close = close;
+    if(this.close) removeViewer = true;
   }
 }

@@ -29,6 +29,7 @@ import java.util.UUID;
  */
 public class MenuManager {
   public Map<String, Menu> menus = new HashMap<>();
+  public Map<UUID, ResponseData> response = new HashMap<>();
   public Map<UUID, ViewerData> data = new HashMap<>();
 
   private static ItemStack border;
