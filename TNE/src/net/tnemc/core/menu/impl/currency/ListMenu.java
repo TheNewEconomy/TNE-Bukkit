@@ -40,6 +40,8 @@ public class ListMenu extends Menu {
     if(size < 10) rows = 1;
     else rows = (size / 9);
 
+    //TODO: Add new currency icon.
+
     return super.buildInventory(player);
   }
 }
