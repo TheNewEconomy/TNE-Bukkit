@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -29,6 +30,8 @@ import java.util.function.Consumer;
 public class Icon {
 
   protected Map<String, Object> data = new HashMap<>();
+
+  protected final Optional<ItemStack> item;
 
   protected Integer slot;
   protected Material material;
@@ -53,6 +56,14 @@ public class Icon {
     this(slot, material, display, damage, new ArrayList<>());
   }
 
+  public Icon(Integer slot, ItemStack stack) {
+    this.item = Optional.of(stack);
+    this.node = "";
+    this.switchMenu = "";
+    this.message = "";
+    this.close = true;
+  }
+
   public Icon(Integer slot, ItemStack stack, String display) {
     this(slot, stack.getType(), display, stack.getDurability(), new ArrayList<>());
   }
@@ -62,6 +73,7 @@ public class Icon {
   }
 
   public Icon(Integer slot, Material material, String display, short damage, List<String> lore) {
+    this.item = Optional.empty();
     this.slot = slot;
     this.material = material;
     this.display = display;
@@ -75,6 +87,9 @@ public class Icon {
   }
 
   public ItemStack buildStack(Player player) {
+    if(item.isPresent()) {
+      return item.get();
+    }
     ItemStack item = new ItemStack(material, 1, damage);
     ItemMeta meta = Bukkit.getServer().getItemFactory().getItemMeta(material);
     meta.setLore(lore);

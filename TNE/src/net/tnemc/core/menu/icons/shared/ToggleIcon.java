@@ -1,7 +1,10 @@
 package net.tnemc.core.menu.icons.shared;
 
 import net.tnemc.core.menu.icons.Icon;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -13,11 +16,32 @@ import org.bukkit.inventory.ItemStack;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class ToggleIcon extends Icon {
+public abstract class ToggleIcon extends Icon {
 
-  public ToggleIcon(ItemStack stack, String display, String menu, ItemStack toggled, Integer slot) {
-    super(slot, stack, display);
+  private final ItemStack toggled;
+
+  public ToggleIcon(Integer slot, ItemStack stack, String menu, ItemStack toggled) {
+    super(slot, stack);
+
+    this.toggled = toggled;
 
     this.switchMenu = menu;
+  }
+
+  public abstract void toggleData(UUID uuid);
+  public abstract boolean isToggled(UUID uuid);
+
+  @Override
+  public ItemStack buildStack(Player player) {
+    if(isToggled(player.getUniqueId())) {
+      return toggled;
+    }
+    return super.buildStack(player);
+  }
+
+  @Override
+  public void onClick(String menu, Player player) {
+    toggleData(player.getUniqueId());
+    super.onClick(menu, player);
   }
 }
