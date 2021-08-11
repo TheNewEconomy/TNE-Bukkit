@@ -4,6 +4,9 @@ import net.tnemc.core.common.menu.consumable.menu.MenuClose;
 import net.tnemc.core.common.menu.consumable.menu.MenuOpen;
 import net.tnemc.core.common.menu.consumable.menu.page.PageSwitch;
 import net.tnemc.core.common.menu.layout.Layout;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -32,4 +35,8 @@ public class Menu {
 
   //TODO: Should this be in Layout? (maybe)
   private Consumer<PageSwitch> onPageSwitch;
+
+  public Inventory buildInventory(Player player) {
+    return Bukkit.createInventory(null, 54);
+  }
 }

@@ -8,6 +8,7 @@ import net.tnemc.core.menu.consumables.IconClick;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -104,7 +105,7 @@ public class Icon {
     return player.hasPermission(node);
   }
 
-  public void onClick(String menu, Player player) {
+  public void onClick(String menu, Player player, ClickType type) {
     if(!switchMenu.trim().equalsIgnoreCase("")) close = false;
     if(!chat.trim().equalsIgnoreCase("")) {
 

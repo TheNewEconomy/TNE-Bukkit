@@ -2,6 +2,7 @@ package net.tnemc.core.menu.icons.shared;
 
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -40,8 +41,8 @@ public abstract class ToggleIcon extends Icon {
   }
 
   @Override
-  public void onClick(String menu, Player player) {
+  public void onClick(String menu, Player player, ClickType type) {
     toggleData(player.getUniqueId());
-    super.onClick(menu, player);
+    super.onClick(menu, player, type);
   }
 }

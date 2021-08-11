@@ -38,7 +38,7 @@ public class InventoryClickListener implements Listener {
       int slot = event.getRawSlot();
       Menu menu = ((MenuHolder)event.getInventory().getHolder()).getMenuInstance();
 
-      menu.click((Player)event.getWhoClicked(), slot);
+      menu.click((Player)event.getWhoClicked(), slot, event.getClick());
     } else {
       if(event.getInventory().getType().equals(InventoryType.MERCHANT) &&
           !TNE.configurations().getBoolean("Core.Server.CurrencyTrading")) {

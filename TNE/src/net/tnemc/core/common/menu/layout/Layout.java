@@ -3,6 +3,7 @@ package net.tnemc.core.common.menu.layout;
 import net.tnemc.core.common.menu.consumable.menu.layout.LayoutBuild;
 import net.tnemc.core.common.menu.consumable.menu.layout.LayoutClick;
 import net.tnemc.core.common.menu.icon.IconType;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,5 +32,41 @@ public class Layout {
   Consumer<LayoutBuild> onBuild;
   Consumer<LayoutClick> onClick;
 
+  public Layout(String identifier) {
+    this.identifier = identifier;
+  }
 
+  public Layout title(String title) {
+    this.title = title;
+    return this;
+  }
+
+  public Layout paginate() {
+    this.paginate = true;
+    return this;
+  }
+
+  public Layout withIcons(Map<Integer, IconType> icons) {
+    this.icons = icons;
+    return this;
+  }
+
+  public Layout withIcon(Integer slot, IconType icon) {
+    icons.put(slot, icon);
+    return this;
+  }
+
+  public Layout onBuild(Consumer<LayoutBuild> onBuild) {
+    this.onBuild = onBuild;
+    return this;
+  }
+
+  public Layout onClick(Consumer<LayoutClick> onClick) {
+    this.onClick = onClick;
+    return this;
+  }
+
+  public void click(Player player, Integer slot) {
+
+  }
 }

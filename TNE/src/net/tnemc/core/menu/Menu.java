@@ -7,6 +7,7 @@ import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
@@ -66,13 +67,13 @@ public class Menu {
     return inventory;
   }
 
-  public void click(Player player, int slot) {
+  public void click(Player player, int slot, ClickType type) {
     if(onClick != null) {
       onClick.accept(new MenuClick(this, player, slot, Optional.of(icons.get(slot))));
     }
 
     if(icons.containsKey(slot) && icons.get(slot).canClick(player)) {
-      icons.get(slot).onClick(getName(), player);
+      icons.get(slot).onClick(getName(), player, type);
     }
   }
 

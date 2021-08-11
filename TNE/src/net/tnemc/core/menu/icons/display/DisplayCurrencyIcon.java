@@ -11,6 +11,7 @@ import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class DisplayCurrencyIcon extends Icon {
   }
 
   @Override
-  public void onClick(String menu, Player player) {
+  public void onClick(String menu, Player player, ClickType type) {
     UUID initiatorID = IDFinder.getID(player);
 
     UUID id = (UUID) TNE.menuManager().getViewerData(initiatorID, "action_player");
@@ -53,6 +54,6 @@ public class DisplayCurrencyIcon extends Icon {
     m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientBalance().getCurrency().name()), world, transaction.recipientBalance().getAmount(), ""));
     this.message = m.grab(world, player);
 
-    super.onClick(menu, player);
+    super.onClick(menu, player, type);
   }
 }

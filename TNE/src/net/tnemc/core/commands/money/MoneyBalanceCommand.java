@@ -38,6 +38,12 @@ public class MoneyBalanceCommand implements CommandExecution {
 
   @Override
   public boolean execute(PlayerProvider provider, String label, String[] arguments) {
+
+    if(label.equalsIgnoreCase("mybal") && provider.isPlayer()) {
+      TNE.menuManager().open("balance_menu", (Player)MISCUtils.getSender(provider));
+      return true;
+    }
+
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       CommandSender sender = MISCUtils.getSender(provider);
 

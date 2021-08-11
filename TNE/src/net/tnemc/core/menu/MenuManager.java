@@ -1,6 +1,8 @@
 package net.tnemc.core.menu;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.menu.impl.balance.BalanceMenu;
+import net.tnemc.core.menu.impl.balance.BalanceOptionsMenu;
 import net.tnemc.core.menu.impl.currency.EditorMenu;
 import net.tnemc.core.menu.impl.currency.ListMenu;
 import net.tnemc.core.menu.impl.player.AmountSelectionMenu;
@@ -51,6 +53,10 @@ public class MenuManager {
     menus.put("pay", new AmountSelectionMenu("pay"));
     menus.put("set", new AmountSelectionMenu("set"));
     menus.put("take", new AmountSelectionMenu("take"));
+
+    //BalanceMenu
+    menus.put("balance_menu", new BalanceMenu());
+    menus.put("balance_options", new BalanceOptionsMenu());
 
     //Currency Editor
     menus.put("currency_list", new ListMenu());
