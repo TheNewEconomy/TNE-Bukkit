@@ -6,7 +6,6 @@ import net.tnemc.core.menu.Menu;
 import net.tnemc.core.menu.icons.Icon;
 import net.tnemc.core.menu.icons.amountselection.AddIcon;
 import net.tnemc.core.menu.icons.amountselection.CancelIcon;
-import net.tnemc.core.menu.icons.amountselection.ConfirmIcon;
 import net.tnemc.core.menu.icons.amountselection.ResetIcon;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,8 +24,12 @@ import java.util.UUID;
  * Created by Daniel on 11/7/2017.
  */
 public class AmountSelectionMenu extends Menu {
-  public AmountSelectionMenu(String name) {
+
+  final Icon confirmIcon;
+
+  public AmountSelectionMenu(String name, Icon confirmIcon) {
     super(name, "[TNE]Action", 5);
+    this.confirmIcon = confirmIcon;
   }
 
   @Override
@@ -63,7 +66,7 @@ public class AmountSelectionMenu extends Menu {
     //Control Icons
     icons.put(36, new CancelIcon(36));
     icons.put(40, new ResetIcon(40, getName()));
-    icons.put(44, new ConfirmIcon(44));
+    icons.put(confirmIcon.getSlot(), confirmIcon);
 
     return super.buildInventory(player);
   }

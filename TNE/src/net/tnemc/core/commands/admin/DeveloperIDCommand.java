@@ -29,20 +29,20 @@ public class DeveloperIDCommand implements CommandExecution {
       final String original = arguments[0];
       final boolean exists = TNE.instance().api().hasAccount(original);
 
-      System.out.println("Username: " + original);
-      System.out.println("Exists: " + exists);
+      TNE.logger().info("Username: " + original);
+      TNE.logger().info("Exists: " + exists);
 
       if(!exists) {
         TNE.instance().api().createAccount(original);
-        System.out.println("Account Created");
+        TNE.logger().info("Account Created");
       }
       final UUID id = IDFinder.getID(original);
       final String userFromID = IDFinder.getUsername(id.toString());
       final UUID idFromUserFromID = IDFinder.getID(userFromID);
 
-      System.out.println("UUID: " + id.toString());
-      System.out.println("UserFromUUID: " + userFromID);
-      System.out.println("UUIDFromUserFromUUID: " + idFromUserFromID.toString());
+      TNE.logger().info("UUID: " + id.toString());
+      TNE.logger().info("UserFromUUID: " + userFromID);
+      TNE.logger().info("UUIDFromUserFromUUID: " + idFromUserFromID.toString());
 
       return true;
     }

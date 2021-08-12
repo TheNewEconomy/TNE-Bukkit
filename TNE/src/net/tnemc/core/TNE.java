@@ -581,7 +581,7 @@ public class TNE extends TNELib implements TabCompleter {
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] arguments) {
-    //System.out.println("Tab Complete");
+    TNE.debug("Tab Complete");
     return handler.tab(new BukkitPlayerProvider(sender), alias, arguments);
   }
 
@@ -825,7 +825,7 @@ public class TNE extends TNELib implements TabCompleter {
       }
       TNE.debug("Finished copying " + file.getName());
     } catch(Exception e) {
-      System.out.println("Error while trying to load: " + defaultFile);
+      TNE.logger().warning("Error while trying to load: " + defaultFile);
       debug(e.getStackTrace());
 
     }
@@ -866,17 +866,17 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   public static void debug(StackTraceElement[] stack) {
-    System.out.println("Please let a professional know about the following:");
-    System.out.println("------------------- TNE Error Log -------------------");
+    logger().warning("Please let a professional know about the following:");
+    logger().warning("------------------- TNE Error Log -------------------");
     for(StackTraceElement element : stack) {
       logger().warning(element.toString());
     }
-    System.out.println("----------------- End of Error Log -----------------");
+    logger().warning("----------------- End of Error Log -----------------");
   }
 
   public static void debug(String message) {
     if(instance().debugMode) {
-      System.out.println(message);
+      logger().info(message);
     }
   }
 

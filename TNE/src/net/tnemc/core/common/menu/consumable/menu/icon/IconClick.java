@@ -1,5 +1,6 @@
 package net.tnemc.core.common.menu.consumable.menu.icon;
 
+import net.tnemc.core.common.menu.MenuClickType;
 import net.tnemc.core.common.menu.icon.IconType;
 import org.bukkit.entity.Player;
 
@@ -18,11 +19,13 @@ public class IconClick {
   private IconType icon;
   private String menu;
   private Player player;
+  private MenuClickType clickType;
 
-  public IconClick(IconType icon, String menu, Player player) {
+  public IconClick(IconType icon, String menu, Player player, MenuClickType clickType) {
     this.icon = icon;
     this.menu = menu;
     this.player = player;
+    this.clickType = clickType;
   }
 
   public IconType getIcon() {
@@ -47,5 +50,13 @@ public class IconClick {
 
   public void setPlayer(Player player) {
     this.player = player;
+  }
+
+  public MenuClickType getClickType() {
+    return clickType;
+  }
+
+  public void setClickType(MenuClickType clickType) {
+    this.clickType = clickType;
   }
 }

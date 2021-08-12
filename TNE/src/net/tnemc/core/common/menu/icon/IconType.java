@@ -3,6 +3,7 @@ package net.tnemc.core.common.menu.icon;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.menu.MenuClickType;
 import net.tnemc.core.common.menu.consumable.menu.icon.IconBuild;
 import net.tnemc.core.common.menu.consumable.menu.icon.IconClick;
 import org.bukkit.Bukkit;
@@ -132,7 +133,7 @@ public class IconType {
     return player.hasPermission(node);
   }
 
-  public void click(String menu, Player player) {
+  public void click(String menu, Player player, MenuClickType clickType) {
     if(!switchMenu.trim().equalsIgnoreCase("")) close = false;
     if(response != null) {
       if(response.getMenu().trim().equalsIgnoreCase("")) {
@@ -160,7 +161,7 @@ public class IconType {
     }
 
     if(onClick != null) {
-      onClick.accept(new IconClick(this, menu, player));
+      onClick.accept(new IconClick(this, menu, player, clickType));
     }
 
     //TODO: Add data?

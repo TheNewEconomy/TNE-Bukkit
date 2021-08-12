@@ -1,7 +1,11 @@
 package net.tnemc.core.common.menu;
 
+import net.tnemc.core.TNE;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -90,5 +94,17 @@ public class ConvertableData {
 
   public Boolean getBoolean() {
     return (Boolean)value;
+  }
+
+  public <T> List<T> getList(Class<? extends T> type) {
+    List<T> cast = new ArrayList<>();
+    for(Object obj : (List)value) {
+      try {
+        cast.add(type.cast(obj));
+      } catch(ClassCastException ignore) {
+        TNE.logger().warning("Attempted to incorrectly cast object to type: " + type.getName());
+      }
+    }
+    return cast;
   }
 }

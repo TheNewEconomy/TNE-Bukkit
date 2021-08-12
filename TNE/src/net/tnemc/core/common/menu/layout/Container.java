@@ -1,14 +1,26 @@
-package net.tnemc.core.common.menu.consumable.menu.layout;
+package net.tnemc.core.common.menu.layout;
+
+import java.util.LinkedList;
 
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
- * Created by creatorfromhell on 8/3/2021.
+ * Created by creatorfromhell on 8/12/2021.
  * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class LayoutClick {
+public class Container {
+
+  private LinkedList<Layout> layouts = new LinkedList<>();
+
+  public void addLayout(Layout layout) {
+    layouts.add(layout);
+  }
+
+  public LinkedList<Layout> getLayouts() {
+    return layouts;
+  }
 }

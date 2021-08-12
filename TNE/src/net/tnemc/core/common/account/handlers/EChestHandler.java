@@ -1,9 +1,9 @@
 package net.tnemc.core.common.account.handlers;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.utils.MISCUtils;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -60,15 +60,15 @@ public class EChestHandler implements HoldingsHandler {
       final Player player = MISCUtils.getPlayer(account);
       if(player != null) {
         BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
-        System.out.println("Echest to: " + holdings.toPlainString());
-        System.out.println("To Remove: " + amount.toPlainString());
+        TNE.debug("Echest to: " + holdings.toPlainString());
+        TNE.debug("To Remove: " + amount.toPlainString());
 
         if(holdings.compareTo(amount) < 0) {
           ItemCalculations.clearItems(currency, player.getEnderChest());
           return amount.subtract(holdings);
         }
 
-        System.out.println("Setting echest to: " + holdings.subtract(amount).toPlainString());
+        TNE.debug("Setting echest to: " + holdings.subtract(amount).toPlainString());
         //ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
         ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), false);
         return BigDecimal.ZERO;

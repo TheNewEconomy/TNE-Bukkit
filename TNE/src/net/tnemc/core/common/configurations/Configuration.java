@@ -1,6 +1,7 @@
 package net.tnemc.core.common.configurations;
 
 import net.tnemc.config.CommentedConfiguration;
+import net.tnemc.core.TNE;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +29,7 @@ public abstract class Configuration {
   }
 
   public Object getValue(String node) {
-    //System.out.println("Value: " + getConfiguration().getString(node));
+    TNE.debug("Value: " + getConfiguration().getString(node));
     return getConfiguration().getString(node);
   }
 

@@ -1,5 +1,6 @@
 package net.tnemc.core.common.menu.layout;
 
+import net.tnemc.core.common.menu.MenuClickType;
 import net.tnemc.core.common.menu.consumable.menu.layout.LayoutBuild;
 import net.tnemc.core.common.menu.consumable.menu.layout.LayoutClick;
 import net.tnemc.core.common.menu.icon.IconType;
@@ -22,6 +23,9 @@ import java.util.function.Consumer;
 public class Layout {
 
   Map<Integer, IconType> icons = new HashMap<>();
+
+  private int minSlot = 0;
+  private int maxSlot = 63;
 
   private String identifier;
 
@@ -66,7 +70,7 @@ public class Layout {
     return this;
   }
 
-  public void click(Player player, Integer slot) {
+  public void click(Player player, Integer slot, MenuClickType type) {
 
   }
 }

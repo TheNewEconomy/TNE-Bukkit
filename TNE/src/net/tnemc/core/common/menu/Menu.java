@@ -3,12 +3,12 @@ package net.tnemc.core.common.menu;
 import net.tnemc.core.common.menu.consumable.menu.MenuClose;
 import net.tnemc.core.common.menu.consumable.menu.MenuOpen;
 import net.tnemc.core.common.menu.consumable.menu.page.PageSwitch;
-import net.tnemc.core.common.menu.layout.Layout;
+import net.tnemc.core.common.menu.layout.Container;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.LinkedList;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /**
@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public class Menu {
 
   //variables
-  private LinkedList<Layout> layouts = new LinkedList<>();
+  TreeMap<Integer, Container> layouts = new TreeMap<>();
 
   private String identifier;
   private String title;
