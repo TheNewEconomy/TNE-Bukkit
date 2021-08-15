@@ -5,6 +5,7 @@ import net.tnemc.core.common.menu.consumable.menu.layout.LayoutBuild;
 import net.tnemc.core.common.menu.consumable.menu.layout.LayoutClick;
 import net.tnemc.core.common.menu.icon.IconType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class Layout {
   private int maxSlot = 63;
 
   private String identifier;
+  private Integer order = 0;
 
   private String title = "";
   private boolean paginate = false;
@@ -42,6 +44,16 @@ public class Layout {
 
   public Layout title(String title) {
     this.title = title;
+    return this;
+  }
+
+  public Layout withOrder(Integer order) {
+    this.order = order;
+    return this;
+  }
+
+  public Layout withOrder(LayoutOrder order) {
+    this.order = order.getOrder();
     return this;
   }
 
@@ -72,5 +84,42 @@ public class Layout {
 
   public void click(Player player, Integer slot, MenuClickType type) {
 
+  }
+
+  public Map<Integer, ItemStack> buildIcons(String menu, Player player) {
+    Map<Integer, ItemStack> items = new HashMap<>();
+
+    for(Map.Entry<Integer, IconType> iconEntry : icons.entrySet()) {
+      items.put(iconEntry.getKey(), iconEntry.getValue().build(menu, player));
+    }
+    return items;
+  }
+
+  public Map<Integer, IconType> getIcons() {
+    return icons;
+  }
+
+  public int getMinSlot() {
+    return minSlot;
+  }
+
+  public int getMaxSlot() {
+    return maxSlot;
+  }
+
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  public Integer getOrder() {
+    return order;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public boolean isPaginate() {
+    return paginate;
   }
 }

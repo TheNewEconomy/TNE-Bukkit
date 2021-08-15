@@ -64,6 +64,10 @@ public class TNESaveManager extends SaveManager {
     TNE.debug("Finished saving data!");
   }
 
+  public void purge(int days) throws SQLException {
+    getTNEManager().getTNEProvider().purge(days);
+  }
+
   public void registerTables(String type, List<String> tables) {
     if(dataTables.containsKey(type)) tables.addAll(dataTables.get(type));
     dataTables.put(type, tables);

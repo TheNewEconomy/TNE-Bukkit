@@ -51,6 +51,7 @@ public abstract class TNEDataProvider extends DataProvider {
   public abstract void saveID(String username, UUID id) throws SQLException;
   public abstract void removeID(String username) throws SQLException;
   public abstract void removeID(UUID id) throws SQLException;
+  public abstract void purge(int days) throws SQLException;
   public abstract Collection<TNEAccount> loadAccounts() throws SQLException;
   public abstract TNEAccount loadAccount(UUID id) throws SQLException;
   public void saveAccounts(List<TNEAccount> accounts) throws SQLException {

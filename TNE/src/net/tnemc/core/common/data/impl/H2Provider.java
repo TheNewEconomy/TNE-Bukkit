@@ -22,12 +22,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -45,6 +47,7 @@ public class H2Provider extends TNEDataProvider {
   private final String ID_LOAD_USERNAME = "SELECT username FROM " + prefix + "_ECOIDS WHERE uuid = ? LIMIT 1";
   private final String ID_SAVE = "INSERT INTO " + prefix + "_ECOIDS (username, uuid) VALUES (?, ?) ON DUPLICATE KEY UPDATE username = ?";
   private final String ID_DELETE = "DELETE FROM " + prefix + "_ECOIDS WHERE uuid = ?";
+  private final String ACCOUNT_PURGE = "SELECT uuid FROM " + prefix + "_USERS WHERE joined_date < ?";
   private final String ACCOUNT_LOAD = "SELECT uuid, display_name, account_pin, account_number, account_status, account_language, " +
       "joined_date, last_online, account_player FROM " + prefix + "_USERS WHERE " +
       "uuid = ? LIMIT 1";
@@ -102,6 +105,35 @@ public class H2Provider extends TNEDataProvider {
   }
 
   @Override
+  public void purge(int days) throws SQLException {
+    final Date min = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(days));
+
+    SQLDatabase.open();
+
+    List<String> purgeIDS = new ArrayList<>();
+
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(ACCOUNT_PURGE)) {
+
+      try(ResultSet results = H2.executePreparedQuery(statement, new Object[] {
+          min.getTime()
+      })) {
+
+        if(results.next()) {
+          purgeIDS.add(results.getString("uuid"));
+        }
+      }
+    } catch(Exception e) {
+      TNE.debug(e);
+    }
+    SQLDatabase.close();
+
+    for(String str : purgeIDS) {
+      executePreparedUpdate(ACCOUNT_DELETE, new Object[] { str });
+      executePreparedUpdate(BALANCE_DELETE, new Object[] { str });
+    }
+  }
+
+  @Override
   public Boolean backupData() {
     return false;
   }
@@ -116,8 +148,8 @@ public class H2Provider extends TNEDataProvider {
           identifier
       })) {
 
-        if(results.next()) {
-          username = results.getString("username");
+        while(results.next()) {
+
         }
       }
     } catch(Exception e) {

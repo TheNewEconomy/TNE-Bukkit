@@ -1,6 +1,13 @@
 package net.tnemc.core.common.menu.layout;
 
-import java.util.LinkedList;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -14,13 +21,44 @@ import java.util.LinkedList;
  */
 public class Container {
 
-  private LinkedList<Layout> layouts = new LinkedList<>();
+
+  private TreeMap<Integer, Layout> layouts = new TreeMap<>();
 
   public void addLayout(Layout layout) {
-    layouts.add(layout);
+    int order = layout.getOrder();
+    if(layouts.containsKey(order)) {
+      order = getNextKey(order);
+    }
+    layouts.put(order, layout);
   }
 
-  public LinkedList<Layout> getLayouts() {
+  public TreeMap<Integer, Layout> getLayouts() {
     return layouts;
+  }
+
+  public int getNextKey(int key) {
+    for(int i = key; i < layouts.size(); i++) {
+      if(!layouts.containsKey(i)) return i;
+    }
+    return layouts.size() + 1;
+  }
+
+  public Inventory buildInventory(String menu, Player player, String title) {
+
+    int size = 64;
+
+    Map<Integer, ItemStack> items = new HashMap<>();
+
+    for(Layout layout : layouts.values()) {
+      items.putAll(layout.buildIcons(menu, player));
+      if(layout.getMaxSlot() > size) size = layout.getMaxSlot();
+    }
+
+    Inventory inventory = Bukkit.createInventory(null, size, title);
+    for(Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
+      inventory.setItem(entry.getKey(), entry.getValue());
+    }
+
+    return inventory;
   }
 }

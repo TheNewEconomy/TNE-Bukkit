@@ -10,5 +10,19 @@ package net.tnemc.core.common.menu.layout;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public enum LayoutLocation {
+public enum LayoutOrder {
+
+  TOP(0),
+  MIDDLE(50),
+  BOTTOM(100);
+
+  private final int order;
+
+  LayoutOrder(int order) {
+    this.order = order;
+  }
+
+  public int getOrder() {
+    return order;
+  }
 }

@@ -59,6 +59,7 @@ import net.tnemc.core.listeners.player.PlayerQuitListener;
 import net.tnemc.core.listeners.player.PlayerTeleportListener;
 import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
+import net.tnemc.core.worker.PurgeWorker;
 import net.tnemc.core.worker.SaveWorker;
 import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
@@ -168,6 +169,7 @@ public class TNE extends TNELib implements TabCompleter {
   private PlayerConfigurations player;
 
   private Thread autoSaver;
+  private Thread purgeWorker;
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
@@ -416,6 +418,11 @@ public class TNE extends TNELib implements TabCompleter {
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       autoSaver = new Thread(new SaveWorker(this, configurations().getLong("Core.AutoSaver.Interval")));
       autoSaver.start();
+    }
+
+    if(configurations().getBoolean("Data.Purge.Enabled")) {
+      purgeWorker = new Thread(new PurgeWorker(this, configurations().getInt("Data.Purge.Days")));
+      purgeWorker.start();
     }
 
     if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.ThirdParty.McMMORewards")) {
