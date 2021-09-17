@@ -55,7 +55,7 @@ public class TNEAccount implements Account {
     this.displayName = displayName;
     this.status = AccountStatus.NORMAL;
     this.language = "Default";
-    this.player = !TNE.instance().special.contains(id);
+    this.player = !IDFinder.isNonPlayer(displayName);
     this.joined = new Date().getTime();
     this.lastOnline = new Date().getTime();
     this.pin = "";

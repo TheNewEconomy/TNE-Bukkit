@@ -31,14 +31,16 @@ public class EChestHandler implements HoldingsHandler {
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) {
     if(currency.canEnderChest()) {
-      Player player = MISCUtils.getPlayer(account);
-      if(player != null) {
-        return ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
-      } else {
+      if(TNE.manager().getAccount(account).playerAccount()) {
+        Player player = MISCUtils.getPlayer(account);
+        if (player != null) {
+          return ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
+        } else {
         /*final OfflinePlayer offlinePlayer = MISCUtils.getOfflinePlayer(account);
         if(offlinePlayer != null) {
 
         }*/
+        }
       }
     }
     return BigDecimal.ZERO;
@@ -57,26 +59,29 @@ public class EChestHandler implements HoldingsHandler {
   @Override
   public BigDecimal removeHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount) {
     if(currency.canEnderChest()) {
-      final Player player = MISCUtils.getPlayer(account);
-      if(player != null) {
-        BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
-        TNE.debug("Echest to: " + holdings.toPlainString());
-        TNE.debug("To Remove: " + amount.toPlainString());
 
-        if(holdings.compareTo(amount) < 0) {
-          ItemCalculations.clearItems(currency, player.getEnderChest());
-          return amount.subtract(holdings);
-        }
+      if(TNE.manager().getAccount(account).playerAccount()) {
+        final Player player = MISCUtils.getPlayer(account);
+        if (player != null) {
+          BigDecimal holdings = ItemCalculations.getCurrencyItems(currency, player.getEnderChest());
+          TNE.debug("Echest to: " + holdings.toPlainString());
+          TNE.debug("To Remove: " + amount.toPlainString());
 
-        TNE.debug("Setting echest to: " + holdings.subtract(amount).toPlainString());
-        //ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
-        ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), false);
-        return BigDecimal.ZERO;
-      } else {
+          if (holdings.compareTo(amount) < 0) {
+            ItemCalculations.clearItems(currency, player.getEnderChest());
+            return amount.subtract(holdings);
+          }
+
+          TNE.debug("Setting echest to: " + holdings.subtract(amount).toPlainString());
+          //ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), true);
+          ItemCalculations.setItems(account, currency, holdings.subtract(amount), player.getEnderChest(), false);
+          return BigDecimal.ZERO;
+        } else {
         /*final OfflinePlayer offlinePlayer = MISCUtils.getOfflinePlayer(account);
         if(offlinePlayer != null) {
 
         }*/
+        }
       }
     }
     return amount;

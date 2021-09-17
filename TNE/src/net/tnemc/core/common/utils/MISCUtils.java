@@ -77,11 +77,15 @@ public class MISCUtils {
   }
 
   public static Player getPlayer(UUID id) {
+    final String name = IDFinder.getUsername(id.toString());
+
+    if(IDFinder.isNonPlayer(name)) return null;
+
     if(Bukkit.getServer().getPlayer(id) == null) {
-      if(Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString())) == null) {
+      if(Bukkit.getServer().getPlayerExact(name) == null) {
         return null;
       }
-      return Bukkit.getServer().getPlayerExact(IDFinder.getUsername(id.toString()));
+      return Bukkit.getServer().getPlayerExact(name);
     }
     return Bukkit.getServer().getPlayer(id);
   }
