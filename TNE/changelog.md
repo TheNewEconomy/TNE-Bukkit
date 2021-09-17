@@ -23,7 +23,7 @@ Fixes
 - Fixed issue where /money note did not properly work.
 - Fixed issue where max balance wasn't being enforced.
 
-Planned for 1.1.4
+Planned for 1.2
 
 New Item Currency System // still needs completed
 - No longer required to declare minor/major

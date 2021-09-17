@@ -179,6 +179,9 @@ public class TNE extends TNELib implements TabCompleter {
   public static boolean fawe = true;
   private boolean firstRun = false;
 
+  //used to determine if we should move our database configurations.
+  private boolean dataFirst = false;
+
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
       blacklisted = true;
@@ -350,6 +353,19 @@ public class TNE extends TNELib implements TabCompleter {
     useUUID = configurations().getBoolean("Core.UUID");
 
     if(MISCUtils.isOneSix()) useUUID = false;
+
+    if(!firstRun && dataFirst) {
+      logger().info("Moving database configurations to data.yml.");
+      configurations().setValue("Data.Database.Type", "data", configurations().getValue("Core.Database.Type"));
+      configurations().setValue("Data.Database.MySQL.Host", "data", configurations().getValue("Core.Database.MySQL.Host"));
+      configurations().setValue("Data.Database.MySQL.Port", "data", configurations().getValue("Core.Database.MySQL.Port"));
+      configurations().setValue("Data.Database.MySQL.DB", "data", configurations().getValue("Core.Database.MySQL.DB"));
+      configurations().setValue("Data.Database.MySQL.User", "data", configurations().getValue("Core.Database.MySQL.User"));
+      configurations().setValue("Data.Database.MySQL.Password", "data", configurations().getValue("Core.Database.MySQL.Password"));
+      configurations().setValue("Data.Database.Prefix", "data", configurations().getValue("Core.Database.Prefix"));
+      configurations().setValue("Data.Database.File", "data", configurations().getValue("Core.Database.File"));
+      configurations().save(data);
+    }
 
     TNE.debug("Preparing save manager");
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
@@ -729,6 +745,10 @@ public class TNE extends TNELib implements TabCompleter {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
     dataFile = new File(getDataFolder(), "data.yml");
+    if(!dataFile.exists()) {
+      dataFirst = true;
+    }
+
     commands = new File(getDataFolder(), "commands.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");

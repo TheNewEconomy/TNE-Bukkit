@@ -4,7 +4,7 @@ Data:
   Purge:
 
     #Whether old data purging is enabled.
-    Enabled: true
+    Enabled: false
 
     #The amount of days for a user to be logged off before purging their data?
     Days: 10
