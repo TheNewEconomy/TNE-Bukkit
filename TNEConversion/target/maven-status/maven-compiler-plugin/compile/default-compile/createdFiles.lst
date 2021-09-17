@@ -33,6 +33,7 @@ net\tnemc\conversion\InvalidDatabaseImport.class
 net\tnemc\conversion\impl\iConomy.class
 net\tnemc\conversion\impl\AdvancedEconomy.class
 net\tnemc\conversion\impl\SimpleConomy.class
+net\tnemc\conversion\command\ConverterCompleter.class
 net\tnemc\conversion\impl\Meep.class
 net\tnemc\conversion\impl\EcoSystem.class
 net\tnemc\conversion\impl\SaneEconomy$1.class
