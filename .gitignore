@@ -10,3 +10,5 @@ bin/
 /target/
 /TNE/target/
 fiotnh33.xot.txt
+/TNEConversion/target/
+/TNEConversion/dependency-reduced-pom.xml

@@ -346,6 +346,12 @@ public class TNE extends TNELib implements TabCompleter {
     TNE.debug("Preparing managers");
     manager = new EconomyManager();
 
+    manager.currencyManager().loadCurrencies();
+
+    Bukkit.getScheduler().runTask(this, ()->{
+      manager.currencyManager().loadRecipes();
+    });
+
     //General Variables based on configuration values
     TNE.debug("Preparing variables");
     serverName = mainConfigurations.getString("Core.Server.Name", "Main Server");
@@ -353,6 +359,27 @@ public class TNE extends TNELib implements TabCompleter {
     useUUID = configurations().getBoolean("Core.UUID");
 
     if(MISCUtils.isOneSix()) useUUID = false;
+
+    if(!messageConfigurations.contains("Messages.Parameter")) {
+      //messagesFile.
+    }
+
+    /*if(!messageConfigurations.contains("Messages.Parameter")) {
+      messageConfigurations.save(messagesFile);
+      configurations.setValue("Messages.Parameter.InvalidType", "messages", "<red>Parameter \\\"$parameter\\\" is of type $parameter_type.");
+      configurations.setValue("Messages.Parameter.InvalidLength", "messages", "<red>The max length of parameter \\\"$parameter\\\" is $max_length.");
+      configurations.setValue("Messages.Parameter.ParameterOption", "messages", "[$parameter]");
+      configurations.setValue("Messages.Parameter.ParameterRequired", "messages", "<$parameter>");
+
+      configurations.setValue("Messages.Command.Cooldown", "messages", "<red>This command is on cooldown.");
+      configurations.setValue("Messages.Command.CommandHelp", "messages", "<gold>Correct usage: <white>$description");
+      configurations.setValue("Messages.Command.CommandHelpHeader", "messages", "===== <gold>[<white>$command<gold>]<white> $page<gold>/<white>$max =====");
+      configurations.setValue("Messages.Command.Developer", "messages", "<red>You must be a developer to use that command.");
+      configurations.setValue("Messages.Command.Console", "messages", "<red>This command is not usable from console.");
+      configurations.setValue("Messages.Command.Player", "messages", "<red>This command is not usable from in-game.");
+      configurations.setValue("Messages.Command.InvalidPermission", "messages", "<red>I'm sorry, but you're not allowed to use that command.");
+      configurations().save(messages);
+    }*/
 
     if(!firstRun && dataFirst) {
       logger().info("Moving database configurations to data.yml.");
@@ -771,23 +798,6 @@ public class TNE extends TNELib implements TabCompleter {
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
 
-
-    if(!messageConfigurations.contains("Messages.Parameter.InvalidType")) {
-      messageConfigurations.setOrCreate("Messages.Parameter.InvalidType", "<red>Parameter \\\"$parameter\\\" is of type $parameter_type.");
-      messageConfigurations.setOrCreate("Messages.Parameter.InvalidLength", "<red>The max length of parameter \\\"$parameter\\\" is $max_length.");
-      messageConfigurations.setOrCreate("Messages.Parameter.ParameterOption", "[$parameter]");
-      messageConfigurations.setOrCreate("Messages.Parameter.ParameterRequired", "<$parameter>");
-
-      messageConfigurations.setOrCreate("Messages.Command.Cooldown", "<red>This command is on cooldown.");
-      messageConfigurations.setOrCreate("Messages.Command.CommandHelp", "<gold>Correct usage: <white>$description");
-      messageConfigurations.setOrCreate("Messages.Command.CommandHelpHeader", "===== <gold>[<white>$command<gold>]<white> $page<gold>/<white>$max =====");
-      messageConfigurations.setOrCreate("Messages.Command.Developer", "<red>You must be a developer to use that command.");
-      messageConfigurations.setOrCreate("Messages.Command.Console", "<red>This command is not usable from console.");
-      messageConfigurations.setOrCreate("Messages.Command.Player", "<red>This command is not usable from in-game.");
-      messageConfigurations.setOrCreate("Messages.Command.InvalidPermission", "<red>I'm sorry, but you're not allowed to use that command.");
-      messageConfigurations.save(messagesFile);
-    }
-
     playerConfigurations = initializeConfiguration(players, "players.yml");
     TNE.logger().info("Initialized players.yml");
     worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
@@ -814,12 +824,6 @@ public class TNE extends TNELib implements TabCompleter {
             })
         );
         TNE.logger().info("Initialized items.yml");
-
-        manager.currencyManager().loadCurrencies();
-
-        Bukkit.getScheduler().runTask(this, ()->{
-          manager.currencyManager().loadRecipes();
-        });
 
         TNE.debug("Preparing server account");
         if(api.getBoolean("Core.Server.Account.Enabled")) {
