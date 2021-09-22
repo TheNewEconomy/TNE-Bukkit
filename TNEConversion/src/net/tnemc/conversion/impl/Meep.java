@@ -37,6 +37,11 @@ public class Meep extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../Meep/config.yml");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
 
     final ConfigurationSection accountSection = config.getConfigurationSection("accounts");

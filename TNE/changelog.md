@@ -12,9 +12,6 @@ New Command System
 - Added percentage support to /money give and take commands.
   - Example: /money take <player> 5% - Will take 5% of their balance.
 
-New Item Currency System // still needs completed
-- No longer required to declare minor/major
-- Ability to use irregular value amounts for tiers, such as 2.01 or even 1.99!
 
 Fixes
 - Fixed issue where item meta being null caused an NPE.
@@ -25,3 +22,9 @@ Fixes
 - Fixes balance issues occurring with ender chest balances.
 - Fixed issue where /money note did not properly work.
 - Fixed issue where max balance wasn't being enforced.
+
+Planned for 1.2
+
+New Item Currency System // still needs completed
+- No longer required to declare minor/major
+- Ability to use irregular value amounts for tiers, such as 2.01 or even 1.99!

@@ -43,6 +43,11 @@ public class CMI extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../CMI/dataBaseInfo.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
 
     final String prefix = config.getString("mysql.tablePrefix");

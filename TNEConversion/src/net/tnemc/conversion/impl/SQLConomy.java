@@ -40,6 +40,11 @@ public class SQLConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../SQLConomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("sql_server").split("\\:")[0],
         3306, config.getString("sql_database"),

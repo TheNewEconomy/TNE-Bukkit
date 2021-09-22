@@ -1,8 +1,7 @@
 package net.tnemc.core.worker;
 
 import net.tnemc.core.TNE;
-
-import java.sql.SQLException;
+import org.bukkit.Bukkit;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -24,12 +23,14 @@ public class SaveWorker implements Runnable {
 
   @Override
   public void run() {
-    System.out.println("Running TNE AutoSaver...");
-    try {
-      plugin.getSaveManager().save();
-    } catch (SQLException e) {
-      TNE.debug(e);
-    }
+    TNE.logger().info("Running TNE AutoSaver...");
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+      try {
+        plugin.getSaveManager().save();
+      } catch(Exception ignore) {
+        TNE.logger().warning("Issue occurred while attempting to save to database.");
+      }
+    });
     try {
       Thread.sleep(time * 1000);
     } catch (InterruptedException ignore) {

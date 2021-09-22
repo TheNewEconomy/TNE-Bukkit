@@ -36,6 +36,11 @@ public class XConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../XConomy/balances.yml");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
 
     final Set<String> accounts = config.getKeys(false);

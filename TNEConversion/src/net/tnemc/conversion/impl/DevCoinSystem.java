@@ -40,6 +40,11 @@ public class DevCoinSystem extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../MySQL/MySQL.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("host"),
         config.getInt("port"), config.getString("database"),

@@ -11,6 +11,7 @@ import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class ConfirmIcon extends Icon {
   }
 
   @Override
-  public void onClick(String menu, Player player) {
+  public void onClick(String menu, Player player, ClickType clickType) {
     TNE.debug("=====START Confirm.onClick =====");
     UUID id = IDFinder.getID(player);
     String world = (String)TNE.menuManager().getViewerData(id, "action_world");
@@ -68,6 +69,6 @@ public class ConfirmIcon extends Icon {
     m.addVariable("$amount", CurrencyFormatter.format(TNE.manager().currencyManager().get(world, transaction.recipientCharge().getCurrency().name()), world, amount, recipient.toString()));
     this.message = m.grab(world, player);
 
-    super.onClick(menu, player);
+    super.onClick(menu, player, clickType);
   }
 }

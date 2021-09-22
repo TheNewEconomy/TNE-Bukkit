@@ -42,10 +42,10 @@ public class TNESaveManager extends SaveManager {
 
     SQLDatabase.open();
 
-    System.out.println("Updating tables, please hold.");
+    TNE.logger().info("Updating tables, please hold.");
     TableManager tableManager = new TableManager(manager.getFormat().toLowerCase(), manager.getPrefix());
     tableManager.generateQueriesAndRun(SQLDatabase.getDb().getConnection(), TNE.instance().getResource("tne_tables.yml"));
-    System.out.println("Finished updating tables.");
+    TNE.logger().info("Finished updating tables.");
 
     SQLDatabase.close();
     load();
@@ -62,6 +62,10 @@ public class TNESaveManager extends SaveManager {
     getTNEManager().getTNEProvider().save(TNELib.instance().currentSaveVersion);
     TNE.debug("Null Account Count: " + getTNEManager().getTNEProvider().nullAccounts());
     TNE.debug("Finished saving data!");
+  }
+
+  public void purge(int days) throws SQLException {
+    getTNEManager().getTNEProvider().purge(days);
   }
 
   public void registerTables(String type, List<String> tables) {

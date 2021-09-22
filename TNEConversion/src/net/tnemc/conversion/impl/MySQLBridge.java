@@ -39,6 +39,12 @@ public class MySQLBridge extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../MysqlPlayerDataBridge/config.yml");
+  }
+
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     File configFile = new File(TNE.instance().getDataFolder(), "../MysqlPlayerDataBridge/config.yml");
     FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);

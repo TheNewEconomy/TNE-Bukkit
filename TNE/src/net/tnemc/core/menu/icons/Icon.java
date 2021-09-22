@@ -3,10 +3,12 @@ package net.tnemc.core.menu.icons;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.menu.ResponseData;
 import net.tnemc.core.menu.consumables.IconClick;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -29,6 +32,8 @@ public class Icon {
 
   protected Map<String, Object> data = new HashMap<>();
 
+  protected final Optional<ItemStack> item;
+
   protected Integer slot;
   protected Material material;
   protected short damage;
@@ -40,6 +45,8 @@ public class Icon {
   protected String node;
   protected String switchMenu;
   protected String message;
+  protected String chat = "";
+  protected boolean removeViewer = true;
   protected boolean close;
 
   public Icon(Integer slot, Material material, String display) {
@@ -48,6 +55,14 @@ public class Icon {
 
   public Icon(Integer slot, Material material, String display, short damage) {
     this(slot, material, display, damage, new ArrayList<>());
+  }
+
+  public Icon(Integer slot, ItemStack stack) {
+    this.item = Optional.of(stack);
+    this.node = "";
+    this.switchMenu = "";
+    this.message = "";
+    this.close = true;
   }
 
   public Icon(Integer slot, ItemStack stack, String display) {
@@ -59,6 +74,7 @@ public class Icon {
   }
 
   public Icon(Integer slot, Material material, String display, short damage, List<String> lore) {
+    this.item = Optional.empty();
     this.slot = slot;
     this.material = material;
     this.display = display;
@@ -72,6 +88,9 @@ public class Icon {
   }
 
   public ItemStack buildStack(Player player) {
+    if(item.isPresent()) {
+      return item.get();
+    }
     ItemStack item = new ItemStack(material, 1, damage);
     ItemMeta meta = Bukkit.getServer().getItemFactory().getItemMeta(material);
     meta.setLore(lore);
@@ -86,11 +105,24 @@ public class Icon {
     return player.hasPermission(node);
   }
 
-  public void onClick(String menu, Player player) {
-    if(!switchMenu.equalsIgnoreCase("")) close = false;
+  public void onClick(String menu, Player player, ClickType type) {
+    if(!switchMenu.trim().equalsIgnoreCase("")) close = false;
+    if(!chat.trim().equalsIgnoreCase("")) {
+
+      final String toGo = (switchMenu.trim().equalsIgnoreCase(""))? menu : switchMenu;
+      switchMenu = "";
+
+      close = true;
+      removeViewer = false;
+      TNE.menuManager().response.put(player.getUniqueId(), new ResponseData(chat, toGo));
+    }
+
     if(close) {
       Bukkit.getScheduler().runTask(TNE.instance(), player::closeInventory);
-      TNE.menuManager().removeData(IDFinder.getID(player));
+
+      if(removeViewer) {
+        TNE.menuManager().removeData(IDFinder.getID(player));
+      }
     }
     if(!switchMenu.equalsIgnoreCase("")) {
       TNE.menuManager().open(switchMenu, player);
@@ -165,5 +197,6 @@ public class Icon {
 
   public void setClose(boolean close) {
     this.close = close;
+    if(this.close) removeViewer = true;
   }
 }

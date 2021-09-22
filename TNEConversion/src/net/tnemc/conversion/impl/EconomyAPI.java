@@ -40,6 +40,11 @@ public class EconomyAPI extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../Economy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("mysql.host"),
         config.getInt("mysql.port"), config.getString("mysql.database"),

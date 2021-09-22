@@ -1,0 +1,43 @@
+Data:
+
+  #Files relating to purging old data.
+  Purge:
+
+    #Whether old data purging is enabled.
+    Enabled: false
+
+    #The amount of days for a user to be logged off before purging their data?
+    Days: 10
+
+  #All configurations relating to the database
+  Database:
+
+    #The database type to use. Current options: MySQL, H2.
+    Type: h2
+
+    #The prefix to use for TheNewEconomy MySQL and H2 Tables
+    Prefix: TNE
+
+    #The file to which all the data will be saved if using a file-based database
+    File: Economy
+
+    #All configurations relating to the MySQL Database
+    MySQL:
+
+      #The MySQL host
+      Host: localhost
+
+      #Whether or not to use SSL.
+      SSL: false
+
+      #The MySQL port
+      Port: 3306
+
+      #The MySQL database
+      DB: TheNewEconomy
+
+      #Your MySQL user's name
+      User: user
+
+      #Your MySQL user's password
+      Password: password

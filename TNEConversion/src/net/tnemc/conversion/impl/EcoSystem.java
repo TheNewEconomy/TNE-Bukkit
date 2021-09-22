@@ -37,6 +37,11 @@ public class EcoSystem extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../EcoSystem/playerData.yml");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
 
     final ConfigurationSection accountSection = config.getConfigurationSection("Players");

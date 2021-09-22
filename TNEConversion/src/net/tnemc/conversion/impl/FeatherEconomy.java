@@ -40,6 +40,11 @@ public class FeatherEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../FeatherEconomy/config.yml");
+  }
+
+  @Override
   public void sqlite() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), "localhost",
         3306, "",

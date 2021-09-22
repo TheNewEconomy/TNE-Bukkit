@@ -45,6 +45,11 @@ public class CraftConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../Craftconomy3/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("System.Database.Address"),
         config.getInt("System.Database.Port"), config.getString("System.Database.Db"),

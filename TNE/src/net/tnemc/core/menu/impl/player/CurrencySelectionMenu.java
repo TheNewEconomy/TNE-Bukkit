@@ -40,7 +40,7 @@ public class CurrencySelectionMenu extends Menu {
     if(world == null) world = WorldFinder.getWorld(player, WorldVariant.ACTUAL);
     int i = 1;
     for(TNECurrency currency : TNE.instance().api().getCurrencies(world)) {
-      icons.put(i, new CurrencyIcon(currency.name(), i, switchMenu));
+      icons.put(i, new CurrencyIcon(currency.name(), world, i, switchMenu));
       i++;
     }
 

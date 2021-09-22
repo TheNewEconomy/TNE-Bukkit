@@ -45,6 +45,11 @@ public class GMoney extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../gMoney/config.yml");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
 
     final ConfigurationSection accountSection = save.getConfigurationSection("money");

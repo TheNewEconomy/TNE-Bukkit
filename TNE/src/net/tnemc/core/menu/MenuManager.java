@@ -1,7 +1,10 @@
 package net.tnemc.core.menu;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.menu.impl.currency.InfoMenu;
+import net.tnemc.core.menu.icons.amountselection.ConfirmIcon;
+import net.tnemc.core.menu.impl.balance.BalanceMenu;
+import net.tnemc.core.menu.impl.balance.BalanceOptionsMenu;
+import net.tnemc.core.menu.impl.currency.EditorMenu;
 import net.tnemc.core.menu.impl.currency.ListMenu;
 import net.tnemc.core.menu.impl.player.AmountSelectionMenu;
 import net.tnemc.core.menu.impl.player.CurrencySelectionMenu;
@@ -29,6 +32,7 @@ import java.util.UUID;
  */
 public class MenuManager {
   public Map<String, Menu> menus = new HashMap<>();
+  public Map<UUID, ResponseData> response = new HashMap<>();
   public Map<UUID, ViewerData> data = new HashMap<>();
 
   private static ItemStack border;
@@ -46,14 +50,18 @@ public class MenuManager {
     menus.put("cur_selection_pay", new CurrencySelectionMenu("cur_selection_pay", "pay"));
     menus.put("cur_selection_set", new CurrencySelectionMenu("cur_selection_set", "set"));
     menus.put("cur_selection_take", new CurrencySelectionMenu("cur_selection_take", "take"));
-    menus.put("give", new AmountSelectionMenu("give"));
-    menus.put("pay", new AmountSelectionMenu("pay"));
-    menus.put("set", new AmountSelectionMenu("set"));
-    menus.put("take", new AmountSelectionMenu("take"));
+    menus.put("give", new AmountSelectionMenu("give", new ConfirmIcon(44)));
+    menus.put("pay", new AmountSelectionMenu("pay", new ConfirmIcon(44)));
+    menus.put("set", new AmountSelectionMenu("set", new ConfirmIcon(44)));
+    menus.put("take", new AmountSelectionMenu("take", new ConfirmIcon(44)));
+
+    //BalanceMenu
+    menus.put("balance_menu", new BalanceMenu());
+    menus.put("balance_options", new BalanceOptionsMenu());
 
     //Currency Editor
     menus.put("currency_list", new ListMenu());
-    menus.put("currency_info", new InfoMenu());
+    menus.put("currency_editor", new EditorMenu());
   }
 
   public void open(String menu, Player player) {

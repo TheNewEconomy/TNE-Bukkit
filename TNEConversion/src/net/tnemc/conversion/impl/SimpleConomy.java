@@ -41,6 +41,11 @@ public class SimpleConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../SimpleConomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     final String table = config.getString("mySqlSettings.Connection.Values.table");
     initialize(new TNEDataManager(type(), config.getString("mySqlSettings.Connection.Values.host"),

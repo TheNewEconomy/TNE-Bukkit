@@ -4,6 +4,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import java.math.BigDecimal;
 
@@ -23,8 +24,8 @@ public class ResetIcon extends Icon {
   }
 
   @Override
-  public void onClick(String menu, Player player) {
+  public void onClick(String menu, Player player, ClickType type) {
     TNE.menuManager().setViewerData(IDFinder.getID(player), "action_amount", BigDecimal.ZERO);
-    super.onClick(menu, player);
+    super.onClick(menu, player, type);
   }
 }

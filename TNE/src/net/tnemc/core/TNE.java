@@ -21,6 +21,7 @@ import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
+import net.tnemc.core.common.configurations.DataConfigurations;
 import net.tnemc.core.common.configurations.MainConfigurations;
 import net.tnemc.core.common.configurations.MessageConfigurations;
 import net.tnemc.core.common.configurations.PlayerConfigurations;
@@ -59,6 +60,7 @@ import net.tnemc.core.listeners.player.PlayerQuitListener;
 import net.tnemc.core.listeners.player.PlayerTeleportListener;
 import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
+import net.tnemc.core.worker.PurgeWorker;
 import net.tnemc.core.worker.SaveWorker;
 import net.tnemc.dbupdater.core.TableManager;
 import org.bukkit.Bukkit;
@@ -78,7 +80,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
@@ -150,12 +151,14 @@ public class TNE extends TNELib implements TabCompleter {
   // Files & Custom Configuration Files
   private File mainConfig;
   private File commands;
+  private File dataFile;
   private File items;
   private File messagesFile;
   private File players;
   private File worlds;
 
   private CommentedConfiguration mainConfigurations;
+  private CommentedConfiguration dataConfigurations;
   private FileConfiguration commandsConfigurations;
   private CommentedConfiguration itemConfigurations;
   private CommentedConfiguration messageConfigurations;
@@ -163,15 +166,21 @@ public class TNE extends TNELib implements TabCompleter {
   private CommentedConfiguration worldConfigurations;
 
   private MainConfigurations main;
+  private DataConfigurations data;
   private MessageConfigurations messages;
   private WorldConfigurations world;
   private PlayerConfigurations player;
 
   private Thread autoSaver;
+  private Thread purgeWorker;
 
   private boolean blacklisted = false;
   public static boolean useMod = false;
   public static boolean fawe = true;
+  private boolean firstRun = false;
+
+  //used to determine if we should move our database configurations.
+  private boolean dataFirst = false;
 
   public void onLoad() {
     if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
@@ -212,7 +221,10 @@ public class TNE extends TNELib implements TabCompleter {
     dupers = MISCUtils.dupers();
     super.onEnable();
 
-    if(!getDataFolder().exists()) getDataFolder().mkdirs();
+    if(!getDataFolder().exists()) {
+      getDataFolder().mkdirs();
+    }
+    firstRun = !(new File(getDataFolder(), "config.yml").exists());
 
     configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
 
@@ -238,8 +250,6 @@ public class TNE extends TNELib implements TabCompleter {
     //Configurations
     loadConfigurations();
 
-
-
     if(!mainConfigurations.getString("Core.DefaultWorld", "TNE_SYSTEM").equalsIgnoreCase("TNE_SYSTEM")) {
       addWorldManager(new WorldManager(mainConfigurations.getString("Core.DefaultWorld")));
     }
@@ -264,22 +274,6 @@ public class TNE extends TNELib implements TabCompleter {
       mainConfigurations.save(main.getFile());
     }
 
-    if(!messageConfigurations.contains("Messages.Parameter.InvalidType")) {
-      messageConfigurations.setOrCreate("Messages.Parameter.InvalidType", "<red>Parameter \\\"$parameter\\\" is of type $parameter_type.");
-      messageConfigurations.setOrCreate("Messages.Parameter.InvalidLength", "<red>The max length of parameter \\\"$parameter\\\" is $max_length.");
-      messageConfigurations.setOrCreate("Messages.Parameter.ParameterOption", "[$parameter]");
-      messageConfigurations.setOrCreate("Messages.Parameter.ParameterRequired", "<$parameter>");
-
-      messageConfigurations.setOrCreate("Messages.Command.Cooldown", "<red>This command is on cooldown.");
-      messageConfigurations.setOrCreate("Messages.Command.CommandHelp", "<gold>Correct usage: <white>$description");
-      messageConfigurations.setOrCreate("Messages.Command.CommandHelpHeader", "===== <gold>[<white>$command<gold>]<white> $page<gold>/<white>$max =====");
-      messageConfigurations.setOrCreate("Messages.Command.Developer", "<red>You must be a developer to use that command.");
-      messageConfigurations.setOrCreate("Messages.Command.Console", "<red>This command is not usable from console.");
-      messageConfigurations.setOrCreate("Messages.Command.Player", "<red>This command is not usable from in-game.");
-      messageConfigurations.setOrCreate("Messages.Command.InvalidPermission", "<red>I'm sorry, but you're not allowed to use that command.");
-      messageConfigurations.save(messagesFile);
-    }
-
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
       value.getModule().loadConfigurations();
@@ -290,6 +284,7 @@ public class TNE extends TNELib implements TabCompleter {
 
     TNE.debug("Preparing configurations for manager");
     configurations().add(main, "main");
+    configurations().add(data, "data");
     configurations().add(messages, "messages");
     configurations().add(player, "player");
     configurations().add(world, "world");
@@ -322,6 +317,12 @@ public class TNE extends TNELib implements TabCompleter {
     loader.getModules().forEach((key, value)-> value.getModule().commandExecutors().forEach((name, executor)->{
       CommandsHandler.instance().addExecutor(name, executor);
     }));
+
+    //Load Module Completers
+    loader.getModules().forEach((key, value)->value.getModule().tabCompleters().forEach((name, completer)->{
+      CommandsHandler.manager().getCompleters().put(name, completer);
+    }));
+
     handler.load();
 
     //Check to see if the currencies directory exists, and if not create it and add the default USD currency.
@@ -345,6 +346,12 @@ public class TNE extends TNELib implements TabCompleter {
     TNE.debug("Preparing managers");
     manager = new EconomyManager();
 
+    manager.currencyManager().loadCurrencies();
+
+    Bukkit.getScheduler().runTask(this, ()->{
+      manager.currencyManager().loadRecipes();
+    });
+
     //General Variables based on configuration values
     TNE.debug("Preparing variables");
     serverName = mainConfigurations.getString("Core.Server.Name", "Main Server");
@@ -353,16 +360,50 @@ public class TNE extends TNELib implements TabCompleter {
 
     if(MISCUtils.isOneSix()) useUUID = false;
 
+    if(!messageConfigurations.contains("Messages.Parameter")) {
+      //messagesFile.
+    }
+
+    /*if(!messageConfigurations.contains("Messages.Parameter")) {
+      messageConfigurations.save(messagesFile);
+      configurations.setValue("Messages.Parameter.InvalidType", "messages", "<red>Parameter \\\"$parameter\\\" is of type $parameter_type.");
+      configurations.setValue("Messages.Parameter.InvalidLength", "messages", "<red>The max length of parameter \\\"$parameter\\\" is $max_length.");
+      configurations.setValue("Messages.Parameter.ParameterOption", "messages", "[$parameter]");
+      configurations.setValue("Messages.Parameter.ParameterRequired", "messages", "<$parameter>");
+
+      configurations.setValue("Messages.Command.Cooldown", "messages", "<red>This command is on cooldown.");
+      configurations.setValue("Messages.Command.CommandHelp", "messages", "<gold>Correct usage: <white>$description");
+      configurations.setValue("Messages.Command.CommandHelpHeader", "messages", "===== <gold>[<white>$command<gold>]<white> $page<gold>/<white>$max =====");
+      configurations.setValue("Messages.Command.Developer", "messages", "<red>You must be a developer to use that command.");
+      configurations.setValue("Messages.Command.Console", "messages", "<red>This command is not usable from console.");
+      configurations.setValue("Messages.Command.Player", "messages", "<red>This command is not usable from in-game.");
+      configurations.setValue("Messages.Command.InvalidPermission", "messages", "<red>I'm sorry, but you're not allowed to use that command.");
+      configurations().save(messages);
+    }*/
+
+    if(!firstRun && dataFirst) {
+      logger().info("Moving database configurations to data.yml.");
+      configurations().setValue("Data.Database.Type", "data", configurations().getValue("Core.Database.Type"));
+      configurations().setValue("Data.Database.MySQL.Host", "data", configurations().getValue("Core.Database.MySQL.Host"));
+      configurations().setValue("Data.Database.MySQL.Port", "data", configurations().getValue("Core.Database.MySQL.Port"));
+      configurations().setValue("Data.Database.MySQL.DB", "data", configurations().getValue("Core.Database.MySQL.DB"));
+      configurations().setValue("Data.Database.MySQL.User", "data", configurations().getValue("Core.Database.MySQL.User"));
+      configurations().setValue("Data.Database.MySQL.Password", "data", configurations().getValue("Core.Database.MySQL.Password"));
+      configurations().setValue("Data.Database.Prefix", "data", configurations().getValue("Core.Database.Prefix"));
+      configurations().setValue("Data.Database.File", "data", configurations().getValue("Core.Database.File"));
+      configurations().save(data);
+    }
+
     TNE.debug("Preparing save manager");
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
-        configurations().getString("Core.Database.Type").toLowerCase(),
-        configurations().getString("Core.Database.MySQL.Host"),
-        configurations().getInt("Core.Database.MySQL.Port"),
-        configurations().getString("Core.Database.MySQL.DB"),
-        configurations().getString("Core.Database.MySQL.User"),
-        configurations().getString("Core.Database.MySQL.Password"),
-        configurations().getString("Core.Database.Prefix"),
-        new File(getDataFolder(), configurations().getString("Core.Database.File")).getAbsolutePath(),
+        configurations().getString("Data.Database.Type", "data").toLowerCase(),
+        configurations().getString("Data.Database.MySQL.Host", "data"),
+        configurations().getInt("Data.Database.MySQL.Port", "data"),
+        configurations().getString("Data.Database.MySQL.DB", "data"),
+        configurations().getString("Data.Database.MySQL.User", "data"),
+        configurations().getString("Data.Database.MySQL.Password", "data"),
+        configurations().getString("Data.Database.Prefix", "data"),
+        new File(getDataFolder(), configurations().getString("Data.Database.File", "data")).getAbsolutePath(),
         true,
         false,
         600,
@@ -373,7 +414,7 @@ public class TNE extends TNELib implements TabCompleter {
     saveManager().getTNEManager().loadProviders();
     TNE.debug("Finished loading providers");
 
-    TNE.debug("Setting format: " + configurations().getString("Core.Database.Type").toLowerCase());
+    TNE.debug("Setting format: " + configurations().getString("Data.Database.Type", "data").toLowerCase());
 
     TNE.debug("Adding version files.");
     saveManager().addVersion(1116.0, true);
@@ -399,9 +440,9 @@ public class TNE extends TNELib implements TabCompleter {
       }
     });
 
-    if(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()).size() > 0) {
+    if(saveManager().getTables(configurations().getString("Data.Database.Type", "data").toLowerCase()).size() > 0) {
       try {
-        saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Core.Database.Type").toLowerCase()));
+        saveManager().getTNEManager().getTNEProvider().createTables(saveManager().getTables(configurations().getString("Data.Database.Type", "data").toLowerCase()));
       } catch (SQLException e) {
         TNE.debug(e);
       }
@@ -424,6 +465,11 @@ public class TNE extends TNELib implements TabCompleter {
     if(configurations().getBoolean("Core.AutoSaver.Enabled")) {
       autoSaver = new Thread(new SaveWorker(this, configurations().getLong("Core.AutoSaver.Interval")));
       autoSaver.start();
+    }
+
+    if(configurations().getBoolean("Data.Purge.Enabled", "data")) {
+      purgeWorker = new Thread(new PurgeWorker(this, configurations().getInt("Data.Purge.Days", "data")));
+      purgeWorker.start();
     }
 
     if(Bukkit.getPluginManager().getPlugin("mcMMO") != null && api().getBoolean("Core.Server.ThirdParty.McMMORewards")) {
@@ -589,7 +635,7 @@ public class TNE extends TNELib implements TabCompleter {
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] arguments) {
-    System.out.println("Tab Complete");
+    TNE.debug("Tab Complete");
     return handler.tab(new BukkitPlayerProvider(sender), alias, arguments);
   }
 
@@ -664,6 +710,10 @@ public class TNE extends TNELib implements TabCompleter {
     return serverName;
   }
 
+  public boolean isFirstRun() {
+    return firstRun;
+  }
+
   public void setUUIDS(Map<String, UUID> ids) {
     uuidCache.putAll(ids);
   }
@@ -678,6 +728,10 @@ public class TNE extends TNELib implements TabCompleter {
 
   public CommentedConfiguration mainConfigurations() {
     return mainConfigurations;
+  }
+
+  public CommentedConfiguration dataConfigurations() {
+    return dataConfigurations;
   }
 
   public CommentedConfiguration messageConfiguration() {
@@ -701,6 +755,7 @@ public class TNE extends TNELib implements TabCompleter {
 
     TNE.debug("Preparing configuration instances");
     main = new MainConfigurations();
+    data = new DataConfigurations();
 
     exclusions = main.getConfiguration().getStringList("Core.Commands.Top.Exclusions");
     messages = new MessageConfigurations();
@@ -716,6 +771,11 @@ public class TNE extends TNELib implements TabCompleter {
   public void initializeConfigurations(boolean item) {
     TNE.logger().info("Loading Configurations.");
     mainConfig = new File(getDataFolder(), "config.yml");
+    dataFile = new File(getDataFolder(), "data.yml");
+    if(!dataFile.exists()) {
+      dataFirst = true;
+    }
+
     commands = new File(getDataFolder(), "commands.yml");
     items = new File(getDataFolder(), "items.yml");
     messagesFile = new File(getDataFolder(), "messages.yml");
@@ -727,14 +787,17 @@ public class TNE extends TNELib implements TabCompleter {
     skip.add("Items");
     skip.add("Virtual");
     mainConfigurations = initializeConfiguration(mainConfig, "config.yml");
+    dataConfigurations = initializeConfiguration(dataFile, "data.yml");
     TNE.logger().info("Initialized config.yml");
     try {
       commandsConfigurations = initializeConfigurationBukkit(commands, "commands.yml");
     } catch (IOException ignore) {
+      ignore.printStackTrace();
     }
     TNE.logger().info("Initialized commands.yml");
     messageConfigurations = initializeConfiguration(messagesFile, "messages.yml");
     TNE.logger().info("Initialized messages.yml");
+
     playerConfigurations = initializeConfiguration(players, "players.yml");
     TNE.logger().info("Initialized players.yml");
     worldConfigurations = initializeConfiguration(worlds, "worlds.yml");
@@ -761,12 +824,6 @@ public class TNE extends TNELib implements TabCompleter {
             })
         );
         TNE.logger().info("Initialized items.yml");
-
-        manager.currencyManager().loadCurrencies();
-
-        Bukkit.getScheduler().runTask(this, ()->{
-          manager.currencyManager().loadRecipes();
-        });
 
         TNE.debug("Preparing server account");
         if(api.getBoolean("Core.Server.Account.Enabled")) {
@@ -801,6 +858,10 @@ public class TNE extends TNELib implements TabCompleter {
     TNE.debug("Started copying " + file.getName());
     CommentedConfiguration commentedConfiguration = null;
 
+    if(!file.exists()) {
+      saveResource(defaultFile, false);
+    }
+
     try {
       commentedConfiguration = new CommentedConfiguration(file, new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8), false);
       TNE.debug("Initializing commented configuration");
@@ -810,7 +871,7 @@ public class TNE extends TNELib implements TabCompleter {
       }
       TNE.debug("Finished copying " + file.getName());
     } catch(Exception e) {
-      System.out.println("Error while trying to load: " + defaultFile);
+      TNE.logger().warning("Error while trying to load: " + defaultFile);
       debug(e.getStackTrace());
 
     }
@@ -819,19 +880,17 @@ public class TNE extends TNELib implements TabCompleter {
 
   public FileConfiguration initializeConfigurationBukkit(File file, String defaultFile) throws IOException {
 
-    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    FileConfiguration config = new YamlConfiguration();
 
-
-    Reader commandsStream = new InputStreamReader(this.getResource(defaultFile), StandardCharsets.UTF_8);
-
-    if(!commands.exists() && commandsStream != null) {
-      YamlConfiguration defaults = YamlConfiguration.loadConfiguration(commandsStream);
-
-      config.setDefaults(defaults);
+    if(!file.exists()) {
+      saveResource(defaultFile, false);
     }
-    config.options().copyDefaults(true);
-    config.save(file);
 
+    try {
+      config.load(file);
+    } catch(Exception ignore) {
+
+    }
     return config;
   }
 
@@ -851,17 +910,17 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   public static void debug(StackTraceElement[] stack) {
-    System.out.println("Please let a professional know about the following:");
-    System.out.println("------------------- TNE Error Log -------------------");
+    logger().warning("Please let a professional know about the following:");
+    logger().warning("------------------- TNE Error Log -------------------");
     for(StackTraceElement element : stack) {
       logger().warning(element.toString());
     }
-    System.out.println("----------------- End of Error Log -----------------");
+    logger().warning("----------------- End of Error Log -----------------");
   }
 
   public static void debug(String message) {
     if(instance().debugMode) {
-      System.out.println(message);
+      logger().info(message);
     }
   }
 

@@ -40,6 +40,11 @@ public class SimplisticEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../SimplisticEconomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     final String table = config.getString("storage.table");
     initialize(new TNEDataManager(type(), config.getString("storage.host"),

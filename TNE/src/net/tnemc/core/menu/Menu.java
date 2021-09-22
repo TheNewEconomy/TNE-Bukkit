@@ -1,14 +1,19 @@
 package net.tnemc.core.menu;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.menu.consumables.MenuBuild;
+import net.tnemc.core.menu.consumables.MenuClick;
 import net.tnemc.core.menu.icons.Icon;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -25,6 +30,9 @@ public class Menu {
   private String title;
   protected int rows;
 
+  private Consumer<MenuBuild> onBuild;
+  private Consumer<MenuClick> onClick;
+
   public Menu(String name, String title, Integer rows) {
     this.name = name;
     this.title = title;
@@ -37,6 +45,11 @@ public class Menu {
 
   public Inventory buildInventory(Player player) {
     Inventory inventory = Bukkit.createInventory(new MenuHolder(getName()), rows * 9, title);
+
+    if(onBuild != null) {
+      onBuild.accept(new MenuBuild(this, player, inventory));
+    }
+
     icons.values().forEach(icon->{
       TNE.debug("Icon Permission Node is: " + icon.getNode());
       TNE.debug("Player Has? " + player.hasPermission(icon.getNode()));
@@ -54,9 +67,13 @@ public class Menu {
     return inventory;
   }
 
-  public void click(Player player, int slot) {
+  public void click(Player player, int slot, ClickType type) {
+    if(onClick != null) {
+      onClick.accept(new MenuClick(this, player, slot, Optional.of(icons.get(slot))));
+    }
+
     if(icons.containsKey(slot) && icons.get(slot).canClick(player)) {
-      icons.get(slot).onClick(getName(), player);
+      icons.get(slot).onClick(getName(), player, type);
     }
   }
 
@@ -64,6 +81,14 @@ public class Menu {
     Menu menu = new Menu(name, title, rows);
     menu.setIcons(getIcons());
     return menu;
+  }
+
+  public void setOnBuild(Consumer<MenuBuild> onBuild) {
+    this.onBuild = onBuild;
+  }
+
+  public void setOnClick(Consumer<MenuClick> onClick) {
+    this.onClick = onClick;
   }
 
   public Map<Integer, Icon> getIcons() {

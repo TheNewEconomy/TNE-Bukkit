@@ -41,7 +41,7 @@ public class ItemType implements CurrencyType {
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) throws SQLException {
     TNE.debug("======================== getHoldings ===========================");
-    if(database || MISCUtils.getPlayer(account) == null) {
+    if(database || !TNE.manager().getAccount(account).playerAccount() || MISCUtils.getPlayer(account) == null) {
       TNE.debug("Loading Balance from Database due to player being null.");
       TNE.debug("UUID: " + account.toString());
       return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());

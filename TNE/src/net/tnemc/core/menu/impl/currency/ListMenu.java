@@ -30,7 +30,7 @@ public class ListMenu extends Menu {
 
     int i = 0;
     for(TNECurrency currency : TNE.instance().api().getCurrencies()) {
-      icons.put(i, new CurrencyIcon(currency.name(), i, "currency_info"));
+      icons.put(i, new CurrencyIcon(currency.name(), currency.getWorlds().get(0), i, "currency_info"));
       i++;
     }
 
@@ -39,6 +39,8 @@ public class ListMenu extends Menu {
 
     if(size < 10) rows = 1;
     else rows = (size / 9);
+
+    //TODO: Add new currency icon.
 
     return super.buildInventory(player);
   }

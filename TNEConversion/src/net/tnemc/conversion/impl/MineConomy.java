@@ -45,6 +45,11 @@ public class MineConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../Mineconomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("Database.URL"),
         3306, config.getString("Database.Name"),

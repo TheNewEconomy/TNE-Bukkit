@@ -40,6 +40,11 @@ public class BEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../BEcon/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("mysql.addr"),
         config.getInt("mysql.port"), config.getString("mysql.data"),

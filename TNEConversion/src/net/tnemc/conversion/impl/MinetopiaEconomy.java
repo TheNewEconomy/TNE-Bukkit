@@ -42,6 +42,11 @@ public class MinetopiaEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../MinetopiaEconomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("database.host"),
         3306, config.getString("database.database"),

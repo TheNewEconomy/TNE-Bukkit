@@ -39,6 +39,11 @@ public class UltimateEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../UltimateEconomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(null);
     final String table = config.getString("table");

@@ -43,6 +43,11 @@ public class AConomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../AConomy/config.yml");
+  }
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("Mysql.Host"),
         config.getInt("Mysql.Port"), config.getString("Mysql.Database"),

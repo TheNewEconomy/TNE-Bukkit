@@ -32,6 +32,11 @@ public class RealEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../RealEconomy/config.yml");
+  }
+
+  @Override
   public void yaml() throws InvalidDatabaseImport {
     if(!dataDirectory.isDirectory() || dataDirectory.listFiles() == null || dataDirectory.listFiles().length == 0) return;
 

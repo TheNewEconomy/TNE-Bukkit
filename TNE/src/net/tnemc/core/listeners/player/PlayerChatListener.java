@@ -1,6 +1,7 @@
 package net.tnemc.core.listeners.player;
 
 import net.tnemc.core.TNE;
+import net.tnemc.core.menu.ResponseData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -9,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -30,6 +32,16 @@ public class PlayerChatListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onChat(AsyncPlayerChatEvent event) {
+    final UUID id = event.getPlayer().getUniqueId();
+    if(TNE.menuManager().response.containsKey(id)) {
+      final ResponseData responseData = TNE.menuManager().response.get(id);
+      TNE.menuManager().setViewerData(id, responseData.getChat(), event.getMessage());
+      TNE.menuManager().open(responseData.getMenu(), event.getPlayer());
+      TNE.menuManager().response.remove(id);
+      event.setCancelled(true);
+      return;
+    }
+
     if(event.getMessage().length() > 0) {
       List<String> triggers = new ArrayList<>(Arrays.asList(TNE.instance().api().getString("Core.Commands.Triggers", event.getPlayer().getWorld().getName(), event.getPlayer().getUniqueId()).split(",")));
 

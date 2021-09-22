@@ -1,57 +1,29 @@
 package net.tnemc.conversion;
 
+import net.tnemc.commands.core.CommandExecution;
+import net.tnemc.commands.core.CommandInformation;
+import net.tnemc.commands.core.TabCompleter;
+import net.tnemc.commands.core.parameter.CommandParameter;
 import net.tnemc.conversion.command.ConvertCommand;
-import net.tnemc.conversion.impl.AConomy;
-import net.tnemc.conversion.impl.AdvancedEconomy;
-import net.tnemc.conversion.impl.BConomy;
-import net.tnemc.conversion.impl.BEconomy;
-import net.tnemc.conversion.impl.BOSEconomy;
-import net.tnemc.conversion.impl.BasicEconomy;
-import net.tnemc.conversion.impl.Blings;
-import net.tnemc.conversion.impl.CMI;
-import net.tnemc.conversion.impl.CraftConomy;
-import net.tnemc.conversion.impl.DevCoinSystem;
-import net.tnemc.conversion.impl.ECEconomy;
-import net.tnemc.conversion.impl.EasyCoins;
-import net.tnemc.conversion.impl.EcoPlugin;
-import net.tnemc.conversion.impl.EcoSystem;
-import net.tnemc.conversion.impl.EconomyAPI;
-import net.tnemc.conversion.impl.Essentials;
-import net.tnemc.conversion.impl.FeConomy;
-import net.tnemc.conversion.impl.FeatherEconomy;
-import net.tnemc.conversion.impl.GMoney;
-import net.tnemc.conversion.impl.GemsEconomy;
-import net.tnemc.conversion.impl.Meep;
-import net.tnemc.conversion.impl.Meller;
-import net.tnemc.conversion.impl.MineCoin;
-import net.tnemc.conversion.impl.MineCoinsYML;
-import net.tnemc.conversion.impl.MineConomy;
-import net.tnemc.conversion.impl.MinetopiaEconomy;
-import net.tnemc.conversion.impl.MoConomy;
-import net.tnemc.conversion.impl.MySQLBridge;
-import net.tnemc.conversion.impl.RealEconomy;
-import net.tnemc.conversion.impl.SQLConomy;
-import net.tnemc.conversion.impl.SaneEconomy;
-import net.tnemc.conversion.impl.SimpleConomy;
-import net.tnemc.conversion.impl.SimplisticEconomy;
-import net.tnemc.conversion.impl.SwiftEconomy;
-import net.tnemc.conversion.impl.TokensEconomy;
-import net.tnemc.conversion.impl.TownyEco;
-import net.tnemc.conversion.impl.XConomy;
-import net.tnemc.conversion.impl.iConomy;
-import net.tnemc.conversion.impl.iConomy7;
+import net.tnemc.conversion.command.ConverterCompleter;
+import net.tnemc.conversion.menu.ConversionMenu;
 import net.tnemc.core.TNE;
-import net.tnemc.core.commands.TNECommand;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.common.module.ModuleListener;
+import net.tnemc.core.menu.Menu;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -70,151 +42,83 @@ import java.util.List;
 public class ConversionModule implements Module {
 
   private static ConversionModule instance;
-  
-  private Converter converter = null;
+
+  private ConverterManager manager;
 
 
   @Override
   public void load(TNE tne) {
     tne.getLogger().info("Conversion Module loaded!");
     instance = this;
+    manager = new ConverterManager();
   }
 
   @Override
   public void unload(TNE tne) {
-
-    converter = null;
+    manager = null;
     tne.logger().info("Conversion Module unloaded!");
   }
 
   @Override
-  public List<TNECommand> commands() {
-    return Collections.singletonList(new ConvertCommand(TNE.instance()));
+  public List<CommandInformation> commands() {
+    CommandInformation info = new CommandInformation(new ArrayList<>(), "convert",
+        "/convert <from> - Converts all data from plugin <from>.", "tne.command.convert",
+        "convert_exe", "creatorfromhell", true, true, false);
+
+    info.addParameter(new CommandParameter(0, "plugin", true, true, "conversion"));
+
+    return Collections.singletonList(info);
   }
 
-  public Converter getConverter(String name) {
+  /**
+   * @return A map of command executors that should be added.
+   * Format: Executor Name, Executor
+   */
+  @Override
+  public Map<String, CommandExecution> commandExecutors() {
+    Map<String, CommandExecution> executors = new HashMap<>();
+    executors.put("convert_exe", new ConvertCommand());
+    return executors;
+  }
 
-    switch(name.toLowerCase()) {
-      case "aconomy":
-        converter = new AConomy();
-        break;
-      case "advancedeconomy":
-        converter = new AdvancedEconomy();
-        break;
-      case "basiceconomy":
-        converter = new BasicEconomy();
-        break;
-      case "bconomy":
-        converter = new BConomy();
-        break;
-      case "beconomy":
-        converter = new BEconomy();
-        break;
-      case "blings":
-        converter = new Blings();
-        break;
-      case "boseconomy":
-        converter = new BOSEconomy();
-        break;
-      case "cmi":
-        converter = new CMI();
-        break;
-      case "craftconomy":
-        converter = new CraftConomy();
-        break;
-      case "devcoinsystem":
-        converter = new DevCoinSystem();
-        break;
-      case "easycoins":
-        converter = new EasyCoins();
-        break;
-      case "ececonomy":
-        converter = new ECEconomy();
-        break;
-      case "economyapi":
-        converter = new EconomyAPI();
-        break;
-      case "ecoplugin":
-        converter = new EcoPlugin();
-        break;
-      case "ecosystem":
-        converter = new EcoSystem();
-        break;
-      case "essentials":
-        converter = new Essentials();
-        break;
-      case "feathereconomy":
-        converter = new FeatherEconomy();
-        break;
-      case "feconomy":
-        converter = new FeConomy();
-        break;
-      case "gemseconomy":
-        converter = new GemsEconomy();
-        break;
-      case "gmoney":
-        converter = new GMoney();
-        break;
-      case "iconomy7":
-        converter = new iConomy7();
-        break;
-      case "iconomy":
-        converter = new iConomy();
-        break;
-      case "meep":
-        converter = new Meep();
-        break;
-      case "meller":
-        converter = new Meller();
-        break;
-      case "minecoin":
-        converter = new MineCoin();
-        break;
-      case "minecoinsyml":
-        converter = new MineCoinsYML();
-        break;
-      case "mineconomy":
-        converter = new MineConomy();
-        break;
-      case "minetopia":
-        converter = new MinetopiaEconomy();
-        break;
-      case "moconomy":
-        converter = new MoConomy();
-        break;
-      case "mysqlbridge":
-      case "ecobridge":
-        converter = new MySQLBridge();
-        break;
-      case "realeconomy":
-        converter = new RealEconomy();
-        break;
-      case "saneeconomy":
-        converter = new SaneEconomy();
-        break;
-      case "simpleconomy":
-        converter = new SimpleConomy();
-        break;
-      case "simplisticeconomy":
-        converter = new SimplisticEconomy();
-        break;
-      case "sqlconomy":
-        converter = new SQLConomy();
-        break;
-      case "swifteconomy":
-        converter = new SwiftEconomy();
-        break;
-      case "tokenseconomy":
-        converter = new TokensEconomy();
-        break;
-      case "townyeco":
-        converter = new TownyEco();
-        break;
-      case "xconomy":
-        converter = new XConomy();
-        break;
-    }
-    return converter;
+  /**
+   * @return A map of command tab completers that should be added.
+   * Format: Completer Name, {@link TabCompleter}
+   */
+  @Override
+  public Map<String, TabCompleter> tabCompleters() {
+    Map<String, TabCompleter> completers = new HashMap<>();
+    completers.put("conversion", new ConverterCompleter());
+    return completers;
+  }
+
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A map containing menus that this module utilize that extend
+   * the TNE Menu class.
+   */
+  @Override
+  public Map<String, Menu> menus(TNE plugin) {
+    Map<String, Menu> menus = new HashMap<>();
+    menus.put("conversion_menu", new ConversionMenu());
+    return menus;
+  }
+
+  public ConverterManager manager() {
+    return manager;
+  }
+
+  public Optional<Converter> getConverter(String name) {
+    return manager.find(name);
+  }
+
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A list of event listeners.
+   */
+  @Override
+  public List<ModuleListener> listeners(TNE plugin) {
+    return Collections.singletonList(new JoinListener(plugin));
   }
 
   public static void convertedAdd(String identifier, String world, String currency, BigDecimal amount) {

@@ -49,6 +49,12 @@ public class SaneEconomy extends Converter {
   }
 
   @Override
+  public File dataFolder() {
+    return new File(TNE.instance().getDataFolder(), "../SaneEconomy/config.yml");
+  }
+
+
+  @Override
   public void mysql() throws InvalidDatabaseImport {
     initialize(new TNEDataManager(type(), config.getString("backend.host"),
         config.getInt("backend.port"), config.getString("backend.database"),

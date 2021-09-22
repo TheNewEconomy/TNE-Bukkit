@@ -15,7 +15,7 @@ import java.util.List;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 06/30/2017.
  */
-public class MainConfigurations  extends Configuration {
+public class MainConfigurations extends Configuration {
   @Override
   public CommentedConfiguration getConfiguration() {
     return TNE.instance().mainConfigurations();

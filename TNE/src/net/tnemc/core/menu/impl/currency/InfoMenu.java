@@ -2,23 +2,25 @@ package net.tnemc.core.menu.impl.currency;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.item.ItemStackBuilder;
 import net.tnemc.core.menu.Menu;
-import net.tnemc.core.menu.icons.currency.DeleteIcon;
-import net.tnemc.core.menu.icons.shared.ActionIcon;
 import net.tnemc.core.menu.icons.shared.BackIcon;
+import net.tnemc.core.menu.icons.shared.ChatResponseIcon;
 import net.tnemc.core.menu.icons.shared.InformIcon;
 import net.tnemc.core.menu.icons.shared.SwitchIcon;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
  * <p>
- * Created by creatorfromhell on 7/4/2021.
+ * Created by creatorfromhell on 7/31/2021.
  * <p>
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
@@ -28,7 +30,7 @@ import java.util.UUID;
 public class InfoMenu extends Menu {
 
   public InfoMenu() {
-    super("currency_info", "Currency Editor", 6);
+    super("currency_info", "Currency Info", 6);
   }
 
   @Override
@@ -37,10 +39,12 @@ public class InfoMenu extends Menu {
 
     final String currency = (String) TNE.menuManager().getViewerData(viewer, "action_currency");
 
-    this.setTitle("Currency Editor: " + currency);
+    this.setTitle("Info: " + currency);
 
     //Row 1
-    icons.put(4, new InformIcon(new ItemStack(Material.NAME_TAG), 4, currency));
+    icons.put(4, new ChatResponseIcon(new ItemStackBuilder(Material.NAME_TAG)
+        .setLore(Collections.singletonList(ChatColor.DARK_PURPLE + "Click to edit name.")).getStack(), 4, currency,
+        "currency_data_name", ChatColor.YELLOW + "Please enter a new name for this currency:"));
 
     //Row 2
     icons.put(9, new SwitchIcon(new ItemStack(Material.ANVIL), "Tiers", "currency_tiers", 9));
@@ -57,12 +61,7 @@ public class InfoMenu extends Menu {
 
 
     //Row 6
-    icons.put(45, new BackIcon("currency_list", 45));
-    icons.put(49, new ActionIcon(TNE.item().build("GREEN_STAINED_GLASS_PANE"), "Save Currency", 49, (iconClick)->{
-      //TODO: Save currency
-    }));
-    icons.put(53, new DeleteIcon(53));
-
+    icons.put(45, new BackIcon("currency_editor", 45));
     return super.buildInventory(player);
   }
 }
