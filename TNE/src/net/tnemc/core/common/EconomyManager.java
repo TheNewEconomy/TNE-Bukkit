@@ -1,6 +1,8 @@
 package net.tnemc.core.common;
 
 import com.github.tnerevival.core.collection.EventMap;
+import net.tnemc.commands.core.parameter.parsers.PlayerParser;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.handlers.CoreHoldingsHandler;
@@ -193,14 +195,18 @@ public class EconomyManager {
     }*/
   }
 
-  public Collection<TNEAccount> parsePlayerArgument(String argument) {
-    return parsePlayerArgument(argument, false);
+  public Collection<TNEAccount> parsePlayerArgument(PlayerProvider provider, String argument) {
+    return parsePlayerArgument(provider, argument, false);
   }
 
-  public Collection<TNEAccount> parsePlayerArgument(String argument, boolean existing) {
+  public Collection<TNEAccount> parsePlayerArgument(PlayerProvider provider, String argument, boolean existing) {
     TNE.debug("EconomyManager.parsePlayerArgument: " + argument);
     argument = argument.trim();
     if(argument.equalsIgnoreCase("all") || argument.equalsIgnoreCase("*")) return getAccounts().values();
+
+    if(argument.contains("@a") || argument.contains("@p") || argument.contains("@r")) {
+      argument = new PlayerParser().parse(provider, argument);
+    }
 
     List<TNEAccount> accounts = new ArrayList<>();
 
