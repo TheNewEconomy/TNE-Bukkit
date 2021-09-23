@@ -68,8 +68,8 @@ public class TNEAPI {
       int currentTest = 0;
       try {
         if(i >= check.length) return true;
-        checkTest = Integer.valueOf(check[i]);
-        currentTest = Integer.valueOf(str);
+        checkTest = Integer.parseInt(check[i]);
+        currentTest = Integer.parseInt(str);
 
       } catch(Exception ignore) {
 

@@ -276,10 +276,14 @@ public class TNE extends TNELib implements TabCompleter {
 
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
-      value.getModule().loadConfigurations();
-      value.getModule().configurations().forEach((configuration, identifier)->{
-        configurations().add(configuration, identifier);
-      });
+      try {
+        value.getModule().loadConfigurations();
+        value.getModule().configurations().forEach((configuration, identifier) -> {
+          configurations().add(configuration, identifier);
+        });
+      } catch(Exception ignore) {
+        logger().warning("Issue while registering configurations for module " + key + ". Is it up to date?");
+      }
     });
 
     TNE.debug("Preparing configurations for manager");
@@ -295,33 +299,55 @@ public class TNE extends TNELib implements TabCompleter {
 
     //Load Module Sub Commands
     loader.getModules().forEach((key, value)-> {
-      value.getModule().subCommands().forEach((command, moduleSubs)->{
-        Optional<CommandInformation> find = CommandsHandler.manager().find(command);
-        if(find.isPresent()) {
-          moduleSubs.forEach((sub)->find.get().addSub(sub));
-        }
+      try {
+        value.getModule().subCommands().forEach((command, moduleSubs) -> {
+          Optional<CommandInformation> find = CommandsHandler.manager().find(command);
+          if (find.isPresent()) {
+            moduleSubs.forEach((sub) -> find.get().addSub(sub));
+          }
 
-        CommandsHandler.manager().register(find.get().getIdentifiers(true), find.get());
-      });
+          CommandsHandler.manager().register(find.get().getIdentifiers(true), find.get());
+        });
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
     });
 
     //Executors
     ExecutorsRegistry.register();
 
     //Load Module Commands
-    loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{
-      CommandsHandler.manager().register(command.getIdentifiers(true), command);
-    }));
+    loader.getModules().forEach((key, value)-> {
+      try {
+        for(CommandInformation command : value.getModule().commands()) {
+          CommandsHandler.manager().register(command.getIdentifiers(true), command);
+        }
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
+    });
 
     //Load Module Executors
-    loader.getModules().forEach((key, value)-> value.getModule().commandExecutors().forEach((name, executor)->{
-      CommandsHandler.instance().addExecutor(name, executor);
-    }));
+    loader.getModules().forEach((key, value)-> {
+      try {
+        value.getModule().commandExecutors().forEach((name, executor) -> {
+          CommandsHandler.instance().addExecutor(name, executor);
+        });
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
+    });
 
     //Load Module Completers
-    loader.getModules().forEach((key, value)->value.getModule().tabCompleters().forEach((name, completer)->{
-      CommandsHandler.manager().getCompleters().put(name, completer);
-    }));
+    loader.getModules().forEach((key, value)-> {
+      try {
+        value.getModule().tabCompleters().forEach((name, completer) -> {
+          CommandsHandler.manager().getCompleters().put(name, completer);
+        });
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
+    });
 
     handler.load();
 
