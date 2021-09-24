@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -29,6 +31,8 @@ public class TNECurrency implements Currency {
   private TreeMap<BigInteger, TNETier> minorTiers = new TreeMap<>(Collections.reverseOrder());
 
   private List<String> worlds = new ArrayList<>();
+
+  private Map<String, Double> conversion = new HashMap<>();
 
   private CurrencyNote note = new CurrencyNote("PAPER");
 
@@ -204,6 +208,17 @@ public class TNECurrency implements Currency {
     return balance;
   }
 
+  public Map<String, Double> getConversion() {
+    return conversion;
+  }
+
+  public void setConversion(Map<String, Double> conversion) {
+    this.conversion = conversion;
+  }
+
+  public void addConversion(String currency, Double rate) {
+
+  }
 
   @Override
   public TreeMap<Integer, Tier> getMajorTiers() {

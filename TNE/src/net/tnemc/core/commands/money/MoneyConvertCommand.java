@@ -54,7 +54,7 @@ public class MoneyConvertCommand implements CommandExecution {
 
 
 
-        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.convert." + from.name())) {
+        if(!TNE.configurations().getBoolean("Core.Currency.Info.Advanced") || !sender.hasPermission("tne.money.convert." + from.name())) {
           Message unable = new Message("Messages.Command.Unable");
           unable.addVariable("$commands", "/" + label);
           unable.translate(worldFrom, sender);
@@ -68,6 +68,11 @@ public class MoneyConvertCommand implements CommandExecution {
 
         if(TNE.instance().getWorldManager(worldTo).isEconomyDisabled()) {
           new Message("Messages.General.Disabled").translate(worldTo, sender);
+          return;
+        }
+
+        if(!from.getConversion().containsKey(to.getIdentifier())) {
+          new Message("Messages.Money.NoConversion").translate(worldTo, sender);
           return;
         }
 
@@ -94,9 +99,10 @@ public class MoneyConvertCommand implements CommandExecution {
         }
 
         BigDecimal value = new BigDecimal(parsed);
+        BigDecimal converted = value.multiply(new BigDecimal(from.getConversion().get(to.getIdentifier())));
         TNETransaction transaction = new TNETransaction(account, account, worldFrom, TNE.transactionManager().getType("conversion"));
         transaction.setInitiatorCharge(new TransactionCharge(worldFrom, from, value, TransactionChargeType.LOSE));
-        transaction.setRecipientCharge(new TransactionCharge(worldTo, to, value, TransactionChargeType.GAIN));
+        transaction.setRecipientCharge(new TransactionCharge(worldTo, to, converted, TransactionChargeType.GAIN));
         TransactionResult result = TNE.transactionManager().perform(transaction);
 
         Message message = new Message(result.initiatorMessage());
