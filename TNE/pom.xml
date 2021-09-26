@@ -201,7 +201,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNCH-Bukkit</artifactId>
-            <version>0.1.16.2</version>
+            <version>0.1.16.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
