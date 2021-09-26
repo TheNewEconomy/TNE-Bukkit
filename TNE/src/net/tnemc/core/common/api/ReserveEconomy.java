@@ -47,7 +47,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public String version() {
-    return "0.1.4.6";
+    return "0.1.5.2";
   }
 
   @Override
@@ -106,16 +106,16 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public Currency getCurrency(String currency) {
+  public Optional<Currency> getCurrency(String currency) {
     for(TNECurrency cur : TNE.manager().currencyManager().getCurrencies()) {
-      if(cur.name().equalsIgnoreCase(currency)) return cur;
+      if(cur.name().equalsIgnoreCase(currency)) return Optional.of(cur);
     }
-    return null;
+    return Optional.empty();
   }
 
   @Override
-  public Currency getCurrency(String currency, String world) {
-    return TNE.manager().currencyManager().get(world, currency);
+  public Optional<Currency> getCurrency(String currency, String world) {
+    return Optional.of(TNE.manager().currencyManager().get(world, currency));
   }
 
   @Override
@@ -146,13 +146,13 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public Account getAccount(String identifier) {
-    return TNE.instance().api().getAccount(identifier);
+  public Optional<Account> getAccount(String identifier) {
+    return Optional.of(TNE.instance().api().getAccount(identifier));
   }
 
   @Override
-  public Account getAccount(UUID identifier) {
-    return TNE.instance().api().getAccount(identifier);
+  public Optional<Account> getAccount(UUID identifier) {
+    return Optional.of(TNE.instance().api().getAccount(identifier));
   }
 
   @Override
@@ -194,13 +194,13 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   @Override
   public Account createIfNotExists(String identifier) {
     if(!hasAccount(identifier)) createAccount(identifier);
-    return getAccount(identifier);
+    return getAccount(identifier).get();
   }
 
   @Override
   public Account createIfNotExists(UUID uuid) {
     if(!hasAccount(uuid)) createAccount(uuid);
-    return getAccount(uuid);
+    return getAccount(uuid).get();
   }
 
   @Override

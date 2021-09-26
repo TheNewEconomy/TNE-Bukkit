@@ -2,6 +2,7 @@ package net.tnemc.core.common.currency;
 
 import net.tnemc.core.economy.currency.Tier;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -72,7 +73,7 @@ public class TNETier implements Tier {
   }
 
   @Override
-  public double weight() {
-    return weight.doubleValue();
+  public BigDecimal weight() {
+    return new BigDecimal(weight);
   }
 }

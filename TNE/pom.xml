@@ -183,7 +183,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
-            <version>0.1.5.0</version>
+            <version>0.1.5.2</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
