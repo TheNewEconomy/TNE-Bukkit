@@ -368,6 +368,15 @@ public class TNE extends TNELib implements TabCompleter {
 
     }
 
+    //Initialize our compatibility classes.
+    if (MISCUtils.isOneThirteen()) {
+      itemCompatibility = new ItemCompatibility13();
+    } else if (MISCUtils.isOneSeven()) {
+      itemCompatibility = new ItemCompatibility7();
+    } else {
+      itemCompatibility = new ItemCompatibility12();
+    }
+
     //Initialize our plugin's managers.
     TNE.debug("Preparing managers");
     manager = new EconomyManager();
@@ -834,14 +843,6 @@ public class TNE extends TNELib implements TabCompleter {
         itemConfigurations = initializeConfiguration(items, itemsFile);
         MaterialHelper.initialize();
 
-        if (MISCUtils.isOneThirteen()) {
-          itemCompatibility = new ItemCompatibility13();
-        } else if (MISCUtils.isOneSeven()) {
-          itemCompatibility = new ItemCompatibility7();
-        } else {
-          itemCompatibility = new ItemCompatibility12();
-        }
-
         menuManager = new MenuManager();
         TNE.debug("Preparing menus");
         loader.getModules().forEach((key, value) ->
@@ -960,7 +961,9 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   private void setupReserve() {
-    Reserve.instance().registerProvider(reserveEconomy);
+
+    ((Reserve)Bukkit.getPluginManager().getPlugin("Reserve")).registerProvider(reserveEconomy);
+    //Reserve.instance().registerProvider(reserveEconomy);
     getLogger().info("Hooked into Reserve");
   }
 

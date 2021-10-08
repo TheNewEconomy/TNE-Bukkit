@@ -10,9 +10,9 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.transaction.charge.TransactionCharge;
+import net.tnemc.core.common.transaction.result.TransactionResult;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 

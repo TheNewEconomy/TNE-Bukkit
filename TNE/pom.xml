@@ -63,6 +63,15 @@
                             <shadedPattern>net.tnemc.libs.org.javalite</shadedPattern>
                         </relocation>
                         <!--<relocation>
+                            <pattern>net.tnemc.core.economy</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.core.economy</shadedPattern>
+                        </relocation>
+
+                        <relocation>
+                            <pattern>net.tnemc.core.economy</pattern>
+                            <shadedPattern>net.tnemc.libs.net.tnemc.core.economy</shadedPattern>
+                        </relocation>
+                        <relocation>
                             <pattern>net.tnemc.commands.core</pattern>
                             <shadedPattern>net.tnemc.libs.net.tnemc.commands.core</shadedPattern>
                         </relocation>
@@ -183,14 +192,8 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
-            <version>0.1.5.2</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github</groupId>
-                    <artifactId>TNELib</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>0.1.5.3-SNAPSHOT-4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.tnemc</groupId>

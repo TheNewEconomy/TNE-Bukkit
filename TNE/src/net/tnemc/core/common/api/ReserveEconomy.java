@@ -1,27 +1,12 @@
 package net.tnemc.core.common.api;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.currency.TNECurrency;
-import net.tnemc.core.common.currency.TNETier;
-import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
-import net.tnemc.core.economy.Account;
-import net.tnemc.core.economy.ExtendedEconomyAPI;
-import net.tnemc.core.economy.currency.Currency;
-import net.tnemc.core.economy.currency.Tier;
+import net.tnemc.core.economy.EconomyAPI;
 import net.tnemc.core.economy.response.AccountResponse;
 import net.tnemc.core.economy.response.EconomyResponse;
 import net.tnemc.core.economy.response.GeneralResponse;
-import net.tnemc.core.economy.tax.TaxEntry;
-import net.tnemc.core.economy.tax.TaxType;
-import net.tnemc.core.economy.transaction.Transaction;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
-import net.tnemc.core.economy.transaction.type.TransactionType;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -32,7 +17,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 8/17/2017.
  */
-public class ReserveEconomy implements ExtendedEconomyAPI {
+public class ReserveEconomy implements EconomyAPI {
 
   private TNE plugin;
 
@@ -47,7 +32,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
 
   @Override
   public String version() {
-    return "0.1.5.2";
+    return "0.1.5.4";
   }
 
   @Override
@@ -86,54 +71,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public Currency getDefault() {
-    return TNE.instance().api().getDefault();
-  }
-
-  @Override
-  public Currency getDefault(String world) {
-    return TNE.instance().api().getDefault(world);
-  }
-
-  @Override
-  public Set<Currency> getCurrencies() {
-    return new HashSet<>(TNE.instance().getWorldManager(TNE.instance().defaultWorld).getCurrencies());
-  }
-
-  @Override
-  public Set<Currency> getCurrencies(String world) {
-    return new HashSet<>(TNE.instance().getWorldManager(world).getCurrencies());
-  }
-
-  @Override
-  public Optional<Currency> getCurrency(String currency) {
-    for(TNECurrency cur : TNE.manager().currencyManager().getCurrencies()) {
-      if(cur.name().equalsIgnoreCase(currency)) return Optional.of(cur);
-    }
-    return Optional.empty();
-  }
-
-  @Override
-  public Optional<Currency> getCurrency(String currency, String world) {
-    return Optional.of(TNE.manager().currencyManager().get(world, currency));
-  }
-
-  @Override
-  public boolean hasTier(String name, Currency currency) {
-    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency.name()).hasTier(name);
-  }
-
-  @Override
-  public boolean hasTier(String name, Currency currency, String world) {
-    return TNE.manager().currencyManager().get(world, currency.name()).hasTier(name);
-  }
-
-  @Override
-  public Set<Tier> getTiers(Currency currency) {
-    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency.name()).getTiers();
-  }
-
-  @Override
   public EconomyResponse hasAccountDetail(String identifier) {
     if(TNE.instance().api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
     return AccountResponse.DOESNT_EXIST;
@@ -143,16 +80,6 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   public EconomyResponse hasAccountDetail(UUID identifier) {
     if(TNE.instance().api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
     return AccountResponse.DOESNT_EXIST;
-  }
-
-  @Override
-  public Optional<Account> getAccount(String identifier) {
-    return Optional.of(TNE.instance().api().getAccount(identifier));
-  }
-
-  @Override
-  public Optional<Account> getAccount(UUID identifier) {
-    return Optional.of(TNE.instance().api().getAccount(identifier));
   }
 
   @Override
@@ -192,15 +119,273 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public Account createIfNotExists(String identifier) {
-    if(!hasAccount(identifier)) createAccount(identifier);
-    return getAccount(identifier).get();
+  public boolean isAccessor(String s, String s1) {
+    return false;
   }
 
   @Override
-  public Account createIfNotExists(UUID uuid) {
-    if(!hasAccount(uuid)) createAccount(uuid);
-    return getAccount(uuid).get();
+  public boolean isAccessor(String s, UUID uuid) {
+    return false;
+  }
+
+  @Override
+  public boolean isAccessor(UUID uuid, String s) {
+    return false;
+  }
+
+  @Override
+  public boolean isAccessor(UUID uuid, UUID uuid1) {
+    return false;
+  }
+
+  @Override
+  public EconomyResponse canWithdrawDetail(String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canWithdrawDetail(String s, UUID uuid) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canWithdrawDetail(UUID uuid, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canWithdrawDetail(UUID uuid, UUID uuid1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canDepositDetail(String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canDepositDetail(String s, UUID uuid) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canDepositDetail(UUID uuid, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canDepositDetail(UUID uuid, UUID uuid1) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getHoldings(String s) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getHoldings(UUID uuid) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getHoldings(String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getHoldings(UUID uuid, String s) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getHoldings(String s, String s1, String s2) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getHoldings(UUID uuid, String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public boolean hasHoldings(String s, BigDecimal bigDecimal) {
+    return false;
+  }
+
+  @Override
+  public boolean hasHoldings(UUID uuid, BigDecimal bigDecimal) {
+    return false;
+  }
+
+  @Override
+  public boolean hasHoldings(String s, BigDecimal bigDecimal, String s1) {
+    return false;
+  }
+
+  @Override
+  public boolean hasHoldings(UUID uuid, BigDecimal bigDecimal, String s) {
+    return false;
+  }
+
+  @Override
+  public boolean hasHoldings(String s, BigDecimal bigDecimal, String s1, String s2) {
+    return false;
+  }
+
+  @Override
+  public boolean hasHoldings(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+    return false;
+  }
+
+  @Override
+  public EconomyResponse setHoldingsDetail(String s, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse setHoldingsDetail(UUID uuid, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse setHoldingsDetail(String s, BigDecimal bigDecimal, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse setHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse setHoldingsDetail(String s, BigDecimal bigDecimal, String s1, String s2) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse setHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse addHoldingsDetail(String s, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse addHoldingsDetail(UUID uuid, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse addHoldingsDetail(String s, BigDecimal bigDecimal, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse addHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse addHoldingsDetail(String s, BigDecimal bigDecimal, String s1, String s2) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse addHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canAddHoldingsDetail(String s, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canAddHoldingsDetail(UUID uuid, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canAddHoldingsDetail(String s, BigDecimal bigDecimal, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canAddHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canAddHoldingsDetail(String s, BigDecimal bigDecimal, String s1, String s2) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canAddHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse removeHoldingsDetail(String s, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse removeHoldingsDetail(UUID uuid, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse removeHoldingsDetail(String s, BigDecimal bigDecimal, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse removeHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse removeHoldingsDetail(String s, BigDecimal bigDecimal, String s1, String s2) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse removeHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canRemoveHoldingsDetail(String s, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canRemoveHoldingsDetail(UUID uuid, BigDecimal bigDecimal) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canRemoveHoldingsDetail(String s, BigDecimal bigDecimal, String s1) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canRemoveHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canRemoveHoldingsDetail(String s, BigDecimal bigDecimal, String s1, String s2) {
+    return null;
+  }
+
+  @Override
+  public EconomyResponse canRemoveHoldingsDetail(UUID uuid, BigDecimal bigDecimal, String s, String s1) {
+    return null;
   }
 
   @Override
@@ -214,6 +399,11 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
+  public String format(BigDecimal bigDecimal, String s, String s1) {
+    return null;
+  }
+
+  @Override
   public boolean purgeAccounts() {
     return false;
   }
@@ -224,102 +414,7 @@ public class ReserveEconomy implements ExtendedEconomyAPI {
   }
 
   @Override
-  public String format(BigDecimal amount, Currency currency) {
-    return CurrencyFormatter.format(TNECurrency.fromReserve(currency), TNE.instance().defaultWorld, amount, "");
-  }
-
-  @Override
-  public String format(BigDecimal amount, Currency currency, String world) {
-    return CurrencyFormatter.format(TNECurrency.fromReserve(currency), world, amount, "");
-  }
-
-  @Override
   public boolean supportTransactions() {
     return true;
-  }
-
-  @Override
-  public TransactionResult performTransaction(Transaction transaction) {
-    return transaction.perform();
-  }
-
-  @Override
-  public boolean voidTransaction(UUID uuid) {
-    return TNE.instance().api().voidTransaction(uuid);
-  }
-
-  @Override
-  public Set<TransactionType> getTransactionTypes() {
-    return TNE.instance().api().getTransactionTypes();
-  }
-
-  @Override
-  public boolean registerTransactionType(TransactionType transactionType) {
-    return TNE.instance().api().registerTransactionType(transactionType);
-  }
-
-  @Override
-  public boolean registerTransactionResult(TransactionResult transactionResult) {
-    return TNE.instance().api().registerTransactionResult(transactionResult);
-  }
-
-  @Override
-  public Optional<TransactionResult> findTransactionResult(String name) {
-    return TNE.instance().api().findTransactionResult(name);
-  }
-
-  @Override
-  public boolean removeTaxException(String identifier, String transactionType) {
-    return TNE.instance().api().removeTaxException(identifier, transactionType);
-  }
-
-  @Override
-  public boolean registerTaxException(String identifier, String transactionType, TaxEntry taxEntry) {
-    return TNE.instance().api().registerTaxException(identifier, transactionType, taxEntry);
-  }
-
-  @Override
-  public boolean registerTaxType(TaxType taxType) {
-    return TNE.instance().api().registerTaxType(taxType);
-  }
-
-  @Override
-  public Optional<TaxType> findTaxType(String name) {
-    return TNE.instance().api().findTaxType(name);
-  }
-
-  @Override
-  public boolean registerCurrency(Currency currency) {
-    return TNE.instance().api().registerCurrency(TNECurrency.fromReserve(currency));
-  }
-
-  @Override
-  public boolean registerCurrency(Currency currency, String world) {
-    return TNE.instance().api().registerCurrency(TNECurrency.fromReserve(currency), world);
-  }
-
-  @Override
-  public boolean registerTier(Tier tier, Currency currency) {
-    return TNE.instance().api().registerTier(TNETier.fromReserve(tier), TNECurrency.fromReserve(currency));
-  }
-
-  @Override
-  public boolean registerTier(Tier tier, Currency currency, String world) {
-    return TNE.instance().api().registerTier(TNETier.fromReserve(tier), TNECurrency.fromReserve(currency), world);
-  }
-
-  @Override
-  public Map<UUID, Transaction> getTransactions(String identifier) {
-    return TNE.instance().api().getTransactions(identifier);
-  }
-
-  @Override
-  public Map<UUID, Transaction> getTransactions() {
-    return TNE.instance().api().getTransactions();
-  }
-
-  @Override
-  public Optional<Transaction> getTransaction(UUID uuid) {
-    return TNE.instance().api().getTransaction(uuid);
   }
 }

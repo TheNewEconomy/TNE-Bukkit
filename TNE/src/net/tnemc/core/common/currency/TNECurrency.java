@@ -1,8 +1,6 @@
 package net.tnemc.core.common.currency;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.economy.currency.Currency;
-import net.tnemc.core.economy.currency.Tier;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,7 +22,7 @@ import java.util.TreeMap;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 10/21/2016.
  */
-public class TNECurrency implements Currency {
+public class TNECurrency {
 
   private TreeMap<BigInteger, TNETier> majorTiers = new TreeMap<>(Collections.reverseOrder());
 
@@ -116,8 +114,8 @@ public class TNECurrency implements Currency {
     return Optional.empty();
   }
 
-  public Set<Tier> getTiers() {
-    Set<Tier> tiers = new HashSet<>();
+  public Set<TNETier> getTiers() {
+    Set<TNETier> tiers = new HashSet<>();
     tiers.addAll(majorTiers.values());
     tiers.addAll(minorTiers.values());
 
@@ -133,33 +131,6 @@ public class TNECurrency implements Currency {
       if(tier.singular().equals(name)) return true;
     }
     return false;
-  }
-
-  public static TNECurrency fromReserve(Currency currency) {
-    TNECurrency tneCurrency = new TNECurrency();
-
-    tneCurrency.setIdentifier(currency.name());
-    tneCurrency.setSingle(currency.name());
-    tneCurrency.setPlural(currency.plural());
-    tneCurrency.setDecimalPlaces(currency.decimalPlaces());
-    tneCurrency.setSymbol(currency.symbol());
-    tneCurrency.setBalance(currency.defaultBalance());
-    tneCurrency.setWorldDefault(currency.isDefault());
-    tneCurrency.setFormat("<symbol><major.amount><decimal><minor.amount>");
-
-    if(currency.getMajorTiers() != null) {
-      currency.getMajorTiers().forEach((weight, tier) -> {
-        tneCurrency.addTNEMajorTier(TNETier.fromReserve(tier));
-      });
-    }
-
-    if(currency.getMinorTiers() != null) {
-      currency.getMinorTiers().forEach((weight, tier) -> {
-        tneCurrency.addTNEMinorTier(TNETier.fromReserve(tier));
-      });
-    }
-
-    return tneCurrency;
   }
 
   public String getIdentifier() {
@@ -178,32 +149,26 @@ public class TNECurrency implements Currency {
     this.note = note;
   }
 
-  @Override
   public String name() {
     return identifier;
   }
 
-  @Override
   public String plural() {
     return plural;
   }
 
-  @Override
   public String symbol() {
     return symbol;
   }
 
-  @Override
   public int decimalPlaces() {
     return decimalPlaces;
   }
 
-  @Override
   public boolean isDefault() {
     return worldDefault;
   }
 
-  @Override
   public BigDecimal defaultBalance() {
     return balance;
   }
@@ -220,13 +185,11 @@ public class TNECurrency implements Currency {
 
   }
 
-  @Override
-  public TreeMap<Integer, Tier> getMajorTiers() {
+  public TreeMap<Integer, TNETier> getMajorTiers() {
     return null;
   }
 
-  @Override
-  public TreeMap<Integer, Tier> getMinorTiers() {
+  public TreeMap<Integer, TNETier> getMinorTiers() {
     return null;
   }
 

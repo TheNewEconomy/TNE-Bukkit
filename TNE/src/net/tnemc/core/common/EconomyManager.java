@@ -9,7 +9,6 @@ import net.tnemc.core.common.account.handlers.CoreHoldingsHandler;
 import net.tnemc.core.common.account.handlers.EChestHandler;
 import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.economy.Account;
 import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
@@ -228,7 +227,7 @@ public class EconomyManager {
     }
     UUID id = IDFinder.getID(argument);
     if(existing && !exists(id)) return null;
-    Account account = TNE.instance().api().getOrCreate(id);
+    TNEAccount account = TNE.instance().api().getOrCreate(id);
     if(account != null) {
       accounts.add(getAccount(id));
       return accounts;

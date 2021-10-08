@@ -12,9 +12,9 @@ import net.tnemc.core.common.currency.type.ItemType;
 import net.tnemc.core.common.currency.type.VirtualType;
 import net.tnemc.core.common.currency.type.XPType;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.transaction.charge.TransactionCharge;
+import net.tnemc.core.common.transaction.charge.TransactionChargeType;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -260,8 +260,8 @@ public class CurrencyManager {
     });
   }
 
-  public void register(net.tnemc.core.economy.currency.Currency currency) {
-    addCurrency(TNE.instance().defaultWorld, TNECurrency.fromReserve(currency));
+  public void register(TNECurrency currency) {
+    addCurrency(TNE.instance().defaultWorld, currency);
   }
 
   public ItemStack createNote(String currency, String world, BigDecimal amount) {
