@@ -2,10 +2,12 @@ package net.tnemc.core.common.transaction;
 
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
-import net.tnemc.core.common.currency.CurrencyEntry;
-import net.tnemc.core.common.transaction.charge.TransactionCharge;
-import net.tnemc.core.common.transaction.result.TransactionResult;
-import net.tnemc.core.common.transaction.type.TransactionType;
+import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.economy.currency.CurrencyEntry;
+import net.tnemc.core.economy.transaction.Transaction;
+import net.tnemc.core.economy.transaction.charge.TransactionCharge;
+import net.tnemc.core.economy.transaction.result.TransactionResult;
+import net.tnemc.core.economy.transaction.type.TransactionType;
 import net.tnemc.core.event.transaction.TNETransactionEvent;
 import org.bukkit.Bukkit;
 
@@ -20,7 +22,7 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 8/17/2017.
  */
-public class TNETransaction {
+public class TNETransaction implements Transaction {
 
   private UUID uuid;
   private TNEAccount initiator;
@@ -51,15 +53,8 @@ public class TNETransaction {
     this.world = world;
     this.time = time;
   }
-  public boolean voidTransaction() {
-    if(!voided()) {
-      boolean voided = type().voidTransaction(this);
-      setVoided(voided);
-      return voided;
-    }
-    return false;
-  }
 
+  @Override
   public TransactionResult perform() {
     TNE.debug("=====START TNETransaction.perform =====");
     if(initiatorCharge != null) TNE.debug("Initiator Charge: " + initiatorCharge.getAmount());
@@ -69,7 +64,7 @@ public class TNETransaction {
       TNE.debug("recipientCharge != null");
       if(recipientBalance == null) {
         recipientInitial = this.recipientCharge().getEntry().copy(
-            recipient.getHoldings(recipientCharge.getWorld(), recipientCharge.getCurrency())
+            recipient.getHoldings(recipientCharge.getWorld(), TNECurrency.fromReserve(recipientCharge.getCurrency()))
         );
         this.setRecipientBalance(recipientInitial);
         TNE.debug("setRecipientBalance: " + recipientBalance.getAmount() + " in Currency: " + recipientBalance.getCurrency().name());
@@ -81,7 +76,7 @@ public class TNETransaction {
     if(initiatorCharge != null) {
       if(initiatorBalance == null) {
         initiatorInitial = this.initiatorCharge().getEntry().copy(
-            initiator.getHoldings(initiatorCharge.getWorld(), initiatorCharge.getCurrency())
+            initiator.getHoldings(initiatorCharge.getWorld(), TNECurrency.fromReserve(initiatorCharge.getCurrency()))
         );
         this.setInitiatorBalance(initiatorInitial);
       }
@@ -108,36 +103,44 @@ public class TNETransaction {
     return recipient;
   }
 
+  @Override
   public String initiator() {
     if(initiator == null) return "None";
     return initiator.identifier().toString();
   }
 
+  @Override
   public String recipient() {
     if(recipient == null) return "None";
     return recipient.identifier().toString();
   }
 
+  @Override
   public CurrencyEntry initiatorBalance() {
     return initiatorBalance;
   }
 
+  @Override
   public void setInitiatorBalance(CurrencyEntry entry) {
     this.initiatorBalance = entry;
   }
 
+  @Override
   public CurrencyEntry recipientBalance() {
     return recipientBalance;
   }
 
+  @Override
   public void setRecipientBalance(CurrencyEntry entry) {
     this.recipientBalance = entry;
   }
 
+  @Override
   public TransactionCharge initiatorCharge() {
     return initiatorCharge;
   }
 
+  @Override
   public void setInitiatorCharge(TransactionCharge transactionCharge) {
     TNE.debug("=====START TNETransaction.setInitiatorCharge =====");
     this.initiatorCharge = transactionCharge;
@@ -146,10 +149,12 @@ public class TNETransaction {
     TNE.debug("=====END TNETransaction.setInitiatorCharge =====");
   }
 
+  @Override
   public TransactionCharge recipientCharge() {
     return recipientCharge;
   }
 
+  @Override
   public void setRecipientCharge(TransactionCharge transactionCharge) {
     TNE.debug("=====START TNETransaction.setRecipientCharge =====");
     this.recipientCharge = transactionCharge;
@@ -158,18 +163,22 @@ public class TNETransaction {
     TNE.debug("=====END TNETransaction.setRecipientCharge =====");
   }
 
+  @Override
   public boolean voided() {
     return voided;
   }
 
+  @Override
   public void setVoided(boolean voided) {
     this.voided = voided;
   }
 
+  @Override
   public UUID transactionID() {
     return uuid;
   }
 
+  @Override
   public TransactionType type() {
     return type;
   }
@@ -182,6 +191,7 @@ public class TNETransaction {
     this.world = world;
   }
 
+  @Override
   public long time() {
     return time;
   }

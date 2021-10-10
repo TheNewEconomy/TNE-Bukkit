@@ -3,9 +3,9 @@ package net.tnemc.core.common.transaction;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.transaction.charge.TransactionCharge;
-import net.tnemc.core.common.transaction.result.TransactionResult;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.economy.transaction.charge.TransactionCharge;
+import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;

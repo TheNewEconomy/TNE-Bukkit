@@ -1,5 +1,7 @@
 package net.tnemc.core.common.transaction.result;
 
+import net.tnemc.core.economy.transaction.result.TransactionResult;
+
 /**
  * The New Economy Minecraft Server Plugin
  *

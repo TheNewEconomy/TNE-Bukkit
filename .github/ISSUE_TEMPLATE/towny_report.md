@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Towny Bug Report
 about: Create a report to help us improve
 title: ''
 labels: 'Type: Bug'
@@ -18,6 +18,8 @@ assignees: ''
 #### The exact command you ran w/ arguments?
 #### config.yml?(use http://paste.ubuntu.com, and remove your SQL details)
 #### Your latest server log file?(use http://paste.ubuntu.com)
+#### Towns affected by this issue? And whether or not they've been renamed recently.
+#### Nations affected by this issue? And whether or not they've been renamed recently.
 #### If this is to do with messages/world/player configurations, please include the YAML file for such.(use http://paste.ubuntu.com)
 
 Note: If, for any reason, you elect not to use the following format for your issue, it will be closed without

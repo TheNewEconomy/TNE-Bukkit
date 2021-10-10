@@ -295,7 +295,7 @@ public class ItemCalculations {
     if(currency.isItem()) {
       if(type.equalsIgnoreCase("all") || type.equalsIgnoreCase("major")) {
         for (TNETier tier : currency.getTNEMajorTiers().values()) {
-          value = value.add(new BigDecimal(getCount(tier.getItemInfo().toStack(), inventory)).multiply(tier.weight()));
+          value = value.add(new BigDecimal(getCount(tier.getItemInfo().toStack(), inventory) * tier.weight()));
         }
       }
 

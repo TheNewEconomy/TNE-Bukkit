@@ -1,15 +1,27 @@
 package net.tnemc.core.common.api;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.CurrencyManager;
-import net.tnemc.core.economy.EconomyAPI;
+import net.tnemc.core.common.currency.TNECurrency;
+import net.tnemc.core.common.currency.TNETier;
+import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
+import net.tnemc.core.economy.Account;
+import net.tnemc.core.economy.ExtendedEconomyAPI;
+import net.tnemc.core.economy.currency.Currency;
+import net.tnemc.core.economy.currency.Tier;
 import net.tnemc.core.economy.response.AccountResponse;
 import net.tnemc.core.economy.response.EconomyResponse;
 import net.tnemc.core.economy.response.GeneralResponse;
-import net.tnemc.core.economy.response.HoldingsResponse;
-import org.bukkit.World;
+import net.tnemc.core.economy.tax.TaxEntry;
+import net.tnemc.core.economy.tax.TaxType;
+import net.tnemc.core.economy.transaction.Transaction;
+import net.tnemc.core.economy.transaction.result.TransactionResult;
+import net.tnemc.core.economy.transaction.type.TransactionType;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -20,11 +32,9 @@ import java.util.UUID;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 8/17/2017.
  */
-public class ReserveEconomy implements EconomyAPI {
+public class ReserveEconomy implements ExtendedEconomyAPI {
 
-  private final TNE plugin;
-
-  private final BigDecimal minBalance = BigDecimal.ZERO;
+  private TNE plugin;
 
   public ReserveEconomy(TNE plugin) {
     this.plugin = plugin;
@@ -37,7 +47,7 @@ public class ReserveEconomy implements EconomyAPI {
 
   @Override
   public String version() {
-    return "0.1.5.4";
+    return "0.1.4.6";
   }
 
   @Override
@@ -47,67 +57,125 @@ public class ReserveEconomy implements EconomyAPI {
 
   @Override
   public String currencyDefaultPlural() {
-    return TNE.manager().currencyManager().get(plugin.defaultWorld).name();
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
   }
 
   @Override
   public String currencyDefaultSingular() {
-    return TNE.manager().currencyManager().get(plugin.defaultWorld).name();
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
   }
 
   @Override
   public String currencyDefaultPlural(String world) {
-    return TNE.manager().currencyManager().get(plugin.defaultWorld).name();
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
   }
 
   @Override
   public String currencyDefaultSingular(String world) {
-    return TNE.manager().currencyManager().get(plugin.defaultWorld).name();
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld).name();
   }
 
   @Override
   public boolean hasCurrency(String name) {
-    return plugin.api().hasCurrency(name);
+    return TNE.instance().api().hasCurrency(name);
   }
 
   @Override
   public boolean hasCurrency(String name, String world) {
-    return plugin.api().hasCurrency(name, world);
+    return TNE.instance().api().hasCurrency(name, world);
+  }
+
+  @Override
+  public Currency getDefault() {
+    return TNE.instance().api().getDefault();
+  }
+
+  @Override
+  public Currency getDefault(String world) {
+    return TNE.instance().api().getDefault(world);
+  }
+
+  @Override
+  public Set<Currency> getCurrencies() {
+    return new HashSet<>(TNE.instance().getWorldManager(TNE.instance().defaultWorld).getCurrencies());
+  }
+
+  @Override
+  public Set<Currency> getCurrencies(String world) {
+    return new HashSet<>(TNE.instance().getWorldManager(world).getCurrencies());
+  }
+
+  @Override
+  public Currency getCurrency(String currency) {
+    for(TNECurrency cur : TNE.manager().currencyManager().getCurrencies()) {
+      if(cur.name().equalsIgnoreCase(currency)) return cur;
+    }
+    return null;
+  }
+
+  @Override
+  public Currency getCurrency(String currency, String world) {
+    return TNE.manager().currencyManager().get(world, currency);
+  }
+
+  @Override
+  public boolean hasTier(String name, Currency currency) {
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency.name()).hasTier(name);
+  }
+
+  @Override
+  public boolean hasTier(String name, Currency currency, String world) {
+    return TNE.manager().currencyManager().get(world, currency.name()).hasTier(name);
+  }
+
+  @Override
+  public Set<Tier> getTiers(Currency currency) {
+    return TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency.name()).getTiers();
   }
 
   @Override
   public EconomyResponse hasAccountDetail(String identifier) {
-    if(plugin.api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
+    if(TNE.instance().api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
     return AccountResponse.DOESNT_EXIST;
   }
 
   @Override
   public EconomyResponse hasAccountDetail(UUID identifier) {
-    if(plugin.api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
+    if(TNE.instance().api().hasAccount(identifier)) return GeneralResponse.SUCCESS;
     return AccountResponse.DOESNT_EXIST;
   }
 
   @Override
+  public Account getAccount(String identifier) {
+    return TNE.instance().api().getAccount(identifier);
+  }
+
+  @Override
+  public Account getAccount(UUID identifier) {
+    return TNE.instance().api().getAccount(identifier);
+  }
+
+  @Override
   public boolean createAccount(String identifier) {
-    return plugin.api().createAccount(identifier);
+    return TNE.instance().api().createAccount(identifier);
   }
 
   @Override
   public boolean createAccount(UUID identifier) {
-    return plugin.api().createAccount(identifier);
+    return TNE.instance().api().createAccount(identifier);
   }
 
   @Override
   public EconomyResponse createAccountDetail(String identifier) {
     if(hasAccount(identifier)) return AccountResponse.ALREADY_EXISTS;
-    if(plugin.api().createAccount(identifier)) return AccountResponse.CREATED;
+    if(TNE.instance().api().createAccount(identifier)) return AccountResponse.CREATED;
     return AccountResponse.CREATION_FAILED;
   }
 
   @Override
   public EconomyResponse createAccountDetail(UUID identifier) {
     if(hasAccount(identifier)) return AccountResponse.ALREADY_EXISTS;
-    if(plugin.api().createAccount(identifier)) return AccountResponse.CREATED;
+    if(TNE.instance().api().createAccount(identifier)) return AccountResponse.CREATED;
     return AccountResponse.CREATION_FAILED;
   }
 
@@ -123,966 +191,135 @@ public class ReserveEconomy implements EconomyAPI {
     return GeneralResponse.FAILED;
   }
 
-  /**
-   * Determines whether or not a player is able to access this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return Whether or not the player is able to access this account.
-   */
   @Override
-  public boolean isAccessor(String identifier, String accessor) {
-    return identifier.equals(accessor);
+  public Account createIfNotExists(String identifier) {
+    if(!hasAccount(identifier)) createAccount(identifier);
+    return getAccount(identifier);
   }
 
-  /**
-   * Determines whether or not a player is able to access this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return Whether or not the player is able to access this account.
-   */
   @Override
-  public boolean isAccessor(String identifier, UUID accessor) {
-    return isAccessor(identifier, accessor.toString());
+  public Account createIfNotExists(UUID uuid) {
+    if(!hasAccount(uuid)) createAccount(uuid);
+    return getAccount(uuid);
   }
 
-  /**
-   * Determines whether or not a player is able to access this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return Whether or not the player is able to access this account.
-   */
-  @Override
-  public boolean isAccessor(UUID identifier, String accessor) {
-    return isAccessor(identifier.toString(), accessor);
-  }
-
-  /**
-   * Determines whether or not a player is able to access this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return Whether or not the player is able to access this account.
-   */
-  @Override
-  public boolean isAccessor(UUID identifier, UUID accessor) {
-    return isAccessor(identifier.toString(), accessor.toString());
-  }
-
-  /**
-   * Determines whether or not a player is able to withdraw holdings from this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canWithdrawDetail(String identifier, String accessor) {
-    if (identifier.equals(accessor)) {
-      return GeneralResponse.SUCCESS;
-    }
-    return GeneralResponse.FAILED;
-  }
-
-  /**
-   * Determines whether or not a player is able to withdraw holdings from this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canWithdrawDetail(String identifier, UUID accessor) {
-    return canWithdrawDetail(identifier, accessor.toString());
-  }
-
-  /**
-   * Determines whether or not a player is able to withdraw holdings from this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canWithdrawDetail(UUID identifier, String accessor) {
-    return canWithdrawDetail(identifier.toString(), accessor);
-  }
-
-  /**
-   * Determines whether or not a player is able to withdraw holdings from this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canWithdrawDetail(UUID identifier, UUID accessor) {
-    return canWithdrawDetail(identifier.toString(), accessor.toString());
-  }
-
-  /**
-   * Determines whether or not a player is able to deposit holdings into this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canDepositDetail(String identifier, String accessor) {
-    if (identifier.equals(accessor)) {
-      return GeneralResponse.SUCCESS;
-    }
-    return GeneralResponse.FAILED;
-  }
-
-  /**
-   * Determines whether or not a player is able to deposit holdings into this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canDepositDetail(String identifier, UUID accessor) {
-    return canDepositDetail(identifier, accessor.toString());
-  }
-
-  /**
-   * Determines whether or not a player is able to deposit holdings into this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canDepositDetail(UUID identifier, String accessor) {
-    return canDepositDetail(identifier.toString(), accessor);
-  }
-
-  /**
-   * Determines whether or not a player is able to deposit holdings into this account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param accessor The identifier of the user attempting to access this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canDepositDetail(UUID identifier, UUID accessor) {
-    return canDepositDetail(identifier.toString(), accessor.toString());
-  }
-
-  /**
-   * Used to get the balance of an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @return The balance of the account.
-   */
-  @Override
-  public BigDecimal getHoldings(String identifier) {
-    if (hasAccount(identifier)) {
-
-      return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings();
-    }
-    return BigDecimal.ZERO;
-  }
-
-  /**
-   * Used to get the balance of an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @return The balance of the account.
-   */
-  @Override
-  public BigDecimal getHoldings(UUID identifier) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(identifier).getHoldings();
-    }
-    return BigDecimal.ZERO;
-  }
-
-  /**
-   * Used to get the balance of an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param world The name of the {@link World} associated with the balance.
-   * @return The balance of the account.
-   */
-  @Override
-  public BigDecimal getHoldings(String identifier, String world) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(IDFinder.getID(identifier)).getHoldings(world);
-    }
-    return BigDecimal.ZERO;
-  }
-
-  /**
-   * Used to get the balance of an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param world The name of the {@link World} associated with the balance.
-   * @return The balance of the account.
-   */
-  @Override
-  public BigDecimal getHoldings(UUID identifier, String world) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(identifier).getHoldings(world);
-    }
-    return BigDecimal.ZERO;
-  }
-
-  /**
-   * Used to get the balance of an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param world The name of the {@link World} associated with the balance.
-   * @param currency The name of the currency associated with the balance.
-   * @return The balance of the account.
-   */
-  @Override
-  public BigDecimal getHoldings(String identifier, String world, String currency) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(IDFinder.getID(identifier))
-          .getHoldings(world, TNE.manager().currencyManager().get(world, currency));
-    }
-    return BigDecimal.ZERO;
-  }
-
-  /**
-   * Used to get the balance of an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param world The name of the {@link World} associated with the balance.
-   * @param currency The name of the currency associated with the balance.
-   * @return The balance of the account.
-   */
-  @Override
-  public BigDecimal getHoldings(UUID identifier, String world, String currency) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(identifier)
-          .getHoldings(world, TNE.manager().currencyManager().get(world, currency));
-    }
-    return BigDecimal.ZERO;
-  }
-
-  /**
-   * Used to determine if an account has at least an amount of funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to use for this check.
-   * @return True if the account has at least the specified amount of funds, otherwise false.
-   */
-  @Override
-  public boolean hasHoldings(String identifier, BigDecimal amount) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(IDFinder.getID(identifier)).hasHoldings(amount);
-    }
-    return false;
-  }
-
-  /**
-   * Used to determine if an account has at least an amount of funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to use for this check.
-   * @return True if the account has at least the specified amount of funds, otherwise false.
-   */
-  @Override
-  public boolean hasHoldings(UUID identifier, BigDecimal amount) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(identifier).hasHoldings(amount);
-    }
-    return false;
-  }
-
-  /**
-   * Used to determine if an account has at least an amount of funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to use for this check.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return True if the account has at least the specified amount of funds, otherwise false.
-   */
-  @Override
-  public boolean hasHoldings(String identifier, BigDecimal amount, String world) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(IDFinder.getID(identifier)).hasHoldings(amount, world);
-    }
-    return false;
-  }
-
-  /**
-   * Used to determine if an account has at least an amount of funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to use for this check.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return True if the account has at least the specified amount of funds, otherwise false.
-   */
-  @Override
-  public boolean hasHoldings(UUID identifier, BigDecimal amount, String world) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(identifier).hasHoldings(amount, world);
-    }
-    return false;
-  }
-
-  /**
-   * Used to determine if an account has at least an amount of funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to use for this check.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return True if the account has at least the specified amount of funds, otherwise false.
-   */
-  @Override
-  public boolean hasHoldings(String identifier, BigDecimal amount, String world, String currency) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(IDFinder.getID(identifier))
-          .hasHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-    }
-    return false;
-  }
-
-  /**
-   * Used to determine if an account has at least an amount of funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to use for this check.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return True if the account has at least the specified amount of funds, otherwise false.
-   */
-  @Override
-  public boolean hasHoldings(UUID identifier, BigDecimal amount, String world, String currency) {
-    if (hasAccount(identifier)) {
-      return TNE.manager().getAccount(identifier)
-          .hasHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-    }
-    return false;
-  }
-
-  /**
-   * Used to set the funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to set this accounts's funds to.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-
-    if(amount.compareTo(minBalance) < 0) {
-      return HoldingsResponse.MIN_HOLDINGS;
-    }
-
-    if(amount.compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier)).setHoldings(amount);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to set the funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to set this accounts's funds to.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-
-    if(amount.compareTo(minBalance) < 0) {
-      return HoldingsResponse.MIN_HOLDINGS;
-    }
-
-    if(amount.compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(identifier).setHoldings(amount);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to set the funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to set this accounts's funds to.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-
-    if(amount.compareTo(minBalance) < 0) {
-      return HoldingsResponse.MIN_HOLDINGS;
-    }
-
-    if(amount.compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier)).setHoldings(amount, world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to set the funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to set this accounts's funds to.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-
-    if(amount.compareTo(minBalance) < 0) {
-      return HoldingsResponse.MIN_HOLDINGS;
-    }
-
-    if(amount.compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(identifier).setHoldings(amount, world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to set the funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to set this accounts's funds to.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse setHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-
-    if(amount.compareTo(minBalance) < 0) {
-      return HoldingsResponse.MIN_HOLDINGS;
-    }
-
-    if(amount.compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier))
-          .setHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to set the funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to set this accounts's funds to.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse setHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-
-    if(amount.compareTo(minBalance) < 0) {
-      return HoldingsResponse.MIN_HOLDINGS;
-    }
-
-    if(amount.compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(identifier)
-          .setHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to add funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to add funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(identifier).addHoldings(amount);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to add funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to add funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(identifier).addHoldings(amount, world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to add funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse addHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier))
-          .addHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to add funds to an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse addHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0) {
-      return HoldingsResponse.MAX_HOLDINGS;
-    }
-
-    try {
-      TNE.manager().getAccount(identifier)
-          .addHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to determine if a call to the corresponding addHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).add(amount).compareTo(CurrencyManager.largestSupported) > 0)
-      return HoldingsResponse.MAX_HOLDINGS;
-    return GeneralResponse.SUCCESS;
-  }
-
-  /**
-   * Used to determine if a call to the corresponding addHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return canAddHoldingsDetail(identifier.toString(), amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding addHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return canAddHoldingsDetail(identifier, amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding addHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return canAddHoldingsDetail(identifier.toString(), amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding addHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canAddHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return canAddHoldingsDetail(identifier, amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding addHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to add to this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse canAddHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return canAddHoldingsDetail(identifier.toString(), amount);
-  }
-
-
-  /**
-   * Used to remove funds from an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(minBalance) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to remove funds from an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(minBalance) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-
-    try {
-      TNE.manager().getAccount(identifier).removeHoldings(amount);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to remove funds from an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(minBalance) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to remove funds from an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(minBalance) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-
-    try {
-      TNE.manager().getAccount(identifier).removeHoldings(amount, world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to remove funds from an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse removeHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(minBalance) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-
-    try {
-      TNE.manager().getAccount(IDFinder.getID(identifier))
-          .removeHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to remove funds from an account.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} for this action.
-   */
-  @Override
-  public EconomyResponse removeHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(minBalance) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-
-    try {
-      TNE.manager().getAccount(identifier)
-          .removeHoldings(amount, TNE.manager().currencyManager().get(world, currency), world);
-      return GeneralResponse.SUCCESS;
-    } catch (Exception ignore) {
-      return GeneralResponse.FAILED;
-    }
-  }
-
-  /**
-   * Used to determine if a call to the corresponding removeHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @return The {@link EconomyResponse} that would be returned with the corresponding removeHoldingsDetail method.
-   */
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount) {
-    if (!hasAccount(identifier) && !createAccount(identifier)) return AccountResponse.CREATION_FAILED;
-    if (getHoldings(identifier).subtract(amount).compareTo(BigDecimal.ZERO) < 0)
-      return HoldingsResponse.MIN_HOLDINGS;
-    return GeneralResponse.SUCCESS;
-  }
-
-  /**
-   * Used to determine if a call to the corresponding removeHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @return The {@link EconomyResponse} that would be returned with the corresponding removeHoldingsDetail method.
-   */
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount) {
-    return canRemoveHoldingsDetail(identifier.toString(), amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding removeHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} that would be returned with the corresponding removeHoldingsDetail method.
-   */
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount, String world) {
-    return canRemoveHoldingsDetail(identifier, amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding removeHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @return The {@link EconomyResponse} that would be returned with the corresponding removeHoldingsDetail method.
-   */
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount, String world) {
-    return canRemoveHoldingsDetail(identifier.toString(), amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding removeHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} that would be returned with the corresponding removeHoldingsDetail method.
-   */
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(String identifier, BigDecimal amount, String world, String currency) {
-    return canRemoveHoldingsDetail(identifier, amount);
-  }
-
-  /**
-   * Used to determine if a call to the corresponding removeHoldings method would be successful. This method does not
-   * affect an account's funds.
-   * @param identifier The identifier of the account that is associated with this call.
-   * @param amount The amount you wish to remove from this account.
-   * @param world The name of the {@link World} associated with the amount.
-   * @param currency The name of the currency associated with the balance.
-   * @return The {@link EconomyResponse} that would be returned with the corresponding removeHoldingsDetail method.
-   */
-  @Override
-  public EconomyResponse canRemoveHoldingsDetail(UUID identifier, BigDecimal amount, String world, String currency) {
-    return canRemoveHoldingsDetail(identifier.toString(), amount);
-  }
-
-  /**
-   * Formats a monetary amount into a more text-friendly version.
-   * @param amount The amount of currency to format.
-   * @return The formatted amount.
-   */
   @Override
   public String format(BigDecimal amount) {
-    return plugin.api().format(amount, plugin.defaultWorld);
+    return TNE.instance().api().format(amount, TNE.instance().defaultWorld);
   }
 
-  /**
-   * Formats a monetary amount into a more text-friendly version.
-   * @param amount The amount of currency to format.
-   * @param world The {@link World} in which this format operation is occurring.
-   * @return The formatted amount.
-   */
   @Override
   public String format(BigDecimal amount, String world) {
-    return plugin.api().format(amount, world);
+    return TNE.instance().api().format(amount, world);
   }
 
-  /**
-   * Formats a monetary amount into a more text-friendly version.
-   * @param amount The amount of currency to format.
-   * @param world The {@link World} in which this format operation is occurring.
-   * @param currency The name of the currency associated with the balance.
-   * @return The formatted amount.
-   */
-  @Override
-  public String format(BigDecimal amount, String world, String currency) {
-    return plugin.api().format(amount, TNE.manager().currencyManager().get(world, currency), world);
-  }
-
-  /**
-   * Purges the database of accounts with the default balance.
-   * @return True if the purge was completed successfully.
-   */
   @Override
   public boolean purgeAccounts() {
     return false;
   }
 
-  /**
-   * Purges the database of accounts with a balance under the specified one.
-   * @param amount The amount that an account's balance has to be under in order to be removed.
-   * @return True if the purge was completed successfully.
-   */
   @Override
-  public boolean purgeAccountsUnder(BigDecimal amount) {
+  public boolean purgeAccountsUnder(BigDecimal bigDecimal) {
     return false;
+  }
+
+  @Override
+  public String format(BigDecimal amount, Currency currency) {
+    return CurrencyFormatter.format(TNECurrency.fromReserve(currency), TNE.instance().defaultWorld, amount, "");
+  }
+
+  @Override
+  public String format(BigDecimal amount, Currency currency, String world) {
+    return CurrencyFormatter.format(TNECurrency.fromReserve(currency), world, amount, "");
   }
 
   @Override
   public boolean supportTransactions() {
     return true;
+  }
+
+  @Override
+  public TransactionResult performTransaction(Transaction transaction) {
+    return transaction.perform();
+  }
+
+  @Override
+  public boolean voidTransaction(UUID uuid) {
+    return TNE.instance().api().voidTransaction(uuid);
+  }
+
+  @Override
+  public Set<TransactionType> getTransactionTypes() {
+    return TNE.instance().api().getTransactionTypes();
+  }
+
+  @Override
+  public boolean registerTransactionType(TransactionType transactionType) {
+    return TNE.instance().api().registerTransactionType(transactionType);
+  }
+
+  @Override
+  public boolean registerTransactionResult(TransactionResult transactionResult) {
+    return TNE.instance().api().registerTransactionResult(transactionResult);
+  }
+
+  @Override
+  public Optional<TransactionResult> findTransactionResult(String name) {
+    return TNE.instance().api().findTransactionResult(name);
+  }
+
+  @Override
+  public boolean removeTaxException(String identifier, String transactionType) {
+    return TNE.instance().api().removeTaxException(identifier, transactionType);
+  }
+
+  @Override
+  public boolean registerTaxException(String identifier, String transactionType, TaxEntry taxEntry) {
+    return TNE.instance().api().registerTaxException(identifier, transactionType, taxEntry);
+  }
+
+  @Override
+  public boolean registerTaxType(TaxType taxType) {
+    return TNE.instance().api().registerTaxType(taxType);
+  }
+
+  @Override
+  public Optional<TaxType> findTaxType(String name) {
+    return TNE.instance().api().findTaxType(name);
+  }
+
+  @Override
+  public boolean registerCurrency(Currency currency) {
+    return TNE.instance().api().registerCurrency(TNECurrency.fromReserve(currency));
+  }
+
+  @Override
+  public boolean registerCurrency(Currency currency, String world) {
+    return TNE.instance().api().registerCurrency(TNECurrency.fromReserve(currency), world);
+  }
+
+  @Override
+  public boolean registerTier(Tier tier, Currency currency) {
+    return TNE.instance().api().registerTier(TNETier.fromReserve(tier), TNECurrency.fromReserve(currency));
+  }
+
+  @Override
+  public boolean registerTier(Tier tier, Currency currency, String world) {
+    return TNE.instance().api().registerTier(TNETier.fromReserve(tier), TNECurrency.fromReserve(currency), world);
+  }
+
+  @Override
+  public Map<UUID, Transaction> getTransactions(String identifier) {
+    return TNE.instance().api().getTransactions(identifier);
+  }
+
+  @Override
+  public Map<UUID, Transaction> getTransactions() {
+    return TNE.instance().api().getTransactions();
+  }
+
+  @Override
+  public Optional<Transaction> getTransaction(UUID uuid) {
+    return TNE.instance().api().getTransaction(uuid);
   }
 }

@@ -1,7 +1,7 @@
 package net.tnemc.core.event.transaction;
 
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.common.transaction.result.TransactionResult;
+import net.tnemc.core.economy.transaction.result.TransactionResult;
 import net.tnemc.core.event.TNEEvent;
 
 /**

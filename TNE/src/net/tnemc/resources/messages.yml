@@ -131,7 +131,6 @@ Messages:
 
     Money:
        TypeOffline: "<red>This currency type does not allow offline interaction."
-       NoConversion: "<red>This currency cannot be converted to $converted."
        Failed: "<red>Unable to process your transaction at this time."
        Given: "<white>You were given <gold>$amount<white>."
        Received: "<white>You were paid <gold>$amount <white>by<white> $player."

@@ -143,9 +143,9 @@ Note:
     Flags:
       - example_flag
 
-Converting:
+#All configurations relating to conversion to other currencies.
+Conversion:
 
-  #Example currency conversion.
-  #Format is currency name and decimal based rate
-  #In this USD converts to double Example currency so 1 USD is 2 Examples
-  Example: 2.0
+  #The conversion power of this currency to other currencies.
+  #This is based on a decimal conversion system where 1.0 is 100% i.e. the "normal" rate
+  Rate: 1.0

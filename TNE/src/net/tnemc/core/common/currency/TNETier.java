@@ -1,6 +1,7 @@
 package net.tnemc.core.common.currency;
 
-import java.math.BigDecimal;
+import net.tnemc.core.economy.currency.Tier;
+
 import java.math.BigInteger;
 
 /**
@@ -11,14 +12,21 @@ import java.math.BigInteger;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by creatorfromhell on 10/22/2016.
  */
-public class TNETier {
+public class TNETier implements Tier {
   private boolean major;
   private String single;
   private String plural;
   private BigInteger weight;
   private ItemTier itemInfo;
 
-
+  public static TNETier fromReserve(Tier tier) {
+    TNETier tneTier = new TNETier();
+    tneTier.setPlural(tier.plural());
+    tneTier.setSingle(tier.singular());
+    tneTier.setWeight(new BigInteger(tier.weight() + ""));
+    tneTier.setMajor(tier.isMajor());
+    return tneTier;
+  }
 
   public ItemTier getItemInfo() {
     return itemInfo;
@@ -48,19 +56,23 @@ public class TNETier {
     this.major = major;
   }
 
+  @Override
   public String singular() {
     return single;
   }
 
+  @Override
   public String plural() {
     return plural;
   }
 
+  @Override
   public boolean isMajor() {
     return major;
   }
 
-  public BigDecimal weight() {
-    return new BigDecimal(weight);
+  @Override
+  public double weight() {
+    return weight.doubleValue();
   }
 }

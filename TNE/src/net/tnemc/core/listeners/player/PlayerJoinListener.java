@@ -76,16 +76,7 @@ public class PlayerJoinListener implements Listener {
       }
 
       TNE.manager().addAccount(account);
-      if(first) {
-        if(TNE.configurations().hasConfiguration("Core.Server.KeepItems") && TNE.configurations().getBoolean("Core.Server.KeepItems")) {
-          TNE.manager().currencyManager().getWorldCurrencies(world).forEach((currency) -> {
-            if (currency.isItem()) {
-              account.setHoldings(account.getHoldings(world, currency), currency, world);
-            }
-          });
-        }
-        account.initializeHoldings(world);
-      }
+      if(first) account.initializeHoldings(world);
       if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
         String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
         if(TNE.instance().updater.getRelease().equals(ReleaseType.PRERELEASE)) {

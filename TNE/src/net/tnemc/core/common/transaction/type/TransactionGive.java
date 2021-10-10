@@ -1,10 +1,10 @@
 package net.tnemc.core.common.transaction.type;
 
 import net.tnemc.core.TNE;
-import net.tnemc.core.common.transaction.TransactionAffected;
-import net.tnemc.core.common.transaction.result.TransactionResult;
-import net.tnemc.core.common.transaction.tax.TaxEntry;
-import net.tnemc.core.common.transaction.tax.type.FlatType;
+import net.tnemc.core.economy.tax.TaxEntry;
+import net.tnemc.core.economy.tax.type.FlatType;
+import net.tnemc.core.economy.transaction.TransactionAffected;
+import net.tnemc.core.economy.transaction.result.TransactionResult;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Optional;
  * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
  * Created by Daniel on 8/23/2017.
  */
-public class TransactionGive implements TransactionType {
+public class TransactionGive implements TNETransactionType {
   @Override
   public Map<String, TaxEntry> taxExceptions() {
     return new HashMap<>();
