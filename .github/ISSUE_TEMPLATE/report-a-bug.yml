@@ -64,13 +64,13 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: Online Mode
+    id: online-mode
     attributes:
       label: Is your server using online mode?
       multiple: false
       options:
-        - Yes
-        - No
+        - 'Yes'
+        - 'No'
     validations:
       required: true
   - type: textarea
