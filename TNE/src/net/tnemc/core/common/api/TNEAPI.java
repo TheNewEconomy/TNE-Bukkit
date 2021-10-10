@@ -3,21 +3,19 @@ package net.tnemc.core.common.api;
 import com.github.tnerevival.TNELib;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
+import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.WorldFinder;
 import net.tnemc.core.common.currency.CurrencyType;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.TNETier;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.transaction.result.TransactionResult;
+import net.tnemc.core.common.transaction.tax.TaxEntry;
+import net.tnemc.core.common.transaction.tax.TaxType;
+import net.tnemc.core.common.transaction.type.TransactionType;
 import net.tnemc.core.common.utils.TopBalance;
-import net.tnemc.core.economy.Account;
 import net.tnemc.core.economy.EconomyAPI;
-import net.tnemc.core.economy.currency.Tier;
-import net.tnemc.core.economy.tax.TaxEntry;
-import net.tnemc.core.economy.tax.TaxType;
-import net.tnemc.core.economy.transaction.Transaction;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
-import net.tnemc.core.economy.transaction.type.TransactionType;
 import net.tnemc.core.event.TNEEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -68,8 +66,8 @@ public class TNEAPI {
       int currentTest = 0;
       try {
         if(i >= check.length) return true;
-        checkTest = Integer.valueOf(check[i]);
-        currentTest = Integer.valueOf(str);
+        checkTest = Integer.parseInt(check[i]);
+        currentTest = Integer.parseInt(str);
 
       } catch(Exception ignore) {
 
@@ -169,7 +167,7 @@ public class TNEAPI {
    * @param currency The {@link TNECurrency} to grab the tiers from.
    * @return A Set containing all the {@link TNETier} objects belonging to this {@link TNECurrency}.
    */
-  public Set<Tier> getTiers(TNECurrency currency) {
+  public Set<TNETier> getTiers(TNECurrency currency) {
     return currency.getTiers();
   }
 
@@ -196,7 +194,7 @@ public class TNEAPI {
    * @param identifier The of the account.
    * @return The instance of the account if it exists, otherwise null.
    */
-  public Account getAccount(String identifier) {
+  public TNEAccount getAccount(String identifier) {
     return TNE.manager().getAccount(IDFinder.getID(identifier));
   }
 
@@ -205,7 +203,7 @@ public class TNEAPI {
    * @param identifier The {@link UUID} of the account.
    * @return The instance of the account if it exists, otherwise null.
    */
-  public Account getAccount(UUID identifier) {
+  public TNEAccount getAccount(UUID identifier) {
     return TNE.manager().getAccount(identifier);
   }
 
@@ -243,7 +241,7 @@ public class TNEAPI {
    * @param identifier The of the account.
    * @return The instance of the account.
    */
-  public Account getOrCreate(String identifier) {
+  public TNEAccount getOrCreate(String identifier) {
     if(!hasAccount(identifier)) createAccount(identifier);
     return getAccount(identifier);
   }
@@ -254,7 +252,7 @@ public class TNEAPI {
    * @param identifier The {@link UUID} of the account.
    * @return The instance of the account.
    */
-  public Account getOrCreate(UUID identifier) {
+  public TNEAccount getOrCreate(UUID identifier) {
     if(!hasAccount(identifier)) createAccount(identifier);
     return getAccount(identifier);
   }
@@ -372,7 +370,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount);
   }
 
   /**
@@ -383,7 +381,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -394,7 +392,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency);
   }
 
   /**
@@ -406,7 +404,7 @@ public class TNEAPI {
    * @return True if the funds were added to the account, otherwise false.
    */
   public boolean addHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).addHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -468,7 +466,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount);
   }
 
   /**
@@ -479,7 +477,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -490,7 +488,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, TNECurrency currency) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency);
   }
 
   /**
@@ -502,7 +500,7 @@ public class TNEAPI {
    * @return True if the funds were removed from the account, otherwise false.
    */
   public boolean removeHoldings(String identifier, BigDecimal amount, TNECurrency currency, String world) {
-    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE)).success();
+    return TNE.manager().getAccount(IDFinder.getID(identifier)).removeHoldings(amount, currency, WorldFinder.getWorldName(world, WorldVariant.BALANCE));
   }
 
   /**
@@ -575,7 +573,7 @@ public class TNEAPI {
    * @param uuid The {@link UUID} of the {@link TNETransaction}.
    * @return A non-empty {@link Optional} if a {@link TNETransaction} exists with the specified {@link UUID}.
    */
-  public Optional<Transaction> getTransaction(UUID uuid) {
+  public Optional<TNETransaction> getTransaction(UUID uuid) {
     return Optional.ofNullable(TNE.transactionManager().get(uuid));
   }
 
@@ -606,8 +604,8 @@ public class TNEAPI {
    *
    * @return A {@link Map} of all recorded {@link TNETransaction} objects.
    */
-  public Map<UUID, Transaction> getTransactions() {
-    Map<UUID, Transaction> transactions = new HashMap<>();
+  public Map<UUID, TNETransaction> getTransactions() {
+    Map<UUID, TNETransaction> transactions = new HashMap<>();
     transactions.putAll(TNE.transactionManager().getTransactions());
 
     return transactions;
@@ -623,8 +621,8 @@ public class TNEAPI {
    * @return A {@link Map} of all recorded {@link TNETransaction} objects, which involve the account with the specified
    * identifier.
    */
-  public Map<UUID, Transaction> getTransactions(String identifier) {
-    Map<UUID, Transaction> transactions = new HashMap<>();
+  public Map<UUID, TNETransaction> getTransactions(String identifier) {
+    Map<UUID, TNETransaction> transactions = new HashMap<>();
     transactions.putAll(TNE.transactionManager().getTransactions(IDFinder.getID(identifier)));
 
     return transactions;

@@ -3,38 +3,90 @@ package net.tnemc.core.common.transaction.type;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.economy.transaction.Transaction;
-import net.tnemc.core.economy.transaction.TransactionAffected;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
-import net.tnemc.core.economy.transaction.type.TransactionType;
+import net.tnemc.core.common.transaction.TransactionAffected;
+import net.tnemc.core.common.transaction.charge.TransactionCharge;
+import net.tnemc.core.common.transaction.charge.TransactionChargeType;
+import net.tnemc.core.common.transaction.result.TransactionResult;
+import net.tnemc.core.common.transaction.tax.TaxEntry;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * The New Economy Minecraft Server Plugin
- *
- * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
- * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
- * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
- * Created by Daniel on 11/8/2017.
- */
-public interface TNETransactionType extends TransactionType {
+ * Created by creatorfromhell on 8/9/2017.
+ * All rights reserved.
+ **/
+public interface TransactionType {
+
+  /**
+   * @return A map containing the account identifier, and matching {@link TaxEntry} for all tax exceptions
+   * for this {@link TransactionType}.
+   */
+  Map<String, TaxEntry> taxExceptions();
+
+  /**
+   * @return The name of this transaction type.
+   */
+  String name();
+
+  /**
+   * @return True if the recipient, or initiator contain the console
+   */
+  boolean console();
 
   TransactionResult success();
 
   TransactionResult fail();
 
+  /**
+   *
+   * @return The {@link TaxEntry} value for the taxes charged to the intiator.
+   */
+  Optional<TaxEntry> initiatorTax();
+
+  /**
+   * Used to calculate a initiator's {@link TaxEntry} after taking into account things such as tax
+   * exceptions.
+   * @param identifier The identifier of the initiator.
+   * @return The final {@link TaxEntry} after lookup is performed.
+   */
+  default Optional<TaxEntry> calculateInitiatorTax(String identifier) {
+    if(taxExceptions().containsKey(identifier)) return Optional.of(taxExceptions().get(identifier));
+    return initiatorTax();
+  }
+
+  /**
+   *
+   * @return The {@link TaxEntry} value for the taxes charged to the recipient.
+   */
+  Optional<TaxEntry> recipientTax();
+
+  /**
+   * Used to calculate a recipient's {@link TaxEntry} after taking into account things such as tax
+   * exceptions.
+   * @param identifier The identifier of the recipient.
+   * @return The final {@link TaxEntry} after lookup is performed.
+   */
+  default Optional<TaxEntry> calculateRecipientTax(String identifier) {
+    if(taxExceptions().containsKey(identifier)) return Optional.of(taxExceptions().get(identifier));
+    return recipientTax();
+  }
+
+  /**
+   * @return The {@link TransactionAffected} of this transaction type.
+   */
+  TransactionAffected affected();
+
   default boolean voidTransaction(TNETransaction transaction) {
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
-      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true)).success();
+      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true));
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true)).success();
+        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true));
       }
     }
 
@@ -54,12 +106,10 @@ public interface TNETransactionType extends TransactionType {
 
   /**
    * Performs the actual transaction logic.
-   * @param transaction The {@link Transaction} to perform.
-   * @return The {@link TransactionResult} of this {@link Transaction}.
+   * @param tneTransaction The {@link TNETransaction} to perform.
+   * @return The {@link TransactionResult} of this {@link TNETransaction}.
    */
-  @Override
-  default TransactionResult perform(Transaction transaction) {
-    final TNETransaction tneTransaction = (TNETransaction)transaction;
+  default TransactionResult perform(TNETransaction tneTransaction) {
     TNE.debug("=====START TNETransactionType.perform =====");
     boolean proceed = false;
 

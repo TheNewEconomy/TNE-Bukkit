@@ -31,6 +31,9 @@ Core:
         #Whether or not to consolidate item-based currencies automatically.
         Consolidate: false
 
+        #Should item currencies in players inventory on first join with TNE be kept and added to their balance?
+        KeepItems: false
+
         #Whether or not experience gains should be disabled. This will help for servers that use Experience as currency.
         ExperienceGain: false
 

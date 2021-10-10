@@ -5,9 +5,8 @@ import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
+import net.tnemc.core.common.transaction.charge.TransactionChargeType;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.economy.currency.Currency;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -127,7 +126,7 @@ public class MultiTransactionHandler {
     this.transactionType = transactionType;
   }
 
-  public BigDecimal getAmount(TNEAccount recipient, String world, Currency currency) {
+  public BigDecimal getAmount(TNEAccount recipient, String world, TNECurrency currency) {
     if(amount == null && modifier != null) {
       if(modifier.contains("\\%")) {
         return MISCUtils.percent(recipient.getHoldings(world, currency), new BigDecimal(modifier.replace("\\%", "")));

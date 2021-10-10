@@ -8,8 +8,8 @@ import net.tnemc.config.CommentedConfiguration;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.data.TNEDataProvider;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
-import net.tnemc.core.economy.transaction.type.TransactionType;
+import net.tnemc.core.common.transaction.result.TransactionResult;
+import net.tnemc.core.common.transaction.type.TransactionType;
 import net.tnemc.core.menu.Menu;
 
 import java.io.File;

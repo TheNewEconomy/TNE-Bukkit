@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static net.tnemc.core.common.CurrencyManager.largestSupported;
 
@@ -169,6 +170,14 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
         currency.setSeparateMajor(separate);
         currency.setMajorSeparator(separator);
         currency.setMinorWeight(minorWeight);
+
+        if(config.contains("Core.Converting")) {
+          Set<String> converting = config.getSection("Core.Converting").getKeys(false);
+
+          for(String str : converting) {
+            currency.addConversion(str, config.getDouble("Core.Converting." + str, 1.0));
+          }
+        }
 
         if(loadTiers(currency)) {
 

@@ -1,13 +1,14 @@
 package net.tnemc.core.common;
 
 import com.github.tnerevival.core.collection.EventMap;
+import net.tnemc.commands.core.parameter.parsers.PlayerParser;
+import net.tnemc.commands.core.provider.PlayerProvider;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.account.handlers.CoreHoldingsHandler;
 import net.tnemc.core.common.account.handlers.EChestHandler;
 import net.tnemc.core.common.account.handlers.HoldingsHandler;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.economy.Account;
 import net.tnemc.core.event.account.TNEAccountCreationEvent;
 import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
@@ -193,14 +194,18 @@ public class EconomyManager {
     }*/
   }
 
-  public Collection<TNEAccount> parsePlayerArgument(String argument) {
-    return parsePlayerArgument(argument, false);
+  public Collection<TNEAccount> parsePlayerArgument(PlayerProvider provider, String argument) {
+    return parsePlayerArgument(provider, argument, false);
   }
 
-  public Collection<TNEAccount> parsePlayerArgument(String argument, boolean existing) {
+  public Collection<TNEAccount> parsePlayerArgument(PlayerProvider provider, String argument, boolean existing) {
     TNE.debug("EconomyManager.parsePlayerArgument: " + argument);
     argument = argument.trim();
     if(argument.equalsIgnoreCase("all") || argument.equalsIgnoreCase("*")) return getAccounts().values();
+
+    if(argument.contains("@a") || argument.contains("@p") || argument.contains("@r")) {
+      argument = new PlayerParser().parse(provider, argument);
+    }
 
     List<TNEAccount> accounts = new ArrayList<>();
 
@@ -222,7 +227,7 @@ public class EconomyManager {
     }
     UUID id = IDFinder.getID(argument);
     if(existing && !exists(id)) return null;
-    Account account = TNE.instance().api().getOrCreate(id);
+    TNEAccount account = TNE.instance().api().getOrCreate(id);
     if(account != null) {
       accounts.add(getAccount(id));
       return accounts;

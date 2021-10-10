@@ -47,7 +47,13 @@ public class ShortenRule implements FormatRule {
         wholeSub = wholeSub + "." + extra;
       }
     }
+    char pre;
+    if(currency.getPrefixes().length() < (pos + 1)) {
+      pre = '^';
+    } else {
+      pre = currency.getPrefixes().charAt(pos);
+    }
 
-    return formatted.replace("<short.amount>", wholeSub + currency.getPrefixes().charAt(pos));
+    return formatted.replace("<short.amount>", wholeSub + pre);
   }
 }

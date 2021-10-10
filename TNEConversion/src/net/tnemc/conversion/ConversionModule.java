@@ -45,6 +45,11 @@ public class ConversionModule implements Module {
 
   private ConverterManager manager;
 
+  private Map<String, CommandExecution> executors;
+  private Map<String, TabCompleter> completers;
+  private Map<String, Menu> menus;
+  private JoinListener listener;
+
 
   @Override
   public void load(TNE tne) {
@@ -56,6 +61,13 @@ public class ConversionModule implements Module {
   @Override
   public void unload(TNE tne) {
     manager = null;
+    listener = null;
+    executors.clear();
+    executors = null;
+    completers.clear();
+    completers = null;
+    menus.clear();
+    menus = null;
     tne.logger().info("Conversion Module unloaded!");
   }
 
@@ -76,7 +88,7 @@ public class ConversionModule implements Module {
    */
   @Override
   public Map<String, CommandExecution> commandExecutors() {
-    Map<String, CommandExecution> executors = new HashMap<>();
+    executors = new HashMap<>();
     executors.put("convert_exe", new ConvertCommand());
     return executors;
   }
@@ -87,7 +99,7 @@ public class ConversionModule implements Module {
    */
   @Override
   public Map<String, TabCompleter> tabCompleters() {
-    Map<String, TabCompleter> completers = new HashMap<>();
+    completers = new HashMap<>();
     completers.put("conversion", new ConverterCompleter());
     return completers;
   }
@@ -99,7 +111,7 @@ public class ConversionModule implements Module {
    */
   @Override
   public Map<String, Menu> menus(TNE plugin) {
-    Map<String, Menu> menus = new HashMap<>();
+    menus = new HashMap<>();
     menus.put("conversion_menu", new ConversionMenu());
     return menus;
   }
@@ -118,7 +130,8 @@ public class ConversionModule implements Module {
    */
   @Override
   public List<ModuleListener> listeners(TNE plugin) {
-    return Collections.singletonList(new JoinListener(plugin));
+    listener = new JoinListener(plugin);
+    return Collections.singletonList(listener);
   }
 
   public static void convertedAdd(String identifier, String world, String currency, BigDecimal amount) {

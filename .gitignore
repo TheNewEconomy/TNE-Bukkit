@@ -6,8 +6,7 @@ bin/
 *.project
 *.classpath
 /.idea/
-/target/
-/target/
+target/
 /TNE/target/
 fiotnh33.xot.txt
 /TNEConversion/target/

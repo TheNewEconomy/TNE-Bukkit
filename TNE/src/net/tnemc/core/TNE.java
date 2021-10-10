@@ -4,7 +4,6 @@ import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.db.SQLDatabase;
 import com.hellyard.cuttlefish.grammar.yaml.YamlValue;
-import net.milkbowl.vault.economy.Economy;
 import net.tnemc.commands.bukkit.BukkitCommandsHandler;
 import net.tnemc.commands.bukkit.provider.BukkitPlayerProvider;
 import net.tnemc.commands.core.CommandInformation;
@@ -17,10 +16,10 @@ import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.EconomyPlaceholders;
-import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
+import net.tnemc.core.common.api.hooks.ReserveHook;
+import net.tnemc.core.common.api.hooks.VaultHook;
 import net.tnemc.core.common.configurations.DataConfigurations;
 import net.tnemc.core.common.configurations.MainConfigurations;
 import net.tnemc.core.common.configurations.MessageConfigurations;
@@ -72,7 +71,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.ServicePriority;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -144,8 +142,6 @@ public class TNE extends TNELib implements TabCompleter {
   private ItemCompatibility itemCompatibility;
 
   //Economy APIs
-  private Economy_TheNewEconomy vaultEconomy;
-  private ReserveEconomy reserveEconomy;
   private TNEAPI api;
 
   // Files & Custom Configuration Files
@@ -203,11 +199,8 @@ public class TNE extends TNELib implements TabCompleter {
 
     //Initialize Economy Classes
     if(getServer().getPluginManager().getPlugin("Vault") != null) {
-      vaultEconomy = new Economy_TheNewEconomy(this);
       setupVault();
     }
-
-    reserveEconomy = new ReserveEconomy(this);
     if(getServer().getPluginManager().getPlugin("Reserve") != null) {
       setupReserve();
     }
@@ -276,10 +269,14 @@ public class TNE extends TNELib implements TabCompleter {
 
     TNE.debug("Preparing module configurations for manager");
     loader.getModules().forEach((key, value)->{
-      value.getModule().loadConfigurations();
-      value.getModule().configurations().forEach((configuration, identifier)->{
-        configurations().add(configuration, identifier);
-      });
+      try {
+        value.getModule().loadConfigurations();
+        value.getModule().configurations().forEach((configuration, identifier) -> {
+          configurations().add(configuration, identifier);
+        });
+      } catch(Exception ignore) {
+        logger().warning("Issue while registering configurations for module " + key + ". Is it up to date?");
+      }
     });
 
     TNE.debug("Preparing configurations for manager");
@@ -295,33 +292,55 @@ public class TNE extends TNELib implements TabCompleter {
 
     //Load Module Sub Commands
     loader.getModules().forEach((key, value)-> {
-      value.getModule().subCommands().forEach((command, moduleSubs)->{
-        Optional<CommandInformation> find = CommandsHandler.manager().find(command);
-        if(find.isPresent()) {
-          moduleSubs.forEach((sub)->find.get().addSub(sub));
-        }
+      try {
+        value.getModule().subCommands().forEach((command, moduleSubs) -> {
+          Optional<CommandInformation> find = CommandsHandler.manager().find(command);
+          if (find.isPresent()) {
+            moduleSubs.forEach((sub) -> find.get().addSub(sub));
+          }
 
-        CommandsHandler.manager().register(find.get().getIdentifiers(true), find.get());
-      });
+          CommandsHandler.manager().register(find.get().getIdentifiers(true), find.get());
+        });
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
     });
 
     //Executors
     ExecutorsRegistry.register();
 
     //Load Module Commands
-    loader.getModules().forEach((key, value)-> value.getModule().commands().forEach((command)->{
-      CommandsHandler.manager().register(command.getIdentifiers(true), command);
-    }));
+    loader.getModules().forEach((key, value)-> {
+      try {
+        for(CommandInformation command : value.getModule().commands()) {
+          CommandsHandler.manager().register(command.getIdentifiers(true), command);
+        }
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
+    });
 
     //Load Module Executors
-    loader.getModules().forEach((key, value)-> value.getModule().commandExecutors().forEach((name, executor)->{
-      CommandsHandler.instance().addExecutor(name, executor);
-    }));
+    loader.getModules().forEach((key, value)-> {
+      try {
+        value.getModule().commandExecutors().forEach((name, executor) -> {
+          CommandsHandler.instance().addExecutor(name, executor);
+        });
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
+    });
 
     //Load Module Completers
-    loader.getModules().forEach((key, value)->value.getModule().tabCompleters().forEach((name, completer)->{
-      CommandsHandler.manager().getCompleters().put(name, completer);
-    }));
+    loader.getModules().forEach((key, value)-> {
+      try {
+        value.getModule().tabCompleters().forEach((name, completer) -> {
+          CommandsHandler.manager().getCompleters().put(name, completer);
+        });
+      } catch(NoClassDefFoundError | Exception ignore) {
+        logger().warning("Issue while registering commands for module " + key + ". Is it up to date?");
+      }
+    });
 
     handler.load();
 
@@ -340,6 +359,15 @@ public class TNE extends TNELib implements TabCompleter {
       final CommentedConfiguration penny = new CommentedConfiguration(new File(tiersDirectory, "penny.yml"), new InputStreamReader(this.getResource("currency/USD/penny.yml"), StandardCharsets.UTF_8));
       penny.load();
 
+    }
+
+    //Initialize our compatibility classes.
+    if (MISCUtils.isOneThirteen()) {
+      itemCompatibility = new ItemCompatibility13();
+    } else if (MISCUtils.isOneSeven()) {
+      itemCompatibility = new ItemCompatibility7();
+    } else {
+      itemCompatibility = new ItemCompatibility12();
     }
 
     //Initialize our plugin's managers.
@@ -672,14 +700,6 @@ public class TNE extends TNELib implements TabCompleter {
     return configurations;
   }
 
-  public Economy_TheNewEconomy vault() {
-    return vaultEconomy;
-  }
-
-  public ReserveEconomy reserve() {
-    return reserveEconomy;
-  }
-
   public static ModuleLoader loader() { return instance().loader; }
 
   public static EconomyManager manager() {
@@ -808,14 +828,6 @@ public class TNE extends TNELib implements TabCompleter {
         itemConfigurations = initializeConfiguration(items, itemsFile);
         MaterialHelper.initialize();
 
-        if (MISCUtils.isOneThirteen()) {
-          itemCompatibility = new ItemCompatibility13();
-        } else if (MISCUtils.isOneSeven()) {
-          itemCompatibility = new ItemCompatibility7();
-        } else {
-          itemCompatibility = new ItemCompatibility12();
-        }
-
         menuManager = new MenuManager();
         TNE.debug("Preparing menus");
         loader.getModules().forEach((key, value) ->
@@ -929,13 +941,11 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   private void setupVault() {
-    getServer().getServicesManager().register(Economy.class, vaultEconomy, this, ServicePriority.Highest);
-    getLogger().info("Hooked into Vault");
+   new VaultHook().register(this);
   }
 
   private void setupReserve() {
-    Reserve.instance().registerProvider(reserveEconomy);
-    getLogger().info("Hooked into Reserve");
+    new ReserveHook().register(this);
   }
 
   public void addWorldManager(WorldManager manager) {

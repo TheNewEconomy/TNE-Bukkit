@@ -11,10 +11,10 @@ import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
+import net.tnemc.core.common.transaction.charge.TransactionCharge;
+import net.tnemc.core.common.transaction.charge.TransactionChargeType;
+import net.tnemc.core.common.transaction.result.TransactionResult;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -54,7 +54,7 @@ public class MoneyConvertCommand implements CommandExecution {
 
 
 
-        if(TNE.configurations().getBoolean("Core.Currency.Info.Advanced") && !sender.hasPermission("tne.money.convert." + from.name())) {
+        if(!TNE.configurations().getBoolean("Core.Currency.Info.Advanced") || !sender.hasPermission("tne.money.convert." + from.name())) {
           Message unable = new Message("Messages.Command.Unable");
           unable.addVariable("$commands", "/" + label);
           unable.translate(worldFrom, sender);
@@ -68,6 +68,11 @@ public class MoneyConvertCommand implements CommandExecution {
 
         if(TNE.instance().getWorldManager(worldTo).isEconomyDisabled()) {
           new Message("Messages.General.Disabled").translate(worldTo, sender);
+          return;
+        }
+
+        if(!from.getConversion().containsKey(to.getIdentifier())) {
+          new Message("Messages.Money.NoConversion").translate(worldTo, sender);
           return;
         }
 
@@ -94,9 +99,10 @@ public class MoneyConvertCommand implements CommandExecution {
         }
 
         BigDecimal value = new BigDecimal(parsed);
+        BigDecimal converted = value.multiply(new BigDecimal(from.getConversion().get(to.getIdentifier())));
         TNETransaction transaction = new TNETransaction(account, account, worldFrom, TNE.transactionManager().getType("conversion"));
         transaction.setInitiatorCharge(new TransactionCharge(worldFrom, from, value, TransactionChargeType.LOSE));
-        transaction.setRecipientCharge(new TransactionCharge(worldTo, to, value, TransactionChargeType.GAIN));
+        transaction.setRecipientCharge(new TransactionCharge(worldTo, to, converted, TransactionChargeType.GAIN));
         TransactionResult result = TNE.transactionManager().perform(transaction);
 
         Message message = new Message(result.initiatorMessage());

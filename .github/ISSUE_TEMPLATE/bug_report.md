@@ -1,24 +1,94 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: 'Type: Bug'
-assignees: ''
+name: Bug Report
+description: File a bug report for TNE to help us improve your experience
+title: "[BUG]: "
+labels: ["bug"]
+assignees:
+- creatorfromhell
 
----
+body:
+- type: markdown
+  attributes:
+  value: Thanks for helping to improve The New Economy with bug reports!
+- type: input
+  id: version
+  attributes:
+  label: TNE Version
+  description: What TNE version are you running?
+  placeholder: e.x. 0.1.1.4
+  validations:
+  required: true
+- type: input
+  id: spig-version
+  attributes:
+  label: Spigot Version
+  description: What Spigot version are you running?
+  placeholder: e.x. 1.17.1
+  validations:
+  required: true
+- type: input
+  id: config
+  attributes:
+  label: Your config.yml
+  description: The paste.ubuntu.com/pastebin link to your config.yml?
+  placeholder: e.x. http://paste.ubuntu.com/example
+  validations:
+  required: true
+- type: input
+  id: log
+  attributes:
+  label: Your latest server log
+  description: The paste.ubuntu.com/pastebin link to your latest server log?
+  placeholder: e.x. http://paste.ubuntu.com/example
+  validations:
+  required: true
+- type: dropdown
+  id: modules
+  attributes:
+  label: What modules are you using?
+  multiple: true
+  options:
+  - Conversion
+  validations:
+  required: true
+- type: dropdown
+  id: related-to
+  attributes:
+  label: What part of TNE is the bug affecting?
+  multiple: true
+  options:
+  - Won't Startup
+  - Transactions
+  - Towny Support
+  - Factions Support
+  - Other Plugin Support
+  validations:
+  required: true
+- type: dropdown
+  id: Online Mode
+  attributes:
+  label: Is your server using online mode?
+  multiple: false
+  options:
+  - Yes
+  - No
+  validations:
+  required: true
+- type: textarea
+  attributes:
+  label: Bug description
+  description: Describe roughly what the bug is here.
+  placeholder: |
+  Example: "When using /pay on a towny account, an error appears"
+  validations:
+  required: true
+- type: textarea
+  attributes:
+  label: How to reproduce
+  description: Provide an example of how to reproduce the bug.
+  placeholder: |
+  Example:
+  1. Have towny installed and item-based currency
+  2. Try to /pay a town account
+  validations:
+  required: true
 
-## Bug Report Format
-#### What is the issue/bug you're experiencing?
-#### How can the issue be reproduced?(i.e. the steps to make the issue occur again)
-#### TNE version?(exact version number), and whether or not you've made modification to it.
-#### TNE build?(/tne build), and whether or not you've made modification to it.
-#### Modules Loaded?(exact version number), and whether or not you've made modification to it.
-#### Spigot/Bukkit version?
-#### Is your server run in online mode?
-#### The exact command you ran w/ arguments?
-#### config.yml?(use http://paste.ubuntu.com, and remove your SQL details)
-#### Your latest server log file?(use http://paste.ubuntu.com)
-#### If this is to do with messages/world/player configurations, please include the YAML file for such.(use http://paste.ubuntu.com)
-
-Note: If, for any reason, you elect not to use the following format for your issue, it will be closed without
-notice.

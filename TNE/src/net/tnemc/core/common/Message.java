@@ -113,7 +113,9 @@ public class Message {
     String[] message = format(world, sender, id);
 
     for(String s : message) {
-      sender.sendMessage(s);
+      if(!s.trim().equalsIgnoreCase("")) {
+        sender.sendMessage(s);
+      }
     }
   }
 
