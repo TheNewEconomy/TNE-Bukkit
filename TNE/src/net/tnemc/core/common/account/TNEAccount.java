@@ -10,8 +10,6 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.transaction.charge.TransactionCharge;
 import net.tnemc.core.common.transaction.charge.TransactionChargeType;
 import net.tnemc.core.common.utils.MISCUtils;
-import net.tnemc.core.economy.response.EconomyResponse;
-import net.tnemc.core.economy.response.GeneralResponse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -288,18 +286,18 @@ public class TNEAccount {
     return accessors.containsKey(account.identifier());
   }
 
-  public EconomyResponse canWithdraw(TNEAccount account) {
+  public boolean canWithdraw(TNEAccount account) {
     if(isAccessor(account) && accessors.get(account.identifier()).canWithdraw()) {
-      return GeneralResponse.SUCCESS;
+      return true;
     }
-    return GeneralResponse.FAILED;
+    return false;
   }
 
-  public EconomyResponse canDeposit(TNEAccount account) {
+  public boolean canDeposit(TNEAccount account) {
     if(isAccessor(account) && accessors.get(account.identifier()).canDeposit()) {
-      return GeneralResponse.SUCCESS;
+      return true;
     }
-    return GeneralResponse.FAILED;
+    return false;
   }
 
   public boolean canRemoveAccessor(TNEAccount account) {
@@ -352,139 +350,139 @@ public class TNEAccount {
     return getHoldings(world, currency).compareTo(amount) >= 0;
   }
 
-  public EconomyResponse setHoldings(BigDecimal amount) {
+  public boolean setHoldings(BigDecimal amount) {
     String world = TNE.instance().defaultWorld;
     setHoldings(world, TNE.manager().currencyManager().get(world).name(), amount);
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse setHoldings(BigDecimal amount, String world) {
+  public boolean setHoldings(BigDecimal amount, String world) {
     setHoldings(world, TNE.manager().currencyManager().get(world).name(), amount);
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse setHoldings(BigDecimal amount, TNECurrency currency) {
+  public boolean setHoldings(BigDecimal amount, TNECurrency currency) {
     setHoldings(TNE.instance().defaultWorld, currency.name(), amount);
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse setHoldings(BigDecimal amount, TNECurrency currency, String world) {
+  public boolean setHoldings(BigDecimal amount, TNECurrency currency, String world) {
     setHoldings(world, currency.name(), amount);
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse addHoldings(BigDecimal amount) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean addHoldings(BigDecimal amount) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     String world = TNE.instance().defaultWorld;
     TNECurrency currency = TNE.manager().currencyManager().get(world);
     setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse addHoldings(BigDecimal amount, String world) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean addHoldings(BigDecimal amount, String world) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     TNECurrency currency = TNE.manager().currencyManager().get(world);
     setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse addHoldings(BigDecimal amount, TNECurrency currency) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean addHoldings(BigDecimal amount, TNECurrency currency) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     String world = TNE.instance().defaultWorld;
     setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse addHoldings(BigDecimal amount, TNECurrency currency, String world) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean addHoldings(BigDecimal amount, TNECurrency currency, String world) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     setHoldings(world, currency.name(), getHoldings(world, currency.name(), true, false).add(amount));
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse canAddHoldings(BigDecimal amount) {
-    return GeneralResponse.SUCCESS;
+  public boolean canAddHoldings(BigDecimal amount) {
+    return true;
   }
 
-  public EconomyResponse canAddHoldings(BigDecimal amount, String world) {
+  public boolean canAddHoldings(BigDecimal amount, String world) {
     final BigDecimal max = TNE.manager().currencyManager().get(world).getMaxBalance();
 
     if(getHoldings(world).add(amount).compareTo(max) > 0) {
-      return GeneralResponse.FAILED;
+      return false;
     }
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse canAddHoldings(BigDecimal amount, TNECurrency currency) {
-    return GeneralResponse.SUCCESS;
+  public boolean canAddHoldings(BigDecimal amount, TNECurrency currency) {
+    return true;
   }
 
-  public EconomyResponse canAddHoldings(BigDecimal amount, TNECurrency currency, String world) {
+  public boolean canAddHoldings(BigDecimal amount, TNECurrency currency, String world) {
     final BigDecimal max = TNE.manager().currencyManager().get(world, currency.name()).getMaxBalance();
 
     if(getHoldings(world, currency).add(amount).compareTo(max) > 0) {
-      return GeneralResponse.FAILED;
+      return false;
     }
-    return GeneralResponse.SUCCESS;
+    return true;
   }
 
-  public EconomyResponse removeHoldings(BigDecimal amount) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean removeHoldings(BigDecimal amount) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount)) {
       String world = TNE.instance().defaultWorld;
       TNECurrency currency = TNE.manager().currencyManager().get(world);
       removeHoldings(amount, world, currency.name(), false);
-      return GeneralResponse.SUCCESS;
+      return true;
     }
-    return GeneralResponse.FAILED;
+    return false;
   }
 
-  public EconomyResponse removeHoldings(BigDecimal amount, String world) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean removeHoldings(BigDecimal amount, String world) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount, world)) {
       TNECurrency currency = TNE.manager().currencyManager().get(world);
       removeHoldings(amount, world, currency.name(), false);
-      return GeneralResponse.SUCCESS;
+      return true;
     }
-    return GeneralResponse.FAILED;
+    return false;
   }
 
-  public EconomyResponse removeHoldings(BigDecimal amount, TNECurrency currency) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean removeHoldings(BigDecimal amount, TNECurrency currency) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount, currency)) {
       String world = TNE.instance().defaultWorld;
       removeHoldings(amount, world, currency.name(), false);
-      return GeneralResponse.SUCCESS;
+      return true;
     }
-    return GeneralResponse.FAILED;
+    return false;
   }
 
-  public EconomyResponse removeHoldings(BigDecimal amount, TNECurrency currency, String world) {
-    if(amount.equals(BigDecimal.ZERO)) return GeneralResponse.SUCCESS;
+  public boolean removeHoldings(BigDecimal amount, TNECurrency currency, String world) {
+    if(amount.equals(BigDecimal.ZERO)) return true;
     if(hasHoldings(amount, currency, world)) {
       removeHoldings(amount, world, currency.name(), false);
-      return GeneralResponse.SUCCESS;
+      return true;
     }
-    return GeneralResponse.FAILED;
+    return false;
   }
 
-  public EconomyResponse canRemoveHoldings(BigDecimal amount) {
-    if(hasHoldings(amount)) return GeneralResponse.SUCCESS;
-    return GeneralResponse.FAILED;
+  public boolean canRemoveHoldings(BigDecimal amount) {
+    if(hasHoldings(amount)) return true;
+    return false;
   }
 
-  public EconomyResponse canRemoveHoldings(BigDecimal amount, String world) {
-    if(hasHoldings(amount, world)) return GeneralResponse.SUCCESS;
-    return GeneralResponse.FAILED;
+  public boolean canRemoveHoldings(BigDecimal amount, String world) {
+    if(hasHoldings(amount, world)) return true;
+    return false;
   }
 
-  public EconomyResponse canRemoveHoldings(BigDecimal amount, TNECurrency currency) {
-    if(hasHoldings(amount, currency)) return GeneralResponse.SUCCESS;
-    return GeneralResponse.FAILED;
+  public boolean canRemoveHoldings(BigDecimal amount, TNECurrency currency) {
+    if(hasHoldings(amount, currency)) return true;
+    return false;
   }
 
-  public EconomyResponse canRemoveHoldings(BigDecimal amount, TNECurrency currency, String world) {
-    if(hasHoldings(amount, currency, world)) return GeneralResponse.SUCCESS;
-    return GeneralResponse.FAILED;
+  public boolean canRemoveHoldings(BigDecimal amount, TNECurrency currency, String world) {
+    if(hasHoldings(amount, currency, world)) return true;
+    return false;
   }
 
   /**
@@ -492,7 +490,7 @@ public class TNEAccount {
    * @param charge The {@link TransactionCharge} to handle.
    * @return True if charge is able to be handled successfully, otherwise false.
    */
-  public EconomyResponse handleCharge(TransactionCharge charge) {
+  public boolean handleCharge(TransactionCharge charge) {
     if(charge.getType().equals(TransactionChargeType.LOSE)) {
       return removeHoldings(charge.getAmount(), charge.getCurrency(), charge.getWorld());
     }
@@ -504,7 +502,7 @@ public class TNEAccount {
    * @param charge The {@link TransactionCharge} to handle.
    * @return True if a call to handleCharge would return true, otherwise false.
    */
-  public EconomyResponse canCharge(TransactionCharge charge) {
+  public boolean canCharge(TransactionCharge charge) {
     if(charge.getType().equals(TransactionChargeType.LOSE)) {
       return canRemoveHoldings(charge.getAmount(), charge.getCurrency(), charge.getWorld());
     }

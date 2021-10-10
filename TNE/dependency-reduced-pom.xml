@@ -131,12 +131,6 @@
       <artifactId>Reserve</artifactId>
       <version>0.1.5.3-SNAPSHOT-4</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>TNELib</artifactId>
-          <groupId>com.github</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.milkbowl.vault</groupId>

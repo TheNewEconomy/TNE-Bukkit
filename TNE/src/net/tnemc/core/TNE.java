@@ -4,7 +4,6 @@ import com.github.tnerevival.TNELib;
 import com.github.tnerevival.core.UpdateChecker;
 import com.github.tnerevival.core.db.SQLDatabase;
 import com.hellyard.cuttlefish.grammar.yaml.YamlValue;
-import net.milkbowl.vault.economy.Economy;
 import net.tnemc.commands.bukkit.BukkitCommandsHandler;
 import net.tnemc.commands.bukkit.provider.BukkitPlayerProvider;
 import net.tnemc.commands.core.CommandInformation;
@@ -17,10 +16,10 @@ import net.tnemc.core.common.TransactionManager;
 import net.tnemc.core.common.WorldManager;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.EconomyPlaceholders;
-import net.tnemc.core.common.api.Economy_TheNewEconomy;
 import net.tnemc.core.common.api.IDFinder;
-import net.tnemc.core.common.api.ReserveEconomy;
 import net.tnemc.core.common.api.TNEAPI;
+import net.tnemc.core.common.api.hooks.ReserveHook;
+import net.tnemc.core.common.api.hooks.VaultHook;
 import net.tnemc.core.common.configurations.DataConfigurations;
 import net.tnemc.core.common.configurations.MainConfigurations;
 import net.tnemc.core.common.configurations.MessageConfigurations;
@@ -72,7 +71,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.ServicePriority;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -144,8 +142,6 @@ public class TNE extends TNELib implements TabCompleter {
   private ItemCompatibility itemCompatibility;
 
   //Economy APIs
-  private Economy_TheNewEconomy vaultEconomy;
-  private ReserveEconomy reserveEconomy;
   private TNEAPI api;
 
   // Files & Custom Configuration Files
@@ -203,11 +199,8 @@ public class TNE extends TNELib implements TabCompleter {
 
     //Initialize Economy Classes
     if(getServer().getPluginManager().getPlugin("Vault") != null) {
-      vaultEconomy = new Economy_TheNewEconomy(this);
       setupVault();
     }
-
-    reserveEconomy = new ReserveEconomy(this);
     if(getServer().getPluginManager().getPlugin("Reserve") != null) {
       setupReserve();
     }
@@ -707,14 +700,6 @@ public class TNE extends TNELib implements TabCompleter {
     return configurations;
   }
 
-  public Economy_TheNewEconomy vault() {
-    return vaultEconomy;
-  }
-
-  public ReserveEconomy reserve() {
-    return reserveEconomy;
-  }
-
   public static ModuleLoader loader() { return instance().loader; }
 
   public static EconomyManager manager() {
@@ -956,15 +941,11 @@ public class TNE extends TNELib implements TabCompleter {
   }
 
   private void setupVault() {
-    getServer().getServicesManager().register(Economy.class, vaultEconomy, this, ServicePriority.Highest);
-    getLogger().info("Hooked into Vault");
+   new VaultHook().register(this);
   }
 
   private void setupReserve() {
-
-    ((Reserve)Bukkit.getPluginManager().getPlugin("Reserve")).registerProvider(reserveEconomy);
-    //Reserve.instance().registerProvider(reserveEconomy);
-    getLogger().info("Hooked into Reserve");
+    new ReserveHook().register(this);
   }
 
   public void addWorldManager(WorldManager manager) {

@@ -82,11 +82,11 @@ public interface TransactionType {
     boolean proceed = false;
 
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.INITIATOR)) {
-      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true)).success();
+      proceed = transaction.getInitiator().canCharge(transaction.initiatorCharge().copy(true));
     }
     if(affected().equals(TransactionAffected.BOTH) || affected().equals(TransactionAffected.RECIPIENT)) {
       if(affected().equals(TransactionAffected.BOTH) && proceed || affected().equals(TransactionAffected.RECIPIENT)) {
-        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true)).success();
+        proceed = transaction.getRecipient().canCharge(transaction.recipientCharge().copy(true));
       }
     }
 
@@ -106,11 +106,10 @@ public interface TransactionType {
 
   /**
    * Performs the actual transaction logic.
-   * @param transaction The {@link TNETransaction} to perform.
+   * @param tneTransaction The {@link TNETransaction} to perform.
    * @return The {@link TransactionResult} of this {@link TNETransaction}.
    */
-  default TransactionResult perform(TNETransaction transaction) {
-    final TNETransaction tneTransaction = (TNETransaction)transaction;
+  default TransactionResult perform(TNETransaction tneTransaction) {
     TNE.debug("=====START TNETransactionType.perform =====");
     boolean proceed = false;
 
