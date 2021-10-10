@@ -76,7 +76,7 @@ body:
   - type: textarea
     attributes:
       label: Bug description
-      description: Describe roughly what the bug is here.
+      description: Describe the bug you're experiencing here.
       placeholder: |
         Example: "When using /pay on a towny account, an error appears"
     validations:
