@@ -23,8 +23,25 @@ Fixes
 - Fixed issue where /money note did not properly work.
 - Fixed issue where max balance wasn't being enforced.
 
+1.1.15
+
+General
+- Revamped the conversion system for currencies to be easier to configure and understand
+- Setting messages in messages.yml to "" will now not send any message.
+- Allow importing currency items in player inventories when first starting with TNE instead of
+wiping them completely
+
+Minor Notes
+- Updated to latest Reserve Economy API.
+
+Fixes
+- Fix issue where using item currencies with Towny threw String.length() error.
+- Fix issues with command selectors as parameters(@a, @o)
+- Fix issue where using an outdated module would result in a complete TNE crash
+
 Planned for 1.2
 
 New Item Currency System // still needs completed
 - No longer required to declare minor/major
 - Ability to use irregular value amounts for tiers, such as 2.01 or even 1.99!
+- Removed the basic currency system, everything should now use the advanced currency system

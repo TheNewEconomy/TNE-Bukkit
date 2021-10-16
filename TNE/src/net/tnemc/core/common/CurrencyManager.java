@@ -42,7 +42,7 @@ import java.util.UUID;
  * Created by creatorfromhell on 10/22/2016.
  */
 public class CurrencyManager {
-  public static BigDecimal largestSupported;
+  public static final BigDecimal largestSupported= new BigDecimal("900000000000000000000000000000000000000000000");
   private Map<String, TNECurrency> globalCurrencies = new HashMap<>();
   private Map<String, CurrencyType> currencyTypes = new HashMap<>();
 
@@ -95,7 +95,6 @@ public class CurrencyManager {
   }
 
   public void loadCurrencies() {
-    largestSupported = new BigDecimal("900000000000000000000000000000000000000000000");
 
     CurrencyLoader loader;
 
@@ -110,7 +109,6 @@ public class CurrencyManager {
     for(WorldManager manager : TNE.instance().getWorldManagers()) {
       initializeWorld(manager.getWorld());
     }
-    largestSupported = null;
   }
 
   public void addCurrencyType(CurrencyType type) {
