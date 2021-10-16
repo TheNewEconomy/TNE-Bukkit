@@ -178,6 +178,7 @@ public class IDFinder {
   }
   
   public static boolean isNonPlayer(String identifier) {
+    if(identifier == null) return true;
     if(identifier.length() >= 3 && identifier.length() <= 16) {
       return !TNE.USERNAME_PATTERN.matcher(identifier).matches();
     }

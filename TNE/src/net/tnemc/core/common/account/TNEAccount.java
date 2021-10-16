@@ -279,7 +279,7 @@ public class TNEAccount {
   }
 
   public boolean playerAccount() {
-    return player;
+    return !IDFinder.isNonPlayer(displayName);
   }
 
   public boolean isAccessor(TNEAccount account) {

@@ -1,5 +1,6 @@
 package net.tnemc.core.common.currency.formatter.impl;
 
+import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.ItemCalculations;
 import net.tnemc.core.common.currency.TNECurrency;
@@ -34,6 +35,8 @@ public class MaterialRule implements FormatRule {
 
     if(player != null && !player.equalsIgnoreCase("") && currency.isItem()) {
       final UUID id = IDFinder.getID(player);
+      TNE.debug("PLAYER: " + player);
+      TNE.debug("ID: " + id.toString());
       if(id != null) {
         Player p = MISCUtils.getPlayer(id);
         if(p != null) {
