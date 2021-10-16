@@ -48,8 +48,6 @@ body:
       multiple: true
       options:
         - Conversion
-    validations:
-      required: true
   - type: dropdown
     id: related-to
     attributes:
