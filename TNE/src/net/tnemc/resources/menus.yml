@@ -1,0 +1,33 @@
+Menus:
+
+  currency:
+
+    Identifier: "currency_editor"
+
+    Size: 54
+
+    Title: "Messages.Menus.Currency.Title"
+
+    Icons:
+
+      0:
+
+        Slot: 0
+
+        Display: "Basic Settings"
+
+        Material:
+
+          Type: "clock"
+
+          Enchantment:
+
+            - "UNBREAKING:3"
+
+          Flags:
+
+            - HIDE_ENCHANTS
+
+        Data:
+
+          SwitchMenu: "currency_basic_settings"

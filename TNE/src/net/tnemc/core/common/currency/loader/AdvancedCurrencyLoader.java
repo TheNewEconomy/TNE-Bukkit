@@ -171,11 +171,11 @@ public class AdvancedCurrencyLoader implements CurrencyLoader {
         currency.setMajorSeparator(separator);
         currency.setMinorWeight(minorWeight);
 
-        if(config.contains("Core.Converting")) {
-          Set<String> converting = config.getSection("Core.Converting").getKeys(false);
+        if(config.contains("Converting")) {
+          Set<String> converting = config.getSection("Converting").getKeys(false);
 
           for(String str : converting) {
-            currency.addConversion(str, config.getDouble("Core.Converting." + str, 1.0));
+            currency.addConversion(str, config.getDouble("Converting." + str, 1.0));
           }
         }
 

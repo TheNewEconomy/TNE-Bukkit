@@ -82,7 +82,7 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    final int dropped = giveItemsFeedback(account, items.values(), inventory);
+    final int dropped = giveItemsFeedback(account, currency, items.values(), inventory);
     if(dropped > 0) {
       if(inventory.getHolder() instanceof HumanEntity) {
         ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -104,7 +104,7 @@ public class ItemCalculations {
       stack.setAmount(itemAmount.intValue());
       items.put(entry.getKey(), stack);
     }
-    final int dropped = giveItemsFeedback(account, items.values(), inventory);
+    final int dropped = giveItemsFeedback(account, currency, items.values(), inventory);
     if(dropped > 0) {
       if(inventory.getHolder() instanceof HumanEntity) {
         ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -193,7 +193,7 @@ public class ItemCalculations {
       items.put(entry.getKey(), stack);
     }
     if(add) {
-      final int dropped = giveItemsFeedback(account, items.values(), inventory);
+      final int dropped = giveItemsFeedback(account, currency, items.values(), inventory);
       if(dropped > 0) {
         if(inventory.getHolder() instanceof HumanEntity) {
           ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -249,7 +249,7 @@ public class ItemCalculations {
     }
     if(add) {
 
-      final int dropped = giveItemsFeedback(account, items.values(), inventory);
+      final int dropped = giveItemsFeedback(account, currency, items.values(), inventory);
       if(dropped > 0) {
         if(inventory.getHolder() instanceof HumanEntity) {
           ((HumanEntity) inventory.getHolder()).sendMessage(ChatColor.RED + "Your inventory was full, check the ground for excess currency items.");
@@ -329,7 +329,7 @@ public class ItemCalculations {
     }
   }
 
-  public static int giveItemsFeedback(UUID account, Collection<ItemStack> items, Inventory inventory) {
+  public static int giveItemsFeedback(UUID account, TNECurrency currency, Collection<ItemStack> items, Inventory inventory) {
     int leftAmount = 0;
     for(ItemStack item : items) {
 
@@ -353,7 +353,7 @@ public class ItemCalculations {
         if(inventory instanceof PlayerInventory) {
           final HumanEntity entity = ((HumanEntity)inventory.getHolder());
 
-          if(entity != null) {
+          if(entity != null && currency.canEnderChest()) {
             left = entity.getEnderChest().addItem(left.values().toArray(new ItemStack[left.size()]));
           }
         }
