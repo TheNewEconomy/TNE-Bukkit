@@ -9,6 +9,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.AccountStatus;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.currency.CurrencyEntry;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.data.TNEDataProvider;
 import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.transaction.charge.TransactionCharge;
@@ -59,6 +60,7 @@ public class MySQLProvider extends TNEDataProvider {
   private final String ACCOUNT_DELETE = "DELETE FROM " + prefix + "_USERS WHERE uuid = ?";
   private final String BALANCE_LOAD_INDIVIDUAL = "SELECT balance FROM " + prefix + "_BALANCES WHERE uuid = ? AND `server_name` = ? AND world = ? AND currency = ?";
   private final String BALANCE_LOAD_ALL = "SELECT world, currency, balance FROM " + prefix + "_BALANCES WHERE uuid = ?";
+  private final String BALANCE_LOAD_ALL_ALL_USERS = "SELECT uuid, world, currency, balance FROM " + prefix + "_BALANCES";
   private final String BALANCE_DELETE_INDIVIDUAL = "DELETE FROM " + prefix + "_BALANCES WHERE uuid = ? AND world = ? AND currency = ?";
   private final String BALANCE_SAVE = "INSERT INTO " + prefix + "_BALANCES (uuid, `server_name`, world, currency, balance) " +
       "VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE balance = ?";
@@ -455,6 +457,32 @@ public class MySQLProvider extends TNEDataProvider {
     }
     SQLDatabase.close();
     return balances;
+  }
+
+  @Override
+  public void loadAllBalances() throws SQLException {
+
+    SQLDatabase.open();
+    try(PreparedStatement statement = SQLDatabase.getDb().getConnection().prepareStatement(BALANCE_LOAD_ALL_ALL_USERS)) {
+
+      try(ResultSet results = statement.executeQuery()) {
+
+        while(results.next()) {
+
+          final String world = results.getString("world");
+          final String cur = results.getString("currency");
+
+          TNECurrency currency = TNE.manager().currencyManager().get(world, cur);
+          if(currency != null && !currency.isItem() && !currency.isXp()) {
+
+            TNE.manager().setBalance(UUID.fromString(results.getString("uuid")),
+                world, cur,
+                results.getBigDecimal("balance"), false);
+          }
+        }
+      }
+    }
+    SQLDatabase.close();
   }
 
   @Override

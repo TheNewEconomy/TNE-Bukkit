@@ -14,8 +14,10 @@ import net.tnemc.core.listeners.collections.AccountListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,6 +40,8 @@ public class EconomyManager {
    * the key and {@link TNEAccount account} as the value.
    */
   private EventMap<UUID, TNEAccount> accounts = new EventMap<>();
+
+  private Map<UUID, BalanceManager> balances = new HashMap<>();
 
   private List<UUID> dead = new ArrayList<>();
 
@@ -76,6 +80,26 @@ public class EconomyManager {
     List<HoldingsHandler> handlers = holdingsHandlers.getOrDefault(handler.priority(), new ArrayList<>());
     handlers.add(handler);
     holdingsHandlers.put(handler.priority(), handlers);
+  }
+
+  public BigDecimal getBalance(UUID account, String world, String currency) {
+
+    BalanceManager balanceManager = balances.getOrDefault(account, new BalanceManager(account));
+
+    return balanceManager.getBalance(world, currency);
+  }
+
+  public void setBalance(UUID account, String world, String currency, BigDecimal balance) {
+    setBalance(account, world, currency, balance, true);
+  }
+
+  public void setBalance(UUID account, String world, String currency, BigDecimal balance, boolean update) {
+
+    BalanceManager balanceManager = balances.getOrDefault(account, new BalanceManager(account));
+    balanceManager.setBalance(world, currency, balance, update);
+
+    balances.put(account, balanceManager);
+
   }
 
   public void addDead(UUID id) {

@@ -48,7 +48,8 @@ public class VirtualType implements CurrencyType {
   @Override
   public BigDecimal getHoldings(UUID account, String world, TNECurrency currency, boolean database) throws SQLException {
     TNE.debug("======================== getHoldings(virtual) ===========================");
-    return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
+    return TNE.manager().getBalance(account, world, currency.getIdentifier());
+    //return TNE.saveManager().getTNEManager().getTNEProvider().loadBalance(account, world, currency.name());
   }
 
   /**
@@ -60,6 +61,7 @@ public class VirtualType implements CurrencyType {
    */
   @Override
   public void setHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount, boolean skipUpdate) throws SQLException {
-    TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(account, world, currency.getIdentifier(), amount);
+    TNE.manager().setBalance(account, world, currency.getIdentifier(), amount, !skipUpdate);
+    //TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(account, world, currency.getIdentifier(), amount);
   }
 }

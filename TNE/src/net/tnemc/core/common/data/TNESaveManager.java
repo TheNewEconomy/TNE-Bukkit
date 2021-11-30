@@ -54,6 +54,10 @@ public class TNESaveManager extends SaveManager {
   @Override
   public void load() throws SQLException {
     TNE.debug("====== TNESaveManager.load =======");
+
+    //Load Balances
+    getTNEManager().getTNEProvider().loadAllBalances();
+
     TNELib.instance().getLogger().info("Finished loading data!");
   }
 

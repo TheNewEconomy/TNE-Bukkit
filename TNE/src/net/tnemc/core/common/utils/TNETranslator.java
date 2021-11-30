@@ -24,8 +24,10 @@ import java.util.Optional;
 public class TNETranslator implements CommandTranslator {
   @Override
   public Optional<List<String>> translateToList(String text, Optional<PlayerProvider> sender) {
+    System.out.println("Translate2: " + text);
     if(sender.isPresent()) {
 
+      System.out.println("made it2");
       CommandSender bukkitSender = (sender.get().isPlayer())? Bukkit.getPlayer(sender.get().getUUID())
           : Bukkit.getConsoleSender();
       return Optional.of(Arrays.asList(new Message(text).format(TNE.instance().defaultWorld, bukkitSender, "")));
@@ -35,10 +37,13 @@ public class TNETranslator implements CommandTranslator {
 
   @Override
   public Optional<String> translateText(String text, Optional<PlayerProvider> sender) {
+    System.out.println("Translate: " + text);
     if(sender.isPresent()) {
 
+      System.out.println("made it");
       CommandSender bukkitSender = (sender.get().isPlayer())? Bukkit.getPlayer(sender.get().getUUID())
           : Bukkit.getConsoleSender();
+      bukkitSender.sendMessage(Message.replaceColours(new Message(text).grab(TNE.instance().defaultWorld, bukkitSender), false));
       return Optional.of(Message.replaceColours(new Message(text).grab(TNE.instance().defaultWorld, bukkitSender), false));
     }
     return Optional.empty();
