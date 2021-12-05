@@ -201,6 +201,10 @@ public class MISCUtils {
     return Bukkit.getVersion().contains("1.17");
   }
 
+  public static boolean isOneEighteen() {
+    return Bukkit.getVersion().contains("1.18");
+  }
+
   public static boolean offHand() {
     return isOneNine() || isOneTen() || isOneEleven() || isOneTwelve() || isOneThirteen();
   }
