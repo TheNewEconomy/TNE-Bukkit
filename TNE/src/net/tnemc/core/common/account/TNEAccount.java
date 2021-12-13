@@ -16,7 +16,6 @@ import org.bukkit.inventory.PlayerInventory;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +30,6 @@ import java.util.UUID;
  */
 
 public class TNEAccount {
-  private Map<UUID, AccountAccessor> accessors = new HashMap<>();
   private AccountHistory history;
 
   private int accountNumber = 0;
@@ -280,38 +278,6 @@ public class TNEAccount {
 
   public boolean playerAccount() {
     return !IDFinder.isNonPlayer(displayName);
-  }
-
-  public boolean isAccessor(TNEAccount account) {
-    return accessors.containsKey(account.identifier());
-  }
-
-  public boolean canWithdraw(TNEAccount account) {
-    if(isAccessor(account) && accessors.get(account.identifier()).canWithdraw()) {
-      return true;
-    }
-    return false;
-  }
-
-  public boolean canDeposit(TNEAccount account) {
-    if(isAccessor(account) && accessors.get(account.identifier()).canDeposit()) {
-      return true;
-    }
-    return false;
-  }
-
-  public boolean canRemoveAccessor(TNEAccount account) {
-    if(isAccessor(account)) {
-      return accessors.get(account.identifier()).canRemoveAccessor();
-    }
-    return false;
-  }
-
-  public boolean canAddAccessor(TNEAccount account) {
-    if(isAccessor(account)) {
-      return accessors.get(account.identifier()).canAddAccessor();
-    }
-    return false;
   }
 
   public BigDecimal getHoldings() {

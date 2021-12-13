@@ -1,11 +1,12 @@
 package net.tnemc.core.common.account;
 
-import com.github.tnerevival.core.collection.EventMap;
 import net.tnemc.core.TNE;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -20,7 +21,7 @@ import java.util.UUID;
  */
 public class WorldBalance {
 
-  private EventMap<String, BigDecimal> balances = new EventMap<>();
+  private Map<String, BigDecimal> balances = new HashMap<>();
 
   private UUID uuid;
   private String world;
@@ -30,7 +31,7 @@ public class WorldBalance {
     this.world = world;
   }
 
-  public EventMap<String, BigDecimal> getBalances() {
+  public Map<String, BigDecimal> getBalances() {
     return balances;
   }
 

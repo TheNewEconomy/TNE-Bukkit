@@ -13,9 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,20 +48,9 @@ public class IDFinder {
       final UUID id = UUID.fromString(identifier);
       final OfflinePlayer player = Bukkit.getOfflinePlayer(id);
 
-      String username = null;
-      try {
-        username = TNE.saveManager().getTNEManager().getTNEProvider().loadUsername(id.toString());
-      } catch (SQLException ignore) {
-      }
+      Optional<String> username = TNE.manager().getName(id);
 
-      if(username != null) {
-        return username;
-      }
-
-      if(player == null) {
-        return MojangAPI.getPlayerUsername(id);
-      }
-      return player.getName();
+      return username.orElseGet(player::getName);
     }
     return identifier;
   }
@@ -162,19 +150,20 @@ public class IDFinder {
     }
 
     TNE.debug("CACHE");
-    if(uuidCache.getIfPresent(identifier) == null && !Bukkit.getOfflinePlayer(identifier).hasPlayedBefore()) {
+    Optional<UUID> cache = TNE.manager().getIdentifier(identifier);
+
+    if(cache.isPresent()) {
+      return cache.get();
+    }
+
+    if(!Bukkit.getOfflinePlayer(identifier).hasPlayedBefore()) {
       UUID uuid = TNE.uuidAPI.getUUID(identifier);
       uuidCache.put(identifier, uuid);
       return uuid;
     }
 
-    String finalIdentifier = identifier;
     TNE.debug("offline");
-    try {
-      return uuidCache.get(identifier, () -> Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId());
-    } catch (ExecutionException e) { // shouldn't throw, but add a backup anyways
-      return Bukkit.getOfflinePlayer(finalIdentifier).getUniqueId();
-    }
+    return Bukkit.getOfflinePlayer(identifier).getUniqueId();
   }
   
   public static boolean isNonPlayer(String identifier) {

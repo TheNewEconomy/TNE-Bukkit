@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The New Economy Minecraft Server Plugin
@@ -55,8 +56,13 @@ public class TNESaveManager extends SaveManager {
   public void load() throws SQLException {
     TNE.debug("====== TNESaveManager.load =======");
 
-    //Load Balances
+    //Load Virtual Currency Balances into memory
     getTNEManager().getTNEProvider().loadAllBalances();
+
+    //Load IDS into memory
+    for(Map.Entry<String, UUID> entry : getTNEManager().getTNEProvider().loadEconomyIDS().entrySet()) {
+      TNE.manager().addID(entry.getValue(), entry.getKey(), true);
+    }
 
     TNELib.instance().getLogger().info("Finished loading data!");
   }

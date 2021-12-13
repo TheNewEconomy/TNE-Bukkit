@@ -15,11 +15,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -40,6 +42,8 @@ public class EconomyManager {
    * the key and {@link TNEAccount account} as the value.
    */
   private EventMap<UUID, TNEAccount> accounts = new EventMap<>();
+
+  private Map<UUID, String> idCache = new HashMap<>();
 
   private Map<UUID, BalanceManager> balances = new HashMap<>();
 
@@ -80,6 +84,32 @@ public class EconomyManager {
     List<HoldingsHandler> handlers = holdingsHandlers.getOrDefault(handler.priority(), new ArrayList<>());
     handlers.add(handler);
     holdingsHandlers.put(handler.priority(), handlers);
+  }
+
+  public void addID(UUID identifier, String name, boolean skipUpdate) {
+    idCache.put(identifier, name);
+
+    if(!skipUpdate) {
+      Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
+        try {
+          TNE.saveManager().getTNEManager().getTNEProvider().saveID(name, identifier);
+        } catch (SQLException e) {
+          TNE.debug(e);
+        }
+      });
+
+    }
+  }
+
+  public Optional<String> getName(UUID identifier) {
+    return Optional.of(idCache.get(identifier));
+  }
+
+  public Optional<UUID> getIdentifier(String name) {
+    for(Map.Entry<UUID, String> entry : idCache.entrySet()) {
+      if(entry.getValue().equalsIgnoreCase(name)) return Optional.of(entry.getKey());
+    }
+    return Optional.empty();
   }
 
   public BigDecimal getBalance(UUID account, String world, String currency) {
