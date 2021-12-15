@@ -9,6 +9,7 @@ import net.tnemc.core.common.currency.loader.AdvancedCurrencyLoader;
 import net.tnemc.core.common.currency.loader.BasicCurrencyLoader;
 import net.tnemc.core.common.currency.recipe.CurrencyRecipe;
 import net.tnemc.core.common.currency.type.ItemType;
+import net.tnemc.core.common.currency.type.MixedType;
 import net.tnemc.core.common.currency.type.VirtualType;
 import net.tnemc.core.common.currency.type.XPType;
 import net.tnemc.core.common.transaction.TNETransaction;
@@ -85,6 +86,7 @@ public class CurrencyManager {
   public void initTypes() {
     addCurrencyType(new ItemType());
     addCurrencyType(new VirtualType());
+    addCurrencyType(new MixedType());
     addCurrencyType(new XPType());
   }
 
