@@ -77,12 +77,12 @@ public class MixedType implements CurrencyType {
     if(holdings.compareTo(BigDecimal.ZERO) != 0 && holdings.compareTo(amount) > 0) {
       final BigDecimal virtualHoldings = virtualHoldings(account, world, currency);
 
-      BigDecimal toSet = amount;
+      final boolean itemNeeded = (virtualHoldings.compareTo(amount) < 0);
 
-      if(virtualHoldings.compareTo(amount) < 0) {
+      final BigDecimal toSet = (itemNeeded)? BigDecimal.ZERO : amount;
+
+      if(itemNeeded) {
         final BigDecimal remaining = amount.subtract(virtualHoldings);
-
-        toSet = BigDecimal.ZERO;
 
         setItemHoldings(account, world, currency, itemHoldings(account, world, currency, false).subtract(remaining));
       }
