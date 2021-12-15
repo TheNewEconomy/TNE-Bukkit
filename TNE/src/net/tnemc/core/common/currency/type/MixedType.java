@@ -72,9 +72,29 @@ public class MixedType implements CurrencyType {
    */
   @Override
   public void setHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount, boolean skipUpdate) throws SQLException {
-    TNE.manager().setBalance(account, world, currency.getIdentifier(), amount, !skipUpdate);
+    final BigDecimal holdings = getHoldings(account, world, currency, false);
 
-    //TNE.saveManager().getTNEManager().getTNEProvider().saveBalance(account, world, currency.getIdentifier(), amount);
+    if(holdings.compareTo(BigDecimal.ZERO) != 0 && holdings.compareTo(amount) > 0) {
+      final BigDecimal virtualHoldings = virtualHoldings(account, world, currency);
+
+      BigDecimal toSet = amount;
+
+      if(virtualHoldings.compareTo(amount) < 0) {
+        final BigDecimal remaining = amount.subtract(virtualHoldings);
+
+        toSet = BigDecimal.ZERO;
+
+        setItemHoldings(account, world, currency, itemHoldings(account, world, currency, false).subtract(remaining));
+      }
+
+      setVirtualHoldings(account, world, currency, toSet, skipUpdate);
+
+    } else if(holdings.compareTo(BigDecimal.ZERO) == 0) {
+      setVirtualHoldings(account, world, currency, amount, skipUpdate);
+      setItemHoldings(account, world, currency, amount);
+    } else {
+      setVirtualHoldings(account, world, currency, amount, skipUpdate);
+    }
   }
 
   public void setVirtualHoldings(UUID account, String world, TNECurrency currency, BigDecimal amount, boolean skipUpdate) {
