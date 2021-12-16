@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>0.1.1.15</version>
+    <version>0.1.1.16</version>
     <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>
@@ -204,7 +204,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNCH-Bukkit</artifactId>
-            <version>0.1.16.13</version>
+            <version>0.1.16.17</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
