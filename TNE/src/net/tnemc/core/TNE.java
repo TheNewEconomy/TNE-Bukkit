@@ -47,7 +47,6 @@ import net.tnemc.core.listeners.entity.EntityPortalListener;
 import net.tnemc.core.listeners.inventory.InventoryClickListener;
 import net.tnemc.core.listeners.item.CraftItemListener;
 import net.tnemc.core.listeners.mcmmo.PlayerFishingTreasureListener;
-import net.tnemc.core.listeners.message.TNEMessageListener;
 import net.tnemc.core.listeners.player.PlayerChangedWorldListener;
 import net.tnemc.core.listeners.player.PlayerChannelListener;
 import net.tnemc.core.listeners.player.PlayerChatListener;
@@ -59,6 +58,8 @@ import net.tnemc.core.listeners.player.PlayerQuitListener;
 import net.tnemc.core.listeners.player.PlayerTeleportListener;
 import net.tnemc.core.listeners.world.WorldLoadListener;
 import net.tnemc.core.menu.MenuManager;
+import net.tnemc.core.message.BungeeMessageListener;
+import net.tnemc.core.message.BungeeMessageManager;
 import net.tnemc.core.worker.PurgeWorker;
 import net.tnemc.core.worker.SaveWorker;
 import net.tnemc.dbupdater.core.TableManager;
@@ -116,7 +117,10 @@ public class TNE extends TNELib implements TabCompleter {
 
   public static final UUIDAPI uuidAPI = new AshconAPI();
 
-  public static final String build = "0.1.1.17-PRE-1";
+  //Our Server ID to use for bungee-related calls.
+  public static final UUID serverID = UUID.randomUUID();
+
+  public static final String build = "0.1.1.17-PRE-2";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   private Map<String, WorldManager> worldManagers = new HashMap<>();
@@ -130,6 +134,8 @@ public class TNE extends TNELib implements TabCompleter {
   private static net.tnemc.core.common.configurations.ConfigurationManager configurations;
 
   private CommandsHandler handler;
+
+  private BungeeMessageManager messageManager;
 
   protected ModuleFileCache moduleCache;
 
@@ -558,10 +564,11 @@ public class TNE extends TNELib implements TabCompleter {
 
     if(useMod) {
       Bukkit.getMessenger().registerOutgoingPluginChannel(this, "tnemod");
-      Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new TNEMessageListener());
+      Bukkit.getMessenger().registerIncomingPluginChannel(this, "tnemod", new BungeeMessageListener());
     }
 
-
+    //Bungeecord stuff
+    messageManager = new BungeeMessageManager();
 
     TNE.debug("Preparing placeholders");
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -990,6 +997,10 @@ public class TNE extends TNELib implements TabCompleter {
 
   public ModuleFileCache moduleCache() {
     return moduleCache;
+  }
+
+  public BungeeMessageManager messageManager() {
+    return messageManager;
   }
 
   public Thread autoSaver() {

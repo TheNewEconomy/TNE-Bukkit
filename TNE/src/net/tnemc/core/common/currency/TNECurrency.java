@@ -285,6 +285,10 @@ public class TNECurrency {
     return minorWeight;
   }
 
+  public boolean useMinor() {
+    return minorWeight != 0;
+  }
+
   public void setMinorWeight(Integer minorWeight) {
     this.minorWeight = minorWeight;
   }

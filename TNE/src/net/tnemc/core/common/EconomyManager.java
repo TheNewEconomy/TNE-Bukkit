@@ -102,7 +102,7 @@ public class EconomyManager {
   }
 
   public Optional<String> getName(UUID identifier) {
-    return Optional.of(idCache.get(identifier));
+    return Optional.ofNullable(idCache.get(identifier));
   }
 
   public Optional<UUID> getIdentifier(String name) {

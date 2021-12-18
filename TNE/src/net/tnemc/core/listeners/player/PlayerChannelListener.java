@@ -26,6 +26,7 @@ public class PlayerChannelListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onChannel(final PlayerChannelEvent event) {
+    //System.out.println("Channel: " + event.getChannel());
     if(TNE.useMod) {
       if (event.getChannel().equalsIgnoreCase("tnemod")) {
         TNE.instance().addModUser(event.getPlayer().getUniqueId());

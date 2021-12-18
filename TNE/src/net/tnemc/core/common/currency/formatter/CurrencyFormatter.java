@@ -119,10 +119,18 @@ public class CurrencyFormatter {
     BigInteger majorConversion = minor;
     majorConversion = majorConversion.divide(new BigInteger(currency.getMinorWeight() + ""));
     major = major.add(majorConversion);
-    minor = minor.mod(new BigInteger(currency.getMinorWeight() + ""));
 
-    final String minorFinal = String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(minor.toString())).replace(' ', '0');
-    return new BigDecimal(major.toString() + "." + minorFinal);
+    if(currency.useMinor()) {
+      minor = minor.mod(new BigInteger(currency.getMinorWeight() + ""));
+    }
+    final String minorFinal = (currency.useMinor())? String.format("%0" + currency.getDecimalPlaces() + "d", Integer.valueOf(minor.toString())).replace(' ', '0') : "";
+
+    String toParse = major.toString();
+    if(currency.useMinor()) {
+      toParse += "." + minorFinal;
+    }
+
+    return new BigDecimal(toParse);
   }
 
   private static String fromShort(TNECurrency currency, String amount) {

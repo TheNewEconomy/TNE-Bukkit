@@ -10,6 +10,8 @@ import net.tnemc.core.common.transaction.TNETransaction;
 import net.tnemc.core.common.transaction.charge.TransactionCharge;
 import net.tnemc.core.common.transaction.charge.TransactionChargeType;
 import net.tnemc.core.common.utils.MISCUtils;
+import net.tnemc.core.message.impl.BungeeBalanceMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -80,6 +82,16 @@ public class TNEAccount {
     TNE.debug("TNECurrency: " + cur.name());
     try {
       cur.getCurrencyType().setHoldings(identifier(), world, cur, amount, skip);
+
+      final String worldF = world;
+
+      if(!TNE.instance().messageManager().isAffected(id)) {
+        Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), () -> {
+          BungeeBalanceMessage.send(id, worldF, currency, amount);
+        });
+      } else {
+        TNE.instance().messageManager().removeAccount(id);
+      }
     } catch (SQLException e) {
       TNE.debug(e);
     }

@@ -1,0 +1,4 @@
+name: TheNewEconomyConnect
+main: net.tnemc.bungee.core.TNEConnect
+version: 1.0.0
+author: creatorfromhell
