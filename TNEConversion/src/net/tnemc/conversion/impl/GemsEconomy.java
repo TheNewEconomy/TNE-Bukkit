@@ -5,8 +5,8 @@ import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.data.TNEDataManager;
-import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,7 +62,7 @@ public class GemsEconomy extends Converter {
         ResultSet results = statement.executeQuery("SELECT * FROM " + table + ";")) {
 
       while(results.next()) {
-        Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+        TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, results.getString("currency_id"))) {
           currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, results.getString("currency_id"));
         }
@@ -87,7 +87,7 @@ public class GemsEconomy extends Converter {
         if(balanceSection != null) {
           final Set<String> currencies = balanceSection.getKeys(false);
           for(String currency : currencies) {
-            Currency cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+            TNECurrency cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
             if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, currency)) {
               cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, currency);
             }

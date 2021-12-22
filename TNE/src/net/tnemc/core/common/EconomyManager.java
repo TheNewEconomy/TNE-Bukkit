@@ -71,6 +71,8 @@ public class EconomyManager {
 
   private List<UUID> expGain = new ArrayList<>();
 
+  private boolean cache = true;
+
   public EconomyManager() {
     this.accounts.setListener(new AccountListener());
     currencyManager = new CurrencyManager();
@@ -99,6 +101,10 @@ public class EconomyManager {
       });
 
     }
+  }
+
+  public boolean isIDCached(UUID identifier) {
+    return idCache.containsKey(identifier);
   }
 
   public Optional<String> getName(UUID identifier) {
@@ -287,5 +293,13 @@ public class EconomyManager {
       return accounts;
     }
     return null;
+  }
+
+  public boolean isCache() {
+    return cache;
+  }
+
+  public void setCache(boolean cache) {
+    this.cache = cache;
   }
 }

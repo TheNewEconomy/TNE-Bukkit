@@ -1,6 +1,6 @@
 package net.tnemc.discord;
 
-import github.scarsz.discordsrv.dependencies.jda.core.EmbedBuilder;
+import github.scarsz.discordsrv.dependencies.jda.api.EmbedBuilder;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import net.tnemc.core.TNE;
 import net.tnemc.core.event.transaction.TNETransactionEvent;

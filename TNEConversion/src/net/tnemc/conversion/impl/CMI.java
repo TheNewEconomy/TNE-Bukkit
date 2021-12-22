@@ -4,8 +4,8 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.data.TNEDataManager;
-import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -64,7 +64,7 @@ public class CMI extends Converter {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("SELECT username, Balance FROM " + table + ";")) {
 
-      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      final TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
         ConversionModule.convertedAdd(results.getString("username"),
             TNE.instance().defaultWorld, currency.name(),
@@ -85,7 +85,7 @@ public class CMI extends Converter {
           Statement statement = connection.createStatement();
           ResultSet results = statement.executeQuery("SELECT username, Balance FROM users;")) {
 
-        final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+        final TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         while(results.next()) {
           ConversionModule.convertedAdd(results.getString("username"),
               TNE.instance().defaultWorld, currency.name(),

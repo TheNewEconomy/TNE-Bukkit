@@ -429,6 +429,7 @@ public class TNE extends TNELib implements TabCompleter {
     }
 
     TNE.debug("Preparing save manager");
+    manager.setCache(dataConfigurations.getBool("Data.Database.Cache", true));
     TNESaveManager sManager = new TNESaveManager(new TNEDataManager(
         configurations().getString("Data.Database.Type", "data").toLowerCase(),
         configurations().getString("Data.Database.MySQL.Host", "data"),

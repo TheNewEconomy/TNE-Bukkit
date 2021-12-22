@@ -4,7 +4,7 @@ import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.ListenerPriority;
 import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.DiscordGuildMessageReceivedEvent;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.Role;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.discord.command.DiscordCommand;
 

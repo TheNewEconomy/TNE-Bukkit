@@ -5,6 +5,7 @@ import net.tnemc.core.TNE;
 import net.tnemc.core.common.configurations.Configuration;
 import net.tnemc.core.common.module.Module;
 import net.tnemc.core.common.module.ModuleInfo;
+import net.tnemc.core.common.module.ModuleListener;
 import net.tnemc.discord.command.DiscordCommandManager;
 import net.tnemc.discord.command.DiscordManager;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +35,7 @@ import java.util.Map;
 @ModuleInfo(
     name = "Discord",
     author = "creatorfromhell",
-    version = "0.1.2",
+    version = "0.1.3",
     updateURL = "https://tnemc.net/files/module-version.xml"
 )
 public class DiscordModule implements Module {
@@ -47,6 +49,7 @@ public class DiscordModule implements Module {
   private DiscordConfiguration discordConfiguration;
 
   private DiscordManager manager;
+  private boolean loaded = false;
 
   public DiscordModule() {
     instance = this;
@@ -56,11 +59,28 @@ public class DiscordModule implements Module {
   public void load(TNE tne) {
 
     if(Bukkit.getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
-      manager = new DiscordManager();
-      manager.initialize();
-      Bukkit.getServer().getPluginManager().registerEvents(new TransactionListener(tne), tne);
+      initialize(tne);
+    } else {
+      Bukkit.getServer().getPluginManager().registerEvents(new PluginLoadedListener(tne), tne);
+      TNE.logger().warning("Failed to load Discord Module, DiscordSRV not present. Will retry");
     }
+  }
+
+  public void initialize(TNE tne) {
+    manager = new DiscordManager();
+    manager.initialize();
+    Bukkit.getServer().getPluginManager().registerEvents(new TransactionListener(tne), tne);
     TNE.logger().info("Discord Module loaded!");
+    loaded = true;
+  }
+
+  /**
+   * @param plugin The instance of the main TNE plugin class.
+   * @return A list of event listeners.
+   */
+  @Override
+  public List<ModuleListener> listeners(TNE plugin) {
+    return Module.super.listeners(plugin);
   }
 
   @Override

@@ -57,7 +57,10 @@ public class TNESaveManager extends SaveManager {
     TNE.debug("====== TNESaveManager.load =======");
 
     //Load Virtual Currency Balances into memory
-    getTNEManager().getTNEProvider().loadAllBalances();
+
+    if(TNE.manager().isCache()) {
+      getTNEManager().getTNEProvider().loadAllBalances();
+    }
 
     //Load IDS into memory
     for(Map.Entry<String, UUID> entry : getTNEManager().getTNEProvider().loadEconomyIDS().entrySet()) {

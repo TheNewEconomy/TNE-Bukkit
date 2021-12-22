@@ -8,26 +8,29 @@ Menus:
 
     Title: "Messages.Menus.Currency.Title"
 
-    Icons:
+    Pages:
 
-      0:
+      1:
+        Icons:
 
-        Slot: 0
+          0:
 
-        Display: "Basic Settings"
+            Slot: 0
 
-        Material:
+            Display: "Basic Settings"
 
-          Type: "clock"
+            Material:
 
-          Enchantment:
+              Type: "clock"
 
-            - "UNBREAKING:3"
+              Enchantment:
 
-          Flags:
+                - "UNBREAKING:3"
 
-            - HIDE_ENCHANTS
+              Flags:
 
-        Data:
+                - HIDE_ENCHANTS
 
-          SwitchMenu: "currency_basic_settings"
+            Data:
+
+              SwitchMenu: "currency_basic_settings"

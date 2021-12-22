@@ -81,7 +81,7 @@
         <dependency>
             <groupId>net.tnemc</groupId>
             <artifactId>TNE</artifactId>
-            <version>0.1.1.13-PRE-8</version>
+            <version>0.1.1.17-PRE-3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

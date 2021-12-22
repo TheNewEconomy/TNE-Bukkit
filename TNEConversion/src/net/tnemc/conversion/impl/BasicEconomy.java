@@ -4,7 +4,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
-import net.tnemc.core.economy.currency.Currency;
+import net.tnemc.core.common.currency.TNECurrency;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,7 +48,7 @@ public class BasicEconomy extends Converter {
     if(accountSection != null) {
       final Set<String> accounts = accountSection.getKeys(false);
       for(String uuid : accounts) {
-        Currency cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+        TNECurrency cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         ConversionModule.convertedAdd(uuid, TNE.instance().defaultWorld, cur.name(), new BigDecimal(config.getString("balances." + uuid)));
       }
     }

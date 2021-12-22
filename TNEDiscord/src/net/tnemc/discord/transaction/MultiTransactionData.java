@@ -3,8 +3,8 @@ package net.tnemc.discord.transaction;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
+import net.tnemc.core.common.transaction.charge.TransactionCharge;
+import net.tnemc.core.common.transaction.result.TransactionResult;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -93,13 +93,13 @@ public class MineConomy extends Converter {
     for(String username : accounts.getConfigurationSection(base).getKeys(false)) {
 
       double amount = accounts.getDouble(base + "." + username + ".Balance");
-      String currencyPath = (currencies != null)? "Currencies." + accounts.getString(base + "." + username + ".Currency") + ".Value" : null;
+      String currencyPath = (currencies != null)? "Currencies." + accounts.getString(base + "." + username + ".TNECurrency") + ".Value" : null;
       double rate = (currencyPath != null && currencies != null && currencies.contains(currencyPath))? currencies.getDouble(currencyPath) : 1.0;
       if(rate > 1.0) rate = 1.0;
       else if(rate < 0.1) rate = 0.1;
 
-      if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, accounts.getString(base + "." + username + ".Currency"))) {
-        currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, accounts.getString(base + "." + username + ".Currency"));
+      if(TNE.manager().currencyManager().contains(TNE.instance().defaultWorld, accounts.getString(base + "." + username + ".TNECurrency"))) {
+        currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld, accounts.getString(base + "." + username + ".TNECurrency"));
       }
       ConversionModule.convertedAdd(username, TNE.instance().defaultWorld, currency.name(), TNE.manager().currencyManager().convert(rate, currency.getRate(), new BigDecimal(amount)));
     }

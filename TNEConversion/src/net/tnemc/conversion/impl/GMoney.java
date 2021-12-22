@@ -4,8 +4,8 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.data.TNEDataManager;
-import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -56,7 +56,7 @@ public class GMoney extends Converter {
     if(accountSection != null) {
       final Set<String> accounts = accountSection.getKeys(false);
       for(String uuid : accounts) {
-        Currency cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+        TNECurrency cur = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         ConversionModule.convertedAdd(uuid, TNE.instance().defaultWorld, cur.name(), new BigDecimal(save.getString("money." + uuid)));
       }
     }
@@ -77,7 +77,7 @@ public class GMoney extends Converter {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("SELECT * FROM " + table + ";")) {
 
-      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      final TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
         ConversionModule.convertedAdd(results.getString("player"),
             TNE.instance().defaultWorld, currency.name(),

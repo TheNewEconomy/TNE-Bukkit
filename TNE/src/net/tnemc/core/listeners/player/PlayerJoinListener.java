@@ -40,11 +40,26 @@ public class PlayerJoinListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
+    if(TNE.instance().getServer().getOnlinePlayers().size() <= 1) {
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+        try {
+          TNE.saveManager().load();
+        } catch (SQLException ignore) {
+          TNE.logger().warning("Error occurred while loading data into cache.");
+        }
+      });
+    }
+
     TNE.debug("=====START ConnectionListener.onJoin =====");
     TNE.debug("Player null: " + (event.getPlayer() == null));
     final Player player = event.getPlayer();
 
     final UUID id = IDFinder.getID(player.getUniqueId().toString());
+
+    if(!TNE.manager().isIDCached(id)) {
+      TNE.manager().addID(id, player.getName(), true);
+    }
+
     Bukkit.getScheduler().runTaskAsynchronously(TNE.instance(), ()->{
       final String world = WorldFinder.getWorld(player, WorldVariant.BALANCE);
       TNE.debug(id + "");

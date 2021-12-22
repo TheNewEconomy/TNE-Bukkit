@@ -4,7 +4,7 @@ import net.tnemc.conversion.ConversionModule;
 import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
-import net.tnemc.core.economy.currency.Currency;
+import net.tnemc.core.common.currency.TNECurrency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -56,7 +56,7 @@ public class TownyEco extends Converter {
         ResultSet results = statement.executeQuery("SELECT uuid, world, currency, balance FROM " + table + ";")) {
       while(results.next()) {
         final String world = results.getString("world");
-        Currency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
+        TNECurrency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
         if(currency == null) {
           currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         }
@@ -79,7 +79,7 @@ public class TownyEco extends Converter {
         ResultSet results = statement.executeQuery("SELECT uuid, world, currency, balance FROM " + table + ";")) {
       while(results.next()) {
         final String world = results.getString("world");
-        Currency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
+        TNECurrency currency = TNE.manager().currencyManager().get(world, results.getString("currency"));
         if(currency == null) {
           currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
         }

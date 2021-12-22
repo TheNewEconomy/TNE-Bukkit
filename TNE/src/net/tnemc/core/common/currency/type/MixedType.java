@@ -26,7 +26,7 @@ public class MixedType implements CurrencyType {
    */
   @Override
   public String name() {
-    return "virtual";
+    return "mixed";
   }
 
   /**

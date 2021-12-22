@@ -1,10 +1,12 @@
 package net.tnemc.discord.command.eco;
 
-import github.scarsz.discordsrv.dependencies.jda.core.EmbedBuilder;
+import github.scarsz.discordsrv.dependencies.jda.api.EmbedBuilder;
 import net.tnemc.core.TNE;
 import net.tnemc.discord.command.DiscordCommand;
 
 import java.awt.*;
+
+;
 
 /**
  * The New Economy Minecraft Server Plugin

@@ -22,6 +22,7 @@ public @interface ModuleInfo {
   String name();
   String author();
   String version();
+  String[] plugins() default {};
   String[] dependencies() default {};
   String updateURL() default "";
 }

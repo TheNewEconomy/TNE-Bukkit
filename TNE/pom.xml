@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.tnemc</groupId>
     <artifactId>TNE</artifactId>
-    <version>0.1.1.17-PRE-3</version>
+    <version>0.1.1.17-PRE-4</version>
     <packaging>jar</packaging>
     <name>The New Economy</name>
     <properties>
@@ -45,24 +45,28 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <filters>
+                        <filter>
+                            <excludes>
+                                <artifact>com.github.tnerevival</artifact>
+                                <exclude>org/h2/**</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <relocations>
-                        <relocation>
+                        <!--<relocation>
                             <pattern>com.zaxxer.hikari</pattern>
                             <shadedPattern>net.tnemc.libs.com.zaxxer.hikari</shadedPattern>
-                        </relocation>
+                        </relocation>-->
                         <relocation>
                             <pattern>org.json.simple</pattern>
                             <shadedPattern>net.tnemc.libs.org.json.simple</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>org.h2</pattern>
-                            <shadedPattern>net.tnemc.libs.org.h2</shadedPattern>
-                        </relocation>
-                        <relocation>
+                        <!--<relocation>
                             <pattern>org.javalite</pattern>
                             <shadedPattern>net.tnemc.libs.org.javalite</shadedPattern>
                         </relocation>
-                        <!--<relocation>
+                        <relocation>
                             <pattern>net.tnemc.core.economy</pattern>
                             <shadedPattern>net.tnemc.libs.net.tnemc.core.economy</shadedPattern>
                         </relocation>
@@ -180,12 +184,20 @@
         <dependency>
             <groupId>com.github</groupId>
             <artifactId>TNELib</artifactId>
-            <version>0.1.3.17</version>
+            <version>0.1.3.19</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
                     <groupId>net.tnemc</groupId>
                     <artifactId>TheNewConfigLibrary</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -244,15 +256,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.15.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.17-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.javalite</groupId>
+            <artifactId>activejdbc</artifactId>
+            <version>2.2</version>
+            <type>jar</type>
             <scope>provided</scope>
         </dependency>
 
@@ -285,7 +304,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.32</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

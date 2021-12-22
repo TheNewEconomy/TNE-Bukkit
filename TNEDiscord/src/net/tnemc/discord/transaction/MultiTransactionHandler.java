@@ -1,14 +1,13 @@
 package net.tnemc.discord.transaction;
 
-import github.scarsz.discordsrv.dependencies.jda.core.entities.MessageChannel;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.MessageChannel;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.account.TNEAccount;
 import net.tnemc.core.common.api.IDFinder;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
-import net.tnemc.core.economy.Account;
-import net.tnemc.core.economy.transaction.charge.TransactionChargeType;
+import net.tnemc.core.common.transaction.charge.TransactionChargeType;
 import net.tnemc.discord.command.DiscordCommand;
 import org.bukkit.Bukkit;
 
@@ -77,7 +76,7 @@ public class MultiTransactionHandler {
     if(DiscordCommand.validateDiscordID(argument)) {
       UUID id = DiscordCommand.getID(argument, fake);
       if (existing && !TNE.manager().exists(id)) return null;
-      Account account = TNE.instance().api().getOrCreate(id);
+      TNEAccount account = TNE.instance().api().getOrCreate(id);
       if (account != null) {
         accounts.add(TNE.manager().getAccount(id));
         return accounts;

@@ -8,8 +8,8 @@ import net.tnemc.conversion.Converter;
 import net.tnemc.conversion.InvalidDatabaseImport;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.api.IDFinder;
+import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.data.TNEDataManager;
-import net.tnemc.core.economy.currency.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -69,7 +69,7 @@ public class SaneEconomy extends Converter {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("SELECT * FROM " + prefix + "saneeconomy_balances;")) {
 
-      final Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+      final TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
       while(results.next()) {
         ConversionModule.convertedAdd(results.getString("unique_identifier"),
             TNE.instance().defaultWorld, currency.name(),
@@ -89,7 +89,7 @@ public class SaneEconomy extends Converter {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    Currency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
+    TNECurrency currency = TNE.manager().currencyManager().get(TNE.instance().defaultWorld);
     balances.forEach((id, balance)->{
       ConversionModule.convertedAdd(IDFinder.getUsername(id), TNE.instance().defaultWorld, currency.name(), new BigDecimal(balance));
     });

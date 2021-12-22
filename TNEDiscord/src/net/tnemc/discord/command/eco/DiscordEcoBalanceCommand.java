@@ -1,18 +1,18 @@
 package net.tnemc.discord.command.eco;
 
-import github.scarsz.discordsrv.dependencies.jda.core.EmbedBuilder;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.Guild;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.MessageChannel;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.User;
+import github.scarsz.discordsrv.dependencies.jda.api.EmbedBuilder;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.MessageChannel;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.User;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.account.TNEAccount;
+import net.tnemc.core.common.currency.CurrencyEntry;
 import net.tnemc.core.common.currency.TNECurrency;
 import net.tnemc.core.common.currency.formatter.CurrencyFormatter;
 import net.tnemc.core.common.transaction.TNETransaction;
-import net.tnemc.core.economy.currency.CurrencyEntry;
-import net.tnemc.core.economy.transaction.charge.TransactionCharge;
-import net.tnemc.core.economy.transaction.result.TransactionResult;
+import net.tnemc.core.common.transaction.charge.TransactionCharge;
+import net.tnemc.core.common.transaction.result.TransactionResult;
 import net.tnemc.discord.command.DiscordCommand;
 import org.bukkit.Bukkit;
 
@@ -23,6 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+;
+;
+;
+;
 
 /**
  * The New Economy Minecraft Server Plugin

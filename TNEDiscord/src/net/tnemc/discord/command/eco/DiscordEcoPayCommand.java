@@ -1,9 +1,9 @@
 package net.tnemc.discord.command.eco;
 
-import github.scarsz.discordsrv.dependencies.jda.core.EmbedBuilder;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.Guild;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.MessageChannel;
-import github.scarsz.discordsrv.dependencies.jda.core.entities.User;
+import github.scarsz.discordsrv.dependencies.jda.api.EmbedBuilder;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.MessageChannel;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.User;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.Message;
 import net.tnemc.core.common.api.IDFinder;
@@ -16,6 +16,11 @@ import org.bukkit.Bukkit;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.UUID;
+
+;
+;
+;
+;
 
 /**
  * The New Economy Minecraft Server Plugin
