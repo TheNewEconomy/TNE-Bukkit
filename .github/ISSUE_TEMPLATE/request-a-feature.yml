@@ -1,0 +1,25 @@
+name: Feature Request
+description: Suggest a feature to be added in order to help TNE improve.
+title: "[FEAT]: "
+labels: ["feature"]
+assignees:
+  - creatorfromhell
+
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping to improve The New Economy with feature requests!
+  - type: textarea
+    attributes:
+      label: Feature Description
+      description: Describe the feature you're requesting to be added here.
+      placeholder: |
+        Example: "Add /oprahpay to celebrate global giving!!@#!"
+  - type: textarea
+    attributes:
+      label: Reasoning
+      description: Why should this be added? What is the use-case?
+      placeholder: |
+        Example: "Global wealth!@#!@#!"
+    validations:
+      required: true
