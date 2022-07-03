@@ -63,7 +63,12 @@
               </excludes>
             </filter>
           </filters>
-          <relocations />
+          <relocations>
+            <relocation>
+              <pattern>org.json.simple</pattern>
+              <shadedPattern>net.tnemc.libs.org.json.simple</shadedPattern>
+            </relocation>
+          </relocations>
         </configuration>
       </plugin>
     </plugins>
@@ -163,12 +168,6 @@
       <groupId>org.javalite</groupId>
       <artifactId>activejdbc</artifactId>
       <version>2.2</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>1.4.200</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

@@ -57,11 +57,15 @@
                         <!--<relocation>
                             <pattern>com.zaxxer.hikari</pattern>
                             <shadedPattern>net.tnemc.libs.com.zaxxer.hikari</shadedPattern>
-                        </relocation>-->
+                        </relocation>
+                        <relocation>
+                            <pattern>org.javalite</pattern>
+                            <shadedPattern>net.tnemc.libs.org.javalite</shadedPattern>
+                        </relocation>
                         <relocation>
                             <pattern>org.json.simple</pattern>
                             <shadedPattern>net.tnemc.libs.org.json.simple</shadedPattern>
-                        </relocation>
+                        </relocation>-->
                         <!--<relocation>
                             <pattern>org.javalite</pattern>
                             <shadedPattern>net.tnemc.libs.org.javalite</shadedPattern>
@@ -272,6 +276,12 @@
             <artifactId>activejdbc</artifactId>
             <version>2.2</version>
             <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
             <scope>provided</scope>
         </dependency>
 

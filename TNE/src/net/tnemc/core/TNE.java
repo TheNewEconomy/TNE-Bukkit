@@ -120,7 +120,7 @@ public class TNE extends TNELib implements TabCompleter {
   //Our Server ID to use for bungee-related calls.
   public static final UUID serverID = UUID.randomUUID();
 
-  public static final String build = "0.1.1.17-PRE-2";
+  public static final String build = "0.1.1.17-PRE-4";
   public final List<String> developers = Collections.singletonList("5bb0dcb3-98ee-47b3-8f66-3eb1cdd1a881");
 
   private Map<String, WorldManager> worldManagers = new HashMap<>();
@@ -185,11 +185,6 @@ public class TNE extends TNELib implements TabCompleter {
   private boolean dataFirst = false;
 
   public void onLoad() {
-    if(MISCUtils.serverBlacklist().contains(getServer().getIp())) {
-      blacklisted = true;
-      getLogger().info("Unable to load The New Economy as this server has been blacklisted!");
-      return;
-    }
 
     if(getServer().getPluginManager().getPlugin("GUIShop") != null) {
       getLogger().info("Unable to load The New Economy as it is incompatible with GUIShop.");
@@ -204,35 +199,46 @@ public class TNE extends TNELib implements TabCompleter {
     api = new TNEAPI(this);
 
     //Initialize Economy Classes
+
+    TNE.debug("Vault check");
     if(getServer().getPluginManager().getPlugin("Vault") != null) {
       setupVault();
     }
+
+    TNE.debug("Reserve check");
     if(getServer().getPluginManager().getPlugin("Reserve") != null) {
       setupReserve();
     }
   }
 
   public void onEnable() {
+    TNE.debug("onEnable");
     if(blacklisted) {
       return;
     }
 
-    dupers = MISCUtils.dupers();
+    TNE.debug("onEnable super");
     super.onEnable();
 
+    TNE.debug("Check for directory existence.");
     if(!getDataFolder().exists()) {
       getDataFolder().mkdirs();
     }
+
+    TNE.debug("First run check");
     firstRun = !(new File(getDataFolder(), "config.yml").exists());
 
+    TNE.debug("Config Manager");
     configurations = new net.tnemc.core.common.configurations.ConfigurationManager();
 
     currentSaveVersion = 1116.0;
 
+    TNE.debug("UUID Manager");
     setUuidManager(new TNEUUIDManager());
 
-    updater = new UpdateChecker("https://tnemc.net/files/tnebuild.txt", getDescription().getVersion());
+    //updater = new UpdateChecker("https://tnemc.net/files/tnebuild.txt", getDescription().getVersion());
 
+    TNE.debug("Module Loader");
     //Run the ModuleLoader
     loader = new ModuleLoader();
     loader.load();
