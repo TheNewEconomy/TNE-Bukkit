@@ -125,8 +125,6 @@ public class TNE extends TNELib implements TabCompleter {
 
   private Map<String, WorldManager> worldManagers = new HashMap<>();
   private List<UUID> tnemodUsers = new ArrayList<>();
-
-  private List<String> dupers;
   public List<String> exclusions;
 
   private EconomyManager manager;
@@ -225,6 +223,15 @@ public class TNE extends TNELib implements TabCompleter {
       getDataFolder().mkdirs();
     }
 
+    //Initialize our compatibility classes.
+    if (MISCUtils.isOneThirteen()) {
+      itemCompatibility = new ItemCompatibility13();
+    } else if (MISCUtils.isOneSeven()) {
+      itemCompatibility = new ItemCompatibility7();
+    } else {
+      itemCompatibility = new ItemCompatibility12();
+    }
+
     TNE.debug("First run check");
     firstRun = !(new File(getDataFolder(), "config.yml").exists());
 
@@ -236,7 +243,7 @@ public class TNE extends TNELib implements TabCompleter {
     TNE.debug("UUID Manager");
     setUuidManager(new TNEUUIDManager());
 
-    //updater = new UpdateChecker("https://tnemc.net/files/tnebuild.txt", getDescription().getVersion());
+    updater = new UpdateChecker("https://tnemc.net/files/tnebuild.txt", getDescription().getVersion());
 
     TNE.debug("Module Loader");
     //Run the ModuleLoader
@@ -371,15 +378,6 @@ public class TNE extends TNELib implements TabCompleter {
       final CommentedConfiguration penny = new CommentedConfiguration(new File(tiersDirectory, "penny.yml"), new InputStreamReader(this.getResource("currency/USD/penny.yml"), StandardCharsets.UTF_8));
       penny.load();
 
-    }
-
-    //Initialize our compatibility classes.
-    if (MISCUtils.isOneThirteen()) {
-      itemCompatibility = new ItemCompatibility13();
-    } else if (MISCUtils.isOneSeven()) {
-      itemCompatibility = new ItemCompatibility7();
-    } else {
-      itemCompatibility = new ItemCompatibility12();
     }
 
     //Initialize our plugin's managers.
@@ -658,13 +656,6 @@ public class TNE extends TNELib implements TabCompleter {
       writer.write("      - " + MaterialUtils.formatMaterialName(material) + newLine);
       writer.write("      - " + MaterialUtils.formatMaterialNameWithSpace(material) + newLine);
     }
-  }
-
-  public static boolean isDuper(String requested) {
-    TNE.debug("=========== Start[TNE.isDuper] ==============");
-    TNE.debug("Requested: " + requested);
-    TNE.debug("Requested Hash: " + MISCUtils.md5(requested));
-    return instance().dupers.contains(MISCUtils.md5(requested));
   }
 
   public static TNE instance() {

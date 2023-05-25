@@ -299,7 +299,7 @@ public class MISCUtils {
   }
 
   public static String findCurrencyName(String world, Location location, String defaultCurrency) {
-    if(!TNE.fawe && TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    if(location != null && !TNE.fawe && TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       return WorldGuardManager.findCurrencyName(world, location);
     }
 
@@ -340,6 +340,7 @@ public class MISCUtils {
           if (message) {
             final int progress = (int) (number * 100 / accounts.size());
             TNE.logger().info("Restoration Progress: " + progress);
+
           }
         } catch(Exception ignore) {}
       }

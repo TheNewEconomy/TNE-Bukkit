@@ -45,6 +45,7 @@ public class MessageListener implements Listener {
     }
 
     if(!(event.getSender() instanceof Server)) {
+      System.out.println("Event sender not server.");
       event.setCancelled(true);
       return;
     }

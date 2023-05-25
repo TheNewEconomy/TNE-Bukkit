@@ -36,7 +36,15 @@ public class BungeeBalanceMessage extends BungeeMessage {
     out.writeUTF(currency);
     out.writeUTF(amount.toPlainString());
 
+    System.out.println("Sending balance:" );
+
     if(Bukkit.getOnlinePlayers().size() > 0) {
+
+      System.out.println("World:" + world);
+      System.out.println("Currency:" + currency);
+      System.out.println("Account:" + account);
+      System.out.println("Amount:" + amount.toPlainString());
+
       Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(TNE.instance(), "tne:balance", out.toByteArray());
     }
   }
@@ -51,10 +59,17 @@ public class BungeeBalanceMessage extends BungeeMessage {
       final String currency = wrapper.readUTF();
       final Optional<BigDecimal> amountOPT = wrapper.readBigDecimal();
 
+      System.out.println("Set balance called: ");
+
       if(accountOPT.isPresent() && amountOPT.isPresent()) {
+        System.out.println("World:" + world);
+        System.out.println("Currency:" + currency);
+        System.out.println("Account:" + accountOPT.get());
+        System.out.println("Amount:" + amountOPT.get().toPlainString());
         TNEAccount account = TNE.manager().getAccount(accountOPT.get());
 
         if(account != null) {
+          System.out.println("Setting balance");
           TNE.instance().messageManager().addAccount(accountOPT.get());
           account.setHoldings(world, currency, amountOPT.get());
         }

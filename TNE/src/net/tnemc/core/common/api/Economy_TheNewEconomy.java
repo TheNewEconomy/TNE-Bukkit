@@ -52,7 +52,7 @@ public class Economy_TheNewEconomy implements Economy {
 
   @Override
   public String format(double amount) {
-    return api.format(new BigDecimal(amount + ""), plugin.defaultWorld);
+    return api.format(BigDecimal.valueOf(amount), plugin.defaultWorld);
   }
 
   @Override
@@ -150,7 +150,7 @@ public class Economy_TheNewEconomy implements Economy {
     TNE.debug("username: " + username);
     TNE.debug("world: " + world);
     TNE.debug("Amount: " + amount);
-    return api.hasHoldings(username, new BigDecimal(amount + ""), world);
+    return api.hasHoldings(username, BigDecimal.valueOf(amount), world);
   }
 
   @Override
@@ -219,7 +219,7 @@ public class Economy_TheNewEconomy implements Economy {
     if(!has(username, world, amount)) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Insufficient funds!");
     }
-    if(api.removeHoldings(username, new BigDecimal(amount + ""), world)) {
+    if(api.removeHoldings(username, BigDecimal.valueOf(amount), world)) {
       return new EconomyResponse(amount, getBalance(username, world), EconomyResponse.ResponseType.SUCCESS, "");
     }
     return new EconomyResponse(amount, getBalance(username, world), EconomyResponse.ResponseType.FAILURE, "Unable to complete transaction!");
@@ -281,7 +281,7 @@ public class Economy_TheNewEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    if(api.addHoldings(username, new BigDecimal(amount + ""), world)) {
+    if(api.addHoldings(username, BigDecimal.valueOf(amount), world)) {
       return new EconomyResponse(amount, getBalance(username, world), EconomyResponse.ResponseType.SUCCESS, "");
     }
     return new EconomyResponse(amount, getBalance(username, world), EconomyResponse.ResponseType.FAILURE, "Unable to complete transaction!");
@@ -311,7 +311,7 @@ public class Economy_TheNewEconomy implements Economy {
     if(amount < 0) {
       return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot deposit negative amounts.");
     }
-    if(api.addHoldings(id.toString(), new BigDecimal(amount + ""), world)) {
+    if(api.addHoldings(id.toString(), BigDecimal.valueOf(amount), world)) {
       return new EconomyResponse(amount, api.getHoldings(id.toString(), world).doubleValue(), EconomyResponse.ResponseType.SUCCESS, "");
     }
     return new EconomyResponse(amount, api.getHoldings(id.toString(), world).doubleValue(), EconomyResponse.ResponseType.FAILURE, "Unable to complete transaction!");

@@ -32,7 +32,6 @@ import java.util.Map;
  **/
 public class ConfigurationManager {
 
-  public boolean save = false;
   public List<String> loaded = new ArrayList<>();
 
   public HashMap<String, Configuration> configurations = new HashMap<>();

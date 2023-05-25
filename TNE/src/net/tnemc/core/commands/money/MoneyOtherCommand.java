@@ -15,6 +15,7 @@ import net.tnemc.core.common.transaction.result.TransactionResult;
 import net.tnemc.core.common.utils.MISCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -43,8 +44,9 @@ public class MoneyOtherCommand implements CommandExecution {
         String world = (arguments.length >= 2) ? WorldFinder.getWorldName(arguments[1], WorldVariant.BALANCE) : WorldFinder.getWorld(sender, WorldVariant.BALANCE);
         String currencyName = (arguments.length >= 3) ? arguments[2] : TNE.manager().currencyManager().get(world).name();
 
-        if (MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3) {
-          currencyName = MISCUtils.findCurrencyName(world, MISCUtils.getPlayer(IDFinder.getID(arguments[0])).getLocation());
+        final Player player = Bukkit.getPlayer(IDFinder.getID(arguments[0]));
+        if (MISCUtils.isSingularPlayer(arguments[0]) && arguments.length < 3 && player != null) {
+          currencyName = MISCUtils.findCurrencyName(world, player.getLocation());
         }
 
         final TNECurrency currency = TNE.manager().currencyManager().get(world, currencyName);

@@ -1,6 +1,5 @@
 package net.tnemc.core.listeners.player;
 
-import com.github.tnerevival.core.version.ReleaseType;
 import net.tnemc.core.TNE;
 import net.tnemc.core.common.WorldVariant;
 import net.tnemc.core.common.account.TNEAccount;
@@ -84,10 +83,6 @@ public class PlayerJoinListener implements Listener {
           }
           //TNE.instance().getUuidManager().addUUID(player.getName(), id);
         }
-        /*if(player.isDead()) {
-          TNE.manager().addDead(player.getUniqueId());
-          return;
-        }*/
       }
 
       TNE.manager().addAccount(account);
@@ -100,13 +95,6 @@ public class PlayerJoinListener implements Listener {
           });
         }
         account.initializeHoldings(world);
-      }
-      if(TNE.instance().api().getBoolean("Core.Update.Notify") && player.hasPermission("tne.admin") && !TNE.instance().updater.getRelease().equals(ReleaseType.LATEST)) {
-        String message = ChatColor.RED + "[TNE] Outdated! The current build is " + TNE.instance().updater.getBuild();
-        if(TNE.instance().updater.getRelease().equals(ReleaseType.PRERELEASE)) {
-          message = ChatColor.GREEN + "[TNE] Prerelease! Thank you for testing TNE Build: " + TNE.instance().updater.getCurrentBuild() + ".";
-        }
-        player.sendMessage(message);
       }
 
       boolean noEconomy = TNE.instance().getWorldManager(world).isEconomyDisabled();

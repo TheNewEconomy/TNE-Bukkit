@@ -108,7 +108,7 @@ public class MaterialUtils {
         TNE.debug("compareClone Display");
         if (!originalCloneMeta.getDisplayName().equalsIgnoreCase(compareCloneMeta.getDisplayName())) return false;
       } else {
-        if(originalCloneMeta.hasDisplayName()) return false;
+        //if(originalCloneMeta.hasDisplayName()) return false;
       }
 
       TNE.debug("lore");

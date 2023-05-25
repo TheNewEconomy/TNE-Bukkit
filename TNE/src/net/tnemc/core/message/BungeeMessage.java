@@ -39,6 +39,9 @@ public abstract class BungeeMessage {
     if(serverID.isPresent()) {
       server = serverID.get();
 
+      System.out.println("Message Received:");
+      System.out.println("ID:" + TNE.serverID);
+      System.out.println("Received:" + server);
       if(!TNE.serverID.toString().equalsIgnoreCase(server.toString())) {
         handle(wrapper);
       }

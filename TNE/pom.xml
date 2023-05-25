@@ -131,7 +131,7 @@
     <repositories>
         <repository>
             <id>mcmmo-repo</id>
-            <url>http://maven.elmakers.com/repository</url>
+            <url>https://maven.elmakers.com/repository</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -139,15 +139,15 @@
         </repository>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+            <url>https://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
+            <url>https://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
@@ -269,20 +269,20 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.1.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.javalite</groupId>
             <artifactId>activejdbc</artifactId>
             <version>2.2</version>
             <type>jar</type>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-            <scope>provided</scope>
+            <version>1.4.197</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->

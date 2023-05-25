@@ -28,7 +28,7 @@ public class WorldGuardManager {
   }
 
   public static TNECurrency findCurrency(String world, Location location) {
-    if(TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+    if(location != null && TNE.instance().getServer().getPluginManager().getPlugin("WorldGuard") != null) {
       final RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(location.getWorld()));
 
       if (regionManager != null) {
@@ -45,15 +45,17 @@ public class WorldGuardManager {
   }
 
   public static String findCurrencyName(String world, Location location) {
-    final RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(location.getWorld()));
+    if(location != null) {
+      final RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(location.getWorld()));
 
-    if(regionManager != null) {
-      final ApplicableRegionSet set = regionManager.getApplicableRegions(BlockVector3.at(location.getX(), location.getY(), location.getZ()));
+      if (regionManager != null) {
+        final ApplicableRegionSet set = regionManager.getApplicableRegions(BlockVector3.at(location.getX(), location.getY(), location.getZ()));
 
-      final String value = set.queryValue(null, currencyFlag);
+        final String value = set.queryValue(null, currencyFlag);
 
-      if(value != null && !value.equalsIgnoreCase(currencyFlag.getDefault())) {
-        return value;
+        if (value != null && !value.equalsIgnoreCase(currencyFlag.getDefault())) {
+          return value;
+        }
       }
     }
     return TNE.manager().currencyManager().get(world).name();
