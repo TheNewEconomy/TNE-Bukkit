@@ -1,3 +1,8 @@
+NEW CODE BASE, NEW REPOSITORY: https://github.com/TheNewEconomy/EconomyCore
+
+
+
+
 <p align="center">
     <img src="http://i.imgur.com/eDlmaed.png" width="728" />
 </p>
